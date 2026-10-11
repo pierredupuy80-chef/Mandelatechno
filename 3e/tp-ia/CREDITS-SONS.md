@@ -3,7 +3,7 @@
 Les 10 extraits embarqués dans `atelier-ia-exemples.html` sont de **vrais enregistrements**,
 pris sur **Wikimedia Commons** (la médiathèque libre de Wikipédia), sous licence libre.
 Chaque enregistrement fournit **deux extraits d'une à deux secondes** : un pour la mémoire de l'IA et un autre,
-différent, pour le test (c'est ce qui garantit que la devinette n'est pas une copie du vrai son).
+différent, pour le test (c'est ce qui garantit que la prédiction n'est pas une copie du vrai son).
 Ils ont été convertis en **WAV mono 16 bits / 22 kHz** et normalisés.
 
 ## Les 5 sons retenus
