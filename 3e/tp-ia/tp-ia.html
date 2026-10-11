@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP — Comment une IA apprend-elle ?</title>
+<style>
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+.onglets button.bonus{border-style:dashed}
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none}
+section.actif{display:block}
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.grille{display:grid; grid-template-columns:minmax(330px,1.35fr) minmax(310px,1fr); gap:14px; align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+canvas{width:100%; height:auto; display:block; background:#fff; border:1px solid var(--bord);
+  border-radius:8px; touch-action:none; cursor:crosshair}
+.legende{display:flex; gap:14px; flex-wrap:wrap; font-size:.82rem; color:var(--gris); margin-top:6px}
+.puce{display:inline-block; width:.75em; height:.75em; border-radius:50%; margin-right:4px; vertical-align:baseline}
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+input[type=range]{width:100%}
+select,input[type=text],input[type=number],textarea{font:inherit; font-size:.88rem; padding:4px 6px;
+  border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{width:100%; min-height:3.2rem; resize:vertical}
+table{border-collapse:collapse; width:100%; font-size:.85rem}
+th,td{border:1px solid var(--bord); padding:3px 6px; text-align:left}
+th{background:var(--bleuf); color:var(--bleu)}
+td.n{text-align:right; font-variant-numeric:tabular-nums}
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+.mesure{font-size:.88rem; background:var(--bleuf2); border:1px dashed var(--bleu2); border-radius:8px; padding:6px 9px; margin:.5rem 0}
+.mesure b{color:var(--bleu)}
+.verdict{font-size:1rem; font-weight:bold}
+.verdict.fermer{color:var(--orange)}
+.verdict.ouvrir{color:var(--bleu2)}
+.erreur{color:var(--rouge); font-weight:bold}
+.ok{color:var(--vert); font-weight:bold}
+details{margin:.5rem 0; font-size:.87rem}
+summary{cursor:pointer; color:var(--bleu2); font-weight:bold}
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+ol,etapes{padding-left:1.3rem}
+ol li{margin:.25rem 0}
+.pastille{display:inline-block; min-width:1.5rem; height:1.5rem; line-height:1.5rem; text-align:center;
+  border-radius:50%; color:#fff; font-weight:bold; font-size:.8rem; margin-right:5px}
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+.grille2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+@media (max-width:700px){.grille2{grid-template-columns:1fr}}
+.chrono{display:flex; align-items:center; gap:6px; font-size:.85rem; color:var(--gris)}
+.chrono .valeur{font-variant-numeric:tabular-nums; font-weight:bold; font-size:1rem; color:var(--bleu); min-width:4.2rem; text-align:center;
+  background:var(--bleuf2); border:1px solid var(--bord); border-radius:6px; padding:2px 4px}
+.chrono.fini .valeur{color:var(--rouge); border-color:var(--rouge)}
+.barre{height:8px; background:var(--bleuf); border-radius:4px; overflow:hidden; margin-top:4px}
+.barre > i{display:block; height:100%; background:var(--vert)}
+.note{font-size:.8rem; color:var(--gris)}
+.reponses-liste{font-size:.86rem}
+.reponses-liste dt{font-weight:bold; color:var(--bleu); margin-top:.5rem}
+.reponses-liste dd{margin:0 0 .2rem; white-space:pre-wrap}
+#zone-message{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:var(--bleu);
+  color:#fff; padding:7px 14px; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .25s; z-index:50}
+#zone-message.visible{opacity:1}
+@media print{
+  header, .onglets, .boutons, canvas, .no-print{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <div class="ligne-titre">
+    <h1>TP — Comment une IA apprend-elle&nbsp;? <small>3<sup>e</sup> · technologie · 1 heure · 3 ateliers + 1 défi</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+    <div class="chrono" id="chrono">
+      <span>Chrono&nbsp;:</span><span class="valeur" id="chrono-valeur">15:00</span>
+      <button class="act sec" id="chrono-start" style="padding:2px 8px">▶</button>
+      <button class="act sec" id="chrono-reset" style="padding:2px 8px">↺</button>
+    </div>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-lab="1" class="actif">Atelier 1 · Apprentissage supervisé</button>
+    <button data-lab="2">Atelier 2 · Apprentissage non supervisé</button>
+    <button data-lab="3">Atelier 3 · Apprentissage par renforcement</button>
+    <button data-lab="4" class="bonus">Défi · Réseau de neurones</button>
+    <button data-lab="9">Bilan</button>
+  </div>
+</header>
+
+<main>
+<!-- ============================ ATELIER 1 ============================ -->
+<section id="lab1">
+  <h2>Atelier 1 — Apprentissage supervisé : apprendre à partir d'exemples étiquetés</h2>
+
+  <div class="carte objectif">
+    <b>La situation.</b> Un volet à lames orientables doit apprendre <b>quand fermer ses lames</b>.
+    On lui donne 48 situations déjà vécues, <b>étiquetées</b> par l'utilisateur&nbsp;: «&nbsp;j'ai fermé&nbsp;» ou «&nbsp;j'ai laissé ouvert&nbsp;».
+    L'IA doit ensuite décider seule pour des situations <b>nouvelles</b>.
+    <br><b>Ce que vous devez découvrir&nbsp;:</b> comment elle fait, et pourquoi elle ne se trompe pas comme un humain.
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <canvas id="c1" width="900" height="580" aria-label="Graphique des situations du volet"></canvas>
+        <div class="legende">
+          <span><i class="puce" style="background:#2e75b6"></i>l'utilisateur a laissé ouvert (<span id="n1-ouvrir">0</span>)</span>
+          <span><i class="puce" style="background:#d97706"></i>l'utilisateur a fermé (<span id="n1-fermer">0</span>)</span>
+          <span><i class="puce" style="background:#111"></i>sonde&nbsp;: la situation à décider</span>
+          <span id="legende-erreurs" style="display:none">✗ situation de test mal classée</span>
+        </div>
+        <p class="note" id="etat1">Données d'exemple chargées.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Ce que vous faites, dans l'ordre</h3>
+        <ol>
+          <li><b>Observe</b> les points. Les deux zones de couleur se mélangent-elles&nbsp;?</li>
+          <li><b>Clique dans le graphique</b> pour déplacer la sonde&nbsp;✛ (vers 20&nbsp;000 lux et 25&nbsp;°C, puis ailleurs)
+            et lis la décision de l'IA&nbsp;: combien de voisins votent «&nbsp;fermer&nbsp;», combien votent «&nbsp;ouvrir&nbsp;»&nbsp;?</li>
+          <li><b>Change k</b> (le nombre de voisins consultés) et regarde la frontière se déformer&nbsp;:
+            à k = 1 elle fait de petits «&nbsp;îlots&nbsp;» autour de certains points.</li>
+          <li><b>Teste</b> le modèle sur les 20 situations nouvelles.</li>
+          <li><b>Réponds</b> aux 4 questions ci-dessous (une phrase suffit).</li>
+        </ol>
+      </div>
+
+      <div class="carte">
+        <span class="champ"><span>Nombre de voisins consultés (k) = <b id="k1-valeur">3</b></span>
+          <input type="range" id="k1" min="1" max="21" step="2" value="3"></span>
+
+        <span class="champ"><span>Mode du clic dans le graphique</span>
+          <select id="mode1">
+            <option value="sonde">Déplacer la sonde</option>
+            <option value="ajout-fermer">Ajouter un exemple « fermer »</option>
+            <option value="ajout-ouvrir">Ajouter un exemple « ouvrir »</option>
+            <option value="suppr">Supprimer un exemple</option>
+          </select></span>
+
+        <label style="font-size:.85rem"><input type="checkbox" id="front1" checked> Afficher la frontière de décision</label><br>
+        <label style="font-size:.85rem"><input type="checkbox" id="norm1" checked> Mettre les deux axes à la même échelle (sinon les lux écrasent les °C)</label><br>
+        <label style="font-size:.85rem"><input type="checkbox" id="err1"> Montrer les situations de test mal classées</label>
+
+        <div class="boutons">
+          <button class="act" id="btn-tester">▶ Tester sur les 20 situations de test</button>
+          <button class="act sec" id="btn-exemple">Données de référence (48)</button>
+          <button class="act sec" id="btn-desequilibre">Données « canicule » (30)</button>
+          <button class="act sec" id="btn-effacer">Tout effacer</button>
+          <label class="act sec" style="cursor:pointer">Importer un CSV<input type="file" id="fichier1" accept=".csv,.txt" style="display:none"></label>
+        </div>
+
+        <div class="mesure" id="mesure1">Sonde non placée : clique dans le graphique.</div>
+        <div id="matrice1"></div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Vos réponses — atelier 1</h3>
+        <div class="q">
+          <p class="enonce">Q1. Avec k = 1, puis k = 5, puis k = 15 : quelle est la réussite sur les 20 situations de test&nbsp;?
+          Note les trois résultats, puis explique ce qui se passe quand k augmente.</p>
+          <textarea data-q="A1-Q1 réussites k=1/5/15" placeholder="k = 1 → … % ; k = 5 → … % ; k = 15 → … %"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q2. À k = 1, cherche les petits «&nbsp;îlots&nbsp;» de couleur isolés autour de certains points.
+          À quoi correspondent-ils&nbsp;? Passe ensuite à k = 15 : que sont devenus ces îlots&nbsp;?</p>
+          <textarea data-q="A1-Q2 îlots et erreurs d'étiquetage" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q3. Clique sur « Données canicule » (30 situations où l'utilisateur a toujours fermé), puis teste.
+          Que répond l'IA à une nuit douce&nbsp;? Comment appelle-t-on ce problème&nbsp;?</p>
+          <textarea data-q="A1-Q3 données canicule (biais)" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q4. Peut-on réussir 100&nbsp;%&nbsp;? Deux situations de test (vers 22&nbsp;000 lux et 25,5&nbsp;°C) sont
+          presque identiques, mais l'utilisateur n'a pas fait la même chose. Que peut donc faire l'IA&nbsp;?</p>
+          <textarea data-q="A1-Q4 pourquoi pas 100 %" placeholder="…"></textarea>
+        </div>
+        <details>
+          <summary>Défi (si vous avez terminé)</summary>
+          <p>Ajoutez des exemples « fermer » et « ouvrir » pour faire <b>baisser</b> la réussite d'une situation de test,
+          puis pour la faire <b>remonter</b>. Vous venez de fabriquer un jeu de données… et un biais.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================ ATELIER 2 ============================ -->
+<section id="lab2">
+  <h2>Atelier 2 — Apprentissage non supervisé : trouver des groupes sans étiquettes</h2>
+
+  <div class="carte objectif">
+    <b>La situation.</b> Cette fois, personne n'a étiqueté les données. On a seulement le journal des capteurs du volet&nbsp;:
+    <b>74 mesures</b> relevées toutes les 20 minutes pendant 24 heures. Aucune colonne ne dit ce que l'utilisateur a fait.
+    L'IA doit <b>découvrir seule des familles de situations</b> (des groupes). C'est ce qu'on appelle un <b>regroupement</b> (ou <i>clustering</i>).
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <canvas id="c2" width="900" height="580" aria-label="Nuage de mesures du volet sur 24 heures"></canvas>
+        <div class="legende">
+          <span><i class="puce" style="background:#8a99a8"></i>mesure (aucune étiquette)</span>
+          <span>✦ centre d'un groupe</span>
+          <span>couleur = groupe trouvé par l'IA</span>
+        </div>
+        <p class="note" id="etat2">74 mesures chargées, sans étiquette.</p>
+      </div>
+      <div class="carte">
+        <h3 style="margin-top:0">Groupes trouvés par l'IA</h3>
+        <div id="table2"><p class="note">Choisissez k puis lancez l'algorithme.</p></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Ce que vous faites, dans l'ordre</h3>
+        <ol>
+          <li>Les points sont <b>tous gris</b> : aucune étiquette, aucune bonne réponse connue.</li>
+          <li>Choisissez le <b>nombre de groupes k</b>, puis cliquez <b>Étape</b> plusieurs fois.
+            L'algorithme alterne deux actions&nbsp;: il <b>déplace les centres</b> ✦ au milieu de leur groupe,
+            puis il <b>réaffecte</b> chaque mesure au centre le plus proche (les points changent de couleur).</li>
+          <li>Cliquez <b>Jusqu'à la convergence</b>, puis <b>nommez chaque groupe</b> dans le tableau (un mot&nbsp;: «&nbsp;nuit&nbsp;», «&nbsp;plein midi&nbsp;»…).</li>
+          <li>Cliquez <b>Autre départ</b> : le résultat est-il identique&nbsp;?</li>
+          <li>Répondez aux 4 questions.</li>
+        </ol>
+      </div>
+
+      <div class="carte">
+        <span class="champ"><span>Nombre de groupes demandé (k) = <b id="k2-valeur">3</b></span>
+          <input type="range" id="k2" min="2" max="6" step="1" value="3"></span>
+
+        <div class="boutons">
+          <button class="act" id="btn2-etape">Étape : déplacer les centres</button>
+          <button class="act" id="btn2-converger">Jusqu'à la convergence</button>
+          <button class="act sec" id="btn2-depart">Autre départ</button>
+          <button class="act sec" id="btn2-reset">Réinitialiser</button>
+        </div>
+        <label style="font-size:.85rem"><input type="checkbox" id="norm2" checked> Mettre les deux axes à la même échelle</label>
+
+        <div class="mesure">Cycles complets&nbsp;: <b id="iter2">0</b> · inertie&nbsp;: <b id="inertie2">—</b><br>
+          En cours&nbsp;: <b id="phase2">les centres se déplacent au milieu de leur groupe</b></div>
+        <p class="note">L'<b>inertie</b> est la somme des distances entre chaque mesure et le centre de son groupe.
+        Elle doit <b>diminuer</b> à chaque étape&nbsp;: c'est le signe que l'IA améliore son découpage.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Vos réponses — atelier 2</h3>
+        <div class="q">
+          <p class="enonce">Q1. Combien de groupes avez-vous choisis, et comment les avez-vous nommés&nbsp;? Regardez la colonne «&nbsp;heures&nbsp;» pour vous aider.</p>
+          <textarea data-q="A2-Q1 groupes et noms" placeholder="k = … → groupe 1 : … ; groupe 2 : …"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q2. Qui a trouvé ces noms&nbsp;: l'IA ou vous&nbsp;? Comparez avec l'atelier 1&nbsp;: qu'est-ce qui manquait dans les données de l'atelier 2&nbsp;?</p>
+          <textarea data-q="A2-Q2 qui nomme les groupes" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q3. Changez k (2, puis 4, puis 6) et cliquez « Autre départ » à chaque fois&nbsp;: le découpage
+          change. Qui a décidé du <b>nombre</b> de groupes&nbsp;? L'IA peut-elle dire quel découpage est le « bon »&nbsp;? Pourquoi&nbsp;?</p>
+          <textarea data-q="A2-Q3 qui choisit k" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q4. Deux mesures sortent de l'ordinaire (14h20 et 15h00 : il fait sombre et chaud). Où l'IA les range-t-elle&nbsp;? Est-ce une erreur de sa part&nbsp;?</p>
+          <textarea data-q="A2-Q4 mesures surprenantes" placeholder="…"></textarea>
+        </div>
+        <details>
+          <summary>Défi (si vous avez terminé)</summary>
+          <p>Réglez k au maximum. L'inertie devient très petite&nbsp;: est-ce que le découpage est meilleur pour autant&nbsp;?
+          Que se passerait-il avec autant de groupes que de mesures&nbsp;?</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================ ATELIER 3 ============================ -->
+<section id="lab3">
+  <h2>Atelier 3 — Apprentissage par renforcement : apprendre par essais et erreurs</h2>
+
+  <div class="carte objectif">
+    <b>La situation.</b> Cette fois, <b>personne ne donne d'exemple et personne ne donne la réponse</b>.
+    Le volet essaie une action, puis reçoit une <b>récompense</b> (une note de 0 à 10&nbsp;: à quel point l'utilisateur est content).
+    Il recommence des centaines de fois et découvre tout seul quelle action est la meilleure dans chaque situation.
+    <br><b>Attention&nbsp;:</b> l'IA <b>ne connaît pas</b> la table des récompenses. C'est vous qui la connaissez, pas elle.
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <canvas id="c3" width="900" height="380" aria-label="Courbe d'apprentissage de l'agent"></canvas>
+        <div class="legende">
+          <span><i class="puce" style="background:#2e75b6"></i>récompense moyenne des 20 derniers épisodes</span>
+          <span><i class="puce" style="background:#2e7d32"></i>meilleur score possible</span>
+          <span>épisode courant&nbsp;: <b id="ep3">0</b></span>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Ce que l'IA a appris : la table Q</h3>
+        <p class="note">Chaque case estime la récompense espérée si l'on choisit cette action dans cette situation.
+        Plus la case est verte, plus l'IA pense que c'est une bonne idée.</p>
+        <div id="table3"></div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Le « monde » tel qu'il est (ce que l'IA ignore au départ)</h3>
+        <div id="env3"></div>
+        <p class="note">C'est l'humain qui a écrit ces notes. Changez d'objectif dans les réglages&nbsp;: mêmes situations, autres récompenses, autre comportement appris.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Ce que vous faites, dans l'ordre</h3>
+        <ol>
+          <li>Cliquez <b>1 épisode</b> puis regardez la table Q&nbsp;: les valeurs sont presque toutes à 0, l'IA ne sait rien.</li>
+          <li>Cliquez <b>+100 épisodes</b>, puis à nouveau&nbsp;: la courbe bleue monte-t-elle&nbsp;?</li>
+          <li>Réglez <b>l'exploration</b> sur 0, cliquez <b>Réinitialiser</b>, puis <b>+500 épisodes</b>&nbsp;: que se passe-t-il&nbsp;?</li>
+          <li>Changez d'<b>objectif</b> (« économie d'énergie »), réinitialisez et relancez 500 épisodes.</li>
+          <li>Répondez aux questions.</li>
+        </ol>
+      </div>
+
+      <div class="carte">
+        <span class="champ"><span>Objectif récompensé</span>
+          <select id="env3-choix">
+            <option value="confort">Confort d'abord (données recompenses_confort.csv)</option>
+            <option value="energie">Économie d'énergie d'abord (données recompenses_energie.csv)</option>
+          </select></span>
+        <span class="champ"><span>Exploration ε = <b id="eps3-valeur">0,15</b> (part des essais faits au hasard)</span>
+          <input type="range" id="eps3" min="0" max="1" step="0.05" value="0.15"></span>
+
+        <div class="boutons">
+          <button class="act" id="btn3-1">1 épisode</button>
+          <button class="act" id="btn3-100">+100 épisodes</button>
+          <button class="act" id="btn3-500">+500 épisodes</button>
+          <button class="act sec" id="btn3-reset">Réinitialiser</button>
+          <label class="act sec" style="cursor:pointer">Importer un CSV de récompenses<input type="file" id="fichier3" accept=".csv,.txt" style="display:none"></label>
+        </div>
+
+        <div class="mesure">
+          Épisodes&nbsp;: <b id="n3">0</b> · récompense moyenne (100 derniers)&nbsp;: <b id="moy3">—</b> / 10 ·
+          meilleur possible&nbsp;: <b id="opt3">—</b> / 10
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Vos réponses — atelier 3</h3>
+        <div class="q">
+          <p class="enonce">Q1. Note la récompense moyenne après 10 épisodes, puis après 500. Donne les deux valeurs.</p>
+          <textarea data-q="A3-Q1 moyenne 10 et 500 épisodes" placeholder="après 10 épisodes : … / 10 ; après 500 : … / 10"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q2. Qui a expliqué à l'IA quelle action choisir&nbsp;? Qu'est-ce qui l'a guidée&nbsp;? Qu'est-ce qui remplace les étiquettes de l'atelier 1&nbsp;?</p>
+          <textarea data-q="A3-Q2 ce qui guide l'agent" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q3. Exploration à 0 puis 500 épisodes : la récompense atteint-elle le meilleur score possible&nbsp;? Explique pourquoi.</p>
+          <textarea data-q="A3-Q3 exploration 0" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q4. Passez à l'objectif « économie d'énergie » : la meilleure action change-t-elle dans certaines situations&nbsp;? Qui a fixé cet objectif&nbsp;? Que retenez-vous&nbsp;?</p>
+          <textarea data-q="A3-Q4 changement d'objectif" placeholder="…"></textarea>
+        </div>
+        <details>
+          <summary>Défi (si vous avez terminé)</summary>
+          <p>Ouvrez <code>recompenses_confort.csv</code> dans un tableur, changez une note pour qu'une action
+          <b>absurde</b> devienne la plus récompensée, enregistrez en CSV, puis importez-le ici. Relancez 500 épisodes&nbsp;:
+          l'IA apprend-elle une bêtise&nbsp;? Est-ce la faute de l'IA&nbsp;?</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================ ATELIER 4 (DÉFI) ============================ -->
+<section id="lab4">
+  <h2>Défi — Réseau de neurones : apprendre sans qu'on explique la règle</h2>
+
+  <div class="carte objectif">
+    <b>Bonus</b> (à faire seulement si les 3 ateliers sont terminés, ou en démonstration par le professeur).
+    Un <b>réseau de neurones</b> ne compare pas la situation à des exemples voisins comme à l'atelier 1&nbsp;:
+    il ajuste des milliers de petits réglages, <b>essai après essai</b>, jusqu'à ce que ses réponses collent aux étiquettes.
+    On appelle cela l'<b>entraînement</b>&nbsp;: c'est la phase d'apprentissage, suivie de la phase de <b>test</b>.
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <canvas id="c4" width="900" height="580" aria-label="Frontière apprise par le réseau de neurones"></canvas>
+        <div class="legende">
+          <span><i class="puce" style="background:#2e75b6"></i>« ouvrir »</span>
+          <span><i class="puce" style="background:#d97706"></i>« fermer »</span>
+          <span>fond coloré = réponse du réseau pour chaque situation possible</span>
+        </div>
+      </div>
+      <div class="carte">
+        <canvas id="c4b" width="900" height="300" aria-label="Courbe d'erreur pendant l'entraînement"></canvas>
+        <p class="note">Erreur du réseau, de 0 (aucune erreur) à 1 (tout faux). L'entraînement ne s'arrête jamais
+        « parce qu'il a compris »&nbsp;: c'est l'humain qui décide quand l'arrêter.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Ce que vous faites</h3>
+        <ol>
+          <li>Cliquez <b>Entraîner 200 tours</b> et regardez la frontière se dessiner&nbsp;: elle est lisse, courbe,
+            contrairement à celle de l'atelier 1.</li>
+          <li>Regardez les deux réussites affichées&nbsp;: sur les exemples d'<b>entraînement</b> (déjà vus) et sur les situations de <b>test</b> (jamais vues).</li>
+          <li>Entraînez encore, plusieurs fois.</li>
+          <li>Choisissez ensuite <b>8 exemples seulement</b>, réinitialisez et entraînez longtemps&nbsp;: comparez les deux réussites.</li>
+        </ol>
+      </div>
+
+      <div class="carte">
+        <span class="champ"><span>Exemples utilisés pour l'entraînement</span>
+          <select id="ex4">
+            <option value="8">8 exemples seulement</option>
+            <option value="16">16 exemples</option>
+            <option value="24">24 exemples</option>
+            <option value="48" selected>48 exemples (tous)</option>
+          </select></span>
+        <span class="champ"><span>Neurones cachés = <b id="n4-valeur">6</b></span>
+          <input type="range" id="n4" min="1" max="12" step="1" value="6"></span>
+        <div class="boutons">
+          <button class="act" id="btn4-200">Entraîner 200 tours</button>
+          <button class="act sec" id="btn4-1000">Entraîner 1000 tours</button>
+          <button class="act sec" id="btn4-reset">Réinitialiser</button>
+        </div>
+        <div class="mesure">
+          Tours d'entraînement&nbsp;: <b id="tours4">0</b> · erreur&nbsp;: <b id="err4">—</b><br>
+          Réussite sur les <b id="nb4">48</b> exemples d'entraînement&nbsp;: <b id="re4">—</b><br>
+          Réussite sur les <b id="nbt4">20</b> situations de test&nbsp;: <b id="rt4">—</b>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Vos réponses — défi</h3>
+        <div class="q">
+          <p class="enonce">Q1. Avec les 48 exemples et après 200 tours, quelle réussite sur les situations de test&nbsp;?
+          Comparez avec l'atelier 1 (k-NN)&nbsp;: laquelle des deux méthodes réussit le mieux ici&nbsp;?</p>
+          <textarea data-q="Défi réseau Q1 réussite test" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q2. Quelle est la forme de la frontière trouvée par le réseau (droite, escalier, courbe)&nbsp;?</p>
+          <textarea data-q="Défi réseau Q2 forme frontière" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Q3. Passez à <b>8 exemples seulement</b> et entraînez 1000 tours&nbsp;: la réussite sur ces 8 exemples
+          monte à 100&nbsp;%. Et sur les situations de test&nbsp;? Comment appelle-t-on ce phénomène&nbsp;?</p>
+          <textarea data-q="Défi réseau Q3 surapprentissage" placeholder="…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ BILAN ============================ -->
+<section id="lab9">
+  <h2>Bilan — ce que vous avez découvert</h2>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">1. Complétez les trois phrases</h3>
+        <div class="q">
+          <p class="enonce">L'<b>apprentissage supervisé</b> : l'IA apprend à partir de …</p>
+          <textarea data-q="BILAN supervisé" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">L'<b>apprentissage non supervisé</b> : l'IA apprend à partir de …</p>
+          <textarea data-q="BILAN non supervisé" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">L'<b>apprentissage par renforcement</b> : l'IA apprend à partir de …</p>
+          <textarea data-q="BILAN renforcement" placeholder="…"></textarea>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">2. Les trois questions de fond</h3>
+        <div class="q">
+          <p class="enonce">a) Dans les trois cas, de quoi l'IA a-t-elle absolument besoin pour apprendre&nbsp;?</p>
+          <textarea data-q="BILAN a besoins communs" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">b) Citez trois choses que l'IA n'a pas décidées toute seule dans ce TP.</p>
+          <textarea data-q="BILAN b ce que l'humain décide" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">c) Une IA apprend avec des données qui contiennent des erreurs ou des habitudes injustes.
+          Que se passe-t-il&nbsp;? Donnez l'exemple vu dans le TP.</p>
+          <textarea data-q="BILAN c biais" placeholder="…"></textarea>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">3. Réinvestir</h3>
+        <div class="q">
+          <p class="enonce">Choisissez une IA de votre quotidien (recommandation de vidéos, assistant vocal, filtre anti-spam,
+          aide au diagnostic, voiture…). Comment a-t-elle pu apprendre&nbsp;: supervisé, non supervisé, par renforcement&nbsp;?
+          Qui a fourni les étiquettes ou les récompenses&nbsp;?</p>
+          <textarea data-q="BILAN réinvestissement" placeholder="…" style="min-height:4.5rem"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte bilan">
+        <h3 style="margin-top:0">Enregistrer / rendre votre travail</h3>
+        <p class="note">Vos réponses restent dans cette page. À la fin de l'heure, exportez-les&nbsp;: le fichier pourra être
+        déposé dans l'espace de travail de la classe.</p>
+        <div class="boutons">
+          <button class="act" id="btn-export">💾 Enregistrer mes réponses</button>
+          <button class="act sec" id="btn-copier">⧉ Copier</button>
+          <button class="act sec" id="btn-imprimer">🖨 Imprimer / PDF</button>
+        </div>
+        <p class="note" id="etat-export">Aucun export pour l'instant.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Récapitulatif de vos réponses</h3>
+        <dl class="reponses-liste" id="recap"><p class="note">Répondez aux questions&nbsp;: vos réponses s'affichent ici.</p></dl>
+      </div>
+
+      <details class="carte">
+        <summary>Trace écrite à recopier (à ouvrir après avoir répondu)</summary>
+        <p><b>Une IA n'apprend jamais « toute seule »&nbsp;: elle apprend à partir de données et d'un objectif fixés par des humains.</b></p>
+        <ul>
+          <li><b>Supervisé</b>&nbsp;: on fournit des exemples déjà étiquetés (la bonne réponse est connue) → classer, prédire.</li>
+          <li><b>Non supervisé</b>&nbsp;: on fournit des données brutes, sans réponse → regrouper, découvrir des ressemblances.</li>
+          <li><b>Par renforcement</b>&nbsp;: on ne fournit aucune réponse, seulement des récompenses après des essais → agir, décider.</li>
+          <li>Les performances dépendent des <b>données d'entraînement</b>&nbsp;: trop peu d'exemples, exemples non représentatifs (biais),
+          exemples contradictoires → erreurs. Un modèle qui « apprend par cœur » réussit sur les exemples déjà vus mais
+          échoue sur des situations nouvelles (<b>surapprentissage</b>).</li>
+          <li>Ce sont les humains qui <b>choisissent les données, les étiquettes et les récompenses</b>&nbsp;: une IA n'est donc pas neutre.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="zone-message"></div>
+
+<script>
+/* =====================================================================
+   COEUR — algorithmes purs, sans accès à la page.
+   Cette section est extraite et testée automatiquement par
+   _outils/verifier_tp_ia.py (mêmes calculs que dans le navigateur).
+   ===================================================================== */
+/*==COEUR-DEBUT==*/
+
+// Échelles de comparaison : x = luminosité (lux), y = température (°C).
+var RX = { min: 0, max: 100000 };
+var RY = { min: 5, max: 35 };
+
+// Générateur pseudo-aléatoire déterministe : mêmes tirages pour tout le monde.
+function creerHasard(graine) {
+  var a = graine >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    var t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ---- lecture d'un fichier CSV (séparateur ; ou , ou tabulation) ----
+function analyserCSV(texte) {
+  var lignes = texte.replace(/\r/g, '').split('\n').filter(function (l) {
+    return l.trim() !== '' && l.trim().charAt(0) !== '#';
+  });
+  if (!lignes.length) return { entetes: [], lignes: [] };
+  var sep = ';';
+  if (lignes[0].indexOf(';') < 0) sep = (lignes[0].indexOf('\t') >= 0) ? '\t' : ',';
+  var entetes = lignes[0].split(sep).map(function (s) { return s.trim(); });
+  var corps = [];
+  for (var i = 1; i < lignes.length; i++) {
+    var morceaux = lignes[i].split(sep);
+    if (morceaux.length < entetes.length) continue;
+    var obj = {};
+    for (var j = 0; j < entetes.length; j++) {
+      var v = (morceaux[j] === undefined ? '' : morceaux[j].trim());
+      var n = parseFloat(v.replace(',', '.'));
+      obj[entetes[j]] = (v !== '' && !isNaN(n) && /^[-+0-9.,eE]+$/.test(v)) ? n : v;
+    }
+    corps.push(obj);
+  }
+  return { entetes: entetes, lignes: corps };
+}
+
+// Transforme des lignes étiquetées en points du graphique.
+function versPoints(lignes, sansEtiquette) {
+  var pts = [];
+  for (var i = 0; i < lignes.length; i++) {
+    var l = lignes[i];
+    var x = Number(l.luminosite_lux), y = Number(l.temperature_C);
+    if (isNaN(x) || isNaN(y)) continue;
+    pts.push({
+      x: x, y: y,
+      etiq: sansEtiquette ? null : String(l.decision_utilisateur || ''),
+      info: (l.id ? l.id : '') + (l.heure ? ' ' + l.heure : '')
+    });
+  }
+  return pts;
+}
+
+function reduire(v, echelle) { return (v - echelle.min) / (echelle.max - echelle.min); }
+
+function distance(a, b, normaliser) {
+  if (normaliser) {
+    var dx = reduire(a.x, RX) - reduire(b.x, RX), dy = reduire(a.y, RY) - reduire(b.y, RY);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  var ex = a.x - b.x, ey = a.y - b.y;
+  return Math.sqrt(ex * ex + ey * ey);
+}
+
+// ---- Atelier 1 : k plus proches voisins (apprentissage supervisé) ----
+function knnClasser(appren, x, y, k, normaliser) {
+  var cible = { x: x, y: y };
+  var liste = appren.map(function (p) {
+    return { p: p, d: distance(cible, p, normaliser) };
+  }).sort(function (a, b) { return a.d - b.d; });
+  var voisins = liste.slice(0, Math.min(k, liste.length));
+  var votes = {};
+  for (var i = 0; i < voisins.length; i++) {
+    var e = voisins[i].p.etiq;
+    votes[e] = (votes[e] || 0) + 1;
+  }
+  var meilleur = null, maxi = -1;
+  Object.keys(votes).forEach(function (e) {
+    if (votes[e] > maxi) { maxi = votes[e]; meilleur = e; }
+  });
+  return { etiq: meilleur, votes: votes, voisins: voisins };
+}
+
+function evaluerKNN(appren, test, k, normaliser) {
+  var details = [], ok = 0;
+  for (var i = 0; i < test.length; i++) {
+    var r = knnClasser(appren, test[i].x, test[i].y, k, normaliser);
+    var bon = (r.etiq === test[i].etiq);
+    if (bon) ok++;
+    details.push({ point: test[i], predit: r.etiq, correct: bon });
+  }
+  return { ok: ok, total: test.length, reussite: test.length ? ok / test.length : 0, details: details };
+}
+
+// ---- Atelier 2 : k-moyennes (apprentissage non supervisé) ----
+// L'algorithme avance par demi-étapes, comme on l'explique au tableau :
+//   1. « déplacement » : chaque centre va se placer au milieu de son groupe ;
+//   2. « affectation » : chaque mesure est rattachée au centre le plus proche.
+// On alterne, et on s'arrête quand plus rien ne bouge (convergence).
+function creerKmeans(points, k, hasard, normaliser) {
+  var centroides = [];
+  var indices = [];
+  var i;
+  for (i = 0; i < points.length; i++) indices.push(i);
+  // tirage de k points distincts comme centres de départ
+  for (i = 0; i < k && indices.length; i++) {
+    var j = Math.floor(hasard() * indices.length);
+    centroides.push({ x: points[indices[j]].x, y: points[indices[j]].y });
+    indices.splice(j, 1);
+  }
+  var affectation = new Array(points.length).fill(-1);
+  var iterations = 0, stable = false, phase = 'deplacement';
+  var dernierAffect = true, dernierDeplace = true;
+
+  function inertie() {
+    var s = 0;
+    for (var n = 0; n < points.length; n++) {
+      var c = centroides[affectation[n] < 0 ? 0 : affectation[n]];
+      var d = distance(points[n], c, normaliser);
+      s += d * d;
+    }
+    return s;
+  }
+
+  function affecter() {
+    var change = false, n, c, meilleur, dmin, d;
+    for (n = 0; n < points.length; n++) {
+      meilleur = 0; dmin = Infinity;
+      for (c = 0; c < centroides.length; c++) {
+        d = distance(points[n], centroides[c], normaliser);
+        if (d < dmin) { dmin = d; meilleur = c; }
+      }
+      if (affectation[n] !== meilleur) { affectation[n] = meilleur; change = true; }
+    }
+    dernierAffect = change;
+    return change;
+  }
+
+  function deplacer() {
+    var bouge = false, c, n;
+    for (c = 0; c < centroides.length; c++) {
+      var sx = 0, sy = 0, nb = 0;
+      for (n = 0; n < points.length; n++) {
+        if (affectation[n] === c) { sx += points[n].x; sy += points[n].y; nb++; }
+      }
+      if (nb > 0) {
+        var nx = sx / nb, ny = sy / nb;
+        if (Math.abs(nx - centroides[c].x) > 1e-9 || Math.abs(ny - centroides[c].y) > 1e-9) bouge = true;
+        centroides[c] = { x: nx, y: ny };
+      }
+    }
+    dernierDeplace = bouge;
+    return bouge;
+  }
+
+  affectation = affectation.map(function () { return -1; });
+  affecter();                       // état de départ : chaque mesure a un groupe
+
+  function etape() {
+    if (phase === 'deplacement') {
+      deplacer();
+      phase = 'affectation';
+    } else {
+      affecter();
+      phase = 'deplacement';
+      iterations++;
+    }
+    stable = (!dernierAffect && !dernierDeplace);
+    return { phase: phase, inertie: inertie(), iterations: iterations, stable: stable };
+  }
+
+  return {
+    centroides: centroides,
+    affectation: affectation,
+    get iterations() { return iterations; },
+    get stable() { return stable; },
+    get phase() { return phase; },
+    inertie: inertie,
+    etape: etape,
+    converger: function (maxi) {
+      maxi = maxi || 200;
+      var r = null;
+      for (var i2 = 0; i2 < maxi; i2++) {
+        r = etape();
+        if (r.stable) break;
+      }
+      return r;
+    },
+    compter: function () {
+      var c = new Array(centroides.length).fill(0);
+      for (var n3 = 0; n3 < points.length; n3++) c[affectation[n3]]++;
+      return c;
+    }
+  };
+}
+
+// ---- Atelier 3 : apprentissage par renforcement (Q-learning) ----
+function creerEnvironnement(lignes) {
+  if (!lignes.length) return { etats: [], actions: [], R: [] };
+  var entetes = Object.keys(lignes[0]);
+  var cleEtat = entetes[0];
+  var actions = entetes.slice(1);
+  var etats = [], R = [];
+  for (var i = 0; i < lignes.length; i++) {
+    etats.push(String(lignes[i][cleEtat]));
+    var ligne = [];
+    for (var a = 0; a < actions.length; a++) ligne.push(Number(lignes[i][actions[a]]) || 0);
+    R.push(ligne);
+  }
+  return { etats: etats, actions: actions, R: R };
+}
+
+function meilleurPossible(env) {
+  if (!env.etats.length) return 0;
+  var s = 0;
+  for (var i = 0; i < env.etats.length; i++) s += Math.max.apply(null, env.R[i]);
+  return s / env.etats.length;
+}
+
+function creerAgent(env, alpha) {
+  var Q = env.etats.map(function () { return env.actions.map(function () { return 0; }); });
+  var episodes = 0, somme = 0, courbe = [], recents = [];
+
+  function episode(eps, hasard) {
+    var e = Math.floor(hasard() * env.etats.length);
+    if (e >= env.etats.length) e = env.etats.length - 1;
+    var a;
+    if (hasard() < eps) {
+      a = Math.floor(hasard() * env.actions.length);          // exploration : au hasard
+    } else {
+      a = 0;
+      for (var j = 1; j < env.actions.length; j++) if (Q[e][j] > Q[e][a]) a = j;   // exploitation
+    }
+    var r = env.R[e][a];
+    Q[e][a] = Q[e][a] + alpha * (r - Q[e][a]);
+    episodes++;
+    recents.push(r);
+    if (recents.length > 100) recents.shift();
+    var moy = recents.reduce(function (x, y) { return x + y; }, 0) / recents.length;
+    somme += r;
+    courbe.push(moy);
+    return { etat: e, action: a, recompense: r, moyenne: moy };
+  }
+
+  return {
+    env: env, Q: Q, alpha: alpha,
+    get episodes() { return episodes; },
+    get courbe() { return courbe; },
+    get moyenneRecente() { return recents.length ? recents.reduce(function (x, y) { return x + y; }, 0) / recents.length : 0; },
+    get recompenseMoyenne() { return episodes ? somme / episodes : 0; },
+    episode: episode,
+    jouer: function (n, eps, hasard) {
+      var dernier = null;
+      for (var i = 0; i < n; i++) dernier = episode(eps, hasard);
+      return dernier;
+    },
+    politique: function () {
+      return Q.map(function (ligne) {
+        var m = 0;
+        for (var j = 1; j < ligne.length; j++) if (ligne[j] > ligne[m]) m = j;
+        return m;
+      });
+    },
+    reinitialiser: function () {
+      Q = env.etats.map(function () { return env.actions.map(function () { return 0; }); });
+      episodes = 0; somme = 0; courbe = []; recents = [];
+      this.Q = Q;
+    }
+  };
+}
+
+// ---- Atelier 4 : petit réseau de neurones (2 entrées → n cachés → 1 sortie) ----
+function mlpCreer(nCache, hasard) {
+  var r = function () { return (hasard() - 0.5) * 1.2; };
+  var w1 = [], b1 = [], w2 = [], i, j;
+  for (j = 0; j < nCache; j++) {
+    w1.push([r(), r()]); b1.push(r());
+    w2.push(r());
+  }
+  return { nCache: nCache, w1: w1, b1: b1, w2: w2, b2: r(), tours: 0 };
+}
+
+function mlpEntree(x, y) { return [reduire(x, RX), reduire(y, RY)]; }
+
+function mlpSortie(reseau, x, y) {
+  var e = mlpEntree(x, y), h = [], j, k;
+  for (j = 0; j < reseau.nCache; j++) {
+    var z = reseau.b1[j];
+    for (k = 0; k < e.length; k++) z += reseau.w1[j][k] * e[k];
+    h.push(Math.tanh(z));
+  }
+  var zo = reseau.b2;
+  for (j = 0; j < reseau.nCache; j++) zo += reseau.w2[j] * h[j];
+  return { h: h, o: 1 / (1 + Math.exp(-zo)), e: e };
+}
+
+// cible : 1 = « fermer », 0 = « ouvrir »
+function mlpCible(p) { return p.etiq === 'fermer' ? 1 : 0; }
+
+function mlpEntrainer(reseau, points, tours, pas) {
+  pas = pas || 0.35;
+  for (var t = 0; t < tours; t++) {
+    var gw1 = reseau.w1.map(function (l) { return l.map(function () { return 0; }); });
+    var gb1 = reseau.b1.map(function () { return 0; });
+    var gw2 = reseau.w2.map(function () { return 0; });
+    var gb2 = 0, n, j, k;
+    for (n = 0; n < points.length; n++) {
+      var p = points[n], s = mlpSortie(reseau, p.x, p.y);
+      var cible = mlpCible(p);
+      var delta = (s.o - cible) * s.o * (1 - s.o);      // dérivée de l'erreur
+      for (j = 0; j < reseau.nCache; j++) {
+        gw2[j] += delta * s.h[j];
+        var dh = delta * reseau.w2[j] * (1 - s.h[j] * s.h[j]);
+        for (k = 0; k < s.e.length; k++) gw1[j][k] += dh * s.e[k];
+        gb1[j] += dh;
+      }
+      gb2 += delta;
+    }
+    var f = pas / Math.max(1, points.length);
+    for (j = 0; j < reseau.nCache; j++) {
+      for (k = 0; k < reseau.w1[j].length; k++) reseau.w1[j][k] -= f * gw1[j][k];
+      reseau.b1[j] -= f * gb1[j];
+      reseau.w2[j] -= f * gw2[j];
+    }
+    reseau.b2 -= f * gb2;
+    reseau.tours++;
+  }
+  return reseau;
+}
+
+function mlpErreur(reseau, points) {
+  var s = 0;
+  for (var i = 0; i < points.length; i++) {
+    var o = mlpSortie(reseau, points[i].x, points[i].y).o, c = mlpCible(points[i]);
+    s += (o - c) * (o - c);
+  }
+  return points.length ? s / points.length : 0;
+}
+
+function mlpReussite(reseau, points) {
+  if (!points.length) return 0;
+  var ok = 0;
+  for (var i = 0; i < points.length; i++) {
+    var o = mlpSortie(reseau, points[i].x, points[i].y).o;
+    var predit = o >= 0.5 ? 'fermer' : 'ouvrir';
+    if (predit === points[i].etiq) ok++;
+  }
+  return ok / points.length;
+}
+
+function mlpEtiq(reseau, x, y) { return mlpSortie(reseau, x, y).o >= 0.5 ? 'fermer' : 'ouvrir'; }
+/*==COEUR-FIN==*/
+
+/* =====================================================================
+   Données embarquées : injectées à la construction depuis donnees/*.csv
+   (aucun accès réseau, aucun fichier à ouvrir : tout fonctionne hors ligne)
+   ===================================================================== */
+var DONNEES = {"entrainement": "# 48 situations observées chez un utilisateur, étiquetées par lui :\n# decision_utilisateur = ce que l'utilisateur a fait (fermer les lames / les laisser ouvertes).\n# ATTENTION : dans la zone où il hésite (assez lumineux ET tiède), l'utilisateur ne fait\n# pas toujours le même choix. Ces étiquettes contradictoires sont normales, et instructives.\nid;luminosite_lux;temperature_C;decision_utilisateur\nE31;83129;23.1;fermer\nE17;25412;25.7;ouvrir\nE12;9559;13.6;ouvrir\nE41;34615;9.0;ouvrir\nE19;14136;20.2;ouvrir\nE13;8890;18.4;ouvrir\nE33;45515;30.3;ouvrir\nE44;1339;28.0;ouvrir\nE18;13085;26.8;ouvrir\nF02;20000;21.0;fermer\nE11;11810;18.3;ouvrir\nE16;23885;22.0;ouvrir\nE08;4971;17.0;ouvrir\nE05;1;21.9;ouvrir\nE39;33009;7.4;ouvrir\nE28;54059;24.4;fermer\nE38;37204;8.3;ouvrir\nE06;11480;16.2;ouvrir\nE04;111;21.1;ouvrir\nE32;90584;23.5;fermer\nE36;34626;16.4;ouvrir\nE15;12925;20.5;ouvrir\nF03;50800;26.0;ouvrir\nE29;90768;30.5;fermer\nE37;37669;18.2;ouvrir\nE09;7746;18.8;ouvrir\nE43;933;29.4;ouvrir\nE07;3949;12.5;ouvrir\nE01;149;22.1;ouvrir\nE02;19;16.7;ouvrir\nE20;23606;26.4;fermer\nE14;10129;12.8;ouvrir\nE23;25845;21.9;ouvrir\nE35;35890;12.0;ouvrir\nE40;31977;12.0;ouvrir\nE30;46545;30.1;fermer\nE10;11403;12.6;ouvrir\nE25;74752;29.0;fermer\nE21;15714;21.8;ouvrir\nE27;59697;28.9;fermer\nF01;9000;24.0;fermer\nE34;37474;8.9;ouvrir\nE24;88368;32.9;fermer\nE42;1594;27.7;ouvrir\nE22;18074;23.2;ouvrir\nE03;56;21.6;ouvrir\nE26;63689;28.5;fermer\nE45;674;30.9;fermer\n", "test": "# 20 situations nouvelles, étiquetées par l'utilisateur :\n# elles ne servent JAMAIS à l'apprentissage, seulement à vérifier si l'IA a bien appris.\nid;luminosite_lux;temperature_C;decision_utilisateur\nY03;9050;24.1;ouvrir\nT11;87518;24.0;fermer\nT01;61;21.4;ouvrir\nT15;565;26.8;ouvrir\nY04;20050;21.1;ouvrir\nT12;83131;27.8;fermer\nT05;11393;20.5;ouvrir\nT07;16459;26.6;fermer\nT06;15690;20.2;ouvrir\nT13;32186;6.9;ouvrir\nT10;89338;24.2;fermer\nT03;6481;14.2;ouvrir\nT08;21585;19.2;ouvrir\nT14;30125;13.0;ouvrir\nT04;10405;13.1;ouvrir\nY05;50850;26.1;fermer\nY02;22550;25.6;fermer\nY01;22150;25.5;ouvrir\nT02;55;21.9;ouvrir\nT09;14907;21.5;ouvrir\n", "desequilibre": "# 30 situations enregistrées pendant une semaine de canicule :\n# l'utilisateur a TOUJOURS fermé les lames. Jeu de données non représentatif (biais).\nid;luminosite_lux;temperature_C;decision_utilisateur\nC01;80459;33.6;fermer\nC02;94857;32.4;fermer\nC03;80621;34.7;fermer\nC04;64671;34.7;fermer\nC05;67547;32.1;fermer\nC06;46151;29.2;fermer\nC07;75465;33.2;fermer\nC08;45408;34.6;fermer\nC09;49638;31.0;fermer\nC10;49935;35.0;fermer\nC11;93668;31.3;fermer\nC12;71083;35.7;fermer\nC13;78482;33.9;fermer\nC14;46315;28.4;fermer\nC15;51114;30.2;fermer\nC16;59840;33.4;fermer\nC17;91513;28.8;fermer\nC18;62404;33.3;fermer\nC19;81380;35.1;fermer\nC20;79901;31.4;fermer\nC21;61188;28.8;fermer\nC22;84752;35.3;fermer\nC23;58701;34.3;fermer\nC24;92764;33.9;fermer\nC25;80336;34.1;fermer\nC26;71278;28.1;fermer\nC27;64615;29.5;fermer\nC28;82067;29.4;fermer\nC29;58281;29.5;fermer\nC30;47843;33.8;fermer\n", "mesures24h": "# 74 mesures relevées toutes les 20 minutes par les capteurs du volet, sur 24 h.\n# AUCUNE étiquette : on ne sait pas ce que l'utilisateur a fait. C'est le jeu de l'atelier 2.\nid;heure;luminosite_lux;temperature_C\nM01;00h00;2;18.8\nM02;00h20;6;18.7\nM03;00h40;3;18.5\nM04;01h00;5;18.1\nM05;01h20;5;17.2\nM06;01h40;1;18.2\nM07;02h00;1;18.1\nM08;02h20;3;19.3\nM09;02h40;3;18.6\nM10;03h00;3;18.0\nM11;03h20;1;18.0\nM12;03h40;5;17.7\nM13;04h00;4;17.8\nM14;04h20;4;18.0\nM15;04h40;3;19.0\nM16;05h00;2;19.2\nM17;05h20;4;17.5\nM18;05h40;1;18.7\nM19;06h00;6;17.6\nM20;06h20;4;17.4\nM21;06h40;5;17.5\nM22;07h00;0;18.3\nM23;07h20;4823;18.4\nM24;07h40;9936;18.6\nM25;08h00;13991;18.4\nM26;08h20;17309;18.6\nM27;08h40;23771;19.3\nM28;09h00;28385;19.9\nM29;09h20;28242;20.5\nM30;09h40;31610;21.5\nM31;10h00;41013;22.8\nM32;10h20;41260;23.2\nM33;10h40;44522;24.4\nM34;11h00;46747;25.2\nM35;11h20;46439;25.9\nM36;11h40;46958;26.1\nM37;12h00;55788;26.9\nM38;12h20;53182;28.0\nM39;12h40;56973;27.9\nM40;13h00;53095;28.5\nM41;13h20;61969;29.4\nM42;13h40;59341;29.3\nM43;14h00;54991;29.9\nM44;14h20;58422;29.5\nM45;14h40;51632;30.1\nM46;15h00;53378;30.1\nM47;15h20;44354;29.6\nM48;15h40;41991;29.5\nM49;16h00;47683;29.8\nM50;16h20;43984;29.1\nM51;16h40;33235;28.7\nM52;17h00;36237;28.8\nM53;17h20;32000;28.3\nM54;17h40;23792;28.0\nM55;18h00;22078;27.1\nM56;18h20;14988;26.3\nM57;18h40;12846;26.0\nM58;19h00;7663;25.3\nM59;19h20;2198;24.1\nM60;19h40;3;23.2\nM61;20h00;4;23.0\nM62;20h20;1;21.4\nM63;20h40;1;21.0\nM64;21h00;4;20.1\nM65;21h20;3;18.0\nM66;21h40;3;18.5\nM67;22h00;3;18.2\nM68;22h20;3;19.2\nM69;22h40;1;18.7\nM70;23h00;2;19.0\nM71;23h20;5;18.1\nM72;23h40;2;18.1\nM73;14h20;900;27.5\nM74;15h00;1200;28.4\n", "recompenses_confort": "# Objectif « confort d'abord » : on récompense une pièce ni éblouissante ni trop chaude.\n# note de 0 à 10 = satisfaction de l'utilisateur pour chaque action dans chaque situation.\netat;ouvrir;fermer;laisser\nSoleil 32 °C;4;9;5\nNuageux 20 °C;6;3;7\nNuit;1;7;6\nOrage 27 °C;2;8;4\n", "recompenses_energie": "# Objectif « économie d'énergie d'abord » : on récompense la lumière naturelle\n# (moins d'éclairage artificiel) et l'absence de climatisation. Même système, autre objectif.\netat;ouvrir;fermer;laisser\nSoleil 32 °C;7;3;5\nNuageux 20 °C;9;2;6\nNuit;2;7;5\nOrage 27 °C;3;8;4\n"};
+
+/* =====================================================================
+   Outils d'affichage
+   ===================================================================== */
+var COUL = { ouvrir: '#2e75b6', fermer: '#d97706', neutre: '#8a99a8', erreur: '#b3261e' };
+var NOMS_ETAT = { ouvrir: 'ouvrir', fermer: 'fermer', laisser: 'laisser' };
+var ERREURS_JS = [];
+window.addEventListener('error', function (e) {
+  ERREURS_JS.push((e.message || 'erreur') + ' (ligne ' + (e.lineno || '?') + ')');
+});
+
+function fmt(n, dec) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  return Number(n).toLocaleString('fr-FR', { minimumFractionDigits: dec || 0, maximumFractionDigits: dec || 0 });
+}
+function ligne(id) { return document.getElementById(id); }
+function message(txt, duree) {
+  var z = ligne('zone-message');
+  z.textContent = txt; z.className = 'visible';
+  clearTimeout(message._t);
+  message._t = setTimeout(function () { z.className = ''; }, duree || 2600);
+}
+
+/* ---------- petite vue graphique partagée ---------- */
+function Vue(canvas) {
+  this.cv = canvas;
+  this.ctx = canvas.getContext('2d');
+  this.w = canvas.width; this.h = canvas.height;
+  this.mg = 84; this.md = 16; this.mh = 18; this.mb = 54;
+}
+Vue.prototype.pxX = function (x) {
+  return this.mg + (x - RX.min) / (RX.max - RX.min) * (this.w - this.mg - this.md);
+};
+Vue.prototype.pxY = function (y) {
+  return (this.h - this.mb) - (y - RY.min) / (RY.max - RY.min) * (this.h - this.mh - this.mb);
+};
+Vue.prototype.dataX = function (px) {
+  return RX.min + (px - this.mg) / (this.w - this.mg - this.md) * (RX.max - RX.min);
+};
+Vue.prototype.dataY = function (py) {
+  return RY.min + ((this.h - this.mb) - py) / (this.h - this.mh - this.mb) * (RY.max - RY.min);
+};
+Vue.prototype.effacer = function () {
+  var c = this.ctx;
+  c.clearRect(0, 0, this.w, this.h);
+  c.fillStyle = '#fff'; c.fillRect(0, 0, this.w, this.h);
+};
+Vue.prototype.axes = function (titreX, titreY) {
+  var c = this.ctx, self = this, i;
+  c.save();
+  c.strokeStyle = '#c9d6e4'; c.fillStyle = '#5b6b7b';
+  c.font = '15px "Liberation Sans", Arial, sans-serif';
+  c.lineWidth = 1;
+  for (i = 0; i <= 100000; i += 20000) {           // graduations en lux
+    var px = self.pxX(i);
+    c.beginPath(); c.moveTo(px, self.mh); c.lineTo(px, self.h - self.mb); c.stroke();
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    c.fillText(fmt(i), px, self.h - self.mb + 6);
+  }
+  for (i = RY.min; i <= RY.max; i += 5) {          // graduations en °C
+    var py = self.pxY(i);
+    c.beginPath(); c.moveTo(self.mg, py); c.lineTo(self.w - self.md, py); c.stroke();
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    c.fillText(fmt(i) + ' °C', self.mg - 8, py);
+  }
+  c.strokeStyle = '#1f4e79'; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(self.mg, self.mh); c.lineTo(self.mg, self.h - self.mb);
+  c.lineTo(self.w - self.md, self.h - self.mb); c.stroke();
+  c.fillStyle = '#1f4e79'; c.font = 'bold 16px "Liberation Sans", Arial, sans-serif';
+  c.textAlign = 'center'; c.textBaseline = 'bottom';
+  c.fillText(titreX, (self.mg + self.w - self.md) / 2, self.h - 10);
+  c.save();
+  c.translate(20, (self.mh + self.h - self.mb) / 2); c.rotate(-Math.PI / 2);
+  c.textBaseline = 'top';
+  c.fillText(titreY, 0, 0);
+  c.restore();
+  c.restore();
+};
+Vue.prototype.fond = function (fonctionEtiquette) {
+  var c = this.ctx, self = this, pas = 10, px, py;
+  for (px = self.mg; px < self.w - self.md; px += pas) {
+    for (py = self.mh; py < self.h - self.mb; py += pas) {
+      var e = fonctionEtiquette(self.dataX(px + pas / 2), self.dataY(py + pas / 2));
+      c.fillStyle = e === 'fermer' ? 'rgba(217,119,6,.20)' : 'rgba(46,117,182,.20)';
+      c.fillRect(px, py, pas, pas);
+    }
+  }
+};
+Vue.prototype.point = function (x, y, couleur, rayon, forme) {
+  var c = this.ctx, px = this.pxX(x), py = this.pxY(y);
+  c.save();
+  c.beginPath();
+  if (forme === 'carre') c.rect(px - rayon, py - rayon, rayon * 2, rayon * 2);
+  else c.arc(px, py, rayon, 0, 2 * Math.PI);
+  c.fillStyle = couleur; c.globalAlpha = 0.9; c.fill();
+  c.globalAlpha = 1; c.lineWidth = 1.4; c.strokeStyle = '#fff'; c.stroke();
+  c.restore();
+};
+Vue.prototype.trait = function (x1, y1, x2, y2, couleur, epaisseur, pointilles) {
+  var c = this.ctx;
+  c.save();
+  c.beginPath(); c.setLineDash(pointilles || []);
+  c.moveTo(this.pxX(x1), this.pxY(y1)); c.lineTo(this.pxX(x2), this.pxY(y2));
+  c.strokeStyle = couleur; c.lineWidth = epaisseur || 1; c.stroke();
+  c.restore();
+};
+Vue.prototype.croix = function (x, y, couleur) {
+  var c = this.ctx, px = this.pxX(x), py = this.pxY(y), r = 8;
+  c.save();
+  c.strokeStyle = couleur; c.lineWidth = 3; c.beginPath();
+  c.moveTo(px - r, py - r); c.lineTo(px + r, py + r);
+  c.moveTo(px + r, py - r); c.lineTo(px - r, py + r);
+  c.stroke(); c.restore();
+};
+Vue.prototype.sonde = function (x, y, texte) {
+  var c = this.ctx, px = this.pxX(x), py = this.pxY(y);
+  c.save();
+  c.strokeStyle = '#111'; c.lineWidth = 2;
+  c.beginPath(); c.arc(px, py, 11, 0, 2 * Math.PI); c.stroke();
+  c.beginPath(); c.moveTo(px - 17, py); c.lineTo(px + 17, py);
+  c.moveTo(px, py - 17); c.lineTo(px, py + 17); c.stroke();
+  if (texte) {
+    c.font = 'bold 17px "Liberation Sans", Arial, sans-serif';
+    var largeur = c.measureText(texte).width + 14;
+    var bx = Math.min(px + 18, this.w - largeur - 6), by = Math.max(py - 34, 6);
+    c.fillStyle = 'rgba(255,255,255,.93)'; c.strokeStyle = '#111'; c.lineWidth = 1.4;
+    c.beginPath(); c.rect(bx, by, largeur, 26); c.fill(); c.stroke();
+    c.fillStyle = '#111'; c.textAlign = 'left'; c.textBaseline = 'middle';
+    c.fillText(texte, bx + 7, by + 14);
+  }
+  c.restore();
+};
+
+/* =====================================================================
+   Navigation par onglets + chronomètre
+   ===================================================================== */
+var sections = ['1', '2', '3', '4', '9'];
+function ouvrirLab(n) {
+  n = String(n);
+  sections.forEach(function (s) {
+    var el = ligne('lab' + s);
+    if (el) el.className = (s === n) ? 'actif' : '';
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#onglets button'), function (b) {
+    b.className = (b.getAttribute('data-lab') === n) ? 'actif' : (b.classList.contains('bonus') ? 'bonus' : '');
+  });
+  if (n === '1') dessiner1();
+  if (n === '2') { if (!L2.km) demarrerKmeans(true); dessiner2(); }
+  if (n === '3') { if (!L3.agent) reinitialiser3(); dessiner3(); }
+  if (n === '4') { if (!L4.reseau) reinitialiser4(); dessiner4(); }
+  if (n === '9') majRecap();
+}
+
+var CHRONO = { restant: 15 * 60, actif: false, id: null, duree: 15 * 60 };
+function chronoAfficher() {
+  var m = Math.floor(CHRONO.restant / 60), s = CHRONO.restant % 60;
+  ligne('chrono-valeur').textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  ligne('chrono').className = 'chrono' + (CHRONO.restant <= 0 ? ' fini' : '');
+}
+function chronoBasculer() {
+  CHRONO.actif = !CHRONO.actif;
+  ligne('chrono-start').textContent = CHRONO.actif ? '❚❚' : '▶';
+  if (CHRONO.actif && !CHRONO.id) {
+    CHRONO.id = setInterval(function () {
+      if (!CHRONO.actif) return;
+      CHRONO.restant--;
+      if (CHRONO.restant <= 0) {
+        CHRONO.restant = 0; CHRONO.actif = false; ligne('chrono-start').textContent = '▶';
+        message('⏰ Temps écoulé : passez à l\'atelier suivant !', 6000);
+      }
+      chronoAfficher();
+    }, 1000);
+  }
+}
+
+/* =====================================================================
+   ATELIER 1 — apprentissage supervisé (k plus proches voisins)
+   ===================================================================== */
+var V1 = new Vue(ligne('c1'));
+var L1 = {
+  appren: [], test: [], k: 3, norm: true, front: true, err: false,
+  mode: 'sonde', sonde: { x: 30000, y: 24 }, glisse: false, evalTest: null
+};
+
+function charger1(texteEntrainement, texteTest, nom) {
+  var a = analyserCSV(texteEntrainement);
+  var t = analyserCSV(texteTest || DONNEES.test);
+  L1.appren = versPoints(a.lignes);
+  L1.test = versPoints(t.lignes);
+  L1.evalTest = evaluerKNN(L1.appren, L1.test, L1.k, L1.norm);
+  ligne('etat1').textContent = nom + ' : ' + L1.appren.length + ' situations d\'entraînement, '
+    + L1.test.length + ' situations de test.';
+  ligne('matrice1').innerHTML = '';
+  majSonde1(); dessiner1();
+}
+
+function majSonde1() {
+  if (!L1.appren.length) {
+    ligne('mesure1').innerHTML = 'Il n\'y a <b>aucun exemple</b> : sans données, l\'IA ne peut rien décider. '
+      + 'Ajoutez des exemples dans le graphique ou cliquez sur « Données de référence ».';
+    return;
+  }
+  var r = knnClasser(L1.appren, L1.sonde.x, L1.sonde.y, L1.k, L1.norm);
+  var votes = Object.keys(r.votes).map(function (e) { return r.votes[e] + ' × « ' + e + ' »'; }).join(', ');
+  ligne('mesure1').innerHTML = 'Sonde : <b>' + fmt(L1.sonde.x) + ' lux</b> et <b>' + fmt(L1.sonde.y, 1)
+    + ' °C</b> → l\'IA répond <span class="verdict ' + r.etiq + '">' + r.etiq.toUpperCase() + '</span>'
+    + ' <span class="note">(voisins consultés : ' + votes + ')</span>';
+}
+
+function dessiner1() {
+  V1.effacer();
+  if (L1.front && L1.appren.length) {
+    V1.fond(function (x, y) { return knnClasser(L1.appren, x, y, L1.k, L1.norm).etiq; });
+  }
+  V1.axes('luminosité extérieure (lux)', 'température (°C)');
+  if (L1.err && L1.evalTest) {
+    L1.evalTest.details.forEach(function (d) {
+      if (!d.correct) { V1.point(d.point.x, d.point.y, COUL.neutre, 7, 'carre'); V1.croix(d.point.x, d.point.y, COUL.erreur); }
+    });
+  }
+  L1.appren.forEach(function (p) { V1.point(p.x, p.y, COUL[p.etiq] || COUL.neutre, 7); });
+  var r = knnClasser(L1.appren, L1.sonde.x, L1.sonde.y, L1.k, L1.norm);
+  r.voisins.forEach(function (v) {
+    V1.trait(L1.sonde.x, L1.sonde.y, v.p.x, v.p.y, 'rgba(17,17,17,.45)', 1.2, [4, 3]);
+  });
+  V1.sonde(L1.sonde.x, L1.sonde.y, r.etiq ? r.etiq.toUpperCase() : null);
+  var nf = L1.appren.filter(function (p) { return p.etiq === 'fermer'; }).length;
+  ligne('n1-fermer').textContent = nf;
+  ligne('n1-ouvrir').textContent = L1.appren.length - nf;
+  ligne('legende-erreurs').style.display = L1.err ? '' : 'none';
+}
+
+function tester1() {
+  if (!L1.appren.length) {
+    ligne('mesure1').innerHTML = 'Impossible de tester : il n\'y a <b>aucun exemple</b> d\'entraînement.';
+    ligne('matrice1').innerHTML = '';
+    return;
+  }
+  L1.evalTest = evaluerKNN(L1.appren, L1.test, L1.k, L1.norm);
+  var ok = L1.evalTest.ok, tot = L1.evalTest.total;
+  var pc = Math.round(100 * ok / tot);
+  ligne('mesure1').innerHTML = 'Réussite sur les situations de test (k = ' + L1.k + ') : <b>'
+    + ok + ' / ' + tot + '</b> soit <b>' + pc + ' %</b>' + (pc === 100 ? ' 🎉' : '');
+  var cases = { 'ouvrir|ouvrir': 0, 'ouvrir|fermer': 0, 'fermer|ouvrir': 0, 'fermer|fermer': 0 };
+  L1.evalTest.details.forEach(function (d) { cases[d.point.etiq + '|' + d.predit]++; });
+  ligne('matrice1').innerHTML = '<table style="margin-top:.5rem"><tr><th>ce que<br>l\'utilisateur a fait</th>'
+    + '<th>l\'IA a dit<br>« ouvrir »</th><th>l\'IA a dit<br>« fermer »</th></tr>'
+    + '<tr><th>a ouvert</th><td class="n ok">' + cases['ouvrir|ouvrir'] + '</td><td class="n erreur">' + cases['ouvrir|fermer'] + '</td></tr>'
+    + '<tr><th>a fermé</th><td class="n erreur">' + cases['fermer|ouvrir'] + '</td><td class="n ok">' + cases['fermer|fermer'] + '</td></tr></table>'
+    + '<p class="note">En vert : les bonnes réponses. En rouge : les erreurs de l\'IA.</p>';
+  L1.err = true; ligne('err1').checked = true;
+  dessiner1();
+  message('Test terminé : ' + ok + '/' + tot + ' (' + pc + ' %)');
+}
+
+function pointDepuis(evenement) {
+  var r = V1.cv.getBoundingClientRect();
+  var px = (evenement.clientX - r.left) * (V1.w / r.width);
+  var py = (evenement.clientY - r.top) * (V1.h / r.height);
+  return { x: Math.max(RX.min, Math.min(RX.max, V1.dataX(px))), y: Math.max(RY.min, Math.min(RY.max, V1.dataY(py))) };
+}
+
+function clic1(e) {
+  var p = pointDepuis(e);
+  if (L1.mode === 'sonde') { L1.sonde = p; majSonde1(); }
+  else if (L1.mode === 'ajout-fermer') { L1.appren.push({ x: p.x, y: p.y, etiq: 'fermer', info: 'ajouté' }); L1.evalTest = null; }
+  else if (L1.mode === 'ajout-ouvrir') { L1.appren.push({ x: p.x, y: p.y, etiq: 'ouvrir', info: 'ajouté' }); L1.evalTest = null; }
+  else if (L1.mode === 'suppr') {
+    var meilleur = -1, dmin = Infinity;
+    L1.appren.forEach(function (q, i) {
+      var d = distance(p, q, L1.norm);
+      if (d < dmin) { dmin = d; meilleur = i; }
+    });
+    if (meilleur >= 0) { L1.appren.splice(meilleur, 1); L1.evalTest = null; }
+  }
+  dessiner1();
+}
+
+/* =====================================================================
+   ATELIER 2 — apprentissage non supervisé (k-moyennes)
+   ===================================================================== */
+var V2 = new Vue(ligne('c2'));
+var L2 = { points: [], k: 3, km: null, norm: true, graine: 1, noms: {} };
+
+function echapper(txt) {
+  return String(txt).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function demarrerKmeans(rejouerGraine) {
+  if (!L2.points.length) {
+    L2.points = versPoints(analyserCSV(DONNEES.mesures24h).lignes, true);
+  }
+  if (!rejouerGraine) L2.graine = Math.floor(Math.random() * 100000) + 1;
+  L2.km = creerKmeans(L2.points, L2.k, creerHasard(L2.graine), L2.norm);
+  ligne('etat2').textContent = L2.points.length + ' mesures chargées, sans aucune étiquette (départ n° ' + L2.graine + ').';
+  majKmeans();
+}
+
+var NOM_PHASE = {
+  deplacement: 'les centres se déplacent au milieu de leur groupe',
+  affectation: 'chaque mesure rejoint le centre le plus proche'
+};
+
+function majKmeans() {
+  if (!L2.km) return;
+  var km = L2.km;
+  ligne('iter2').textContent = km.iterations;
+  ligne('inertie2').textContent = fmt(km.inertie(), 5);
+  ligne('phase2').textContent = NOM_PHASE[km.phase] || km.phase;
+  ligne('btn2-etape').textContent = (km.phase === 'affectation')
+    ? 'Étape : réaffecter les mesures' : 'Étape : déplacer les centres';
+  var c = couleursGroupes(km.centroides.length);
+  var html = '<table><tr><th>groupe</th><th>mesures</th><th>luminosité<br>moyenne</th><th>temp.<br>moyenne</th>'
+    + '<th>heures concernées</th><th>nom que VOUS donnez</th></tr>';
+  for (var g = 0; g < km.centroides.length; g++) {
+    var inds = [], sx = 0, sy = 0;
+    for (var i = 0; i < L2.points.length; i++) if (km.affectation[i] === g) { inds.push(i); sx += L2.points[i].x; sy += L2.points[i].y; }
+    var heures = inds.map(function (i) { return (L2.points[i].info || '').split(' ').pop(); }).sort();
+    var plage = heures.length ? (heures[0] + ' → ' + heures[heures.length - 1]) : '—';
+    var cle = 'A2 nom du groupe n°' + (g + 1);
+    html += '<tr><td><span class="puce" style="background:' + c[g] + '"></span> n° ' + (g + 1) + '</td>'
+      + '<td class="n">' + inds.length + '</td>'
+      + '<td class="n">' + (inds.length ? fmt(sx / inds.length) : '—') + '</td>'
+      + '<td class="n">' + (inds.length ? fmt(sy / inds.length, 1) : '—') + '</td>'
+      + '<td>' + plage + '</td>'
+      + '<td><input type="text" data-q="' + cle + '" placeholder="ex. nuit…" value="'
+      + echapper(L2.noms[cle] || '') + '"></td></tr>';
+  }
+  html += '</table><p class="note">Les noms que vous tapez sont conservés, même si vous relancez l\'algorithme.</p>';
+  ligne('table2').innerHTML = html;
+}
+
+function couleursGroupes(n) {
+  var base = ['#2e75b6', '#d97706', '#2e7d32', '#8e24aa', '#00838f', '#c2185b', '#5d4037', '#455a64'];
+  var c = [];
+  for (var i = 0; i < n; i++) c.push(base[i % base.length]);
+  return c;
+}
+
+function dessiner2() {
+  V2.effacer();
+  V2.axes('luminosité extérieure (lux)', 'température (°C)');
+  var c = couleursGroupes(L2.km ? L2.km.centroides.length : 3);
+  L2.points.forEach(function (p, i) {
+    var g = L2.km ? L2.km.affectation[i] : -1;
+    V2.point(p.x, p.y, g < 0 ? COUL.neutre : c[g], 6);
+  });
+  if (L2.km) {
+    L2.km.centroides.forEach(function (centre, g) {
+      var c2 = V2.ctx;
+      c2.save();
+      c2.fillStyle = c[g]; c2.strokeStyle = '#fff'; c2.lineWidth = 3;
+      c2.font = 'bold 30px "Liberation Sans", Arial, sans-serif';
+      c2.textAlign = 'center'; c2.textBaseline = 'middle';
+      c2.strokeText('✦', V2.pxX(centre.x), V2.pxY(centre.y));
+      c2.fillText('✦', V2.pxX(centre.x), V2.pxY(centre.y));
+      c2.restore();
+    });
+  }
+}
+
+/* =====================================================================
+   ATELIER 3 — apprentissage par renforcement (Q-learning)
+   ===================================================================== */
+var V3 = new Vue(ligne('c3'));
+var L3 = { env: null, agent: null, eps: 0.15, alpha: 0.3 };
+
+function environnement3(choix) {
+  var texte = (choix === 'energie') ? DONNEES.recompenses_energie : DONNEES.recompenses_confort;
+  return creerEnvironnement(analyserCSV(texte).lignes);
+}
+
+function reinitialiser3() {
+  L3.env = environnement3(ligne('env3-choix').value);
+  L3.agent = creerAgent(L3.env, L3.alpha);
+  L3.agent.jouer(0, L3.eps, creerHasard(2024));
+  maj3();
+}
+
+function maj3() {
+  if (!L3.agent) return;
+  var env = L3.env, Q = L3.agent.Q;
+  ligne('n3').textContent = L3.agent.episodes;
+  ligne('moy3').textContent = fmt(L3.agent.moyenneRecente, 2);
+  ligne('opt3').textContent = fmt(meilleurPossible(env), 2);
+  var pol = L3.agent.politique();
+  var html = '<table><tr><th>situation</th>';
+  env.actions.forEach(function (a) { html += '<th>' + a + '</th>'; });
+  html += '<th>action choisie<br>par l\'IA</th></tr>';
+  for (var e = 0; e < env.etats.length; e++) {
+    html += '<tr><th>' + env.etats[e] + '</th>';
+    for (var a = 0; a < env.actions.length; a++) {
+      var v = Q[e][a];
+      var fond = (v <= 0.001) ? '#fff' : 'rgba(46,125,50,' + Math.min(0.85, v / 10).toFixed(2) + ')';
+      html += '<td class="n" style="background:' + fond + '">' + fmt(v, 2) + '</td>';
+    }
+    html += '<td><b>' + env.actions[pol[e]] + '</b></td></tr>';
+  }
+  html += '</table><p class="note">Une case blanche = action jamais essayée (valeur encore à 0).</p>';
+  ligne('table3').innerHTML = html;
+
+  var h2 = '<table><tr><th>situation</th>';
+  env.actions.forEach(function (a) { h2 += '<th>' + a + '</th>'; });
+  h2 += '<th>meilleure</th></tr>';
+  for (var e2 = 0; e2 < env.etats.length; e2++) {
+    h2 += '<tr><th>' + env.etats[e2] + '</th>';
+    var maxi = Math.max.apply(null, env.R[e2]);
+    for (var a2 = 0; a2 < env.actions.length; a2++) {
+      h2 += '<td class="n"' + (env.R[e2][a2] === maxi ? ' style="font-weight:bold;color:#2e7d32"' : '') + '>' + fmt(env.R[e2][a2], 0) + '</td>';
+    }
+    h2 += '<td><b>' + env.actions[env.R[e2].indexOf(maxi)] + '</b></td></tr>';
+  }
+  h2 += '</table>';
+  ligne('env3').innerHTML = h2;
+  dessiner3();
+}
+
+function dessiner3() {
+  var c = V3.ctx, self = V3;
+  self.effacer();
+  var mg = 74, md = 20, mh = 22, mb = 48;
+  var w = self.w, h = self.h;
+  var maxEp = Math.max(200, L3.agent ? L3.agent.episodes : 200);
+  function pxX(e) { return mg + e / maxEp * (w - mg - md); }
+  function pxY(v) { return (h - mb) - v / 10 * (h - mh - mb); }
+  c.save();
+  c.strokeStyle = '#c9d6e4'; c.fillStyle = '#5b6b7b'; c.font = '15px "Liberation Sans", Arial, sans-serif';
+  var i;
+  for (i = 0; i <= 10; i += 2) {
+    c.beginPath(); c.moveTo(mg, pxY(i)); c.lineTo(w - md, pxY(i)); c.stroke();
+    c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(fmt(i), mg - 8, pxY(i));
+  }
+  for (i = 0; i <= maxEp; i += Math.round(maxEp / 5)) {
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(fmt(i), pxX(i), h - mb + 6);
+  }
+  c.strokeStyle = '#1f4e79'; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(mg, mh); c.lineTo(mg, h - mb); c.lineTo(w - md, h - mb); c.stroke();
+  c.fillStyle = '#1f4e79'; c.font = 'bold 16px "Liberation Sans", Arial, sans-serif';
+  c.textAlign = 'center'; c.textBaseline = 'bottom';
+  c.fillText('nombre d\'essais (épisodes)', (mg + w - md) / 2, h - 8);
+  c.save(); c.translate(18, (mh + h - mb) / 2); c.rotate(-Math.PI / 2);
+  c.textBaseline = 'top'; c.fillText('récompense (sur 10)', 0, 0); c.restore();
+
+  if (L3.agent) {
+    var opt = meilleurPossible(L3.env);
+    c.beginPath(); c.setLineDash([7, 5]); c.strokeStyle = '#2e7d32'; c.lineWidth = 2;
+    c.moveTo(mg, pxY(opt)); c.lineTo(w - md, pxY(opt)); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#2e7d32'; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText('meilleur possible : ' + fmt(opt, 2), mg + 6, pxY(opt) - 4);
+
+    if (L3.agent.courbe.length) {
+      c.beginPath(); c.strokeStyle = '#2e75b6'; c.lineWidth = 2.6;
+      L3.agent.courbe.forEach(function (v, k) {
+        var x = pxX(k + 1), y = pxY(Math.max(0, Math.min(10, v)));
+        if (k === 0) c.moveTo(x, y); else c.lineTo(x, y);
+      });
+      c.stroke();
+      var dernier = L3.agent.courbe[L3.agent.courbe.length - 1];
+      c.fillStyle = '#2e75b6';
+      c.beginPath(); c.arc(pxX(L3.agent.courbe.length), pxY(Math.max(0, Math.min(10, dernier))), 5, 0, 2 * Math.PI); c.fill();
+    }
+  }
+  c.restore();
+}
+
+/* =====================================================================
+   ATELIER 4 — réseau de neurones (défi)
+   ===================================================================== */
+var V4 = new Vue(ligne('c4'));
+var V4b = new Vue(ligne('c4b'));
+var L4 = { reseau: null, nCache: 6, points: [], test: [], historique: [] };
+
+function reinitialiser4() {
+  L4.test = versPoints(analyserCSV(DONNEES.test).lignes);
+  L4.tous = versPoints(analyserCSV(DONNEES.entrainement).lignes);
+  L4.nExemples = Number(ligne('ex4').value);
+  L4.points = L4.tous.slice(0, L4.nExemples);
+  L4.nCache = Number(ligne('n4').value);
+  L4.reseau = mlpCreer(L4.nCache, creerHasard(4242));
+  L4.historique = [{ t: 0, e: mlpErreur(L4.reseau, L4.points) }];
+  maj4();
+}
+
+function entrainer4(tours) {
+  if (!L4.reseau) reinitialiser4();
+  var pas = Math.max(10, Math.round(tours / 20));
+  for (var t = 0; t < tours; t += pas) {
+    var bloc = Math.min(pas, tours - t);
+    mlpEntrainer(L4.reseau, L4.points, bloc);
+    L4.historique.push({ t: L4.reseau.tours, e: mlpErreur(L4.reseau, L4.points) });
+  }
+  maj4();
+}
+
+function maj4() {
+  if (!L4.reseau) return;
+  ligne('tours4').textContent = fmt(L4.reseau.tours);
+  ligne('err4').textContent = fmt(mlpErreur(L4.reseau, L4.points), 3);
+  ligne('nb4').textContent = L4.points.length;
+  ligne('nbt4').textContent = L4.test.length;
+  ligne('re4').textContent = Math.round(100 * mlpReussite(L4.reseau, L4.points)) + ' %';
+  ligne('rt4').textContent = Math.round(100 * mlpReussite(L4.reseau, L4.test)) + ' %';
+  dessiner4();
+}
+
+function dessiner4() {
+  V4.effacer();
+  if (L4.reseau) V4.fond(function (x, y) { return mlpEtiq(L4.reseau, x, y); });
+  V4.axes('luminosité extérieure (lux)', 'température (°C)');
+  L4.points.forEach(function (p) { V4.point(p.x, p.y, COUL[p.etiq], 7); });
+  L4.test.forEach(function (p) {
+    if (mlpEtiq(L4.reseau, p.x, p.y) !== p.etiq) V4.croix(p.x, p.y, COUL.erreur);
+  });
+
+  V4b.effacer();
+  var c = V4b.ctx, self = V4b;
+  var mg = 74, md = 20, mh = 22, mb = 48, w = self.w, h = self.h;
+  var maxT = Math.max(L4.reseau ? L4.reseau.tours : 200, 200);
+  function pxX(t) { return mg + t / maxT * (w - mg - md); }
+  function pxY(v) { return (h - mb) - v * (h - mh - mb); }
+  c.save();
+  c.strokeStyle = '#c9d6e4'; c.fillStyle = '#5b6b7b'; c.font = '15px "Liberation Sans", Arial, sans-serif';
+  for (var i = 0; i <= 10; i++) {
+    var v = i / 10;
+    c.beginPath(); c.moveTo(mg, pxY(v)); c.lineTo(w - md, pxY(v)); c.stroke();
+    c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(v.toFixed(1), mg - 8, pxY(v));
+  }
+  for (var t = 0; t <= maxT; t += Math.round(maxT / 5)) {
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(fmt(t), pxX(t), h - mb + 6);
+  }
+  c.strokeStyle = '#1f4e79'; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(mg, mh); c.lineTo(mg, h - mb); c.lineTo(w - md, h - mb); c.stroke();
+  c.fillStyle = '#1f4e79'; c.font = 'bold 16px "Liberation Sans", Arial, sans-serif';
+  c.textAlign = 'center'; c.textBaseline = 'bottom';
+  c.fillText('tours d\'entraînement', (mg + w - md) / 2, h - 8);
+  c.save(); c.translate(18, (mh + h - mb) / 2); c.rotate(-Math.PI / 2);
+  c.textBaseline = 'top'; c.fillText('erreur du réseau', 0, 0); c.restore();
+  if (L4.historique.length) {
+    c.beginPath(); c.strokeStyle = '#d97706'; c.lineWidth = 2.6;
+    L4.historique.forEach(function (pt, k) {
+      var x = pxX(Math.min(maxT, pt.t)), y = pxY(Math.max(0, Math.min(1, pt.e)));
+      if (k === 0) c.moveTo(x, y); else c.lineTo(x, y);
+    });
+    c.stroke();
+  }
+  c.restore();
+}
+
+/* =====================================================================
+   Bilan : récapitulatif, export, impression
+   ===================================================================== */
+function toutesLesReponses() {
+  var out = [];
+  Array.prototype.forEach.call(document.querySelectorAll('[data-q]'), function (el, i) {
+    var v = (el.value || '').trim();
+    var libelle = el.getAttribute('data-q');
+    var rang = out.filter(function (o) { return o.libelle === libelle; }).length;
+    out.push({ libelle: libelle + (rang ? ' (' + (rang + 1) + ')' : ''), valeur: v, ordre: i });
+  });
+  return out;
+}
+
+function majRecap() {
+  var rep = toutesLesReponses(), html = '', faites = 0;
+  rep.forEach(function (r) {
+    if (r.valeur) faites++;
+    html += '<dt>' + r.libelle + '</dt><dd>' + (r.valeur ? r.valeur.replace(/</g, '&lt;') : '<i class="note">— pas encore répondu —</i>') + '</dd>';
+  });
+  ligne('recap').innerHTML = html || '<p class="note">Aucune question.</p>';
+  ligne('etat-export').textContent = faites + ' réponse(s) sur ' + rep.length + ' renseignée(s).';
+}
+
+function nomAtelier(libelle) {
+  if (/^A1/.test(libelle)) return 'Atelier 1 — apprentissage supervisé';
+  if (/^A2/.test(libelle)) return 'Atelier 2 — apprentissage non supervisé';
+  if (/^A3/.test(libelle)) return 'Atelier 3 — apprentissage par renforcement';
+  if (/^Défi réseau/.test(libelle)) return 'Défi — réseau de neurones';
+  if (/^BILAN/.test(libelle)) return 'Bilan';
+  return 'Autres réponses';
+}
+
+function texteCompteRendu() {
+  var b = (ligne('binome').value || '').trim() || '(binôme non renseigné)';
+  var cl = (ligne('classe').value || '').trim() || '(classe)';
+  var d = new Date();
+  var t = 'Compte rendu — TP « Comment une IA apprend-elle ? »\n';
+  t += 'Binôme : ' + b + '   Classe : ' + cl + '\n';
+  t += 'Date : ' + d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR').slice(0, 5) + '\n';
+  t += '='.repeat(64) + '\n\n';
+  var atelier = '';
+  toutesLesReponses().forEach(function (r) {
+    var a = nomAtelier(r.libelle);
+    if (a !== atelier) { atelier = a; t += '\n### ' + a + '\n'; }
+    t += '\n' + r.libelle + '\n' + (r.valeur || '(non répondu)') + '\n';
+  });
+  return t;
+}
+
+function exporter() {
+  var t = texteCompteRendu();
+  var b = (ligne('binome').value || 'binome').replace(/[^A-Za-z0-9À-ÿ _-]/g, '').replace(/\s+/g, '-');
+  var nom = 'compte-rendu_TP-IA_' + b + '.txt';
+  try {
+    var blob = new Blob([t], { type: 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = nom;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    ligne('etat-export').textContent = 'Fichier proposé au téléchargement : ' + nom;
+    message('Fichier « ' + nom + ' » enregistré (dossier Téléchargements).', 4200);
+  } catch (e) {
+    message('Téléchargement impossible : utilisez « Copier ».', 4200);
+  }
+}
+
+function copier() {
+  var t = texteCompteRendu();
+  function ok() { message('Compte rendu copié : collez-le dans le document de la classe.', 3600); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(ok, function () { copierSecours(t, ok); });
+  } else { copierSecours(t, ok); }
+}
+function copierSecours(t, ok) {
+  var z = document.createElement('textarea');
+  z.value = t; z.style.position = 'fixed'; z.style.left = '-9999px';
+  document.body.appendChild(z); z.select();
+  try { document.execCommand('copy'); ok(); }
+  catch (e) { message('Copie impossible : sélectionnez le texte du récapitulatif à la main.', 4200); }
+  z.remove();
+}
+
+/* =====================================================================
+   Branchements
+   ===================================================================== */
+Array.prototype.forEach.call(document.querySelectorAll('#onglets button'), function (b) {
+  b.addEventListener('click', function () { ouvrirLab(b.getAttribute('data-lab')); });
+});
+ligne('chrono-start').addEventListener('click', chronoBasculer);
+ligne('chrono-reset').addEventListener('click', function () {
+  CHRONO.restant = CHRONO.duree; CHRONO.actif = false;
+  ligne('chrono-start').textContent = '▶'; chronoAfficher();
+});
+
+// — atelier 1
+V1.cv.addEventListener('pointerdown', function (e) { L1.glisse = true; clic1(e); });
+V1.cv.addEventListener('pointermove', function (e) { if (L1.glisse) clic1(e); });
+window.addEventListener('pointerup', function () { L1.glisse = false; });
+ligne('k1').addEventListener('input', function () {
+  L1.k = Number(this.value); ligne('k1-valeur').textContent = L1.k;
+  if (L1.evalTest) tester1(); else { majSonde1(); dessiner1(); }
+});
+ligne('mode1').addEventListener('change', function () { L1.mode = this.value; });
+ligne('front1').addEventListener('change', function () { L1.front = this.checked; dessiner1(); });
+ligne('norm1').addEventListener('change', function () { L1.norm = this.checked; majSonde1(); dessiner1(); });
+ligne('err1').addEventListener('change', function () { L1.err = this.checked; dessiner1(); });
+ligne('btn-tester').addEventListener('click', tester1);
+ligne('btn-exemple').addEventListener('click', function () { charger1(DONNEES.entrainement, DONNEES.test, 'Données de référence'); });
+ligne('btn-desequilibre').addEventListener('click', function () {
+  charger1(DONNEES.desequilibre, DONNEES.test, 'Données « canicule »');
+  message('Attention : ces 30 situations viennent toutes d\'une semaine de canicule.', 4200);
+});
+ligne('btn-effacer').addEventListener('click', function () {
+  L1.appren = []; L1.evalTest = null; ligne('etat1').textContent = 'Plus aucun exemple : l\'IA ne peut pas apprendre.';
+  ligne('matrice1').innerHTML = ''; majSonde1(); dessiner1();
+});
+ligne('fichier1').addEventListener('change', function () {
+  var f = this.files && this.files[0]; if (!f) return;
+  var lecteur = new FileReader();
+  lecteur.onload = function () {
+    var texte = String(lecteur.result);
+    charger1(texte, DONNEES.test, 'Fichier importé (' + f.name + ')');
+  };
+  lecteur.readAsText(f, 'utf-8');
+});
+
+// — atelier 2
+ligne('k2').addEventListener('input', function () {
+  L2.k = Number(this.value); ligne('k2-valeur').textContent = L2.k;
+  demarrerKmeans(true);
+});
+ligne('norm2').addEventListener('change', function () { L2.norm = this.checked; demarrerKmeans(true); });
+ligne('btn2-etape').addEventListener('click', function () {
+  if (!L2.km) demarrerKmeans(true);
+  var r = L2.km.etape(); majKmeans(); dessiner2();
+  message(r.stable ? 'Plus rien ne bouge : l\'algorithme a convergé.'
+    : 'Étape suivante : ' + NOM_PHASE[r.phase] + '.', 3000);
+});
+ligne('btn2-converger').addEventListener('click', function () {
+  if (!L2.km) demarrerKmeans(true);
+  L2.km.converger(); majKmeans(); dessiner2();
+  message('Convergence atteinte en ' + L2.km.iterations + ' cycles complets.', 3200);
+});
+ligne('btn2-depart').addEventListener('click', function () {
+  demarrerKmeans(false); dessiner2(); message('Nouveau tirage de départ.', 2600);
+});
+ligne('btn2-reset').addEventListener('click', function () {
+  demarrerKmeans(true); dessiner2();
+});
+
+// — atelier 3
+ligne('env3-choix').addEventListener('change', function () {
+  reinitialiser3(); message('Objectif changé : l\'IA repart de zéro.', 3400);
+});
+ligne('eps3').addEventListener('input', function () {
+  L3.eps = Number(this.value);
+  ligne('eps3-valeur').textContent = L3.eps.toFixed(2).replace('.', ',');
+});
+ligne('btn3-1').addEventListener('click', function () { L3.agent.jouer(1, L3.eps, creerHasard(L3.agent.episodes + 11)); maj3(); });
+ligne('btn3-100').addEventListener('click', function () { L3.agent.jouer(100, L3.eps, creerHasard(L3.agent.episodes + 11)); maj3(); });
+ligne('btn3-500').addEventListener('click', function () { L3.agent.jouer(500, L3.eps, creerHasard(L3.agent.episodes + 11)); maj3(); });
+ligne('btn3-reset').addEventListener('click', function () { reinitialiser3(); message('Agent remis à zéro : il ne sait plus rien.', 3000); });
+ligne('fichier3').addEventListener('change', function () {
+  var f = this.files && this.files[0]; if (!f) return;
+  var lecteur = new FileReader();
+  lecteur.onload = function () {
+    var env = creerEnvironnement(analyserCSV(String(lecteur.result)).lignes);
+    if (env.etats.length < 2 || env.actions.length < 2) {
+      message('Fichier illisible : il faut une 1re colonne « etat » puis AU MOINS DEUX colonnes d\'actions.', 5200);
+      return;
+    }
+    L3.env = env; L3.agent = creerAgent(env, L3.alpha); maj3();
+    message('Table de récompenses importée (' + f.name + ').', 3600);
+  };
+  lecteur.readAsText(f, 'utf-8');
+});
+
+// — atelier 4
+ligne('n4').addEventListener('input', function () {
+  ligne('n4-valeur').textContent = this.value;
+  reinitialiser4();
+});
+ligne('ex4').addEventListener('change', function () { reinitialiser4(); });
+ligne('btn4-200').addEventListener('click', function () { entrainer4(200); });
+ligne('btn4-1000').addEventListener('click', function () { entrainer4(1000); });
+ligne('btn4-reset').addEventListener('click', function () { reinitialiser4(); });
+
+// — bilan
+ligne('btn-export').addEventListener('click', exporter);
+ligne('btn-copier').addEventListener('click', copier);
+ligne('btn-imprimer').addEventListener('click', function () { majRecap(); window.print(); });
+document.addEventListener('input', function (e) {
+  if (!e.target || !e.target.hasAttribute || !e.target.hasAttribute('data-q')) return;
+  var cle = e.target.getAttribute('data-q');
+  if (cle.indexOf('A2 nom du groupe') === 0) L2.noms[cle] = e.target.value;   // noms conservés
+  clearTimeout(majRecap._t); majRecap._t = setTimeout(majRecap, 400);
+});
+
+/* =====================================================================
+   Démarrage
+   ===================================================================== */
+charger1(DONNEES.entrainement, DONNEES.test, 'Données de référence');
+majRecap();
+chronoAfficher();
+(function () {
+  var m = /[?&]lab=(\d+)/.exec(location.search);
+  ouvrirLab(m ? m[1] : '1');
+})();
+
+/* =====================================================================
+   AUTO-TEST (mode vérification, utilisé par _outils/verifier_tp_ia.py)
+   ===================================================================== */
+function autotest() {
+  var res = [], echecs = 0;
+  function verifier(nom, condition, detail) {
+    if (!condition) echecs++;
+    res.push((condition ? 'OK   ' : 'ÉCHEC') + ' | ' + nom + (detail !== undefined ? ' | ' + detail : ''));
+  }
+  var a = analyserCSV(DONNEES.entrainement), t = analyserCSV(DONNEES.test);
+  var ap = versPoints(a.lignes), te = versPoints(t.lignes);
+  verifier('CSV entraînement lu', a.lignes.length === 48 && ap.length === 48, a.lignes.length + ' lignes');
+  verifier('CSV test lu', t.lignes.length === 20 && te.length === 20, t.lignes.length + ' lignes');
+  var nf = ap.filter(function (p) { return p.etiq === 'fermer'; }).length;
+  verifier('étiquettes présentes', nf > 10 && nf < 38, nf + ' fermer / ' + (ap.length - nf) + ' ouvrir');
+
+  var acc = {};
+  [1, 3, 5, 15].forEach(function (k) { acc[k] = evaluerKNN(ap, te, k, true).reussite; });
+  verifier('kNN k=1 calculé', acc[1] > 0.6, (100 * acc[1]).toFixed(1) + ' %');
+  verifier('kNN k=5 calculé', acc[5] > 0.75, (100 * acc[5]).toFixed(1) + ' %');
+  verifier('kNN k=15 calculé', acc[15] > 0.4, (100 * acc[15]).toFixed(1) + ' %');
+  verifier('réussite jamais parfaite (données contradictoires)', Math.max(acc[1], acc[3], acc[5], acc[15]) < 1,
+    'meilleur : ' + (100 * Math.max(acc[1], acc[3], acc[5], acc[15])).toFixed(1) + ' %');
+
+  var dese = versPoints(analyserCSV(DONNEES.desequilibre).lignes);
+  var evalD = evaluerKNN(dese, te, 3, true);
+  var predFermer = evalD.details.filter(function (d) { return d.predit === 'fermer'; }).length;
+  verifier('biais canicule : tout est classé « fermer »', predFermer === te.length, predFermer + '/' + te.length);
+
+  var pts24 = versPoints(analyserCSV(DONNEES.mesures24h).lignes, true);
+  verifier('CSV 24 h lu sans étiquette', pts24.length >= 70 && pts24[0].etiq === null, pts24.length + ' mesures');
+  var km = creerKmeans(pts24, 3, creerHasard(1), true);
+  var i0 = km.inertie();
+  km.converger();
+  var i1 = km.inertie(), compte = km.compter();
+  verifier('k-moyennes : inertie qui diminue', i1 <= i0 + 1e-9, i0.toFixed(5) + ' → ' + i1.toFixed(5));
+  verifier('k-moyennes : 3 groupes non vides', compte.every(function (c) { return c > 0; }), compte.join(' / '));
+  verifier('k-moyennes : convergence', km.iterations < 100, km.iterations + ' étapes');
+
+  var envC = creerEnvironnement(analyserCSV(DONNEES.recompenses_confort).lignes);
+  var envE = creerEnvironnement(analyserCSV(DONNEES.recompenses_energie).lignes);
+  var optC = meilleurPossible(envC), optE = meilleurPossible(envE);
+  verifier('environnement confort lu', envC.etats.length === 4 && envC.actions.length === 3, envC.etats.join(' ; '));
+  var ag0 = creerAgent(envC, 0.3);
+  ag0.jouer(500, 0, creerHasard(5));
+  verifier('renforcement ε=0 : reste bloqué sous l\'optimum', ag0.moyenneRecente < optC - 1.5,
+    ag0.moyenneRecente.toFixed(2) + ' vs optimum ' + optC.toFixed(2));
+  var ag1 = creerAgent(envC, 0.3);
+  ag1.jouer(1000, 0.2, creerHasard(5));
+  verifier('renforcement ε=0,2 : s\'approche de l\'optimum', ag1.moyenneRecente > optC - 1.2,
+    ag1.moyenneRecente.toFixed(2) + ' vs optimum ' + optC.toFixed(2));
+  verifier('renforcement : le hasard empêche d\'atteindre l\'optimum', ag1.moyenneRecente < optC,
+    ag1.moyenneRecente.toFixed(2) + ' < ' + optC.toFixed(2));
+  var polC = ag1.politique().map(function (i) { return envC.actions[i]; }).join(',');
+  verifier('politique confort apprise', polC === 'fermer,laisser,fermer,fermer', polC);
+  var ag2 = creerAgent(envE, 0.3);
+  ag2.jouer(1000, 0.2, creerHasard(5));
+  var polE = ag2.politique().map(function (i) { return envE.actions[i]; }).join(',');
+  verifier('politique énergie différente de confort', polE !== polC, polE + ' (optimum ' + optE.toFixed(2) + ')');
+
+  var reseau = mlpCreer(6, creerHasard(4242));
+  mlpEntrainer(reseau, ap, 2000);
+  var rEnt = mlpReussite(reseau, ap), rTest = mlpReussite(reseau, te);
+  verifier('réseau : apprend les exemples', rEnt > 0.75, (100 * rEnt).toFixed(1) + ' %');
+  verifier('réseau : généralise au test', rTest > 0.6, (100 * rTest).toFixed(1) + ' %');
+  var petit = mlpCreer(12, creerHasard(4242));
+  mlpEntrainer(petit, ap.slice(0, 8), 2000);
+  verifier('réseau : surapprentissage avec 8 exemples',
+    mlpReussite(petit, ap.slice(0, 8)) > 0.95 && mlpReussite(petit, te) < 0.92,
+    (100 * mlpReussite(petit, ap.slice(0, 8))).toFixed(0) + ' % sur les 8 exemples, '
+    + (100 * mlpReussite(petit, te)).toFixed(0) + ' % sur le test');
+
+  // ---- vérifications d'affichage (le rendu a-t-il bien eu lieu ?) ----
+  function encre(idCanvas) {
+    var cv = ligne(idCanvas);
+    if (!cv) return -1;
+    var d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+    var n = 0;
+    for (var i = 0; i < d.length; i += 4) {
+      if (d[i + 3] > 10 && (d[i] < 245 || d[i + 1] < 245 || d[i + 2] < 245)) n++;
+    }
+    return n;
+  }
+  ['1', '2', '3', '4', '9'].forEach(function (num) { ouvrirLab(num); });
+  ouvrirLab('1');
+  [['c1', 20000, 'atelier 1'], ['c2', 5000, 'atelier 2'], ['c3', 2000, 'atelier 3'],
+   ['c4', 20000, 'défi réseau'], ['c4b', 500, 'courbe d\'erreur']].forEach(function (c) {
+    var n = encre(c[0]);
+    verifier('canvas ' + c[2] + ' dessiné', n > c[1], n + ' pixels');
+  });
+  verifier('onglet 1 actif au démarrage', ligne('lab1').className === 'actif', ligne('lab1').className);
+  verifier('champs de réponse présents', document.querySelectorAll('[data-q]').length >= 20,
+    document.querySelectorAll('[data-q]').length + ' champs');
+  verifier('table des récompenses remplie', ligne('env3').innerHTML.indexOf('Soleil') > 0);
+  verifier('table Q remplie', ligne('table3').innerHTML.indexOf('Nuit') > 0);
+  verifier('aucune erreur JavaScript', ERREURS_JS.length === 0, ERREURS_JS.join(' ; '));
+  verifier('compte rendu exportable', texteCompteRendu().indexOf('Compte rendu') === 0);
+  var cv1 = ligne('c1').getBoundingClientRect();
+  verifier('graphique 1 assez large', cv1.width > 320 && cv1.height > 200,
+    Math.round(cv1.width) + ' × ' + Math.round(cv1.height) + ' px');
+  verifier('pas de débordement horizontal', document.documentElement.scrollWidth <= window.innerWidth + 4,
+    document.documentElement.scrollWidth + ' px pour une fenêtre de ' + window.innerWidth + ' px');
+  verifier('tous les tableaux de réponses visibles',
+    ['1', '2', '3', '4', '9'].every(function (n) { return !!ligne('lab' + n); }));
+
+  // ---- scénario : on simule un binôme qui clique partout dans les 4 ateliers ----
+  function clic(id) { ligne(id).click(); }
+  function regler(id, valeur, typeEvenement) {
+    var el = ligne(id);
+    el.value = valeur;
+    el.dispatchEvent(new Event(typeEvenement || 'input', { bubbles: true }));
+  }
+  function essayer(nom, action) {
+    try { action(); res.push('OK    | scénario : ' + nom); }
+    catch (e) { echecs++; res.push('ÉCHEC | scénario : ' + nom + ' | ' + e.message); }
+  }
+  function clicGraphique(idCanvas, fx, fy) {
+    var r = ligne(idCanvas).getBoundingClientRect();
+    ligne(idCanvas).dispatchEvent(new PointerEvent('pointerdown', {
+      clientX: r.left + r.width * fx, clientY: r.top + r.height * fy, bubbles: true
+    }));
+    window.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+  }
+
+  ouvrirLab('1');
+  essayer('k = 1 puis test', function () { regler('k1', '1'); clic('btn-tester'); });
+  essayer('k = 15 puis test', function () { regler('k1', '15'); clic('btn-tester'); });
+  essayer('clic dans le graphique (sonde)', function () {
+    clicGraphique('c1', 0.3, 0.5);
+    if (ligne('mesure1').innerHTML.indexOf('Sonde') < 0) throw new Error('la sonde n\'a pas bougé');
+  });
+  essayer('ajout d\'un exemple étiqueté', function () {
+    regler('mode1', 'ajout-fermer', 'change');
+    clicGraphique('c1', 0.6, 0.3);
+    regler('mode1', 'sonde', 'change');
+    if (L1.appren.length !== 49) throw new Error('exemple non ajouté (' + L1.appren.length + ' points)');
+  });
+  essayer('données canicule puis test', function () { clic('btn-desequilibre'); clic('btn-tester'); });
+  essayer('tout effacer, tester, puis recharger les données de référence', function () {
+    clic('btn-effacer');
+    clic('btn-tester');
+    if (ligne('mesure1').innerHTML.indexOf('aucun exemple') < 0) throw new Error('message d\'absence de données manquant');
+    clic('btn-exemple');
+    if (L1.appren.length !== 48) throw new Error(L1.appren.length + ' points au lieu de 48');
+  });
+  essayer('case « erreurs du test » et échelle brute', function () {
+    ligne('err1').click(); regler('norm1', false, 'change'); regler('norm1', true, 'change');
+  });
+
+  ouvrirLab('2');
+  essayer('5 étapes de k-moyennes', function () {
+    for (var i = 0; i < 5; i++) clic('btn2-etape');
+    if (Number(ligne('iter2').textContent) < 1) throw new Error('aucun cycle complet');
+  });
+  essayer('convergence', function () { clic('btn2-converger'); });
+  essayer('autre départ', function () { clic('btn2-depart'); });
+  essayer('k = 6', function () { regler('k2', '6'); });
+  essayer('nommer un groupe (nom conservé)', function () {
+    var champ = document.querySelector('#table2 input[data-q]');
+    champ.value = 'nuit'; champ.dispatchEvent(new Event('input', { bubbles: true }));
+    if (L2.noms[champ.getAttribute('data-q')] !== 'nuit') throw new Error('nom non conservé');
+  });
+  essayer('réinitialiser', function () { clic('btn2-reset'); });
+
+  ouvrirLab('3');
+  essayer('1 épisode', function () { clic('btn3-1'); });
+  essayer('100 épisodes', function () { clic('btn3-100'); });
+  essayer('500 épisodes (l\'agent progresse)', function () {
+    clic('btn3-500');
+    if (L3.agent.recompenseMoyenne <= 5) throw new Error('récompense trop faible : ' + L3.agent.recompenseMoyenne.toFixed(2));
+  });
+  essayer('exploration à 0 puis 500 épisodes (l\'agent se bloque)', function () {
+    regler('eps3', '0'); clic('btn3-reset'); clic('btn3-500');
+    if (L3.agent.recompenseMoyenne > 5) throw new Error('l\'agent n\'est pas resté bloqué');
+  });
+  essayer('objectif « énergie »', function () {
+    regler('env3-choix', 'energie', 'change');
+    if (ligne('env3').innerHTML.indexOf('Soleil') < 0) throw new Error('table des récompenses vide');
+    clic('btn3-500');
+  });
+
+  ouvrirLab('4');
+  essayer('entraîner 200 tours', function () { clic('btn4-200'); });
+  essayer('entraîner 1000 tours', function () {
+    clic('btn4-1000');
+    if (ligne('rt4').textContent === '—') throw new Error('réussite non affichée');
+  });
+  essayer('8 exemples puis 1000 tours', function () {
+    regler('ex4', '8', 'change'); clic('btn4-1000');
+    if (ligne('nb4').textContent !== '8') throw new Error('nombre d\'exemples non pris en compte');
+  });
+  essayer('12 neurones', function () { regler('n4', '12'); clic('btn4-200'); });
+  essayer('réinitialiser le réseau', function () { clic('btn4-reset'); });
+
+  ouvrirLab('9');
+  essayer('récapitulatif des réponses', function () {
+    if (ligne('recap').innerHTML.indexOf('nuit') < 0) throw new Error('le nom de groupe n\'apparaît pas');
+  });
+  essayer('compte rendu exportable et complet', function () {
+    var t = texteCompteRendu();
+    if (t.indexOf('nuit') < 0 || t.indexOf('Atelier 1') < 0) throw new Error('contenu incomplet');
+  });
+  essayer('chronomètre', function () { clic('chrono-start'); clic('chrono-start'); clic('chrono-reset'); });
+  verifier('aucune erreur JavaScript après le scénario', ERREURS_JS.length === 0, ERREURS_JS.join(' ; '));
+  ouvrirLab('1');
+
+  var texte = res.join('\n') + '\n' + (echecs ? 'AUTOTEST: ÉCHECS = ' + echecs : 'AUTOTEST: TOUT OK') + '\n';
+  var pre = document.createElement('pre');
+  pre.id = 'autotest-resultat';
+  pre.style.cssText = 'white-space:pre-wrap;font-size:13px;background:#fff;margin:12px;padding:12px;border:2px solid #2e75b6';
+  pre.textContent = texte;
+  document.body.appendChild(pre);
+  document.title = (echecs ? 'AUTOTEST-ECHEC' : 'AUTOTEST-OK');
+  return texte;
+}
+function autotestSecours(erreur) {
+  var pre = document.createElement('pre');
+  pre.id = 'autotest-resultat';
+  pre.style.cssText = 'white-space:pre-wrap;font-size:13px;background:#fff;margin:12px;padding:12px;border:2px solid #b3261e';
+  pre.textContent = 'ÉCHEC DE L\'AUTO-TEST\n' + (erreur && erreur.stack ? erreur.stack : erreur)
+    + '\nErreurs JavaScript captées : ' + ERREURS_JS.join(' ; ') + '\nAUTOTEST: ÉCHEC';
+  document.body.appendChild(pre);
+  document.title = 'AUTOTEST-ECHEC';
+}
+if (/[?&]autotest=1/.test(location.search)) {
+  try { autotest(); } catch (e) { autotestSecours(e); }
+}
+
+</script>
+</body>
+</html>
