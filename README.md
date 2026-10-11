@@ -22,7 +22,8 @@ index.html                          page d'accueil : les 17 activités, sommaire
 3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
 3e/tp-ia/                           TP d'apprentissage IA
     tp-ia.html
-    atelier-ia-exemples.html
+    atelier-ia-exemples.html        atelier « L'IA apprend avec des exemples »
+    CREDITS-SONS.md                 crédits et licences des sons de l'atelier
     donnees/*.csv                   6 fichiers à ouvrir dans un tableur
 
 4e/ost0/activite-iag-assistant.html               Séquence 0 — utiliser l'IAG

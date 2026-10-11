@@ -29,7 +29,7 @@ Utilisé par `atelier-ia-exemples.html`. Ce fichier contient **tout** ce dont la
 | `chiffres` | 1. Supervisé | 10 exemples de « 3 » et de « 8 » (5 par famille), 10 images de test (série A), 10 images jamais montrées (série B), et `controle` : tous les scores attendus |
 | `modes.nonSupervise` | 4. Non supervisé | 12 images de chiffres **sans aucune étiquette** (`images`, `familles`), les paquets trouvés par l'IA (`groupes`), leur taille (`repartition`) et leur propreté (`purete`) |
 | `modes.visages` | 4. Non supervisé | les **visages** : `personnes` (3 identités : teinte, cheveux, coiffure, mesures du visage) · `photos` (12 photos : la personne, la pose, la lumière, les lunettes, le chapeau, et les mesures que l'IA en tire) · `mesures` (la liste affichée aux élèves) · `paquets` (le paquet de chaque photo) · `repartition`, `proprete` · `erreurs` (la photo mal rangée) · `dure` |
-| `modes.autoSupervise` | 2. Auto-supervisé | `types` (les 6 genres, nom + emoji) · `colonnes` × `bandes` (la taille du dessin) · `exemples` (10 sons de la **mémoire**, avec `modele` = le dessin et `son` = l'extrait audio) · `peu` (les 2 sons gardés pour la comparaison) · `sons` (les 10 sons à deviner : `vraie`, `devinee`, `devinee_peu`, `cache`, `bien`, `bien_peu`, `sonores`, `differentes`, `son`, `fichier_test`) · `total10`, `total2`, `total_sonore` · `credits` |
+| `modes.autoSupervise` | 2. Auto-supervisé | `types` (les 5 genres, nom + emoji) · `colonnes` × `bandes` (la taille du dessin) · `exemples` (5 sons de la **mémoire**, avec `modele` = le dessin et `son` = l'extrait audio) · `sons` (les 5 sons à deviner : `vraie`, `devinee`, `cache`, `bien`, `sonores`, `differentes`, `son`, `fichier_test`) · `total10` · `credits` |
 
 Comment lire les données :
 
