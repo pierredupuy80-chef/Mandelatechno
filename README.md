@@ -24,14 +24,19 @@ ne dépend d'un service tiers pour s'afficher.
 
 ---
 
-## Activer GitHub Pages (une seule fois)
+## GitHub Pages
+
+Le site est **en ligne** : <https://pierredupuy80-chef.github.io/Mandelatechno/>
+
+À chaque `git push` sur la branche `main`, GitHub republie le site automatiquement en une
+minute environ. La page d'accueil est `index.html` à la racine du dépôt.
+
+Si le réglage devait être refait (par exemple pour un nouveau dépôt) :
 
 1. Ouvrir <https://github.com/pierredupuy80-chef/Mandelatechno/settings/pages>
 2. Dans **Source**, choisir **Deploy from a branch**
 3. Branche : **main**, dossier : **/ (root)**, puis **Save**
-4. Attendre une à deux minutes : le site est en ligne à l'adresse ci-dessus
-
-À chaque `git push` sur `main`, GitHub republie automatiquement le site en une minute environ.
+4. Attendre une à deux minutes
 
 ---
 
