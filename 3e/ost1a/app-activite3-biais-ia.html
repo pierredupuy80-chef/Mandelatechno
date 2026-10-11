@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulateur LexIA — Découvrir les biais de l'IA</title>
+<style>
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e; --rougeF:#fce8e6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer; transition:all .2s}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none; animation:fadeIn .3s ease}
+section.actif{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.grille{display:grid; grid-template-columns:minmax(330px,1.35fr) minmax(310px,1fr); gap:14px; align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px;
+  transition:box-shadow .2s}
+.carte:hover{box-shadow:0 2px 8px rgba(31,78,121,.08)}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+.carte.danger{background:var(--rougeF); border-left:5px solid var(--rouge)}
+canvas{width:100%; height:auto; display:block; background:#fff; border:1px solid var(--bord);
+  border-radius:8px; touch-action:none}
+.legende{display:flex; gap:14px; flex-wrap:wrap; font-size:.82rem; color:var(--gris); margin-top:6px}
+.puce{display:inline-block; width:.75em; height:.75em; border-radius:50%; margin-right:4px; vertical-align:baseline}
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+input[type=range]{width:100%; accent-color:var(--bleu2)}
+select,input[type=text],input[type=number],textarea{font:inherit; font-size:.88rem; padding:4px 6px;
+  border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{width:100%; min-height:3.2rem; resize:vertical}
+table{border-collapse:collapse; width:100%; font-size:.85rem}
+th,td{border:1px solid var(--bord); padding:3px 6px; text-align:left}
+th{background:var(--bleuf); color:var(--bleu)}
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer; transition:background .2s}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+button.act.orange{background:var(--orange); border-color:var(--orange)}
+button.act.orange:hover{background:#b45309}
+.mesure{font-size:.88rem; background:var(--bleuf2); border:1px dashed var(--bleu2); border-radius:8px; padding:6px 9px; margin:.5rem 0}
+.mesure b{color:var(--bleu)}
+.note{font-size:.8rem; color:var(--gris)}
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+.chrono{display:flex; align-items:center; gap:6px; font-size:.85rem; color:var(--gris)}
+.chrono .valeur{font-variant-numeric:tabular-nums; font-weight:bold; font-size:1rem; color:var(--bleu); min-width:4.2rem; text-align:center;
+  background:var(--bleuf2); border:1px solid var(--bord); border-radius:6px; padding:2px 4px}
+.barre-progression{height:8px; background:var(--bleuf); border-radius:4px; overflow:hidden; margin:6px 0}
+.barre-progression > i{display:block; height:100%; background:var(--vert); transition:width .4s ease}
+.score-badge{display:inline-block; background:var(--bleu2); color:#fff; border-radius:999px; padding:2px 10px;
+  font-size:.8rem; font-weight:bold; margin-left:6px}
+/* Onglets internes N1 */
+.sous-onglets{display:flex; gap:4px; margin-bottom:10px}
+.sous-onglets button{font:inherit; font-size:.82rem; padding:5px 10px; border:1px solid var(--bord); background:#fff;
+  color:var(--gris); border-radius:6px 6px 0 0; cursor:pointer}
+.sous-onglets button.actif{background:var(--bleuf); color:var(--bleu); border-bottom-color:var(--bleuf); font-weight:bold}
+.sous-section{display:none}
+.sous-section.actif{display:block}
+/* Cartes N2 */
+.grille-cartes{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px}
+.carte-fonction{background:#fff; border:2px solid var(--bord); border-radius:10px; padding:12px; cursor:pointer;
+  transition:all .25s; position:relative; overflow:hidden}
+.carte-fonction:hover{border-color:var(--bleu2); transform:translateY(-2px); box-shadow:0 4px 12px rgba(31,78,121,.12)}
+.carte-fonction.revelee{border-color:var(--bleu2)}
+.carte-fonction .icone{font-size:2rem; margin-bottom:6px}
+.carte-fonction .titre-carte{font-weight:bold; color:var(--bleu); font-size:.95rem}
+.carte-fonction .details-carte{display:none; margin-top:8px; font-size:.84rem; color:#333}
+.carte-fonction.revelee .details-carte{display:block}
+/* Zone de classement N2 */
+.zone-classement{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px}
+.colonne-classement{background:var(--bleuf2); border:2px dashed var(--bord); border-radius:8px; padding:8px; min-height:120px;
+  text-align:center; transition:border-color .2s}
+.colonne-classement.titre-col{font-weight:bold; color:var(--bleu); font-size:.85rem; margin-bottom:6px; display:block}
+.colonne-classement.drag-over{border-color:var(--bleu2); background:var(--bleuf)}
+.item-classement{display:inline-block; background:#fff; border:1px solid var(--bleu2); border-radius:6px; padding:4px 8px;
+  margin:3px; font-size:.82rem; cursor:grab; user-select:none}
+.item-classement:active{cursor:grabbing}
+.item-classement.correct{background:var(--vertF); border-color:var(--vert)}
+.item-classement.incorrect{background:var(--rougeF); border-color:var(--rouge)}
+/* Scénarios N3 */
+.scenario-tabs{display:flex; gap:4px; margin-bottom:10px}
+.scenario-tabs button{flex:1; font:inherit; font-size:.82rem; padding:6px 8px; border:1px solid var(--bord);
+  background:#fff; color:var(--gris); border-radius:6px; cursor:pointer}
+.scenario-tabs button.actif{background:var(--orange); color:#fff; border-color:var(--orange)}
+.resultat-test{padding:10px; border-radius:8px; margin-top:8px; font-size:.88rem}
+.resultat-test.biais{background:var(--rougeF); border:1px solid var(--rouge)}
+.resultat-test.corrigee{background:var(--vertF); border:1px solid var(--vert)}
+/* Débat N4 */
+.debat-colonnes{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media(max-width:700px){.debat-colonnes{grid-template-columns:1fr}}
+.col-debat{background:#fff; border:2px solid var(--bord); border-radius:10px; padding:10px; min-height:180px}
+.col-debat h4{margin:0 0 8px; font-size:.9rem; text-align:center}
+.col-debat.groupe-a{border-color:var(--orange)}
+.col-debat.groupe-a h4{color:var(--orange)}
+.col-debat.groupe-b{border-color:var(--rouge)}
+.col-debat.groupe-b h4{color:var(--rouge)}
+.arg-card{background:var(--bleuf2); border:1px solid var(--bleu2); border-radius:6px; padding:6px 8px; margin:4px 0;
+  font-size:.83rem; cursor:pointer; transition:all .2s}
+.arg-card:hover{background:var(--bleuf)}
+.arg-card.selectionne{background:var(--bleu2); color:#fff}
+.arg-pool{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0}
+.analyse-guided{background:var(--orangeF); border:1px solid var(--orange); border-radius:8px; padding:10px; margin:8px 0}
+.analyse-guided textarea{min-height:2.5rem}
+.synthese-auto{background:var(--vertF); border:1px solid var(--vert); border-radius:8px; padding:10px; margin-top:10px}
+#zone-message{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:var(--bleu);
+  color:#fff; padding:7px 14px; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .25s; z-index:50;
+  pointer-events:none}
+#zone-message.visible{opacity:1}
+@media print{
+  header, .onglets, .boutons, canvas, .no-print, .sous-onglets, .scenario-tabs{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles — voir
+   Rapport-compatibilite-mobile-apps.md)
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   ===================================================================== */
+/* Ecrans etroits OU peu hauts (telephone en paysage).
+     Prefixe « screen » : l'impression et l'export PDF ne sont pas touches. */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .ligne-titre{gap:6px 10px}
+  header .bloc-binome{font-size:.78rem; gap:6px}
+  header .bloc-binome input{width:auto; min-width:0; max-width:9rem; padding:3px 6px}
+  header .chrono{font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* Onglets : une seule ligne, defilement horizontal */
+  header .onglets{flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch; gap:6px; margin-top:6px; padding-bottom:2px}
+  header .onglets button{flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px}
+
+  /* Champs de saisie : 16 px = pas de zoom automatique sur iOS */
+  input, textarea, select{font-size:16px !important}
+
+  /* Reponses de QCM : la ligne entiere devient une cible confortable */
+  label.option-choix, label.quiz-option{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* Etiquettes a deplacer */
+  .etiquette, .assoc-item, .etiquette-drop{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* Repere visuel de l'etiquette selectionnee au doigt */
+  .etiquette.selectionnee, .assoc-item.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : repli de la barre au defilement + compensation des
+     sauts d'ancre. Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend donc que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  function ajuster() {
+    var entete = document.querySelector('header');
+    if (!entete) return;
+    var onglets = entete.querySelector('.onglets') || entete.querySelector('.tabs');
+    if (!onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+    var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+    var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+    var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+    var hauteurVisible = Math.round(entete.offsetHeight - (petit ? dessus : 0));
+
+    // En petit ecran, tout ce qui precede les onglets sort de l'ecran au
+    // defilement : l'eleve garde les onglets sous les yeux sans perdre la
+    // moitie de son ecran. Sur ordinateur, rien ne change (top:0).
+    entete.style.top = petit ? (-dessus) + 'px' : '0px';
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    document.documentElement.style.scrollPaddingTop = (hauteurVisible + 8) + 'px';
+  }
+
+  function demarrer() {
+    ajuster();
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <div class="ligne-titre">
+    <h1>Simulateur LexIA — Découvrir les biais de l'IA <small>3<sup>e</sup> · technologie · T1 · Séquence 1a</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+    <div class="chrono" id="chrono">
+      <span>Chrono&nbsp;:</span><span class="valeur" id="chrono-valeur">55:00</span>
+      <button class="act sec" id="chrono-start" style="padding:2px 8px">▶</button>
+      <button class="act sec" id="chrono-reset" style="padding:2px 8px">↺</button>
+    </div>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-tab="n1" class="actif">N1 · Types d'apprentissage</button>
+    <button data-tab="n2">N2 · Usages dans LexIA</button>
+    <button data-tab="n3">N3 · Laboratoire des biais</button>
+    <button data-tab="n4">N4 · Débat &amp; Analyse</button>
+    <button data-tab="bilan">Bilan</button>
+  </div>
+  <div class="barre-progression"><i id="barre-score" style="width:0%"></i></div>
+  <div style="font-size:.8rem;color:var(--gris)">Progression globale : <b id="score-texte">0 / 20</b> <span class="score-badge" id="badge-niveau">N1</span></div>
+</header>
+
+<main>
+
+<!-- ======================== SECTION N1 ======================== -->
+<section id="n1" class="actif">
+  <h2>N1 — Les types d'apprentissage de l'IA <span class="tag">Mémoriser</span></h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Découvrir les trois grands types d'apprentissage en IA à travers des mini-simulations visuelles.
+    Chaque onglet présente un type, une visualisation interactive et un quiz de vérification.
+  </div>
+
+  <div class="sous-onglets" id="n1-tabs">
+    <button data-sub="supervise" class="actif">Supervisé</button>
+    <button data-sub="non-supervise">Non supervisé</button>
+    <button data-sub="renforcement">Renforcement</button>
+  </div>
+
+  <!-- Sous-section Supervisé -->
+  <div class="sous-section actif" id="sub-supervise">
+    <div class="grille">
+      <div>
+        <div class="carte">
+          <h3 style="margin-top:0">Apprentissage supervisé : traduction FR→EN</h3>
+          <p class="note">L'IA apprend à partir de paires de phrases <b>étiquetées</b> (français → anglais).
+          Elle cherche la frontière qui sépare les catégories.</p>
+          <canvas id="c-supervise" width="800" height="400"></canvas>
+          <div class="legende">
+            <span><i class="puce" style="background:#2e75b6"></i>Salutations</span>
+            <span><i class="puce" style="background:#d97706"></i>Questions</span>
+            <span><i class="puce" style="background:#2e7d32"></i>Affirmations</span>
+            <span>--- Frontière de décision</span>
+          </div>
+        </div>
+        <div class="carte">
+          <div class="boutons">
+            <button class="act" id="btn-sup-animer">▶ Animer l'apprentissage</button>
+            <button class="act sec" id="btn-sup-reset">↺ Réinitialiser</button>
+          </div>
+          <div class="mesure">Points affichés : <b id="sup-count">0</b>/30 · Frontière tracée : <b id="sup-front">Non</b></div>
+        </div>
+      </div>
+      <div>
+        <div class="carte consigne">
+          <h3 style="margin-top:0">Ce que vous observez</h3>
+          <ol>
+            <li>Des points colorés apparaissent : chacun est une phrase française étiquetée par un humain.</li>
+            <li>L'IA trace une <b>frontière</b> pour séparer les catégories.</li>
+            <li>Quand une nouvelle phrase arrive, l'IA regarde de quel côté elle tombe.</li>
+          </ol>
+          <p><b>Définition :</b> L'apprentissage <b>supervisé</b> utilise des données <b>étiquetées</b>
+          (la bonne réponse est connue) pour entraîner le modèle à classer ou prédire.</p>
+        </div>
+        <div class="carte">
+          <h3 style="margin-top:0">Quiz — Apprentissage supervisé</h3>
+          <div class="q" id="q-sup-1">
+            <p class="enonce">Q1. Que signifie « supervisé » en IA ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="sup-1" data-v="a">L'IA surveille les élèves</button>
+              <button class="act sec quiz-btn" data-q="sup-1" data-v="b">L'IA apprend avec des exemples étiquetés</button>
+              <button class="act sec quiz-btn" data-q="sup-1" data-v="c">L'IA n'a besoin de rien</button>
+            </div>
+            <p class="note feedback" id="fb-sup-1"></p>
+          </div>
+          <div class="q" id="q-sup-2">
+            <p class="enonce">Q2. Dans LexIA, quel usage correspond à l'apprentissage supervisé ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="sup-2" data-v="a">Regrouper des contacts similaires</button>
+              <button class="act sec quiz-btn" data-q="sup-2" data-v="b">Traduire des phrases grâce à des paires FR-EN connues</button>
+              <button class="act sec quiz-btn" data-q="sup-2" data-v="c">Apprendre à jouer à un jeu</button>
+            </div>
+            <p class="note feedback" id="fb-sup-2"></p>
+          </div>
+          <div class="q" id="q-sup-3">
+            <p class="enonce">Q3. Si les données d'entraînement ne contiennent que des phrases formelles, que se passe-t-il quand on traduit du langage familier ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="sup-3" data-v="a">L'IA traduit parfaitement</button>
+              <button class="act sec quiz-btn" data-q="sup-3" data-v="b">L'IA fait des erreurs car elle n'a jamais vu ce type de phrase</button>
+              <button class="act sec quiz-btn" data-q="sup-3" data-v="c">L'IA refuse de traduire</button>
+            </div>
+            <p class="note feedback" id="fb-sup-3"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sous-section Non supervisé -->
+  <div class="sous-section" id="sub-non-supervise">
+    <div class="grille">
+      <div>
+        <div class="carte">
+          <h3 style="margin-top:0">Apprentissage non supervisé : regroupement de messages</h3>
+          <p class="note">Les messages de LexIA ne sont <b>pas étiquetés</b>. L'IA doit trouver seule des groupes (clusters).</p>
+          <canvas id="c-non-sup" width="800" height="400"></canvas>
+          <div class="legende">
+            <span><i class="puce" style="background:#8a99a8"></i>Messages non étiquetés</span>
+            <span>✦ Centre de cluster</span>
+            <span>Couleur = groupe trouvé</span>
+          </div>
+        </div>
+        <div class="carte">
+          <span class="champ"><span>Nombre de clusters (k) = <b id="kmeans-k-val">3</b></span>
+            <input type="range" id="kmeans-k" min="2" max="5" step="1" value="3"></span>
+          <div class="boutons">
+            <button class="act" id="btn-kmeans-step">Étape</button>
+            <button class="act" id="btn-kmeans-converge">Converger</button>
+            <button class="act sec" id="btn-kmeans-reset">↺ Réinitialiser</button>
+          </div>
+          <div class="mesure">Itérations : <b id="kmeans-iter">0</b> · Phase : <b id="kmeans-phase">Initialisation</b></div>
+        </div>
+      </div>
+      <div>
+        <div class="carte consigne">
+          <h3 style="margin-top:0">Ce que vous observez</h3>
+          <ol>
+            <li>Tous les points sont gris : aucune étiquette.</li>
+            <li>Cliquez « Étape » plusieurs fois : les centres ✦ se déplacent, les points changent de couleur.</li>
+            <li>L'IA regroupe les messages qui se ressemblent sans savoir ce qu'ils signifient.</li>
+          </ol>
+          <p><b>Définition :</b> L'apprentissage <b>non supervisé</b> trouve des structures cachées dans des données <b>sans étiquettes</b>.</p>
+        </div>
+        <div class="carte">
+          <h3 style="margin-top:0">Quiz — Apprentissage non supervisé</h3>
+          <div class="q" id="q-nsup-1">
+            <p class="enonce">Q1. Quelle est la différence principale avec l'apprentissage supervisé ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="nsup-1" data-v="a">Il n'y a pas de données du tout</button>
+              <button class="act sec quiz-btn" data-q="nsup-1" data-v="b">Les données n'ont pas d'étiquettes (pas de bonne réponse connue)</button>
+              <button class="act sec quiz-btn" data-q="nsup-1" data-v="c">L'IA est plus intelligente</button>
+            </div>
+            <p class="note feedback" id="fb-nsup-1"></p>
+          </div>
+          <div class="q" id="q-nsup-2">
+            <p class="enonce">Q2. Dans LexIA, à quoi sert le clustering non supervisé ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="nsup-2" data-v="a">Traduire des phrases</button>
+              <button class="act sec quiz-btn" data-q="nsup-2" data-v="b">Recommander des contacts en regroupant les profils similaires</button>
+              <button class="act sec quiz-btn" data-q="nsup-2" data-v="c">Filtrer les spams</button>
+            </div>
+            <p class="note feedback" id="fb-nsup-2"></p>
+          </div>
+          <div class="q" id="q-nsup-3">
+            <p class="enonce">Q3. Qui décide du nombre de groupes (k) ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="nsup-3" data-v="a">L'IA le devine toute seule</button>
+              <button class="act sec quiz-btn" data-q="nsup-3" data-v="b">C'est l'humain qui choisit k, l'IA ne peut pas savoir quel découpage est le bon</button>
+              <button class="act sec quiz-btn" data-q="nsup-3" data-v="c">Le hasard</button>
+            </div>
+            <p class="note feedback" id="fb-nsup-3"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sous-section Renforcement -->
+  <div class="sous-section" id="sub-renforcement">
+    <div class="grille">
+      <div>
+        <div class="carte">
+          <h3 style="margin-top:0">Apprentissage par renforcement : agent et récompenses</h3>
+          <p class="note">Un agent essaie des actions et reçoit des <b>récompenses</b> (+ ou −). Il apprend par essais-erreurs.</p>
+          <canvas id="c-renf" width="800" height="350"></canvas>
+          <div class="legende">
+            <span><i class="puce" style="background:#2e75b6"></i>Récompense moyenne</span>
+            <span><i class="puce" style="background:#2e7d32"></i>Optimum possible</span>
+            <span>Épisode : <b id="renf-ep">0</b></span>
+          </div>
+        </div>
+        <div class="carte">
+          <div class="boutons">
+            <button class="act" id="btn-renf-10">+10 épisodes</button>
+            <button class="act" id="btn-renf-100">+100 épisodes</button>
+            <button class="act sec" id="btn-renf-reset">↺ Réinitialiser</button>
+          </div>
+          <div class="mesure">Épisodes : <b id="renf-total">0</b> · Moyenne : <b id="renf-moy">—</b>/10</div>
+        </div>
+      </div>
+      <div>
+        <div class="carte consigne">
+          <h3 style="margin-top:0">Ce que vous observez</h3>
+          <ol>
+            <li>Au début, l'agent agit au hasard : la courbe bleue est basse et instable.</li>
+            <li>Après beaucoup d'épisodes, il découvre les meilleures actions : la courbe monte.</li>
+            <li>Personne ne lui a montré la bonne réponse : il a appris uniquement par <b>récompenses</b>.</li>
+          </ol>
+          <p><b>Définition :</b> L'apprentissage par <b>renforcement</b> utilise un système de récompenses/pénalités
+          après chaque action pour guider l'agent vers le meilleur comportement.</p>
+        </div>
+        <div class="carte">
+          <h3 style="margin-top:0">Quiz — Apprentissage par renforcement</h3>
+          <div class="q" id="q-renf-1">
+            <p class="enonce">Q1. Qu'est-ce qui guide l'apprentissage dans ce type ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="renf-1" data-v="a">Des exemples étiquetés</button>
+              <button class="act sec quiz-btn" data-q="renf-1" data-v="b">Des récompenses et pénalités après chaque action</button>
+              <button class="act sec quiz-btn" data-q="renf-1" data-v="c">Le regroupement automatique</button>
+            </div>
+            <p class="note feedback" id="fb-renf-1"></p>
+          </div>
+          <div class="q" id="q-renf-2">
+            <p class="enonce">Q2. Dans LexIA, quel usage pourrait utiliser le renforcement ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="renf-2" data-v="a">La traduction de phrases</button>
+              <button class="act sec quiz-btn" data-q="renf-2" data-v="b">Le filtrage adaptatif qui s'améliore selon les retours de l'utilisateur</button>
+              <button class="act sec quiz-btn" data-q="renf-2" data-v="c">Le stockage des contacts</button>
+            </div>
+            <p class="note feedback" id="fb-renf-2"></p>
+          </div>
+          <div class="q" id="q-renf-3">
+            <p class="enonce">Q3. Pourquoi l'agent a-t-il besoin de beaucoup d'essais avant de bien agir ?</p>
+            <div class="boutons">
+              <button class="act sec quiz-btn" data-q="renf-3" data-v="a">Parce qu'il est lent</button>
+              <button class="act sec quiz-btn" data-q="renf-3" data-v="b">Parce qu'il explore au hasard au début et affine progressivement sa stratégie</button>
+              <button class="act sec quiz-btn" data-q="renf-3" data-v="c">Parce qu'il attend les ordres</button>
+            </div>
+            <p class="note feedback" id="fb-renf-3"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1e</span>Les grands types d'apprentissage des intelligences artificielles et leurs usages possibles</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/tD2HPYQLCKKTgjG" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113245-ost1e-les-grands-types-dapprentissage-des-intelligences-artificielles-et-leurs-usages-possibles/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113245-ost1e-les-grands-types-dapprentissage-des-intelligences-artificielles-et-leurs-usages-possibles/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/k9TKZAtdqjhc3oW36" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1f</span>Les incidences sociétales de l'IA (biais, effets de l'usage)</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/kZSCaGnqFzFYE6C" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113242-ost1f-les-incidences-societales-notamment-letude-du-biais-et-de-leffet-de-lusage-dune-intelligence-artificielle-ia/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113242-ost1f-les-incidences-societales-notamment-letude-du-biais-et-de-leffet-de-lusage-dune-intelligence-artificielle-ia/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/Cshv2mxuyHTKWMcw9" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- ======================== SECTION N2 ======================== -->
+<section id="n2">
+  <h2>N2 — Usages de l'IA dans LexIA <span class="tag">Comprendre</span></h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Associer chaque fonction de LexIA au type d'apprentissage correspondant.
+    Cliquez sur chaque carte pour découvrir les détails, puis classez-les correctement.
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">Les 4 fonctions de LexIA</h3>
+    <p class="note">Cliquez sur une carte pour révéler le type d'apprentissage utilisé.</p>
+    <div class="grille-cartes" id="cartes-fonctions">
+      <div class="carte-fonction" data-func="traduction">
+        <div class="icone">🌐</div>
+        <div class="titre-carte">Traduction instantanée</div>
+        <div class="details-carte">
+          <b>Type :</b> Apprentissage supervisé<br>
+          <b>Données :</b> Millions de paires de phrases FR↔EN étiquetées<br>
+          <b>Usage :</b> Traduire un message reçu en français vers l'anglais (ou inversement)
+        </div>
+      </div>
+      <div class="carte-fonction" data-func="reponses">
+        <div class="icone">💬</div>
+        <div class="titre-carte">Réponses automatiques</div>
+        <div class="details-carte">
+          <b>Type :</b> Apprentissage supervisé<br>
+          <b>Données :</b> Historique de conversations étiquetées (question → réponse appropriée)<br>
+          <b>Usage :</b> Proposer des réponses pertinentes quand l'utilisateur tape un message
+        </div>
+      </div>
+      <div class="carte-fonction" data-func="filtrage">
+        <div class="icone">🛡️</div>
+        <div class="titre-carte">Filtrage des messages</div>
+        <div class="details-carte">
+          <b>Type :</b> Apprentissage supervisé + renforcement<br>
+          <b>Données :</b> Messages étiquetés « spam/harasslement/normal » + retours utilisateur<br>
+          <b>Usage :</b> Bloquer les messages inappropriés et s'améliorer selon les signalements
+        </div>
+      </div>
+      <div class="carte-fonction" data-func="contacts">
+        <div class="icone">👥</div>
+        <div class="titre-carte">Recommandation de contacts</div>
+        <div class="details-carte">
+          <b>Type :</b> Apprentissage non supervisé<br>
+          <b>Données :</b> Profils utilisateurs sans étiquettes (centres d'intérêt, localisation, âge)<br>
+          <b>Usage :</b> Regrouper les profils similaires et suggérer des personnes proches
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">Exercice de classement</h3>
+    <p class="note">Glissez chaque fonction sous le bon type d'apprentissage (ou cliquez pour sélectionner puis cliquer sur la colonne).</p>
+    <div class="arg-pool" id="pool-classement">
+      <span class="item-classement" draggable="true" data-target="supervise" data-id="cl-trad">🌐 Traduction</span>
+      <span class="item-classement" draggable="true" data-target="supervise" data-id="cl-rep">💬 Réponses auto</span>
+      <span class="item-classement" draggable="true" data-target="renforcement" data-id="cl-filt">🛡️ Filtrage</span>
+      <span class="item-classement" draggable="true" data-target="non-supervise" data-id="cl-cont">👥 Contacts</span>
+    </div>
+    <div class="zone-classement">
+      <div class="colonne-classement" data-col="supervise">
+        <span class="titre-col">Supervisé</span>
+        <div class="drop-zone"></div>
+      </div>
+      <div class="colonne-classement" data-col="non-supervise">
+        <span class="titre-col">Non supervisé</span>
+        <div class="drop-zone"></div>
+      </div>
+      <div class="colonne-classement" data-col="renforcement">
+        <span class="titre-col">Renforcement</span>
+        <div class="drop-zone"></div>
+      </div>
+    </div>
+    <div class="boutons" style="margin-top:10px">
+      <button class="act" id="btn-verif-classement">✓ Vérifier le classement</button>
+      <button class="act sec" id="btn-reset-classement">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="resultat-classement">Placez les 4 éléments puis vérifiez.</div>
+  </div>
+</section>
+
+<!-- ======================== SECTION N3 ======================== -->
+<section id="n3">
+  <h2>N3 — Laboratoire des biais <span class="tag">Appliquer · Analyser</span></h2>
+
+  <div class="carte danger">
+    <b>⚠ Définition du biais :</b> Un <b>biais</b> en IA est une erreur systématique causée par des données
+    d'entraînement <b>non représentatives</b> ou des préjugés humains intégrés dans le système.
+    L'IA reproduit et amplifie les déséquilibres présents dans ses données.
+  </div>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Expérimenter 3 scénarios de biais dans LexIA. Pour chacun : ajustez les données,
+    testez l'IA, observez le biais, puis proposez une correction et retestez.
+  </div>
+
+  <div class="scenario-tabs" id="scenario-tabs">
+    <button data-scenario="traduction" class="actif">Scénario A : Traduction biaisée</button>
+    <button data-scenario="filtrage">Scénario B : Filtrage injuste</button>
+    <button data-scenario="vocale">Scénario C : Reconnaissance vocale</button>
+  </div>
+
+  <!-- Scénario A : Traduction -->
+  <div class="sous-section actif" id="sc-traduction">
+    <div class="grille">
+      <div>
+        <div class="carte">
+          <h3 style="margin-top:0">Répartition des données d'entraînement</h3>
+          <canvas id="c-biais-trad" width="800" height="300"></canvas>
+          <div class="legende">
+            <span><i class="puce" style="background:#2e75b6"></i>Anglais formel</span>
+            <span><i class="puce" style="background:#d97706"></i>Français familier</span>
+            <span><i class="puce" style="background:#2e7d32"></i>Autres langues</span>
+          </div>
+        </div>
+        <div class="carte">
+          <span class="champ"><span>% de français familier dans les données = <b id="trad-pct-val">10</b>%</span>
+            <input type="range" id="trad-pct" min="5" max="50" step="5" value="10"></span>
+          <div class="boutons">
+            <button class="act orange" id="btn-test-trad">🧪 Tester l'IA</button>
+            <button class="act" id="btn-corrige-trad">🔧 Appliquer la correction</button>
+          </div>
+          <div id="resultat-trad" class="resultat-test" style="display:none"></div>
+        </div>
+      </div>
+      <div>
+        <div class="carte consigne">
+          <h3 style="margin-top:0">Scénario A — Traduction biaisée</h3>
+          <p>Les textes d'entraînement de LexIA sont à <b>90 % en anglais formel</b>.
+          Quand un élève écrit « Wesh ça va ? » en français familier, l'IA produit une traduction absurde.</p>
+          <ol>
+            <li>Observez la répartition actuelle (slider à 10 %).</li>
+            <li>Cliquez « Tester l'IA » pour voir le résultat biaisé.</li>
+            <li>Augmentez le slider pour ajouter du français familier.</li>
+            <li>Cliquez « Appliquer la correction » puis retestez.</li>
+          </ol>
+        </div>
+        <div class="carte">
+          <h3 style="margin-top:0">Vos observations</h3>
+          <div class="q">
+            <p class="enonce">Quel problème avez-vous observé avec les données déséquilibrées ?</p>
+            <textarea data-q="N3-trad-probleme" placeholder="…"></textarea>
+          </div>
+          <div class="q">
+            <p class="enonce">Quelle solution avez-vous appliquée ? Le résultat s'est-il amélioré ?</p>
+            <textarea data-q="N3-trad-solution" placeholder="…"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scénario B : Filtrage -->
+  <div class="sous-section" id="sc-filtrage">
+    <div class="grille">
+      <div>
+        <div class="carte">
+          <h3 style="margin-top:0">Corpus d'entraînement du filtre</h3>
+          <canvas id="c-biais-filtre" width="800" height="300"></canvas>
+          <div class="legende">
+            <span><i class="puce" style="background:#2e75b6"></i>Messages masculins</span>
+            <span><i class="puce" style="background:#d97706"></i>Messages féminins</span>
+            <span><i class="puce" style="background:#b3261e"></i>Bloqués à tort</span>
+          </div>
+        </div>
+        <div class="carte">
+          <span class="champ"><span>% de messages féminins dans le corpus = <b id="filtre-pct-val">15</b>%</span>
+            <input type="range" id="filtre-pct" min="5" max="50" step="5" value="15"></span>
+          <div class="boutons">
+            <button class="act orange" id="btn-test-filtre">🧪 Tester le filtre</button>
+            <button class="act" id="btn-corrige-filtre">🔧 Diversifier le corpus</button>
+          </div>
+          <div id="resultat-filtre" class="resultat-test" style="display:none"></div>
+        </div>
+      </div>
+      <div>
+        <div class="carte consigne">
+          <h3 style="margin-top:0">Scénario B — Filtrage injuste</h3>
+          <p>Les mots-clés du filtre ont été entraînés sur un corpus <b>majoritairement masculin</b>.
+          Résultat : des messages normaux écrits par des filles sont bloqués comme « inappropriés ».</p>
+          <ol>
+            <li>Testez avec le corpus actuel (15 % féminin).</li>
+            <li>Observez combien de messages féminins sont bloqués à tort.</li>
+            <li>Diversifiez le corpus puis retestez.</li>
+          </ol>
+        </div>
+        <div class="carte">
+          <h3 style="margin-top:0">Vos observations</h3>
+          <div class="q">
+            <p class="enonce">Pourquoi le filtre bloque-t-il des messages féminins normaux ?</p>
+            <textarea data-q="N3-filtre-probleme" placeholder="…"></textarea>
+          </div>
+          <div class="q">
+            <p class="enonce">Proposez deux solutions concrètes pour éviter ce biais.</p>
+            <textarea data-q="N3-filtre-solutions" placeholder="1. …\n2. …"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scénario C : Vocale -->
+  <div class="sous-section" id="sc-vocale">
+    <div class="grille">
+      <div>
+        <div class="carte">
+          <h3 style="margin-top:0">Voix dans les données d'entraînement</h3>
+          <canvas id="c-biais-vocale" width="800" height="300"></canvas>
+          <div class="legende">
+            <span><i class="puce" style="background:#2e75b6"></i>Hommes 20-35 ans</span>
+            <span><i class="puce" style="background:#d97706"></i>Femmes</span>
+            <span><i class="puce" style="background:#8a99a8"></i>Personnes âgées</span>
+          </div>
+        </div>
+        <div class="carte">
+          <span class="champ"><span>% de voix féminines et âgées = <b id="voc-pct-val">20</b>%</span>
+            <input type="range" id="voc-pct" min="10" max="50" step="5" value="20"></span>
+          <div class="boutons">
+            <button class="act orange" id="btn-test-vocale">🧪 Tester la reconnaissance</button>
+            <button class="act" id="btn-corrige-vocale">🔧 Équilibrer les voix</button>
+          </div>
+          <div id="resultat-vocale" class="resultat-test" style="display:none"></div>
+        </div>
+      </div>
+      <div>
+        <div class="carte consigne">
+          <h3 style="margin-top:0">Scénario C — Reconnaissance vocale discriminante</h3>
+          <p>Les voix d'entraînement sont à <b>80 % des hommes de 20-35 ans</b>.
+          L'assistant vocal comprend mal les voix féminines et les voix âgées.</p>
+          <ol>
+            <li>Testez avec les données actuelles.</li>
+            <li>Comparez les taux de compréhension selon le type de voix.</li>
+            <li>Équilibrez les données et retestez.</li>
+          </ol>
+        </div>
+        <div class="carte">
+          <h3 style="margin-top:0">Vos observations</h3>
+          <div class="q">
+            <p class="enonce">Quelles voix sont mal comprises ? Pourquoi est-ce un problème éthique ?</p>
+            <textarea data-q="N3-vocale-probleme" placeholder="…"></textarea>
+          </div>
+          <div class="q">
+            <p class="enonce">En tant que concepteur de LexIA, que feriez-vous pour garantir l'équité ?</p>
+            <textarea data-q="N3-vocale-equite" placeholder="…"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SECTION N4 ======================== -->
+<section id="n4">
+  <h2>N4 — Débat &amp; Analyse <span class="tag">Analyser</span></h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Construire une argumentation structurée sur les biais de l'IA et analyser des cas concrets.
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">Débat : « Les biais de l'IA : un mal nécessaire ? »</h3>
+    <p class="note">Sélectionnez des arguments dans la réserve, puis cliquez dans la colonne correspondante pour les placer.</p>
+
+    <div class="arg-pool" id="arg-pool">
+      <div class="arg-card" data-groupe="a" data-id="a1">Les biais reflètent la réalité : l'IA montre nos propres préjugés</div>
+      <div class="arg-card" data-groupe="b" data-id="b1">Les biais discriminent des personnes réelles (emploi, justice, santé)</div>
+      <div class="arg-card" data-groupe="a" data-id="a2">On peut corriger les biais progressivement avec plus de données</div>
+      <div class="arg-card" data-groupe="b" data-id="b2">Les biais s'amplifient : l'IA reproduit et aggrave les inégalités</div>
+      <div class="arg-card" data-groupe="a" data-id="a3">Sans IA, les décisions humaines sont aussi biaisées</div>
+      <div class="arg-card" data-groupe="b" data-id="b3">L'IA donne une apparence d'objectivité à des décisions injustes</div>
+      <div class="arg-card" data-groupe="a" data-id="a4">Les biais permettent de découvrir des problèmes sociaux cachés</div>
+      <div class="arg-card" data-groupe="b" data-id="b4">Les victimes de biais n'ont aucun recours efficace</div>
+    </div>
+
+    <div class="debat-colonnes">
+      <div class="col-debat groupe-a" id="col-a">
+        <h4>Groupe A — « Inévitables / utiles »</h4>
+        <div class="drop-area" id="drop-a"></div>
+      </div>
+      <div class="col-debat groupe-b" id="col-b">
+        <h4>Groupe B — « Dangereux / inacceptables »</h4>
+        <div class="drop-area" id="drop-b"></div>
+      </div>
+    </div>
+
+    <div class="boutons" style="margin-top:10px">
+      <button class="act" id="btn-verif-debat">✓ Vérifier mes arguments</button>
+      <button class="act sec" id="btn-reset-debat">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="resultat-debat">Placez les 8 arguments puis vérifiez.</div>
+  </div>
+
+  <div class="carte">
+    <h3>Analyse guidée 1 — Streaming et recommandation</h3>
+    <div class="analyse-guided">
+      <p><b>Contexte :</b> Une plateforme de streaming utilise l'IA pour recommander des vidéos.
+      L'algorithme favorise les contenus déjà populaires et crée une « bulle de filtres ».</p>
+      <p class="enonce">Expliquez en 3-4 phrases : comment fonctionne ce mécanisme de recommandation, et quels effets négatifs peut-il avoir ?</p>
+      <textarea data-q="N4-streaming" placeholder="Le mécanisme consiste à…\nLes effets négatifs sont…"></textarea>
+    </div>
+  </div>
+
+  <div class="carte">
+    <h3>Analyse guidée 2 — Reconnaissance faciale biaisée</h3>
+    <div class="analyse-guided">
+      <p><b>Contexte :</b> Des études montrent que les systèmes de reconnaissance faciale identifient moins bien
+      les femmes et les personnes à peau foncée. Conséquences : erreurs dans la sécurité, la police, l'embauche.</p>
+      <p class="enonce">Quelle est la cause technique de ce biais ? Proposez une solution concrète.</p>
+      <textarea data-q="N4-faciale" placeholder="Cause : …\nSolution : …"></textarea>
+    </div>
+  </div>
+
+  <div class="carte bilan">
+    <h3 style="margin-top:0">Votre position finale</h3>
+    <p class="enonce">Après cette activité, rédigez un paragraphe argumenté (5-8 lignes) :
+    « En tant que futur citoyen numérique, que pensez-vous de l'utilisation de l'IA dans les applications du quotidien ? »</p>
+    <textarea data-q="N4-position" placeholder="…" style="min-height:5rem"></textarea>
+  </div>
+</section>
+
+<!-- ======================== BILAN ======================== -->
+<section id="bilan">
+  <h2>Bilan — Synthèse de l'activité</h2>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">Complétez le tableau récapitulatif</h3>
+        <table>
+          <thead><tr><th>Type</th><th>Données</th><th>Usage dans LexIA</th><th>Risque de biais</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>Supervisé</b></td>
+              <td><textarea data-q="BILAN-sup-donnees" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+              <td><textarea data-q="BILAN-sup-usage" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+              <td><textarea data-q="BILAN-sup-biais" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+            </tr>
+            <tr>
+              <td><b>Non supervisé</b></td>
+              <td><textarea data-q="BILAN-nsup-donnees" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+              <td><textarea data-q="BILAN-nsup-usage" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+              <td><textarea data-q="BILAN-nsup-biais" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+            </tr>
+            <tr>
+              <td><b>Renforcement</b></td>
+              <td><textarea data-q="BILAN-renf-donnees" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+              <td><textarea data-q="BILAN-renf-usage" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+              <td><textarea data-q="BILAN-renf-biais" placeholder="…" style="min-height:1.5rem;width:100%"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Les 3 règles d'or pour une IA responsable</h3>
+        <div class="q">
+          <p class="enonce">Règle 1 : Les données doivent être…</p>
+          <textarea data-q="BILAN-regle1" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Règle 2 : Les humains doivent…</p>
+          <textarea data-q="BILAN-regle2" placeholder="…"></textarea>
+        </div>
+        <div class="q">
+          <p class="enonce">Règle 3 : Quand l'IA se trompe, il faut…</p>
+          <textarea data-q="BILAN-regle3" placeholder="…"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte bilan">
+        <h3 style="margin-top:0">Enregistrer / rendre votre travail</h3>
+        <p class="note">Vos réponses sont sauvegardées automatiquement dans le navigateur.
+        Exportez-les pour les remettre au professeur.</p>
+        <div class="boutons">
+          <button class="act" id="btn-export">💾 Enregistrer mes réponses</button>
+          <button class="act sec" id="btn-copier">⧉ Copier</button>
+          <button class="act sec" id="btn-imprimer">🖨 Imprimer / PDF</button>
+        </div>
+        <p class="note" id="etat-export">Sauvegarde automatique active.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Récapitulatif de vos réponses</h3>
+        <dl class="reponses-liste" id="recap"><p class="note">Répondez aux questions : vos réponses apparaîtront ici.</p></dl>
+      </div>
+
+      <details class="carte">
+        <summary>Trace écrite à recopier</summary>
+        <p><b>L'IA dans notre poche transforme notre quotidien, mais elle n'est pas neutre.</b></p>
+        <ul>
+          <li><b>Supervisé</b> : données étiquetées → classer, traduire, filtrer.</li>
+          <li><b>Non supervisé</b> : données brutes → regrouper, découvrir des patterns.</li>
+          <li><b>Renforcement</b> : récompenses → agir, s'adapter.</li>
+          <li>Un <b>biais</b> est une erreur systématique due à des données non représentatives.</li>
+          <li>Pour limiter les biais : <b>diversifier les données</b>, <b>contrôle humain</b>, <b>tests d'équité</b>.</li>
+          <li>L'IA est un outil créé par des humains : <b>la responsabilité reste humaine</b>.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<div id="zone-message"></div>
+
+<script>
+/* =====================================================================
+   UTILITAIRES GÉNÉRAUX
+   ===================================================================== */
+function $(id){return document.getElementById(id)}
+function $$(sel){return document.querySelectorAll(sel)}
+function message(txt,duree){
+  var z=$('zone-message');z.textContent=txt;z.className='visible';
+  clearTimeout(message._t);message._t=setTimeout(function(){z.className=''},duree||2600);
+}
+function fmt(n,dec){if(n==null||isNaN(n))return'—';return Number(n).toLocaleString('fr-FR',{minimumFractionDigits:dec||0,maximumFractionDigits:dec||0})}
+
+// Générateur pseudo-aléatoire déterministe
+function creerHasard(graine){
+  var a=graine>>>0;
+  return function(){a|=0;a=(a+0x6D2B79F5)|0;var t=Math.imul(a^(a>>>15),1|a);
+  t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296};
+}
+var rng=creerHasard(42);
+
+/* =====================================================================
+   CHRONOMÈTRE
+   ===================================================================== */
+(function(){
+  var secondes=55*60,timer=null,enMarche=false;
+  function afficher(){
+    var m=Math.floor(secondes/60),s=secondes%60;
+    $('chrono-valeur').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    $('chrono').classList.toggle('fini',secondes<=0);
+  }
+  $('chrono-start').addEventListener('click',function(){
+    if(enMarche){clearInterval(timer);enMarche=false;$('chrono-start').textContent='▶';return}
+    enMarche=true;$('chrono-start').textContent='⏸';
+    timer=setInterval(function(){if(secondes>0){secondes--;afficher()}else{clearInterval(timer);enMarche=false;$('chrono-start').textContent='▶'}},1000);
+  });
+  $('chrono-reset').addEventListener('click',function(){
+    clearInterval(timer);enMarche=false;secondes=55*60;$('chrono-start').textContent='▶';afficher();
+  });
+  afficher();
+})();
+
+/* =====================================================================
+   NAVIGATION PAR ONGLETS
+   ===================================================================== */
+$$('.onglets button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    $$('.onglets button').forEach(function(b){b.classList.remove('actif')});
+    btn.classList.add('actif');
+    $$('main > section').forEach(function(s){s.classList.remove('actif')});
+    $(btn.dataset.tab).classList.add('actif');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    mettreAJourScore();
+  });
+});
+
+// Sous-onglets N1
+$$('#n1-tabs button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    $$('#n1-tabs button').forEach(function(b){b.classList.remove('actif')});
+    btn.classList.add('actif');
+    $$('#n1 .sous-section').forEach(function(s){s.classList.remove('actif')});
+    $('sub-'+btn.dataset.sub).classList.add('actif');
+  });
+});
+
+// Scénarios N3
+$$('#scenario-tabs button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    $$('#scenario-tabs button').forEach(function(b){b.classList.remove('actif')});
+    btn.classList.add('actif');
+    $$('#n3 .sous-section').forEach(function(s){s.classList.remove('actif')});
+    $('sc-'+btn.dataset.scenario).classList.add('actif');
+  });
+});
+
+/* =====================================================================
+   LOCALSTORAGE — SAUVEGARDE AUTOMATIQUE
+   ===================================================================== */
+var CLE_LS='lexia-biais-ia-v1';
+function sauvegarder(){
+  var data={};
+  $$('textarea[data-q]').forEach(function(t){data[t.dataset.q]=t.value});
+  $$('input[data-q]').forEach(function(i){data[i.dataset.q]=i.value});
+  data.binome=$('binome').value;data.classe=$('classe').value;
+  data.quizScores=scoresQuiz;data.classementOk=classementValide;
+  localStorage.setItem(CLE_LS,JSON.stringify(data));
+  majRecap();mettreAJourScore();
+}
+function restaurer(){
+  try{
+    var raw=localStorage.getItem(CLE_LS);if(!raw)return;
+    var data=JSON.parse(raw);
+    $$('textarea[data-q]').forEach(function(t){if(data[t.dataset.q]!==undefined)t.value=data[t.dataset.q]});
+    $$('input[data-q]').forEach(function(i){if(data[i.dataset.q]!==undefined)i.value=data[i.dataset.q]});
+    if(data.binome)$('binome').value=data.binome;
+    if(data.classe)$('classe').value=data.classe;
+    if(data.quizScores)scoresQuiz=data.quizScores;
+    if(data.classementOk)classementValide=data.classementValide;
+    // Restaurer les feedbacks quiz
+    for(var k in scoresQuiz){
+      var fb=$('fb-'+k);if(fb)fb.innerHTML=scoresQuiz[k]?'<span class="ok">✓ Correct</span>':'<span class="erreur">✗ Incorrect</span>';
+    }
+    majRecap();mettreAJourScore();
+  }catch(e){console.warn('Restauration échouée',e)}
+}
+document.addEventListener('input',function(e){if(e.target.matches('textarea[data-q],input[data-q]'))sauvegarder()});
+$('binome').addEventListener('input',sauvegarder);
+$('classe').addEventListener('input',sauvegarder);
+
+/* =====================================================================
+   SYSTÈME DE SCORE
+   ===================================================================== */
+var scoresQuiz={};
+var classementValide=false;
+var SCORE_MAX=20;
+
+function compterScore(){
+  var s=0;
+  // Quiz N1 : 9 questions × 1 pt
+  for(var k in scoresQuiz){if(scoresQuiz[k])s++}
+  // Classement N2 : 4 pts si correct
+  if(classementValide)s+=4;
+  // Textareas remplies N3+N4+Bilan : ~0.3 pt chacune (max ~7 pts)
+  var txtCount=0;
+  $$('textarea[data-q]').forEach(function(t){if(t.value.trim().length>10)txtCount++});
+  s+=Math.min(7,Math.round(txtCount*0.35));
+  return Math.min(SCORE_MAX,s);
+}
+
+function mettreAJourScore(){
+  var s=compterScore();
+  var pct=Math.round(s/SCORE_MAX*100);
+  $('barre-score').style.width=pct+'%';
+  $('score-texte').textContent=s+' / '+SCORE_MAX;
+  var niveau='N1';if(s>=5)niveau='N2';if(s>=10)niveau='N3';if(s>=15)niveau='N4';
+  $('badge-niveau').textContent=niveau;
+}
+
+/* =====================================================================
+   QUIZ N1
+   ===================================================================== */
+var REPONSES_QUIZ={
+  'sup-1':'b','sup-2':'b','sup-3':'b',
+  'nsup-1':'b','nsup-2':'b','nsup-3':'b',
+  'renf-1':'b','renf-2':'b','renf-3':'b'
+};
+
+$$('.quiz-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var q=btn.dataset.q,v=btn.dataset.v;
+    var correct=(REPONSES_QUIZ[q]===v);
+    scoresQuiz[q]=correct;
+    var fb=$('fb-'+q);
+    if(fb)fb.innerHTML=correct?'<span class="ok">✓ Correct !</span>':'<span class="erreur">✗ Incorrect — relisez la définition ci-dessus.</span>';
+    // Désactiver les boutons de cette question
+    $$('[data-q="'+q+'"]').forEach(function(b){b.disabled=true;b.style.opacity=correct&&b.dataset.v===REPONSES_QUIZ[q]?'1':'0.5'});
+    sauvegarder();
+  });
+});
+
+/* =====================================================================
+   CANVAS — VISUALISATION SUPERVISÉ (N1)
+   ===================================================================== */
+(function(){
+  var cv=$('c-supervise'),ctx=cv.getContext('2d');
+  var W=cv.width,H=cv.height;
+  var points=[],nbAffiches=0,frontiereTracee=false;
+  var categories=[
+    {nom:'Salutations',coul:'#2e75b6',cx:0.25,cy:0.3},
+    {nom:'Questions',coul:'#d97706',cx:0.7,cy:0.25},
+    {nom:'Affirmations',coul:'#2e7d32',cx:0.5,cy:0.75}
+  ];
+
+  function genererPoints(){
+    points=[];
+    for(var c=0;c<categories.length;c++){
+      for(var i=0;i<10;i++){
+        points.push({
+          x:categories[c].cx+(rng()-0.5)*0.3,
+          y:categories[c].cy+(rng()-0.5)*0.3,
+          cat:c
+        });
+      }
+    }
+  }
+  genererPoints();
+
+  function dessiner(nb){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    // Grille
+    ctx.strokeStyle='#e8eff6';ctx.lineWidth=1;
+    for(var i=0;i<=10;i++){
+      var p=i/10*W;ctx.beginPath();ctx.moveTo(p,0);ctx.lineTo(p,H);ctx.stroke();
+      var py=i/10*H;ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(W,py);ctx.stroke();
+    }
+    // Points
+    for(var j=0;j<Math.min(nb,points.length);j++){
+      var pt=points[j];
+      ctx.beginPath();
+      ctx.arc(pt.x*W,pt.y*H,8,0,Math.PI*2);
+      ctx.fillStyle=categories[pt.cat].coul;
+      ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    }
+    // Frontière
+    if(frontiereTracee&&nb>=points.length){
+      ctx.setLineDash([8,4]);ctx.lineWidth=3;ctx.strokeStyle='#333';
+      // Frontière simplifiée : ligne entre les clusters
+      ctx.beginPath();ctx.moveTo(0.15*W,0.55*H);ctx.lineTo(0.85*W,0.5*H);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0.45*W,0.05*H);ctx.lineTo(0.55*W,0.95*H);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    $('sup-count').textContent=Math.min(nb,points.length);
+    $('sup-front').textContent=frontiereTracee?'Oui':'Non';
+  }
+
+  dessiner(0);
+
+  $('btn-sup-animer').addEventListener('click',function(){
+    nbAffiches=0;frontiereTracee=false;
+    var anim=setInterval(function(){
+      nbAffiches+=2;
+      if(nbAffiches>=points.length){nbAffiches=points.length;frontiereTracee=true;clearInterval(anim);dessiner(nbAffiches);message('Frontière de décision tracée !');return}
+      dessiner(nbAffiches);
+    },80);
+  });
+
+  $('btn-sup-reset').addEventListener('click',function(){
+    nbAffiches=0;frontiereTracee=false;genererPoints();dessiner(0);
+  });
+})();
+
+/* =====================================================================
+   CANVAS — K-MEANS NON SUPERVISÉ (N1)
+   ===================================================================== */
+(function(){
+  var cv=$('c-non-sup'),ctx=cv.getContext('2d');
+  var W=cv.width,H=cv.height;
+  var points=[],centroides=[],affectation=[],k=3,iterations=0,phase='init';
+  var couleurs=['#2e75b6','#d97706','#2e7d32','#b3261e','#7c3aed'];
+
+  function generer(){
+    points=[];
+    for(var i=0;i<60;i++)points.push({x:rng()*0.9+0.05,y:rng()*0.9+0.05});
+    centroides=[];
+    for(var j=0;j<k;j++)centroides.push({x:rng()*0.8+0.1,y:rng()*0.8+0.1});
+    affectation=new Array(points.length).fill(-1);
+    iterations=0;phase='affectation';
+  }
+  generer();
+
+  function dist(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.sqrt(dx*dx+dy*dy)}
+
+  function etapeAffecter(){
+    for(var i=0;i<points.length;i++){
+      var best=0,bd=Infinity;
+      for(var c=0;c<centroides.length;c++){var d=dist(points[i],centroides[c]);if(d<bd){bd=d;best=c}}
+      affectation[i]=best;
+    }
+    phase='deplacement';
+  }
+
+  function etapeDeplacer(){
+    for(var c=0;c<centroides.length;c++){
+      var sx=0,sy=0,nb=0;
+      for(var i=0;i<points.length;i++){if(affectation[i]===c){sx+=points[i].x;sy+=points[i].y;nb++}}
+      if(nb>0){centroides[c]={x:sx/nb,y:sy/nb}}
+    }
+    iterations++;phase='affectation';
+  }
+
+  function dessiner(){
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    // Points
+    for(var i=0;i<points.length;i++){
+      ctx.beginPath();ctx.arc(points[i].x*W,points[i].y*H,6,0,Math.PI*2);
+      ctx.fillStyle=affectation[i]>=0?couleurs[affectation[i]%couleurs.length]:'#8a99a8';
+      ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+    }
+    // Centroides
+    for(var c=0;c<centroides.length;c++){
+      ctx.beginPath();
+      var cx=centroides[c].x*W,cy=centroides[c].y*H;
+      ctx.moveTo(cx-10,cy);ctx.lineTo(cx+10,cy);ctx.moveTo(cx,cy-10);ctx.lineTo(cx,cy+10);
+      ctx.strokeStyle='#111';ctx.lineWidth=3;ctx.stroke();
+      ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle='#111';ctx.fill();
+    }
+    $('kmeans-iter').textContent=iterations;
+    $('kmeans-phase').textContent=phase==='affectation'?'Affectation des points':'Déplacement des centres';
+  }
+
+  dessiner();
+
+  $('kmeans-k').addEventListener('input',function(){
+    k=parseInt(this.value);$('kmeans-k-val').textContent=k;generer();dessiner();
+  });
+  $('btn-kmeans-step').addEventListener('click',function(){
+    if(phase==='affectation')etapeAffecter();else etapeDeplacer();dessiner();
+  });
+  $('btn-kmeans-converge').addEventListener('click',function(){
+    for(var i=0;i<50;i++){etapeAffecter();etapeDeplacer()}dessiner();message('Convergence atteinte !');
+  });
+  $('btn-kmeans-reset').addEventListener('click',function(){generer();dessiner()});
+})();
+
+/* =====================================================================
+   CANVAS — RENFORCEMENT (N1)
+   ===================================================================== */
+(function(){
+  var cv=$('c-renf'),ctx=cv.getContext('2d');
+  var W=cv.width,H=cv.height;
+  var episodes=0,courbe=[],optimum=8.5;
+
+  function episode(){
+    episodes++;
+    var recompense=Math.min(optimum,optimum*(1-Math.exp(-episodes/30))+((rng()-0.5)*1.5));
+    recompense=Math.max(0,Math.min(10,recompense));
+    courbe.push(recompense);
+  }
+
+  function dessiner(){
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    // Axes
+    ctx.strokeStyle='#c9d6e4';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(50,10);ctx.lineTo(50,H-30);ctx.lineTo(W-10,H-30);ctx.stroke();
+    // Labels
+    ctx.fillStyle='#5b6b7b';ctx.font='12px Arial';ctx.textAlign='center';
+    ctx.fillText('Épisodes',W/2,H-5);
+    ctx.save();ctx.translate(15,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('Récompense',0,0);ctx.restore();
+    // Optimum
+    var yOpt=H-30-(optimum/10)*(H-40);
+    ctx.setLineDash([6,3]);ctx.strokeStyle='#2e7d32';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(50,yOpt);ctx.lineTo(W-10,yOpt);ctx.stroke();ctx.setLineDash([]);
+    // Courbe
+    if(courbe.length>1){
+      ctx.strokeStyle='#2e75b6';ctx.lineWidth=2;ctx.beginPath();
+      for(var i=0;i<courbe.length;i++){
+        var x=50+i/(Math.max(courbe.length,200))*(W-60);
+        var y=H-30-(courbe[i]/10)*(H-40);
+        if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    $('renf-ep').textContent=episodes;
+    $('renf-total').textContent=episodes;
+    var moy=courbe.length?courbe.slice(-20).reduce(function(a,b){return a+b},0)/Math.min(20,courbe.length):0;
+    $('renf-moy').textContent=fmt(moy,1);
+  }
+
+  dessiner();
+
+  $('btn-renf-10').addEventListener('click',function(){for(var i=0;i<10;i++)episode();dessiner()});
+  $('btn-renf-100').addEventListener('click',function(){for(var i=0;i<100;i++)episode();dessiner();message(episodes+' épisodes complétés')});
+  $('btn-renf-reset').addEventListener('click',function(){episodes=0;courbe=[];dessiner()});
+})();
+
+/* =====================================================================
+   CARTES N2 — RÉVÉLER AU CLIC
+   ===================================================================== */
+$$('.carte-fonction').forEach(function(carte){
+  carte.addEventListener('click',function(){carte.classList.toggle('revelee')});
+});
+
+/* =====================================================================
+   CLASSEMENT N2 — DRAG & DROP SIMPLIFIÉ
+   ===================================================================== */
+var selectedItem=null;
+$$('.item-classement').forEach(function(item){
+  item.addEventListener('click',function(){
+    $$('.item-classement').forEach(function(i){i.style.outline=''});
+    selectedItem=item;item.style.outline='2px solid var(--bleu2)';
+  });
+  // Drag natif
+  item.addEventListener('dragstart',function(e){
+    e.dataTransfer.setData('text/plain',item.dataset.id);
+    selectedItem=item;
+  });
+});
+
+$$('.colonne-classement').forEach(function(col){
+  col.addEventListener('click',function(){
+    if(!selectedItem)return;
+    var dz=col.querySelector('.drop-zone');
+    dz.appendChild(selectedItem);
+    selectedItem.style.outline='';selectedItem=null;
+  });
+  col.addEventListener('dragover',function(e){e.preventDefault();col.classList.add('drag-over')});
+  col.addEventListener('dragleave',function(){col.classList.remove('drag-over')});
+  col.addEventListener('drop',function(e){
+    e.preventDefault();col.classList.remove('drag-over');
+    var id=e.dataTransfer.getData('text/plain');
+    var item=document.querySelector('[data-id="'+id+'"]');
+    if(item)col.querySelector('.drop-zone').appendChild(item);
+  });
+});
+
+$('btn-verif-classement').addEventListener('click',function(){
+  var correct=0,total=4;
+  $$('.colonne-classement').forEach(function(col){
+    var cible=col.dataset.col;
+    col.querySelectorAll('.item-classement').forEach(function(item){
+      if(item.dataset.target===cible){item.classList.add('correct');item.classList.remove('incorrect');correct++}
+      else{item.classList.add('incorrect');item.classList.remove('correct')}
+    });
+  });
+  classementValide=(correct===total);
+  $('resultat-classement').innerHTML=classementValide
+    ?'<span class="ok">✓ Bravo ! Les 4 fonctions sont correctement classées.</span>'
+    :'<span class="erreur">✗ '+correct+'/'+total+' correct(s). Réessayez !</span>';
+  sauvegarder();
+});
+
+$('btn-reset-classement').addEventListener('click',function(){
+  $$('.item-classement').forEach(function(item){
+    item.classList.remove('correct','incorrect');
+    $('pool-classement').appendChild(item);
+  });
+  classementValide=false;$('resultat-classement').textContent='Placez les 4 éléments puis vérifiez.';
+  sauvegarder();
+});
+
+/* =====================================================================
+   LABORATOIRE DES BIAIS N3
+   ===================================================================== */
+function dessinerBarres(canvasId,segments){
+  var cv=$(canvasId),ctx=cv.getContext('2d');
+  var W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var total=segments.reduce(function(a,s){return a+s.val},0);
+  var x=40,maxW=W-80;
+  for(var i=0;i<segments.length;i++){
+    var s=segments[i];
+    var w=(s.val/total)*maxW;
+    ctx.fillStyle=s.coul;
+    ctx.fillRect(x,30+i*70,w,50);
+    ctx.fillStyle='#333';ctx.font='bold 14px Arial';ctx.textBaseline='middle';
+    ctx.fillText(s.label+' ('+Math.round(s.val/total*100)+'%)',x+w+8,55+i*70);
+  }
+}
+
+// Scénario A — Traduction
+(function(){
+  var pct=10,corrigee=false;
+  function majCanvas(){
+    var frFam=pct,angForm=90-pct*0.5,autres=10-pct*0.5;
+    if(autres<2)autres=2;
+    dessinerBarres('c-biais-trad',[
+      {label:'Anglais formel',val:angForm,coul:'#2e75b6'},
+      {label:'Français familier',val:frFam,coul:'#d97706'},
+      {label:'Autres langues',val:autres,coul:'#2e7d32'}
+    ]);
+  }
+  majCanvas();
+  $('trad-pct').addEventListener('input',function(){pct=parseInt(this.value);$('trad-pct-val').textContent=pct;corrigee=false;majCanvas()});
+  $('btn-test-trad').addEventListener('click',function(){
+    var r=$('resultat-trad');r.style.display='block';
+    if(pct<25){
+      r.className='resultat-test biais';
+      r.innerHTML='<b>⚠ Résultat biaisé :</b><br>« Wesh ça va ? » → traduit par « Good health? » (absurde)<br>« Ça roule ma poule » → « It rolls my hen » (littéral, faux)<br>Taux de réussite sur le français familier : <b>'+Math.round(pct*2.5)+'%</b>';
+    }else{
+      r.className='resultat-test corrigee';
+      r.innerHTML='<b>✓ Résultat amélioré :</b><br>« Wesh ça va ? » → « Hey, how\'s it going? » (correct)<br>Taux de réussite : <b>'+Math.min(95,Math.round(pct*2.5+20))+'%</b>';
+    }
+  });
+  $('btn-corrige-trad').addEventListener('click',function(){
+    pct=40;$('trad-pct').value=40;$('trad-pct-val').textContent=40;corrigee=true;majCanvas();
+    message('Données diversifiées ! Retestez maintenant.');
+  });
+})();
+
+// Scénario B — Filtrage
+(function(){
+  var pct=15;
+  function majCanvas(){
+    dessinerBarres('c-biais-filtre',[
+      {label:'Messages masculins',val:100-pct,coul:'#2e75b6'},
+      {label:'Messages féminins',val:pct,coul:'#d97706'},
+      {label:'Bloqués à tort',val:Math.max(0,(50-pct)*0.8),coul:'#b3261e'}
+    ]);
+  }
+  majCanvas();
+  $('filtre-pct').addEventListener('input',function(){pct=parseInt(this.value);$('filtre-pct-val').textContent=pct;majCanvas()});
+  $('btn-test-filtre').addEventListener('click',function(){
+    var r=$('resultat-filtre');r.style.display='block';
+    var fauxPositifs=Math.max(2,Math.round((50-pct)*0.7));
+    if(pct<30){
+      r.className='resultat-test biais';
+      r.innerHTML='<b>⚠ Filtrage injuste :</b><br>'+fauxPositifs+' messages féminins normaux bloqués à tort sur 20 testés.<br>Exemple : « Tu es trop belle aujourd\'hui 😊 » → BLOQUÉ comme harcèlement.<br>Taux de faux positifs : <b>'+Math.round(fauxPositifs/20*100)+'%</b>';
+    }else{
+      r.className='resultat-test corrigee';
+      r.innerHTML='<b>✓ Filtrage équitable :</b><br>Seulement 1-2 faux positifs sur 20.<br>Les messages féminins normaux passent correctement.<br>Taux de faux positifs : <b>~5%</b>';
+    }
+  });
+  $('btn-corrige-filtre').addEventListener('click',function(){
+    pct=45;$('filtre-pct').value=45;$('filtre-pct-val').textContent=45;majCanvas();
+    message('Corpus diversifié ! Retestez le filtre.');
+  });
+})();
+
+// Scénario C — Vocale
+(function(){
+  var pct=20;
+  function majCanvas(){
+    dessinerBarres('c-biais-vocale',[
+      {label:'Hommes 20-35 ans',val:100-pct,coul:'#2e75b6'},
+      {label:'Femmes',val:pct*0.6,coul:'#d97706'},
+      {label:'Personnes âgées',val:pct*0.4,coul:'#8a99a8'}
+    ]);
+  }
+  majCanvas();
+  $('voc-pct').addEventListener('input',function(){pct=parseInt(this.value);$('voc-pct-val').textContent=pct;majCanvas()});
+  $('btn-test-vocale').addEventListener('click',function(){
+    var r=$('resultat-vocale');r.style.display='block';
+    if(pct<30){
+      r.className='resultat-test biais';
+      r.innerHTML='<b>⚠ Reconnaissance discriminante :</b><br>Voix masculines jeunes : <b>95%</b> de compréhension<br>Voix féminines : <b>62%</b> de compréhension<br>Voix âgées : <b>48%</b> de compréhension<br>→ Inégalité d\'accès au service !';
+    }else{
+      r.className='resultat-test corrigee';
+      r.innerHTML='<b>✓ Reconnaissance équitable :</b><br>Voix masculines jeunes : <b>94%</b><br>Voix féminines : <b>91%</b><br>Voix âgées : <b>87%</b><br>→ Écart réduit à moins de 7%.';
+    }
+  });
+  $('btn-corrige-vocale').addEventListener('click',function(){
+    pct=45;$('voc-pct').value=45;$('voc-pct-val').textContent=45;majCanvas();
+    message('Voix équilibrées ! Retestez la reconnaissance.');
+  });
+})();
+
+/* =====================================================================
+   DÉBAT N4
+   ===================================================================== */
+var selectedArg=null;
+$$('.arg-card').forEach(function(card){
+  card.addEventListener('click',function(){
+    $$('.arg-card').forEach(function(c){c.classList.remove('selectionne')});
+    selectedArg=card;card.classList.add('selectionne');
+  });
+});
+
+['col-a','col-b'].forEach(function(id){
+  $(id).addEventListener('click',function(){
+    if(!selectedArg||selectedArg.parentElement.id==='arg-pool'){
+      // Ne déplacer que depuis le pool
+    }
+    if(selectedArg){
+      $(id).querySelector('.drop-area').appendChild(selectedArg);
+      selectedArg.classList.remove('selectionne');selectedArg=null;
+    }
+  });
+});
+
+$('btn-verif-debat').addEventListener('click',function(){
+  var correct=0,total=8;
+  ['a','b'].forEach(function(g){
+    var col=$('col-'+g);
+    col.querySelectorAll('.arg-card').forEach(function(card){
+      if(card.dataset.groupe===g){card.style.background='var(--vertF)';card.style.borderColor='var(--vert)';correct++}
+      else{card.style.background='var(--rougeF)';card.style.borderColor='var(--rouge)'}
+    });
+  });
+  $('resultat-debat').innerHTML=correct===total
+    ?'<span class="ok">✓ Tous les arguments sont bien placés !</span>'
+    :'<span class="erreur">'+correct+'/'+total+' correct(s). Relisez les arguments et replacez-les.</span>';
+  sauvegarder();
+});
+
+$('btn-reset-debat').addEventListener('click',function(){
+  $$('.arg-card').forEach(function(c){
+    c.style.background='';c.style.borderColor='';
+    $('arg-pool').appendChild(c);
+  });
+  $('resultat-debat').textContent='Placez les 8 arguments puis vérifiez.';
+});
+
+/* =====================================================================
+   RÉCAPITULATIF ET EXPORT
+   ===================================================================== */
+function majRecap(){
+  var dl=$('recap'),html='',count=0;
+  $$('textarea[data-q]').forEach(function(t){
+    if(t.value.trim()){
+      html+='<dt>'+t.dataset.q+'</dt><dd>'+t.value.replace(/</g,'&lt;')+'</dd>';
+      count++;
+    }
+  });
+  dl.innerHTML=count?html:'<p class="note">Répondez aux questions : vos réponses apparaîtront ici.</p>';
+}
+
+$('btn-export').addEventListener('click',function(){
+  sauvegarder();
+  var data=JSON.parse(localStorage.getItem(CLE_LS)||'{}');
+  var texte='=== Simulateur LexIA — Export ===\n';
+  texte+='Date : '+new Date().toLocaleString('fr-FR')+'\n';
+  texte+='Binôme : '+(data.binome||'—')+'\n';
+  texte+='Classe : '+(data.classe||'—')+'\n\n';
+  for(var k in data){
+    if(k!=='binome'&&k!=='classe'&&k!=='quizScores'&&k!=='classementOk'&&typeof data[k]==='string'&&data[k].trim()){
+      texte+='['+k+']\n'+data[k]+'\n\n';
+    }
+  }
+  var blob=new Blob([texte],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='lexia-biais-ia-export.txt';a.click();
+  $('etat-export').textContent='Export téléchargé à '+new Date().toLocaleTimeString('fr-FR');
+  message('Fichier exporté !');
+});
+
+$('btn-copier').addEventListener('click',function(){
+  var texte='';
+  $$('textarea[data-q]').forEach(function(t){if(t.value.trim())texte+=t.dataset.q+' :\n'+t.value+'\n\n'});
+  navigator.clipboard.writeText(texte).then(function(){message('Copié dans le presse-papiers !')});
+});
+
+$('btn-imprimer').addEventListener('click',function(){window.print()});
+
+/* =====================================================================
+   INITIALISATION
+   ===================================================================== */
+restaurer();
+mettreAJourScore();
+message('Bienvenue dans le Simulateur LexIA !');
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "3e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz — Innovations et ruptures technologiques</title>
+<style>
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none}
+section.actif{display:block}
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.grille{display:grid; grid-template-columns:minmax(330px,1.35fr) minmax(310px,1fr); gap:14px; align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+select,input[type=text],input[type=number],textarea{font:inherit; font-size:.88rem; padding:4px 6px;
+  border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{width:100%; min-height:3.2rem; resize:vertical}
+table{border-collapse:collapse; width:100%; font-size:.85rem}
+th,td{border:1px solid var(--bord); padding:3px 6px; text-align:left}
+th{background:var(--bleuf); color:var(--bleu)}
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+.mesure{font-size:.88rem; background:var(--bleuf2); border:1px dashed var(--bleu2); border-radius:8px; padding:6px 9px; margin:.5rem 0}
+.mesure b{color:var(--bleu)}
+.verdict{font-size:1rem; font-weight:bold}
+.erreur{color:var(--rouge); font-weight:bold}
+.ok{color:var(--vert); font-weight:bold}
+details{margin:.5rem 0; font-size:.87rem}
+summary{cursor:pointer; color:var(--bleu2); font-weight:bold}
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+ol{padding-left:1.3rem}
+ol li{margin:.25rem 0}
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+.note{font-size:.8rem; color:var(--gris)}
+
+/* Quiz styles */
+.quiz-question{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:14px 16px; margin-bottom:14px; transition:border-color .3s}
+.quiz-question.correct{border-color:var(--vert); background:var(--vertF)}
+.quiz-question.incorrect{border-color:var(--rouge); background:#fef2f2}
+.quiz-question .q-header{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+.quiz-question .q-num{background:var(--bleu2); color:#fff; border-radius:50%; width:28px; height:28px;
+  display:flex; align-items:center; justify-content:center; font-size:.82rem; font-weight:bold; flex-shrink:0}
+.quiz-question .q-bloom{font-size:.7rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:2px 8px}
+.quiz-question .q-text{font-weight:bold; font-size:.92rem; margin-bottom:10px}
+.quiz-options{display:flex; flex-direction:column; gap:6px}
+.quiz-option{display:flex; align-items:flex-start; gap:8px; padding:8px 10px; border:1px solid var(--bord);
+  border-radius:8px; cursor:pointer; transition:all .2s; font-size:.88rem}
+.quiz-option:hover{background:var(--bleuf2); border-color:var(--bleu2)}
+.quiz-option.selected{background:var(--bleuf); border-color:var(--bleu2); font-weight:bold}
+.quiz-option.correct-answer{background:var(--vertF); border-color:var(--vert)}
+.quiz-option.wrong-answer{background:#fef2f2; border-color:var(--rouge)}
+.quiz-option input[type=radio],.quiz-option input[type=checkbox]{margin-top:2px; flex-shrink:0}
+.quiz-feedback{margin-top:8px; padding:8px 10px; border-radius:6px; font-size:.85rem; display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:var(--vertF); color:var(--vert)}
+.quiz-feedback.incorrect{background:#fef2f2; color:var(--rouge)}
+
+/* Drag & Drop association */
+.assoc-container{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0}
+@media(max-width:700px){.assoc-container{grid-template-columns:1fr}}
+.assoc-col{display:flex; flex-direction:column; gap:8px}
+.assoc-item{padding:10px 12px; border:2px solid var(--bord); border-radius:8px; cursor:grab;
+  font-size:.85rem; background:#fff; transition:all .2s; user-select:none}
+.assoc-item:active{cursor:grabbing}
+.assoc-item.dragging{opacity:.5; border-style:dashed}
+.assoc-item.matched{border-color:var(--vert); background:var(--vertF)}
+.assoc-item.wrong{border-color:var(--rouge); background:#fef2f2; animation:shake .4s}
+.assoc-target{min-height:44px; border:2px dashed var(--bord); border-radius:8px; padding:10px 12px;
+  font-size:.85rem; background:var(--bleuf2); transition:all .2s; display:flex; align-items:center}
+.assoc-target.over{border-color:var(--bleu2); background:var(--bleuf)}
+.assoc-target.filled{border-style:solid; border-color:var(--bleu2); background:#fff}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* Progress bar */
+.progress-container{margin:10px 0}
+.progress-bar{height:10px; background:var(--bleuf); border-radius:5px; overflow:hidden}
+.progress-fill{height:100%; background:var(--vert); transition:width .4s ease; border-radius:5px}
+.progress-text{font-size:.82rem; color:var(--gris); margin-top:4px; display:flex; justify-content:space-between}
+
+/* Score panel */
+.score-panel{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:12px 0}
+@media(max-width:600px){.score-panel{grid-template-columns:repeat(2,1fr)}}
+.score-card{text-align:center; padding:10px 8px; border-radius:8px; border:1px solid var(--bord); background:#fff}
+.score-card .score-level{font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--gris); margin-bottom:4px}
+.score-card .score-value{font-size:1.4rem; font-weight:bold; color:var(--bleu)}
+.score-card .score-max{font-size:.75rem; color:var(--gris)}
+.score-card.n1{border-bottom:3px solid #3b82f6}
+.score-card.n2{border-bottom:3px solid var(--orange)}
+.score-card.n3{border-bottom:3px solid var(--vert)}
+.score-card.n4{border-bottom:3px solid #7c3aed}
+
+#zone-message{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:var(--bleu);
+  color:#fff; padding:7px 14px; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .25s; z-index:50}
+#zone-message.visible{opacity:1}
+@media print{
+  header, .onglets, .boutons, .no-print{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles — voir
+   Rapport-compatibilite-mobile-apps.md)
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   ===================================================================== */
+/* Ecrans etroits OU peu hauts (telephone en paysage).
+     Prefixe « screen » : l'impression et l'export PDF ne sont pas touches. */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .ligne-titre{gap:6px 10px}
+  header .bloc-binome{font-size:.78rem; gap:6px}
+  header .bloc-binome input{width:auto; min-width:0; max-width:9rem; padding:3px 6px}
+  header .chrono{font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* Onglets : une seule ligne, defilement horizontal */
+  header .onglets{flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch; gap:6px; margin-top:6px; padding-bottom:2px}
+  header .onglets button{flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px}
+
+  /* Champs de saisie : 16 px = pas de zoom automatique sur iOS */
+  input, textarea, select{font-size:16px !important}
+
+  /* Reponses de QCM : la ligne entiere devient une cible confortable */
+  label.option-choix, label.quiz-option{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* Etiquettes a deplacer */
+  .etiquette, .assoc-item, .etiquette-drop{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* Repere visuel de l'etiquette selectionnee au doigt */
+  .etiquette.selectionnee, .assoc-item.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : repli de la barre au defilement + compensation des
+     sauts d'ancre. Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend donc que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  function ajuster() {
+    var entete = document.querySelector('header');
+    if (!entete) return;
+    var onglets = entete.querySelector('.onglets') || entete.querySelector('.tabs');
+    if (!onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+    var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+    var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+    var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+    var hauteurVisible = Math.round(entete.offsetHeight - (petit ? dessus : 0));
+
+    // En petit ecran, tout ce qui precede les onglets sort de l'ecran au
+    // defilement : l'eleve garde les onglets sous les yeux sans perdre la
+    // moitie de son ecran. Sur ordinateur, rien ne change (top:0).
+    entete.style.top = petit ? (-dessus) + 'px' : '0px';
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    document.documentElement.style.scrollPaddingTop = (hauteurVisible + 8) + 'px';
+  }
+
+  function demarrer() {
+    ajuster();
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <div class="ligne-titre">
+    <h1>Innovations et ruptures technologiques <small>3<sup>e</sup> · technologie · Séquence 1a · Activité 2</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-tab="n1" class="actif">N1 — Connaissances</button>
+    <button data-tab="n2">N2 — Compréhension</button>
+    <button data-tab="n3">N3 — Application</button>
+    <button data-tab="n4">N4 — Analyse</button>
+    <button data-tab="bilan">Bilan</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================ N1 ============================ -->
+<section id="n1" class="actif">
+  <h2>N1 — Mémoriser : Connaissances fondamentales</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Reconnaître une lignée d'OST, distinguer invention/innovation/développement durable, identifier les contraintes sociétales.
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="prog-n1" style="width:0%"></div></div>
+    <div class="progress-text"><span id="prog-n1-text">0 / 4 questions</span><span id="score-n1-display">Score : 0</span></div>
+  </div>
+
+  <!-- QCM N1a -->
+  <div class="quiz-question" id="q-n1a" data-bloom="N1">
+    <div class="q-header">
+      <div class="q-num">1</div>
+      <span class="q-bloom">N1 — Mémoriser</span>
+    </div>
+    <div class="q-text">Qu'est-ce qui distingue une invention d'une innovation ?</div>
+    <div class="quiz-options" data-type="single" data-correct="A">
+      <label class="quiz-option" data-val="A">
+        <input type="radio" name="n1a"> Une invention est une nouvelle idée ou un nouveau principe technique ; une innovation est sa mise sur le marché avec succès auprès des utilisateurs.
+      </label>
+      <label class="quiz-option" data-val="B">
+        <input type="radio" name="n1a"> Une invention et une innovation désignent exactement la même chose.
+      </label>
+      <label class="quiz-option" data-val="C">
+        <input type="radio" name="n1a"> Une innovation précède toujours l'invention correspondante.
+      </label>
+      <label class="quiz-option" data-val="D">
+        <input type="radio" name="n1a"> Une invention concerne uniquement le développement durable.
+      </label>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- QCM N1b -->
+  <div class="quiz-question" id="q-n1b" data-bloom="N1">
+    <div class="q-header">
+      <div class="q-num">2</div>
+      <span class="q-bloom">N1 — Mémoriser</span>
+    </div>
+    <div class="q-text">Parmi les évolutions suivantes du smartphone, lesquelles relèvent du développement durable ? (plusieurs réponses possibles)</div>
+    <div class="quiz-options" data-type="multi" data-correct="A,C">
+      <label class="quiz-option" data-val="A">
+        <input type="checkbox" name="n1b"> L'utilisation de plastique recyclé dans la coque.
+      </label>
+      <label class="quiz-option" data-val="B">
+        <input type="checkbox" name="n1b"> L'ajout d'un appareil photo à plus haute résolution.
+      </label>
+      <label class="quiz-option" data-val="C">
+        <input type="checkbox" name="n1b"> La conception d'une batterie remplaçable par l'utilisateur pour prolonger la durée de vie.
+      </label>
+      <label class="quiz-option" data-val="D">
+        <input type="checkbox" name="n1b"> L'augmentation de la puissance du processeur.
+      </label>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <!-- Association N1c -->
+  <div class="quiz-question" id="q-n1c" data-bloom="N1">
+    <div class="q-header">
+      <div class="q-num">3</div>
+      <span class="q-bloom">N1 — Mémoriser</span>
+    </div>
+    <div class="q-text">Associer chaque étape de la lignée du téléphone à sa description. Touchez un objet, puis touchez la description correspondante (ou glissez-le à la souris).</div>
+    <div class="assoc-container" id="assoc-n1c">
+      <div class="assoc-col" id="assoc-n1c-sources">
+        <div class="assoc-item" draggable="true" data-id="fixe">📞 Téléphone fixe à cadran</div>
+        <div class="assoc-item" draggable="true" data-id="mobile">📱 Téléphone mobile à touches</div>
+        <div class="assoc-item" draggable="true" data-id="smart">📲 Premier smartphone tactile</div>
+        <div class="assoc-item" draggable="true" data-id="pliable">🔄 Smartphone pliable actuel</div>
+      </div>
+      <div class="assoc-col" id="assoc-n1c-targets">
+        <div class="assoc-target" data-match="fixe">Fonctionne uniquement branché à une ligne téléphonique filaire.</div>
+        <div class="assoc-target" data-match="mobile">Permet d'appeler sans être relié par un fil, depuis n'importe quel lieu.</div>
+        <div class="assoc-target" data-match="smart">Introduit la commande par le doigt sur un écran, remplaçant les touches physiques.</div>
+        <div class="assoc-target" data-match="pliable">Combine un grand écran et un format compact grâce à un écran flexible.</div>
+      </div>
+    </div>
+    <div class="boutons">
+      <button class="act" id="btn-check-assoc-n1c">✓ Vérifier mes associations</button>
+      <button class="act sec" id="btn-reset-assoc-n1c">↺ Recommencer</button>
+    </div>
+    <div class="quiz-feedback" id="fb-n1c"></div>
+  </div>
+
+  <!-- QCM N1d -->
+  <div class="quiz-question" id="q-n1d" data-bloom="N1">
+    <div class="q-header">
+      <div class="q-num">4</div>
+      <span class="q-bloom">N1 — Mémoriser</span>
+    </div>
+    <div class="q-text">Parmi les éléments suivants, lesquels sont des contraintes sociétales qui influencent la conception des smartphones ? (plusieurs réponses)</div>
+    <div class="quiz-options" data-type="multi" data-correct="A,B,D">
+      <label class="quiz-option" data-val="A">
+        <input type="checkbox" name="n1d"> L'accessibilité pour les personnes malvoyantes ou malentendantes.
+      </label>
+      <label class="quiz-option" data-val="B">
+        <input type="checkbox" name="n1d"> Le coût de fabrication.
+      </label>
+      <label class="quiz-option" data-val="C">
+        <input type="checkbox" name="n1d"> La couleur préférée du concepteur.
+      </label>
+      <label class="quiz-option" data-val="D">
+        <input type="checkbox" name="n1d"> Le respect des règlements sur le recyclage des appareils électroniques.
+      </label>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" id="btn-validate-n1">✓ Valider toutes mes réponses N1</button>
+  </div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1a</span>Les éléments qui participent à l'évolution des besoins (invention, innovation, développement durable)</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/SW5baiZ2eJTqWfQ" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/2z1NaaZfmgGfKGF2A" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1c</span>La famille et la lignée d'OST</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/o2qoHTQBzyHqgGf" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113247-ost1c-la-famille-et-la-lignee-dost/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113247-ost1c-la-famille-et-la-lignee-dost/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/EmDcue7oq1mKGUcL8" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1d</span>Les contraintes sociétales</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/yrkbGNrTRKceMJp" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113246-ost1d-les-contraintes-societales/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113246-ost1d-les-contraintes-societales/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/B8sosjVCNbVSmehT6" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- ============================ N2 ============================ -->
+<section id="n2">
+  <h2>N2 — Comprendre : Explication et reformulation</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Expliquer avec ses propres mots la différence entre invention et innovation, comprendre la notion de lignée d'OST.
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="prog-n2" style="width:0%"></div></div>
+    <div class="progress-text"><span id="prog-n2-text">0 / 3 activités</span><span id="score-n2-display">Score : 0</span></div>
+  </div>
+
+  <!-- Cartes à retourner -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Cartes concepts — Cliquez pour retourner</h3>
+    <p class="note">Cliquez sur chaque carte pour découvrir l'explication. Lisez attentivement avant de répondre aux questions.</p>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-bottom:16px">
+    <div class="flip-card" onclick="this.classList.toggle('flipped')" style="perspective:1000px; cursor:pointer; height:200px">
+      <div style="position:relative; width:100%; height:100%; transition:transform .6s; transform-style:preserve-3d" class="flip-inner">
+        <div style="position:absolute; width:100%; height:100%; backface-visibility:hidden; background:var(--bleuf2); border:2px solid var(--bleu2); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px; text-align:center">
+          <div style="font-size:2rem; margin-bottom:8px">💡</div>
+          <div style="font-weight:bold; font-size:1.1rem; color:var(--bleu)">INVENTION</div>
+          <div style="font-size:.82rem; color:var(--gris); margin-top:6px">Cliquez pour voir l'explication</div>
+        </div>
+        <div style="position:absolute; width:100%; height:100%; backface-visibility:hidden; background:#fff; border:2px solid var(--bleu2); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px; text-align:center; transform:rotateY(180deg)">
+          <div style="font-size:.88rem; line-height:1.4">Une <b>invention</b> est une nouvelle idée ou un nouveau principe technique.<br><br><i>Exemple : le premier téléphone portable de Martin Cooper en 1973 — un prototype qui n'était pas vendu au public.</i></div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.querySelector('.flip-inner').style.transform=this.querySelector('.flip-inner').style.transform==='rotateY(180deg)'?'':'rotateY(180deg)'" style="perspective:1000px; cursor:pointer; height:200px">
+      <div style="position:relative; width:100%; height:100%; transition:transform .6s; transform-style:preserve-3d" class="flip-inner">
+        <div style="position:absolute; width:100%; height:100%; backface-visibility:hidden; background:var(--orangeF); border:2px solid var(--orange); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px; text-align:center">
+          <div style="font-size:2rem; margin-bottom:8px">🚀</div>
+          <div style="font-weight:bold; font-size:1.1rem; color:var(--orange)">INNOVATION</div>
+          <div style="font-size:.82rem; color:var(--gris); margin-top:6px">Cliquez pour voir l'explication</div>
+        </div>
+        <div style="position:absolute; width:100%; height:100%; backface-visibility:hidden; background:#fff; border:2px solid var(--orange); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px; text-align:center; transform:rotateY(180deg)">
+          <div style="font-size:.88rem; line-height:1.4">Une <b>innovation</b> est la mise sur le marché réussie d'une invention, adoptée par les utilisateurs.<br><br><i>Exemple : l'iPhone en 2007 — il n'a pas inventé le téléphone mobile, mais a transformé son usage grâce à l'écran tactile et aux applications.</i></div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.querySelector('.flip-inner').style.transform=this.querySelector('.flip-inner').style.transform==='rotateY(180deg)'?'':'rotateY(180deg)'" style="perspective:1000px; cursor:pointer; height:200px">
+      <div style="position:relative; width:100%; height:100%; transition:transform .6s; transform-style:preserve-3d" class="flip-inner">
+        <div style="position:absolute; width:100%; height:100%; backface-visibility:hidden; background:var(--vertF); border:2px solid var(--vert); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px; text-align:center">
+          <div style="font-size:2rem; margin-bottom:8px">⚡</div>
+          <div style="font-weight:bold; font-size:1.1rem; color:var(--vert)">RUPTURE</div>
+          <div style="font-size:.82rem; color:var(--gris); margin-top:6px">Cliquez pour voir l'explication</div>
+        </div>
+        <div style="position:absolute; width:100%; height:100%; backface-visibility:hidden; background:#fff; border:2px solid var(--vert); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:16px; text-align:center; transform:rotateY(180deg)">
+          <div style="font-size:.88rem; line-height:1.4">Une <b>innovation de rupture</b> change profondément les usages.<br><br><i>Exemple : l'arrivée d'Internet et des applications dans le téléphone — on ne téléphone plus seulement, on s'informe, on travaille, on paie, on se repère.</i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions N2 -->
+  <div class="quiz-question" id="q-n2a" data-bloom="N2">
+    <div class="q-header">
+      <div class="q-num">1</div>
+      <span class="q-bloom">N2 — Comprendre</span>
+    </div>
+    <div class="q-text">Expliquez avec vos propres mots la différence entre invention et innovation, en utilisant un exemple pris dans l'histoire du téléphone portable.</div>
+    <textarea id="resp-n2a" placeholder="L'invention est… alors que l'innovation est… Par exemple…" rows="4"></textarea>
+    <div class="boutons">
+      <button class="act" onclick="checkOpenQuestion('n2a')">✓ Vérifier ma réponse</button>
+    </div>
+    <div class="quiz-feedback" id="fb-n2a"></div>
+    <details>
+      <summary>Voir un exemple de réponse attendue</summary>
+      <p>L'invention est la création d'une idée ou d'un principe technique totalement nouveau (ex : le premier téléphone portable de 1983). L'innovation reprend ce principe et l'améliore pour mieux répondre aux besoins des utilisateurs (ex : le smartphone tactile de 2007).</p>
+    </details>
+  </div>
+
+  <div class="quiz-question" id="q-n2b" data-bloom="N2">
+    <div class="q-header">
+      <div class="q-num">2</div>
+      <span class="q-bloom">N2 — Comprendre</span>
+    </div>
+    <div class="q-text">Qu'est-ce qu'une « lignée d'OST » ? Montrez en quoi le smartphone appartient à la même famille que le téléphone fixe et le talkie-walkie.</div>
+    <textarea id="resp-n2b" placeholder="Une lignée d'OST regroupe des objets qui…" rows="4"></textarea>
+    <div class="boutons">
+      <button class="act" onclick="checkOpenQuestion('n2b')">✓ Vérifier ma réponse</button>
+    </div>
+    <div class="quiz-feedback" id="fb-n2b"></div>
+    <details>
+      <summary>Voir un exemple de réponse attendue</summary>
+      <p>Une lignée d'OST regroupe des objets techniques qui répondent au même besoin fondamental (communiquer à distance) mais dont les solutions techniques ont évolué. Le téléphone fixe (liaison filaire), le talkie-walkie (ondes radio courte portée) et le smartphone (réseau mobile + internet) appartiennent à la même famille.</p>
+    </details>
+  </div>
+
+  <div class="quiz-question" id="q-n2c" data-bloom="N2">
+    <div class="q-header">
+      <div class="q-num">3</div>
+      <span class="q-bloom">N2 — Comprendre</span>
+    </div>
+    <div class="q-text">Complétez le schéma de la lignée d'OST en sélectionnant le bon terme pour chaque case :</div>
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:12px 0; font-size:.9rem">
+      <span style="padding:6px 12px; background:var(--bleuf); border-radius:6px; font-weight:bold">Besoin fondamental :</span>
+      <select id="sel-n2c-1" style="padding:6px; border-radius:6px; border:1px solid var(--bord)">
+        <option value="">— Choisir —</option>
+        <option value="comm">Communiquer à distance</option>
+        <option value="photo">Prendre des photos</option>
+        <option value="jeu">Jouer en ligne</option>
+      </select>
+      <span>→</span>
+      <span style="padding:6px 12px; background:var(--orangeF); border-radius:6px; font-weight:bold">Solution technique :</span>
+      <select id="sel-n2c-2" style="padding:6px; border-radius:6px; border:1px solid var(--bord)">
+        <option value="">— Choisir —</option>
+        <option value="evol">Évolue au fil du temps</option>
+        <option value="fixe">Reste toujours identique</option>
+        <option value="dispo">Disparaît rapidement</option>
+      </select>
+      <span>→</span>
+      <span style="padding:6px 12px; background:var(--vertF); border-radius:6px; font-weight:bold">Résultat :</span>
+      <select id="sel-n2c-3" style="padding:6px; border-radius:6px; border:1px solid var(--bord)">
+        <option value="">— Choisir —</option>
+        <option value="lignee">Une lignée d'OST</option>
+        <option value="objet">Un seul objet unique</option>
+        <option value="rien">Rien de particulier</option>
+      </select>
+    </div>
+    <div class="boutons">
+      <button class="act" onclick="checkSelectN2c()">✓ Vérifier</button>
+    </div>
+    <div class="quiz-feedback" id="fb-n2c"></div>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" id="btn-validate-n2">✓ Valider toutes mes réponses N2</button>
+  </div>
+</section>
+
+<!-- ============================ N3 ============================ -->
+<section id="n3">
+  <h2>N3 — Appliquer : Frise chronologique et analyse</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Créer une frise chronologique interactive, expliquer l'incidence d'un OST sur la société.
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="prog-n3" style="width:0%"></div></div>
+    <div class="progress-text"><span id="prog-n3-text">0 / 3 activités</span><span id="score-n3-display">Score : 0</span></div>
+  </div>
+
+  <!-- Frise interactive -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Frise chronologique interactive</h3>
+    <p>Cliquez sur chaque objet pour découvrir son histoire. Puis classez les étiquettes « Invention », « Innovation » et « Innovation de rupture ».</p>
+  </div>
+
+  <div id="timeline" style="overflow-x:auto; padding:20px 0; margin-bottom:16px">
+    <div style="display:flex; gap:0; min-width:900px; position:relative; padding:40px 20px 60px">
+      <!-- Ligne horizontale -->
+      <div style="position:absolute; top:50%; left:20px; right:20px; height:3px; background:var(--bleu2); z-index:0"></div>
+
+      <!-- 1876 -->
+      <div class="timeline-item" data-year="1876" data-name="Téléphone fixe" data-innovation="Transmission électrique de la voix" data-besoin="Communiquer à distance sans se déplacer" data-decouverte="Ondes électromagnétiques (Maxwell)" data-type="invention"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--bleu2); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--bleu2)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--bleu)">1876</div>
+        <div style="font-size:.75rem; color:var(--gris)">Téléphone fixe</div>
+        <div style="font-size:1.5rem; margin-top:4px">📞</div>
+      </div>
+
+      <!-- 1973 -->
+      <div class="timeline-item" data-year="1973" data-name="Premier appel mobile" data-innovation="Téléphonie sans fil (prototype)" data-besoin="Téléphoner en se déplaçant" data-decouverte="Ondes radio et réseaux cellulaires" data-type="invention"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--orange); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--orange)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--orange)">1973</div>
+        <div style="font-size:.75rem; color:var(--gris)">1er appel mobile</div>
+        <div style="font-size:1.5rem; margin-top:4px">📟</div>
+      </div>
+
+      <!-- 1983 -->
+      <div class="timeline-item" data-year="1983" data-name="DynaTAC 8000X" data-innovation="Premier téléphone mobile commercial" data-besoin="Téléphoner partout, autonomie personnelle" data-decouverte="Miniaturisation électronique, réseaux cellulaires" data-type="innovation"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--vert); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--vert)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--vert)">1983</div>
+        <div style="font-size:.75rem; color:var(--gris)">DynaTAC</div>
+        <div style="font-size:1.5rem; margin-top:4px">🧱</div>
+      </div>
+
+      <!-- 1992 -->
+      <div class="timeline-item" data-year="1992" data-name="Premier SMS" data-innovation="Messagerie texte sur réseau mobile" data-besoin="Communiquer par écrit sans appeler" data-decouverte="Protocole GSM" data-type="innovation"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--bleu2); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--bleu2)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--bleu)">1992</div>
+        <div style="font-size:.75rem; color:var(--gris)">Premier SMS</div>
+        <div style="font-size:1.5rem; margin-top:4px">💬</div>
+      </div>
+
+      <!-- 2000 -->
+      <div class="timeline-item" data-year="2000" data-name="Téléphone avec appareil photo" data-innovation="Appareil photo intégré au téléphone" data-besoin="Capturer et partager des images instantanément" data-decouverte="Capteurs CMOS miniaturisés" data-type="innovation"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--orange); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--orange)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--orange)">2000</div>
+        <div style="font-size:.75rem; color:var(--gris)">Phone + Photo</div>
+        <div style="font-size:1.5rem; margin-top:4px">📷</div>
+      </div>
+
+      <!-- 2007 -->
+      <div class="timeline-item" data-year="2007" data-name="iPhone" data-innovation="Smartphone tactile + App Store" data-besoin="Un appareil multifonction : téléphone, Internet, apps" data-decouverte="Écran capacitif, connexion Internet mobile haut débit" data-type="rupture"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--vert); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--vert)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--vert)">2007</div>
+        <div style="font-size:.75rem; color:var(--gris)">iPhone</div>
+        <div style="font-size:1.5rem; margin-top:4px">📱</div>
+      </div>
+
+      <!-- 2019 -->
+      <div class="timeline-item" data-year="2019" data-name="Smartphone pliable" data-innovation="Écran flexible OLED" data-besoin="Grand écran + format compact" data-decouverte="Matériaux flexibles, charnières résistantes" data-type="innovation"
+           style="flex:1; text-align:center; position:relative; z-index:1; cursor:pointer; padding:0 4px"
+           onclick="showTimelineDetail(this)">
+        <div style="width:16px; height:16px; background:var(--bleu2); border-radius:50%; margin:0 auto 8px; border:3px solid #fff; box-shadow:0 0 0 2px var(--bleu2)"></div>
+        <div style="font-weight:bold; font-size:.82rem; color:var(--bleu)">2019</div>
+        <div style="font-size:.75rem; color:var(--gris)">Pliable</div>
+        <div style="font-size:1.5rem; margin-top:4px">🔄</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Détail timeline -->
+  <div class="carte" id="timeline-detail" style="display:none">
+    <h3 id="td-title" style="margin-top:0"></h3>
+    <table>
+      <tr><th style="width:140px">Année</th><td id="td-year"></td></tr>
+      <tr><th>Innovation majeure</th><td id="td-innovation"></td></tr>
+      <tr><th>Besoin sociétal</th><td id="td-besoin"></td></tr>
+      <tr><th>Découverte scientifique</th><td id="td-decouverte"></td></tr>
+    </table>
+    <div style="margin-top:10px">
+      <span style="font-size:.85rem; font-weight:bold; color:var(--bleu)">Classer cet objet :</span>
+      <div class="boutons" style="margin-top:4px">
+        <button class="act sec timeline-classify" data-type="invention" onclick="classifyTimeline('invention')">💡 Invention</button>
+        <button class="act sec timeline-classify" data-type="innovation" onclick="classifyTimeline('innovation')">🚀 Innovation</button>
+        <button class="act sec timeline-classify" data-type="rupture" onclick="classifyTimeline('rupture')">⚡ Rupture</button>
+      </div>
+      <div id="td-result" style="margin-top:6px; font-size:.85rem"></div>
+    </div>
+  </div>
+
+  <!-- Exercice incidence -->
+  <div class="quiz-question" id="q-n3-incidence" data-bloom="N3">
+    <div class="q-header">
+      <div class="q-num">+</div>
+      <span class="q-bloom">N3 — Appliquer</span>
+    </div>
+    <div class="q-text">En 2-3 phrases, expliquez comment l'arrivée du smartphone a modifié la vie quotidienne des adolescents de votre âge.</div>
+    <textarea id="resp-n3-incidence" placeholder="Le smartphone a changé… car…" rows="3"></textarea>
+    <div class="boutons">
+      <button class="act" onclick="checkOpenQuestion('n3-incidence')">✓ Vérifier</button>
+    </div>
+    <div class="quiz-feedback" id="fb-n3-incidence"></div>
+    <details>
+      <summary>Pistes de réponse</summary>
+      <p>Communication instantanée (messages, réseaux sociaux), accès à l'information partout, nouveaux loisirs (jeux, vidéos), mais aussi risques de dépendance, cyberharcèlement, temps d'écran excessif, comparaison sociale.</p>
+    </details>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" id="btn-validate-n3">✓ Valider mes réponses N3</button>
+  </div>
+</section>
+
+<!-- ============================ N4 ============================ -->
+<section id="n4">
+  <h2>N4 — Analyser et Créer : Contraintes sociétales et smartphone de demain</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Analyser les contraintes sociétales qui influencent l'évolution des OST, concevoir un smartphone responsable.
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="prog-n4" style="width:0%"></div></div>
+    <div class="progress-text"><span id="prog-n4-text">0 / 2 activités</span><span id="score-n4-display">Score : 0</span></div>
+  </div>
+
+  <!-- Défi conception -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">🏭 Défi — Concevez le smartphone de 2035</h3>
+    <p>Vous êtes ingénieur chez un fabricant. On vous demande de concevoir un smartphone qui respecte les contraintes sociétales actuelles. Faites vos choix !</p>
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">Vos choix de conception</h3>
+
+        <div class="champ">
+          <span>🌍 Environnement</span>
+          <select id="choix-env" onchange="updateDesignScore()">
+            <option value="0">— Choisir —</option>
+            <option value="1">Coque en plastique standard</option>
+            <option value="3">Coque en plastique recyclé</option>
+            <option value="5">Coque biosourcée + emballage zéro déchet</option>
+          </select>
+        </div>
+
+        <div class="champ">
+          <span>🔧 Réparabilité</span>
+          <select id="choix-rep" onchange="updateDesignScore()">
+            <option value="0">— Choisir —</option>
+            <option value="1">Appareil collé, impossible à ouvrir</option>
+            <option value="3">Batterie remplaçable en atelier</option>
+            <option value="5">Batterie + écran remplaçables par l'utilisateur, pièces détachées 7 ans</option>
+          </select>
+        </div>
+
+        <div class="champ">
+          <span>♿ Accessibilité</span>
+          <select id="choix-acc" onchange="updateDesignScore()">
+            <option value="0">— Choisir —</option>
+            <option value="1">Fonctions standards uniquement</option>
+            <option value="3">Mode lecteur d'écran + sous-titres</option>
+            <option value="5">Interface adaptée + commande vocale + compatibilité prothèses auditives</option>
+          </select>
+        </div>
+
+        <div class="champ">
+          <span>📜 Réglementation</span>
+          <select id="choix-reg" onchange="updateDesignScore()">
+            <option value="0">— Choisir —</option>
+            <option value="1">Respect minimal des normes</option>
+            <option value="3">Chargeur USB-C universel + indice réparabilité affiché</option>
+            <option value="5">Garantie 5 ans + mises à jour sécurité 7 ans + transparence données</option>
+          </select>
+        </div>
+
+        <div class="champ">
+          <span>💰 Prix</span>
+          <select id="choix-prix" onchange="updateDesignScore()">
+            <option value="0">— Choisir —</option>
+            <option value="1">Haut de gamme (> 1000€)</option>
+            <option value="3">Milieu de gamme (400-700€)</option>
+            <option value="5">Accessible (< 300€, reconditionné possible)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte bilan">
+        <h3 style="margin-top:0">📊 Bilan de votre conception</h3>
+        <div id="design-radar" style="margin:12px 0">
+          <canvas id="canvas-radar" width="300" height="300" style="width:100%; max-width:300px; margin:0 auto; display:block"></canvas>
+        </div>
+        <div class="mesure" id="design-score">Sélectionnez vos choix pour voir le bilan.</div>
+        <div id="design-comments" style="font-size:.85rem; margin-top:8px"></div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Argumentaire</h3>
+        <p class="note">Rédigez un court argumentaire (3-4 phrases) pour présenter votre smartphone de 2035.</p>
+        <textarea id="resp-n4-argumentaire" placeholder="Notre smartphone de 2035 se distingue par… Il répond aux contraintes sociétales en… Son impact environnemental est réduit grâce à…" rows="4"></textarea>
+        <div class="boutons">
+          <button class="act" onclick="checkOpenQuestion('n4-argumentaire')">✓ Vérifier mon argumentaire</button>
+        </div>
+        <div class="quiz-feedback" id="fb-n4-argumentaire"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" id="btn-validate-n4">✓ Valider mes réponses N4</button>
+  </div>
+</section>
+
+<!-- ============================ BILAN ============================ -->
+<section id="bilan">
+  <h2>Bilan global</h2>
+
+  <div class="score-panel" id="score-panel">
+    <div class="score-card n1">
+      <div class="score-level">N1 — Mémoriser</div>
+      <div class="score-value" id="bilan-n1">0</div>
+      <div class="score-max">/ 4 pts</div>
+    </div>
+    <div class="score-card n2">
+      <div class="score-level">N2 — Comprendre</div>
+      <div class="score-value" id="bilan-n2">0</div>
+      <div class="score-max">/ 3 pts</div>
+    </div>
+    <div class="score-card n3">
+      <div class="score-level">N3 — Appliquer</div>
+      <div class="score-value" id="bilan-n3">0</div>
+      <div class="score-max">/ 3 pts</div>
+    </div>
+    <div class="score-card n4">
+      <div class="score-level">N4 — Analyser</div>
+      <div class="score-value" id="bilan-n4">0</div>
+      <div class="score-max">/ 3 pts</div>
+    </div>
+  </div>
+
+  <div class="carte bilan">
+    <h3 style="margin-top:0">Score total</h3>
+    <div style="text-align:center; margin:16px 0">
+      <div style="font-size:2.5rem; font-weight:bold; color:var(--bleu)" id="bilan-total">0 / 13</div>
+      <div style="font-size:1rem; color:var(--gris)" id="bilan-appreciation"></div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar" style="height:16px"><div class="progress-fill" id="bilan-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">Mes réponses</h3>
+    <div id="bilan-reponses" style="font-size:.85rem"></div>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" onclick="exportResults()">📋 Copier mes résultats</button>
+    <button class="act sec" onclick="resetAll()">↺ Tout recommencer</button>
+    <button class="act sec" onclick="window.print()">🖨️ Imprimer le bilan</button>
+  </div>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<div id="zone-message"></div>
+
+<script>
+// ===== STATE =====
+const state = {
+  scores: { n1: 0, n2: 0, n3: 0, n4: 0 },
+  answered: { n1: {}, n2: {}, n3: {}, n4: {} },
+  timelineClassified: {},
+  currentTimelineItem: null,
+  assocN1c: {},
+  designScores: { env: 0, rep: 0, acc: 0, reg: 0, prix: 0 }
+};
+
+// Load from localStorage
+try {
+  const saved = JSON.parse(localStorage.getItem('quiz-innovations-state'));
+  if (saved) Object.assign(state, saved);
+} catch(e) {}
+
+function saveState() {
+  try { localStorage.setItem('quiz-innovations-state', JSON.stringify(state)); } catch(e) {}
+}
+
+// ===== TABS =====
+document.querySelectorAll('.onglets button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.onglets button').forEach(b => b.classList.remove('actif'));
+    document.querySelectorAll('section').forEach(s => s.classList.remove('actif'));
+    btn.classList.add('actif');
+    document.getElementById(btn.dataset.tab).classList.add('actif');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  });
+});
+
+// ===== MESSAGE =====
+function showMessage(text) {
+  const el = document.getElementById('zone-message');
+  el.textContent = text;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 2500);
+}
+
+// ===== QCM VALIDATION =====
+function validateQCM(container) {
+  const opts = container.querySelector('.quiz-options');
+  const type = opts.dataset.type;
+  const correct = opts.dataset.correct.split(',');
+  const fb = container.querySelector('.quiz-feedback');
+  let selected = [];
+
+  opts.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.classList.remove('selected', 'correct-answer', 'wrong-answer');
+    const input = opt.querySelector('input');
+    if (input.checked || input.type === 'checkbox' && input.checked) {
+      selected.push(opt.dataset.val);
+    }
+  });
+
+  if (type === 'single') {
+    selected = selected.slice(0, 1);
+  }
+
+  const isCorrect = type === 'single'
+    ? selected.length === 1 && selected[0] === correct[0]
+    : correct.every(c => selected.includes(c)) && selected.length === correct.length;
+
+  // Show feedback
+  opts.querySelectorAll('.quiz-option').forEach(opt => {
+    const val = opt.dataset.val;
+    if (correct.includes(val)) opt.classList.add('correct-answer');
+    else if (selected.includes(val)) opt.classList.add('wrong-answer');
+  });
+
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.innerHTML = isCorrect
+    ? '✅ Correct ! Bien joué.'
+    : '❌ Incorrect. Les bonnes réponses sont surlignées en vert.';
+
+  container.classList.remove('correct', 'incorrect');
+  container.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+  return isCorrect;
+}
+
+// Validate all QCM in a section
+function validateSection(sectionId, maxScore) {
+  const section = document.getElementById(sectionId);
+  let score = 0;
+  let total = 0;
+
+  section.querySelectorAll('.quiz-question').forEach(q => {
+    if (q.querySelector('.quiz-options')) {
+      total++;
+      if (validateQCM(q)) score++;
+    }
+  });
+
+  state.scores[sectionId] = score;
+  updateProgress(sectionId, score, total, maxScore);
+  updateBilan();
+  saveState();
+  showMessage(`Score ${sectionId.toUpperCase()} : ${score}/${total}`);
+}
+
+// ===== OPEN QUESTIONS =====
+function checkOpenQuestion(id) {
+  const textarea = document.getElementById('resp-' + id);
+  const fb = document.getElementById('fb-' + id);
+  const text = textarea.value.trim();
+
+  if (text.length < 15) {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.textContent = '⚠️ Votre réponse est trop courte. Développez votre explication (au moins 2 phrases).';
+    return;
+  }
+
+  // Simple keyword check
+  const keywords = getKeywordsForQuestion(id);
+  const found = keywords.filter(k => text.toLowerCase().includes(k.toLowerCase()));
+  const ratio = found.length / Math.max(keywords.length, 1);
+
+  if (ratio >= 0.4) {
+    fb.className = 'quiz-feedback show correct';
+    fb.innerHTML = `✅ Bonne réponse ! Vous avez mentionné ${found.length} mot(s)-clé pertinent(s). Consultez l'exemple de réponse pour comparer.`;
+    // Award point
+    const section = id.startsWith('n2') ? 'n2' : id.startsWith('n3') ? 'n3' : 'n4';
+    if (!state.answered[section][id]) {
+      state.answered[section][id] = true;
+      state.scores[section] = Math.min(state.scores[section] + 1, getMaxForSection(section));
+      updateProgress(section, null, null, getMaxForSection(section));
+      updateBilan();
+      saveState();
+    }
+  } else {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.innerHTML = '💡 Votre réponse pourrait être plus complète. Consultez l\'exemple de réponse ci-dessous pour vous améliorer.';
+  }
+}
+
+function getKeywordsForQuestion(id) {
+  const map = {
+    'n2a': ['invention', 'innovation', 'nouveau', 'marché', 'utilisateurs', 'principe', 'technique', 'exemple', 'téléphone'],
+    'n2b': ['lignée', 'besoin', 'communiquer', 'distance', 'solution', 'technique', 'famille', 'fixe', 'mobile', 'smartphone'],
+    'n3-incidence': ['smartphone', 'communication', 'information', 'accès', 'réseaux', 'dépendance', 'écran', 'quotidien', 'changement'],
+    'n4-argumentaire': ['environnement', 'réparable', 'accessible', 'durable', 'responsable', 'contrainte', 'sociétal', 'recyclé', 'batterie']
+  };
+  return map[id] || [];
+}
+
+function getMaxForSection(section) {
+  return { n1: 4, n2: 3, n3: 3, n4: 3 }[section] || 3;
+}
+
+// ===== SELECT N2c =====
+function checkSelectN2c() {
+  const v1 = document.getElementById('sel-n2c-1').value;
+  const v2 = document.getElementById('sel-n2c-2').value;
+  const v3 = document.getElementById('sel-n2c-3').value;
+  const fb = document.getElementById('fb-n2c');
+
+  if (!v1 || !v2 || !v3) {
+    fb.className = 'quiz-feedback show incorrect';
+    fb.textContent = '⚠️ Veuillez faire les trois choix.';
+    return;
+  }
+
+  const correct = v1 === 'comm' && v2 === 'evol' && v3 === 'lignee';
+  fb.className = 'quiz-feedback show ' + (correct ? 'correct' : 'incorrect');
+  fb.innerHTML = correct
+    ? '✅ Exact ! Le besoin fondamental est de communiquer à distance, la solution technique évolue, et cela forme une lignée d\'OST.'
+    : '❌ Revoyez vos choix. Le besoin fondamental de la lignée du téléphone est de communiquer à distance.';
+
+  if (correct && !state.answered.n2['n2c']) {
+    state.answered.n2['n2c'] = true;
+    state.scores.n2 = Math.min(state.scores.n2 + 1, 3);
+    updateProgress('n2', null, null, 3);
+    updateBilan();
+    saveState();
+  }
+}
+
+// ===== DRAG & DROP ASSOCIATION N1c =====
+(function initAssoc() {
+  const sources = document.querySelectorAll('#assoc-n1c-sources .assoc-item');
+  const targets = document.querySelectorAll('#assoc-n1c-targets .assoc-target');
+  let draggedItem = null;
+
+  sources.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      draggedItem = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      draggedItem = null;
+    });
+  });
+
+  targets.forEach(target => {
+    target.addEventListener('dragover', e => {
+      e.preventDefault();
+      target.classList.add('over');
+    });
+    target.addEventListener('dragleave', () => target.classList.remove('over'));
+    target.addEventListener('drop', e => {
+      e.preventDefault();
+      target.classList.remove('over');
+      if (draggedItem && !target.classList.contains('filled')) {
+        target.textContent = draggedItem.textContent + ' → ' + target.dataset.match;
+        target.dataset.placed = draggedItem.dataset.id;
+        target.classList.add('filled');
+        draggedItem.style.display = 'none';
+        state.assocN1c[target.dataset.match] = draggedItem.dataset.id;
+        saveState();
+      }
+    });
+  });
+
+
+  /* --- Repli tactile : toucher un objet puis toucher sa description ---
+     Le glisser-deposer HTML5 n'est pas declenche par le toucher. */
+  let objetChoisi = null;
+  sources.forEach(item => {
+    item.addEventListener('click', () => {
+      sources.forEach(i => i.classList.remove('selectionnee'));
+      objetChoisi = item;
+      item.classList.add('selectionnee');
+      showMessage('« ' + item.textContent.trim() + ' » selectionne : touchez maintenant la description correspondante.');
+    });
+  });
+  targets.forEach(target => {
+    target.addEventListener('click', () => {
+      if (!objetChoisi || target.classList.contains('filled')) return;
+      target.textContent = objetChoisi.textContent + ' → ' + target.dataset.match;
+      target.dataset.placed = objetChoisi.dataset.id;
+      target.classList.add('filled');
+      objetChoisi.style.display = 'none';
+      state.assocN1c[target.dataset.match] = objetChoisi.dataset.id;
+      objetChoisi.classList.remove('selectionnee');
+      objetChoisi = null;
+      saveState();
+    });
+  });
+
+  document.getElementById('btn-check-assoc-n1c').addEventListener('click', () => {
+    let correct = 0;
+    targets.forEach(t => {
+      t.classList.remove('matched', 'wrong');
+      if (t.dataset.placed === t.dataset.match) {
+        t.classList.add('matched');
+        correct++;
+      } else if (t.dataset.placed) {
+        t.classList.add('wrong');
+      }
+    });
+    const fb = document.getElementById('fb-n1c');
+    fb.className = 'quiz-feedback show ' + (correct === 4 ? 'correct' : 'incorrect');
+    fb.innerHTML = correct === 4
+      ? '✅ Toutes les associations sont correctes !'
+      : `${correct}/4 correct. Les erreurs sont surlignées en rouge.`;
+
+    if (correct === 4 && !state.answered.n1['n1c']) {
+      state.answered.n1['n1c'] = true;
+      state.scores.n1 = Math.min(state.scores.n1 + 1, 4);
+      updateProgress('n1', null, null, 4);
+      updateBilan();
+      saveState();
+    }
+  });
+
+  document.getElementById('btn-reset-assoc-n1c').addEventListener('click', () => {
+    targets.forEach(t => {
+      t.classList.remove('filled', 'matched', 'wrong');
+      delete t.dataset.placed;
+      // Restore original text
+      const origTexts = {
+        'fixe': 'Fonctionne uniquement branché à une ligne téléphonique filaire.',
+        'mobile': "Permet d'appeler sans être relié par un fil, depuis n'importe quel lieu.",
+        'smart': 'Introduit la commande par le doigt sur un écran, remplaçant les touches physiques.',
+        'pliable': 'Combine un grand écran et un format compact grâce à un écran flexible.'
+      };
+      t.textContent = origTexts[t.dataset.match];
+    });
+    sources.forEach(s => s.style.display = '');
+    state.assocN1c = {};
+    document.getElementById('fb-n1c').className = 'quiz-feedback';
+    saveState();
+  });
+})();
+
+// ===== TIMELINE =====
+function showTimelineDetail(el) {
+  state.currentTimelineItem = el;
+  const detail = document.getElementById('timeline-detail');
+  detail.style.display = 'block';
+  document.getElementById('td-title').textContent = el.dataset.name;
+  document.getElementById('td-year').textContent = el.dataset.year;
+  document.getElementById('td-innovation').textContent = el.dataset.innovation;
+  document.getElementById('td-besoin').textContent = el.dataset.besoin;
+  document.getElementById('td-decouverte').textContent = el.dataset.decouverte;
+  document.getElementById('td-result').textContent = '';
+
+  // Highlight correct classify button if already classified
+  document.querySelectorAll('.timeline-classify').forEach(b => {
+    b.classList.remove('actif');
+    b.style.background = '';
+    b.style.color = '';
+  });
+  if (state.timelineClassified[el.dataset.year]) {
+    const btn = document.querySelector(`.timeline-classify[data-type="${state.timelineClassified[el.dataset.year].choice}"]`);
+    if (btn) {
+      btn.style.background = state.timelineClassified[el.dataset.year].correct ? 'var(--vert)' : 'var(--rouge)';
+      btn.style.color = '#fff';
+    }
+  }
+  detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function classifyTimeline(type) {
+  if (!state.currentTimelineItem) return;
+  const year = state.currentTimelineItem.dataset.year;
+  const correctType = state.currentTimelineItem.dataset.type;
+  const isCorrect = type === correctType;
+
+  state.timelineClassified[year] = { choice: type, correct: isCorrect };
+
+  const result = document.getElementById('td-result');
+  result.innerHTML = isCorrect
+    ? `<span class="ok">✅ Correct ! C'est bien une ${type === 'rupture' ? 'innovation de rupture' : type}.</span>`
+    : `<span class="erreur">❌ Non, c'est une ${correctType === 'rupture' ? 'innovation de rupture' : correctType}. ${
+        correctType === 'invention' ? "C'est un nouveau principe technique, pas encore commercialisé." :
+        correctType === 'innovation' ? "C'est une mise sur le marché réussie." :
+        "Elle a changé profondément les usages."
+      }</span>`;
+
+  // Count correct classifications
+  const correctCount = Object.values(state.timelineClassified).filter(v => v.correct).length;
+  const totalClassified = Object.keys(state.timelineClassified).length;
+
+  if (totalClassified >= 5 && !state.answered.n3['timeline']) {
+    state.answered.n3['timeline'] = true;
+    const tlScore = Math.min(Math.round(correctCount / 7 * 2), 2);
+    state.scores.n3 = Math.min(state.scores.n3 + tlScore, 3);
+    updateProgress('n3', null, null, 3);
+    updateBilan();
+    saveState();
+    showMessage(`Frise : ${correctCount}/7 correct → +${tlScore} pts N3`);
+  }
+  saveState();
+}
+
+// ===== DESIGN SCORE =====
+function updateDesignScore() {
+  const env = parseInt(document.getElementById('choix-env').value) || 0;
+  const rep = parseInt(document.getElementById('choix-rep').value) || 0;
+  const acc = parseInt(document.getElementById('choix-acc').value) || 0;
+  const reg = parseInt(document.getElementById('choix-reg').value) || 0;
+  const prix = parseInt(document.getElementById('choix-prix').value) || 0;
+
+  state.designScores = { env, rep, acc, reg, prix };
+  const total = env + rep + acc + reg + prix;
+  const max = 25;
+  const pct = Math.round(total / max * 100);
+
+  const comments = [];
+  if (env >= 4) comments.push('🌍 Excellent choix environnemental !');
+  else if (env <= 1) comments.push('🌍 Attention : l\'impact environnemental est élevé.');
+  if (rep >= 4) comments.push('🔧 Très bonne réparabilité !');
+  else if (rep <= 1) comments.push('🔧 Appareil difficilement réparable → obsolescence rapide.');
+  if (acc >= 4) comments.push('♿ Belle accessibilité !');
+  if (reg >= 4) comments.push('📜 Conformité réglementaire exemplaire.');
+  if (prix >= 4) comments.push('💰 Prix accessible, bravo !');
+
+  document.getElementById('design-score').innerHTML = `<b>Score : ${total}/${max} (${pct}%)</b>`;
+  document.getElementById('design-comments').innerHTML = comments.map(c => `<div>${c}</div>`).join('');
+
+  drawRadar(env, rep, acc, reg, prix);
+
+  if (total >= 18 && !state.answered.n4['design']) {
+    state.answered.n4['design'] = true;
+    state.scores.n4 = Math.min(state.scores.n4 + 1, 3);
+    updateProgress('n4', null, null, 3);
+    updateBilan();
+    saveState();
+  }
+  saveState();
+}
+
+function drawRadar(env, rep, acc, reg, prix) {
+  const canvas = document.getElementById('canvas-radar');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2, r = Math.min(w, h) / 2 - 30;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const labels = ['Env.', 'Répar.', 'Access.', 'Réglement.', 'Prix'];
+  const values = [env, rep, acc, reg, prix];
+  const n = 5;
+
+  // Draw grid
+  for (let level = 1; level <= 5; level++) {
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+      const lr = r * level / 5;
+      const x = cx + lr * Math.cos(angle);
+      const y = cy + lr * Math.sin(angle);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#c9d6e4';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Draw axes
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = '#c9d6e4';
+    ctx.stroke();
+
+    // Labels
+    const lx = cx + (r + 18) * Math.cos(angle);
+    const ly = cy + (r + 18) * Math.sin(angle);
+    ctx.fillStyle = '#1f4e79';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(labels[i], lx, ly);
+  }
+
+  // Draw data
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const angle = (Math.PI * 2 * idx / n) - Math.PI / 2;
+    const vr = r * values[idx] / 5;
+    const x = cx + vr * Math.cos(angle);
+    const y = cy + vr * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.fillStyle = 'rgba(46, 117, 182, 0.3)';
+  ctx.fill();
+  ctx.strokeStyle = '#2e75b6';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Draw points
+  for (let i = 0; i < n; i++) {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const vr = r * values[i] / 5;
+    ctx.beginPath();
+    ctx.arc(cx + vr * Math.cos(angle), cy + vr * Math.sin(angle), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#2e75b6';
+    ctx.fill();
+  }
+}
+
+// ===== PROGRESS & BILAN =====
+function updateProgress(section, score, total, max) {
+  if (score !== null && total !== null) {
+    const pct = Math.round(score / total * 100);
+    document.getElementById(`prog-${section}`).style.width = pct + '%';
+    document.getElementById(`prog-${section}-text`).textContent = `${score} / ${total} questions`;
+    document.getElementById(`score-${section}-display`).textContent = `Score : ${score}`;
+  } else {
+    const s = state.scores[section];
+    const pct = Math.round(s / max * 100);
+    document.getElementById(`prog-${section}`).style.width = pct + '%';
+    document.getElementById(`score-${section}-display`).textContent = `Score : ${s}/${max}`;
+  }
+}
+
+function updateBilan() {
+  const s = state.scores;
+  document.getElementById('bilan-n1').textContent = s.n1;
+  document.getElementById('bilan-n2').textContent = s.n2;
+  document.getElementById('bilan-n3').textContent = s.n3;
+  document.getElementById('bilan-n4').textContent = s.n4;
+
+  const total = s.n1 + s.n2 + s.n3 + s.n4;
+  const max = 13;
+  document.getElementById('bilan-total').textContent = `${total} / ${max}`;
+  document.getElementById('bilan-bar').style.width = Math.round(total / max * 100) + '%';
+
+  let app = '';
+  if (total >= 11) app = '🏆 Excellent ! Maîtrise des 4 niveaux Bloom.';
+  else if (total >= 8) app = '👏 Très bien ! Bon niveau global.';
+  else if (total >= 5) app = '👍 Bien. Quelques points à revoir.';
+  else app = '📚 À retravailler. Relisez les fiches de connaissances.';
+  document.getElementById('bilan-appreciation').textContent = app;
+
+  // Build responses summary
+  const respDiv = document.getElementById('bilan-reponses');
+  let html = '<dl class="reponses-liste">';
+  ['n1', 'n2', 'n3', 'n4'].forEach(level => {
+    html += `<dt>${level.toUpperCase()}</dt><dd>Score : ${state.scores[level]} pts</dd>`;
+  });
+  html += '</dl>';
+  respDiv.innerHTML = html;
+}
+
+// ===== BUTTON HANDLERS =====
+document.getElementById('btn-validate-n1').addEventListener('click', () => validateSection('n1', 4));
+document.getElementById('btn-validate-n2').addEventListener('click', () => {
+  // For N2, we count open questions manually
+  let score = 0;
+  if (state.answered.n2['n2a']) score++;
+  if (state.answered.n2['n2b']) score++;
+  if (state.answered.n2['n2c']) score++;
+  state.scores.n2 = score;
+  updateProgress('n2', score, 3, 3);
+  updateBilan();
+  saveState();
+  showMessage(`Score N2 : ${score}/3`);
+});
+document.getElementById('btn-validate-n3').addEventListener('click', () => {
+  let score = 0;
+  const tlCorrect = Object.values(state.timelineClassified).filter(v => v.correct).length;
+  score += Math.min(Math.round(tlCorrect / 7 * 2), 2);
+  if (state.answered.n3['n3-incidence']) score++;
+  state.scores.n3 = Math.min(score, 3);
+  updateProgress('n3', state.scores.n3, 3, 3);
+  updateBilan();
+  saveState();
+  showMessage(`Score N3 : ${state.scores.n3}/3`);
+});
+document.getElementById('btn-validate-n4').addEventListener('click', () => {
+  let score = 0;
+  if (state.answered.n4['design']) score++;
+  if (state.answered.n4['n4-argumentaire']) score++;
+  // Bonus for high design score
+  const totalDesign = Object.values(state.designScores).reduce((a, b) => a + b, 0);
+  if (totalDesign >= 20) score++;
+  state.scores.n4 = Math.min(score, 3);
+  updateProgress('n4', state.scores.n4, 3, 3);
+  updateBilan();
+  saveState();
+  showMessage(`Score N4 : ${state.scores.n4}/3`);
+});
+
+// ===== EXPORT =====
+function exportResults() {
+  const binome = document.getElementById('binome').value || 'Non renseigné';
+  const classe = document.getElementById('classe').value || 'Non renseignée';
+  const s = state.scores;
+  const total = s.n1 + s.n2 + s.n3 + s.n4;
+  const text = `Quiz Innovations et ruptures technologiques\nBinôme : ${binome}\nClasse : ${classe}\n\nN1 (Mémoriser) : ${s.n1}/4\nN2 (Comprendre) : ${s.n2}/3\nN3 (Appliquer) : ${s.n3}/3\nN4 (Analyser) : ${s.n4}/3\nTotal : ${total}/13`;
+
+  navigator.clipboard.writeText(text).then(() => showMessage('Résultats copiés !')).catch(() => {
+    prompt('Copiez ce texte :', text);
+  });
+}
+
+function resetAll() {
+  if (!confirm('Voulez-vous vraiment tout recommencer ?')) return;
+  localStorage.removeItem('quiz-innovations-state');
+  location.reload();
+}
+
+// ===== INIT =====
+drawRadar(0, 0, 0, 0, 0);
+updateBilan();
+
+// Restore flip cards CSS
+document.querySelectorAll('.flip-card').forEach(card => {
+  card.addEventListener('click', function() {
+    const inner = this.querySelector('.flip-inner');
+    if (inner.style.transform === 'rotateY(180deg)') {
+      inner.style.transform = '';
+    } else {
+      inner.style.transform = 'rotateY(180deg)';
+    }
+  });
+});
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "3e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2063 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frise Interactive — 150 ans d'évolution des moyens de communication</title>
+<style>
+/* =====================================================================
+   VARIABLES & RESET — Style identique au modèle tp-ia.html
+   ===================================================================== */
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e;
+  --violet:#6a1b9a; --violetF:#f3e5f5;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+
+/* =====================================================================
+   HEADER STICKY
+   ===================================================================== */
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+
+/* Barre de progression globale */
+.barre-progression{display:flex; align-items:center; gap:8px; font-size:.82rem; color:var(--gris); margin-top:4px}
+.barre-progression .barre{flex:1; height:8px; background:var(--bleuf); border-radius:4px; overflow:hidden}
+.barre-progression .barre > i{display:block; height:100%; background:var(--vert); transition:width .4s ease}
+.scores-bloom{display:flex; gap:10px; font-size:.78rem; flex-wrap:wrap}
+.score-pill{background:var(--bleuf); color:var(--bleu); padding:2px 8px; border-radius:999px; font-weight:bold}
+
+/* Onglets */
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer; transition:all .2s}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+
+/* =====================================================================
+   MAIN & SECTIONS
+   ===================================================================== */
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none; animation:fadeIn .3s ease}
+section.actif{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+
+/* Grille responsive */
+.grille{display:grid; grid-template-columns:minmax(330px,1.35fr) minmax(310px,1fr); gap:14px; align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.grille2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+@media (max-width:700px){.grille2{grid-template-columns:1fr}}
+.grille3{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px}
+
+/* Cartes */
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+.carte.defi{background:var(--violetF); border-left:5px solid var(--violet)}
+
+/* Boutons */
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer; transition:background .2s}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+
+/* Champs & formulaires */
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+select,input[type=text],input[type=number],textarea{font:inherit; font-size:.88rem; padding:4px 6px;
+  border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{width:100%; min-height:3.2rem; resize:vertical}
+
+/* Tags & badges */
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+.tag.n1{background:#e3f2fd; color:#1565c0}
+.tag.n2{background:#fff3e0; color:#e65100}
+.tag.n3{background:#e8f5e9; color:#2e7d32}
+.tag.n4{background:#f3e5f5; color:#6a1b9a}
+
+/* Questions */
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+
+/* Mesure / feedback */
+.mesure{font-size:.88rem; background:var(--bleuf2); border:1px dashed var(--bleu2); border-radius:8px; padding:6px 9px; margin:.5rem 0}
+.mesure b{color:var(--bleu)}
+.verdict{font-size:1rem; font-weight:bold}
+.erreur{color:var(--rouge); font-weight:bold}
+.ok{color:var(--vert); font-weight:bold}
+
+/* Details */
+details{margin:.5rem 0; font-size:.87rem}
+summary{cursor:pointer; color:var(--bleu2); font-weight:bold}
+
+/* Note */
+.note{font-size:.8rem; color:var(--gris)}
+
+/* =====================================================================
+   SECTION N1 — QUIZ INTERACTIF
+   ===================================================================== */
+.quiz-question{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:12px; margin-bottom:10px; transition:border-color .3s}
+.quiz-question.correct{border-color:var(--vert); background:var(--vertF)}
+.quiz-question.incorrect{border-color:var(--rouge); background:#fce4ec}
+.quiz-options{display:flex; flex-direction:column; gap:6px; margin-top:8px}
+.quiz-option{display:flex; align-items:center; gap:8px; padding:8px 12px; border:1px solid var(--bord);
+  border-radius:8px; cursor:pointer; transition:all .2s; font-size:.9rem}
+.quiz-option:hover{background:var(--bleuf); border-color:var(--bleu2)}
+.quiz-option.selected{background:var(--bleuf); border-color:var(--bleu2); font-weight:bold}
+.quiz-option.correct-answer{background:var(--vertF); border-color:var(--vert)}
+.quiz-option.wrong-answer{background:#fce4ec; border-color:var(--rouge)}
+.quiz-feedback{margin-top:8px; padding:8px; border-radius:6px; font-size:.85rem; display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct{background:var(--vertF); color:var(--vert)}
+.quiz-feedback.incorrect{background:#fce4ec; color:var(--rouge)}
+
+/* Association (drag & drop simplifié = clic pour sélectionner) */
+.association-container{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0}
+@media(max-width:700px){.association-container{grid-template-columns:1fr}}
+.assoc-col{display:flex; flex-direction:column; gap:6px}
+.assoc-item{padding:10px; border:2px solid var(--bord); border-radius:8px; cursor:pointer; font-size:.85rem;
+  transition:all .2s; text-align:center; user-select:none}
+.assoc-item:hover{border-color:var(--bleu2); background:var(--bleuf)}
+.assoc-item.selected{border-color:var(--orange); background:var(--orangeF); font-weight:bold}
+.assoc-item.matched{border-color:var(--vert); background:var(--vertF); opacity:.7; pointer-events:none}
+.assoc-item.error{border-color:var(--rouge); background:#fce4ec; animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* Contraintes sociétales & DD */
+.tag-selector{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0}
+.tag-selectable{padding:6px 12px; border:2px solid var(--bord); border-radius:999px; cursor:pointer;
+  font-size:.82rem; transition:all .2s; user-select:none}
+.tag-selectable:hover{border-color:var(--bleu2)}
+.tag-selectable.selected{border-color:var(--bleu2); background:var(--bleu2); color:#fff}
+.tag-selectable.correct-reveal{border-color:var(--vert); background:var(--vertF); color:var(--vert)}
+.tag-selectable.wrong-reveal{border-color:var(--rouge); background:#fce4ec; color:var(--rouge)}
+
+/* =====================================================================
+   SECTION N2 — CARTES À RETOURNER
+   ===================================================================== */
+.flip-cards-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin:12px 0}
+.flip-card{perspective:800px; height:220px; cursor:pointer}
+.flip-card-inner{position:relative; width:100%; height:100%; transition:transform .6s; transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute; width:100%; height:100%; backface-visibility:hidden;
+  border-radius:10px; padding:14px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; border:1px solid var(--bord)}
+.flip-card-front{background:#fff; color:var(--bleu)}
+.flip-card-front h4{margin:0 0 8px; font-size:1rem}
+.flip-card-front .icon{font-size:2rem; margin-bottom:8px}
+.flip-card-back{background:var(--bleuf2); transform:rotateY(180deg); font-size:.85rem; color:#12212e; overflow-y:auto}
+.flip-card-back strong{color:var(--bleu)}
+
+/* Schéma lignée OST */
+.lignee-schema{display:flex; align-items:center; justify-content:center; gap:0; flex-wrap:wrap; margin:16px 0; padding:16px; background:#fff; border-radius:10px; border:1px solid var(--bord)}
+.lignee-node{background:var(--bleuf); border:2px solid var(--bleu2); border-radius:10px; padding:12px 16px;
+  text-align:center; min-width:120px; position:relative; transition:all .3s}
+.lignee-node:hover{background:var(--bleu2); color:#fff; transform:scale(1.05)}
+.lignee-node .emoji{font-size:1.8rem; display:block; margin-bottom:4px}
+.lignee-node .label{font-size:.82rem; font-weight:bold}
+.lignee-arrow{font-size:1.5rem; color:var(--bleu2); padding:0 6px; flex-shrink:0}
+.lignee-besoin{text-align:center; margin-top:10px; padding:8px; background:var(--orangeF); border-radius:8px;
+  font-size:.85rem; color:var(--orange); font-weight:bold}
+
+/* Animation découverte scientifique */
+.discovery-animation{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:16px; margin:12px 0; text-align:center}
+.discovery-steps{display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin:12px 0}
+.discovery-step{padding:10px 14px; border-radius:8px; font-size:.82rem; opacity:.3; transition:all .5s; border:2px solid transparent}
+.discovery-step.active{opacity:1; transform:scale(1.08)}
+.discovery-step.step-science{background:#e3f2fd; border-color:#1565c0; color:#1565c0}
+.discovery-step.step-tech{background:var(--orangeF); border-color:var(--orange); color:var(--orange)}
+.discovery-step.step-ost{background:var(--vertF); border-color:var(--vert); color:var(--vert)}
+.discovery-arrow{font-size:1.2rem; color:var(--gris); opacity:.3; transition:opacity .5s}
+.discovery-arrow.active{opacity:1}
+
+/* =====================================================================
+   SECTION N3 — FRISE CHRONOLOGIQUE
+   ===================================================================== */
+.frise-container{overflow-x:auto; padding:20px 0; -webkit-overflow-scrolling:touch}
+.frise{display:flex; align-items:flex-start; gap:0; min-width:max-content; padding:0 20px; position:relative}
+.frise::before{content:''; position:absolute; top:60px; left:20px; right:20px; height:4px; background:var(--bleu2); border-radius:2px}
+.frise-item{display:flex; flex-direction:column; align-items:center; min-width:160px; max-width:180px; position:relative; cursor:pointer; transition:transform .2s}
+.frise-item:hover{transform:translateY(-4px)}
+.frise-dot{width:20px; height:20px; border-radius:50%; background:var(--bleu2); border:3px solid #fff;
+  box-shadow:0 0 0 2px var(--bleu2); margin-top:50px; z-index:2; transition:all .3s}
+.frise-item.active .frise-dot{background:var(--orange); box-shadow:0 0 0 2px var(--orange); transform:scale(1.3)}
+.frise-year{font-size:.85rem; font-weight:bold; color:var(--bleu); margin-top:8px}
+.frise-title{font-size:.78rem; text-align:center; color:var(--gris); padding:0 4px; line-height:1.2}
+.frise-detail{position:absolute; top:100px; left:50%; transform:translateX(-50%); width:280px;
+  background:#fff; border:1px solid var(--bord); border-radius:10px; padding:12px; font-size:.82rem;
+  box-shadow:0 4px 12px rgba(0,0,0,.12); z-index:10; display:none; text-align:left}
+.frise-item.active .frise-detail{display:block; animation:fadeIn .3s ease}
+.frise-detail h4{margin:0 0 6px; color:var(--bleu); font-size:.9rem}
+.frise-detail .detail-row{margin:4px 0; padding:4px 0; border-bottom:1px dashed var(--bord)}
+.frise-detail .detail-row:last-child{border-bottom:none}
+.frise-detail .detail-label{font-weight:bold; color:var(--bleu2); font-size:.78rem; text-transform:uppercase}
+
+/* Drag & Drop étiquettes */
+.etiquettes-zone{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; padding:10px; background:var(--bleuf2); border-radius:10px}
+.etiquette{padding:6px 14px; border:2px solid var(--bleu2); border-radius:999px; font-size:.82rem;
+  cursor:grab; user-select:none; background:#fff; color:var(--bleu); font-weight:bold; transition:all .2s}
+.etiquette:active{cursor:grabbing}
+.etiquette.placed{opacity:.4; pointer-events:none}
+.etiquette-drop{min-height:32px; border:2px dashed var(--bord); border-radius:8px; padding:4px 8px;
+  font-size:.78rem; text-align:center; color:var(--gris); transition:all .2s; margin-top:4px}
+.etiquette-drop.hover{border-color:var(--orange); background:var(--orangeF)}
+.etiquette-drop.filled{border-style:solid; border-color:var(--bleu2); background:var(--bleuf); color:var(--bleu); font-weight:bold}
+.etiquette-drop.correct{border-color:var(--vert); background:var(--vertF); color:var(--vert)}
+.etiquette-drop.incorrect{border-color:var(--rouge); background:#fce4ec; color:var(--rouge)}
+
+/* =====================================================================
+   SECTION N4 — DÉFI CONCEPTION 2035
+   ===================================================================== */
+.defi-scenario{background:var(--violetF); border:1px solid var(--violet); border-radius:10px; padding:14px; margin-bottom:14px}
+.defi-scenario h3{color:var(--violet); margin-top:0}
+.contraintes-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:12px 0}
+.contrainte-card{background:#fff; border:2px solid var(--bord); border-radius:10px; padding:12px; text-align:center; transition:all .3s}
+.contrainte-card .emoji{font-size:1.5rem; display:block; margin-bottom:4px}
+.contrainte-card .titre{font-weight:bold; font-size:.85rem; color:var(--bleu)}
+.contrainte-bar{height:8px; background:var(--bleuf); border-radius:4px; overflow:hidden; margin-top:6px}
+.contrainte-bar > i{display:block; height:100%; border-radius:4px; transition:width .5s ease, background .5s ease}
+.contrainte-score{font-size:.78rem; color:var(--gris); margin-top:2px}
+.options-conception{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px; margin:12px 0}
+.option-choix{display:flex; align-items:center; gap:8px; padding:10px; border:2px solid var(--bord);
+  border-radius:8px; cursor:pointer; transition:all .2s; font-size:.85rem}
+.option-choix:hover{border-color:var(--bleu2); background:var(--bleuf)}
+.option-choix.selected{border-color:var(--bleu2); background:var(--bleuf2); font-weight:bold}
+.option-choix input{accent-color:var(--bleu2)}
+.bilan-defi{background:#fff; border:2px solid var(--bord); border-radius:10px; padding:16px; margin-top:14px; display:none}
+.bilan-defi.visible{display:block; animation:fadeIn .4s ease}
+.bilan-score-global{font-size:1.5rem; font-weight:bold; text-align:center; margin:8px 0}
+.bilan-commentaire{font-size:.9rem; padding:10px; border-radius:8px; margin-top:8px}
+
+/* =====================================================================
+   ZONE MESSAGE FLOTTANTE
+   ===================================================================== */
+#zone-message{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:var(--bleu);
+  color:#fff; padding:7px 14px; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .25s; z-index:50;
+  pointer-events:none; white-space:nowrap}
+#zone-message.visible{opacity:1}
+
+/* =====================================================================
+   IMPRESSION
+   ===================================================================== */
+@media print{
+  header, .onglets, .boutons, .no-print, #zone-message, .etiquettes-zone{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+  .frise-container{overflow:visible}
+  .frise{min-width:auto; flex-wrap:wrap}
+}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles — voir
+   Rapport-compatibilite-mobile-apps.md)
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   ===================================================================== */
+/* Ecrans etroits OU peu hauts (telephone en paysage).
+     Prefixe « screen » : l'impression et l'export PDF ne sont pas touches. */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .ligne-titre{gap:6px 10px}
+  header .bloc-binome{font-size:.78rem; gap:6px}
+  header .bloc-binome input{width:auto; min-width:0; max-width:9rem; padding:3px 6px}
+  header .chrono{font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* Onglets : une seule ligne, defilement horizontal */
+  header .onglets{flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch; gap:6px; margin-top:6px; padding-bottom:2px}
+  header .onglets button{flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px}
+
+  /* Champs de saisie : 16 px = pas de zoom automatique sur iOS */
+  input, textarea, select{font-size:16px !important}
+
+  /* Reponses de QCM : la ligne entiere devient une cible confortable */
+  label.option-choix, label.quiz-option{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* Etiquettes a deplacer */
+  .etiquette, .assoc-item, .etiquette-drop{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* Repere visuel de l'etiquette selectionnee au doigt */
+  .etiquette.selectionnee, .assoc-item.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : repli de la barre au defilement + compensation des
+     sauts d'ancre. Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend donc que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  function ajuster() {
+    var entete = document.querySelector('header');
+    if (!entete) return;
+    var onglets = entete.querySelector('.onglets') || entete.querySelector('.tabs');
+    if (!onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+    var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+    var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+    var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+    var hauteurVisible = Math.round(entete.offsetHeight - (petit ? dessus : 0));
+
+    // En petit ecran, tout ce qui precede les onglets sort de l'ecran au
+    // defilement : l'eleve garde les onglets sous les yeux sans perdre la
+    // moitie de son ecran. Sur ordinateur, rien ne change (top:0).
+    entete.style.top = petit ? (-dessus) + 'px' : '0px';
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    document.documentElement.style.scrollPaddingTop = (hauteurVisible + 8) + 'px';
+  }
+
+  function demarrer() {
+    ajuster();
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<!-- =====================================================================
+     HEADER
+     ===================================================================== -->
+<header>
+  <div class="ligne-titre">
+    <h1>Frise Interactive — 150 ans d'évolution des moyens de communication <small>3<sup>e</sup> · technologie · T1 · OST</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+  </div>
+  <div class="barre-progression">
+    <span>Progression :</span>
+    <div class="barre"><i id="progress-bar" style="width:0%"></i></div>
+    <span id="progress-text">0 %</span>
+    <div class="scores-bloom">
+      <span class="score-pill" title="N1 — Mémoriser">N1: <span id="score-n1">0</span>/8</span>
+      <span class="score-pill" title="N2 — Comprendre">N2: <span id="score-n2">0</span>/6</span>
+      <span class="score-pill" title="N3 — Appliquer">N3: <span id="score-n3">0</span>/7</span>
+      <span class="score-pill" title="N4 — Analyser/Créer">N4: <span id="score-n4">0</span>/10</span>
+    </div>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-tab="n1" class="actif"><span class="tag n1">N1</span> Connaissances</button>
+    <button data-tab="n2"><span class="tag n2">N2</span> Compréhension</button>
+    <button data-tab="n3"><span class="tag n3">N3</span> Application</button>
+    <button data-tab="n4"><span class="tag n4">N4</span> Analyse & Défi</button>
+    <button data-tab="bilan">Bilan</button>
+  </div>
+</header>
+
+<main>
+
+<!-- =====================================================================
+     SECTION N1 — CONNAISSANCES (Quiz interactif)
+     ===================================================================== -->
+<section id="n1" class="actif">
+  <h2><span class="tag n1">N1</span> Mémoriser — Invention, Innovation, Lignée d'OST, Développement Durable</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Reconnaître une lignée d'OST, identifier les principales ruptures technologiques,
+    distinguer invention / innovation / développement durable.
+  </div>
+
+  <div class="grille">
+    <div>
+      <!-- QCM 1 : Invention vs Innovation -->
+      <div class="carte consigne">
+        <h3 style="margin-top:0">QCM 1 — Invention ou Innovation ?</h3>
+        <p class="note">Sélectionne la bonne réponse. Le feedback est immédiat.</p>
+      </div>
+
+      <div id="quiz-qcm1" class="quiz-question" data-score-key="n1-qcm1">
+        <p class="enonce">1. Graham Bell crée le premier téléphone en 1876. C'est une…</p>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="invention">🔧 Une invention</div>
+          <div class="quiz-option" data-value="innovation">💡 Une innovation</div>
+          <div class="quiz-option" data-value="developpement">♻️ Un développement durable</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div id="quiz-qcm2" class="quiz-question" data-score-key="n1-qcm2">
+        <p class="enonce">2. Apple lance l'iPhone en 2007 avec écran tactile + magasin d'applications. C'est une…</p>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="invention">🔧 Une invention</div>
+          <div class="quiz-option" data-value="innovation">💡 Une innovation</div>
+          <div class="quiz-option" data-value="rupture">🚀 Une innovation de rupture</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+
+      <div id="quiz-qcm3" class="quiz-question" data-score-key="n1-qcm3">
+        <p class="enonce">3. Concevoir un smartphone avec plastique 100 % recyclé et batterie remplaçable relève du…</p>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="invention">🔧 De l'invention</div>
+          <div class="quiz-option" data-value="dd">♻️ Du développement durable</div>
+          <div class="quiz-option" data-value="marketing">📢 Du marketing</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Association : étapes de la lignée -->
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Association — Relier chaque étape à sa description</h3>
+        <p class="note">Clique sur un élément de gauche, puis sur la bonne description à droite.</p>
+      </div>
+
+      <div class="association-container" id="assoc-lignee">
+        <div class="assoc-col" id="assoc-left">
+          <div class="assoc-item" data-id="fixe">📞 Téléphone fixe à cadran</div>
+          <div class="assoc-item" data-id="mobile">📱 Téléphone mobile à touches</div>
+          <div class="assoc-item" data-id="smartphone">🖥️ Premier smartphone tactile</div>
+          <div class="assoc-item" data-id="pliable">🔄 Smartphone pliable</div>
+        </div>
+        <div class="assoc-col" id="assoc-right">
+          <div class="assoc-item" data-match="smartphone">Écran tactile + applications + internet mobile (2007)</div>
+          <div class="assoc-item" data-match="fixe">Communication vocale filaire, usage domestique (1876)</div>
+          <div class="assoc-item" data-match="pliable">Écran flexible, nouvelle forme factor (2019)</div>
+          <div class="assoc-item" data-match="mobile">Communication sans fil, mobilité personnelle (1983)</div>
+        </div>
+      </div>
+      <div class="mesure" id="assoc-feedback">Associations correctes : <b>0</b> / 4</div>
+
+      <!-- Identifier contraintes sociétales -->
+      <div class="carte consigne" style="margin-top:12px">
+        <h3 style="margin-top:0">Contraintes sociétales ou non ?</h3>
+        <p class="note">Sélectionne les éléments qui sont des <b>contraintes sociétales</b> influençant l'évolution des OST.</p>
+      </div>
+      <div class="tag-selector" id="contraintes-selector">
+        <div class="tag-selectable" data-correct="true">Besoin de mobilité</div>
+        <div class="tag-selectable" data-correct="false">Couleur du boîtier</div>
+        <div class="tag-selectable" data-correct="true">Protection de la vie privée</div>
+        <div class="tag-selectable" data-correct="true">Accessibilité aux personnes handicapées</div>
+        <div class="tag-selectable" data-correct="false">Nom de la marque</div>
+        <div class="tag-selectable" data-correct="true">Impact environnemental</div>
+        <div class="tag-selectable" data-correct="false">Prix de vente élevé</div>
+        <div class="tag-selectable" data-correct="true">Réglementation des fréquences radio</div>
+      </div>
+      <div class="boutons">
+        <button class="act" id="btn-check-contraintes">Vérifier mes réponses</button>
+      </div>
+      <div class="mesure" id="contraintes-feedback">Sélectionne les bonnes réponses puis vérifie.</div>
+
+      <!-- Développement durable -->
+      <div class="carte consigne" style="margin-top:12px">
+        <h3 style="margin-top:0">Développement durable — Vrai ou Faux ?</h3>
+        <p class="note">Pour chaque affirmation, clique sur Vrai ou Faux.</p>
+      </div>
+      <div id="quiz-dd1" class="quiz-question" data-score-key="n1-dd1">
+        <p class="enonce">« Un smartphone conçu pour être réparé facilement contribue au développement durable. »</p>
+        <div class="quiz-options" style="flex-direction:row;gap:8px">
+          <div class="quiz-option" data-value="vrai" style="flex:1;text-align:center">✅ Vrai</div>
+          <div class="quiz-option" data-value="faux" style="flex:1;text-align:center">❌ Faux</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+      <div id="quiz-dd2" class="quiz-question" data-score-key="n1-dd2">
+        <p class="enonce">« L'obsolescence programmée est une pratique compatible avec le développement durable. »</p>
+        <div class="quiz-options" style="flex-direction:row;gap:8px">
+          <div class="quiz-option" data-value="vrai" style="flex:1;text-align:center">✅ Vrai</div>
+          <div class="quiz-option" data-value="faux" style="flex:1;text-align:center">❌ Faux</div>
+        </div>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1a</span>Les éléments qui participent à l'évolution des besoins (invention, innovation, développement durable)</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/SW5baiZ2eJTqWfQ" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/2z1NaaZfmgGfKGF2A" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1c</span>La famille et la lignée d'OST</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/o2qoHTQBzyHqgGf" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113247-ost1c-la-famille-et-la-lignee-dost/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113247-ost1c-la-famille-et-la-lignee-dost/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/EmDcue7oq1mKGUcL8" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1d</span>Les contraintes sociétales</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/yrkbGNrTRKceMJp" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113246-ost1d-les-contraintes-societales/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113246-ost1d-les-contraintes-societales/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/B8sosjVCNbVSmehT6" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- =====================================================================
+     SECTION N2 — COMPRÉHENSION (Cartes interactives)
+     ===================================================================== -->
+<section id="n2">
+  <h2><span class="tag n2">N2</span> Comprendre — Invention vs Innovation, Lignée d'OST, Découverte scientifique</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Mettre en relation une découverte scientifique avec l'évolution d'un OST,
+    expliquer ce qu'est une lignée d'OST et la différence entre invention et innovation.
+  </div>
+
+  <!-- Cartes à retourner -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Cartes connaissances — Clique pour retourner</h3>
+    <p class="note">Chaque carte cache une explication. Retourne-les toutes pour vérifier ta compréhension.</p>
+  </div>
+
+  <div class="flip-cards-grid" id="flip-cards">
+    <div class="flip-card" data-card="invention">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <span class="icon">🔧</span>
+          <h4>Invention</h4>
+          <p class="note">Clique pour voir la définition</p>
+        </div>
+        <div class="flip-card-back">
+          <strong>Invention</strong> = Création d'un objet ou procédé <b>entièrement nouveau</b>, qui n'existait pas auparavant.<br><br>
+          <em>Exemple :</em> Le premier téléphone de Graham Bell (1876) est une <b>invention</b> car il crée la communication vocale à distance pour la première fois.
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" data-card="innovation">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <span class="icon">💡</span>
+          <h4>Innovation</h4>
+          <p class="note">Clique pour voir la définition</p>
+        </div>
+        <div class="flip-card-back">
+          <strong>Innovation</strong> = Amélioration ou transformation d'un objet <b>déjà existant</b> pour répondre mieux à un besoin.<br><br>
+          <em>Exemple :</em> Le téléphone mobile est une <b>innovation</b> par rapport au téléphone fixe : même fonction (communiquer), mais sans fil.
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" data-card="rupture">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <span class="icon">🚀</span>
+          <h4>Innovation de rupture</h4>
+          <p class="note">Clique pour voir la définition</p>
+        </div>
+        <div class="flip-card-back">
+          <strong>Innovation de rupture</strong> = Innovation qui <b>bouleverse</b> le marché et change radicalement les usages.<br><br>
+          <em>Exemple :</em> L'iPhone (2007) a créé une rupture : écran tactile, apps, internet mobile → plus seulement un téléphone.
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" data-card="lignee">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <span class="icon">🧬</span>
+          <h4>Lignée d'OST</h4>
+          <p class="note">Clique pour voir la définition</p>
+        </div>
+        <div class="flip-card-back">
+          <strong>Lignée d'OST</strong> = Ensemble d'objets techniques qui répondent au <b>même besoin fondamental</b> mais avec des solutions techniques différentes au fil du temps.<br><br>
+          <em>Exemple :</em> Téléphone fixe → mobile → smartphone → smartphone pliable = une même lignée.
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" data-card="dd">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <span class="icon">♻️</span>
+          <h4>Développement durable</h4>
+          <p class="note">Clique pour voir la définition</p>
+        </div>
+        <div class="flip-card-back">
+          <strong>Développement durable</strong> = Concevoir des objets qui répondent aux besoins actuels <b>sans compromettre</b> ceux des générations futures.<br><br>
+          3 piliers : <b>environnemental</b> (recyclage), <b>social</b> (accessibilité), <b>économique</b> (durabilité).
+        </div>
+      </div>
+    </div>
+
+    <div class="flip-card" data-card="besoin">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <span class="icon">🎯</span>
+          <h4>Besoin fondamental</h4>
+          <p class="note">Clique pour voir la définition</p>
+        </div>
+        <div class="flip-card-back">
+          <strong>Besoin fondamental</strong> = Le besoin de base auquel répond toute une lignée d'OST, <b>inchangé</b> malgré les évolutions techniques.<br><br>
+          Pour la lignée téléphone : <b>communiquer à distance</b>. Les solutions changent, le besoin reste.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mesure" id="cards-counter">Cartes retournées : <b>0</b> / 6</div>
+
+  <!-- Schéma lignée OST -->
+  <div class="carte" style="margin-top:14px">
+    <h3 style="margin-top:0">Schéma interactif — La lignée du téléphone</h3>
+    <p class="note">Survole chaque étape pour voir les détails. Le besoin fondamental reste le même !</p>
+    <div class="lignee-schema">
+      <div class="lignee-node" title="1876 — Communication vocale filaire">
+        <span class="emoji">📞</span>
+        <span class="label">Téléphone fixe</span>
+        <span class="note">1876</span>
+      </div>
+      <span class="lignee-arrow">→</span>
+      <div class="lignee-node" title="1983 — Mobilité personnelle, sans fil">
+        <span class="emoji">📱</span>
+        <span class="label">Mobile</span>
+        <span class="note">1983</span>
+      </div>
+      <span class="lignee-arrow">→</span>
+      <div class="lignee-node" title="2007 — Écran tactile, apps, internet">
+        <span class="emoji">🖥️</span>
+        <span class="label">Smartphone</span>
+        <span class="note">2007</span>
+      </div>
+      <span class="lignee-arrow">→</span>
+      <div class="lignee-node" title="2019 — Écran flexible, nouvelle forme">
+        <span class="emoji">🔄</span>
+        <span class="label">Pliable</span>
+        <span class="note">2019</span>
+      </div>
+    </div>
+    <div class="lignee-besoin">
+      🎯 Besoin fondamental commun : <b>COMMUNIQUER À DISTANCE</b>
+    </div>
+  </div>
+
+  <!-- Animation découverte scientifique -->
+  <div class="carte" style="margin-top:14px">
+    <h3 style="margin-top:0">Animation — De la découverte scientifique à l'objet technique</h3>
+    <p class="note">Clique sur « Lancer l'animation » pour voir comment une découverte conduit à un OST.</p>
+    <div class="discovery-animation">
+      <div class="discovery-steps" id="discovery-steps">
+        <div class="discovery-step step-science" id="ds-1">⚡ Découverte des ondes électromagnétiques<br><span class="note">Hertz, 1887</span></div>
+        <span class="discovery-arrow" id="da-1">→</span>
+        <div class="discovery-step step-tech" id="ds-2">📡 Maîtrise de la transmission radio<br><span class="note">Marconi, 1895</span></div>
+        <span class="discovery-arrow" id="da-2">→</span>
+        <div class="discovery-step step-tech" id="ds-3">📱 Miniaturisation électronique<br><span class="note">Années 1970</span></div>
+        <span class="discovery-arrow" id="da-3">→</span>
+        <div class="discovery-step step-ost" id="ds-4">📲 Téléphone mobile commercial<br><span class="note">Motorola, 1983</span></div>
+      </div>
+      <div class="boutons" style="justify-content:center">
+        <button class="act" id="btn-discovery">▶ Lancer l'animation</button>
+        <button class="act sec" id="btn-discovery-reset">↺ Recommencer</button>
+      </div>
+      <div class="mesure" id="discovery-explanation" style="margin-top:8px;text-align:center">
+        Clique sur « Lancer l'animation » pour commencer.
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions de compréhension -->
+  <div class="carte" style="margin-top:14px">
+    <h3 style="margin-top:0">Vos réponses — Compréhension</h3>
+    <div class="q">
+      <p class="enonce">Q1. Explique en une phrase la différence entre invention et innovation.</p>
+      <textarea data-q="N2-Q1 invention vs innovation" placeholder="L'invention c'est… alors que l'innovation c'est…"></textarea>
+    </div>
+    <div class="q">
+      <p class="enonce">Q2. Quel est le besoin fondamental commun à tous les objets de la lignée du téléphone ?</p>
+      <textarea data-q="N2-Q2 besoin fondamental" placeholder="Le besoin fondamental est…"></textarea>
+    </div>
+    <div class="q">
+      <p class="enonce">Q3. Cite une découverte scientifique qui a permis le développement du téléphone mobile.</p>
+      <textarea data-q="N2-Q3 découverte scientifique" placeholder="La découverte de… a permis…"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     SECTION N3 — APPLICATION (Frise chronologique interactive)
+     ===================================================================== -->
+<section id="n3">
+  <h2><span class="tag n3">N3</span> Appliquer — Frise chronologique interactive</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Créer une frise chronologique, associer chaque objet à son innovation majeure,
+    au besoin sociétal et à la découverte scientifique associée. Classifier invention / innovation / innovation de rupture.
+  </div>
+
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Frise chronologique — Clique sur chaque point pour voir les détails</h3>
+    <p class="note">Scroll horizontalement pour explorer les 7 objets clés. Puis classe les étiquettes !</p>
+  </div>
+
+  <div class="frise-container">
+    <div class="frise" id="frise">
+      <!-- Les items sont générés par JS -->
+    </div>
+  </div>
+
+  <!-- Drag & Drop étiquettes -->
+  <div class="carte" style="margin-top:14px">
+    <h3 style="margin-top:0">Classer les objets — Glisse les étiquettes sur les bons objets</h3>
+    <p class="note">Glisse chaque étiquette (Invention, Innovation, Innovation de rupture) sur le bon objet dans la frise ci-dessus.</p>
+
+    <div class="etiquettes-zone" id="etiquettes-zone">
+      <div class="etiquette" draggable="true" data-type="invention" id="etiq-invention">🔧 Invention</div>
+      <div class="etiquette" draggable="true" data-type="innovation" id="etiq-innovation">💡 Innovation</div>
+      <div class="etiquette" draggable="true" data-type="innovation" id="etiq-innovation2">💡 Innovation</div>
+      <div class="etiquette" draggable="true" data-type="innovation" id="etiq-innovation3">💡 Innovation</div>
+      <div class="etiquette" draggable="true" data-type="innovation" id="etiq-innovation4">💡 Innovation</div>
+      <div class="etiquette" draggable="true" data-type="rupture" id="etiq-rupture">🚀 Innovation de rupture</div>
+      <div class="etiquette" draggable="true" data-type="rupture" id="etiq-rupture2">🚀 Innovation de rupture</div>
+    </div>
+
+    <div class="boutons">
+      <button class="act" id="btn-check-frise">✅ Vérifier le classement</button>
+      <button class="act sec" id="btn-reset-frise">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="frise-feedback">Place les étiquettes puis vérifie.</div>
+  </div>
+
+  <!-- Questions d'application -->
+  <div class="carte" style="margin-top:14px">
+    <h3 style="margin-top:0">Vos réponses — Application</h3>
+    <div class="q">
+      <p class="enonce">Q1. Parmi les 7 objets de la frise, lequel représente selon toi la plus grande rupture technologique ? Justifie.</p>
+      <textarea data-q="N3-Q1 plus grande rupture" placeholder="Je pense que… parce que…"></textarea>
+    </div>
+    <div class="q">
+      <p class="enonce">Q2. Comment l'incidence du smartphone a-t-elle changé la société par rapport au téléphone fixe ?</p>
+      <textarea data-q="N3-Q2 incidence smartphone" placeholder="Le smartphone a changé…"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     SECTION N4 — ANALYSE (Défi interactif)
+     ===================================================================== -->
+<section id="n4">
+  <h2><span class="tag n4">N4</span> Analyser & Créer — Concevoir le smartphone de 2035</h2>
+
+  <div class="carte defi">
+    <div class="defi-scenario">
+      <h3>🏭 Scénario : Vous êtes ingénieur chez un fabricant de smartphones</h3>
+      <p>On vous demande de concevoir le <b>smartphone de 2035</b>. Vous devez prendre en compte
+      <b>4 contraintes sociétales majeures</b> et faire des choix de conception responsables.</p>
+      <p class="note">Sélectionnez vos options de conception et observez l'impact sur chaque contrainte.</p>
+    </div>
+  </div>
+
+  <div class="grille">
+    <div>
+      <!-- Contraintes -->
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Impact sur les 4 contraintes sociétales</h3>
+      </div>
+      <div class="contraintes-grid" id="contraintes-display">
+        <div class="contrainte-card" data-contrainte="environnement">
+          <span class="emoji">🌍</span>
+          <span class="titre">Environnement</span>
+          <div class="contrainte-bar"><i id="bar-environnement" style="width:50%;background:var(--orange)"></i></div>
+          <div class="contrainte-score" id="score-environnement">50 / 100</div>
+        </div>
+        <div class="contrainte-card" data-contrainte="reglementation">
+          <span class="emoji">⚖️</span>
+          <span class="titre">Réglementation</span>
+          <div class="contrainte-bar"><i id="bar-reglementation" style="width:50%;background:var(--orange)"></i></div>
+          <div class="contrainte-score" id="score-reglementation">50 / 100</div>
+        </div>
+        <div class="contrainte-card" data-contrainte="accessibilite">
+          <span class="emoji">♿</span>
+          <span class="titre">Accessibilité</span>
+          <div class="contrainte-bar"><i id="bar-accessibilite" style="width:50%;background:var(--orange)"></i></div>
+          <div class="contrainte-score" id="score-accessibilite">50 / 100</div>
+        </div>
+        <div class="contrainte-card" data-contrainte="modesdevie">
+          <span class="emoji">🏠</span>
+          <span class="titre">Modes de vie</span>
+          <div class="contrainte-bar"><i id="bar-modesdevie" style="width:50%;background:var(--orange)"></i></div>
+          <div class="contrainte-score" id="score-modesdevie">50 / 100</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Choix de conception</h3>
+        <p class="note">Sélectionnez une option pour chaque catégorie. Chaque choix impacte les contraintes.</p>
+      </div>
+
+      <!-- Catégorie 1 : Matériaux -->
+      <div class="carte">
+        <h3>📦 Matériaux du boîtier</h3>
+        <div class="options-conception" data-category="materiaux">
+          <label class="option-choix">
+            <input type="radio" name="materiaux" value="plastique_vierge"> Plastique vierge (pas cher, polluant)
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="materiaux" value="plastique_recycle"> Plastique recyclé ♻️
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="materiaux" value="bioplastique"> Bioplastique biosourcé 🌱
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="materiaux" value="aluminium_recycle"> Aluminium recyclé 🔩
+          </label>
+        </div>
+      </div>
+
+      <!-- Catégorie 2 : Batterie -->
+      <div class="carte">
+        <h3>🔋 Batterie</h3>
+        <div class="options-conception" data-category="batterie">
+          <label class="option-choix">
+            <input type="radio" name="batterie" value="scellee"> Scellée (fine, non réparable)
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="batterie" value="remplacable"> Remplaçable par l'utilisateur 🔧
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="batterie" value="modulaire"> Modulaire + charge solaire ☀️
+          </label>
+        </div>
+      </div>
+
+      <!-- Catégorie 3 : Logiciel -->
+      <div class="carte">
+        <h3>💻 Logiciel & Accessibilité</h3>
+        <div class="options-conception" data-category="logiciel">
+          <label class="option-choix">
+            <input type="radio" name="logiciel" value="standard"> Interface standard
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="logiciel" value="adaptable"> Interface adaptable (taille, contraste, voix)
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="logiciel" value="open_source"> Open source + accessible 🌐
+          </label>
+        </div>
+      </div>
+
+      <!-- Catégorie 4 : Fin de vie -->
+      <div class="carte">
+        <h3>♻️ Fin de vie</h3>
+        <div class="options-conception" data-category="findevie">
+          <label class="option-choix">
+            <input type="radio" name="findevie" value="aucun"> Aucun programme de reprise
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="findevie" value="reprise"> Programme de reprise en magasin
+          </label>
+          <label class="option-choix">
+            <input type="radio" name="findevie" value="consigne"> Consigne + réparation garantie 7 ans 🔄
+          </label>
+        </div>
+      </div>
+
+      <div class="boutons">
+        <button class="act" id="btn-eval-defi">📊 Évaluer ma conception</button>
+        <button class="act sec" id="btn-reset-defi">↺ Recommencer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bilan du défi -->
+  <div class="bilan-defi" id="bilan-defi">
+    <h3 style="margin-top:0;text-align:center">📊 Bilan de votre conception</h3>
+    <div class="bilan-score-global" id="bilan-score-global"></div>
+    <div class="bilan-commentaire" id="bilan-commentaire"></div>
+    <div class="q" style="margin-top:12px">
+      <p class="enonce">Expliquez pourquoi vos choix sont cohérents (ou non) avec les 4 contraintes sociétales.</p>
+      <textarea data-q="N4 justification conception 2035" placeholder="J'ai choisi… parce que…" style="min-height:4rem"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     BILAN
+     ===================================================================== -->
+<section id="bilan">
+  <h2>Bilan — Ce que vous avez appris</h2>
+
+  <div class="grille">
+    <div>
+      <div class="carte bilan">
+        <h3 style="margin-top:0">Scores par niveau Bloom</h3>
+        <table>
+          <tr><th>Niveau</th><th>Score</th><th>Max</th><th>%</th></tr>
+          <tr><td><span class="tag n1">N1</span> Mémoriser</td><td id="bilan-n1">0</td><td>8</td><td id="bilan-n1-pct">0%</td></tr>
+          <tr><td><span class="tag n2">N2</span> Comprendre</td><td id="bilan-n2">0</td><td>6</td><td id="bilan-n2-pct">0%</td></tr>
+          <tr><td><span class="tag n3">N3</span> Appliquer</td><td id="bilan-n3">0</td><td>7</td><td id="bilan-n3-pct">0%</td></tr>
+          <tr><td><span class="tag n4">N4</span> Analyser/Créer</td><td id="bilan-n4">0</td><td>10</td><td id="bilan-n4-pct">0%</td></tr>
+          <tr style="font-weight:bold;background:var(--bleuf)"><td>TOTAL</td><td id="bilan-total">0</td><td>31</td><td id="bilan-total-pct">0%</td></tr>
+        </table>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Récapitulatif de vos réponses écrites</h3>
+        <dl class="reponses-liste" id="recap"><p class="note">Répondez aux questions dans chaque section : vos réponses s'affichent ici.</p></dl>
+      </div>
+
+      <details class="carte">
+        <summary>Trace écrite à recopier</summary>
+        <p><b>L'évolution des objets techniques suit une lignée : des objets différents répondent au même besoin fondamental.</b></p>
+        <ul>
+          <li><b>Invention</b> = création d'un objet entièrement nouveau (ex : premier téléphone, 1876).</li>
+          <li><b>Innovation</b> = amélioration d'un objet existant (ex : téléphone mobile, 1983).</li>
+          <li><b>Innovation de rupture</b> = changement radical des usages (ex : iPhone, 2007).</li>
+          <li><b>Lignée d'OST</b> = ensemble d'objets répondant au même besoin (communiquer à distance) avec des solutions techniques évolutives.</li>
+          <li>Les <b>contraintes sociétales</b> (environnement, réglementation, accessibilité, modes de vie) influencent l'évolution des OST.</li>
+          <li>Le <b>développement durable</b> exige de concevoir des objets réparables, recyclables et accessibles.</li>
+          <li>Les <b>découvertes scientifiques</b> (ondes électromagnétiques, semi-conducteurs) permettent les avancées technologiques.</li>
+        </ul>
+      </details>
+    </div>
+
+    <div>
+      <div class="carte bilan">
+        <h3 style="margin-top:0">Enregistrer / rendre votre travail</h3>
+        <p class="note">Vos réponses et scores sont sauvegardés automatiquement dans le navigateur.
+        Exportez-les pour les remettre au professeur.</p>
+        <div class="boutons">
+          <button class="act" id="btn-export">💾 Enregistrer mes réponses</button>
+          <button class="act sec" id="btn-copier">⧉ Copier</button>
+          <button class="act sec" id="btn-imprimer">🖨 Imprimer / PDF</button>
+          <button class="act sec" id="btn-reset-all">🗑 Tout effacer</button>
+        </div>
+        <p class="note" id="etat-export">Sauvegarde automatique activée.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Ressources pour aller plus loin</h3>
+        <ul style="font-size:.85rem">
+          <li><a href="https://eduscol.education.fr/document/17125/download" target="_blank" rel="noopener">Éduscol — Programme technologie cycle 4</a></li>
+          <li><a href="https://pedagogie.ac-reunion.fr/fileadmin/ANNEXES-ACADEMIQUES/03-PEDAGOGIE/03-LYCEE/Voie-generale-technologique/sciences-ingenieur/technologie/documents/Progressions/4eme_Bras_Panon.pdf" target="_blank" rel="noopener">Progression cycle 4 — Académie de La Réunion</a></li>
+          <li><a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/wp-content/uploads/sites/63/2020/09/OTSCIS-1-3-C1-MF-Comparer-et-commenter-les-%C3%A9volutions.pdf" target="_blank" rel="noopener">Comparer les évolutions d'OST — Académie de Bordeaux</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<div id="zone-message"></div>
+
+<!-- =====================================================================
+     JAVASCRIPT — Tout le code interactif
+     ===================================================================== -->
+<script>
+(function(){
+'use strict';
+
+/* =====================================================================
+   DONNÉES DE LA FRISE
+   ===================================================================== */
+var FRISE_DATA = [
+  {
+    id: 'bell', year: 1876, title: 'Téléphone fixe',
+    emoji: '📞', inventor: 'Graham Bell',
+    innovation: 'Première transmission de la voix humaine par fil électrique.',
+    besoin: 'Communiquer à distance sans se déplacer.',
+    science: 'Électricité et acoustique — conversion son/signal électrique.',
+    type: 'invention'
+  },
+  {
+    id: 'cooper', year: 1973, title: 'Premier appel mobile',
+    emoji: '📡', inventor: 'Martin Cooper (Motorola)',
+    innovation: 'Premier appel téléphonique sans fil depuis un appareil portable.',
+    besoin: 'Communiquer en mobilité, sans être attaché à un lieu fixe.',
+    science: 'Ondes électromagnétiques et réseaux cellulaires.',
+    type: 'rupture'
+  },
+  {
+    id: 'dynatac', year: 1983, title: 'DynaTAC commercial',
+    emoji: '📱', inventor: 'Motorola',
+    innovation: 'Premier téléphone mobile vendu au grand public (800 g, 30 min d\'autonomie).',
+    besoin: 'Rendre la téléphonie mobile accessible aux particuliers.',
+    science: 'Miniaturisation des composants électroniques.',
+    type: 'innovation'
+  },
+  {
+    id: 'sms', year: 1992, title: 'Premier SMS',
+    emoji: '✉️', inventor: 'Neil Papworth',
+    innovation: 'Envoi de messages texte courts via le réseau mobile.',
+    besoin: 'Communiquer par écrit rapidement, sans appeler.',
+    science: 'Protocole GSM et codage numérique des messages.',
+    type: 'innovation'
+  },
+  {
+    id: 'photo', year: 2000, title: 'Téléphone + appareil photo',
+    emoji: '📸', inventor: 'Sharp / Samsung',
+    innovation: 'Intégration d\'un capteur photo dans un téléphone mobile.',
+    besoin: 'Capturer et partager des images instantanément.',
+    science: 'Capteurs CCD/CMOS miniaturisés.',
+    type: 'innovation'
+  },
+  {
+    id: 'iphone', year: 2007, title: 'iPhone',
+    emoji: '🖥️', inventor: 'Apple (Steve Jobs)',
+    innovation: 'Écran tactile multipoint + App Store + internet mobile complet.',
+    besoin: 'Un appareil unique : téléphone, ordinateur de poche, caméra, GPS.',
+    science: 'Écrans capacitifs, processeurs ARM, réseaux 3G.',
+    type: 'rupture'
+  },
+  {
+    id: 'pliable', year: 2019, title: 'Smartphone pliable',
+    emoji: '🔄', inventor: 'Samsung / Huawei',
+    innovation: 'Écran OLED flexible permettant de plier l\'appareil.',
+    besoin: 'Grand écran tout en restant compact et transportable.',
+    science: 'Diodes OLED flexibles, charnières haute précision.',
+    type: 'innovation'
+  }
+];
+
+/* Impact des choix de conception sur les contraintes (valeurs 0-100) */
+var IMPACTS = {
+  materiaux: {
+    plastique_vierge:  { environnement: -20, reglementation: -5,  accessibilite: 0,   modesdevie: 5 },
+    plastique_recycle: { environnement: 15,  reglementation: 10,  accessibilite: 0,   modesdevie: 5 },
+    bioplastique:      { environnement: 20,  reglementation: 10,  accessibilite: 0,   modesdevie: 5 },
+    aluminium_recycle: { environnement: 15,  reglementation: 10,  accessibilite: 5,   modesdevie: 10 }
+  },
+  batterie: {
+    scellee:     { environnement: -15, reglementation: -10, accessibilite: -10, modesdevie: 5 },
+    remplacable: { environnement: 15,  reglementation: 15,  accessibilite: 10,  modesdevie: 10 },
+    modulaire:   { environnement: 20,  reglementation: 15,  accessibilite: 10,  modesdevie: 15 }
+  },
+  logiciel: {
+    standard:    { environnement: 0,   reglementation: 0,   accessibilite: -10, modesdevie: 0 },
+    adaptable:   { environnement: 0,   reglementation: 5,   accessibilite: 20,  modesdevie: 10 },
+    open_source: { environnement: 5,   reglementation: 10,  accessibilite: 25,  modesdevie: 15 }
+  },
+  findevie: {
+    aucun:   { environnement: -20, reglementation: -15, accessibilite: 0,   modesdevie: -5 },
+    reprise: { environnement: 10,  reglementation: 10,  accessibilite: 0,   modesdevie: 5 },
+    consigne:{ environnement: 25,  reglementation: 20,  accessibilite: 5,   modesdevie: 15 }
+  }
+};
+
+/* Réponses correctes du quiz */
+var QUIZ_ANSWERS = {
+  'n1-qcm1': { correct: 'invention', feedback_ok: '✅ Correct ! Le premier téléphone est une invention car il crée quelque chose de totalement nouveau.', feedback_ko: '❌ Incorrect. Graham Bell a créé le téléphone pour la première fois : c\'est une invention.' },
+  'n1-qcm2': { correct: 'rupture', feedback_ok: '✅ Correct ! L\'iPhone a bouleversé les usages : c\'est une innovation de rupture.', feedback_ko: '❌ Pas tout à fait. L\'iPhone a radicalement changé les usages (tactile, apps, internet) : c\'est une innovation de rupture.' },
+  'n1-qcm3': { correct: 'dd', feedback_ok: '✅ Correct ! Recyclage et réparabilité relèvent du développement durable.', feedback_ko: '❌ Incorrect. Utiliser du plastique recyclé et une batterie remplaçable relève du développement durable.' },
+  'n1-dd1':  { correct: 'vrai', feedback_ok: '✅ Vrai ! La réparabilité prolonge la durée de vie et réduit les déchets.', feedback_ko: '❌ Faux. Un objet réparable dure plus longtemps et génère moins de déchets : c\'est du développement durable.' },
+  'n1-dd2':  { correct: 'faux', feedback_ok: '✅ Correct ! L\'obsolescence programmée est contraire au développement durable.', feedback_ko: '❌ Incorrect. L\'obsolescence programmée raccourcit la durée de vie et augmente les déchets : c\'est incompatible avec le DD.' }
+};
+
+/* =====================================================================
+   ÉTAT GLOBAL & LOCALSTORAGE
+   ===================================================================== */
+var STORAGE_KEY = 'frise-ost-3eme-v1';
+var state = {
+  binome: '', classe: '',
+  scores: { n1: 0, n2: 0, n3: 0, n4: 0 },
+  maxScores: { n1: 8, n2: 6, n3: 7, n4: 10 },
+  quizDone: {},
+  assocDone: 0,
+  contraintesDone: false,
+  cardsFlipped: [],
+  friseLabels: {},
+  defiChoices: {},
+  defiScore: null,
+  textAnswers: {}
+};
+
+function loadState() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      for (var k in parsed) { if (state.hasOwnProperty(k)) state[k] = parsed[k]; }
+    }
+  } catch(e) { /* ignore */ }
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { /* ignore */ }
+  updateUI();
+}
+
+function resetAll() {
+  if (!confirm('Effacer toutes les réponses et scores ?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+/* =====================================================================
+   UTILITAIRES UI
+   ===================================================================== */
+function $(id) { return document.getElementById(id); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function message(txt, duree) {
+  var z = $('zone-message');
+  z.textContent = txt; z.className = 'visible';
+  clearTimeout(message._t);
+  message._t = setTimeout(function(){ z.className = ''; }, duree || 2600);
+}
+
+function updateUI() {
+  // Progression
+  var total = state.scores.n1 + state.scores.n2 + state.scores.n3 + state.scores.n4;
+  var maxTotal = state.maxScores.n1 + state.maxScores.n2 + state.maxScores.n3 + state.maxScores.n4;
+  var pct = maxTotal > 0 ? Math.round(total / maxTotal * 100) : 0;
+  $('progress-bar').style.width = pct + '%';
+  $('progress-text').textContent = pct + ' %';
+
+  // Scores Bloom
+  $('score-n1').textContent = state.scores.n1;
+  $('score-n2').textContent = state.scores.n2;
+  $('score-n3').textContent = state.scores.n3;
+  $('score-n4').textContent = state.scores.n4;
+
+  // Bilan
+  $('bilan-n1').textContent = state.scores.n1;
+  $('bilan-n2').textContent = state.scores.n2;
+  $('bilan-n3').textContent = state.scores.n3;
+  $('bilan-n4').textContent = state.scores.n4;
+  $('bilan-total').textContent = total;
+  $('bilan-n1-pct').textContent = Math.round(state.scores.n1/state.maxScores.n1*100) + '%';
+  $('bilan-n2-pct').textContent = Math.round(state.scores.n2/state.maxScores.n2*100) + '%';
+  $('bilan-n3-pct').textContent = Math.round(state.scores.n3/state.maxScores.n3*100) + '%';
+  $('bilan-n4-pct').textContent = Math.round(state.scores.n4/state.maxScores.n4*100) + '%';
+  $('bilan-total-pct').textContent = pct + '%';
+
+  // Binôme / classe
+  $('binome').value = state.binome || '';
+  $('classe').value = state.classe || '';
+
+  // Récapitulatif
+  updateRecap();
+}
+
+function updateRecap() {
+  var dl = $('recap');
+  var keys = Object.keys(state.textAnswers);
+  if (!keys.length) { dl.innerHTML = '<p class="note">Répondez aux questions dans chaque section.</p>'; return; }
+  var html = '';
+  keys.forEach(function(k) {
+    if (state.textAnswers[k] && state.textAnswers[k].trim()) {
+      html += '<dt>' + escapeHtml(k) + '</dt><dd>' + escapeHtml(state.textAnswers[k]) + '</dd>';
+    }
+  });
+  dl.innerHTML = html || '<p class="note">Aucune réponse écrite pour l\'instant.</p>';
+}
+
+function escapeHtml(s) {
+  var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+/* =====================================================================
+   NAVIGATION PAR ONGLETS
+   ===================================================================== */
+function initTabs() {
+  var btns = $$('.onglets button');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var tab = btn.getAttribute('data-tab');
+      btns.forEach(function(b) { b.classList.remove('actif'); });
+      btn.classList.add('actif');
+      $$('main > section').forEach(function(s) { s.classList.remove('actif'); });
+      $(tab).classList.add('actif');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  });
+}
+
+/* =====================================================================
+   N1 — QUIZ QCM
+   ===================================================================== */
+function initQuiz() {
+  Object.keys(QUIZ_ANSWERS).forEach(function(key) {
+    var container = $(key.replace('n1-','quiz-'));
+    if (!container) container = $('quiz-' + key.split('-').slice(1).join('-'));
+    // Trouver le bon conteneur
+    var el = document.querySelector('[data-score-key="' + key + '"]');
+    if (!el) return;
+
+    // Restaurer l'état
+    if (state.quizDone[key]) {
+      el.classList.add('correct');
+      var opts = el.querySelectorAll('.quiz-option');
+      opts.forEach(function(o) {
+        o.style.pointerEvents = 'none';
+        if (o.getAttribute('data-value') === QUIZ_ANSWERS[key].correct) o.classList.add('correct-answer');
+      });
+      var fb = el.querySelector('.quiz-feedback');
+      fb.textContent = QUIZ_ANSWERS[key].feedback_ok;
+      fb.className = 'quiz-feedback show correct';
+    }
+
+    el.querySelectorAll('.quiz-option').forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        if (state.quizDone[key]) return;
+        var val = opt.getAttribute('data-value');
+        var ans = QUIZ_ANSWERS[key];
+        var fb = el.querySelector('.quiz-feedback');
+        var isCorrect = (val === ans.correct);
+
+        state.quizDone[key] = true;
+        if (isCorrect) {
+          el.classList.add('correct');
+          opt.classList.add('correct-answer');
+          fb.textContent = ans.feedback_ok;
+          fb.className = 'quiz-feedback show correct';
+          recalcScoreN1();
+          message('✅ Bonne réponse !');
+        } else {
+          el.classList.add('incorrect');
+          opt.classList.add('wrong-answer');
+          // Montrer la bonne réponse
+          el.querySelectorAll('.quiz-option').forEach(function(o2) {
+            if (o2.getAttribute('data-value') === ans.correct) o2.classList.add('correct-answer');
+          });
+          fb.textContent = ans.feedback_ko;
+          fb.className = 'quiz-feedback show incorrect';
+          message('❌ Mauvaise réponse');
+        }
+        el.querySelectorAll('.quiz-option').forEach(function(o) { o.style.pointerEvents = 'none'; });
+        saveState();
+      });
+    });
+  });
+}
+
+function recalcScoreN1() {
+  var score = 0;
+  // QCM (3 pts)
+  ['n1-qcm1','n1-qcm2','n1-qcm3'].forEach(function(k) {
+    if (state.quizDone[k]) {
+      // Vérifier si correct (on ne stocke pas vrai/faux, on recalcule)
+      var el = document.querySelector('[data-score-key="' + k + '"]');
+      if (el && el.classList.contains('correct')) score++;
+    }
+  });
+  // Association (4 pts max → compté dans assocDone)
+  score += state.assocDone;
+  // DD (2 pts)
+  ['n1-dd1','n1-dd2'].forEach(function(k) {
+    if (state.quizDone[k]) {
+      var el = document.querySelector('[data-score-key="' + k + '"]');
+      if (el && el.classList.contains('correct')) score++;
+    }
+  });
+  // Contraintes (1 pt si done)
+  if (state.contraintesDone) score += 1;
+  state.scores.n1 = Math.min(score, state.maxScores.n1);
+}
+
+/* =====================================================================
+   N1 — ASSOCIATION
+   ===================================================================== */
+function initAssociation() {
+  var selectedLeft = null;
+  var matched = 0;
+
+  // Restaurer
+  if (state.assocDone > 0) {
+    // Simplification : on ne restaure pas visuellement les associations, juste le score
+    $('assoc-feedback').innerHTML = 'Associations correctes : <b>' + state.assocDone + '</b> / 4';
+  }
+
+  $$('#assoc-left .assoc-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      if (item.classList.contains('matched')) return;
+      $$('#assoc-left .assoc-item').forEach(function(i) { i.classList.remove('selected'); });
+      item.classList.add('selected');
+      selectedLeft = item;
+    });
+  });
+
+  $$('#assoc-right .assoc-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      if (item.classList.contains('matched') || !selectedLeft) return;
+      var leftId = selectedLeft.getAttribute('data-id');
+      var rightMatch = item.getAttribute('data-match');
+
+      if (leftId === rightMatch) {
+        // Correct
+        selectedLeft.classList.remove('selected');
+        selectedLeft.classList.add('matched');
+        item.classList.add('matched');
+        matched++;
+        state.assocDone = matched;
+        $('assoc-feedback').innerHTML = 'Associations correctes : <b>' + matched + '</b> / 4';
+        message('✅ Association correcte !');
+        recalcScoreN1();
+        saveState();
+      } else {
+        // Erreur
+        item.classList.add('error');
+        setTimeout(function() { item.classList.remove('error'); }, 500);
+        message('❌ Essayez encore');
+      }
+      selectedLeft = null;
+      $$('#assoc-left .assoc-item').forEach(function(i) { i.classList.remove('selected'); });
+    });
+  });
+}
+
+/* =====================================================================
+   N1 — CONTRAINTES SOCIÉTALES
+   ===================================================================== */
+function initContraintes() {
+  $$('#contraintes-selector .tag-selectable').forEach(function(tag) {
+    tag.addEventListener('click', function() {
+      if (state.contraintesDone) return;
+      tag.classList.toggle('selected');
+    });
+  });
+
+  $('btn-check-contraintes').addEventListener('click', function() {
+    if (state.contraintesDone) return;
+    var allCorrect = true;
+    $$('#contraintes-selector .tag-selectable').forEach(function(tag) {
+      var isCorrect = tag.getAttribute('data-correct') === 'true';
+      var isSelected = tag.classList.contains('selected');
+      if (isCorrect && isSelected) {
+        tag.classList.add('correct-reveal');
+      } else if (!isCorrect && !isSelected) {
+        tag.classList.add('correct-reveal');
+      } else if (isCorrect && !isSelected) {
+        tag.classList.add('wrong-reveal');
+        allCorrect = false;
+      } else {
+        tag.classList.add('wrong-reveal');
+        allCorrect = false;
+      }
+    });
+    state.contraintesDone = true;
+    $('contraintes-feedback').innerHTML = allCorrect
+      ? '<span class="ok">✅ Toutes les contraintes sociétales identifiées correctement !</span>'
+      : '<span class="erreur">❌ Quelques erreurs. Les éléments en vert sont les bonnes réponses.</span>';
+    recalcScoreN1();
+    saveState();
+  });
+}
+
+/* =====================================================================
+   N2 — CARTES À RETOURNER
+   ===================================================================== */
+function initFlipCards() {
+  var flipped = new Set(state.cardsFlipped || []);
+  $$('.flip-card').forEach(function(card) {
+    var cardId = card.getAttribute('data-card');
+    if (flipped.has(cardId)) card.classList.add('flipped');
+
+    card.addEventListener('click', function() {
+      card.classList.toggle('flipped');
+      if (card.classList.contains('flipped')) {
+        flipped.add(cardId);
+      } else {
+        flipped.delete(cardId);
+      }
+      state.cardsFlipped = Array.from(flipped);
+      $('cards-counter').innerHTML = 'Cartes retournées : <b>' + flipped.size + '</b> / 6';
+      // Score N2 : cartes retournées ne donnent pas de points directement,
+      // mais les questions écrites oui (gérées globalement)
+      saveState();
+    });
+  });
+  $('cards-counter').innerHTML = 'Cartes retournées : <b>' + flipped.size + '</b> / 6';
+}
+
+/* =====================================================================
+   N2 — ANIMATION DÉCOUVERTE SCIENTIFIQUE
+   ===================================================================== */
+function initDiscovery() {
+  var steps = ['ds-1','da-1','ds-2','da-2','ds-3','da-3','ds-4'];
+  var explanations = [
+    'Heinrich Hertz découvre les ondes électromagnétiques en 1887.',
+    'Cette découverte permet de transmettre des signaux sans fil…',
+    'Marconi réalise la première transmission radio en 1895.',
+    'La maîtrise des ondes radio ouvre la voie aux communications mobiles…',
+    'La miniaturisation électronique rend les appareils portables possibles.',
+    'Les composants deviennent assez petits pour tenir dans la main…',
+    'Résultat : le premier téléphone mobile commercial (Motorola DynaTAC, 1983) !'
+  ];
+  var currentStep = -1;
+  var timer = null;
+
+  function resetAnim() {
+    clearTimeout(timer);
+    currentStep = -1;
+    steps.forEach(function(id) {
+      var el = $(id);
+      if (el) el.classList.remove('active');
+    });
+    $('discovery-explanation').textContent = 'Clique sur « Lancer l\'animation » pour commencer.';
+  }
+
+  function nextStep() {
+    currentStep++;
+    if (currentStep >= steps.length) {
+      $('discovery-explanation').textContent = '✅ Animation terminée ! Une découverte scientifique → une technologie → un objet technique.';
+      return;
+    }
+    var el = $(steps[currentStep]);
+    if (el) el.classList.add('active');
+    $('discovery-explanation').textContent = explanations[currentStep];
+    timer = setTimeout(nextStep, 1800);
+  }
+
+  $('btn-discovery').addEventListener('click', function() {
+    resetAnim();
+    nextStep();
+  });
+
+  $('btn-discovery-reset').addEventListener('click', resetAnim);
+}
+
+/* =====================================================================
+   N3 — FRISE CHRONOLOGIQUE
+   ===================================================================== */
+function initFrise() {
+  var frise = $('frise');
+  frise.innerHTML = '';
+
+  FRISE_DATA.forEach(function(item, idx) {
+    var div = document.createElement('div');
+    div.className = 'frise-item';
+    div.setAttribute('data-id', item.id);
+    div.innerHTML =
+      '<div class="frise-dot"></div>' +
+      '<div class="frise-year">' + item.year + '</div>' +
+      '<div class="frise-title">' + item.emoji + ' ' + item.title + '</div>' +
+      '<div class="frise-detail">' +
+        '<h4>' + item.emoji + ' ' + item.title + ' (' + item.year + ')</h4>' +
+        '<div class="detail-row"><span class="detail-label">Innovateur :</span> ' + item.inventor + '</div>' +
+        '<div class="detail-row"><span class="detail-label">Innovation majeure :</span> ' + item.innovation + '</div>' +
+        '<div class="detail-row"><span class="detail-label">Besoin sociétal :</span> ' + item.besoin + '</div>' +
+        '<div class="detail-row"><span class="detail-label">Découverte scientifique :</span> ' + item.science + '</div>' +
+        '<div class="etiquette-drop" data-frise-id="' + item.id + '" data-expected="' + item.type + '">Touchez ici pour placer une étiquette</div>' +
+      '</div>';
+
+    div.addEventListener('click', function(e) {
+      // Ne pas fermer si on clique dans le détail
+      if (e.target.closest('.frise-detail') && !e.target.closest('.etiquette-drop')) return;
+      $$('.frise-item').forEach(function(fi) { fi.classList.remove('active'); });
+      div.classList.add('active');
+    });
+
+    frise.appendChild(div);
+  });
+
+  // Restaurer les étiquettes placées
+  if (state.friseLabels) {
+    Object.keys(state.friseLabels).forEach(function(friseId) {
+      var drop = document.querySelector('.etiquette-drop[data-frise-id="' + friseId + '"]');
+      var etiqId = state.friseLabels[friseId];
+      if (drop && etiqId) {
+        var etiq = $(etiqId);
+        if (etiq) {
+          drop.textContent = etiq.textContent;
+          drop.classList.add('filled');
+          etiq.classList.add('placed');
+        }
+      }
+    });
+  }
+
+  initDragDrop();
+}
+
+function initDragDrop() {
+  var draggedEl = null;
+
+  $$('.etiquette').forEach(function(etiq) {
+    etiq.addEventListener('dragstart', function(e) {
+      draggedEl = etiq;
+      e.dataTransfer.setData('text/plain', etiq.id);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+  });
+
+  $$('.etiquette-drop').forEach(function(drop) {
+    drop.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      drop.classList.add('hover');
+    });
+    drop.addEventListener('dragleave', function() {
+      drop.classList.remove('hover');
+    });
+    drop.addEventListener('drop', function(e) {
+      e.preventDefault();
+      drop.classList.remove('hover');
+      if (!draggedEl || drop.classList.contains('filled')) return;
+      var etiqId = draggedEl.id;
+      drop.textContent = draggedEl.textContent;
+      drop.classList.add('filled');
+      draggedEl.classList.add('placed');
+      state.friseLabels[drop.getAttribute('data-frise-id')] = etiqId;
+      saveState();
+      message('Étiquette placée !');
+    });
+  });
+
+
+  /* --- Repli tactile : toucher une etiquette puis toucher la case ---
+     Le glisser-deposer HTML5 n'est pas declenche par le toucher : sans ce
+     repli, l'exercice est impossible sur telephone. Le glisser a la souris
+     continue de fonctionner. */
+  var etiquetteChoisie = null;
+  $$('.etiquette').forEach(function(etiq) {
+    etiq.addEventListener('click', function() {
+      if (etiq.classList.contains('placed')) return;
+      $$('.etiquette').forEach(function(e) { e.classList.remove('selectionnee'); });
+      etiquetteChoisie = etiq;
+      etiq.classList.add('selectionnee');
+      message('« ' + etiq.textContent.trim() + ' » selectionnee : touchez la case ou la placer.');
+    });
+  });
+  $$('.etiquette-drop').forEach(function(drop) {
+    drop.addEventListener('click', function() {
+      if (!etiquetteChoisie || drop.classList.contains('filled')) return;
+      drop.textContent = etiquetteChoisie.textContent;
+      drop.classList.add('filled');
+      etiquetteChoisie.classList.add('placed');
+      state.friseLabels[drop.getAttribute('data-frise-id')] = etiquetteChoisie.id;
+      etiquetteChoisie.classList.remove('selectionnee');
+      etiquetteChoisie = null;
+      saveState();
+      message('Etiquette placee !');
+    });
+  });
+
+  // Vérifier
+  $('btn-check-frise').addEventListener('click', function() {
+    var correct = 0;
+    var total = FRISE_DATA.length;
+    $$('.etiquette-drop').forEach(function(drop) {
+      var expected = drop.getAttribute('data-expected');
+      var placedId = state.friseLabels[drop.getAttribute('data-frise-id')];
+      if (placedId) {
+        var placedEl = $(placedId);
+        if (placedEl) {
+          var placedType = placedEl.getAttribute('data-type');
+          if (placedType === expected) {
+            drop.classList.add('correct');
+            drop.classList.remove('incorrect');
+            correct++;
+          } else {
+            drop.classList.add('incorrect');
+            drop.classList.remove('correct');
+          }
+        }
+      }
+    });
+    state.scores.n3 = correct + (state.textAnswers['N3-Q1 plus grande rupture'] ? 1 : 0) + (state.textAnswers['N3-Q2 incidence smartphone'] ? 1 : 0);
+    state.scores.n3 = Math.min(state.scores.n3, state.maxScores.n3);
+    $('frise-feedback').innerHTML = correct + ' / ' + total + ' étiquettes correctement placées.' +
+      (correct === total ? ' <span class="ok">✅ Parfait !</span>' : ' <span class="note">Corrigez les erreurs en rouge.</span>');
+    saveState();
+  });
+
+  // Reset
+  $('btn-reset-frise').addEventListener('click', function() {
+    state.friseLabels = {};
+    $$('.etiquette-drop').forEach(function(d) {
+      d.textContent = 'Touchez ici pour placer une étiquette';
+      d.classList.remove('filled','correct','incorrect');
+    });
+    $$('.etiquette').forEach(function(e) { e.classList.remove('placed'); });
+    $('frise-feedback').textContent = 'Place les étiquettes puis vérifie.';
+    saveState();
+  });
+}
+
+/* =====================================================================
+   N4 — DÉFI CONCEPTION 2035
+   ===================================================================== */
+function initDefi() {
+  // Sélection des options
+  $$('.option-choix input[type=radio]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var category = radio.name;
+      var value = radio.value;
+      state.defiChoices[category] = value;
+
+      // Highlight
+      var parent = radio.closest('.options-conception');
+      parent.querySelectorAll('.option-choix').forEach(function(o) { o.classList.remove('selected'); });
+      radio.closest('.option-choix').classList.add('selected');
+
+      updateDefiBars();
+      saveState();
+    });
+  });
+
+  // Restaurer les choix
+  Object.keys(state.defiChoices).forEach(function(cat) {
+    var radio = document.querySelector('input[name="' + cat + '"][value="' + state.defiChoices[cat] + '"]');
+    if (radio) {
+      radio.checked = true;
+      radio.closest('.option-choix').classList.add('selected');
+    }
+  });
+
+  // Évaluer
+  $('btn-eval-defi').addEventListener('click', evaluateDefi);
+  $('btn-reset-defi').addEventListener('click', function() {
+    state.defiChoices = {};
+    state.defiScore = null;
+    $$('input[type=radio]').forEach(function(r) { r.checked = false; });
+    $$('.option-choix').forEach(function(o) { o.classList.remove('selected'); });
+    $('bilan-defi').classList.remove('visible');
+    resetDefiBars();
+    saveState();
+  });
+
+  if (state.defiScore !== null) {
+    updateDefiBars();
+    showDefiBilan(state.defiScore);
+  }
+}
+
+function resetDefiBars() {
+  ['environnement','reglementation','accessibilite','modesdevie'].forEach(function(c) {
+    $('bar-' + c).style.width = '50%';
+    $('bar-' + c).style.background = 'var(--orange)';
+    $('score-' + c).textContent = '50 / 100';
+  });
+}
+
+function updateDefiBars() {
+  var scores = { environnement: 50, reglementation: 50, accessibilite: 50, modesdevie: 50 };
+  Object.keys(state.defiChoices).forEach(function(cat) {
+    var val = state.defiChoices[cat];
+    if (IMPACTS[cat] && IMPACTS[cat][val]) {
+      var imp = IMPACTS[cat][val];
+      Object.keys(imp).forEach(function(k) { scores[k] += imp[k]; });
+    }
+  });
+  Object.keys(scores).forEach(function(k) {
+    scores[k] = Math.max(0, Math.min(100, scores[k]));
+    var bar = $('bar-' + k);
+    var scoreEl = $('score-' + k);
+    bar.style.width = scores[k] + '%';
+    scoreEl.textContent = scores[k] + ' / 100';
+    if (scores[k] >= 70) bar.style.background = 'var(--vert)';
+    else if (scores[k] >= 40) bar.style.background = 'var(--orange)';
+    else bar.style.background = 'var(--rouge)';
+  });
+  return scores;
+}
+
+function evaluateDefi() {
+  var cats = ['materiaux','batterie','logiciel','findevie'];
+  var missing = cats.filter(function(c) { return !state.defiChoices[c]; });
+  if (missing.length) {
+    message('⚠️ Faites un choix pour chaque catégorie !');
+    return;
+  }
+  var scores = updateDefiBars();
+  var total = Math.round((scores.environnement + scores.reglementation + scores.accessibilite + scores.modesdevie) / 4);
+  state.defiScore = total;
+  state.scores.n4 = Math.min(Math.round(total / 10), state.maxScores.n4);
+  showDefiBilan(total);
+  saveState();
+}
+
+function showDefiBilan(total) {
+  var bilan = $('bilan-defi');
+  bilan.classList.add('visible');
+  var scoreEl = $('bilan-score-global');
+  var commEl = $('bilan-commentaire');
+  scoreEl.textContent = 'Score global : ' + total + ' / 100';
+
+  if (total >= 80) {
+    scoreEl.style.color = 'var(--vert)';
+    commEl.style.background = 'var(--vertF)';
+    commEl.innerHTML = '🌟 <b>Excellent !</b> Votre smartphone de 2035 est très bien conçu. Vous avez pris en compte les 4 contraintes sociétales de manière équilibrée. C\'est un exemple de conception responsable !';
+  } else if (total >= 60) {
+    scoreEl.style.color = 'var(--bleu2)';
+    commEl.style.background = 'var(--bleuf2)';
+    commEl.innerHTML = '👍 <b>Bien !</b> Votre conception est correcte mais peut être améliorée. Regardez les contraintes avec un score faible et ajustez vos choix.';
+  } else if (total >= 40) {
+    scoreEl.style.color = 'var(--orange)';
+    commEl.style.background = 'var(--orangeF)';
+    commEl.innerHTML = '⚠️ <b>Moyen.</b> Certains aspects sociétaux sont négligés. Essayez de trouver un meilleur équilibre entre les contraintes.';
+  } else {
+    scoreEl.style.color = 'var(--rouge)';
+    commEl.style.background = '#fce4ec';
+    commEl.innerHTML = '❌ <b>Insuffisant.</b> Votre conception ne prend pas assez en compte les contraintes sociétales. Repensez vos choix en privilégiant le développement durable.';
+  }
+}
+
+/* =====================================================================
+   TEXTAREAS — Sauvegarde automatique des réponses écrites
+   ===================================================================== */
+function initTextareas() {
+  $$('textarea[data-q]').forEach(function(ta) {
+    var key = ta.getAttribute('data-q');
+    if (state.textAnswers[key]) ta.value = state.textAnswers[key];
+
+    ta.addEventListener('input', function() {
+      state.textAnswers[key] = ta.value;
+      // Mettre à jour les scores N2/N3 basés sur les réponses écrites
+      recalcWrittenScores();
+      saveState();
+    });
+  });
+}
+
+function recalcWrittenScores() {
+  // N2 : 3 questions écrites × 2 pts = 6
+  var n2 = 0;
+  ['N2-Q1 invention vs innovation','N2-Q2 besoin fondamental','N2-Q3 découverte scientifique'].forEach(function(k) {
+    if (state.textAnswers[k] && state.textAnswers[k].trim().length > 10) n2 += 2;
+  });
+  state.scores.n2 = Math.min(n2, state.maxScores.n2);
+
+  // N3 : frise labels (déjà calculé) + 2 questions écrites
+  var friseCorrect = 0;
+  $$('.etiquette-drop').forEach(function(d) {
+    if (d.classList.contains('correct')) friseCorrect++;
+  });
+  var n3 = friseCorrect;
+  ['N3-Q1 plus grande rupture','N3-Q2 incidence smartphone'].forEach(function(k) {
+    if (state.textAnswers[k] && state.textAnswers[k].trim().length > 10) n3 += 1;
+  });
+  state.scores.n3 = Math.min(n3, state.maxScores.n3);
+
+  // N4 : defi score (déjà calculé) + question écrite
+  // Le score N4 est principalement basé sur le défi (max 10)
+  // On garde le score du défi tel quel
+}
+
+/* =====================================================================
+   EXPORT / COPIER / IMPRIMER
+   ===================================================================== */
+function initExport() {
+  $('btn-export').addEventListener('click', function() {
+    var data = {
+      binome: state.binome,
+      classe: state.classe,
+      date: new Date().toLocaleString('fr-FR'),
+      scores: state.scores,
+      reponses: state.textAnswers
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'frise-ost-' + (state.binome || 'eleve').replace(/\s+/g,'_') + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    $('etat-export').textContent = '✅ Fichier exporté !';
+    message('💾 Réponses exportées !');
+  });
+
+  $('btn-copier').addEventListener('click', function() {
+    var lines = ['=== FRISE OST — RÉPONSES ==='];
+    lines.push('Binôme : ' + (state.binome || '-'));
+    lines.push('Classe : ' + (state.classe || '-'));
+    lines.push('Date : ' + new Date().toLocaleString('fr-FR'));
+    lines.push('');
+    lines.push('SCORES :');
+    lines.push('  N1 (Mémoriser) : ' + state.scores.n1 + '/' + state.maxScores.n1);
+    lines.push('  N2 (Comprendre) : ' + state.scores.n2 + '/' + state.maxScores.n2);
+    lines.push('  N3 (Appliquer) : ' + state.scores.n3 + '/' + state.maxScores.n3);
+    lines.push('  N4 (Analyser) : ' + state.scores.n4 + '/' + state.maxScores.n4);
+    lines.push('');
+    lines.push('RÉPONSES ÉCRITES :');
+    Object.keys(state.textAnswers).forEach(function(k) {
+      if (state.textAnswers[k] && state.textAnswers[k].trim()) {
+        lines.push('  [' + k + ']');
+        lines.push('  ' + state.textAnswers[k].trim());
+        lines.push('');
+      }
+    });
+    var text = lines.join('\n');
+    navigator.clipboard.writeText(text).then(function() {
+      message('⧉ Copié dans le presse-papier !');
+    }).catch(function() {
+      message('❌ Copie impossible');
+    });
+  });
+
+  $('btn-imprimer').addEventListener('click', function() {
+    window.print();
+  });
+
+  $('btn-reset-all').addEventListener('click', resetAll);
+}
+
+/* =====================================================================
+   BINÔME / CLASSE
+   ===================================================================== */
+function initInputs() {
+  $('binome').addEventListener('input', function() { state.binome = this.value; saveState(); });
+  $('classe').addEventListener('input', function() { state.classe = this.value; saveState(); });
+}
+
+/* =====================================================================
+   INITIALISATION
+   ===================================================================== */
+function init() {
+  loadState();
+  initTabs();
+  initInputs();
+  initQuiz();
+  initAssociation();
+  initContraintes();
+  initFlipCards();
+  initDiscovery();
+  initFrise();
+  initDefi();
+  initTextareas();
+  initExport();
+  recalcScoreN1();
+  recalcWrittenScores();
+  updateUI();
+}
+
+// Démarrage
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+})();
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "3e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>
