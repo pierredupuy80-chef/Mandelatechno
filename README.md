@@ -10,19 +10,36 @@ utilisées sur ordinateur, tablette et téléphone.
 ## Ce que contient le dépôt
 
 ```
-index.html                                    page d'accueil : la liste des activités
-.nojekyll                                     demande à GitHub de servir les fichiers tels quels
-3e/ost1a/                                     OST 1 de 3e — le smartphone
-    app-activite1-frise-evolution.html        1 · Frise interactive — 150 ans de communication
-    app-activite2-innovations.html            2 · Innovations et ruptures technologiques
-    app-activite3-biais-ia.html               3 · Simulateur LexIA — les biais de l'IA
-3e/tp-ia/                                     TP d'apprentissage IA
-    tp-ia.html                                TP complet — 3 ateliers + défi
-    atelier-ia-exemples.html                  Atelier « L'IA apprend avec des exemples »
-    donnees/*.csv                             6 fichiers à ouvrir dans un tableur
-4e/ost1/
-    activite-securite-donnees.html            IAG et sécurité des données
+index.html                          page d'accueil : les 17 activités, sommaire par niveau
+.nojekyll                           demande à GitHub de servir les fichiers tels quels
+
+3e/ost1a/                           OST 1 — le smartphone
+    app-activite1-frise-evolution.html
+    app-activite2-innovations.html
+    app-activite3-biais-ia.html
+3e/ost2a/app-impact-numerique.html  OST 2a — l'impact du numérique
+3e/ost3/app-comparateur-ost.html    OST 3 — trottinette électrique et VAE
+3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
+3e/tp-ia/                           TP d'apprentissage IA
+    tp-ia.html
+    atelier-ia-exemples.html
+    donnees/*.csv                   6 fichiers à ouvrir dans un tableur
+
+4e/ost0/activite-iag-assistant.html               Séquence 0 — utiliser l'IAG
+4e/ost1/activite-securite-donnees.html            Séquence 1 — sécurité des données
+4e/ost2/activite-evolution-drones.html            Séquence 2 — les drones
+4e/ost3/activite-maison-connectee-eclairage.html  Séquence 3 — maison connectée
+4e/ost4/activite-chauffage-domotique.html         Séquence 4 — chauffage domotique
+
+5e/ost2/activite-outils-numeriques.html           Séquence 2 — outils numériques
+5e/ost3/activite-evolution-ost.html               Séquence 3 — évolution des OST
+5e/ost4/activite-souris-interaction.html          Séquence 4 — la souris
+5e/ost5/activite-choix-lampes.html                Séquence 5 — choisir un OST : les lampes
 ```
+
+Une convention de nommage simple : `Niveau/ostN/` pour un objet et système technique,
+`Niveau/tp-*/` pour un travail pratique. Le numéro suit celui de la séquence d'origine, ce qui
+permet de retrouver le dossier de préparation correspondant.
 
 Chaque application est un **fichier HTML autonome** : le style, le code, les images et même les
 données et les sons sont inclus dans le fichier. Aucune bibliothèque externe n'est téléchargée,
@@ -75,7 +92,7 @@ git push
 
 ## Compatibilité téléphone
 
-Les **17 pages** (15 mini-apps + les 2 pages du TP) ont été auditées dans un navigateur en
+Les **17 pages** (les 15 mini-apps + les 2 pages du TP) ont été auditées dans un navigateur en
 émulation de téléphone, puis corrigées pour l'usage au doigt. Chaque correction a été vérifiée
 en comparant la page corrigée à sa sauvegarde `*.BACKUP-avant-correctifs-mobile.html`.
 
