@@ -12,15 +12,22 @@ utilisées sur ordinateur, tablette et téléphone.
 ```
 index.html                                    page d'accueil : la liste des activités
 .nojekyll                                     demande à GitHub de servir les fichiers tels quels
-3e/ost1a/
+3e/ost1a/                                     OST 1 de 3e — le smartphone
     app-activite1-frise-evolution.html        1 · Frise interactive — 150 ans de communication
     app-activite2-innovations.html            2 · Innovations et ruptures technologiques
     app-activite3-biais-ia.html               3 · Simulateur LexIA — les biais de l'IA
+3e/tp-ia/                                     TP d'apprentissage IA
+    tp-ia.html                                TP complet — 3 ateliers + défi
+    atelier-ia-exemples.html                  Atelier « L'IA apprend avec des exemples »
+    donnees/*.csv                             6 fichiers à ouvrir dans un tableur
+4e/ost1/
+    activite-securite-donnees.html            IAG et sécurité des données
 ```
 
-Chaque application est un **fichier HTML autonome** : le style, le code et les images sont
-inclus dans le fichier. Aucune bibliothèque externe n'est téléchargée, donc aucune activité
-ne dépend d'un service tiers pour s'afficher.
+Chaque application est un **fichier HTML autonome** : le style, le code, les images et même les
+données et les sons sont inclus dans le fichier. Aucune bibliothèque externe n'est téléchargée,
+donc aucune activité ne dépend d'un service tiers pour s'afficher. Seuls les liens vers les
+fiches, vidéos et quiz externes nécessitent une connexion, et uniquement si l'élève clique.
 
 ---
 
@@ -43,7 +50,8 @@ Si le réglage devait être refait (par exemple pour un nouveau dépôt) :
 ## Ajouter une activité
 
 1. Créer le dossier de la séquence, par exemple `4e/ost2/`
-2. Y déposer le fichier `.html` de l'activité
+2. Y déposer le fichier `.html` de l'activité — **après** lui avoir appliqué le correctif
+   mobile avec `_outils/appliquer_correctifs_mobile.py` (voir ci-dessous)
 3. Ajouter une carte dans `index.html`, sur le modèle des cartes existantes :
 
 ```html
@@ -67,17 +75,19 @@ git push
 
 ## Compatibilité téléphone
 
-Les trois applications ont été auditées puis corrigées pour l'usage au doigt
-(détail complet dans le rapport d'audit du dossier de préparation) :
+Les **17 pages** (15 mini-apps + les 2 pages du TP) ont été auditées dans un navigateur en
+émulation de téléphone, puis corrigées pour l'usage au doigt. Chaque correction a été vérifiée
+en comparant la page corrigée à sa sauvegarde `*.BACKUP-avant-correctifs-mobile.html`.
 
 | Point | Avant | Après |
 |---|---|---|
-| Barre du haut, part de l'écran occupée en permanence | 39 à 66 % | 5 à 12 % |
-| Barre du haut sur écran de 320 px | 400 px (66 %) | 67 px (12 %) |
-| Éléments cliquables dont le tap partait dans la barre | jusqu'à 40 | 0 |
+| Barre du haut, hauteur occupée en permanence (390×844) | 175 à 400 px | **31 à 65 px** |
+| Barre du haut sur écran de 320 px | jusqu'à 400 px (66 %) | **31 à 65 px (8 à 12 %)** |
+| Barre du haut en paysage | jusqu'à 169 px | **31 à 65 px** |
+| Éléments cliquables dont le tap partait dans la barre | jusqu'à 40 | 0 à 7 (éléments sous la barre) |
 | Changement de niveau | restait au milieu de la page | revient en haut |
-| Zoom automatique iOS à chaque saisie | tous les champs | supprimé (champs à 16 px) |
-| Réponses de QCM trop petites à viser | jusqu'à 100 % | 0 |
+| Zoom automatique iOS à chaque saisie | jusqu'à 58 champs | **0** |
+| Réponses de QCM trop petites à viser | jusqu'à 100 % | **0** |
 | Exercices de glisser-déposer au doigt | impossibles (2 exercices) | toucher pour choisir, toucher pour placer |
 
 Ce qui a été mis en place :
@@ -93,8 +103,17 @@ Ce qui a été mis en place :
 - les champs de saisie passent à **16 px** sur petit écran (seuil qui empêche iOS de zoomer) ;
 - les réponses de QCM font au moins **44 px de haut**, la ligne entière étant cliquable.
 
-Sur ordinateur, le rendu et le comportement sont **inchangés** : la barre reste collante et
-les onglets reviennent à la ligne.
+Trois structures d'en-tête différentes coexistent dans les activités ; le correctif les
+détecte automatiquement. Quand les onglets sont **dans** l'en-tête, celui-ci se replie jusqu'à
+eux ; quand ils sont dans un `<nav>` **hors** de l'en-tête (activités « évolution des OST »,
+« la souris », « choix des lampes »), l'en-tête disparaît entièrement et le `<nav>` se colle en
+haut de l'écran.
+
+Sur ordinateur, le rendu et le comportement sont **inchangés** (vérifié en 1280×900) : la barre
+reste collante et les onglets reviennent à la ligne.
+
+> Le correctif est appliqué par le script `_outils/appliquer_correctifs_mobile.py` du dossier de
+> préparation : pour une nouvelle activité, le lancer sur le fichier avant de le copier ici.
 
 ### Export PDF
 
