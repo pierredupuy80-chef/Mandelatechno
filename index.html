@@ -10,7 +10,6 @@
     --bleu:#1e4e79;
     --bleu2:#2a6fb0;
     --bleuf:#e8f1fa;
-    --vert:#2e7d32;
     --bord:#cfdce8;
     --gris:#5b6b7b;
     --fond:#f4f7fb;
@@ -30,19 +29,46 @@
     color:#fff;
     padding:22px 18px 20px;
   }
-  header .contenu{max-width:900px; margin:0 auto}
+  header .contenu{max-width:960px; margin:0 auto}
   header h1{margin:0 0 6px; font-size:clamp(1.25rem,4.5vw,1.7rem); line-height:1.2}
   header p{margin:0; opacity:.92; font-size:clamp(.9rem,3.4vw,1rem)}
-  main{max-width:900px; margin:0 auto; padding:18px 14px 40px}
-  section{margin-bottom:26px}
-  h2{
-    font-size:clamp(1.05rem,3.8vw,1.3rem);
-    color:var(--bleu);
-    margin:0 0 4px;
+
+  /* Sommaire par niveau : liens simples, non collants */
+  .sommaire{
+    display:flex; flex-wrap:wrap; gap:8px;
+    max-width:960px; margin:0 auto; padding:12px 14px 0;
+  }
+  .sommaire a{
+    flex:1 1 auto; min-height:44px;
+    display:flex; align-items:center; justify-content:center;
+    background:#fff; border:1px solid var(--bord); border-radius:10px;
+    color:var(--bleu); text-decoration:none; font-weight:bold; font-size:.95rem;
+    padding:8px 14px;
+  }
+  .sommaire a:hover,.sommaire a:focus{background:var(--bleuf)}
+
+  main{max-width:960px; margin:0 auto; padding:18px 14px 40px}
+  .niveau{margin:0 0 34px; scroll-margin-top:12px}
+  .niveau > h2{
+    font-size:clamp(1.15rem,4.2vw,1.45rem);
+    color:#fff;
+    background:var(--bleu);
+    border-radius:10px;
+    margin:0 0 16px;
+    padding:10px 14px;
     line-height:1.25;
   }
-  .niveau-seq{color:var(--gris); font-size:.9rem; margin:0 0 14px}
-  .cartes{display:grid; gap:14px}
+  .sequence{margin:0 0 22px}
+  .sequence > h3{
+    font-size:clamp(1rem,3.6vw,1.15rem);
+    color:var(--bleu);
+    margin:0 0 2px;
+    line-height:1.3;
+  }
+  .sequence > .resume{
+    color:var(--gris); font-size:.9rem; margin:0 0 12px;
+  }
+  .cartes{display:grid; gap:12px}
   @media (min-width:720px){ .cartes{grid-template-columns:1fr 1fr} }
   .carte{
     background:#fff;
@@ -54,8 +80,8 @@
     gap:10px;
     box-shadow:0 1px 4px rgba(30,78,121,.06);
   }
-  .carte h3{margin:0; font-size:1.05rem; color:var(--bleu); line-height:1.3}
-  .carte p{margin:0; font-size:.95rem; color:#33414f}
+  .carte h4{margin:0; font-size:1.02rem; color:var(--bleu); line-height:1.3}
+  .carte p{margin:0; font-size:.94rem; color:#33414f}
   .niveaux{
     display:inline-block;
     align-self:flex-start;
@@ -83,32 +109,25 @@
     text-align:center;
   }
   .ouvrir:hover,.ouvrir:focus{background:var(--bleu)}
-  .aide{
+
+  .aide,.astuce{
     background:#fff;
     border:1px solid var(--bord);
     border-left:5px solid var(--bleu2);
     border-radius:12px;
     padding:16px;
+    margin-bottom:18px;
   }
-  .aide h2{margin-bottom:10px}
+  .aide h2{margin:0 0 10px; font-size:1.1rem; color:var(--bleu)}
   .aide ol{margin:0; padding-left:20px}
   .aide li{margin-bottom:8px}
-  .aide code{
-    background:var(--bleuf);
-    padding:1px 5px;
-    border-radius:4px;
-    font-size:.9em;
-  }
-  .astuce{
-    background:#fff8e1;
-    border:1px solid #ffe0a3;
-    border-radius:12px;
-    padding:14px 16px;
-    font-size:.95rem;
-  }
+  .aide code{background:var(--bleuf); padding:1px 5px; border-radius:4px; font-size:.9em}
+  .astuce{border-left-color:#f0ad4e; background:#fffdf7}
   .astuce strong{color:#8a5a00}
+  .donnees{font-size:.88rem; color:var(--gris); margin:12px 0 0}
+  .donnees a{color:var(--bleu2); min-height:24px; display:inline-block; padding:2px 0}
   footer{
-    max-width:900px;
+    max-width:960px;
     margin:0 auto;
     padding:0 14px 34px;
     color:var(--gris);
@@ -125,16 +144,25 @@
   </div>
 </header>
 
+<nav class="sommaire" aria-label="Aller à un niveau">
+  <a href="#niveau-3e">3<sup>e</sup></a>
+  <a href="#niveau-4e">4<sup>e</sup></a>
+  <a href="#niveau-5e">5<sup>e</sup></a>
+</nav>
+
 <main>
 
-  <section>
-    <h2>3<sup>e</sup> · OST 1 — Le smartphone, entre innovation et responsabilité</h2>
-    <p class="niveau-seq">Séquence 1a · cycle 4 · trois activités, chacune du niveau « mémoriser » au niveau « analyser »</p>
+<!-- ==================== 3e ==================== -->
+<section class="niveau" id="niveau-3e">
+  <h2>3<sup>e</sup></h2>
 
+  <div class="sequence">
+    <h3>OST 1 · Le smartphone, entre innovation et responsabilité</h3>
+    <p class="resume">Séquence 1a — trois activités, du niveau « mémoriser » au niveau « analyser »</p>
     <div class="cartes">
 
       <article class="carte">
-        <h3>1 · Frise interactive — 150 ans d'évolution des moyens de communication</h3>
+        <h4>1 · Frise interactive — 150 ans d'évolution des moyens de communication</h4>
         <p>Quiz sur l'invention et l'innovation, association de la lignée d'un objet technique,
            frise chronologique cliquable et défi de conception du smartphone de 2035.</p>
         <span class="niveaux">N1 → N4</span>
@@ -142,7 +170,7 @@
       </article>
 
       <article class="carte">
-        <h3>2 · Innovations et ruptures technologiques</h3>
+        <h4>2 · Innovations et ruptures technologiques</h4>
         <p>Quiz complet sur les innovations et les ruptures, cartes à retourner, classement
            d'objets, frise chronologique et simulateur de conception responsable.</p>
         <span class="niveaux">N1 → N4</span>
@@ -150,7 +178,7 @@
       </article>
 
       <article class="carte">
-        <h3>3 · Simulateur LexIA — découvrir les biais de l'IA</h3>
+        <h4>3 · Simulateur LexIA — découvrir les biais de l'IA</h4>
         <p>Mini-labs pour chaque type d'apprentissage (supervisé, non supervisé, par
            renforcement), laboratoire des biais à curseurs et débat structuré.</p>
         <span class="niveaux">N1 → N4</span>
@@ -158,16 +186,63 @@
       </article>
 
     </div>
-  </section>
+  </div>
 
-  <section>
-    <h2>3<sup>e</sup> · TP — Comment une IA apprend-elle ?</h2>
-    <p class="niveau-seq">Trois ateliers et un défi · environ 1 heure · les données sont incluses dans les pages</p>
-
+  <div class="sequence">
+    <h3>OST 2a · L'impact du numérique sur la société et les métiers</h3>
+    <p class="resume">Comprendre ce que change le numérique : stockage, flux de données, réseaux, métiers</p>
     <div class="cartes">
 
       <article class="carte">
-        <h3>TP complet — supervisé, non supervisé, renforcement</h3>
+        <h4>Impact du numérique — société et métiers</h4>
+        <p>Connaissances, compréhension, application puis analyse : les incidences du stockage et
+           des flux de données, et les métiers qui apparaissent ou disparaissent.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="3e/ost2a/app-impact-numerique.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>OST 3 · L'OST idéal — trottinette électrique et VAE</h3>
+    <p class="resume">Choisir un objet technique en justifiant, puis écrire son cahier des charges</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>Comparateur OST — trottinette vs VAE</h4>
+        <p>Six modèles comparés, critères à hiérarchiser, cahier des charges à curseurs, quiz sur la
+           réglementation (25 km/h, 14 ans, équipements) et radar du développement durable.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="3e/ost3/app-comparateur-ost.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>RNR · Tracker solaire</h3>
+    <p class="resume">Un objet technique qui suit le soleil : simuler, programmer, optimiser</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>Tracker solaire — simulateur et programmeur</h4>
+        <p>Connaissances, simulation du capteur, écriture du programme (variables, conditions,
+           boucles) puis optimisation du rendement.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="3e/rnr/app-tracker-solaire.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>TP · Comment une IA apprend-elle ?</h3>
+    <p class="resume">Trois ateliers et un défi · environ 1 heure · les données sont incluses dans les pages</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>TP complet — supervisé, non supervisé, renforcement</h4>
         <p>Trois ateliers d'une heure pour manipuler les trois grands types d'apprentissage, avec
            un chronomètre et l'export du bilan.</p>
         <span class="niveaux">3 ateliers + défi</span>
@@ -175,7 +250,7 @@
       </article>
 
       <article class="carte">
-        <h3>Atelier « L'IA apprend avec des exemples »</h3>
+        <h4>Atelier « L'IA apprend avec des exemples »</h4>
         <p>Les chiffres, les visages et les sons : voir comment une IA range des exemples toute
            seule, et où elle se trompe. À projeter ou à manipuler en binôme.</p>
         <span class="niveaux">Démonstration</span>
@@ -184,7 +259,7 @@
 
     </div>
 
-    <p class="niveau-seq" style="margin-top:12px">
+    <p class="donnees">
       Fichiers de données à ouvrir dans un tableur :
       <a href="3e/tp-ia/donnees/recompenses_confort.csv">récompenses — confort</a> ·
       <a href="3e/tp-ia/donnees/recompenses_energie.csv">récompenses — énergie</a> ·
@@ -193,54 +268,192 @@
       <a href="3e/tp-ia/donnees/volet_entrainement_desequilibre.csv">volet déséquilibré</a> ·
       <a href="3e/tp-ia/donnees/volet_mesures_24h.csv">mesures sur 24 h</a>
     </p>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <h2>4<sup>e</sup> · OST 1 — L'IA générative et la sécurité des données</h2>
-    <p class="niveau-seq">Séquence 1 · cycle 4 · une activité, du niveau « mémoriser » au niveau « analyser »</p>
+<!-- ==================== 4e ==================== -->
+<section class="niveau" id="niveau-4e">
+  <h2>4<sup>e</sup></h2>
 
+  <div class="sequence">
+    <h3>Séquence 0 · Utiliser l'intelligence artificielle générative</h3>
+    <p class="resume">Séquence préalable — se servir d'une IA générative comme assistant</p>
     <div class="cartes">
 
       <article class="carte">
-        <h3>IAG et sécurité des données</h3>
-        <p>Ce qu'une IA générative fait de vos données : chiffrement de César à manipuler,
-           comparaison d'un VPN et du chiffrement, et bonnes pratiques à retenir.</p>
+        <h4>Utiliser l'IAG comme assistant personnel</h4>
+        <p>Découvrir l'IA générative, apprendre la méthode ACTIF pour écrire un prompt efficace,
+           comparer un prompt vague et un prompt ACTIF, puis analyser les limites de l'outil.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="4e/ost0/activite-iag-assistant.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>Séquence 1 · L'IA générative et la sécurité des données</h3>
+    <p class="resume">Ce qu'une IA fait de vos données, et comment les protéger</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>IAG et sécurité des données</h4>
+        <p>Chiffrement de César à manipuler, comparaison d'un VPN et du chiffrement, et bonnes
+           pratiques à retenir pour protéger ses données personnelles.</p>
         <span class="niveaux">N1 → N4</span>
         <a class="ouvrir" href="4e/ost1/activite-securite-donnees.html">Ouvrir l'activité</a>
       </article>
 
     </div>
-  </section>
+  </div>
 
-  <section class="aide">
-    <h2>Comment utiliser ces activités sur téléphone</h2>
-    <ol>
-      <li>Touchez <strong>« Ouvrir l'activité »</strong> : la page s'ouvre dans votre navigateur.</li>
-      <li>En haut de la page, écrivez votre <strong>binôme</strong> et votre <strong>classe</strong>.
-          Votre travail est <strong>enregistré automatiquement</strong> dans le navigateur.</li>
-      <li>Avancez avec les onglets <code>N1</code>, <code>N2</code>, <code>N3</code>, <code>N4</code>, <code>Bilan</code>.
-          Ils restent visibles en haut de l'écran quand vous faites défiler.</li>
-      <li>À la fin, utilisez <strong>« Exporter le support en PDF »</strong> ou
-          <strong>« Copier mes réponses »</strong> pour rendre votre travail.</li>
-    </ol>
-    <p style="margin:12px 0 0">
-      <strong>Important :</strong> sur Android, utilisez <strong>Chrome</strong> (l'export PDF ne
-      fonctionne pas dans Firefox). Sur iPhone, utilisez <strong>Safari</strong>.
-    </p>
-  </section>
+  <div class="sequence">
+    <h3>Séquence 2 · L'évolution des drones en réponse aux besoins</h3>
+    <p class="resume">Du besoin aux solutions techniques : contraintes, configuration, argumentation</p>
+    <div class="cartes">
 
-  <section>
-    <p class="astuce">
-      <strong>Astuce :</strong> ajoutez cette page à votre écran d'accueil pour la retrouver
-      en un geste — menu <em>Partager</em> puis <em>« Sur l'écran d'accueil »</em>.
-      Les activités fonctionnent ensuite sans connexion.
-    </p>
-  </section>
+      <article class="carte">
+        <h4>Évolution des drones</h4>
+        <p>Comment les drones ont évolué pour répondre aux besoins de la société : contraintes à
+           identifier, configuration d'un drone à régler, choix à justifier.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="4e/ost2/activite-evolution-drones.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>Séquence 3 · La maison connectée — l'éclairage</h3>
+    <p class="resume">Capteurs, actionneurs et scénarios d'un système d'éclairage connecté</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>Maison connectée — éclairage</h4>
+        <p>Identifier les composants d'un système d'éclairage connecté, comprendre la chaîne
+           d'information et vérifier des scénarios de fonctionnement.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="4e/ost3/activite-maison-connectee-eclairage.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>Séquence 4 · Le chauffage avec un système domotique</h3>
+    <p class="resume">Sources d'énergie, chaîne d'énergie et régulation du chauffage</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>Chauffage domotique</h4>
+        <p>Classer les systèmes de chauffage par source d'énergie, suivre la chaîne d'énergie et
+           comprendre comment un système domotique régule la température.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="4e/ost4/activite-chauffage-domotique.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5e ==================== -->
+<section class="niveau" id="niveau-5e">
+  <h2>5<sup>e</sup></h2>
+
+  <div class="sequence">
+    <h3>Séquence 2 · Faire bon usage des outils numériques</h3>
+    <p class="resume">Vocabulaire, sécurité et données personnelles</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>Faire bon usage des outils numériques</h4>
+        <p>Retenir le vocabulaire essentiel des outils numériques, la sécurité et les données
+           personnelles : dix questions, un score et un mot de passe à tester.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="5e/ost2/activite-outils-numeriques.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>Séquence 3 · L'évolution des objets et systèmes techniques</h3>
+    <p class="resume">Grandes époques, inventeurs clés et objets qui ont marqué l'histoire</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>L'évolution des objets techniques</h4>
+        <p>Mémoriser les grandes époques et les inventeurs clés de l'histoire de l'écriture et de
+           la communication, puis analyser ce qui fait évoluer un objet technique.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="5e/ost3/activite-evolution-ost.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>Séquence 4 · La souris et ses interactions</h3>
+    <p class="resume">Un objet technique, son environnement et ses interactions</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>La souris et ses interactions</h4>
+        <p>Vocabulaire technique des objets techniques et de leurs interactions, puis analyse de la
+           souris dans son environnement.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="5e/ost4/activite-souris-interaction.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="sequence">
+    <h3>Séquence 5 · Choisir un objet technique — les lampes</h3>
+    <p class="resume">Comparer, évaluer le cycle de vie, choisir en justifiant</p>
+    <div class="cartes">
+
+      <article class="carte">
+        <h4>Choisir un OST — les lampes</h4>
+        <p>Quiz, cycle de vie d'une lampe, comparateur et analyse : choisir un objet technique en
+           tenant compte du développement durable.</p>
+        <span class="niveaux">N1 → N4</span>
+        <a class="ouvrir" href="5e/ost5/activite-choix-lampes.html">Ouvrir l'activité</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== AIDE ==================== -->
+<section class="aide">
+  <h2>Comment utiliser ces activités sur téléphone</h2>
+  <ol>
+    <li>Touchez <strong>« Ouvrir l'activité »</strong> : la page s'ouvre dans votre navigateur.</li>
+    <li>En haut de la page, écrivez votre <strong>binôme</strong> et votre <strong>classe</strong>.
+        Votre travail est <strong>enregistré automatiquement</strong> dans le navigateur.</li>
+    <li>Avancez avec les onglets de niveau (<code>N1</code>, <code>N2</code>, <code>N3</code>,
+        <code>N4</code>, <code>Bilan</code>). Ils restent visibles en haut de l'écran quand vous
+        faites défiler.</li>
+    <li>À la fin, utilisez <strong>« Exporter le support en PDF »</strong> ou
+        <strong>« Copier mes réponses »</strong> pour rendre votre travail.</li>
+  </ol>
+  <p style="margin:12px 0 0">
+    <strong>Important :</strong> sur Android, utilisez <strong>Chrome</strong> (l'export PDF ne
+    fonctionne pas dans Firefox). Sur iPhone, utilisez <strong>Safari</strong>.
+  </p>
+</section>
+
+<section class="astuce">
+  <strong>Astuce :</strong> ajoutez cette page à votre écran d'accueil pour la retrouver
+  en un geste — menu <em>Partager</em> puis <em>« Sur l'écran d'accueil »</em>.
+  Les activités fonctionnent ensuite sans connexion.
+</section>
 
 </main>
 
 <footer>
-  <p>Activités de Technologie — cycle 4. Contenus pédagogiques issus des fiches de la séquence.
+  <p>Activités de Technologie — cycle 4. Contenus pédagogiques issus des fiches des séquences.
      Les pages fonctionnent hors ligne ; seuls les liens vers les fiches, vidéos et quiz
      externes nécessitent une connexion.</p>
 </footer>

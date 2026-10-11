@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chauffage domotique</title>
+<style>
+:root{--bleu:#1f4e79;--bleu2:#2e75b6;--bleuf:#e8f1fa;--orange:#d97706;--orangeF:#fdf1e0;--vert:#2e7d32;--vertF:#e8f5e9;--rouge:#b3261e;--rougeF:#fdecea;--gris:#5b6b7b;--bord:#c9d6e4;--noir:#1f2933}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Liberation Sans",Arial,sans-serif;font-size:17px;line-height:1.5;color:var(--noir);background:#f4f8fc}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid var(--bleu2);padding:10px 16px;box-shadow:0 2px 6px rgba(31,78,121,.08)}
+h1{font-size:1.2rem;color:var(--bleu)}h1 small{display:block;font-weight:normal;font-size:.75rem;color:var(--gris)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tabs button{font:inherit;font-size:.88rem;padding:8px 14px;border:2px solid var(--bleu2);background:#fff;color:var(--bleu);border-radius:999px;cursor:pointer;transition:all .2s}
+.tabs button.active{background:var(--bleu2);color:#fff}.tabs button:hover:not(.active){background:var(--bleuf)}
+main{padding:16px;max-width:900px;margin:0 auto}
+section{display:none;animation:fadeIn .3s}section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#fff;border:1px solid var(--bord);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.badge{display:inline-block;font-size:.7rem;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.badge.n1{background:#dbeafe;color:#1e40af}.badge.n2{background:#fef3c7;color:#92400e}.badge.n3{background:#d1fae5;color:#065f46}.badge.n4{background:#fce7f3;color:#9d174d}
+h2{font-size:1.15rem;color:var(--bleu);margin:0 0 8px}h3{font-size:1.05rem;color:var(--bleu);margin:12px 0 6px}
+p{margin:6px 0}
+.info{background:var(--bleuf);border-left:5px solid var(--bleu2);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.95rem}
+.success{background:var(--vertF);border-left-color:var(--vert)}.error{background:var(--rougeF);border-left-color:var(--rouge)}
+.match-item{padding:10px 14px;border:2px solid var(--bord);border-radius:10px;cursor:pointer;background:#fff;font-size:.9rem;transition:all .15s;margin-bottom:6px}
+.match-item:hover{border-color:var(--bleu2);background:var(--bleuf)}
+.match-item.selected{border-color:var(--bleu2);background:var(--bleuf);font-weight:bold}
+.match-item.matched{border-color:var(--vert);background:var(--vertF);cursor:default;opacity:.7}
+.score-display{font-size:1.3rem;font-weight:bold;color:var(--bleu);text-align:center;padding:12px;background:var(--bleuf);border-radius:10px;margin:12px 0}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.chain-step{display:inline-flex;align-items:center;padding:8px 14px;background:var(--bleuf);border:1px solid var(--bleu2);border-radius:8px;font-size:.9rem;font-weight:bold;margin:4px 0}
+.chain-arrow{color:var(--bleu2);font-size:1.2rem;margin:0 6px}
+footer{text-align:center;padding:20px;color:var(--gris);font-size:.8rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--bleu2);color:#fff;padding:10px;text-align:center}
+td{padding:8px;text-align:center;border-bottom:1px solid var(--bord)}
+td.best{background:var(--vertF);font-weight:bold}
+td:first-child{text-align:left;font-weight:bold}
+@media(max-width:600px){.tabs button{font-size:.78rem;padding:6px 10px}}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+<header>
+<h1>Chauffage domotique<small>Séquence 4 — Gestion du chauffage avec un système domotique</small></h1>
+<div class="tabs" id="tabs"></div>
+</header>
+<main id="content"></main>
+<footer>Mini-application pédagogique — Niveau Bloom N1 à N4 — 4ème Technologie</footer>
+<script>
+window.__HTML_RESSOURCES_N1="\n<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->\n<div class=\"ressources-n1\">\n  <h3>📚 Ressources associées à cette partie N1</h3>\n  <p class=\"note\">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de\n  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif\n  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST3a</span>Les composantes d'une notice et d'une documentation technique</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/wg9X8aW6rgRaAYo\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113213-ost3a-les-composantes-dune-notice-et-dune-documentation-technique-et-leur-organisation/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113213-ost3a-les-composantes-dune-notice-et-dune-documentation-technique-et-leur-organisation/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/gYjXxK1CjQwngYSz5\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST3b</span>L'indice énergétique et l'indice de réparabilité</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/bWr4saKp3MCp6KR\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113212-ost3b-lindice-energetique-et-lindice-de-reparabilite/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113212-ost3b-lindice-energetique-et-lindice-de-reparabilite/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/wJz5zoDdZAfofv7V6\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST3e</span>Les critères de choix : qualité, efficacité énergétique, durabilité, recyclabilité</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/bDpDp8wAATg6Qjy\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113190-ost3e-les-criteres-de-choix-la-qualite-lefficacite-energetique-la-durabilite-la-recyclabilite/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113190-ost3e-les-criteres-de-choix-la-qualite-lefficacite-energetique-la-durabilite-la-recyclabilite/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/uM7qoFzyE2EJ7U3r5\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST3f</span>Les critères de performance d'un OST (grandeurs mesurables)</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/zpgtqtDiiik2KtX\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113189-ost3f-les-criteres-de-performance-dun-ost-grandeurs-mesurables-vitesse-autonomie-energetique-etc/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113189-ost3f-les-criteres-de-performance-dun-ost-grandeurs-mesurables-vitesse-autonomie-energetique-etc/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/bSt3KvLhG1MsPADc6\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">SFC1a</span>Les différentes formes d'énergie : électrique, cinétique, potentielle, thermique, lumineuse</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/Gywt66BZTBZdx8z\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113181-sfc1a-les-differentes-formes-denergie-electrique-cinetique-potentielle-thermique-lumineuse/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113181-sfc1a-les-differentes-formes-denergie-electrique-cinetique-potentielle-thermique-lumineuse/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/i8NNGjr9o9DspsFu6\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">SFC1b</span>Les conversions d'énergie (moteur, lampe, radiateur, génératrice, vérin)</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/65rrFLQiPnkTf6n\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113172-sfc1b-les-conversions-denergie-des-constituants-suivants-moteur-electrique-lampe-radiateur-generatrice-verin/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113172-sfc1b-les-conversions-denergie-des-constituants-suivants-moteur-electrique-lampe-radiateur-generatrice-verin/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/Qcs159x6wKDsgvRX8\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">SFC1i</span>Capteurs, microcontrôleur et composants d'une interface humain-machine (IHM)</div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/CZzJjbTiL2GwB68\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances</a>\n      <a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113105-sfc1i-les-fonctions-des-constituants-suivants-capteurs-temperature-presence-distance-etc-microcontroleur-composants-dune-interface-entre-lhumain-et-la-machine-ihm-boutons-afficheurs/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo</a>\n      <a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113105-sfc1i-les-fonctions-des-constituants-suivants-capteurs-temperature-presence-distance-etc-microcontroleur-composants-dune-interface-entre-lhumain-et-la-machine-ihm-boutons-afficheurs/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif (Podeduc)</a>\n      <a class=\"ress-lien form\" href=\"https://forms.gle/FLYdWh6HntgCoy636\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)</a></div>\n  </div>\n  <p class=\"note\">🔗 Index complet : <a href=\"https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/\" target=\"_blank\" rel=\"noopener\">toutes les fiches de connaissances</a>\n  · <a href=\"https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/\" target=\"_blank\" rel=\"noopener\">toutes les vidéos et tous les quiz auto-correctifs</a></p>\n</div>\n";
+window.__HTML_EXPORT_PDF="\n<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->\n<div class=\"carte-export-pdf no-print\">\n  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>\n  <p class=\"note\">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec\n  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination\n  « Enregistrer au format PDF », puis valide.</p>\n  <button type=\"button\" class=\"bouton-export-pdf\" id=\"btn-export-pdf\">📄 Exporter le support en PDF (avec mes réponses)</button>\n  <p class=\"note\">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »\n  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>\n</div>\n";
+
+const TABS=[
+{label:"N1 — Types de chauffage",bloom:"n1"},
+{label:"N2 — Conversion d'énergie",bloom:"n2"},
+{label:"N3 — Compatible TAPO",bloom:"n3"},
+{label:"N4 — Performance & Environnement",bloom:"n4"}
+];
+let cur=0,csSel=null,csCount=0;
+
+function init(){
+const t=document.getElementById("tabs"),c=document.getElementById("content");
+TABS.forEach((tab,i)=>{
+const b=document.createElement("button");b.textContent=tab.label;b.className=i===0?"active":"";
+b.onclick=()=>switchTab(i);t.appendChild(b);
+const s=document.createElement("section");s.id="s-"+i;s.className=i===0?"active":"";
+var __h=renderTab(i);if(i===0&&window.__HTML_RESSOURCES_N1)__h+=window.__HTML_RESSOURCES_N1;if(i===TABS.length-1&&window.__HTML_EXPORT_PDF)__h+=window.__HTML_EXPORT_PDF;s.innerHTML=__h;c.appendChild(s);
+});
+}
+function switchTab(i){cur=i;document.querySelectorAll(".tabs button").forEach((b,j)=>b.className=j===i?"active":"");document.querySelectorAll("section").forEach((s,j)=>s.className=j===i?"active":"");}
+function renderTab(i){if(i===0)return renderCardSort();if(i===1)return renderEnergyChain();if(i===2)return renderCompat();return renderCompTable();}
+
+/* === N1 CARD SORT === */
+const CATEGORIES=["Électricité ⚡","Gaz 🔥","Biomasse 🪵","Pompe à chaleur ♻️"];
+const ITEMS=[
+{name:"Radiateur électrique",cat:"Électricité ⚡",icon:"⚡"},
+{name:"Chaudière condensation gaz",cat:"Gaz 🔥",icon:"🔥"},
+{name:"Poêle à granulés",cat:"Biomasse 🪵",icon:"🪵"},
+{name:"PAC air-air",cat:"Pompe à chaleur ♻️",icon:"♻️"},
+{name:"Plancher chauffant électrique",cat:"Électricité ⚡",icon:"⚡"},
+{name:"Chaudière gaz basse température",cat:"Gaz 🔥",icon:"🔥"},
+{name:"Poêle à bûches",cat:"Biomasse 🪵",icon:"🪵"},
+{name:"PAC géothermique",cat:"Pompe à chaleur ♻️",icon:"♻️"},
+{name:"Convecteur soufflant",cat:"Électricité ⚡",icon:"⚡"},
+{name:"Chaudière à granulés",cat:"Biomasse 🪵",icon:"🪵"}
+];
+
+function renderCardSort(){
+let h='<div class="card"><span class="badge n1">N1 — Mémoriser</span><h2>Classer les systèmes de chauffage par source d\'énergie</h2>';
+h+='<p>Cliquez sur un système de chauffage puis sur la catégorie d\'énergie correspondante.</p></div>';
+h+='<div class="card"><div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">';
+CATEGORIES.forEach(cat=>{
+h+='<div class="match-item cs-cat" data-cat="'+cat+'" onclick="selCS(this,\'cat\',\''+cat+'\')" style="flex:1;min-width:140px;text-align:center;font-weight:bold">'+cat+'</div>';
+});
+h+='</div><div class="grid-3" id="cs-items">';
+const sh=[...ITEMS].sort(()=>Math.random()-.5);
+sh.forEach(item=>{
+h+='<div class="match-item cs-item" data-cat="'+item.cat+'" onclick="selCS(this,\'item\',\''+item.cat+'\')" style="text-align:center">'+item.icon+'<br><strong>'+item.name+'</strong></div>';
+});
+h+='</div><div id="cs-score" class="score-display" style="display:none"></div></div>';
+return h;
+}
+
+window.selCS=function(el,type,val){
+if(el.classList.contains("matched"))return;
+if(!csSel){document.querySelectorAll(".match-item.selected").forEach(e=>e.classList.remove("selected"));el.classList.add("selected");csSel={type,val,el};}
+else if(csSel.type===type){csSel.el.classList.remove("selected");el.classList.add("selected");csSel={type,val,el};}
+else{
+if(csSel.val===val){csSel.el.classList.remove("selected");csSel.el.classList.add("matched");el.classList.remove("selected");el.classList.add("matched");csCount++;
+if(csCount===ITEMS.length){document.getElementById("cs-score").style.display="block";document.getElementById("cs-score").textContent="🎉 Tous les systèmes classés correctement ! Bravo !";}
+}else{csSel.el.classList.remove("selected");el.style.background="var(--rougeF)";setTimeout(()=>el.style.background="",500);}
+csSel=null;
+}
+};
+
+/* === N2 ENERGY CHAIN === */
+const CHAINS=[
+{system:"Radiateur électrique",steps:["Énergie électrique","Effet Joule","Énergie thermique","Chaleur rayonnée / convection"],eff:100,note:"Conversion directe, rendement ~100% mais l'électricité est coûteuse et souvent produite par des centrales nucléaires ou fossiles."},
+{system:"Pompe à chaleur air-air",steps:["Énergie électrique","Compresseur","Énergie thermique captée dans l'air extérieur","Chaleur diffusée dans le logement"],eff:300,note:"COP ~3 : pour 1 kWh d'électricité consommé, 3 kWh de chaleur sont restitués. Très efficace même en hiver."},
+{system:"Chaudière gaz à condensation",steps:["Énergie chimique (gaz naturel)","Combustion","Énergie thermique","Chaleur + récupération de la vapeur d'eau"],eff:107,note:"Rendement >100% car elle récupère la chaleur latente contenue dans la vapeur d'eau des fumées."}
+];
+
+function renderEnergyChain(){
+let h='<div class="card"><span class="badge n2">N2 — Comprendre</span><h2>Les chaînes de conversion d\'énergie</h2>';
+h+='<p>Découvrez comment chaque système transforme l\'énergie pour produire de la chaleur.</p></div>';
+CHAINS.forEach(ch=>{
+h+='<div class="card" style="border-left:5px solid var(--bleu2)"><h3>⚡ '+ch.system+'</h3>';
+h+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin:12px 0">';
+ch.steps.forEach((step,j)=>{
+h+='<div class="chain-step">'+step+'</div>';
+if(j<ch.steps.length-1)h+='<span class="chain-arrow">→</span>';
+});
+h+='</div>';
+h+='<div class="info"><strong>Rendement : '+ch.eff+'%</strong> — '+ch.note+'</div></div>';
+});
+h+='<div class="card info success"><strong>💡 À retenir :</strong> Le rendement ne mesure pas l\'efficacité environnementale. Une PAC avec COP=3 utilise 3× moins d\'énergie primaire qu\'un radiateur électrique pour la même chaleur produite.</div>';
+return h;
+}
+
+/* === N3 COMPATIBILITY === */
+const DEVICES=[
+{name:"Prise connectée P110M",compat:true,reason:"Permet de piloter tout appareil électrique branché (radiateur d'appoint, convecteur). Mesure la consommation en temps réel.",limit:"Ne fonctionne qu'avec des appareils à interrupteur mécanique (pas de commande électronique tactile)."},
+{name:"Capteur température T310/T315",compat:true,reason:"Mesure température et humidité ambiante. Peut déclencher des automatisations de chauffage via le Hub H100.",limit:"Ne contrôle pas directement le chauffage — c'est un capteur, pas un actionneur."},
+{name:"Chaudière gaz murale",compat:false,reason:"Pas de protocole compatible TAPO natif. Nécessite un thermostat connecté tiers (Netatmo, Tado...) pour être pilotée.",limit:"L'écosystème TAPO ne gère pas les chaudières gaz directement."},
+{name:"Radiateur bain d'huile mécanique",compat:true,reason:"Via la prise P110M : allumer/éteindre à distance et mesurer la consommation électrique.",limit:"Le réglage de température se fait manuellement sur le radiateur uniquement."},
+{name:"PAC avec module Wi-Fi propriétaire",compat:false,reason:"Protocole fermé du fabricant. Pas d'intégration TAPO possible sans passerelle universelle coûteuse.",limit:"Écosystème verrouillé par le constructeur de la PAC (ex: Daikin, Mitsubishi)."}
+];
+
+function renderCompat(){
+let h='<div class="card"><span class="badge n3">N3 — Appliquer</span><h2>Compatibilité avec l\'écosystème domotique TAPO</h2>';
+h+='<p>Vérifiez quels systèmes de chauffage peuvent être intégrés dans une installation domotique TAPO.</p></div>';
+DEVICES.forEach(d=>{
+const color=d.compat?"var(--vert)":"var(--rouge)";
+const icon=d.compat?"✅":"❌";
+const label=d.compat?"Compatible TAPO":"Non compatible";
+h+='<div class="card" style="border-left:5px solid '+color+'">';
+h+='<h3>'+icon+' '+d.name+'</h3>';
+h+='<p><strong style="color:'+color+'">'+label+'</strong></p>';
+h+='<p>'+d.reason+'</p>';
+h+='<p style="font-size:.85rem;color:var(--gris)">⚠️ Limite : '+d.limit+'</p></div>';
+});
+h+='<div class="card info"><strong>💡 Conseil :</strong> Avant d\'acheter un système de chauffage, vérifiez toujours sa compatibilité avec votre écosystème domotique existant. Les protocoles ouverts (Matter, Zigbee) offrent plus de flexibilité.</div>';
+return h;
+}
+
+/* === N4 COMPARISON TABLE === */
+const SYSTEMS=[
+{name:"Convecteur électrique",install:200,annual:1800,co2:0.079,life:20,comfort:2},
+{name:"Chaudière gaz condensation",install:5000,annual:1200,co2:0.227,life:20,comfort:4},
+{name:"Poêle à granulés",install:3500,annual:800,co2:0.030,life:15,comfort:3},
+{name:"PAC air-air",install:8000,annual:600,co2:0.026,life:15,comfort:5}
+];
+const CRITERIA=[
+{label:"Coût installation",key:"install",unit:"€",best:"min"},
+{label:"Coût annuel",key:"annual",unit:"€/an",best:"min"},
+{label:"Émissions CO₂",key:"co2",unit:"kg CO₂/kWh",best:"min"},
+{label:"Durée de vie",key:"life",unit:"ans",best:"max"},
+{label:"Confort thermique",key:"comfort",unit:"/5",best:"max"}
+];
+
+function renderCompTable(){
+let h='<div class="card"><span class="badge n4">N4 — Analyser</span><h2>Comparaison performance & impact environnemental</h2>';
+h+='<p>Analysez les critères techniques, économiques et environnementaux de 4 systèmes de chauffage.</p></div>';
+h+='<div class="card" style="overflow-x:auto"><table><thead><tr><th>Critère</th>';
+SYSTEMS.forEach(s=>{h+='<th>'+s.name+'</th>';});
+h+='</tr></thead><tbody>';
+CRITERIA.forEach(cr=>{
+const vals=SYSTEMS.map(s=>s[cr.key]);
+const bestVal=cr.best==="min"?Math.min(...vals):Math.max(...vals);
+h+='<tr><td>'+cr.label+'</td>';
+SYSTEMS.forEach(s=>{
+const v=s[cr.key],isBest=v===bestVal;
+h+='<td'+(isBest?' class="best"':'')+'>'+v+' '+cr.unit+'</td>';
+});
+h+='</tr>';
+});
+h+='</tbody></table></div>';
+h+='<div class="card info success"><strong>💡 Bilan :</strong> La <strong>PAC air-air</strong> offre le meilleur compromis performance/environnement malgré un coût d\'installation élevé (amorti en ~7 ans). Le <strong>poêle à granulés</strong> est le plus écologique (biomasse renouvelable). Le convecteur électrique, bien que peu cher à l\'achat, est le plus coûteux et le moins confortable sur le long terme.</div>';
+h+='<div class="card"><h3>🤔 Question de synthèse</h3>';
+h+='<p>Si vous deviez équiper une maison neuve en respectant le développement durable, quel système choisiriez-vous ? Justifiez votre choix en citant au moins 3 critères du tableau.</p>';
+h+='<textarea style="width:100%;min-height:80px;padding:10px;border:2px solid var(--bord);border-radius:8px;font:inherit;font-size:.95rem;resize:vertical" placeholder="Votre réponse ici..."></textarea>';
+h+='<p style="font-size:.8rem;color:var(--gris);margin-top:4px">💡 Cette question peut servir de support pour un débat ou une évaluation écrite en classe.</p></div>';
+return h;
+}
+
+init();
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "4e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

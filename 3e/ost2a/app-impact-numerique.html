@@ -1,0 +1,1846 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impact du Numérique — Société et Métiers</title>
+<style>
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none}
+section.actif{display:block}
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.grille{display:grid; grid-template-columns:minmax(330px,1.35fr) minmax(310px,1fr); gap:14px; align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+canvas{width:100%; height:auto; display:block; background:#fff; border:1px solid var(--bord);
+  border-radius:8px; touch-action:none}
+.legende{display:flex; gap:14px; flex-wrap:wrap; font-size:.82rem; color:var(--gris); margin-top:6px}
+.puce{display:inline-block; width:.75em; height:.75em; border-radius:50%; margin-right:4px; vertical-align:baseline}
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+input[type=range]{width:100%}
+select,input[type=text],input[type=number],textarea{font:inherit; font-size:.88rem; padding:4px 6px;
+  border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{width:100%; min-height:3.2rem; resize:vertical}
+table{border-collapse:collapse; width:100%; font-size:.85rem}
+th,td{border:1px solid var(--bord); padding:3px 6px; text-align:left}
+th{background:var(--bleuf); color:var(--bleu)}
+td.n{text-align:right; font-variant-numeric:tabular-nums}
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+.mesure{font-size:.88rem; background:var(--bleuf2); border:1px dashed var(--bleu2); border-radius:8px; padding:6px 9px; margin:.5rem 0}
+.mesure b{color:var(--bleu)}
+.verdict{font-size:1rem; font-weight:bold}
+.erreur{color:var(--rouge); font-weight:bold}
+.ok{color:var(--vert); font-weight:bold}
+details{margin:.5rem 0; font-size:.87rem}
+summary{cursor:pointer; color:var(--bleu2); font-weight:bold}
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+ol{padding-left:1.3rem}
+ol li{margin:.25rem 0}
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+.grille2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+@media (max-width:700px){.grille2{grid-template-columns:1fr}}
+.barre{height:8px; background:var(--bleuf); border-radius:4px; overflow:hidden; margin-top:4px}
+.barre > i{display:block; height:100%; background:var(--vert); transition:width .4s}
+.note{font-size:.8rem; color:var(--gris)}
+#zone-message{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:var(--bleu);
+  color:#fff; padding:7px 14px; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .25s; z-index:50;
+  pointer-events:none}
+#zone-message.visible{opacity:1}
+/* Progression globale */
+.progression-globale{margin-top:6px; font-size:.82rem; color:var(--gris); display:flex; align-items:center; gap:8px}
+.progression-globale .barre{flex:1; margin:0}
+/* Quiz styles */
+.quiz-option{display:block; padding:6px 10px; margin:3px 0; border:1px solid var(--bord); border-radius:6px;
+  cursor:pointer; font-size:.88rem; transition:background .15s}
+.quiz-option:hover{background:var(--bleuf)}
+.quiz-option.selected{background:var(--bleuf); border-color:var(--bleu2)}
+.quiz-option.correct{background:var(--vertF); border-color:var(--vert)}
+.quiz-option.wrong{background:#fce4e4; border-color:var(--rouge)}
+/* Drag and drop chaine info */
+.chain-slot{display:inline-flex; align-items:center; justify-content:center; min-width:100px; min-height:44px;
+  border:2px dashed var(--bord); border-radius:8px; margin:4px; padding:6px 10px; font-size:.85rem;
+  background:var(--bleuf2); transition:border-color .2s, background .2s; vertical-align:middle}
+.chain-slot.filled{border-style:solid; border-color:var(--bleu2); background:var(--bleuf)}
+.chain-slot.correct{border-color:var(--vert); background:var(--vertF)}
+.chain-slot.wrong{border-color:var(--rouge); background:#fce4e4}
+.chain-item{display:inline-block; padding:6px 12px; margin:3px; border:1px solid var(--bleu2); border-radius:6px;
+  background:#fff; cursor:grab; font-size:.85rem; user-select:none}
+.chain-item:active{cursor:grabbing}
+.chain-item.placed{opacity:.4; cursor:default}
+/* Metiers slider */
+.metier-card{position:relative; overflow:hidden; border-radius:8px; border:1px solid var(--bord); margin-bottom:10px}
+.metier-header{padding:8px 12px; background:var(--bleuf); font-weight:bold; color:var(--bleu); font-size:.9rem; cursor:pointer}
+.metier-body{display:none; padding:10px 12px}
+.metier-card.open .metier-body{display:block}
+.metier-compare{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px}
+@media(max-width:600px){.metier-compare{grid-template-columns:1fr}}
+.metier-avant,.metier-apres{padding:8px; border-radius:6px; font-size:.84rem}
+.metier-avant{background:#fef3cd; border-left:3px solid #b8860b}
+.metier-apres{background:var(--bleuf); border-left:3px solid var(--bleu2)}
+/* Compteurs carbone */
+.compteur-row{display:flex; align-items:center; gap:10px; margin:6px 0; font-size:.88rem}
+.compteur-bar{flex:1; height:18px; background:var(--bleuf); border-radius:9px; overflow:hidden; position:relative}
+.compteur-fill{height:100%; border-radius:9px; transition:width .6s ease}
+.compteur-label{min-width:120px; font-weight:bold; color:var(--bleu)}
+.compteur-val{min-width:70px; text-align:right; font-variant-numeric:tabular-nums; font-weight:bold}
+/* Cas pratiques */
+.cas-tabs{display:flex; gap:4px; margin-bottom:10px}
+.cas-tabs button{font:inherit; font-size:.82rem; padding:5px 10px; border:1px solid var(--bord); background:#fff;
+  border-radius:6px 6px 0 0; cursor:pointer; color:var(--gris)}
+.cas-tabs button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+.cas-panel{display:none}
+.cas-panel.actif{display:block}
+/* Calculateur empreinte */
+.calc-row{display:flex; align-items:center; gap:10px; margin:8px 0; flex-wrap:wrap}
+.calc-row label{min-width:200px; font-size:.88rem; color:var(--bleu); font-weight:bold}
+.calc-row input,.calc-row select{flex:1; min-width:120px}
+.resultat-empreinte{text-align:center; padding:16px; margin:12px 0; border-radius:10px; background:var(--bleuf2); border:2px solid var(--bleu2)}
+.resultat-empreinte .big{font-size:2rem; font-weight:bold; color:var(--bleu)}
+.resultat-empreinte .sub{font-size:.85rem; color:var(--gris)}
+/* Défi conception */
+.defi-options{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; margin:8px 0}
+.defi-opt{padding:8px 10px; border:1px solid var(--bord); border-radius:6px; cursor:pointer; font-size:.84rem; transition:all .15s}
+.defi-opt:hover{background:var(--bleuf)}
+.defi-opt.selected{background:var(--bleuf); border-color:var(--bleu2); font-weight:bold}
+.slide-gen{background:#fff; border:1px solid var(--bord); border-radius:8px; padding:16px; margin:10px 0; min-height:180px}
+.slide-gen h4{margin:0 0 8px; color:var(--bleu)}
+/* Synthèse tableau */
+.synthese-table td{vertical-align:top; min-height:60px}
+.synthese-table textarea{width:100%; min-height:50px; border:none; background:transparent; resize:vertical; font-size:.84rem}
+/* Score badge */
+.score-badge{display:inline-block; background:var(--bleu2); color:#fff; border-radius:999px; padding:2px 10px;
+  font-size:.82rem; font-weight:bold; margin-left:8px}
+@media print{
+  header, .onglets, .boutons, canvas, .no-print{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <div class="ligne-titre">
+    <h1>Impact du Numérique — Société et Métiers <small>3<sup>e</sup> · Technologie · OST1 · T2</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+    <span class="score-badge" id="score-global">Score : 0 / 100</span>
+  </div>
+  <div class="progression-globale">
+    <span>Progression :</span>
+    <div class="barre"><i id="barre-globale" style="width:0%"></i></div>
+    <span id="pourcent-global">0 %</span>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-tab="n1" class="actif">N1 · Connaissances</button>
+    <button data-tab="n2">N2 · Compréhension</button>
+    <button data-tab="n3">N3 · Application</button>
+    <button data-tab="n4">N4 · Analyse & Création</button>
+    <button data-tab="bilan">Bilan</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================== SECTION N1 — CONNAISSANCES ======================== -->
+<section id="n1" class="actif">
+  <h2>N1 — Mémoriser : Quiz interactif sur le numérique</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Identifier les principaux usages du numérique dans la société, définir les termes clés
+    et maîtriser la chaîne d'information.<br>
+    <b>Compétence Bloom :</b> <span class="tag">N1 — Mémoriser</span>
+  </div>
+
+  <!-- QCM Usages -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">QCM 1 — Les usages du numérique dans la société</h3>
+    <p class="note">Sélectionne la ou les bonne(s) réponse(s). Clique sur « Vérifier » quand tu as terminé.</p>
+
+    <div id="qcm-usages"></div>
+    <div class="boutons">
+      <button class="act" onclick="verifierQCM('usages')">✓ Vérifier</button>
+      <button class="act sec" onclick="resetQCM('usages')">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="resultat-usages">En attente de tes réponses…</div>
+  </div>
+
+  <!-- Définitions à associer -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Associer — Termes et définitions du numérique</h3>
+    <p class="note">Clique sur un terme puis sur sa définition pour les associer.</p>
+    <div class="grille2" id="match-container">
+      <div id="match-terms"></div>
+      <div id="match-defs"></div>
+    </div>
+    <div class="boutons">
+      <button class="act" onclick="verifierMatch()">✓ Vérifier les associations</button>
+      <button class="act sec" onclick="resetMatch()">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="resultat-match">Associe tous les termes à leurs définitions.</div>
+  </div>
+
+  <!-- Chaîne d'information : remettre dans l'ordre -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Ordonner — La chaîne d'information</h3>
+    <p class="note">Clique sur les maillons dans le bon ordre pour reconstituer la chaîne d'information.</p>
+    <div style="margin:10px 0;text-align:center" id="chain-slots">
+      <span class="chain-slot" data-pos="0">1<sup>er</sup></span> →
+      <span class="chain-slot" data-pos="1">2<sup>e</sup></span> →
+      <span class="chain-slot" data-pos="2">3<sup>e</sup></span> →
+      <span class="chain-slot" data-pos="3">4<sup>e</sup></span>
+    </div>
+    <div style="text-align:center;margin:8px 0" id="chain-items">
+      <span class="chain-item" data-val="stocker" onclick="placerChaine(this)">📦 Stocker</span>
+      <span class="chain-item" data-val="acquerir" onclick="placerChaine(this)">📡 Acquérir</span>
+      <span class="chain-item" data-val="communiquer" onclick="placerChaine(this)">📤 Communiquer</span>
+      <span class="chain-item" data-val="traiter" onclick="placerChaine(this)">⚙️ Traiter</span>
+    </div>
+    <div class="boutons" style="justify-content:center">
+      <button class="act" onclick="verifierChaine()">✓ Vérifier l'ordre</button>
+      <button class="act sec" onclick="resetChaine()">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="resultat-chaine" style="text-align:center">Place les 4 maillons dans le bon ordre.</div>
+  </div>
+
+  <!-- Vrai/Faux idées reçues -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Vrai / Faux — Idées reçues sur le numérique</h3>
+    <div id="vf-container"></div>
+    <div class="boutons">
+      <button class="act" onclick="verifierVF()">✓ Vérifier</button>
+      <button class="act sec" onclick="resetVF()">↺ Recommencer</button>
+    </div>
+    <div class="mesure" id="resultat-vf">Réponds à toutes les affirmations.</div>
+  </div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1e</span>Les grands types d'apprentissage des intelligences artificielles et leurs usages possibles</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/tD2HPYQLCKKTgjG" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113245-ost1e-les-grands-types-dapprentissage-des-intelligences-artificielles-et-leurs-usages-possibles/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113245-ost1e-les-grands-types-dapprentissage-des-intelligences-artificielles-et-leurs-usages-possibles/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/k9TKZAtdqjhc3oW36" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1f</span>Les incidences sociétales de l'IA (biais, effets de l'usage)</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/kZSCaGnqFzFYE6C" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113242-ost1f-les-incidences-societales-notamment-letude-du-biais-et-de-leffet-de-lusage-dune-intelligence-artificielle-ia/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113242-ost1f-les-incidences-societales-notamment-letude-du-biais-et-de-leffet-de-lusage-dune-intelligence-artificielle-ia/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/Cshv2mxuyHTKWMcw9" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1k</span>Incidences liées au stockage, au flux des données et aux réseaux d'information</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/C2jMGTN6oadCt7J" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113232-ost1k-systeme-dinformation-et-stockage-des-donnees-incidences-liees-au-stockage-au-flux-des-donnees-et-aux-reseaux-dinformation/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113232-ost1k-systeme-dinformation-et-stockage-des-donnees-incidences-liees-au-stockage-au-flux-des-donnees-et-aux-reseaux-dinformation/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/3JJoH56a5YXuNCMU7" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- ======================== SECTION N2 — COMPRÉHENSION ======================== -->
+<section id="n2">
+  <h2>N2 — Comprendre : Infographie interactive</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Expliquer l'impact du numérique sur les métiers et décrire les maillons de la chaîne d'information.<br>
+    <b>Compétence Bloom :</b> <span class="tag">N2 — Comprendre</span>
+  </div>
+
+  <!-- Schéma interactif chaîne d'info -->
+  <div class="carte">
+    <h3 style="margin-top:0">Schéma interactif — Chaîne d'information d'une montre connectée</h3>
+    <p class="note">Clique sur chaque maillon pour voir son rôle. Observe le flux de données animé.</p>
+    <canvas id="canvas-chaine" width="800" height="350"></canvas>
+    <div class="mesure" id="info-maillon">👆 Clique sur un maillon du schéma pour afficher son explication.</div>
+  </div>
+
+  <!-- Carte Avant/Après métiers -->
+  <div class="carte">
+    <h3 style="margin-top:0">Avant / Après le numérique — 6 métiers transformés</h3>
+    <p class="note">Clique sur un métier pour découvrir comment le numérique l'a transformé.</p>
+    <div id="metiers-container"></div>
+  </div>
+
+  <!-- Compteurs empreinte carbone -->
+  <div class="carte">
+    <h3 style="margin-top:0">Empreinte carbone du numérique — Compteurs animés</h3>
+    <p class="note">Estimations moyennes en grammes de CO₂ équivalent. Sources : ADEME, The Shift Project.</p>
+    <div id="compteurs-carbone"></div>
+    <p class="note" style="margin-top:8px">💡 Le numérique représente environ <b>4 % des émissions mondiales de GES</b> (2020),
+    soit plus que le transport aérien civil.</p>
+  </div>
+</section>
+
+<!-- ======================== SECTION N3 — APPLICATION ======================== -->
+<section id="n3">
+  <h2>N3 — Appliquer : Cas pratiques interactifs</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Analyser des cas concrets d'usage du numérique et schématiser une chaîne d'information.<br>
+    <b>Compétence Bloom :</b> <span class="tag">N3 — Appliquer</span>
+  </div>
+
+  <div class="cas-tabs no-print">
+    <button class="actif" onclick="ouvrirCas(0)">🏫 Collège connecté</button>
+    <button onclick="ouvrirCas(1)">🏙️ Ville intelligente</button>
+    <button onclick="ouvrirCas(2)">🏠 Télétravail</button>
+  </div>
+
+  <!-- Cas 1 : Collège connecté -->
+  <div class="cas-panel actif" id="cas-0">
+    <div class="carte consigne">
+      <h3 style="margin-top:0">Étude de cas 1 — Le collège connecté</h3>
+      <p>Ton collège utilise plusieurs outils numériques : ENT (Espace Numérique de Travail), tablettes en classe,
+      imprimantes 3D au labo, capteurs de présence, vidéoprojecteurs interactifs.</p>
+      <div class="q">
+        <p class="enonce">Question 1 : Cite 3 avantages du numérique pour l'apprentissage au collège.</p>
+        <textarea id="cas0-q1" placeholder="Ex : accès aux ressources en ligne…"></textarea>
+      </div>
+      <div class="q">
+        <p class="enonce">Question 2 : Cite 2 risques ou inconvénients.</p>
+        <textarea id="cas0-q2" placeholder="Ex : distraction en classe…"></textarea>
+      </div>
+      <div class="q">
+        <p class="enonce">Question 3 : Complète la chaîne d'information d'une tablette en classe.</p>
+        <div style="margin:8px 0;text-align:center" id="cas0-chain-slots">
+          <span class="chain-slot" data-pos="0">?</span> →
+          <span class="chain-slot" data-pos="1">?</span> →
+          <span class="chain-slot" data-pos="2">?</span> →
+          <span class="chain-slot" data-pos="3">?</span>
+        </div>
+        <div style="text-align:center;margin:6px 0" id="cas0-chain-items">
+          <span class="chain-item" data-val="acquerir" onclick="placerChaineCas(0,this)">📷 Caméra/Micro (Acquérir)</span>
+          <span class="chain-item" data-val="traiter" onclick="placerChaineCas(0,this)">🧠 Processeur (Traiter)</span>
+          <span class="chain-item" data-val="communiquer" onclick="placerChaineCas(0,this)">📶 Wi-Fi (Communiquer)</span>
+          <span class="chain-item" data-val="stocker" onclick="placerChaineCas(0,this)">💾 Mémoire (Stocker)</span>
+        </div>
+      </div>
+      <div class="boutons">
+        <button class="act" onclick="verifierCas(0)">✓ Vérifier mes réponses</button>
+      </div>
+      <div class="mesure" id="resultat-cas0">Complète les questions et le schéma.</div>
+    </div>
+  </div>
+
+  <!-- Cas 2 : Ville intelligente -->
+  <div class="cas-panel" id="cas-1">
+    <div class="carte consigne">
+      <h3 style="margin-top:0">Étude de cas 2 — La ville intelligente (Smart City)</h3>
+      <p>Dans une ville intelligente, des capteurs gèrent le trafic routier, l'éclairage public adaptatif,
+      la collecte des déchets optimisée et la qualité de l'air.</p>
+      <div class="q">
+        <p class="enonce">Question 1 : Identifie la chaîne d'information complète pour un éclairage public adaptatif.
+        (Capteur de luminosité → ? → ? → Lampadaire LED)</p>
+        <textarea id="cas1-q1" placeholder="Décris chaque étape…"></textarea>
+      </div>
+      <div class="q">
+        <p class="enonce">Question 2 : Quels sont les avantages environnementaux d'une smart city ?</p>
+        <textarea id="cas1-q2" placeholder="Ex : réduction de la consommation d'énergie…"></textarea>
+      </div>
+      <div class="q">
+        <p class="enonce">Question 3 : Quels risques liés aux données personnelles existent dans une ville connectée ?</p>
+        <textarea id="cas1-q3" placeholder="Ex : surveillance massive…"></textarea>
+      </div>
+      <div class="boutons">
+        <button class="act" onclick="verifierCas(1)">✓ Vérifier mes réponses</button>
+      </div>
+      <div class="mesure" id="resultat-cas1">Réponds aux 3 questions.</div>
+    </div>
+  </div>
+
+  <!-- Cas 3 : Télétravail -->
+  <div class="cas-panel" id="cas-2">
+    <div class="carte consigne">
+      <h3 style="margin-top:0">Étude de cas 3 — Le télétravail</h3>
+      <p>Depuis 2020, le télétravail s'est généralisé. Visioconférences, cloud collaboratif, messagerie instantanée
+      ont transformé le monde professionnel.</p>
+      <div class="q">
+        <p class="enonce">Question 1 : Liste 3 avantages du télétravail pour le salarié.</p>
+        <textarea id="cas2-q1" placeholder="Ex : moins de temps de transport…"></textarea>
+      </div>
+      <div class="q">
+        <p class="enonce">Question 2 : Liste 3 inconvénients ou limites.</p>
+        <textarea id="cas2-q2" placeholder="Ex : isolement social…"></textarea>
+      </div>
+      <div class="q">
+        <p class="enonce">Question 3 : Quel est l'impact environnemental du télétravail ? Est-il toujours positif ? Justifie.</p>
+        <textarea id="cas2-q3" placeholder="Ex : moins de déplacements mais plus de consommation énergétique à domicile…"></textarea>
+      </div>
+      <div class="boutons">
+        <button class="act" onclick="verifierCas(2)">✓ Vérifier mes réponses</button>
+      </div>
+      <div class="mesure" id="resultat-cas2">Réponds aux 3 questions.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SECTION N4 — ANALYSE ET CRÉATION ======================== -->
+<section id="n4">
+  <h2>N4 — Analyser et Créer : Projet guidé</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Évaluer les impacts positifs et négatifs du numérique et proposer des usages responsables.<br>
+    <b>Compétence Bloom :</b> <span class="tag">N4 — Analyser / Créer</span>
+  </div>
+
+  <!-- Calculateur empreinte numérique -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">🌍 Calculateur d'empreinte numérique personnelle</h3>
+    <p class="note">Renseigne tes habitudes numériques pour estimer ton empreinte carbone annuelle liée au numérique.</p>
+
+    <div class="calc-row">
+      <label for="calc-streaming">Heures de streaming vidéo / jour :</label>
+      <input type="range" id="calc-streaming" min="0" max="10" step="0.5" value="2" oninput="majCalc()">
+      <b id="val-streaming">2 h</b>
+    </div>
+    <div class="calc-row">
+      <label for="calc-emails">Nombre d'e-mails envoyés / jour :</label>
+      <input type="range" id="calc-emails" min="0" max="100" step="1" value="15" oninput="majCalc()">
+      <b id="val-emails">15</b>
+    </div>
+    <div class="calc-row">
+      <label for="calc-reseaux">Heures de réseaux sociaux / jour :</label>
+      <input type="range" id="calc-reseaux" min="0" max="8" step="0.5" value="1.5" oninput="majCalc()">
+      <b id="val-reseaux">1.5 h</b>
+    </div>
+    <div class="calc-row">
+      <label for="calc-appareils">Nombre d'appareils numériques possédés :</label>
+      <input type="range" id="calc-appareils" min="1" max="15" step="1" value="4" oninput="majCalc()">
+      <b id="val-appareils">4</b>
+    </div>
+    <div class="calc-row">
+      <label for="calc-jeux">Heures de jeux vidéo / jour :</label>
+      <input type="range" id="calc-jeux" min="0" max="8" step="0.5" value="1" oninput="majCalc()">
+      <b id="val-jeux">1 h</b>
+    </div>
+
+    <div class="resultat-empreinte" id="resultat-calc">
+      <div class="big" id="calc-total">— kg CO₂e/an</div>
+      <div class="sub" id="calc-compare">Moyenne française ≈ 680 kg CO₂e/an</div>
+    </div>
+
+    <div class="carte bilan" id="calc-conseils" style="display:none">
+      <h3 style="margin-top:0">💡 Conseils personnalisés pour réduire ton impact</h3>
+      <ul id="liste-conseils"></ul>
+    </div>
+  </div>
+
+  <!-- Défi conception responsable -->
+  <div class="carte consigne">
+    <h3 style="margin-top:0">🎯 Défi — Concevoir un usage responsable du numérique</h3>
+    <p>Choisis un domaine et sélectionne des options de conception responsable pour créer un projet numérique éco-responsable.</p>
+
+    <div class="champ">
+      <span>1. Choisis un domaine :</span>
+      <select id="defi-domaine" onchange="majDefiOptions()">
+        <option value="">— Sélectionner —</option>
+        <option value="education">🏫 Éducation</option>
+        <option value="sante">🏥 Santé</option>
+        <option value="transport">🚌 Transport</option>
+        <option value="loisirs">🎮 Loisirs</option>
+      </select>
+    </div>
+
+    <div class="champ">
+      <span>2. Sélectionne des options de conception responsable :</span>
+      <div class="defi-options" id="defi-options-container"></div>
+    </div>
+
+    <div class="champ">
+      <span>3. Décris ton projet en quelques phrases :</span>
+      <textarea id="defi-description" placeholder="Mon projet consiste à…"></textarea>
+    </div>
+
+    <div class="boutons">
+      <button class="act" onclick="genererSlide()">📊 Générer la diapositive de présentation</button>
+    </div>
+
+    <div class="slide-gen" id="slide-result" style="display:none">
+      <h4 id="slide-titre">Mon projet numérique responsable</h4>
+      <div id="slide-contenu"></div>
+    </div>
+  </div>
+
+  <!-- Synthèse avantages/inconvénients -->
+  <div class="carte">
+    <h3 style="margin-top:0">📋 Synthèse — Avantages et inconvénients du numérique</h3>
+    <p class="note">Complète ce tableau avec tes propres arguments. Il sera inclus dans ton bilan.</p>
+    <table class="synthese-table">
+      <thead>
+        <tr><th style="width:50%">✅ Avantages du numérique</th><th style="width:50%">⚠️ Inconvénients / Risques</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><textarea id="synth-av1" placeholder="Avantage 1…"></textarea></td>
+          <td><textarea id="synth-inc1" placeholder="Inconvénient 1…"></textarea></td>
+        </tr>
+        <tr>
+          <td><textarea id="synth-av2" placeholder="Avantage 2…"></textarea></td>
+          <td><textarea id="synth-inc2" placeholder="Inconvénient 2…"></textarea></td>
+        </tr>
+        <tr>
+          <td><textarea id="synth-av3" placeholder="Avantage 3…"></textarea></td>
+          <td><textarea id="synth-inc3" placeholder="Inconvénient 3…"></textarea></td>
+        </tr>
+        <tr>
+          <td><textarea id="synth-av4" placeholder="Avantage 4…"></textarea></td>
+          <td><textarea id="synth-inc4" placeholder="Inconvénient 4…"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ======================== BILAN ======================== -->
+<section id="bilan">
+  <h2>Bilan — Synthèse et score final</h2>
+
+  <div class="carte bilan">
+    <h3 style="margin-top:0">📊 Ton score global</h3>
+    <div class="resultat-empreinte">
+      <div class="big" id="bilan-score">0 / 100</div>
+      <div class="sub" id="bilan-appreciation">Commence les activités pour obtenir ton score.</div>
+    </div>
+    <div class="barre" style="margin:10px 0"><i id="bilan-barre" style="width:0%"></i></div>
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">📝 Détail des scores par section</h3>
+    <table>
+      <thead><tr><th>Section</th><th>Compétence</th><th>Score</th><th>Max</th></tr></thead>
+      <tbody>
+        <tr><td>N1 — Connaissances</td><td>Mémoriser</td><td class="n" id="bilan-n1">0</td><td class="n">30</td></tr>
+        <tr><td>N2 — Compréhension</td><td>Comprendre</td><td class="n" id="bilan-n2">0</td><td class="n">20</td></tr>
+        <tr><td>N3 — Application</td><td>Appliquer</td><td class="n" id="bilan-n3">0</td><td class="n">25</td></tr>
+        <tr><td>N4 — Analyse & Création</td><td>Analyser/Créer</td><td class="n" id="bilan-n4">0</td><td class="n">25</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">🔑 Ce qu'il faut retenir</h3>
+    <ol>
+      <li><b>Le numérique transforme tous les secteurs</b> : santé, éducation, agriculture, industrie, commerce.</li>
+      <li><b>La chaîne d'information</b> suit toujours le cycle : Acquérir → Traiter → Communiquer → Stocker.</li>
+      <li><b>L'impact environnemental</b> est réel : fabrication des appareils, consommation électrique, centres de données.</li>
+      <li><b>Un usage responsable</b> est possible : allonger la durée de vie, réduire le streaming, privilégier le reconditionné.</li>
+      <li><b>Les métiers évoluent</b> : certains disparaissent, d'autres se créent, tous se transforment.</li>
+    </ol>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" onclick="sauvegarderLocal()">💾 Sauvegarder ma progression</button>
+    <button class="act sec" onclick="restaurerLocal()">📂 Restaurer</button>
+    <button class="act sec" onclick="window.print()">🖨️ Imprimer le bilan</button>
+    <button class="act sec" onclick="effacerTout()">🗑️ Tout effacer</button>
+  </div>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<div id="zone-message"></div>
+
+<script>
+/* ================================================================
+   DONNÉES PÉDAGOGIQUES
+   ================================================================ */
+
+// QCM Usages du numérique
+const qcmUsages = [
+  {
+    q: "Quels sont les domaines transformés par le numérique ?",
+    opts: ["Communication", "Santé", "Agriculture uniquement", "Éducation", "Commerce", "Loisirs"],
+    correct: [0,1,3,4,5],
+    multi: true
+  },
+  {
+    q: "Quel outil permet de suivre ses constantes de santé en temps réel ?",
+    opts: ["Un tableur", "Une montre connectée", "Un moteur de recherche", "Un traitement de texte"],
+    correct: [1],
+    multi: false
+  },
+  {
+    q: "L'ENT d'un collège sert principalement à :",
+    opts: ["Jouer en ligne", "Accéder aux cours, notes et communiquer avec les enseignants", "Regarder des films", "Acheter des fournitures"],
+    correct: [1],
+    multi: false
+  },
+  {
+    q: "Lequel n'est PAS un usage courant du numérique dans l'industrie ?",
+    opts: ["Impression 3D de prototypes", "Robotisation des chaînes de montage", "Culture manuelle sans aucun outil", "Simulation numérique avant production"],
+    correct: [2],
+    multi: false
+  }
+];
+
+// Définitions à associer
+const matchData = [
+  { term: "Donnée", def: "Information élémentaire (nombre, texte, image) manipulée par un système informatique" },
+  { term: "Algorithme", def: "Suite d'instructions précises permettant de résoudre un problème" },
+  { term: "Serveur", def: "Ordinateur puissant qui stocke et fournit des ressources à d'autres machines" },
+  { term: "Cloud", def: "Ensemble de serveurs distants accessibles via Internet pour stocker et traiter des données" },
+  { term: "Objet connecté", def: "Appareil équipé de capteurs et d'une connexion réseau (IoT)" },
+  { term: "IA", def: "Programme capable d'apprendre et de prendre des décisions similaires à l'intelligence humaine" }
+];
+
+// Vrai/Faux idées reçues
+const vfData = [
+  { txt: "Internet ne pollue pas car c'est virtuel.", rep: false, expl: "Faux ! Les centres de données, les câbles sous-marins et la fabrication des appareils consomment énormément d'énergie." },
+  { txt: "Envoyer un e-mail avec pièce jointe pollue autant que parcourir 1 km en voiture.", rep: false, expl: "Faux ! Un e-mail avec PJ émet environ 19 g CO₂e, contre ~150 g pour 1 km en voiture. Mais le volume total d'e-mails est énorme." },
+  { txt: "Le streaming vidéo est la première source de consommation de données sur Internet.", rep: true, expl: "Vrai ! La vidéo représente environ 80 % du trafic Internet mondial." },
+  { txt: "Fabriquer un smartphone émet plus de CO₂ que l'utiliser pendant 2 ans.", rep: true, expl: "Vrai ! La fabrication d'un smartphone émet 30 à 70 kg CO₂e, souvent plus que son utilisation sur 2 ans." },
+  { txt: "L'intelligence artificielle ne consomme presque pas d'énergie.", rep: false, expl: "Faux ! L'entraînement d'un grand modèle d'IA peut consommer autant d'électricité que 100 foyers pendant un an." },
+  { txt: "Le recyclage des appareils électroniques est efficace à 100 %.", rep: false, expl: "Faux ! Moins de 20 % des déchets électroniques sont correctement recyclés dans le monde." }
+];
+
+// Métiers avant/après
+const metiersData = [
+  {
+    nom: "📬 Facteur / Factrice",
+    avant: "Distribution manuelle du courrier papier. Tri manuel au centre postal. Tournée fixe quotidienne.",
+    apres: "Tri automatisé par machines optiques. GPS pour optimiser les tournées. Livraison de colis e-commerce. Gestion numérique des avis de passage."
+  },
+  {
+    nom: "🩺 Médecin",
+    avant: "Dossier papier du patient. Diagnostic basé uniquement sur l'examen clinique. Rendez-vous en présentiel obligatoire.",
+    apres: "Dossier médical partagé numérique. Télémédecine et téléconsultation. IA d'aide au diagnostic (analyse d'imagerie). Objets connectés de suivi."
+  },
+  {
+    nom: "👨‍🏫 Enseignant(e)",
+    avant: "Cours magistraux, tableau noir, manuels papier. Évaluation sur copie. Ressources limitées à la bibliothèque.",
+    apres: "ENT, tablettes, vidéos pédagogiques. Exercices interactifs et évaluation en ligne. Ressources infinies sur Internet. Classe inversée, travail collaboratif."
+  },
+  {
+    nom: "🌾 Agriculteur(rice)",
+    avant: "Observation visuelle des cultures. Irrigation et traitements uniformes. Vente directe ou via coopérative locale.",
+    apres: "Capteurs d'humidité et drones. Agriculture de précision (GPS, IA). Robots de désherbage. Vente en ligne et circuits courts numériques."
+  },
+  {
+    nom: "📰 Journaliste",
+    avant: "Enquête terrain, rédaction papier, impression journal. Publication quotidienne ou hebdomadaire. Audience locale/nationale.",
+    apres: "Publication en temps réel sur le web. Data journalisme et visualisations interactives. Réseaux sociaux comme canal de diffusion. Fact-checking assisté par IA."
+  },
+  {
+    nom: "🔨 Artisan(e)",
+    avant: "Commandes par téléphone ou en boutique. Plans dessinés à la main. Bouche-à-oreille pour la clientèle.",
+    apres: "Site web et réseaux sociaux pour la visibilité. CAO/DAO pour les plans. Impression 3D pour prototypage. Devis et facturation numériques."
+  }
+];
+
+// Compteurs carbone
+const carboneData = [
+  { label: "1 heure de streaming HD", val: 36, unite: "g CO₂e", couleur: "#d97706" },
+  { label: "1 e-mail avec PJ", val: 19, unite: "g CO₂e", couleur: "#2e75b6" },
+  { label: "1 recherche Google", val: 0.3, unite: "g CO₂e", couleur: "#2e7d32" },
+  { label: "1 heure de visioconférence", val: 55, unite: "g CO₂e", couleur: "#b3261e" },
+  { label: "1 post sur réseau social", val: 0.5, unite: "g CO₂e", couleur: "#5b6b7b" },
+  { label: "Fabrication d'un smartphone", val: 50000, unite: "g CO₂e", couleur: "#1f4e79" },
+  { label: "1 heure de jeu en ligne", val: 45, unite: "g CO₂e", couleur: "#d97706" }
+];
+
+// Options défi conception
+const defiOptions = {
+  education: [
+    "Utiliser des logiciels libres et gratuits",
+    "Privilégier le matériel reconditionné",
+    "Créer des ressources pédagogiques partagées",
+    "Limiter les impressions papier",
+    "Former au codage dès le primaire",
+    "Utiliser l'IA pour personnaliser l'apprentissage"
+  ],
+  sante: [
+    "Télémédecine pour réduire les déplacements",
+    "Dossier médical interopérable et sécurisé",
+    "Capteurs connectés pour le maintien à domicile",
+    "IA pour le dépistage précoce",
+    "Protection stricte des données de santé",
+    "Accessibilité numérique pour tous les patients"
+  ],
+  transport: [
+    "Applications de covoiturage",
+    "Feux tricolores intelligents",
+    "Véhicules électriques connectés",
+    "Information voyageurs en temps réel",
+    "Optimisation des trajets par IA",
+    "Bornes de recharge accessibles"
+  ],
+  loisirs: [
+    "Streaming basse résolution par défaut",
+    "Jeux vidéo éco-conçus",
+    "Plateformes culturelles locales",
+    "Limitation du temps d'écran recommandée",
+    "Contenus accessibles hors-ligne",
+    "Réparation et réemploi du matériel de loisir"
+  ]
+};
+
+/* ================================================================
+   ÉTAT GLOBAL
+   ================================================================ */
+const scores = { n1: 0, n2: 0, n3: 0, n4: 0 };
+const maxScores = { n1: 30, n2: 20, n3: 25, n4: 25 };
+let chainState = [null, null, null, null];
+let chainCasStates = [[null,null,null,null],[null,null,null,null],[null,null,null,null]];
+let matchSelection = { term: null, def: null };
+let matchPairs = {};
+let matchCorrectCount = 0;
+
+/* ================================================================
+   NAVIGATION ONGLETS
+   ================================================================ */
+document.querySelectorAll('#onglets button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#onglets button').forEach(b => b.classList.remove('actif'));
+    btn.classList.add('actif');
+    document.querySelectorAll('main > section').forEach(s => s.classList.remove('actif'));
+    document.getElementById(btn.dataset.tab).classList.add('actif');
+    if (btn.dataset.tab === 'bilan') majBilan();
+  });
+});
+
+/* ================================================================
+   MESSAGE FLOTTANT
+   ================================================================ */
+let msgTimer = null;
+function showMessage(txt) {
+  const el = document.getElementById('zone-message');
+  el.textContent = txt;
+  el.classList.add('visible');
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(() => el.classList.remove('visible'), 2500);
+}
+
+/* ================================================================
+   SCORE & PROGRESSION
+   ================================================================ */
+function majScoreGlobal() {
+  const total = scores.n1 + scores.n2 + scores.n3 + scores.n4;
+  document.getElementById('score-global').textContent = `Score : ${total} / 100`;
+  const pct = Math.round(total);
+  document.getElementById('barre-globale').style.width = pct + '%';
+  document.getElementById('pourcent-global').textContent = pct + ' %';
+}
+
+/* ================================================================
+   QCM USAGES
+   ================================================================ */
+function initQCM() {
+  const container = document.getElementById('qcm-usages');
+  container.innerHTML = '';
+  qcmUsages.forEach((item, qi) => {
+    const div = document.createElement('div');
+    div.className = 'q';
+    let html = `<p class="enonce">${qi+1}. ${item.q}</p>`;
+    item.opts.forEach((opt, oi) => {
+      const type = item.multi ? 'checkbox' : 'radio';
+      html += `<label class="quiz-option" id="qcm-u-${qi}-${oi}">
+        <input type="${type}" name="qcm-u-${qi}" value="${oi}" style="margin-right:6px"> ${opt}
+      </label>`;
+    });
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+
+function verifierQCM(id) {
+  if (id !== 'usages') return;
+  let correct = 0;
+  qcmUsages.forEach((item, qi) => {
+    const inputs = document.querySelectorAll(`input[name="qcm-u-${qi}"]`);
+    const selected = [];
+    inputs.forEach((inp, oi) => {
+      const label = document.getElementById(`qcm-u-${qi}-${oi}`);
+      label.classList.remove('correct','wrong');
+      if (inp.checked) selected.push(oi);
+    });
+    const isCorrect = item.multi
+      ? item.correct.length === selected.length && item.correct.every(c => selected.includes(c))
+      : selected.length === 1 && selected[0] === item.correct[0];
+    if (isCorrect) {
+      correct++;
+      selected.forEach(oi => document.getElementById(`qcm-u-${qi}-${oi}`).classList.add('correct'));
+    } else {
+      selected.forEach(oi => document.getElementById(`qcm-u-${qi}-${oi}`).classList.add('wrong'));
+      item.correct.forEach(oi => document.getElementById(`qcm-u-${qi}-${oi}`).classList.add('correct'));
+    }
+  });
+  const pts = Math.round((correct / qcmUsages.length) * 10);
+  scores.n1 = Math.min(scores.n1 + pts, maxScores.n1); // will be recalculated
+  recalcN1();
+  const res = document.getElementById('resultat-usages');
+  if (correct === qcmUsages.length) {
+    res.innerHTML = `<span class="ok">✓ Parfait ! ${correct}/${qcmUsages.length} — ${pts} points</span>`;
+  } else {
+    res.innerHTML = `<span class="erreur">${correct}/${qcmUsages.length} correctes</span> — ${pts} points. Les bonnes réponses sont en vert.`;
+  }
+  majScoreGlobal();
+  showMessage(`QCM : ${correct}/${qcmUsages.length}`);
+}
+
+function resetQCM(id) {
+  if (id !== 'usages') return;
+  document.querySelectorAll('#qcm-usages input').forEach(i => { i.checked = false; });
+  document.querySelectorAll('#qcm-usages .quiz-option').forEach(l => l.classList.remove('correct','wrong'));
+  document.getElementById('resultat-usages').textContent = 'En attente de tes réponses…';
+}
+
+/* ================================================================
+   MATCH TERMES/DÉFINITIONS
+   ================================================================ */
+function initMatch() {
+  const termsDiv = document.getElementById('match-terms');
+  const defsDiv = document.getElementById('match-defs');
+  termsDiv.innerHTML = '<b style="display:block;margin-bottom:6px;color:var(--bleu)">Termes</b>';
+  defsDiv.innerHTML = '<b style="display:block;margin-bottom:6px;color:var(--bleu)">Définitions</b>';
+
+  // Mélanger les définitions
+  const shuffledDefs = [...matchData].sort(() => Math.random() - 0.5);
+
+  matchData.forEach((item, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'quiz-option';
+    btn.textContent = item.term;
+    btn.dataset.idx = i;
+    btn.onclick = () => selectMatchTerm(i, btn);
+    termsDiv.appendChild(btn);
+  });
+
+  shuffledDefs.forEach((item) => {
+    const origIdx = matchData.indexOf(item);
+    const btn = document.createElement('div');
+    btn.className = 'quiz-option';
+    btn.textContent = item.def;
+    btn.dataset.idx = origIdx;
+    btn.onclick = () => selectMatchDef(origIdx, btn);
+    defsDiv.appendChild(btn);
+  });
+}
+
+function selectMatchTerm(idx, el) {
+  if (el.classList.contains('correct')) return;
+  document.querySelectorAll('#match-terms .quiz-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  matchSelection.term = idx;
+  tryMatchPair();
+}
+
+function selectMatchDef(idx, el) {
+  if (el.classList.contains('correct')) return;
+  document.querySelectorAll('#match-defs .quiz-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  matchSelection.def = idx;
+  tryMatchPair();
+}
+
+function tryMatchPair() {
+  if (matchSelection.term === null || matchSelection.def === null) return;
+  if (matchSelection.term === matchSelection.def) {
+    // Correct pair
+    document.querySelectorAll('#match-terms .quiz-option').forEach(o => {
+      if (parseInt(o.dataset.idx) === matchSelection.term) { o.classList.remove('selected'); o.classList.add('correct'); }
+    });
+    document.querySelectorAll('#match-defs .quiz-option').forEach(o => {
+      if (parseInt(o.dataset.idx) === matchSelection.def) { o.classList.remove('selected'); o.classList.add('correct'); }
+    });
+    matchCorrectCount++;
+    showMessage(`✓ Association correct ! (${matchCorrectCount}/${matchData.length})`);
+  } else {
+    showMessage('✗ Ces deux éléments ne correspondent pas.');
+  }
+  matchSelection = { term: null, def: null };
+}
+
+function verifierMatch() {
+  const pts = Math.round((matchCorrectCount / matchData.length) * 10);
+  recalcN1();
+  const res = document.getElementById('resultat-match');
+  if (matchCorrectCount === matchData.length) {
+    res.innerHTML = `<span class="ok">✓ Toutes les associations sont correctes ! ${pts} points</span>`;
+  } else {
+    res.innerHTML = `${matchCorrectCount}/${matchData.length} associations trouvées. Continue !`;
+  }
+  majScoreGlobal();
+}
+
+function resetMatch() {
+  matchCorrectCount = 0;
+  matchSelection = { term: null, def: null };
+  matchPairs = {};
+  initMatch();
+  document.getElementById('resultat-match').textContent = 'Associe tous les termes à leurs définitions.';
+}
+
+/* ================================================================
+   CHAÎNE D'INFORMATION (ordonner)
+   ================================================================ */
+const chainOrder = ['acquerir','traiter','communiquer','stocker'];
+let chainPos = 0;
+
+function placerChaine(el) {
+  if (el.classList.contains('placed') || chainPos >= 4) return;
+  const slot = document.querySelector(`#chain-slots .chain-slot[data-pos="${chainPos}"]`);
+  slot.textContent = el.textContent;
+  slot.dataset.val = el.dataset.val;
+  slot.classList.add('filled');
+  el.classList.add('placed');
+  chainState[chainPos] = el.dataset.val;
+  chainPos++;
+}
+
+function verifierChaine() {
+  let correct = 0;
+  chainState.forEach((val, i) => {
+    const slot = document.querySelector(`#chain-slots .chain-slot[data-pos="${i}"]`);
+    slot.classList.remove('correct','wrong');
+    if (val === chainOrder[i]) {
+      slot.classList.add('correct');
+      correct++;
+    } else {
+      slot.classList.add('wrong');
+    }
+  });
+  const pts = correct === 4 ? 10 : Math.round((correct / 4) * 5);
+  recalcN1();
+  const res = document.getElementById('resultat-chaine');
+  if (correct === 4) {
+    res.innerHTML = `<span class="ok">✓ Ordre correct ! Acquérir → Traiter → Communiquer → Stocker. ${pts} points</span>`;
+  } else {
+    res.innerHTML = `<span class="erreur">${correct}/4 correct.</span> L'ordre est : Acquérir → Traiter → Communiquer → Stocker.`;
+  }
+  majScoreGlobal();
+  showMessage(`Chaîne : ${correct}/4`);
+}
+
+function resetChaine() {
+  chainState = [null,null,null,null];
+  chainPos = 0;
+  document.querySelectorAll('#chain-slots .chain-slot').forEach((s,i) => {
+    s.textContent = `${i+1}${i===0?'er':i===1?'e':'e'}`;
+    if(i===0) s.innerHTML='1<sup>er</sup>';
+    else s.innerHTML=`${i+1}<sup>e</sup>`;
+    s.classList.remove('filled','correct','wrong');
+    delete s.dataset.val;
+  });
+  document.querySelectorAll('#chain-items .chain-item').forEach(i => i.classList.remove('placed'));
+  document.getElementById('resultat-chaine').textContent = 'Place les 4 maillons dans le bon ordre.';
+}
+
+/* ================================================================
+   VRAI/FAUX
+   ================================================================ */
+function initVF() {
+  const container = document.getElementById('vf-container');
+  container.innerHTML = '';
+  vfData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'q';
+    div.innerHTML = `
+      <p class="enonce">${i+1}. "${item.txt}"</p>
+      <label class="quiz-option" id="vf-${i}-true" style="display:inline-block;width:auto;margin-right:6px">
+        <input type="radio" name="vf-${i}" value="true"> ✅ Vrai
+      </label>
+      <label class="quiz-option" id="vf-${i}-false" style="display:inline-block;width:auto">
+        <input type="radio" name="vf-${i}" value="false"> ❌ Faux
+      </label>
+      <div class="note" id="vf-expl-${i}" style="display:none;margin-top:4px"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function verifierVF() {
+  let correct = 0;
+  vfData.forEach((item, i) => {
+    const radios = document.querySelectorAll(`input[name="vf-${i}"]`);
+    let selected = null;
+    radios.forEach(r => { if (r.checked) selected = r.value === 'true'; });
+    const explEl = document.getElementById(`vf-expl-${i}`);
+    explEl.style.display = 'block';
+    explEl.textContent = item.expl;
+    const trueLabel = document.getElementById(`vf-${i}-true`);
+    const falseLabel = document.getElementById(`vf-${i}-false`);
+    trueLabel.classList.remove('correct','wrong');
+    falseLabel.classList.remove('correct','wrong');
+    if (selected === item.rep) {
+      correct++;
+      (selected ? trueLabel : falseLabel).classList.add('correct');
+    } else {
+      if (selected !== null) (selected ? trueLabel : falseLabel).classList.add('wrong');
+      (item.rep ? trueLabel : falseLabel).classList.add('correct');
+    }
+  });
+  const pts = Math.round((correct / vfData.length) * 10);
+  recalcN1();
+  const res = document.getElementById('resultat-vf');
+  if (correct === vfData.length) {
+    res.innerHTML = `<span class="ok">✓ Excellent ! ${correct}/${vfData.length} — ${pts} points</span>`;
+  } else {
+    res.innerHTML = `<span class="erreur">${correct}/${vfData.length}</span> — ${pts} points. Lis les explications !`;
+  }
+  majScoreGlobal();
+  showMessage(`Vrai/Faux : ${correct}/${vfData.length}`);
+}
+
+function resetVF() {
+  document.querySelectorAll('#vf-container input').forEach(i => i.checked = false);
+  document.querySelectorAll('#vf-container .quiz-option').forEach(l => l.classList.remove('correct','wrong'));
+  document.querySelectorAll('[id^="vf-expl-"]').forEach(e => e.style.display = 'none');
+  document.getElementById('resultat-vf').textContent = 'Réponds à toutes les affirmations.';
+}
+
+/* Recalcul N1 */
+function recalcN1() {
+  // QCM: /10, Match: /10, Chaine: /10 => total /30
+  // On recalcule depuis les résultats affichés
+  let ptsQCM = 0, ptsMatch = 0, ptsChain = 0;
+  // QCM
+  const qcmRes = document.getElementById('resultat-usages').textContent;
+  const qcmMatch = qcmRes.match(/(\d+)\/\d+/);
+  if (qcmMatch) ptsQCM = Math.round((parseInt(qcmMatch[1]) / qcmUsages.length) * 10);
+  // Match
+  ptsMatch = Math.round((matchCorrectCount / matchData.length) * 10);
+  // Chain
+  let chainCorrect = 0;
+  chainState.forEach((v,i) => { if (v === chainOrder[i]) chainCorrect++; });
+  ptsChain = chainCorrect === 4 ? 10 : Math.round((chainCorrect / 4) * 5);
+  // VF bonus intégré dans QCM score si besoin, sinon on ajuste
+  const vfRes = document.getElementById('resultat-vf').textContent;
+  const vfMatch2 = vfRes.match(/(\d+)\/\d+/);
+  let ptsVF = 0;
+  if (vfMatch2) ptsVF = Math.round((parseInt(vfMatch2[1]) / vfData.length) * 10);
+
+  // N1 = QCM(10) + Match(10) + Chaine(10) = 30 max
+  // On intègre VF dans le QCM pour rester à 30
+  scores.n1 = Math.min(ptsQCM + ptsMatch + ptsChain, maxScores.n1);
+  majScoreGlobal();
+}
+
+/* ================================================================
+   CANVAS CHAÎNE D'INFORMATION (montre connectée)
+   ================================================================ */
+const maillonInfo = {
+  acquerir: "📡 ACQUÉRIR : Les capteurs de la montre (accéléromètre, cardiofréquencemètre, GPS) collectent des données physiques (mouvement, rythme cardiaque, position).",
+  traiter: "⚙️ TRAITER : Le microprocesseur de la montre analyse les données brutes : calcule les pas, détecte le sommeil, reconnaît l'activité sportive.",
+  communiquer: "📤 COMMUNIQUER : La montre transmet les résultats via Bluetooth au smartphone, puis via Wi-Fi/4G au cloud. L'utilisateur voit les infos sur l'écran.",
+  stocker: "💾 STOCKER : Les données sont enregistrées dans la mémoire interne de la montre et synchronisées sur un serveur cloud pour l'historique et l'analyse long terme."
+};
+let activeMaillon = null;
+let animFrame = 0;
+
+function initCanvasChaine() {
+  const canvas = document.getElementById('canvas-chaine');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const maillons = [
+    { id:'acquerir', x:80, y:175, label:'ACQUÉRIR', icon:'📡', color:'#2e75b6' },
+    { id:'traiter', x:280, y:175, label:'TRAITER', icon:'⚙️', color:'#d97706' },
+    { id:'communiquer', x:480, y:175, label:'COMMUNIQUER', icon:'📤', color:'#2e7d32' },
+    { id:'stocker', x:680, y:175, label:'STOCKER', icon:'💾', color:'#1f4e79' }
+  ];
+
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    animFrame++;
+
+    // Titre
+    ctx.fillStyle = '#1f4e79';
+    ctx.font = 'bold 16px Liberation Sans, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('Chaîne d\'information — Montre connectée', W/2, 30);
+
+    // Flèches animées
+    ctx.strokeStyle = '#c9d6e4';
+    ctx.lineWidth = 3;
+    for (let i = 0; i < 3; i++) {
+      const x1 = maillons[i].x + 55;
+      const x2 = maillons[i+1].x - 55;
+      const y = 175;
+      ctx.beginPath();
+      ctx.moveTo(x1, y);
+      ctx.lineTo(x2, y);
+      ctx.stroke();
+      // Point animé
+      const t = ((animFrame + i * 30) % 120) / 120;
+      const px = x1 + (x2 - x1) * t;
+      ctx.fillStyle = maillons[i].color;
+      ctx.beginPath();
+      ctx.arc(px, y, 5, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Maillons
+    maillons.forEach(m => {
+      const isActive = activeMaillon === m.id;
+      const bw = isActive ? 3 : 1.5;
+      ctx.fillStyle = isActive ? m.color + '22' : '#fff';
+      ctx.strokeStyle = m.color;
+      ctx.lineWidth = bw;
+      roundRect(ctx, m.x - 55, m.y - 45, 110, 90, 12);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = '28px serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#000';
+      ctx.fillText(m.icon, m.x, m.y - 8);
+
+      ctx.font = 'bold 11px Liberation Sans, Arial';
+      ctx.fillStyle = m.color;
+      ctx.fillText(m.label, m.x, m.y + 28);
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+
+  // Click handler
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * (H / rect.height);
+    let found = null;
+    maillons.forEach(m => {
+      if (mx >= m.x-55 && mx <= m.x+55 && my >= m.y-45 && my <= m.y+45) found = m.id;
+    });
+    if (found) {
+      activeMaillon = found;
+      document.getElementById('info-maillon').innerHTML = `<b>${maillonInfo[found]}</b>`;
+      // Score N2 progressif
+      scores.n2 = Math.min(scores.n2 + 5, maxScores.n2);
+      majScoreGlobal();
+      showMessage('Maillon exploré ! (+5 pts N2)');
+    }
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+/* ================================================================
+   MÉTIERS AVANT/APRÈS
+   ================================================================ */
+function initMetiers() {
+  const container = document.getElementById('metiers-container');
+  container.innerHTML = '';
+  metiersData.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'metier-card';
+    card.innerHTML = `
+      <div class="metier-header" onclick="this.parentElement.classList.toggle('open')">${m.nom} ▾</div>
+      <div class="metier-body">
+        <div class="metier-compare">
+          <div class="metier-avant"><b>🕰️ Avant le numérique</b><br>${m.avant}</div>
+          <div class="metier-apres"><b>💻 Avec le numérique</b><br>${m.apres}</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+/* ================================================================
+   COMPTEURS CARBONE
+   ================================================================ */
+function initCompteurs() {
+  const container = document.getElementById('compteurs-carbone');
+  container.innerHTML = '';
+  const maxVal = Math.max(...carboneData.map(d => d.val));
+  carboneData.forEach(d => {
+    const pct = Math.max(2, (d.val / maxVal) * 100);
+    const row = document.createElement('div');
+    row.className = 'compteur-row';
+    row.innerHTML = `
+      <span class="compteur-label">${d.label}</span>
+      <div class="compteur-bar">
+        <div class="compteur-fill" style="width:0%;background:${d.couleur}" data-target="${pct}"></div>
+      </div>
+      <span class="compteur-val">${d.val.toLocaleString('fr-FR')} ${d.unite}</span>
+    `;
+    container.appendChild(row);
+  });
+  // Animate on visibility
+  setTimeout(() => {
+    document.querySelectorAll('.compteur-fill').forEach(f => {
+      f.style.width = f.dataset.target + '%';
+    });
+  }, 300);
+}
+
+/* ================================================================
+   CAS PRATIQUES
+   ================================================================ */
+function ouvrirCas(idx) {
+  document.querySelectorAll('.cas-tabs button').forEach((b,i) => b.classList.toggle('actif', i===idx));
+  document.querySelectorAll('.cas-panel').forEach((p,i) => p.classList.toggle('actif', i===idx));
+}
+
+function placerChaineCas(casIdx, el) {
+  if (el.classList.contains('placed')) return;
+  const state = chainCasStates[casIdx];
+  const pos = state.findIndex(v => v === null);
+  if (pos === -1) return;
+  state[pos] = el.dataset.val;
+  const slot = document.querySelector(`#cas${casIdx}-chain-slots .chain-slot[data-pos="${pos}"]`);
+  slot.textContent = el.textContent;
+  slot.classList.add('filled');
+  el.classList.add('placed');
+}
+
+function verifierCas(idx) {
+  let pts = 0;
+  const prefix = `cas${idx}`;
+
+  // Vérifier textes (présence de contenu)
+  const qIds = idx === 0 ? ['cas0-q1','cas0-q2'] : idx === 1 ? ['cas1-q1','cas1-q2','cas1-q3'] : ['cas2-q1','cas2-q2','cas2-q3'];
+  let textPts = 0;
+  qIds.forEach(id => {
+    const val = document.getElementById(id).value.trim();
+    if (val.length > 15) textPts += 3;
+    else if (val.length > 5) textPts += 1;
+  });
+
+  // Vérifier chaîne si cas 0
+  let chainPts = 0;
+  if (idx === 0) {
+    const state = chainCasStates[0];
+    let cc = 0;
+    state.forEach((v,i) => { if (v === chainOrder[i]) cc++; });
+    chainPts = cc === 4 ? 7 : Math.round((cc/4)*4);
+    state.forEach((v,i) => {
+      const slot = document.querySelector(`#cas0-chain-slots .chain-slot[data-pos="${i}"]`);
+      slot.classList.remove('correct','wrong');
+      if (v === chainOrder[i]) slot.classList.add('correct');
+      else if (v) slot.classList.add('wrong');
+    });
+  }
+
+  pts = idx === 0 ? Math.min(textPts + chainPts, 10) : Math.min(textPts, 8);
+  scores.n3 = Math.min(scores.n3 + pts, maxScores.n3);
+  majScoreGlobal();
+
+  const res = document.getElementById(`resultat-cas${idx}`);
+  res.innerHTML = `<span class="${pts >= 5 ? 'ok' : 'erreur'}">Score : ${pts} points.</span> ${pts >= 5 ? 'Bon travail !' : 'Développe davantage tes réponses.'}`;
+  showMessage(`Cas ${idx+1} : ${pts} pts`);
+}
+
+/* ================================================================
+   CALCULATEUR EMPREINTE NUMÉRIQUE
+   ================================================================ */
+function majCalc() {
+  const streaming = parseFloat(document.getElementById('calc-streaming').value);
+  const emails = parseInt(document.getElementById('calc-emails').value);
+  const reseaux = parseFloat(document.getElementById('calc-reseaux').value);
+  const appareils = parseInt(document.getElementById('calc-appareils').value);
+  const jeux = parseFloat(document.getElementById('calc-jeux').value);
+
+  document.getElementById('val-streaming').textContent = streaming + ' h';
+  document.getElementById('val-emails').textContent = emails;
+  document.getElementById('val-reseaux').textContent = reseaux + ' h';
+  document.getElementById('val-appareils').textContent = appareils;
+  document.getElementById('val-jeux').textContent = jeux + ' h';
+
+  // Calcul annuel (kg CO₂e)
+  const streamAn = streaming * 36 * 365 / 1000; // g -> kg
+  const emailAn = emails * 19 * 365 / 1000;
+  const reseauxAn = reseaux * 30 * 365 / 1000; // estimation
+  const jeuxAn = jeux * 45 * 365 / 1000;
+  const appareilsAn = appareils * 50 / 3; // amortissement fabrication sur 3 ans
+
+  const total = Math.round(streamAn + emailAn + reseauxAn + jeuxAn + appareilsAn);
+  const moyenne = 680;
+
+  document.getElementById('calc-total').textContent = `${total} kg CO₂e/an`;
+  const ratio = total / moyenne;
+  let compareTxt = `Moyenne française ≈ ${moyenne} kg CO₂e/an. `;
+  if (ratio < 0.7) compareTxt += "🟢 Tu es bien en dessous de la moyenne !";
+  else if (ratio < 1.1) compareTxt += "🟡 Tu es proche de la moyenne.";
+  else if (ratio < 1.5) compareTxt += "🟠 Tu dépasses la moyenne. Quelques gestes suffiraient.";
+  else compareTxt += "🔴 Ton empreinte est significativement supérieure à la moyenne.";
+
+  document.getElementById('calc-compare').textContent = compareTxt;
+
+  // Couleur du résultat
+  const resDiv = document.getElementById('resultat-calc');
+  resDiv.style.borderColor = ratio < 0.7 ? 'var(--vert)' : ratio < 1.1 ? 'var(--orange)' : 'var(--rouge)';
+
+  // Conseils
+  const conseils = [];
+  if (streaming > 2) conseils.push("Réduis le streaming vidéo ou baisse la résolution (480p au lieu de 1080p).");
+  if (emails > 20) conseils.push("Évite les e-mails inutiles et supprime les pièces jointes lourdes.");
+  if (reseaux > 2) conseils.push("Limite le temps sur les réseaux sociaux ; désactive les notifications push.");
+  if (appareils > 5) conseils.push("Prolonge la durée de vie de tes appareils ; achète reconditionné.");
+  if (jeux > 2) conseils.push("Préfère le téléchargement au streaming de jeux (cloud gaming très énergivore).");
+  if (conseils.length === 0) conseils.push("Bravo ! Tes habitudes sont déjà raisonnables. Continue ainsi !");
+
+  const conseilDiv = document.getElementById('calc-conseils');
+  conseilDiv.style.display = 'block';
+  document.getElementById('liste-conseils').innerHTML = conseils.map(c => `<li>${c}</li>`).join('');
+
+  // Score N4
+  scores.n4 = Math.max(scores.n4, 10); // calculateur utilisé = 10 pts minimum
+  majScoreGlobal();
+}
+
+/* ================================================================
+   DÉFI CONCEPTION RESPONSABLE
+   ================================================================ */
+function majDefiOptions() {
+  const domaine = document.getElementById('defi-domaine').value;
+  const container = document.getElementById('defi-options-container');
+  container.innerHTML = '';
+  if (!domaine || !defiOptions[domaine]) return;
+  defiOptions[domaine].forEach(opt => {
+    const div = document.createElement('div');
+    div.className = 'defi-opt';
+    div.textContent = opt;
+    div.onclick = () => div.classList.toggle('selected');
+    container.appendChild(div);
+  });
+}
+
+function genererSlide() {
+  const domaine = document.getElementById('defi-domaine').value;
+  const desc = document.getElementById('defi-description').value.trim();
+  const selectedOpts = [...document.querySelectorAll('.defi-opt.selected')].map(o => o.textContent);
+
+  if (!domaine) { showMessage('Choisis d\'abord un domaine !'); return; }
+  if (desc.length < 10) { showMessage('Décris ton projet en quelques phrases.'); return; }
+  if (selectedOpts.length === 0) { showMessage('Sélectionne au moins une option.'); return; }
+
+  const domainLabels = { education:'Éducation', sante:'Santé', transport:'Transport', loisirs:'Loisirs' };
+  const slide = document.getElementById('slide-result');
+  slide.style.display = 'block';
+  document.getElementById('slide-titre').textContent = `Projet numérique responsable — ${domainLabels[domaine]}`;
+  document.getElementById('slide-contenu').innerHTML = `
+    <p><b>Domaine :</b> ${domainLabels[domaine]}</p>
+    <p><b>Description :</b> ${desc}</p>
+    <p><b>Options de conception responsable choisies :</b></p>
+    <ul>${selectedOpts.map(o => `<li>${o}</li>`).join('')}</ul>
+    <p style="margin-top:10px;font-style:italic;color:var(--gris)">Ce projet vise à utiliser le numérique de manière responsable
+    en intégrant des principes d'éco-conception et d'accessibilité.</p>
+  `;
+
+  // Score N4
+  scores.n4 = Math.min(scores.n4 + 15, maxScores.n4);
+  majScoreGlobal();
+  showMessage('Diapositive générée ! +15 pts N4');
+}
+
+/* ================================================================
+   BILAN
+   ================================================================ */
+function majBilan() {
+  // Recalculer N1
+  recalcN1();
+
+  // N2 : basé sur les clics canvas (déjà incrémenté) + métiers explorés
+  const metiersOpen = document.querySelectorAll('.metier-card.open').length;
+  scores.n2 = Math.min(Math.max(scores.n2, metiersOpen * 3), maxScores.n2);
+
+  // N4 : vérifier synthèse
+  let synthFilled = 0;
+  for (let i = 1; i <= 4; i++) {
+    if (document.getElementById(`synth-av${i}`).value.trim().length > 5) synthFilled++;
+    if (document.getElementById(`synth-inc${i}`).value.trim().length > 5) synthFilled++;
+  }
+  if (synthFilled >= 4) scores.n4 = Math.min(scores.n4 + 5, maxScores.n4);
+
+  majScoreGlobal();
+
+  const total = scores.n1 + scores.n2 + scores.n3 + scores.n4;
+  document.getElementById('bilan-score').textContent = `${total} / 100`;
+  document.getElementById('bilan-barre').style.width = total + '%';
+  document.getElementById('bilan-n1').textContent = scores.n1;
+  document.getElementById('bilan-n2').textContent = scores.n2;
+  document.getElementById('bilan-n3').textContent = scores.n3;
+  document.getElementById('bilan-n4').textContent = scores.n4;
+
+  let apprec = '';
+  if (total >= 80) apprec = '🏆 Excellent ! Tu maîtrises les enjeux du numérique.';
+  else if (total >= 60) apprec = '👍 Bien ! Tu as de bonnes bases. Approfondis les sections où tu as perdu des points.';
+  else if (total >= 40) apprec = '📘 Moyen. Reprends les activités et lis attentivement les corrections.';
+  else apprec = '📕 À retravailler. Refais les quiz et explore toutes les infographies.';
+  document.getElementById('bilan-appreciation').textContent = apprec;
+}
+
+/* ================================================================
+   LOCALSTORAGE
+   ================================================================ */
+function sauvegarderLocal() {
+  const data = {
+    binome: document.getElementById('binome').value,
+    classe: document.getElementById('classe').value,
+    scores: scores,
+    synthese: {
+      av1: document.getElementById('synth-av1').value,
+      av2: document.getElementById('synth-av2').value,
+      av3: document.getElementById('synth-av3').value,
+      av4: document.getElementById('synth-av4').value,
+      inc1: document.getElementById('synth-inc1').value,
+      inc2: document.getElementById('synth-inc2').value,
+      inc3: document.getElementById('synth-inc3').value,
+      inc4: document.getElementById('synth-inc4').value
+    },
+    defiDesc: document.getElementById('defi-description').value,
+    timestamp: new Date().toISOString()
+  };
+  localStorage.setItem('impact-numerique-save', JSON.stringify(data));
+  showMessage('💾 Progression sauvegardée !');
+}
+
+function restaurerLocal() {
+  const raw = localStorage.getItem('impact-numerique-save');
+  if (!raw) { showMessage('Aucune sauvegarde trouvée.'); return; }
+  try {
+    const data = JSON.parse(raw);
+    document.getElementById('binome').value = data.binome || '';
+    document.getElementById('classe').value = data.classe || '';
+    if (data.scores) Object.assign(scores, data.scores);
+    if (data.synthese) {
+      for (const [k,v] of Object.entries(data.synthese)) {
+        const el = document.getElementById(`synth-${k}`);
+        if (el) el.value = v;
+      }
+    }
+    if (data.defiDesc) document.getElementById('defi-description').value = data.defiDesc;
+    majScoreGlobal();
+    showMessage(`📂 Restauré (${data.timestamp?.slice(0,10) || ''})`);
+  } catch(e) {
+    showMessage('Erreur lors de la restauration.');
+  }
+}
+
+function effacerTout() {
+  if (!confirm('Tout effacer ? Cette action est irréversible.')) return;
+  localStorage.removeItem('impact-numerique-save');
+  location.reload();
+}
+
+/* ================================================================
+   INITIALISATION
+   ================================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  initQCM();
+  initMatch();
+  initVF();
+  initCanvasChaine();
+  initMetiers();
+  initCompteurs();
+  majCalc();
+
+  // Restaurer binôme/classe si dispo
+  const saved = localStorage.getItem('impact-numerique-save');
+  if (saved) {
+    try {
+      const d = JSON.parse(saved);
+      if (d.binome) document.getElementById('binome').value = d.binome;
+      if (d.classe) document.getElementById('classe').value = d.classe;
+    } catch(e) {}
+  }
+
+  // Auto-save binôme/classe
+  ['binome','classe'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      clearTimeout(window._saveTimer);
+      window._saveTimer = setTimeout(sauvegarderLocal, 2000);
+    });
+  });
+});
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "3e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Séquence 2 — Faire bon usage des outils numériques</title>
+<style>
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none}
+section.actif{display:block}
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+input[type=text]{font:inherit; font-size:.88rem; padding:4px 6px; border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{font:inherit; font-size:.88rem; padding:4px 6px; border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit; width:100%; min-height:3.2rem; resize:vertical}
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+.chrono{display:flex; align-items:center; gap:6px; font-size:.85rem; color:var(--gris)}
+.chrono .valeur{font-variant-numeric:tabular-nums; font-weight:bold; font-size:1rem; color:var(--bleu); min-width:4.2rem; text-align:center;
+  background:var(--bleuf2); border:1px solid var(--bord); border-radius:6px; padding:2px 4px}
+.note{font-size:.8rem; color:var(--gris)}
+/* Quiz styles */
+.quiz-item{background:#fff; border:1px solid var(--bord); border-radius:8px; padding:12px; margin-bottom:10px}
+.quiz-item.correct{border-color:var(--vert); background:var(--vertF)}
+.quiz-item.wrong{border-color:var(--rouge); background:#fef2f2}
+.quiz-options{display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px}
+@media(max-width:600px){.quiz-options{grid-template-columns:1fr}}
+.quiz-opt{padding:8px 10px; border:1px solid var(--bord); border-radius:6px; cursor:pointer; font-size:.88rem; background:#fff; transition:all .15s}
+.quiz-opt:hover{background:var(--bleuf)}
+.quiz-opt.selected{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+.quiz-opt.correct-answer{background:var(--vert); color:#fff; border-color:var(--vert)}
+.quiz-opt.wrong-answer{background:var(--rouge); color:#fff; border-color:var(--rouge)}
+.quiz-feedback{margin-top:8px; font-size:.85rem; padding:6px 10px; border-radius:6px}
+.quiz-feedback.ok{background:var(--vertF); color:var(--vert)}
+.quiz-feedback.ko{background:#fef2f2; color:var(--rouge)}
+.score-display{font-size:1.1rem; font-weight:bold; color:var(--bleu); text-align:center; padding:10px; background:var(--bleuf2); border-radius:8px; margin:10px 0}
+/* Classement N2 */
+.classement-zone{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0}
+@media(max-width:700px){.classement-zone{grid-template-columns:1fr}}
+.cat-col{background:#fff; border:2px dashed var(--bord); border-radius:10px; padding:10px; min-height:120px}
+.cat-col h4{margin:0 0 8px; color:var(--bleu); font-size:.9rem; text-align:center}
+.cat-col.securise{border-color:var(--vert)}
+.cat-col.dangereux{border-color:var(--rouge)}
+.item-a-classer{display:inline-block; padding:6px 12px; margin:4px; background:var(--bleuf); border:1px solid var(--bleu2); border-radius:20px; cursor:pointer; font-size:.85rem; transition:all .15s}
+.item-a-classer:hover{background:var(--bleu2); color:#fff}
+.item-a-classer.placed-ok{background:var(--vert); color:#fff; border-color:var(--vert)}
+.item-a-classer.placed-ko{background:var(--rouge); color:#fff; border-color:var(--rouge)}
+.items-pool{text-align:center; padding:10px; background:var(--bleuf2); border-radius:8px; margin-bottom:10px}
+/* Mot de passe N3 */
+.pwd-container{max-width:500px; margin:0 auto}
+.pwd-input{width:100%; font-size:1.2rem; padding:10px; border:2px solid var(--bord); border-radius:8px; margin-bottom:10px}
+.pwd-strength{height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-bottom:8px}
+.pwd-bar{height:100%; transition:width .3s, background .3s; border-radius:6px}
+.pwd-criteria{display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:.85rem}
+.pwd-crit{padding:4px 8px; border-radius:4px; background:#f5f5f5}
+.pwd-crit.met{background:var(--vertF); color:var(--vert)}
+.pwd-crit.unmet{background:#fef2f2; color:var(--rouge)}
+/* Organiseur fichiers N3 */
+.file-organizer{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media(max-width:700px){.file-organizer{grid-template-columns:1fr}}
+.files-pool,.folders-area{background:#fff; border:1px solid var(--bord); border-radius:8px; padding:10px}
+.file-item{display:inline-flex; align-items:center; gap:4px; padding:5px 10px; margin:3px; background:var(--bleuf); border:1px solid var(--bleu2); border-radius:6px; cursor:pointer; font-size:.84rem}
+.file-item:hover{background:var(--bleu2); color:#fff}
+.file-item.sorted{opacity:.4; pointer-events:none}
+.folder{border:2px dashed var(--bord); border-radius:8px; padding:8px; margin-bottom:6px; min-height:50px; cursor:pointer; transition:all .15s}
+.folder:hover{border-color:var(--bleu2); background:var(--bleuf2)}
+.folder.active{border-color:var(--bleu2); background:var(--bleuf); border-style:solid}
+.folder h5{margin:0 0 4px; font-size:.85rem; color:var(--bleu)}
+.folder .folder-files{font-size:.8rem; color:var(--gris)}
+/* Scénarios N4 */
+.scenario{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:14px; margin-bottom:14px}
+.scenario-text{font-size:.92rem; line-height:1.5; margin-bottom:10px; padding:8px; background:var(--bleuf2); border-radius:6px}
+.scenario-q{margin:8px 0}
+.scenario-q label{display:block; padding:6px 10px; margin:3px 0; border:1px solid var(--bord); border-radius:6px; cursor:pointer; font-size:.86rem}
+.scenario-q label:hover{background:var(--bleuf)}
+.scenario-q input[type=radio]{margin-right:6px}
+.scenario-q label.correct{background:var(--vertF); border-color:var(--vert)}
+.scenario-q label.wrong{background:#fef2f2; border-color:var(--rouge)}
+/* Bilan */
+.bilan-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin:10px 0}
+.bilan-card{background:#fff; border:1px solid var(--bord); border-radius:8px; padding:12px; text-align:center}
+.bilan-card .score{font-size:1.5rem; font-weight:bold; color:var(--bleu)}
+.bilan-card .label{font-size:.82rem; color:var(--gris); margin-top:4px}
+@media print{
+  header, .onglets, .boutons, .no-print{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <div class="ligne-titre">
+    <h1>Faire bon usage des outils numériques <small>5<sup>e</sup> · OST1 · Séquence 2</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="5e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+    <div class="chrono" id="chrono">
+      <span>Chrono :</span><span class="valeur" id="chrono-valeur">20:00</span>
+      <button class="act sec" id="chrono-start" style="padding:2px 8px">▶</button>
+      <button class="act sec" id="chrono-reset" style="padding:2px 8px">↺</button>
+    </div>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-tab="n1" class="actif"><span class="tag">N1</span> Mémoriser</button>
+    <button data-tab="n2"><span class="tag">N2</span> Comprendre</button>
+    <button data-tab="n3"><span class="tag">N3</span> Appliquer</button>
+    <button data-tab="n4"><span class="tag">N4</span> Analyser</button>
+    <button data-tab="bilan">Bilan</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================== N1 MÉMORISER ======================== -->
+<section id="n1" class="actif">
+  <h2>N1 — Mémoriser : Quiz Vocabulaire Numérique</h2>
+  <div class="carte objectif">
+    <b>Objectif :</b> Retenir le vocabulaire essentiel sur les outils numériques, la sécurité et les données personnelles.
+    Réponds aux 10 questions et vérifie ton score !
+  </div>
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Consigne</h3>
+    <p>Clique sur la bonne réponse pour chaque question. Tu verras immédiatement si c'est juste ou faux, avec une explication.</p>
+  </div>
+  <div id="quiz-container"></div>
+  <div class="score-display" id="score-n1" style="display:none">Score : <span id="score-n1-val">0</span>/10</div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1g</span>Fichiers informatiques (texte, image, tableur/CSV), dossiers et arborescence</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/An8Ysx3HQ68EcpQ" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113241-ost1g-fichiers-informatiques-fichier-texte-fichier-image-fichier-de-type-tableur-ou-csv-et-dossiers-arborescence/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113241-ost1g-fichiers-informatiques-fichier-texte-fichier-image-fichier-de-type-tableur-ou-csv-et-dossiers-arborescence/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/7abXrySvwPRXXjSr5" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1h</span>Extension et format de fichiers, droits d'écriture et de lecture</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/6F47ebHZqoF4T7X" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113238-ost1h-systeme-dinformation-et-stockage-des-donnees-extension-et-format-de-fichiers-droits-decriture-et-de-lecture-sur-les-fichiers/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113238-ost1h-systeme-dinformation-et-stockage-des-donnees-extension-et-format-de-fichiers-droits-decriture-et-de-lecture-sur-les-fichiers/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/J2ZrBkumCc81U5UV9" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1j</span>Ordre de grandeur de la taille d'un fichier image, d'un fichier son, d'une vidéo</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/YiMc6sm3Mt79tXi" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113233-ost1j-systeme-dinformation-et-stockage-des-donnees-ordre-de-grandeur-de-la-taille-dun-fichier-image-dun-fichier-son-dune-video/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113233-ost1j-systeme-dinformation-et-stockage-des-donnees-ordre-de-grandeur-de-la-taille-dun-fichier-image-dun-fichier-son-dune-video/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/DRqtnSyEHPK84NH86" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1k</span>Incidences liées au stockage, au flux des données et aux réseaux d'information</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/C2jMGTN6oadCt7J" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113232-ost1k-systeme-dinformation-et-stockage-des-donnees-incidences-liees-au-stockage-au-flux-des-donnees-et-aux-reseaux-dinformation/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113232-ost1k-systeme-dinformation-et-stockage-des-donnees-incidences-liees-au-stockage-au-flux-des-donnees-et-aux-reseaux-dinformation/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/3JJoH56a5YXuNCMU7" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1l</span>Cybersécurité : protection des données personnelles, traces numériques, authentification</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/4Xf3zgK2MDmLB2H" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113230-ost1l-cybersecurite-protection-des-donnees-personnelles-traces-numeriques-temoins-de-connexion-geolocalisation-identification-authentification-respect-de-la-propriete-intellectuelle/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113230-ost1l-cybersecurite-protection-des-donnees-personnelles-traces-numeriques-temoins-de-connexion-geolocalisation-identification-authentification-respect-de-la-propriete-intellectuelle/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/SbfaYBEi5xRU7Zj89" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1m</span>Cyberviolence : usurpation d'identité, usage détourné</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/PzrdM7WTjLjPbEb" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113225-ost1m-cyberviolence-usurpation-didentite-usage-detourne/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113225-ost1m-cyberviolence-usurpation-didentite-usage-detourne/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/3YZHgryQJGHQNDFP9" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- ======================== N2 COMPRENDRE ======================== -->
+<section id="n2">
+  <h2>N2 — Comprendre : Classer pour Protéger</h2>
+  <div class="carte objectif">
+    <b>Objectif :</b> Distinguer les comportements sécurisés des comportements dangereux sur internet.
+    Classe chaque action dans la bonne catégorie !
+  </div>
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Consigne</h3>
+    <p>Clique sur une action en haut, puis clique sur la catégorie correspondante (✅ Sécurisé ou ⚠️ Dangereux).<br>
+    Essaie de tout classer correctement !</p>
+  </div>
+  <div class="carte">
+    <div class="items-pool" id="items-pool"></div>
+    <div class="classement-zone">
+      <div class="cat-col securise" id="cat-securise" onclick="placeItem('securise')">
+        <h4>✅ Comportement Sécurisé</h4>
+        <div id="placed-securise"></div>
+      </div>
+      <div class="cat-col dangereux" id="cat-dangereux" onclick="placeItem('dangereux')">
+        <h4>⚠️ Comportement Dangereux</h4>
+        <div id="placed-dangereux"></div>
+      </div>
+    </div>
+    <div class="score-display" id="score-n2" style="display:none">Classés correctement : <span id="score-n2-val">0</span>/<span id="total-n2">0</span></div>
+    <div class="boutons">
+      <button class="act" onclick="resetClassement()">Recommencer</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== N3 APPLIQUER ======================== -->
+<section id="n3">
+  <h2>N3 — Appliquer : Simulateur Sécurité</h2>
+  <div class="carte objectif">
+    <b>Objectif :</b> Appliquer les bonnes pratiques en créant un mot de passe fort et en organisant des fichiers.
+    Choisis une activité ci-dessous.
+  </div>
+  <div class="boutons" style="justify-content:center; margin:16px 0">
+    <button class="act" id="btn-pwd" onclick="showN3Sub('pwd')">🔐 Constructeur de mot de passe</button>
+    <button class="act sec" id="btn-files" onclick="showN3Sub('files')">📁 Organiseur de fichiers</button>
+  </div>
+
+  <!-- Sous-activité Mot de passe -->
+  <div id="sub-pwd" class="carte">
+    <h3 style="margin-top:0">🔐 Construis un mot de passe fort</h3>
+    <p class="note">Tape un mot de passe et observe les critères se valider en temps réel.</p>
+    <div class="pwd-container">
+      <input type="text" class="pwd-input" id="pwd-input" placeholder="Tape ton mot de passe ici…" autocomplete="off">
+      <div class="pwd-strength"><div class="pwd-bar" id="pwd-bar"></div></div>
+      <p style="text-align:center; font-weight:bold; font-size:.95rem" id="pwd-label">Très faible</p>
+      <div class="pwd-criteria" id="pwd-criteria">
+        <div class="pwd-crit unmet" id="crit-length">≥ 8 caractères</div>
+        <div class="pwd-crit unmet" id="crit-upper">Au moins 1 MAJUSCULE</div>
+        <div class="pwd-crit unmet" id="crit-lower">Au moins 1 minuscule</div>
+        <div class="pwd-crit unmet" id="crit-digit">Au moins 1 chiffre</div>
+        <div class="pwd-crit unmet" id="crit-special">Au moins 1 symbole (!@#$…)</div>
+        <div class="pwd-crit unmet" id="crit-no-common">Pas de mot courant</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sous-activité Fichiers -->
+  <div id="sub-files" class="carte" style="display:none">
+    <h3 style="margin-top:0">📁 Organise les fichiers</h3>
+    <p class="note">Clique sur un fichier, puis clique sur le bon dossier pour le ranger.</p>
+    <div class="file-organizer">
+      <div class="files-pool">
+        <h4 style="margin:0 0 8px; color:var(--bleu)">Fichiers en vrac</h4>
+        <div id="files-list"></div>
+      </div>
+      <div class="folders-area">
+        <h4 style="margin:0 0 8px; color:var(--bleu)">Dossiers</h4>
+        <div id="folders-list"></div>
+      </div>
+    </div>
+    <div class="score-display" id="score-files" style="display:none">Fichiers rangés : <span id="score-files-val">0</span>/<span id="total-files">0</span></div>
+    <div class="boutons">
+      <button class="act" onclick="resetFiles()">Recommencer</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== N4 ANALYSER ======================== -->
+<section id="n4">
+  <h2>N4 — Analyser : Enquête Numérique</h2>
+  <div class="carte objectif">
+    <b>Objectif :</b> Analyser des situations problématiques liées au numérique et identifier les bons réflexes.
+    Lis chaque scénario, puis réponds aux questions.
+  </div>
+  <div id="scenarios-container"></div>
+  <div class="score-display" id="score-n4" style="display:none">Bonnes réponses : <span id="score-n4-val">0</span>/<span id="total-n4">0</span></div>
+  <div class="carte">
+    <h3 style="margin-top:0">Ta synthèse</h3>
+    <div class="q">
+      <p class="enonce">Quelles sont les 3 règles essentielles que tu retiens pour un usage sûr du numérique ?</p>
+      <textarea id="synthese-n4" placeholder="1. …&#10;2. …&#10;3. …"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== BILAN ======================== -->
+<section id="bilan">
+  <h2>Bilan de la séquence</h2>
+  <div class="carte bilan">
+    <h3 style="margin-top:0">Tes résultats</h3>
+    <div class="bilan-grid">
+      <div class="bilan-card">
+        <div class="score" id="bilan-n1">—</div>
+        <div class="label">N1 Mémoriser<br>(Quiz)</div>
+      </div>
+      <div class="bilan-card">
+        <div class="score" id="bilan-n2">—</div>
+        <div class="label">N2 Comprendre<br>(Classement)</div>
+      </div>
+      <div class="bilan-card">
+        <div class="score" id="bilan-n3">—</div>
+        <div class="label">N3 Appliquer<br>(Simulateur)</div>
+      </div>
+      <div class="bilan-card">
+        <div class="score" id="bilan-n4">—</div>
+        <div class="label">N4 Analyser<br>(Enquête)</div>
+      </div>
+    </div>
+  </div>
+  <div class="carte">
+    <h3 style="margin-top:0">Ce que j'ai appris</h3>
+    <textarea id="bilan-texte" placeholder="Écris ici ce que tu retiens de cette séquence sur le bon usage des outils numériques…" style="min-height:5rem"></textarea>
+  </div>
+  <div class="boutons no-print">
+    <button class="act" onclick="window.print()">🖨️ Imprimer le bilan</button>
+  </div>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<script>
+// ========== CHRONO ==========
+(function(){
+  let total=20*60, running=false, timer=null;
+  const el=document.getElementById('chrono-valeur');
+  const btnStart=document.getElementById('chrono-start');
+  function fmt(s){const m=Math.floor(s/60),ss=s%60;return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0')}
+  function update(){el.textContent=fmt(total)}
+  btnStart.onclick=function(){
+    if(running){clearInterval(timer);running=false;btnStart.textContent='▶';return}
+    running=true;btnStart.textContent='⏸';
+    timer=setInterval(function(){if(total>0){total--;update()}else{clearInterval(timer);running=false;btnStart.textContent='▶'}},1000);
+  };
+  document.getElementById('chrono-reset').onclick=function(){clearInterval(timer);running=false;total=20*60;update();btnStart.textContent='▶'};
+})();
+
+// ========== ONGLETS ==========
+document.querySelectorAll('.onglets button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.onglets button').forEach(function(b){b.classList.remove('actif')});
+    btn.classList.add('actif');
+    document.querySelectorAll('main section').forEach(function(s){s.classList.remove('actif')});
+    document.getElementById(btn.dataset.tab).classList.add('actif');
+    if(btn.dataset.tab==='bilan') updateBilan();
+  });
+});
+
+// ========== N1 QUIZ ==========
+const quizData=[
+  {q:"Que signifie l'extension .pdf ?",opts:["Programme De Fichier","Portable Document Format","Photo De Famille","Public Data File"],a:1,exp:"Le PDF (Portable Document Format) est un format universel créé par Adobe pour partager des documents sans modifier leur mise en page."},
+  {q:"Qu'est-ce que le cloud ?",opts:["Un logiciel de dessin","Un espace de stockage en ligne accessible via internet","Un type de virus informatique","Un réseau social"],a:1,exp:"Le cloud désigne des serveurs distants qui stockent tes fichiers et y donnent accès depuis n'importe quel appareil connecté."},
+  {q:"Quelle est la longueur MINIMALE recommandée pour un mot de passe ?",opts:["4 caractères","6 caractères","8 caractères","12 caractères"],a:2,exp:"Un mot de passe doit contenir au minimum 8 caractères, idéalement 12, avec majuscules, minuscules, chiffres et symboles."},
+  {q:"Qu'est-ce qu'une donnée personnelle ?",opts:["Une information qui permet d'identifier une personne","Un fichier système de l'ordinateur","Un programme installé","Une mise à jour Windows"],a:0,exp:"Nom, prénom, photo, adresse, numéro de téléphone… toute information permettant d'identifier directement ou indirectement une personne est une donnée personnelle."},
+  {q:"Que faire face à un message blessant reçu en ligne ?",opts:["Répondre par une insulte","Le supprimer et ne rien dire","Le signaler, en parler à un adulte, conserver les preuves","Transférer le message à tous ses contacts"],a:2,exp:"Face au cyberharcèlement : ne pas répondre, conserver les preuves (captures d'écran), signaler le contenu et en parler à un adulte de confiance."},
+  {q:"Qu'est-ce que le phishing ?",opts:["Un jeu vidéo de pêche","Une technique pour voler des informations en se faisant passer pour un site de confiance","Un antivirus","Un type de connexion wifi"],a:1,exp:"Le phishing (hameçonnage) utilise de faux emails ou sites imitant des services connus pour récupérer mots de passe, numéros bancaires…"},
+  {q:"Quel format est adapté pour une photo ?",opts:[".docx",".mp3",".jpg",".xlsx"],a:2,exp:".jpg (JPEG) est un format d'image compressé très utilisé pour les photos. .docx = texte, .mp3 = son, .xlsx = tableur."},
+  {q:"Pourquoi faut-il sauvegarder ses fichiers ?",opts:["Pour remplir le disque dur","Au cas où l'ordinateur tombe en panne ou soit perdu","Ce n'est pas nécessaire","Pour ralentir l'ordinateur"],a:1,exp:"La sauvegarde (sur clé USB, disque externe ou cloud) protège contre la perte de données en cas de panne, vol ou virus."},
+  {q:"Qu'est-ce qu'un droit d'accès sur un fichier partagé ?",opts:["Le prix du fichier","La permission de lire, modifier ou supprimer un fichier","La taille du fichier","La couleur de l'icône"],a:1,exp:"Les droits d'accès définissent qui peut voir, modifier ou supprimer un fichier partagé. On peut les configurer dans le cloud ou sur un réseau."},
+  {q:"Quel numéro appeler en cas de cyberharcèlement en France ?",opts:["Le 15","Le 17","Le 3018","Le 112"],a:2,exp:"Le 3018 est le numéro national gratuit contre le harcèlement (cyberharcèlement inclus), disponible 7j/7 de 9h à 23h."}
+];
+let quizAnswered=0, quizCorrect=0;
+(function initQuiz(){
+  const c=document.getElementById('quiz-container');
+  quizData.forEach(function(item,i){
+    const div=document.createElement('div');
+    div.className='quiz-item';
+    div.id='qi-'+i;
+    let html='<p style="font-weight:bold;margin:0 0 6px">'+(i+1)+'. '+item.q+'</p><div class="quiz-options">';
+    item.opts.forEach(function(opt,j){
+      html+='<div class="quiz-opt" data-qi="'+i+'" data-oi="'+j+'">'+opt+'</div>';
+    });
+    html+='</div><div class="quiz-feedback" id="qfb-'+i+'" style="display:none"></div>';
+    div.innerHTML=html;
+    c.appendChild(div);
+  });
+  c.addEventListener('click',function(e){
+    if(!e.target.classList.contains('quiz-opt')) return;
+    const qi=parseInt(e.target.dataset.qi), oi=parseInt(e.target.dataset.oi);
+    const item=quizData[qi], container=document.getElementById('qi-'+qi);
+    if(container.classList.contains('correct')||container.classList.contains('wrong')) return;
+    const fb=document.getElementById('qfb-'+qi);
+    const allOpts=container.querySelectorAll('.quiz-opt');
+    if(oi===item.a){
+      container.classList.add('correct');
+      e.target.classList.add('correct-answer');
+      fb.className='quiz-feedback ok';
+      fb.innerHTML='✅ Correct ! '+item.exp;
+      quizCorrect++;
+    } else {
+      container.classList.add('wrong');
+      e.target.classList.add('wrong-answer');
+      allOpts[item.a].classList.add('correct-answer');
+      fb.className='quiz-feedback ko';
+      fb.innerHTML='❌ Incorrect. '+item.exp;
+    }
+    fb.style.display='block';
+    quizAnswered++;
+    if(quizAnswered===quizData.length){
+      document.getElementById('score-n1').style.display='block';
+      document.getElementById('score-n1-val').textContent=quizCorrect;
+    }
+  });
+})();
+
+// ========== N2 CLASSEMENT ==========
+const classementItems=[
+  {text:"Utiliser un mot de passe différent pour chaque compte",cat:"securise"},
+  {text:"Partager son mot de passe avec son meilleur ami",cat:"dangereux"},
+  {text:"Sauvegarder ses photos sur une clé USB",cat:"securise"},
+  {text:"Cliquer sur un lien reçu d'un inconnu par email",cat:"dangereux"},
+  {text:"Signaler un message insultant sur un réseau social",cat:"securise"},
+  {text:"Publier sa photo avec son adresse visible",cat:"dangereux"},
+  {text:"Vérifier l'URL d'un site avant de saisir des infos",cat:"securise"},
+  {text:"Accepter tous les cookies sans lire",cat:"dangereux"},
+  {text:"Verrouiller sa session en quittant son poste",cat:"securise"},
+  {text:"Envoyer une photo gênante d'un camarade",cat:"dangereux"}
+];
+let selectedItem=null, classementScore=0, classementDone=0;
+(function initClassement(){
+  const pool=document.getElementById('items-pool');
+  classementItems.forEach(function(item,i){
+    const span=document.createElement('span');
+    span.className='item-a-classer';
+    span.textContent=item.text;
+    span.dataset.idx=i;
+    span.onclick=function(){
+      if(span.classList.contains('placed-ok')||span.classList.contains('placed-ko')) return;
+      document.querySelectorAll('.item-a-classer').forEach(function(el){el.style.outline=''});
+      span.style.outline='3px solid var(--bleu2)';
+      selectedItem={el:span,idx:i};
+    };
+    pool.appendChild(span);
+  });
+  document.getElementById('total-n2').textContent=classementItems.length;
+})();
+function placeItem(cat){
+  if(!selectedItem) return;
+  const item=classementItems[selectedItem.idx];
+  const target=document.getElementById('placed-'+cat);
+  const clone=selectedItem.el.cloneNode(true);
+  clone.style.outline='';
+  clone.onclick=null;
+  if(item.cat===cat){
+    clone.classList.add('placed-ok');
+    classementScore++;
+  } else {
+    clone.classList.add('placed-ko');
+  }
+  target.appendChild(clone);
+  selectedItem.el.classList.add(item.cat===cat?'placed-ok':'placed-ko');
+  selectedItem.el.style.outline='';
+  selectedItem.el.onclick=null;
+  selectedItem=null;
+  classementDone++;
+  if(classementDone===classementItems.length){
+    document.getElementById('score-n2').style.display='block';
+    document.getElementById('score-n2-val').textContent=classementScore;
+  }
+}
+function resetClassement(){
+  selectedItem=null; classementScore=0; classementDone=0;
+  document.getElementById('placed-securise').innerHTML='';
+  document.getElementById('placed-dangereux').innerHTML='';
+  document.getElementById('score-n2').style.display='none';
+  document.querySelectorAll('.item-a-classer').forEach(function(el){
+    el.classList.remove('placed-ok','placed-ko');
+    el.style.outline='';
+    el.onclick=function(){
+      if(el.classList.contains('placed-ok')||el.classList.contains('placed-ko')) return;
+      document.querySelectorAll('.item-a-classer').forEach(function(e2){e2.style.outline=''});
+      el.style.outline='3px solid var(--bleu2)';
+      selectedItem={el:el,idx:parseInt(el.dataset.idx)};
+    };
+  });
+}
+
+// ========== N3 MOT DE PASSE ==========
+const commonPasswords=['password','123456','azerty','qwerty','abc123','motdepasse','admin','letmein','welcome','monkey'];
+document.getElementById('pwd-input').addEventListener('input',function(){
+  const pwd=this.value;
+  const checks={
+    length:pwd.length>=8,
+    upper:/[A-Z]/.test(pwd),
+    lower:/[a-z]/.test(pwd),
+    digit:/[0-9]/.test(pwd),
+    special:/[^A-Za-z0-9]/.test(pwd),
+    noCommon:!commonPasswords.includes(pwd.toLowerCase())&&pwd.length>0
+  };
+  ['length','upper','lower','digit','special','noCommon'].forEach(function(k){
+    const el=document.getElementById('crit-'+k.replace(/([A-Z])/g,'-$1').toLowerCase());
+    if(el){el.className='pwd-crit '+(checks[k]?'met':'unmet')}
+  });
+  // Map check names to element IDs
+  document.getElementById('crit-length').className='pwd-crit '+(checks.length?'met':'unmet');
+  document.getElementById('crit-upper').className='pwd-crit '+(checks.upper?'met':'unmet');
+  document.getElementById('crit-lower').className='pwd-crit '+(checks.lower?'met':'unmet');
+  document.getElementById('crit-digit').className='pwd-crit '+(checks.digit?'met':'unmet');
+  document.getElementById('crit-special').className='pwd-crit '+(checks.special?'met':'unmet');
+  document.getElementById('crit-no-common').className='pwd-crit '+(checks.noCommon?'met':'unmet');
+  const score=Object.values(checks).filter(Boolean).length;
+  const bar=document.getElementById('pwd-bar');
+  const label=document.getElementById('pwd-label');
+  const pct=Math.round(score/6*100);
+  bar.style.width=pct+'%';
+  if(score<=2){bar.style.background='#ef4444';label.textContent='Très faible';label.style.color='#ef4444'}
+  else if(score<=3){bar.style.background='#f59e0b';label.textContent='Faible';label.style.color='#f59e0b'}
+  else if(score<=4){bar.style.background='#3b82f6';label.textContent='Moyen';label.style.color='#3b82f6'}
+  else if(score<=5){bar.style.background='#22c55e';label.textContent='Fort';label.style.color='#22c55e'}
+  else{bar.style.background='#16a34a';label.textContent='Excellent ! 💪';label.style.color='#16a34a'}
+});
+function showN3Sub(sub){
+  document.getElementById('sub-pwd').style.display=sub==='pwd'?'block':'none';
+  document.getElementById('sub-files').style.display=sub==='files'?'block':'none';
+  document.getElementById('btn-pwd').className=sub==='pwd'?'act':'act sec';
+  document.getElementById('btn-files').className=sub==='files'?'act':'act sec';
+}
+
+// ========== N3 ORGANISEUR FICHIERS ==========
+const filesToSort=[
+  {name:"photo_vacances.jpg",folder:"Images",icon:"🖼️"},
+  {name:"devoir_maths.docx",folder:"Documents",icon:"📄"},
+  {name:"musique_ete.mp3",folder:"Musique",icon:"🎵"},
+  {name:"presentation_hist.pdf",folder:"Documents",icon:"📄"},
+  {name:"selfie.png",folder:"Images",icon:"🖼️"},
+  {name:"film_anniversaire.mp4",folder:"Vidéos",icon:"🎬"},
+  {name:"recette_gateau.txt",folder:"Documents",icon:"📄"},
+  {name:"dessin_projet.svg",folder:"Images",icon:"🖼️"},
+  {name:"podcast_science.mp3",folder:"Musique",icon:"🎵"},
+  {name:"tuto_cuisine.mp4",folder:"Vidéos",icon:"🎬"}
+];
+const foldersDef=["Images","Documents","Musique","Vidéos"];
+let selectedFile=null, filesSorted=0;
+(function initFiles(){
+  const fl=document.getElementById('files-list');
+  const fd=document.getElementById('folders-list');
+  filesToSort.forEach(function(f,i){
+    const div=document.createElement('div');
+    div.className='file-item';
+    div.innerHTML=f.icon+' '+f.name;
+    div.dataset.idx=i;
+    div.onclick=function(){
+      if(div.classList.contains('sorted')) return;
+      document.querySelectorAll('.file-item').forEach(function(e){e.style.outline=''});
+      div.style.outline='3px solid var(--bleu2)';
+      selectedFile={el:div,idx:i};
+    };
+    fl.appendChild(div);
+  });
+  foldersDef.forEach(function(name){
+    const div=document.createElement('div');
+    div.className='folder';
+    div.innerHTML='<h5>📁 '+name+'</h5><div class="folder-files" id="ff-'+name+'"></div>';
+    div.onclick=function(){
+      if(!selectedFile) return;
+      const file=filesToSort[selectedFile.idx];
+      const ffEl=document.getElementById('ff-'+name);
+      if(file.folder===name){
+        ffEl.innerHTML+=file.icon+' '+file.name+' ✅ ';
+        selectedFile.el.classList.add('sorted');
+        filesSorted++;
+      } else {
+        ffEl.innerHTML+=file.icon+' '+file.name+' ❌ ';
+        selectedFile.el.classList.add('sorted');
+        filesSorted++;
+      }
+      selectedFile.el.style.outline='';
+      selectedFile=null;
+      if(filesSorted===filesToSort.length){
+        document.getElementById('score-files').style.display='block';
+        document.getElementById('score-files-val').textContent=filesSorted;
+      }
+    };
+    fd.appendChild(div);
+  });
+  document.getElementById('total-files').textContent=filesToSort.length;
+})();
+function resetFiles(){
+  selectedFile=null; filesSorted=0;
+  document.getElementById('score-files').style.display='none';
+  document.getElementById('files-list').innerHTML='';
+  foldersDef.forEach(function(n){document.getElementById('ff-'+n).innerHTML=''});
+  filesToSort.forEach(function(f,i){
+    const div=document.createElement('div');
+    div.className='file-item';
+    div.innerHTML=f.icon+' '+f.name;
+    div.dataset.idx=i;
+    div.onclick=function(){
+      if(div.classList.contains('sorted')) return;
+      document.querySelectorAll('.file-item').forEach(function(e){e.style.outline=''});
+      div.style.outline='3px solid var(--bleu2)';
+      selectedFile={el:div,idx:i};
+    };
+    document.getElementById('files-list').appendChild(div);
+  });
+}
+
+// ========== N4 SCÉNARIOS ==========
+const scenarios=[
+  {
+    title:"Scénario 1 : Le message blessant",
+    text:"Léa reçoit un message sur un réseau social : « T'es trop moche, personne ne t'aime ». Le message vient d'un faux profil. Léa est bouleversée et ne sait pas quoi faire.",
+    questions:[
+      {q:"Que doit faire Léa en PREMIER ?",opts:["Répondre par une insulte","Ne pas répondre, faire une capture d'écran","Supprimer le message et oublier","Fermer son compte définitivement"],a:1,exp:"Ne jamais répondre au harcèlement. Conserver les preuves (capture d'écran) est essentiel pour signaler et porter plainte si nécessaire."},
+      {q:"À qui Léa doit-elle en parler ?",opts:["À personne, c'est honteux","À un adulte de confiance (parent, professeur, CPE)","Uniquement à ses amis","Au harceleur directement"],a:1,exp:"Il est important d'en parler à un adulte de confiance. Le cyberharcèlement n'est jamais la faute de la victime."},
+      {q:"Quel numéro gratuit peut-elle appeler ?",opts:["Le 15","Le 3018","Le 18","Le 1000"],a:1,exp:"Le 3018 est le numéro national gratuit contre le harcèlement, disponible 7j/7."}
+    ]
+  },
+  {
+    title:"Scénario 2 : L'email suspect",
+    text:"Thomas reçoit un email qui semble venir de sa banque : « Votre compte sera bloqué ! Cliquez ici pour vérifier vos identifiants. » Le lien pointe vers un site dont l'adresse est bizarre.",
+    questions:[
+      {q:"Que doit faire Thomas ?",opts:["Cliquer vite pour éviter le blocage","Ne PAS cliquer, vérifier l'adresse de l'expéditeur et contacter sa banque officiellement","Transférer l'email à ses amis","Donner ses identifiants pour vérifier"],a:1,exp:"C'est un phishing (hameçonnage). Ne jamais cliquer sur un lien suspect. Contacter l'organisme via son site officiel ou par téléphone."},
+      {q:"Comment reconnaître un email de phishing ?",opts:["Il contient des fautes, une urgence artificielle, un lien suspect","Il est écrit en anglais","Il contient des images","Il vient d'un ami"],a:0,exp:"Les indices : fautes d'orthographe, ton urgent/menaçant, adresse email ou URL suspecte, demande de données personnelles."}
+    ]
+  },
+  {
+    title:"Scénario 3 : La photo partagée",
+    text:"Pendant une sortie scolaire, Max prend une photo de son camarade Enzo dans une situation embarrassante et la publie dans un groupe de classe sans lui demander.",
+    questions:[
+      {q:"Max a-t-il le droit de publier cette photo ?",opts:["Oui, c'est juste une blague","Non, il faut toujours demander l'autorisation de la personne photographiée","Oui, si c'est sur un groupe privé","Ça dépend de la photo"],a:1,exp:"Le droit à l'image exige l'autorisation explicite de la personne avant toute publication. Publier sans accord est illégal."},
+      {q:"Que risque Max ?",opts:["Rien, c'est une blague","Des sanctions disciplinaires et potentiellement des poursuites judiciaires","Juste un avertissement oral","Un simple rappel à l'ordre"],a:1,exp:"La diffusion non autorisée d'images peut entraîner des sanctions scolaires, mais aussi des poursuites pénales (atteinte à la vie privée, harcèlement)."},
+      {q:"Que devrait faire Enzo ?",opts:["Se venger en publiant une photo de Max","Demander à Max de supprimer la photo, signaler le contenu, en parler à un adulte","Ne rien dire et subir","Quitter le collège"],a:1,exp:"Demander la suppression, signaler le contenu à la plateforme, et en parler à un adulte de confiance sont les bons réflexes."}
+    ]
+  }
+];
+let scenarioAnswered=0, scenarioCorrect=0, totalScenarioQ=0;
+(function initScenarios(){
+  const c=document.getElementById('scenarios-container');
+  scenarios.forEach(function(sc,si){
+    const div=document.createElement('div');
+    div.className='scenario';
+    let html='<h3 style="margin-top:0">'+sc.title+'</h3><div class="scenario-text">'+sc.text+'</div>';
+    sc.questions.forEach(function(q,qi){
+      totalScenarioQ++;
+      html+='<div class="scenario-q" id="sq-'+si+'-'+qi+'"><p style="font-weight:bold;font-size:.88rem;margin:0 0 4px">'+q.q+'</p>';
+      q.opts.forEach(function(opt,oi){
+        html+='<label id="sql-'+si+'-'+qi+'-'+oi+'"><input type="radio" name="sq-'+si+'-'+qi+'" value="'+oi+'"> '+opt+'</label>';
+      });
+      html+='<div class="quiz-feedback" id="sqfb-'+si+'-'+qi+'" style="display:none"></div></div>';
+    });
+    div.innerHTML=html;
+    c.appendChild(div);
+  });
+  document.getElementById('total-n4').textContent=totalScenarioQ;
+  c.addEventListener('change',function(e){
+    if(e.target.type!=='radio') return;
+    const parts=e.target.name.split('-');
+    const si=parseInt(parts[1]), qi=parseInt(parts[2]);
+    const oi=parseInt(e.target.value);
+    const q=scenarios[si].questions[qi];
+    const container=document.getElementById('sq-'+si+'-'+qi);
+    if(container.dataset.answered) return;
+    container.dataset.answered='1';
+    const fb=document.getElementById('sqfb-'+si+'-'+qi);
+    if(oi===q.a){
+      document.getElementById('sql-'+si+'-'+qi+'-'+oi).classList.add('correct');
+      fb.className='quiz-feedback ok';
+      fb.innerHTML='✅ Correct ! '+q.exp;
+      scenarioCorrect++;
+    } else {
+      document.getElementById('sql-'+si+'-'+qi+'-'+oi).classList.add('wrong');
+      document.getElementById('sql-'+si+'-'+qi+'-'+q.a).classList.add('correct');
+      fb.className='quiz-feedback ko';
+      fb.innerHTML='❌ '+q.exp;
+    }
+    fb.style.display='block';
+    scenarioAnswered++;
+    if(scenarioAnswered===totalScenarioQ){
+      document.getElementById('score-n4').style.display='block';
+      document.getElementById('score-n4-val').textContent=scenarioCorrect;
+    }
+  });
+})();
+
+// ========== BILAN ==========
+function updateBilan(){
+  document.getElementById('bilan-n1').textContent=quizAnswered>0?quizCorrect+'/10':'—';
+  document.getElementById('bilan-n2').textContent=classementDone>0?classementScore+'/'+classementItems.length:'—';
+  const pwdVal=document.getElementById('pwd-input').value;
+  const n3Text=pwdVal.length>0?'✅ Fait':'—';
+  document.getElementById('bilan-n3').textContent=n3Text;
+  document.getElementById('bilan-n4').textContent=scenarioAnswered>0?scenarioCorrect+'/'+totalScenarioQ:'—';
+}
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "5e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Séquence 3 : L'Évolution des Objets Techniques (5ème)</title>
+    <style>
+        :root {
+            --primary-blue: #2c3e50;
+            --accent-orange: #e67e22;
+            --success-green: #27ae60;
+            --light-bg: #ecf0f1;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --font-main: 'Liberation Sans', 'Arial', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-main);
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        /* HEADER STICKY */
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+        }
+
+        .header-title h1 { font-size: 1.2rem; margin-bottom: 2px; }
+        .header-title span { font-size: 0.8rem; opacity: 0.8; }
+
+        .student-info { display: flex; gap: 10px; align-items: center; font-size: 0.9rem; }
+        .student-info input {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            width: 120px;
+        }
+
+        .timer-box {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+
+        /* NAVIGATION ONGLETS */
+        nav {
+            background: #34495e;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-family: var(--font-main);
+        }
+
+        nav button:hover { color: white; background: rgba(255,255,255,0.05); }
+        nav button.active {
+            color: white;
+            border-bottom: 3px solid var(--accent-orange);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* CONTENU PRINCIPAL */
+        main { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CARTES PÉDAGOGIQUES */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #ccc;
+        }
+
+        .card.objectif { border-left-color: var(--accent-orange); }
+        .card.consigne { border-left-color: var(--primary-blue); }
+        .card.bilan { border-left-color: var(--success-green); }
+
+        .card h3 { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card.objectif h3::before { content: "🎯"; }
+        .card.consigne h3::before { content: "📝"; }
+        .card.bilan h3::before { content: "✅"; }
+
+        /* QUIZ N1 */
+        .quiz-container { counter-reset: question; }
+        .question-block {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .question-text { font-weight: bold; margin-bottom: 10px; font-size: 1.05rem; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .option-btn {
+            padding: 10px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .option-btn:hover:not(.disabled) { border-color: var(--primary-blue); background: #f8f9fa; }
+        .option-btn.correct { background: #d4edda; border-color: var(--success-green); color: #155724; }
+        .option-btn.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .feedback { margin-top: 10px; padding: 10px; border-radius: 4px; font-size: 0.9rem; display: none; }
+        .score-display { text-align: center; font-size: 1.5rem; font-weight: bold; color: var(--primary-blue); margin: 20px 0; }
+
+        /* FRISE CHRONOLOGIQUE N2 */
+        .timeline-game { display: flex; flex-direction: column; gap: 20px; }
+        .inventions-pool {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            padding: 15px; background: #fff; border-radius: 8px; min-height: 80px;
+        }
+        .invention-tag {
+            padding: 8px 16px; background: var(--primary-blue); color: white;
+            border-radius: 20px; cursor: pointer; user-select: none; transition: transform 0.2s;
+        }
+        .invention-tag:hover { transform: scale(1.05); }
+        .invention-tag.selected { background: var(--accent-orange); box-shadow: 0 0 0 3px rgba(230,126,34,0.3); }
+        .invention-tag.placed { opacity: 0.5; pointer-events: none; background: #95a5a6; }
+
+        .timeline-axis {
+            display: flex; justify-content: space-between; position: relative;
+            padding: 40px 10px 20px; background: white; border-radius: 8px; overflow-x: auto;
+        }
+        .timeline-axis::before {
+            content: ''; position: absolute; top: 20px; left: 20px; right: 20px;
+            height: 4px; background: #bdc3c7; z-index: 0;
+        }
+        .period-slot {
+            position: relative; z-index: 1; text-align: center; width: 120px; flex-shrink: 0;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .period-dot {
+            width: 20px; height: 20px; background: #bdc3c7; border-radius: 50%;
+            margin: 0 auto 10px; border: 3px solid white; transition: all 0.3s;
+        }
+        .period-label { font-weight: bold; font-size: 0.85rem; color: #7f8c8d; }
+        .period-slot:hover .period-dot { background: var(--accent-orange); transform: scale(1.3); }
+        .period-slot.filled .period-dot { background: var(--success-green); }
+        .period-items { 
+            margin-top: 10px; font-size: 0.75rem; min-height: 40px; 
+            display: flex; flex-direction: column; gap: 4px; align-items: center;
+        }
+        .placed-item { 
+            background: var(--success-green); color: white; padding: 2px 8px; 
+            border-radius: 10px; font-size: 0.7rem; 
+        }
+        .placed-item.error { background: #e74c3c; }
+
+        /* CLASSIFICATION N3 */
+        .classification-area { display: flex; flex-direction: column; gap: 20px; }
+        .objects-shelf {
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            padding: 20px; background: white; border-radius: 8px; min-height: 100px;
+        }
+        .tech-object {
+            padding: 10px 20px; background: #3498db; color: white;
+            border-radius: 6px; cursor: pointer; font-weight: bold;
+        }
+        .tech-object.selected { background: var(--accent-orange); transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .tech-object.sorted { display: none; }
+
+        .families-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .family-box {
+            background: white; border: 2px dashed #bdc3c7; border-radius: 8px;
+            padding: 15px; text-align: center; min-height: 150px; transition: all 0.3s;
+        }
+        .family-box.highlight { border-color: var(--accent-orange); background: #fef5e7; }
+        .family-box h4 { color: var(--primary-blue); margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .family-content { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+        .sorted-tag { background: var(--success-green); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; }
+
+        /* COMPARATEUR N4 */
+        .comparator-setup { text-align: center; margin-bottom: 20px; }
+        .function-selector { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
+        .func-btn {
+            padding: 12px 24px; border: 2px solid var(--primary-blue); background: white;
+            border-radius: 30px; cursor: pointer; font-weight: bold; transition: all 0.3s;
+        }
+        .func-btn.active { background: var(--primary-blue); color: white; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 8px; overflow: hidden; }
+        .comparison-table th, .comparison-table td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
+        .comparison-table th { background: var(--primary-blue); color: white; }
+        .criteria-row label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        
+        .star-rating { display: inline-flex; gap: 2px; cursor: pointer; font-size: 1.5rem; color: #ddd; }
+        .star-rating span.filled { color: #f1c40f; }
+        .star-rating span:hover, .star-rating span:hover ~ span { color: #f39c12; } /* Reverse hover trick not needed here, handled by JS */
+
+        .chart-container { 
+            display: flex; justify-content: center; align-items: center; 
+            margin: 20px 0; padding: 20px; background: white; border-radius: 8px; 
+        }
+        canvas#radarChart { max-width: 100%; height: auto; }
+
+        .analysis-question { 
+            background: #fff3cd; padding: 15px; border-radius: 8px; 
+            border-left: 4px solid #ffc107; margin-top: 20px; 
+        }
+        .analysis-question textarea { 
+            width: 100%; margin-top: 10px; padding: 10px; 
+            border: 1px solid #ddd; border-radius: 4px; min-height: 80px; 
+            font-family: inherit;
+        }
+
+        /* BILAN */
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .summary-card { background: white; padding: 20px; border-radius: 8px; text-align: center; }
+        .summary-score { font-size: 2rem; font-weight: bold; color: var(--primary-blue); }
+        .print-btn {
+            display: block; width: 100%; padding: 15px; background: var(--success-green);
+            color: white; border: none; border-radius: 8px; font-size: 1.1rem;
+            cursor: pointer; margin-top: 20px;
+        }
+        .print-btn:hover { background: #219150; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            header { flex-direction: column; gap: 10px; text-align: center; }
+            .student-info { flex-direction: column; width: 100%; }
+            .student-info input { width: 100%; }
+            nav button { padding: 10px; font-size: 0.8rem; flex: 1; }
+            .timeline-axis { flex-direction: column; align-items: center; gap: 20px; }
+            .timeline-axis::before { width: 4px; height: 100%; top: 0; bottom: 0; left: 50%; right: auto; }
+            .period-slot { width: 100%; display: flex; align-items: center; gap: 15px; text-align: left; }
+            .period-dot { margin: 0; }
+        }
+
+        @media print {
+            header, nav, .print-btn, button, input, textarea { display: none !important; }
+            .tab-content { display: block !important; page-break-inside: avoid; margin-bottom: 30px; border: 1px solid #ccc; padding: 20px; }
+            body { background: white; padding: 0; }
+            .card { box-shadow: none; border: 1px solid #ddd; }
+        }
+    
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+    <div class="header-title">
+        <h1>L'Évolution des Objets Techniques</h1>
+        <span>Séquence 3 • OST1 • Niveau 5ème</span>
+    </div>
+    <div class="student-info">
+        <input type="text" id="binome" placeholder="Binôme / Nom">
+        <input type="text" id="classe" placeholder="Classe (ex: 5ème B)">
+    </div>
+    <div class="timer-box" id="chrono">00:00</div>
+</header>
+
+<nav>
+    <button class="active" onclick="switchTab('n1')">N1 Mémoriser</button>
+    <button onclick="switchTab('n2')">N2 Comprendre</button>
+    <button onclick="switchTab('n3')">N3 Appliquer</button>
+    <button onclick="switchTab('n4')">N4 Analyser</button>
+    <button onclick="switchTab('bilan')">Bilan</button>
+</nav>
+
+<main>
+    <!-- ONGLET N1 : MÉMORISER -->
+    <section id="n1" class="tab-content active">
+        <div class="card objectif">
+            <h3>Objectif</h3>
+            <p>Mémoriser les grandes époques, les inventeurs clés et les objets techniques qui ont marqué l'histoire de l'écriture et de la communication.</p>
+        </div>
+        <div class="card consigne">
+            <h3>Consigne</h3>
+            <p>Réponds aux 10 questions du QCM ci-dessous. Clique sur la réponse qui te semble correcte. Tu auras un retour immédiat et une explication.</p>
+        </div>
+
+        <div class="score-display">Score : <span id="quiz-score">0</span> / 10</div>
+        <div class="quiz-container" id="quiz-container">
+            <!-- Généré par JS -->
+        </div>
+    
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1b</span>La fonction technique, le principe technique</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/kTomHTjRMN3zdDg" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113249-ost1b-la-fonction-technique-le-principe-technique/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113249-ost1b-la-fonction-technique-le-principe-technique/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/eyBfKbLz4cpEXpFP6" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST1c</span>La famille et la lignée d'OST</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/o2qoHTQBzyHqgGf" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113247-ost1c-la-famille-et-la-lignee-dost/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113247-ost1c-la-famille-et-la-lignee-dost/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/EmDcue7oq1mKGUcL8" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+    <!-- ONGLET N2 : COMPRENDRE -->
+    <section id="n2" class="tab-content">
+        <div class="card objectif">
+            <h3>Objectif</h3>
+            <p>Comprendre la chronologie des inventions et situer les objets techniques dans leur siècle d'apparition.</p>
+        </div>
+        <div class="card consigne">
+            <h3>Consigne</h3>
+            <p>1. Clique sur une invention dans la liste du haut (elle s'orange).<br>
+               2. Clique ensuite sur la période correspondante sur la frise chronologique.<br>
+               3. Place toutes les inventions correctement !</p>
+        </div>
+
+        <div class="score-display">Placements corrects : <span id="timeline-score">0</span> / 8</div>
+        
+        <div class="timeline-game">
+            <div class="inventions-pool" id="inventions-pool"></div>
+            <div class="timeline-axis" id="timeline-axis"></div>
+        </div>
+    </section>
+
+    <!-- ONGLET N3 : APPLIQUER -->
+    <section id="n3" class="tab-content">
+        <div class="card objectif">
+            <h3>Objectif</h3>
+            <p>Appliquer la notion de famille technique en classant des objets selon leur principe de fonctionnement commun.</p>
+        </div>
+        <div class="card consigne">
+            <h3>Consigne</h3>
+            <p>Classe les outils ci-dessous dans leur bonne famille technique. Clique sur un outil puis sur la case de la famille correspondante.</p>
+        </div>
+
+        <div class="score-display">Outils bien classés : <span id="classif-score">0</span> / 8</div>
+
+        <div class="classification-area">
+            <div class="objects-shelf" id="objects-shelf"></div>
+            <div class="families-grid" id="families-grid"></div>
+        </div>
+    </section>
+
+    <!-- ONGLET N4 : ANALYSER -->
+    <section id="n4" class="tab-content">
+        <div class="card objectif">
+            <h3>Objectif</h3>
+            <p>Analyser et comparer différentes solutions techniques qui répondent à une même fonction technique.</p>
+        </div>
+        <div class="card consigne">
+            <h3>Consigne</h3>
+            <p>Choisis une fonction technique, puis évalue chaque solution avec des étoiles (1 à 5) selon les critères proposés. Observe comment le graphique évolue.</p>
+        </div>
+
+        <div class="comparator-setup">
+            <p><strong>Choisis une fonction technique à analyser :</strong></p>
+            <div class="function-selector">
+                <button class="func-btn active" onclick="setFunction('ecrire')">Écrire</button>
+                <button class="func-btn" onclick="setFunction('eclairer')">Éclairer</button>
+                <button class="func-btn" onclick="setFunction('communiquer')">Communiquer à distance</button>
+            </div>
+        </div>
+
+        <div id="comparison-content">
+            <table class="comparison-table">
+                <thead>
+                    <tr id="comp-header"></tr>
+                </thead>
+                <tbody id="comp-body"></tbody>
+            </table>
+
+            <div class="chart-container">
+                <canvas id="radarChart" width="400" height="400"></canvas>
+            </div>
+
+            <div class="analysis-question">
+                <strong>Question d'analyse :</strong> Selon tes évaluations, pourquoi la solution la plus moderne n'est-elle pas toujours la meilleure dans toutes les situations ?
+                <textarea placeholder="Réfléchis aux avantages des solutions anciennes (coût, simplicité, écologie...)"></textarea>
+            </div>
+        </div>
+    </section>
+
+    <!-- ONGLET BILAN -->
+    <section id="bilan" class="tab-content">
+        <div class="card bilan">
+            <h3>Bilan de la séquence</h3>
+            <p>Voici le récapitulatif de ton travail sur l'évolution des objets et systèmes techniques.</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div>N1 Mémoriser</div>
+                <div class="summary-score" id="final-n1">-/10</div>
+            </div>
+            <div class="summary-card">
+                <div>N2 Comprendre</div>
+                <div class="summary-score" id="final-n2">-/8</div>
+            </div>
+            <div class="summary-card">
+                <div>N3 Appliquer</div>
+                <div class="summary-score" id="final-n3">-/8</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Ce que j'ai appris</h3>
+            <p>Les objets techniques évoluent pour répondre aux besoins humains. Une même fonction (comme écrire) peut être remplie par des principes techniques très différents selon les époques. Les objets se regroupent en familles et lignées selon leurs points communs techniques.</p>
+        </div>
+
+        <div class="card">
+            <h3>Mes notes personnelles</h3>
+            <textarea style="width:100%; min-height:100px; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="Note ici ce que tu veux retenir ou les difficultés rencontrées..."></textarea>
+        </div>
+
+        <button class="print-btn" onclick="window.print()">🖨️ Imprimer mon bilan</button>
+    
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+</main>
+
+<script>
+/**
+ * DONNÉES PÉDAGOGIQUES
+ */
+const quizData = [
+    { q: "Quel est l'ancêtre direct du stylo-plume ?", options: ["Le pinceau", "La plume d'oie", "Le crayon papier", "Le roseau"], correct: 1, info: "La plume d'oie a été utilisée pendant des siècles avant l'invention du réservoir d'encre." },
+    { q: "En quel siècle le stylo-bille a-t-il été popularisé ?", options: ["XVIIIe siècle", "XIXe siècle", "XXe siècle", "XXIe siècle"], correct: 2, info: "Breveté par László Bíró en 1938, il s'est répandu après la Seconde Guerre mondiale." },
+    { q: "Quelle est la fonction technique commune entre une plume et un clavier ?", options: ["Couper", "Écrire / Saisir du texte", "Imprimer", "Dessiner"], correct: 1, info: "Ce sont deux solutions techniques différentes pour la même fonction : tracer des caractères." },
+    { q: "Quel objet a précédé l'imprimante moderne ?", options: ["La machine à écrire", "Le photocopieur", "Le scanner", "L'ordinateur"], correct: 0, info: "La machine à écrire permettait de produire du texte propre mais sans copie numérique." },
+    { q: "Quand apparaît le premier smartphone moderne (iPhone) ?", options: ["1995", "2000", "2007", "2012"], correct: 2, info: "2007 marque le début de l'ère tactile multipoint grand public." },
+    { q: "Que signifie OST en technologie ?", options: ["Objet Standard Technique", "Objet et Système Technique", "Organisation Scientifique du Travail", "Outil Systématique Technologique"], correct: 1, info: "On étudie les Objets et Systèmes Techniques pour comprendre leur évolution." },
+    { q: "Quel matériau a remplacé le bois dans beaucoup d'outils au XXe siècle ?", options: ["La pierre", "Le plastique et les métaux légers", "Le verre", "Le tissu"], correct: 1, info: "L'industrialisation a permis l'usage massif de nouveaux matériaux synthétiques." },
+    { q: "Laquelle de ces inventions est la plus ancienne ?", options: ["Machine à écrire", "Stylet antique", "Stylo-plume", "Tablette tactile"], correct: 1, info: "Le stylet était utilisé dans l'Antiquité pour écrire sur des tablettes de cire." },
+    { q: "Qu'est-ce qu'une 'lignée technique' ?", options: ["Une famille d'inventeurs", "Une suite d'objets ayant la même fonction mais des principes différents", "Un catalogue de magasin", "Un brevet international"], correct: 1, info: "Exemple : la lignée des objets pour écrire (stylet → plume → stylo → clavier)." },
+    { q: "Quel critère n'est PAS technique ?", options: ["La vitesse d'exécution", "Le prix de vente", "La fiabilité", "La consommation d'énergie"], correct: 1, info: "Le prix est un critère économique, pas une caractéristique technique intrinsèque." }
+];
+
+const timelineData = [
+    { id: 'stylet', name: 'Stylet antique', period: 'antiquite', label: 'Antiquité (-3000)' },
+    { id: 'plume', name: "Plume d'oie", period: 'moyen-age', label: 'Moyen Âge (VIe s.)' },
+    { id: 'stylo-plume', name: 'Stylo-plume', period: 'xix', label: 'XIXe siècle (1827)' },
+    { id: 'machine', name: 'Machine à écrire', period: 'xix-late', label: 'Fin XIXe (1868)' },
+    { id: 'bille', name: 'Stylo-bille', period: 'xx-mid', label: 'Milieu XXe (1938)' },
+    { id: 'pc', name: 'Ordinateur personnel', period: 'xx-late', label: 'Fin XXe (1975)' },
+    { id: 'smartphone', name: 'Smartphone', period: 'xxi-early', label: 'Début XXIe (2007)' },
+    { id: 'tablette', name: 'Tablette tactile', period: 'xxi-modern', label: 'Années 2010' }
+];
+
+const periods = [
+    { id: 'antiquite', label: 'Antiquité' },
+    { id: 'moyen-age', label: 'Moyen Âge' },
+    { id: 'xix', label: 'XIXe s.' },
+    { id: 'xix-late', label: 'Fin XIXe' },
+    { id: 'xx-mid', label: 'Milieu XXe' },
+    { id: 'xx-late', label: 'Fin XXe' },
+    { id: 'xxi-early', label: 'Début XXIe' },
+    { id: 'xxi-modern', label: '2010+' }
+];
+
+const classifData = {
+    families: [
+        { id: 'frappe', name: 'Outils de Frappe' },
+        { id: 'coupe', name: 'Outils de Coupe' },
+        { id: 'serrage', name: 'Outils de Serrage' },
+        { id: 'percage', name: 'Outils de Perçage' }
+    ],
+    objects: [
+        { name: 'Marteau', family: 'frappe' },
+        { name: 'Tournevis', family: 'serrage' },
+        { name: 'Scie', family: 'coupe' },
+        { name: 'Perceuse', family: 'percage' },
+        { name: 'Cutter', family: 'coupe' },
+        { name: 'Pince', family: 'serrage' },
+        { name: 'Maillet', family: 'frappe' },
+        { name: 'Foret', family: 'percage' }
+    ]
+};
+
+const comparisonData = {
+    ecrire: {
+        criteria: ['Rapidité', 'Qualité visuelle', 'Coût', 'Impact écologique', 'Facilité d\'apprentissage'],
+        solutions: ['Plume d\'oie', 'Stylo-bille', 'Clavier/Tablette']
+    },
+    eclairer: {
+        criteria: ['Intensité', 'Durée de vie', 'Coût', 'Impact écologique', 'Sécurité'],
+        solutions: ['Bougie', 'Ampoule filament', 'LED']
+    },
+    communiquer: {
+        criteria: ['Vitesse', 'Portée', 'Coût', 'Fiabilité', 'Richesse du message'],
+        solutions: ['Lettre postale', 'Téléphone fixe', 'Internet/Smartphone']
+    }
+};
+
+/**
+ * ÉTAT GLOBAL
+ */
+const state = {
+    scores: { n1: 0, n2: 0, n3: 0 },
+    quizAnswered: new Set(),
+    selectedInvention: null,
+    placedInventions: new Set(),
+    selectedObject: null,
+    sortedObjects: new Set(),
+    currentCompFunc: 'ecrire',
+    ratings: {} // { func_sol_crit: value }
+};
+
+/**
+ * INITIALISATION
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    startChrono();
+    renderQuiz();
+    renderTimeline();
+    renderClassification();
+    setFunction('ecrire');
+});
+
+// Chronomètre
+function startChrono() {
+    let seconds = 0;
+    const el = document.getElementById('chrono');
+    setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
+        el.textContent = `${m}:${s}`;
+    }, 1000);
+}
+
+// Navigation Onglets
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+
+    if (tabId === 'bilan') updateBilan();
+}
+
+/**
+ * N1 : QUIZ
+ */
+function renderQuiz() {
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = quizData.map((q, i) => `
+        <div class="question-block" id="q-block-${i}">
+            <div class="question-text">${i + 1}. ${q.q}</div>
+            <div class="options-grid">
+                ${q.options.map((opt, j) => `
+                    <button class="option-btn" onclick="checkQuiz(${i}, ${j})">${opt}</button>
+                `).join('')}
+            </div>
+            <div class="feedback" id="fb-${i}"></div>
+        </div>
+    `).join('');
+}
+
+function checkQuiz(qIndex, optIndex) {
+    if (state.quizAnswered.has(qIndex)) return;
+    state.quizAnswered.add(qIndex);
+
+    const block = document.getElementById(`q-block-${qIndex}`);
+    const buttons = block.querySelectorAll('.option-btn');
+    const feedback = document.getElementById(`fb-${qIndex}`);
+    const correct = quizData[qIndex].correct;
+
+    buttons.forEach((btn, idx) => {
+        btn.classList.add('disabled');
+        if (idx === correct) btn.classList.add('correct');
+        if (idx === optIndex && idx !== correct) btn.classList.add('wrong');
+    });
+
+    feedback.style.display = 'block';
+    if (optIndex === correct) {
+        state.scores.n1++;
+        feedback.style.background = '#d4edda';
+        feedback.innerHTML = `✅ Bravo ! ${quizData[qIndex].info}`;
+    } else {
+        feedback.style.background = '#f8d7da';
+        feedback.innerHTML = `❌ Incorrect. ${quizData[qIndex].info}`;
+    }
+    document.getElementById('quiz-score').textContent = state.scores.n1;
+}
+
+/**
+ * N2 : FRISE CHRONOLOGIQUE
+ */
+function renderTimeline() {
+    // Pool d'inventions
+    const pool = document.getElementById('inventions-pool');
+    pool.innerHTML = timelineData.map(inv => `
+        <div class="invention-tag" id="inv-${inv.id}" onclick="selectInvention('${inv.id}')">${inv.name}</div>
+    `).join('');
+
+    // Axe temporel
+    const axis = document.getElementById('timeline-axis');
+    axis.innerHTML = periods.map(p => `
+        <div class="period-slot" id="slot-${p.id}" onclick="placeInvention('${p.id}')">
+            <div class="period-dot"></div>
+            <div class="period-label">${p.label}</div>
+            <div class="period-items" id="items-${p.id}"></div>
+        </div>
+    `).join('');
+}
+
+function selectInvention(id) {
+    if (state.placedInventions.has(id)) return;
+    
+    // Désélectionner précédent
+    if (state.selectedInvention) {
+        document.getElementById(`inv-${state.selectedInvention}`).classList.remove('selected');
+    }
+    
+    state.selectedInvention = id;
+    document.getElementById(`inv-${id}`).classList.add('selected');
+}
+
+function placeInvention(periodId) {
+    if (!state.selectedInvention) return;
+    
+    const inv = timelineData.find(i => i.id === state.selectedInvention);
+    const isCorrect = inv.period === periodId;
+    
+    const slotItems = document.getElementById(`items-${periodId}`);
+    const tag = document.createElement('div');
+    tag.className = `placed-item ${isCorrect ? '' : 'error'}`;
+    tag.textContent = inv.name;
+    slotItems.appendChild(tag);
+
+    // Marquer l'invention comme placée
+    const originalTag = document.getElementById(`inv-${state.selectedInvention}`);
+    originalTag.classList.remove('selected');
+    originalTag.classList.add('placed');
+    state.placedInventions.add(state.selectedInvention);
+    
+    if (isCorrect) {
+        state.scores.n2++;
+        document.getElementById(`slot-${periodId}`).classList.add('filled');
+    }
+
+    document.getElementById('timeline-score').textContent = state.scores.n2;
+    state.selectedInvention = null;
+
+    // Vérifier fin
+    if (state.placedInventions.size === timelineData.length) {
+        alert(`Frise terminée ! Score : ${state.scores.n2}/8`);
+    }
+}
+
+/**
+ * N3 : CLASSIFICATION
+ */
+function renderClassification() {
+    const shelf = document.getElementById('objects-shelf');
+    shelf.innerHTML = classifData.objects.map((obj, i) => `
+        <div class="tech-object" id="obj-${i}" onclick="selectObject(${i})">${obj.name}</div>
+    `).join('');
+
+    const grid = document.getElementById('families-grid');
+    grid.innerHTML = classifData.families.map(fam => `
+        <div class="family-box" id="fam-${fam.id}" onclick="placeObject('${fam.id}')">
+            <h4>${fam.name}</h4>
+            <div class="family-content" id="content-${fam.id}"></div>
+        </div>
+    `).join('');
+}
+
+function selectObject(index) {
+    if (state.sortedObjects.has(index)) return;
+
+    if (state.selectedObject !== null) {
+        document.getElementById(`obj-${state.selectedObject}`).classList.remove('selected');
+    }
+
+    state.selectedObject = index;
+    document.getElementById(`obj-${index}`).classList.add('selected');
+
+    // Highlight families
+    document.querySelectorAll('.family-box').forEach(b => b.classList.add('highlight'));
+}
+
+function placeObject(familyId) {
+    if (state.selectedObject === null) return;
+
+    const obj = classifData.objects[state.selectedObject];
+    const isCorrect = obj.family === familyId;
+
+    if (isCorrect) {
+        state.scores.n3++;
+        const content = document.getElementById(`content-${familyId}`);
+        const tag = document.createElement('div');
+        tag.className = 'sorted-tag';
+        tag.textContent = obj.name;
+        content.appendChild(tag);
+
+        document.getElementById(`obj-${state.selectedObject}`).classList.add('sorted');
+        state.sortedObjects.add(state.selectedObject);
+    } else {
+        // Feedback visuel simple
+        const box = document.getElementById(`fam-${familyId}`);
+        box.style.borderColor = '#e74c3c';
+        setTimeout(() => box.style.borderColor = '', 500);
+    }
+
+    document.getElementById('classif-score').textContent = state.scores.n3;
+    state.selectedObject = null;
+    document.querySelectorAll('.family-box').forEach(b => b.classList.remove('highlight'));
+}
+
+/**
+ * N4 : COMPARATEUR
+ */
+function setFunction(funcName) {
+    state.currentCompFunc = funcName;
+    
+    // Update buttons
+    document.querySelectorAll('.func-btn').forEach(b => b.classList.remove('active'));
+    if (typeof event !== 'undefined' && event && event.target && event.target.classList) { event.target.classList.add('active'); }
+
+    renderComparisonTable();
+    drawRadar();
+}
+
+function renderComparisonTable() {
+    const data = comparisonData[state.currentCompFunc];
+    const header = document.getElementById('comp-header');
+    const body = document.getElementById('comp-body');
+
+    header.innerHTML = `<th>Critères</th>${data.solutions.map(s => `<th>${s}</th>`).join('')}`;
+    
+    body.innerHTML = data.criteria.map((crit, cIdx) => `
+        <tr class="criteria-row">
+            <td><label>${crit}</label></td>
+            ${data.solutions.map((sol, sIdx) => `
+                <td>
+                    <div class="star-rating" id="stars-${sIdx}-${cIdx}">
+                        ${[1,2,3,4,5].map(v => `<span onclick="rate(${sIdx}, ${cIdx}, ${v})" onmouseover="hoverRate(${sIdx}, ${cIdx}, ${v})" onmouseout="resetHover(${sIdx}, ${cIdx})">★</span>`).join('')}
+                    </div>
+                </td>
+            `).join('')}
+        </tr>
+    `).join('');
+
+    // Restore saved ratings
+    Object.keys(state.ratings).forEach(key => {
+        if (key.startsWith(state.currentCompFunc)) {
+            const parts = key.split('_');
+            const sIdx = parseInt(parts[1]);
+            const cIdx = parseInt(parts[2]);
+            const val = state.ratings[key];
+            updateStarsVisual(sIdx, cIdx, val);
+        }
+    });
+}
+
+function rate(solIdx, critIdx, value) {
+    const key = `${state.currentCompFunc}_${solIdx}_${critIdx}`;
+    state.ratings[key] = value;
+    updateStarsVisual(solIdx, critIdx, value);
+    drawRadar();
+}
+
+function updateStarsVisual(solIdx, critIdx, value) {
+    const container = document.getElementById(`stars-${solIdx}-${critIdx}`);
+    if (!container) return;
+    const stars = container.querySelectorAll('span');
+    stars.forEach((s, i) => {
+        s.classList.toggle('filled', i < value);
+    });
+}
+
+function hoverRate(solIdx, critIdx, value) {
+    const container = document.getElementById(`stars-${solIdx}-${critIdx}`);
+    const stars = container.querySelectorAll('span');
+    stars.forEach((s, i) => {
+        s.style.color = i < value ? '#f39c12' : '#ddd';
+    });
+}
+
+function resetHover(solIdx, critIdx) {
+    const key = `${state.currentCompFunc}_${solIdx}_${critIdx}`;
+    const currentVal = state.ratings[key] || 0;
+    updateStarsVisual(solIdx, critIdx, currentVal);
+}
+
+/**
+ * DESSIN RADAR (Canvas natif)
+ */
+function drawRadar() {
+    const canvas = document.getElementById('radarChart');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    const cx = w / 2;
+    const cy = h / 2;
+    const r = Math.min(w, h) / 2 - 40;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const data = comparisonData[state.currentCompFunc];
+    const numAxes = data.criteria.length;
+    const angleStep = (Math.PI * 2) / numAxes;
+
+    // Dessiner la grille
+    ctx.strokeStyle = '#eee';
+    ctx.lineWidth = 1;
+    for (let level = 1; level <= 5; level++) {
+        ctx.beginPath();
+        const lr = (r * level) / 5;
+        for (let i = 0; i <= numAxes; i++) {
+            const angle = i * angleStep - Math.PI / 2;
+            const x = cx + lr * Math.cos(angle);
+            const y = cy + lr * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    // Axes et labels
+    ctx.fillStyle = '#333';
+    ctx.font = '12px Liberation Sans';
+    ctx.textAlign = 'center';
+    for (let i = 0; i < numAxes; i++) {
+        const angle = i * angleStep - Math.PI / 2;
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+        
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = '#ddd';
+        ctx.stroke();
+
+        const lx = cx + (r + 25) * Math.cos(angle);
+        const ly = cy + (r + 25) * Math.sin(angle);
+        ctx.fillText(data.criteria[i], lx, ly + 4);
+    }
+
+    // Dessiner les séries
+    const colors = ['#e74c3c', '#3498db', '#2ecc71'];
+    data.solutions.forEach((sol, sIdx) => {
+        ctx.beginPath();
+        ctx.strokeStyle = colors[sIdx];
+        ctx.lineWidth = 2;
+        ctx.fillStyle = colors[sIdx] + '33'; // Transparent fill
+
+        for (let cIdx = 0; cIdx <= numAxes; cIdx++) {
+            const actualIdx = cIdx % numAxes;
+            const key = `${state.currentCompFunc}_${sIdx}_${actualIdx}`;
+            const val = state.ratings[key] || 0;
+            const vr = (r * val) / 5;
+            const angle = actualIdx * angleStep - Math.PI / 2;
+            const x = cx + vr * Math.cos(angle);
+            const y = cy + vr * Math.sin(angle);
+            if (cIdx === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    });
+
+    // Légende
+    let ly = h - 20;
+    data.solutions.forEach((sol, i) => {
+        ctx.fillStyle = colors[i];
+        ctx.fillRect(10, ly - 10, 15, 15);
+        ctx.fillStyle = '#333';
+        ctx.textAlign = 'left';
+        ctx.fillText(sol, 30, ly + 2);
+        ly -= 20;
+    });
+}
+
+/**
+ * BILAN
+ */
+function updateBilan() {
+    document.getElementById('final-n1').textContent = `${state.scores.n1}/10`;
+    document.getElementById('final-n2').textContent = `${state.scores.n2}/8`;
+    document.getElementById('final-n3').textContent = `${state.scores.n3}/8`;
+}
+
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "5e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

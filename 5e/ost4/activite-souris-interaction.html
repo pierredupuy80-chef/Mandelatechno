@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Séquence 4 — La souris informatique et ses interactions</title>
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --orange: #ea580c;
+    --orange-light: #fff7ed;
+    --green: #16a34a;
+    --green-light: #f0fdf4;
+    --gray: #64748b;
+    --gray-light: #f1f5f9;
+    --dark: #1e293b;
+    --white: #ffffff;
+    --radius: 12px;
+    --shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--gray-light);
+    color: var(--dark);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER STICKY */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(135deg, var(--blue), #1d4ed8);
+    color: var(--white);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+  header h1 { font-size: 1.2rem; font-weight: 700; }
+  header .meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  header input {
+    padding: 6px 12px; border-radius: 8px; border: none;
+    font-size: 0.9rem; width: 140px;
+  }
+  #chrono {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px; border-radius: 8px;
+    font-weight: 700; font-size: 1rem;
+    min-width: 70px; text-align: center;
+  }
+
+  /* ONGLETS */
+  nav.tabs {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    padding: 12px 24px 0;
+    background: var(--white);
+    border-bottom: 2px solid var(--gray-light);
+  }
+  nav.tabs button {
+    padding: 10px 18px; border: none; background: transparent;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    border-radius: var(--radius) var(--radius) 0 0;
+    color: var(--gray); transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+  }
+  nav.tabs button:hover { background: var(--blue-light); color: var(--blue); }
+  nav.tabs button.active {
+    color: var(--blue); border-bottom-color: var(--blue);
+    background: var(--blue-light);
+  }
+
+  /* CONTENU */
+  main { max-width: 960px; margin: 0 auto; padding: 24px; }
+  .tab-content { display: none; animation: fadeIn 0.3s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* CARTES */
+  .card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 16px;
+    box-shadow: var(--shadow); border-left: 5px solid var(--gray);
+  }
+  .card.objectif { border-left-color: var(--orange); background: var(--orange-light); }
+  .card.consigne { border-left-color: var(--blue); background: var(--blue-light); }
+  .card.bilan { border-left-color: var(--green); background: var(--green-light); }
+  .card h3 { margin-bottom: 8px; font-size: 1.05rem; }
+  .card p, .card li { font-size: 0.95rem; }
+
+  /* QUIZ N1 */
+  .quiz-question {
+    background: var(--white); border-radius: var(--radius);
+    padding: 18px 22px; margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  .quiz-question h4 { margin-bottom: 10px; color: var(--blue); }
+  .quiz-options label {
+    display: block; padding: 8px 14px; margin: 4px 0;
+    border-radius: 8px; cursor: pointer; transition: background 0.2s;
+    border: 2px solid transparent;
+  }
+  .quiz-options label:hover { background: var(--blue-light); }
+  .quiz-options input { margin-right: 10px; }
+  .quiz-feedback {
+    margin-top: 10px; padding: 10px 14px; border-radius: 8px;
+    font-size: 0.9rem; display: none;
+  }
+  .quiz-feedback.correct { background: var(--green-light); color: var(--green); display: block; }
+  .quiz-feedback.wrong { background: #fef2f2; color: #dc2626; display: block; }
+  #quiz-score {
+    text-align: center; font-size: 1.3rem; font-weight: 700;
+    color: var(--blue); margin-top: 16px;
+  }
+
+  /* N2 CARTE INTERACTEURS */
+  #interactor-svg { width: 100%; max-width: 700px; margin: 0 auto; display: block; }
+  .bubble { cursor: pointer; transition: all 0.3s; }
+  .bubble:hover { filter: brightness(1.1); }
+  .bubble-text { font-size: 13px; font-weight: 600; fill: var(--dark); pointer-events: none; }
+  .arrow-line { stroke: var(--gray); stroke-width: 2; fill: none; opacity: 0.3; transition: all 0.5s; }
+  .arrow-line.active { stroke: var(--green); stroke-width: 3; opacity: 1; }
+  .interactor-panel {
+    display: none; background: var(--white); border-radius: var(--radius);
+    padding: 16px 20px; margin-top: 12px; box-shadow: var(--shadow);
+  }
+  .interactor-panel.visible { display: block; }
+  .interactor-btns { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .interactor-btns button {
+    padding: 8px 16px; border: 2px solid var(--blue); border-radius: 8px;
+    background: var(--white); color: var(--blue); font-weight: 600;
+    cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+  }
+  .interactor-btns button:hover, .interactor-btns button.selected {
+    background: var(--blue); color: var(--white);
+  }
+  .interactor-btns button.correct-choice { background: var(--green); border-color: var(--green); color: var(--white); }
+  .interactor-btns button.wrong-choice { background: #dc2626; border-color: #dc2626; color: var(--white); }
+
+  /* N3 DIAGRAMME */
+  .step-indicator {
+    display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .step-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.9rem;
+    background: var(--gray-light); color: var(--gray);
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--blue); color: var(--white); }
+  .step-dot.done { background: var(--green); color: var(--white); }
+  .step-panel { display: none; }
+  .step-panel.active { display: block; }
+  .chip-container { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .chip {
+    padding: 8px 16px; border-radius: 20px; border: 2px solid var(--blue);
+    background: var(--white); color: var(--blue); font-weight: 600;
+    cursor: pointer; transition: all 0.2s; font-size: 0.85rem; user-select: none;
+  }
+  .chip.selected { background: var(--blue); color: var(--white); }
+  .chip.locked { opacity: 0.5; cursor: default; }
+  #diagram-svg { width: 100%; max-width: 650px; margin: 16px auto; display: block; }
+  .diag-validate-btn {
+    display: inline-block; margin-top: 12px; padding: 10px 24px;
+    background: var(--green); color: var(--white); border: none;
+    border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.95rem;
+  }
+  .diag-validate-btn:hover { filter: brightness(1.1); }
+
+  /* N4 ANALYSE */
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+  }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .mouse-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 18px; box-shadow: var(--shadow); text-align: center;
+  }
+  .mouse-card h4 { margin-bottom: 8px; }
+  .mouse-card svg { width: 120px; height: 100px; margin: 8px auto; display: block; }
+  .rating-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .rating-table th, .rating-table td {
+    padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--gray-light);
+  }
+  .rating-table th { background: var(--blue-light); color: var(--blue); font-size: 0.85rem; }
+  .rating-table td:first-child { text-align: left; font-weight: 600; }
+  .star-rating { display: inline-flex; gap: 2px; cursor: pointer; }
+  .star-rating span {
+    font-size: 1.3rem; color: #cbd5e1; transition: color 0.15s; user-select: none;
+  }
+  .star-rating span.filled { color: #f59e0b; }
+  .star-rating span:hover, .star-rating span:hover ~ span { color: #fbbf24; }
+  #compare-chart { width: 100%; max-width: 500px; margin: 16px auto; display: block; }
+  .analysis-q {
+    background: var(--white); border-radius: var(--radius);
+    padding: 14px 18px; margin: 10px 0; box-shadow: var(--shadow);
+  }
+  .analysis-q textarea {
+    width: 100%; min-height: 60px; margin-top: 8px; padding: 10px;
+    border: 2px solid var(--gray-light); border-radius: 8px;
+    font-family: inherit; font-size: 0.9rem; resize: vertical;
+  }
+  .analysis-q textarea:focus { outline: none; border-color: var(--blue); }
+
+  /* BILAN */
+  .score-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px; margin: 16px 0;
+  }
+  .score-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 16px; text-align: center; box-shadow: var(--shadow);
+  }
+  .score-card .score-val { font-size: 2rem; font-weight: 800; color: var(--blue); }
+  .score-card .score-label { font-size: 0.85rem; color: var(--gray); margin-top: 4px; }
+  #mindmap-svg { width: 100%; max-width: 700px; margin: 16px auto; display: block; }
+  .print-btn {
+    display: inline-block; margin-top: 16px; padding: 12px 28px;
+    background: var(--blue); color: var(--white); border: none;
+    border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;
+  }
+  .print-btn:hover { filter: brightness(1.1); }
+  #bilan-text {
+    width: 100%; min-height: 100px; margin-top: 12px; padding: 12px;
+    border: 2px solid var(--gray-light); border-radius: 8px;
+    font-family: inherit; font-size: 0.95rem; resize: vertical;
+  }
+  #bilan-text:focus { outline: none; border-color: var(--blue); }
+
+  @media print {
+    header, nav.tabs, .print-btn, .interactor-btns button, .diag-validate-btn, .chip { break-inside: avoid; }
+    body { background: white; }
+    .tab-content { display: block !important; page-break-before: always; }
+  }
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <h1>🖱️ Séquence 4 — La souris &amp; ses interactions</h1>
+  <div class="meta">
+    <input type="text" id="binome" placeholder="Binôme / Nom" aria-label="Nom du binôme">
+    <input type="text" id="classe" placeholder="Classe" aria-label="Classe">
+    <div id="chrono">00:00</div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="active" data-tab="n1" role="tab">N1 Mémoriser</button>
+  <button data-tab="n2" role="tab">N2 Comprendre</button>
+  <button data-tab="n3" role="tab">N3 Appliquer</button>
+  <button data-tab="n4" role="tab">N4 Analyser</button>
+  <button data-tab="bilan" role="tab">Bilan</button>
+</nav>
+
+<main>
+
+<!-- ==================== N1 MÉMORISER ==================== -->
+<section id="n1" class="tab-content active">
+  <div class="card objectif">
+    <h3>🎯 Objectif</h3>
+    <p>Mémoriser le vocabulaire technique lié aux objets techniques et à leurs interactions.</p>
+  </div>
+  <div class="card consigne">
+    <h3>📋 Consigne</h3>
+    <p>Réponds aux 10 questions ci-dessous. Chaque bonne réponse vaut 1 point. Lis bien l'explication après chaque question !</p>
+  </div>
+  <div id="quiz-container"></div>
+  <div id="quiz-score"></div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST2a</span>Les interacteurs extérieurs : usagers, données, autres objets, éléments de l'environnement</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/7sy9CD6oA3xypzb" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113224-ost2a-les-interacteurs-exterieurs-usagers-donnees-autres-objets-elements-de-lenvironnement/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113224-ost2a-les-interacteurs-exterieurs-usagers-donnees-autres-objets-elements-de-lenvironnement/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/ZmigfNrUkFmaw9zp8" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST2b</span>Les modes de représentation : croquis, schéma, graphique, algorithme, modélisation</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/NwfE3ET2Swy7Mbk" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113218-ost2b-les-modes-de-representation-croquis-schema-graphique-algorithme-modelisation/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113218-ost2b-les-modes-de-representation-croquis-schema-graphique-algorithme-modelisation/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/RFDAXRjKqRbbaSr58" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST2c</span>Les contraintes : normes, cahier des charges, labels et certifications</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/ofospYFZEYkRD7K" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113217-ost2c-les-contraintes-prise-en-compte-des-exigences-issues-des-normes-ou-dun-cahier-des-charges-labels-et-certifications/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113217-ost2c-les-contraintes-prise-en-compte-des-exigences-issues-des-normes-ou-dun-cahier-des-charges-labels-et-certifications/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/nu4LYwQ4Jee88UEW6" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST2d</span>L'ergonomie liée à l'usage</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/X5mgeXoaMzrxg4W" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113215-ost2d-lergonomie-liee-a-lusage/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113215-ost2d-lergonomie-liee-a-lusage/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/DEoCqe51nzoSEMXE8" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- ==================== N2 COMPRENDRE ==================== -->
+<section id="n2" class="tab-content">
+  <div class="card objectif">
+    <h3>🎯 Objectif</h3>
+    <p>Identifier les interacteurs d'une souris informatique et comprendre leur rôle.</p>
+  </div>
+  <div class="card consigne">
+    <h3>📋 Consigne</h3>
+    <p>Clique sur chaque bulle autour de la souris, puis indique si c'est un <strong>interacteur direct</strong>, <strong>indirect</strong> ou un <strong>non-interacteur</strong>.</p>
+  </div>
+
+  <svg id="interactor-svg" viewBox="0 0 700 450" xmlns="http://www.w3.org/2000/svg">
+    <!-- Souris centrale -->
+    <rect x="290" y="160" width="120" height="130" rx="30" fill="#2563eb" opacity="0.15"/>
+    <ellipse cx="350" cy="225" rx="45" ry="55" fill="#2563eb"/>
+    <line x1="350" y1="175" x2="350" y2="210" stroke="white" stroke-width="2"/>
+    <rect x="340" y="185" width="20" height="18" rx="4" fill="white" opacity="0.6"/>
+    <text x="350" y="250" text-anchor="middle" fill="white" font-size="12" font-weight="700">SOURIS</text>
+
+    <!-- Flèches (seront activées) -->
+    <line class="arrow-line" id="arrow-0" x1="305" y1="195" x2="145" y2="90"/>
+    <line class="arrow-line" id="arrow-1" x1="395" y1="195" x2="555" y2="90"/>
+    <line class="arrow-line" id="arrow-2" x1="290" y1="240" x2="120" y2="280"/>
+    <line class="arrow-line" id="arrow-3" x1="410" y1="240" x2="580" y2="280"/>
+    <line class="arrow-line" id="arrow-4" x1="350" y1="290" x2="350" y2="390"/>
+    <line class="arrow-line" id="arrow-5" x1="310" y1="170" x2="200" y2="50"/>
+
+    <!-- Bulles interacteurs -->
+    <g class="bubble" data-id="0" onclick="selectBubble(0)">
+      <circle cx="120" cy="75" r="48" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+      <text class="bubble-text" x="120" y="72" text-anchor="middle">Main de</text>
+      <text class="bubble-text" x="120" y="88" text-anchor="middle">l'utilisateur</text>
+    </g>
+    <g class="bubble" data-id="1" onclick="selectBubble(1)">
+      <circle cx="580" cy="75" r="48" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+      <text class="bubble-text" x="580" y="72" text-anchor="middle">Ordinateur</text>
+      <text class="bubble-text" x="580" y="88" text-anchor="middle">(USB/BT)</text>
+    </g>
+    <g class="bubble" data-id="2" onclick="selectBubble(2)">
+      <circle cx="95" cy="290" r="48" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+      <text class="bubble-text" x="95" y="287" text-anchor="middle">Surface /</text>
+      <text class="bubble-text" x="95" y="303" text-anchor="middle">Tapis</text>
+    </g>
+    <g class="bubble" data-id="3" onclick="selectBubble(3)">
+      <circle cx="605" cy="290" r="48" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+      <text class="bubble-text" x="605" y="287" text-anchor="middle">Pilote</text>
+      <text class="bubble-text" x="605" y="303" text-anchor="middle">logiciel</text>
+    </g>
+    <g class="bubble" data-id="4" onclick="selectBubble(4)">
+      <circle cx="350" cy="410" r="48" fill="#fff7ed" stroke="#ea580c" stroke-width="2.5"/>
+      <text class="bubble-text" x="350" y="407" text-anchor="middle">Autre</text>
+      <text class="bubble-text" x="350" y="423" text-anchor="middle">périphérique</text>
+    </g>
+    <g class="bubble" data-id="5" onclick="selectBubble(5)">
+      <circle cx="175" cy="40" r="42" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+      <text class="bubble-text" x="175" y="37" text-anchor="middle">Lumière</text>
+      <text class="bubble-text" x="175" y="53" text-anchor="middle">ambiante</text>
+    </g>
+  </svg>
+
+  <div id="interactor-panel" class="interactor-panel">
+    <h4 id="panel-title"></h4>
+    <p id="panel-desc" style="font-size:0.9rem;color:var(--gray);margin-bottom:8px;"></p>
+    <div class="interactor-btns" id="panel-btns"></div>
+    <div id="panel-feedback" class="quiz-feedback" style="margin-top:10px;"></div>
+  </div>
+
+  <div id="n2-progress" style="text-align:center;margin-top:16px;font-weight:700;color:var(--blue);"></div>
+</section>
+
+<!-- ==================== N3 APPLIQUER ==================== -->
+<section id="n3" class="tab-content">
+  <div class="card objectif">
+    <h3>🎯 Objectif</h3>
+    <p>Construire étape par étape un diagramme de cas d'utilisation simplifié pour une souris.</p>
+  </div>
+  <div class="card consigne">
+    <h3>📋 Consigne</h3>
+    <p>Suis les 3 étapes guidées. À chaque étape, sélectionne les éléments appropriés. Le diagramme se construit sous tes yeux !</p>
+  </div>
+
+  <div class="step-indicator" id="step-dots">
+    <div class="step-dot active">1</div>
+    <div class="step-dot">2</div>
+    <div class="step-dot">3</div>
+  </div>
+
+  <!-- Étape 1 -->
+  <div class="step-panel active" id="step-1">
+    <div class="card" style="border-left-color:var(--blue);">
+      <h3>Étape 1 — Identifier les acteurs</h3>
+      <p>Qui utilise ou interagit avec la souris ? Clique sur les bons acteurs.</p>
+      <div class="chip-container" id="actors-chips"></div>
+      <button class="diag-validate-btn" onclick="validateStep1()">Valider ✓</button>
+      <div id="step1-feedback" class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- Étape 2 -->
+  <div class="step-panel" id="step-2">
+    <div class="card" style="border-left-color:var(--blue);">
+      <h3>Étape 2 — Lister les cas d'utilisation</h3>
+      <p>Que peut-on faire avec une souris ? Sélectionne toutes les actions possibles.</p>
+      <div class="chip-container" id="usecases-chips"></div>
+      <button class="diag-validate-btn" onclick="validateStep2()">Valider ✓</button>
+      <div id="step2-feedback" class="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- Étape 3 -->
+  <div class="step-panel" id="step-3">
+    <div class="card" style="border-left-color:var(--blue);">
+      <h3>Étape 3 — Relier acteurs et cas d'utilisation</h3>
+      <p>Observe le diagramme qui s'est construit. Chaque acteur est relié aux cas d'utilisation qu'il réalise.</p>
+      <svg id="diagram-svg" viewBox="0 0 650 400" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="step3-feedback" class="quiz-feedback"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== N4 ANALYSER ==================== -->
+<section id="n4" class="tab-content">
+  <div class="card objectif">
+    <h3>🎯 Objectif</h3>
+    <p>Analyser les choix de conception d'une souris ergonomique par rapport à une souris classique.</p>
+  </div>
+  <div class="card consigne">
+    <h3>📋 Consigne</h3>
+    <p>Note chaque critère de 1 à 5 étoiles pour les deux souris, puis réponds aux questions d'analyse.</p>
+  </div>
+
+  <div class="compare-grid">
+    <div class="mouse-card">
+      <h4>🖱️ Souris Classique</h4>
+      <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="55" rx="35" ry="40" fill="#94a3b8"/>
+        <line x1="60" y1="20" x2="60" y2="45" stroke="white" stroke-width="2"/>
+        <rect x="52" y="28" width="16" height="12" rx="3" fill="white" opacity="0.6"/>
+      </svg>
+      <p style="font-size:0.85rem;color:var(--gray);">Forme plate symétrique, usage standard</p>
+    </div>
+    <div class="mouse-card">
+      <h4>🖐️ Souris Ergonomique Verticale</h4>
+      <svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40,80 Q25,50 35,25 Q50,5 75,10 Q95,18 95,45 Q92,75 75,88 Z" fill="#ea580c" opacity="0.8"/>
+        <rect x="52" y="22" width="14" height="10" rx="3" fill="white" opacity="0.6"/>
+      </svg>
+      <p style="font-size:0.85rem;color:var(--gray);">Poignée verticale, position naturelle du poignet</p>
+    </div>
+  </div>
+
+  <table class="rating-table">
+    <thead>
+      <tr><th>Critère</th><th>Souris Classique</th><th>Souris Ergonomique</th></tr>
+    </thead>
+    <tbody id="rating-body"></tbody>
+  </table>
+
+  <svg id="compare-chart" viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <div class="analysis-q">
+    <h4>❓ Pourquoi la souris ergonomique a-t-elle cette forme inclinée ?</h4>
+    <textarea placeholder="Ta réponse ici…"></textarea>
+  </div>
+  <div class="analysis-q">
+    <h4>❓ Quel compromis a été fait sur la souris ergonomique (précision vs confort) ?</h4>
+    <textarea placeholder="Ta réponse ici…"></textarea>
+  </div>
+  <div class="analysis-q">
+    <h4>❓ Pour quel public cible chaque souris est-elle conçue ? Cite des contraintes (normes, cahier des charges).</h4>
+    <textarea placeholder="Ta réponse ici…"></textarea>
+  </div>
+</section>
+
+<!-- ==================== BILAN ==================== -->
+<section id="bilan" class="tab-content">
+  <div class="card bilan">
+    <h3>📊 Bilan de la séquence</h3>
+    <p>Voici le récapitulatif de tes résultats et des concepts clés.</p>
+  </div>
+
+  <div class="score-grid" id="score-grid">
+    <div class="score-card"><div class="score-val" id="score-n1">-</div><div class="score-label">N1 Mémoriser</div></div>
+    <div class="score-card"><div class="score-val" id="score-n2">-</div><div class="score-label">N2 Comprendre</div></div>
+    <div class="score-card"><div class="score-val" id="score-n3">-</div><div class="score-label">N3 Appliquer</div></div>
+    <div class="score-card"><div class="score-val" id="score-n4">-</div><div class="score-label">N4 Analyser</div></div>
+  </div>
+
+  <div class="card" style="border-left-color:var(--orange);">
+    <h3>🧠 Carte mentale des concepts clés</h3>
+    <svg id="mindmap-svg" viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+      <rect x="260" y="140" width="180" height="60" rx="16" fill="#2563eb"/>
+      <text x="350" y="176" text-anchor="middle" fill="white" font-size="15" font-weight="700">SOURIS</text>
+
+      <line x1="260" y1="160" x2="130" y2="80" stroke="#ea580c" stroke-width="2"/>
+      <rect x="40" y="55" width="140" height="45" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+      <text x="110" y="83" text-anchor="middle" fill="#ea580c" font-size="12" font-weight="700">Interacteurs</text>
+
+      <line x1="440" y1="160" x2="570" y2="80" stroke="#16a34a" stroke-width="2"/>
+      <rect x="520" y="55" width="140" height="45" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+      <text x="590" y="83" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="700">Contraintes</text>
+
+      <line x1="260" y1="190" x2="130" y2="270" stroke="#2563eb" stroke-width="2"/>
+      <rect x="30" y="250" width="160" height="45" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="110" y="278" text-anchor="middle" fill="#2563eb" font-size="12" font-weight="700">Diagrammes</text>
+
+      <line x1="440" y1="190" x2="570" y2="270" stroke="#7c3aed" stroke-width="2"/>
+      <rect x="510" y="250" width="160" height="45" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+      <text x="590" y="278" text-anchor="middle" fill="#7c3aed" font-size="12" font-weight="700">Ergonomie</text>
+
+      <!-- Sous-concepts -->
+      <text x="110" y="115" text-anchor="middle" fill="#64748b" font-size="10">Main, Surface, USB,</text>
+      <text x="110" y="128" text-anchor="middle" fill="#64748b" font-size="10">Logiciel, Environnement</text>
+
+      <text x="590" y="115" text-anchor="middle" fill="#64748b" font-size="10">Normes, CdC,</text>
+      <text x="590" y="128" text-anchor="middle" fill="#64748b" font-size="10">Labels, Prix</text>
+
+      <text x="110" y="310" text-anchor="middle" fill="#64748b" font-size="10">Contexte, Cas d'usage,</text>
+      <text x="110" y="323" text-anchor="middle" fill="#64748b" font-size="10">Exigences</text>
+
+      <text x="590" y="310" text-anchor="middle" fill="#64748b" font-size="10">Confort, Précision,</text>
+      <text x="590" y="323" text-anchor="middle" fill="#64748b" font-size="10">Adaptabilité, Usage</text>
+    </svg>
+  </div>
+
+  <div class="card" style="border-left-color:var(--blue);">
+    <h3>✏️ Ce que je retiens</h3>
+    <textarea id="bilan-text" placeholder="Écris ici ce que tu as appris dans cette séquence…"></textarea>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimer mon bilan</button>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<script>
+/* ========== CHRONO ========== */
+(function(){
+  const el = document.getElementById('chrono');
+  let sec = 0;
+  setInterval(() => {
+    sec++;
+    const m = String(Math.floor(sec/60)).padStart(2,'0');
+    const s = String(sec%60).padStart(2,'0');
+    el.textContent = m+':'+s;
+  }, 1000);
+})();
+
+/* ========== ONGLETS ========== */
+document.querySelectorAll('nav.tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab === 'bilan') updateBilan();
+  });
+});
+
+/* ========== SCORES GLOBALS ========== */
+const scores = { n1: 0, n2: 0, n3: 0, n4: 0 };
+
+/* ========== N1 QUIZ ========== */
+const quizData = [
+  { q: "Qu'est-ce qu'un interacteur ?", opts: ["Un objet qui ne sert à rien", "Un élément extérieur qui interagit avec l'objet technique", "Un composant interne de la souris", "Un logiciel de dessin"], correct: 1, expl: "Un interacteur est tout élément extérieur (personne, objet, environnement) qui échange des informations ou de l'énergie avec l'objet technique." },
+  { q: "Lequel est un interacteur DIRECT de la souris ?", opts: ["La lumière ambiante", "La main de l'utilisateur", "Le ventilateur du PC", "L'imprimante"], correct: 1, expl: "La main touche directement la souris et lui transmet des mouvements et des clics : c'est un interacteur direct." },
+  { q: "Que signifie « ergonomie » pour une souris ?", opts: ["Sa couleur", "Son prix", "L'adaptation de sa forme à l'usage et au confort de l'utilisateur", "Sa vitesse de connexion"], correct: 2, expl: "L'ergonomie concerne la conception adaptée au corps humain et à l'usage pour réduire la fatigue et améliorer le confort." },
+  { q: "Qu'est-ce qu'une norme technique ?", opts: ["Une marque commerciale", "Une règle ou spécification technique reconnue (ex : USB, Bluetooth)", "Un type de souris", "Un logiciel"], correct: 1, expl: "Une norme est un référentiel technique commun qui garantit la compatibilité et la sécurité (ex : norme USB, CE)." },
+  { q: "À quoi sert un cahier des charges ?", opts: ["À décorer l'emballage", "À définir les exigences et contraintes que doit respecter l'objet technique", "À lister les couleurs disponibles", "À donner le prix"], correct: 1, expl: "Le cahier des charges précise les fonctions attendues, les contraintes et les critères de performance avant la conception." },
+  { q: "Quel capteur permet à la souris de détecter le mouvement ?", opts: ["Un microphone", "Un capteur optique ou laser", "Une caméra thermique", "Un gyroscope uniquement"], correct: 1, expl: "Le capteur optique/laser éclaire la surface et analyse les micro-déplacements pour traduire le mouvement en coordonnées." },
+  { q: "Que représente un diagramme de contexte ?", opts: ["Une photo de la souris", "Les interactions entre l'objet et son environnement extérieur", "Le schéma électronique interne", "Le manuel utilisateur"], correct: 1, expl: "Le diagramme de contexte montre l'objet au centre et tous les interacteurs extérieurs avec lesquels il échange." },
+  { q: "La surface (tapis de souris) est un interacteur…", opts: ["Direct", "Indirect", "Inexistant", "Principal"], correct: 0, expl: "La surface est en contact direct avec le capteur de la souris : elle influence directement le fonctionnement → interacteur direct." },
+  { q: "Quel est un exemple de contrainte normative pour une souris ?", opts: ["Être disponible en rose", "Respecter la norme USB pour la connectique", "Avoir un long câble", "Être vendue en supermarché"], correct: 1, expl: "La norme USB impose des spécifications électriques et mécaniques précises pour garantir la compatibilité avec tout ordinateur." },
+  { q: "Dans un diagramme de cas d'utilisation, un « cas d'utilisation » représente…", opts: ["Un défaut de fabrication", "Une action ou fonction que l'utilisateur peut réaliser avec l'objet", "Le prix de vente", "La date de fabrication"], correct: 1, expl: "Un cas d'utilisation décrit une fonctionnalité observable du point de vue de l'utilisateur (ex : cliquer, déplacer, scroller)." }
+];
+
+let quizAnswered = 0;
+let quizCorrect = 0;
+
+(function buildQuiz(){
+  const container = document.getElementById('quiz-container');
+  quizData.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = `<h4>Question ${i+1}/${quizData.length} — ${item.q}</h4>
+      <div class="quiz-options" id="qopt-${i}">
+        ${item.opts.map((o,j) => `<label><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${i}"></div>`;
+    container.appendChild(div);
+
+    div.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
+      inp.addEventListener('change', () => {
+        const fb = document.getElementById(`qfb-${i}`);
+        if(fb.classList.contains('correct') || fb.classList.contains('wrong')) return;
+        quizAnswered++;
+        const val = parseInt(inp.value);
+        if(val === item.correct) {
+          quizCorrect++;
+          fb.className = 'quiz-feedback correct';
+          fb.innerHTML = `✅ Correct ! ${item.expl}`;
+        } else {
+          fb.className = 'quiz-feedback wrong';
+          fb.innerHTML = `❌ Incorrect. ${item.expl}`;
+        }
+        scores.n1 = quizCorrect;
+        document.getElementById('quiz-score').textContent = `Score : ${quizCorrect} / ${quizData.length}`;
+      });
+    });
+  });
+})();
+
+/* ========== N2 INTERACTEURS ========== */
+const interactorData = [
+  { name: "Main de l'utilisateur", type: "direct", desc: "L'utilisateur touche et manipule directement la souris.", expl: "La main applique des forces mécaniques (clics, déplacement) directement sur la souris. C'est l'interacteur principal et direct." },
+  { name: "Ordinateur (USB/Bluetooth)", type: "direct", desc: "La souris envoie des données numériques à l'ordinateur.", expl: "La connexion USB ou Bluetooth transporte les signaux de mouvement et de clic vers l'ordinateur. C'est un interacteur direct par échange de données." },
+  { name: "Surface / Tapis", type: "direct", desc: "La surface sous la souris influence le capteur optique.", expl: "Le capteur optique lit les micro-reliefs de la surface pour calculer le déplacement. Contact physique direct → interacteur direct." },
+  { name: "Pilote logiciel", type: "indirect", desc: "Le pilote interprète les signaux de la souris dans le système.", expl: "Le pilote (driver) est un programme qui traduit les signaux bruts en actions compréhensibles par le système. Il n'y a pas de contact physique → interacteur indirect." },
+  { name: "Autre périphérique", type: "indirect", desc: "Clavier, écran… interagissent via l'ordinateur, pas directement.", expl: "Les autres périphériques communiquent avec la souris uniquement par l'intermédiaire de l'ordinateur. Interaction médiatisée → indirecte." },
+  { name: "Lumière ambiante", type: "non", desc: "La lumière extérieure n'influence pas le fonctionnement normal.", expl: "Une souris optique fonctionne avec sa propre source lumineuse (LED/laser). La lumière ambiante n'a pas d'effet significatif → non-interacteur." }
+];
+
+let currentBubble = null;
+let n2Validated = new Set();
+
+function selectBubble(id) {
+  if(n2Validated.has(id)) return;
+  currentBubble = id;
+  const data = interactorData[id];
+  const panel = document.getElementById('interactor-panel');
+  document.getElementById('panel-title').textContent = data.name;
+  document.getElementById('panel-desc').textContent = data.desc;
+  document.getElementById('panel-feedback').className = 'quiz-feedback';
+  document.getElementById('panel-feedback').innerHTML = '';
+
+  const btns = document.getElementById('panel-btns');
+  btns.innerHTML = '';
+  ['direct','indirect','non'].forEach(type => {
+    const labels = { direct: 'Interacteur Direct', indirect: 'Interacteur Indirect', non: 'Non-interacteur' };
+    const b = document.createElement('button');
+    b.textContent = labels[type];
+    b.onclick = () => validateInteractor(id, type, b);
+    btns.appendChild(b);
+  });
+  panel.classList.add('visible');
+}
+
+function validateInteractor(id, chosen, btnEl) {
+  if(n2Validated.has(id)) return;
+  const data = interactorData[id];
+  const fb = document.getElementById('panel-feedback');
+  const allBtns = document.querySelectorAll('#panel-btns button');
+
+  if(chosen === data.type) {
+    fb.className = 'quiz-feedback correct';
+    fb.innerHTML = `✅ Correct ! ${data.expl}`;
+    btnEl.classList.add('correct-choice');
+    document.getElementById(`arrow-${id}`).classList.add('active');
+    n2Validated.add(id);
+    scores.n2 = n2Validated.size;
+  } else {
+    fb.className = 'quiz-feedback wrong';
+    fb.innerHTML = `❌ Non, ce n'est pas la bonne classification. Réessaie !`;
+    btnEl.classList.add('wrong-choice');
+    setTimeout(() => btnEl.classList.remove('wrong-choice'), 1200);
+  }
+  document.getElementById('n2-progress').textContent = `Progression : ${n2Validated.size} / ${interactorData.length} interacteurs identifiés`;
+}
+
+/* ========== N3 DIAGRAMME ========== */
+const actorsList = [
+  { id: 'user', label: 'Utilisateur', correct: true },
+  { id: 'pc', label: 'Ordinateur', correct: true },
+  { id: 'printer', label: 'Imprimante', correct: false },
+  { id: 'surface', label: 'Surface/Tapis', correct: true },
+  { id: 'lamp', label: 'Lampe', correct: false }
+];
+const useCasesList = [
+  { id: 'click', label: 'Cliquer', correct: true },
+  { id: 'move', label: 'Déplacer le curseur', correct: true },
+  { id: 'scroll', label: 'Scroller', correct: true },
+  { id: 'rightclick', label: 'Clic droit', correct: true },
+  { id: 'print', label: 'Imprimer', correct: false },
+  { id: 'type', label: 'Écrire du texte', correct: false },
+  { id: 'dblclick', label: 'Double-cliquer', correct: true }
+];
+
+let selectedActors = new Set();
+let selectedUC = new Set();
+let step3Done = false;
+
+function buildChips(containerId, items, selectionSet, toggleFn) {
+  const c = document.getElementById(containerId);
+  items.forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = item.label;
+    chip.onclick = () => {
+      if(selectionSet.has(item.id)) { selectionSet.delete(item.id); chip.classList.remove('selected'); }
+      else { selectionSet.add(item.id); chip.classList.add('selected'); }
+    };
+    c.appendChild(chip);
+  });
+}
+buildChips('actors-chips', actorsList, selectedActors);
+buildChips('usecases-chips', useCasesList, selectedUC);
+
+function setStep(n) {
+  document.querySelectorAll('.step-dot').forEach((d,i) => {
+    d.classList.remove('active','done');
+    if(i < n-1) d.classList.add('done');
+    if(i === n-1) d.classList.add('active');
+  });
+  document.querySelectorAll('.step-panel').forEach((p,i) => {
+    p.classList.toggle('active', i === n-1);
+  });
+}
+
+function validateStep1() {
+  const correct = actorsList.filter(a=>a.correct).map(a=>a.id);
+  const ok = correct.every(c => selectedActors.has(c)) && [...selectedActors].every(s => correct.includes(s));
+  const fb = document.getElementById('step1-feedback');
+  if(ok) {
+    fb.className = 'quiz-feedback correct';
+    fb.textContent = '✅ Bravo ! Les acteurs sont bien identifiés.';
+    scores.n3 = Math.max(scores.n3, 1);
+    setTimeout(() => setStep(2), 1000);
+  } else {
+    fb.className = 'quiz-feedback wrong';
+    fb.textContent = '❌ Attention : sélectionne uniquement les vrais acteurs de la souris (pas l\'imprimante ni la lampe).';
+  }
+}
+
+function validateStep2() {
+  const correct = useCasesList.filter(u=>u.correct).map(u=>u.id);
+  const ok = correct.every(c => selectedUC.has(c)) && [...selectedUC].every(s => correct.includes(s));
+  const fb = document.getElementById('step2-feedback');
+  if(ok) {
+    fb.className = 'quiz-feedback correct';
+    fb.textContent = '✅ Excellent ! Passons à la construction du diagramme.';
+    scores.n3 = Math.max(scores.n3, 2);
+    setTimeout(() => { setStep(3); drawDiagram(); }, 1000);
+  } else {
+    fb.className = 'quiz-feedback wrong';
+    fb.textContent = '❌ Attention : « Imprimer » et « Écrire du texte » ne sont pas des cas d\'utilisation de la souris.';
+  }
+}
+
+function drawDiagram() {
+  const svg = document.getElementById('diagram-svg');
+  const validActors = actorsList.filter(a => selectedActors.has(a));
+  const validUC = useCasesList.filter(u => selectedUC.has(u));
+
+  // Système central
+  let html = `<rect x="250" y="150" width="150" height="100" rx="20" fill="#2563eb" opacity="0.15" stroke="#2563eb" stroke-width="2"/>`;
+  html += `<text x="325" y="205" text-anchor="middle" fill="#2563eb" font-size="14" font-weight="700">SOURIS</text>`;
+
+  // Acteurs à gauche
+  const actorSpacing = 300 / Math.max(validActors.length, 1);
+  validActors.forEach((a, i) => {
+    const y = 50 + i * actorSpacing;
+    html += `<circle cx="70" cy="${y}" r="28" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>`;
+    html += `<text x="70" y="${y+4}" text-anchor="middle" fill="#ea580c" font-size="10" font-weight="700">${a.label.split('/')[0]}</text>`;
+    // Lien vers système
+    html += `<line x1="98" y1="${y}" x2="250" y2="200" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,3"/>`;
+    // Liens vers cas d'utilisation
+    validUC.forEach((u, j) => {
+      const uy = 40 + j * (320 / Math.max(validUC.length, 1));
+      html += `<line x1="98" y1="${y}" x2="430" y2="${uy}" stroke="#dbeafe" stroke-width="1" opacity="0.5"/>`;
+    });
+  });
+
+  // Cas d'utilisation à droite
+  const ucSpacing = 320 / Math.max(validUC.length, 1);
+  validUC.forEach((u, i) => {
+    const y = 40 + i * ucSpacing;
+    html += `<ellipse cx="510" cy="${y}" rx="80" ry="18" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>`;
+    html += `<text x="510" y="${y+4}" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">${u.label}</text>`;
+    // Lien depuis système
+    html += `<line x1="400" y1="200" x2="430" y2="${y}" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6,3"/>`;
+  });
+
+  svg.innerHTML = html;
+
+  const fb = document.getElementById('step3-feedback');
+  fb.className = 'quiz-feedback correct';
+  fb.innerHTML = '✅ Diagramme construit avec succès ! Les acteurs (à gauche) sont reliés aux cas d\'utilisation (à droite) via le système « Souris » au centre.';
+  scores.n3 = 3;
+  step3Done = true;
+}
+
+/* ========== N4 ANALYSE ========== */
+const criteria = [
+  { label: 'Confort longue durée', classic: 0, ergo: 0 },
+  { label: 'Précision du curseur', classic: 0, ergo: 0 },
+  { label: 'Facilité de prise en main', classic: 0, ergo: 0 },
+  { label: 'Adaptabilité (gaucher/droitier)', classic: 0, ergo: 0 },
+  { label: 'Prix accessible', classic: 0, ergo: 0 },
+  { label: 'Esthétique / Design', classic: 0, ergo: 0 },
+  { label: 'Réduction fatigue musculaire', classic: 0, ergo: 0 }
+];
+
+function buildRatingTable() {
+  const tbody = document.getElementById('rating-body');
+  criteria.forEach((crit, ci) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${crit.label}</td>
+      <td><div class="star-rating" id="sr-c-${ci}">${makeStars(ci,'c')}</div></td>
+      <td><div class="star-rating" id="sr-e-${ci}">${makeStars(ci,'e')}</div></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function makeStars(ci, type) {
+  let html = '';
+  for(let s = 1; s <= 5; s++) {
+    html += `<span data-ci="${ci}" data-type="${type}" data-val="${s}" onclick="rateStar(this)">★</span>`;
+  }
+  return html;
+}
+
+function rateStar(el) {
+  const ci = parseInt(el.dataset.ci);
+  const type = el.dataset.type;
+  const val = parseInt(el.dataset.val);
+  if(type === 'c') criteria[ci].classic = val;
+  else criteria[ci].ergo = val;
+
+  // Update visuals
+  const container = document.getElementById(`sr-${type}-${ci}`);
+  container.querySelectorAll('span').forEach(sp => {
+    sp.classList.toggle('filled', parseInt(sp.dataset.val) <= val);
+  });
+
+  updateChart();
+  updateN4Score();
+}
+
+function updateChart() {
+  const svg = document.getElementById('compare-chart');
+  const barH = 18;
+  const gap = 8;
+  const startY = 30;
+  const maxW = 200;
+  let html = '';
+
+  // Legend
+  html += `<rect x="140" y="5" width="14" height="14" rx="3" fill="#94a3b8"/>`;
+  html += `<text x="160" y="16" fill="#64748b" font-size="11">Classique</text>`;
+  html += `<rect x="260" y="5" width="14" height="14" rx="3" fill="#ea580c"/>`;
+  html += `<text x="280" y="16" fill="#64748b" font-size="11">Ergonomique</text>`;
+
+  criteria.forEach((crit, i) => {
+    const y = startY + i * (barH * 2 + gap);
+    // Label
+    const shortLabel = crit.label.length > 22 ? crit.label.substring(0,20)+'…' : crit.label;
+    html += `<text x="5" y="${y + barH - 3}" fill="#1e293b" font-size="10" font-weight="600">${shortLabel}</text>`;
+    // Classic bar
+    const cw = (crit.classic / 5) * maxW;
+    html += `<rect x="140" y="${y}" width="${cw}" height="${barH}" rx="4" fill="#94a3b8" opacity="0.8"/>`;
+    if(crit.classic > 0) html += `<text x="${142 + cw + 4}" y="${y + barH - 4}" fill="#64748b" font-size="10">${crit.classic}/5</text>`;
+    // Ergo bar
+    const ew = (crit.ergo / 5) * maxW;
+    html += `<rect x="140" y="${y + barH + 2}" width="${ew}" height="${barH}" rx="4" fill="#ea580c" opacity="0.8"/>`;
+    if(crit.ergo > 0) html += `<text x="${142 + ew + 4}" y="${y + barH + 2 + barH - 4}" fill="#64748b" font-size="10">${crit.ergo}/5</text>`;
+  });
+
+  svg.innerHTML = html;
+}
+
+function updateN4Score() {
+  const totalRated = criteria.reduce((acc, c) => acc + (c.classic > 0 ? 1 : 0) + (c.ergo > 0 ? 1 : 0), 0);
+  const maxRateable = criteria.length * 2;
+  // Score basé sur le taux de remplissage + réponses aux questions
+  const textareas = document.querySelectorAll('#n4 textarea');
+  let answeredTexts = 0;
+  textareas.forEach(t => { if(t.value.trim().length > 10) answeredTexts++; });
+  const ratingPart = Math.min(totalRated / maxRateable, 1) * 2;
+  const textPart = Math.min(answeredTexts / 3, 1) * 1;
+  scores.n4 = Math.round((ratingPart + textPart) * 10) / 10;
+}
+
+// Listen to textareas for N4 score
+document.querySelectorAll('#n4 textarea').forEach(t => {
+  t.addEventListener('input', updateN4Score);
+});
+
+buildRatingTable();
+updateChart();
+
+/* ========== BILAN ========== */
+function updateBilan() {
+  document.getElementById('score-n1').textContent = `${scores.n1}/${quizData.length}`;
+  document.getElementById('score-n2').textContent = `${scores.n2}/${interactorData.length}`;
+  document.getElementById('score-n3').textContent = `${scores.n3}/3`;
+  document.getElementById('score-n4').textContent = scores.n4 > 0 ? `${scores.n4}/3` : '-/3';
+}
+
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "5e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>

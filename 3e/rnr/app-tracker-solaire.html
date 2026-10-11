@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tracker Solaire — Simulateur et Programmeur</title>
+<style>
+:root{
+  --bleu:#1f4e79; --bleu2:#2e75b6; --bleuf:#dce9f7; --bleuf2:#f2f7fd;
+  --orange:#d97706; --orangeF:#fdf0dd; --vert:#2e7d32; --vertF:#e6f4e7;
+  --gris:#5b6b7b; --bord:#c9d6e4; --rouge:#b3261e;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Liberation Sans","DejaVu Sans",Arial,Helvetica,sans-serif;
+  font-size:16px; line-height:1.45; color:#12212e; background:#f4f8fc;
+}
+header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px solid var(--bleu2);
+  padding:8px 14px 6px; box-shadow:0 2px 6px rgba(31,78,121,.08)}
+.ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+h1{font-size:1.18rem; margin:0; color:var(--bleu)}
+h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
+.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
+.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
+.onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
+  color:var(--bleu); border-radius:999px; cursor:pointer}
+.onglets button:hover{background:var(--bleuf)}
+.onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
+section{display:none}
+section.actif{display:block}
+h2{font-size:1.05rem; color:var(--bleu); margin:.2rem 0 .5rem; border-bottom:2px solid var(--bleuf); padding-bottom:4px}
+h3{font-size:.95rem; color:var(--bleu); margin:.8rem 0 .3rem}
+p{margin:.4rem 0}
+.grille{display:grid; grid-template-columns:minmax(330px,1.35fr) minmax(310px,1fr); gap:14px; align-items:start}
+@media (max-width:980px){.grille{grid-template-columns:1fr}}
+.carte{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:10px 12px; margin-bottom:12px}
+.carte.consigne{border-left:5px solid var(--bleu2)}
+.carte.objectif{background:var(--bleuf2); border-left:5px solid var(--orange)}
+.carte.bilan{background:var(--vertF); border-left:5px solid var(--vert)}
+canvas{width:100%; height:auto; display:block; background:#fff; border:1px solid var(--bord);
+  border-radius:8px; touch-action:none}
+.legende{display:flex; gap:14px; flex-wrap:wrap; font-size:.82rem; color:var(--gris); margin-top:6px}
+.puce{display:inline-block; width:.75em; height:.75em; border-radius:50%; margin-right:4px; vertical-align:baseline}
+.champ{display:block; margin:.6rem 0}
+.champ > span{display:block; font-size:.85rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+input[type=range]{width:100%}
+select,input[type=text],input[type=number],textarea{font:inherit; font-size:.88rem; padding:4px 6px;
+  border:1px solid var(--bord); border-radius:6px; background:#fff; color:inherit}
+textarea{width:100%; min-height:3.2rem; resize:vertical}
+table{border-collapse:collapse; width:100%; font-size:.85rem}
+th,td{border:1px solid var(--bord); padding:3px 6px; text-align:left}
+th{background:var(--bleuf); color:var(--bleu)}
+td.n{text-align:right; font-variant-numeric:tabular-nums}
+.boutons{display:flex; flex-wrap:wrap; gap:6px; margin:.55rem 0}
+button.act{font:inherit; font-size:.85rem; padding:6px 10px; border:1px solid var(--bleu2); background:var(--bleu2);
+  color:#fff; border-radius:7px; cursor:pointer}
+button.act:hover{background:var(--bleu)}
+button.act.sec{background:#fff; color:var(--bleu)}
+button.act.sec:hover{background:var(--bleuf)}
+button.act:disabled{opacity:.45; cursor:default}
+.mesure{font-size:.88rem; background:var(--bleuf2); border:1px dashed var(--bleu2); border-radius:8px; padding:6px 9px; margin:.5rem 0}
+.mesure b{color:var(--bleu)}
+.verdict{font-size:1rem; font-weight:bold}
+.erreur{color:var(--rouge); font-weight:bold}
+.ok{color:var(--vert); font-weight:bold}
+details{margin:.5rem 0; font-size:.87rem}
+summary{cursor:pointer; color:var(--bleu2); font-weight:bold}
+.tag{display:inline-block; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--bleuf); color:var(--bleu); border-radius:4px; padding:1px 6px; vertical-align:middle}
+ol{padding-left:1.3rem}
+ol li{margin:.25rem 0}
+.q{border-left:3px solid var(--orange); padding-left:9px; margin:.8rem 0}
+.q p.enonce{margin:.1rem 0 .3rem; font-weight:bold; font-size:.9rem}
+.grille2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+@media (max-width:700px){.grille2{grid-template-columns:1fr}}
+.barre{height:8px; background:var(--bleuf); border-radius:4px; overflow:hidden; margin-top:4px}
+.barre > i{display:block; height:100%; background:var(--vert)}
+.note{font-size:.8rem; color:var(--gris)}
+
+/* Quiz styles */
+.quiz-question{margin:.8rem 0; padding:8px; background:var(--bleuf2); border-radius:8px}
+.quiz-question label{display:block; margin:3px 0; cursor:pointer; font-size:.88rem}
+.quiz-question input[type=radio]{margin-right:6px}
+.quiz-feedback{font-size:.85rem; margin-top:4px; padding:4px 8px; border-radius:4px}
+.quiz-feedback.correct{background:var(--vertF); color:var(--vert)}
+.quiz-feedback.wrong{background:#fde8e8; color:var(--rouge)}
+
+/* Matching game */
+.match-container{display:flex; gap:12px; flex-wrap:wrap; margin:.5rem 0}
+.match-col{flex:1; min-width:140px}
+.match-item{padding:6px 10px; margin:4px 0; background:#fff; border:2px solid var(--bord); border-radius:6px;
+  cursor:pointer; font-size:.85rem; transition:all .2s}
+.match-item.selected{border-color:var(--bleu2); background:var(--bleuf)}
+.match-item.matched{border-color:var(--vert); background:var(--vertF); cursor:default}
+.match-item.wrong{border-color:var(--rouge); background:#fde8e8}
+
+/* Code editor */
+.code-editor{font-family:"Courier New",monospace; font-size:.88rem; background:#1e1e2e; color:#cdd6f4;
+  border-radius:8px; padding:10px; min-height:200px; white-space:pre-wrap; line-height:1.6; position:relative}
+.code-editor textarea{font-family:inherit; font-size:inherit; background:transparent; color:inherit;
+  border:none; outline:none; width:100%; min-height:180px; resize:vertical; line-height:inherit}
+.code-toolbar{display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px}
+.code-toolbar button{font-size:.78rem; padding:3px 8px; border:1px solid var(--bord); background:var(--bleuf2);
+  color:var(--bleu); border-radius:4px; cursor:pointer}
+.code-toolbar button:hover{background:var(--bleuf)}
+.code-level{display:inline-block; font-size:.75rem; padding:2px 8px; border-radius:999px; margin-bottom:6px}
+.code-level.n1{background:var(--vertF); color:var(--vert)}
+.code-level.n2{background:var(--orangeF); color:var(--orange)}
+.code-level.n3{background:#fde8e8; color:var(--rouge)}
+
+/* Progress bar */
+.progress-container{margin:.5rem 0}
+.progress-label{display:flex; justify-content:space-between; font-size:.82rem; color:var(--gris); margin-bottom:2px}
+.progress-bar{height:12px; background:var(--bleuf); border-radius:6px; overflow:hidden}
+.progress-fill{height:100%; border-radius:6px; transition:width .4s ease}
+.progress-fill.blue{background:var(--bleu2)}
+.progress-fill.green{background:var(--vert)}
+.progress-fill.orange{background:var(--orange)}
+
+/* Chain info diagram */
+.chain-info{display:flex; align-items:center; justify-content:center; gap:4px; flex-wrap:wrap;
+  padding:10px; background:var(--bleuf2); border-radius:8px; margin:.5rem 0; font-size:.85rem}
+.chain-box{padding:6px 12px; background:#fff; border:2px solid var(--bleu2); border-radius:6px; font-weight:bold; text-align:center}
+.chain-arrow{font-size:1.2rem; color:var(--bleu2); font-weight:bold}
+.chain-label{font-size:.72rem; color:var(--gris); display:block}
+
+/* Lab controls */
+.lab-controls{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+@media (max-width:700px){.lab-controls{grid-template-columns:1fr}}
+.lab-param{padding:6px; background:var(--bleuf2); border-radius:6px}
+.lab-param label{display:block; font-size:.82rem; color:var(--bleu); font-weight:bold; margin-bottom:2px}
+.lab-param input[type=range]{margin:2px 0}
+.lab-param .val{font-size:.82rem; color:var(--gris); text-align:right}
+
+/* Improvement form */
+.improve-form{display:grid; gap:8px}
+.improve-form label{font-size:.85rem; color:var(--bleu); font-weight:bold}
+.improve-form textarea{min-height:60px}
+
+#zone-message{position:fixed; bottom:12px; left:50%; transform:translateX(-50%); background:var(--bleu);
+  color:#fff; padding:7px 14px; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .25s; z-index:50}
+#zone-message.visible{opacity:1}
+
+@media print{
+  header, .onglets, .boutons, canvas, .no-print, .code-toolbar{display:none !important}
+  section{display:none !important}
+  section#bilan{display:block !important}
+  body{background:#fff; font-size:11pt}
+  .carte{break-inside:avoid}
+}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+
+<header>
+  <div class="ligne-titre">
+    <h1>Tracker Solaire — Simulateur et Programmeur <small>3<sup>e</sup> · technologie · OST2 / SFC1 / SFC3</small></h1>
+    <div class="bloc-binome">
+      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
+      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    </div>
+  </div>
+  <div class="onglets" id="onglets">
+    <button data-tab="n1" class="actif">N1 · Connaissances</button>
+    <button data-tab="n2">N2 · Simulation</button>
+    <button data-tab="n3">N3 · Programmation</button>
+    <button data-tab="n4">N4 · Optimisation</button>
+    <button data-tab="bilan">Bilan</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ======================== SECTION N1 — CONNAISSANCES ======================== -->
+<section id="n1" class="actif">
+  <h2>Niveau 1 — Mémoriser : Quiz interactif sur les connaissances fondamentales</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Définir les notions clés (variable, instruction conditionnelle, capteur, actionneur) et identifier les modes de représentation technique et les procédés de fabrication.
+    <br><span class="tag">Bloom N1</span> <span class="tag">Compétences : SFC1, SFC3</span>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-label"><span>Progression du quiz</span><span id="quiz-progress-text">0 / 5</span></div>
+    <div class="progress-bar"><div class="progress-fill blue" id="quiz-progress-bar" style="width:0%"></div></div>
+  </div>
+
+  <!-- QCM 1 : Variable -->
+  <div class="carte">
+    <h3>QCM 1 — Qu'est-ce qu'une variable en programmation ?</h3>
+    <div class="quiz-question" id="qcm1">
+      <p class="enonce">Parmi ces définitions, laquelle décrit correctement une variable ?</p>
+      <label><input type="radio" name="qcm1" value="a"> Une fonction qui exécute une action répétitive</label>
+      <label><input type="radio" name="qcm1" value="b"> Une boîte nommée qui contient une valeur pouvant changer</label>
+      <label><input type="radio" name="qcm1" value="c"> Un composant électronique qui mesure la lumière</label>
+      <label><input type="radio" name="qcm1" value="d"> Un câble qui relie le capteur au moteur</label>
+      <div class="quiz-feedback" id="fb-qcm1" style="display:none"></div>
+    </div>
+    <button class="act" onclick="checkQCM('qcm1','b')">Vérifier</button>
+  </div>
+
+  <!-- QCM 2 : Instruction conditionnelle -->
+  <div class="carte">
+    <h3>QCM 2 — Qu'est-ce qu'une instruction conditionnelle SI…ALORS…SINON ?</h3>
+    <div class="quiz-question" id="qcm2">
+      <p class="enonce">Que permet de faire une instruction conditionnelle ?</p>
+      <label><input type="radio" name="qcm2" value="a"> Répéter une action un nombre fixe de fois</label>
+      <label><input type="radio" name="qcm2" value="b"> Stocker une valeur dans une variable</label>
+      <label><input type="radio" name="qcm2" value="c"> Exécuter des instructions différentes selon qu'une condition est vraie ou fausse</label>
+      <label><input type="radio" name="qcm2" value="d"> Allumer un moteur électrique</label>
+      <div class="quiz-feedback" id="fb-qcm2" style="display:none"></div>
+    </div>
+    <button class="act" onclick="checkQCM('qcm2','c')">Vérifier</button>
+  </div>
+
+  <!-- Association 1 : Composants -->
+  <div class="carte">
+    <h3>Association 1 — Rôle des composants du tracker</h3>
+    <p class="note">Clique sur un élément de gauche puis sur sa fonction à droite pour les associer.</p>
+    <div class="match-container" id="match1">
+      <div class="match-col" id="match1-left">
+        <div class="match-item" data-id="capteur" onclick="selectMatch('match1',this,'left')">Capteur de luminosité</div>
+        <div class="match-item" data-id="servo" onclick="selectMatch('match1',this,'left')">Servomoteur</div>
+        <div class="match-item" data-id="microbit" onclick="selectMatch('match1',this,'left')">Micro:bit</div>
+      </div>
+      <div class="match-col" id="match1-right">
+        <div class="match-item" data-id="servo" onclick="selectMatch('match1',this,'right')">Tourner le panneau solaire</div>
+        <div class="match-item" data-id="microbit" onclick="selectMatch('match1',this,'right')">Traiter les informations et décider</div>
+        <div class="match-item" data-id="capteur" onclick="selectMatch('match1',this,'right')">Mesurer l'intensité lumineuse</div>
+      </div>
+    </div>
+    <div class="quiz-feedback" id="fb-match1" style="display:none"></div>
+  </div>
+
+  <!-- Association 2 : Modes de représentation -->
+  <div class="carte">
+    <h3>Association 2 — Modes de représentation technique</h3>
+    <p class="note">Associe chaque mode de représentation à son usage principal.</p>
+    <div class="match-container" id="match2">
+      <div class="match-col" id="match2-left">
+        <div class="match-item" data-id="croquis" onclick="selectMatch('match2',this,'left')">Croquis à main levée</div>
+        <div class="match-item" data-id="schema" onclick="selectMatch('match2',this,'left')">Schéma technique</div>
+        <div class="match-item" data-id="modele3d" onclick="selectMatch('match2',this,'left')">Modèle 3D (Onshape)</div>
+      </div>
+      <div class="match-col" id="match2-right">
+        <div class="match-item" data-id="modele3d" onclick="selectMatch('match2',this,'right')">Fabrication additive / impression 3D</div>
+        <div class="match-item" data-id="croquis" onclick="selectMatch('match2',this,'right')">Idée rapide, première ébauche</div>
+        <div class="match-item" data-id="schema" onclick="selectMatch('match2',this,'right')">Représentation normalisée avec cotes</div>
+      </div>
+    </div>
+    <div class="quiz-feedback" id="fb-match2" style="display:none"></div>
+  </div>
+
+  <!-- Association 3 : Procédés de fabrication -->
+  <div class="carte">
+    <h3>Association 3 — Procédés de fabrication de la platine</h3>
+    <p class="note">Associe chaque procédé à sa description.</p>
+    <div class="match-container" id="match3">
+      <div class="match-col" id="match3-left">
+        <div class="match-item" data-id="laser" onclick="selectMatch('match3',this,'left')">Découpe laser</div>
+        <div class="match-item" data-id="impression" onclick="selectMatch('match3',this,'left')">Impression 3D (FDM)</div>
+        <div class="match-item" data-id="usinage" onclick="selectMatch('match3',this,'left')">Usinage CNC</div>
+      </div>
+      <div class="match-col" id="match3-right">
+        <div class="match-item" data-id="usinage" onclick="selectMatch('match3',this,'right')">Enlever de la matière dans un bloc plein</div>
+        <div class="match-item" data-id="laser" onclick="selectMatch('match3',this,'right')">Couper une plaque par faisceau lumineux</div>
+        <div class="match-item" data-id="impression" onclick="selectMatch('match3',this,'right')">Déposer du filament fondu couche par couche</div>
+      </div>
+    </div>
+    <div class="quiz-feedback" id="fb-match3" style="display:none"></div>
+  </div>
+
+  <div class="carte bilan">
+    <h3 style="margin-top:0">Score N1</h3>
+    <p id="score-n1">Répondez aux questions ci-dessus. Votre score s'affichera ici.</p>
+  </div>
+
+<!-- ===== RESSOURCES ASSOCIÉES (fiches de connaissances, vidéos, quiz) ===== -->
+<div class="ressources-n1">
+  <h3>📚 Ressources associées à cette partie N1</h3>
+  <p class="note">Ressources officielles de l'académie de Bordeaux, en lien direct avec le programme de
+  technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif
+  (correction immédiate), puis 📄 lis la fiche de connaissances et colle-la dans ton classeur.</p>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">OST2b</span>Les modes de représentation : croquis, schéma, graphique, algorithme, modélisation</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/NwfE3ET2Swy7Mbk" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113218-ost2b-les-modes-de-representation-croquis-schema-graphique-algorithme-modelisation/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113218-ost2b-les-modes-de-representation-croquis-schema-graphique-algorithme-modelisation/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/RFDAXRjKqRbbaSr58" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">SFC1f</span>Les caractéristiques des procédés de mise en forme du laboratoire</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/yXY2afqFLqyfdp3" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113115-sfc1f-les-caracteristiques-des-procedes-de-mise-en-forme-disponibles-dans-le-laboratoire/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113115-sfc1f-les-caracteristiques-des-procedes-de-mise-en-forme-disponibles-dans-le-laboratoire/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/2c4S8279j4Y87JtC7" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">SFC2e</span>Les moyens de production : découpe laser, usinage, fabrication additive (imprimante 3D)</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/rYMkAYTJjyJ6o9C" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113031-sfc2e-les-moyens-de-production-decoupe-au-laser-centre-dusinage-fabrication-additive-imprimante-3d/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113031-sfc2e-les-moyens-de-production-decoupe-au-laser-centre-dusinage-fabrication-additive-imprimante-3d/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/Xrkjho6TsPneGSL88" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">SFC3a</span>Algorithmique et programmation : instruction d'affectation, variable</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/rkpbdcZdin3bSfg" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113022-sfc3a-algorithmique-et-programmation-instruction-daffectation-variable/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113022-sfc3a-algorithmique-et-programmation-instruction-daffectation-variable/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/TkCUQSQMg98zHHoq6" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">SFC3c</span>Algorithmique et programmation : instruction conditionnelle</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/5cBJdKT5jbwpYE9" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113020-sfc3c-algorithmique-et-programmation-instruction-conditionnelle/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113020-sfc3c-algorithmique-et-programmation-instruction-conditionnelle/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/jVCfdi6KWfKZgPZJ9" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <div class="ress-carte">
+    <div class="ress-code-titre"><span class="ress-code">SFC3d</span>Algorithmique et programmation : instructions itératives</div>
+    <div class="ress-liens"><a class="ress-lien fiche" href="https://nuage01.apps.education.fr/index.php/s/rms64NNANEGP3k8" target="_blank" rel="noopener">📄 Fiche de connaissances</a>
+      <a class="ress-lien video" href="https://podeduc.apps.education.fr/video/113019-sfc3d-algorithmique-et-programmation-instructions-iteratives/" target="_blank" rel="noopener">🎬 Vidéo</a>
+      <a class="ress-lien quiz" href="https://podeduc.apps.education.fr/quiz/113019-sfc3d-algorithmique-et-programmation-instructions-iteratives/" target="_blank" rel="noopener">✅ Quiz auto-correctif (Podeduc)</a>
+      <a class="ress-lien form" href="https://forms.gle/17L2qGAsHmGS3PN5A" target="_blank" rel="noopener">📝 Quiz (formulaire)</a></div>
+  </div>
+  <p class="note">🔗 Index complet : <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2024/06/13/fiches-connaissances/" target="_blank" rel="noopener">toutes les fiches de connaissances</a>
+  · <a href="https://ent2d.ac-bordeaux.fr/disciplines/sti-college/2026/01/04/quiz-auto-correctifs/" target="_blank" rel="noopener">toutes les vidéos et tous les quiz auto-correctifs</a></p>
+</div>
+</section>
+
+<!-- ======================== SECTION N2 — SIMULATION ======================== -->
+<section id="n2">
+  <h2>Niveau 2 — Comprendre : Simulateur physique du tracker solaire</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Comprendre pourquoi orienter un panneau solaire augmente la production d'énergie.
+    Observer la différence entre un panneau fixe et un tracker qui suit le soleil.
+    <br><span class="tag">Bloom N2</span> <span class="tag">T3 — L'OST dans son environnement</span>
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <canvas id="simCanvas" width="800" height="450" aria-label="Simulation du tracker solaire"></canvas>
+        <div class="legende">
+          <span><i class="puce" style="background:#f59e0b"></i>Soleil</span>
+          <span><i class="puce" style="background:#2e75b6"></i>Panneau (mode actuel)</span>
+          <span><i class="puce" style="background:#2e7d32"></i>Production tracker</span>
+          <span><i class="puce" style="background:#9ca3af"></i>Production fixe</span>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Courbe de production journalière</h3>
+        <canvas id="graphCanvas" width="800" height="250" aria-label="Graphique de production"></canvas>
+        <div class="legende">
+          <span><i class="puce" style="background:#2e7d32"></i>Tracker (cumul : <b id="cumul-tracker">0</b> Wh)</span>
+          <span><i class="puce" style="background:#9ca3af"></i>Fixe (cumul : <b id="cumul-fixe">0</b> Wh)</span>
+          <span>Gain : <b id="gain-pourcent">0</b>%</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Comment utiliser le simulateur</h3>
+        <ol>
+          <li>Choisis le <b>mode</b> : Fixe ou Tracker.</li>
+          <li>Règle la <b>vitesse</b> de simulation pour accélérer le temps.</li>
+          <li>Observe comment le panneau s'oriente (ou non) par rapport au soleil.</li>
+          <li>Compare les courbes de production et le gain en %.</li>
+          <li>Essaie les différents <b>scénarios météo</b>.</li>
+        </ol>
+      </div>
+
+      <div class="carte">
+        <span class="champ"><span>Mode du panneau</span>
+          <select id="sim-mode">
+            <option value="tracker">TRACKER — Le panneau suit le soleil</option>
+            <option value="fixe">FIXE — Panneau immobile (orienté sud)</option>
+            <option value="manuel">MANUEL — Tu contrôles l'angle</option>
+          </select></span>
+
+        <span class="champ"><span>Vitesse de simulation : <b id="sim-speed-val">1x</b></span>
+          <input type="range" id="sim-speed" min="1" max="20" step="1" value="1"></span>
+
+        <span class="champ" id="manual-angle-champ" style="display:none"><span>Angle manuel : <b id="manual-angle-val">45°</b></span>
+          <input type="range" id="manual-angle" min="0" max="90" step="1" value="45"></span>
+
+        <span class="champ"><span>Scénario météo</span>
+          <select id="sim-weather">
+            <option value="clear">☀️ Ciel dégagé</option>
+            <option value="clouds">⛅ Nuages passagers</option>
+            <option value="overcast">☁️ Couvert</option>
+          </select></span>
+
+        <div class="boutons">
+          <button class="act" id="btn-sim-start">▶ Démarrer</button>
+          <button class="act sec" id="btn-sim-pause">⏸ Pause</button>
+          <button class="act sec" id="btn-sim-reset">↺ Réinitialiser</button>
+        </div>
+
+        <div class="mesure" id="sim-info">
+          Heure : <b id="sim-time">06:00</b> · Angle soleil : <b id="sim-sun-angle">0°</b> ·
+          Angle panneau : <b id="sim-panel-angle">45°</b> · Puissance : <b id="sim-power">0</b> W
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Pourquoi orienter le panneau ?</h3>
+        <p>Un panneau solaire produit un maximum d'énergie quand les rayons du soleil arrivent
+        <b>perpendiculairement</b> à sa surface. Plus l'angle d'incidence est proche de 90°, plus la puissance est grande.</p>
+        <p>Le <b>tracker solaire</b> fait tourner le panneau pour qu'il reste face au soleil tout au long de la journée,
+        augmentant la production de <b>25 à 40%</b> par rapport à un panneau fixe.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Chaîne d'information du tracker</h3>
+        <div class="chain-info">
+          <div class="chain-box">
+            Capteur G<span class="chain-label">Luminosité gauche</span>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-box" style="border-color:var(--orange)">
+            Micro:bit<span class="chain-label">Traiter & Décider</span>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-box">
+            Servomoteur<span class="chain-label">Tourner le panneau</span>
+          </div>
+          <div class="chain-arrow">←</div>
+          <div class="chain-box">
+            Capteur D<span class="chain-label">Luminosité droite</span>
+          </div>
+        </div>
+        <p class="note">Le micro:bit compare les deux capteurs. Si luminosité_G &gt; luminosité_D, il tourne vers la gauche, et inversement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SECTION N3 — PROGRAMMATION ======================== -->
+<section id="n3">
+  <h2>Niveau 3 — Appliquer : Éditeur de pseudo-code du tracker</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Écrire le programme qui contrôle le tracker solaire en utilisant des variables et des instructions conditionnelles.
+    Teste ton code sur la simulation !
+    <br><span class="tag">Bloom N3</span> <span class="tag">T12 — Programmation d'une nouvelle fonctionnalité</span>
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">Éditeur de pseudo-code</h3>
+        <p class="note">Écris ton programme en pseudo-code. Utilise les boutons pour insérer des blocs, ou tape directement.</p>
+
+        <div class="code-toolbar no-print">
+          <button onclick="insertCode('VARIABLE luminosite_g = capteur_gauche\n')">📦 VARIABLE</button>
+          <button onclick="insertCode('SI luminosite_g > luminosite_d ALORS\n  tourner_gauche()\nSINON\n  tourner_droite()\nFIN_SI\n')">❓ SI…ALORS…SINON</button>
+          <button onclick="insertCode('SI condition ALORS\n  action()\nFIN_SI\n')">❓ SI…ALORS</button>
+          <button onclick="insertCode('AFFICHER(valeur)\n')">📺 AFFICHER</button>
+          <button onclick="insertCode('tourner_gauche()\n')">⬅️ Tourner gauche</button>
+          <button onclick="insertCode('tourner_droite()\n')">➡️ Tourner droite</button>
+          <button onclick="insertCode('ARRETER()\n')">🛑 ARRÊTER</button>
+          <button onclick="insertCode('luminosite_g > luminosite_d')">🔍 Comparaison</button>
+          <button onclick="insertCode('difference = luminosite_g - luminosite_d\n')">➖ Soustraction</button>
+        </div>
+
+        <span class="champ"><span>Niveau de difficulté</span>
+          <select id="code-level" onchange="loadLevel()">
+            <option value="1">Niveau 1 — Afficher la valeur du capteur</option>
+            <option value="2">Niveau 2 — Comparer et tourner</option>
+            <option value="3">Niveau 3 — Seuil + arrêt nuit</option>
+          </select></span>
+
+        <div class="code-editor">
+          <textarea id="code-area" spellcheck="false" placeholder="Écris ton pseudo-code ici..."></textarea>
+        </div>
+
+        <div class="boutons">
+          <button class="act" id="btn-test-code">▶ Tester le programme</button>
+          <button class="act sec" id="btn-clear-code">🗑 Effacer</button>
+          <button class="act sec" id="btn-reset-code">↺ Réinitialiser le niveau</button>
+        </div>
+
+        <div class="mesure" id="code-result" style="display:none">
+          Résultat du test : <span id="code-verdict"></span>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Aide-mémoire : Syntaxe du pseudo-code</h3>
+        <table>
+          <tr><th>Instruction</th><th>Syntaxe</th><th>Exemple</th></tr>
+          <tr><td>Créer/modifier une variable</td><td><code>VARIABLE nom = valeur</code></td><td><code>VARIABLE seuil = 50</code></td></tr>
+          <tr><td>Condition simple</td><td><code>SI condition ALORS … FIN_SI</code></td><td><code>SI lum_g > 100 ALORS tourner() FIN_SI</code></td></tr>
+          <tr><td>Condition avec alternative</td><td><code>SI … ALORS … SINON … FIN_SI</code></td><td><code>SI a > b ALORS gauche() SINON droite() FIN_SI</code></td></tr>
+          <tr><td>Afficher une valeur</td><td><code>AFFICHER(variable)</code></td><td><code>AFFICHER(luminosite_g)</code></td></tr>
+          <tr><td>Tourner le panneau</td><td><code>tourner_gauche()</code> / <code>tourner_droite()</code></td><td>—</td></tr>
+          <tr><td>Arrêter le moteur</td><td><code>ARRETER()</code></td><td>—</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">Mini-simulation de test</h3>
+        <canvas id="codeCanvas" width="400" height="300" aria-label="Test du programme"></canvas>
+        <div class="mesure" id="code-sim-info">
+          Capteur G : <b id="cs-lum-g">0</b> · Capteur D : <b id="cs-lum-d">0</b> ·
+          Action : <b id="cs-action">—</b>
+        </div>
+        <p class="note" id="code-explain">Clique sur « Tester le programme » pour voir ton code en action.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Score de programmation</h3>
+        <div class="progress-container">
+          <div class="progress-label"><span>Efficacité du tracker</span><span id="code-efficiency-text">—</span></div>
+          <div class="progress-bar"><div class="progress-fill green" id="code-efficiency-bar" style="width:0%"></div></div>
+        </div>
+        <p class="note" id="code-feedback-detail"></p>
+      </div>
+
+      <div class="carte consigne">
+        <h3 style="margin-top:0">Consignes par niveau</h3>
+        <details open id="consigne-n1">
+          <summary>Niveau 1 — Variable simple</summary>
+          <p>Crée une variable <code>luminosite_g</code> qui reçoit la valeur du capteur gauche, puis affiche-la.
+          <br>Complète les trous dans le code proposé.</p>
+        </details>
+        <details id="consigne-n2">
+          <summary>Niveau 2 — Comparer et tourner</summary>
+          <p>Lis les deux capteurs. SI la luminosité gauche est supérieure à la droite, tourne à gauche. SINON, tourne à droite.</p>
+        </details>
+        <details id="consigne-n3">
+          <summary>Niveau 3 — Seuil et arrêt nuit</summary>
+          <p>Ajoute un seuil minimum : ne tourne que si la différence entre les capteurs dépasse ce seuil.
+          Ajoute aussi un arrêt du moteur quand il fait nuit (luminosité moyenne &lt; 20).</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== SECTION N4 — OPTIMISATION ======================== -->
+<section id="n4">
+  <h2>Niveau 4 — Analyser et Créer : Labo d'optimisation du tracker</h2>
+
+  <div class="carte objectif">
+    <b>Objectif :</b> Trouver les paramètres optimaux du tracker, analyser le coût énergétique du moteur,
+    et proposer une amélioration du système.
+    <br><span class="tag">Bloom N4</span> <span class="tag">T7 — Matériaux et procédés</span>
+  </div>
+
+  <div class="grille">
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">Paramètres réglables</h3>
+        <div class="lab-controls">
+          <div class="lab-param">
+            <label>Seuil de luminosité : <b id="lab-seuil-val">30</b></label>
+            <input type="range" id="lab-seuil" min="5" max="100" step="5" value="30">
+          </div>
+          <div class="lab-param">
+            <label>Vitesse de rotation (°/s) : <b id="lab-vitesse-val">2</b></label>
+            <input type="range" id="lab-vitesse" min="0.5" max="10" step="0.5" value="2">
+          </div>
+          <div class="lab-param">
+            <label>Angle max (°) : <b id="lab-anglemax-val">80</b></label>
+            <input type="range" id="lab-anglemax" min="30" max="90" step="5" value="80">
+          </div>
+          <div class="lab-param">
+            <label>Fréquence mesure (s) : <b id="lab-freq-val">1</b></label>
+            <input type="range" id="lab-freq" min="0.5" max="10" step="0.5" value="1">
+          </div>
+        </div>
+        <span class="champ"><span>Scénario météo</span>
+          <select id="lab-weather">
+            <option value="clear">☀️ Ciel dégagé</option>
+            <option value="clouds">⛅ Nuages passagers</option>
+            <option value="overcast">☁️ Couvert</option>
+          </select></span>
+        <div class="boutons">
+          <button class="act" id="btn-lab-run">▶ Lancer la simulation (1 journée)</button>
+          <button class="act sec" id="btn-lab-reset">↺ Réinitialiser</button>
+        </div>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Résultats comparatifs</h3>
+        <canvas id="labCanvas" width="800" height="300" aria-label="Graphique comparatif labo"></canvas>
+        <div class="mesure">
+          Production tracker : <b id="lab-prod-tracker">0</b> Wh ·
+          Production fixe : <b id="lab-prod-fixe">0</b> Wh ·
+          Consommation moteur : <b id="lab-conso-moteur">0</b> Wh ·
+          Gain net : <b id="lab-gain-net">0</b> Wh
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="carte">
+        <h3 style="margin-top:0">Analyse coût / bénéfice</h3>
+        <p>Le servomoteur consomme de l'énergie pour tourner. À partir de quel moment le gain de production
+        compense-t-il cette consommation ?</p>
+        <div class="champ">
+          <span>Consommation du moteur (W pendant rotation) : <b id="lab-motor-w-val">1.5</b> W</span>
+          <input type="range" id="lab-motor-w" min="0.5" max="5" step="0.1" value="1.5">
+        </div>
+        <div class="mesure">
+          Temps de rotation total : <b id="lab-rotation-time">0</b> s ·
+          Énergie consommée : <b id="lab-energy-consumed">0</b> Wh ·
+          Point d'équilibre atteint à : <b id="lab-break-even">—</b>
+        </div>
+        <p class="note" id="lab-analysis-text">Lance une simulation pour voir l'analyse.</p>
+      </div>
+
+      <div class="carte">
+        <h3 style="margin-top:0">Défi — Améliorer le tracker</h3>
+        <p>Propose une amélioration concrète du tracker solaire. Remplis le formulaire ci-dessous.</p>
+        <div class="improve-form">
+          <label>Problème identifié :</label>
+          <textarea id="improve-problem" placeholder="Ex : Le tracker oscille quand il y a des nuages…"></textarea>
+
+          <label>Solution proposée :</label>
+          <textarea id="improve-solution" placeholder="Ex : Ajouter un délai avant de tourner (filtre temporel)…"></textarea>
+
+          <label>Schéma de principe (description textuelle) :</label>
+          <textarea id="improve-schema" placeholder="Ex : Capteur → Filtre moyenne mobile → Micro:bit → Moteur…"></textarea>
+
+          <label>Bénéfice attendu :</label>
+          <textarea id="improve-benefit" placeholder="Ex : Moins d'oscillations, économie d'énergie du moteur…"></textarea>
+        </div>
+        <div class="boutons">
+          <button class="act" id="btn-save-improve">💾 Enregistrer ma proposition</button>
+        </div>
+        <div class="quiz-feedback" id="fb-improve" style="display:none"></div>
+      </div>
+
+      <div class="carte bilan">
+        <h3 style="margin-top:0">Bilan énergétique complet</h3>
+        <p id="bilan-energetique">Lance une simulation dans le labo pour obtenir le bilan énergétique.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== BILAN ======================== -->
+<section id="bilan">
+  <h2>Bilan de la séquence — Tracker Solaire</h2>
+
+  <div class="carte bilan">
+    <h3 style="margin-top:0">Résumé des compétences travaillées</h3>
+    <table>
+      <tr><th>Niveau Bloom</th><th>Compétence</th><th>Activité</th><th>Statut</th></tr>
+      <tr><td>N1 — Mémoriser</td><td>Définir variable, condition, capteur, actionneur</td><td>Quiz interactif</td><td id="bilan-n1">⬜ Non fait</td></tr>
+      <tr><td>N2 — Comprendre</td><td>Expliquer le principe du tracker solaire</td><td>Simulation physique</td><td id="bilan-n2">⬜ Non fait</td></tr>
+      <tr><td>N3 — Appliquer</td><td>Écrire un pseudo-code fonctionnel</td><td>Éditeur de code</td><td id="bilan-n3">⬜ Non fait</td></tr>
+      <tr><td>N4 — Analyser/Créer</td><td>Optimiser les paramètres, proposer une amélioration</td><td>Labo + Défi</td><td id="bilan-n4">⬜ Non fait</td></tr>
+    </table>
+  </div>
+
+  <div class="carte">
+    <h3 style="margin-top:0">Scores</h3>
+    <div class="progress-container">
+      <div class="progress-label"><span>N1 — Quiz</span><span id="bilan-score-n1">0 / 5</span></div>
+      <div class="progress-bar"><div class="progress-fill blue" id="bilan-bar-n1" style="width:0%"></div></div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-label"><span>N3 — Programmation</span><span id="bilan-score-n3">—</span></div>
+      <div class="progress-bar"><div class="progress-fill orange" id="bilan-bar-n3" style="width:0%"></div></div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-label"><span>N4 — Optimisation</span><span id="bilan-score-n4">—</span></div>
+      <div class="progress-bar"><div class="progress-fill green" id="bilan-bar-n4" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="carte consigne">
+    <h3 style="margin-top:0">Ce que je dois retenir</h3>
+    <ul>
+      <li>Une <b>variable</b> est une boîte nommée qui stocke une valeur (ex : luminosité du capteur).</li>
+      <li>Une <b>instruction conditionnelle</b> (SI…ALORS…SINON) permet de prendre des décisions dans un programme.</li>
+      <li>Un <b>tracker solaire</b> oriente le panneau face au soleil pour maximiser la production d'énergie.</li>
+      <li>La <b>chaîne d'information</b> : capteurs → micro:bit (traitement) → servomoteur (action).</li>
+      <li>L'<b>optimisation</b> consiste à trouver le meilleur compromis entre gain de production et consommation du moteur.</li>
+    </ul>
+  </div>
+
+  <div class="boutons no-print">
+    <button class="act" onclick="saveProgress()">💾 Sauvegarder la progression</button>
+    <button class="act sec" onclick="resetAll()">↺ Tout réinitialiser</button>
+    <button class="act sec" onclick="window.print()">🖨 Imprimer le bilan</button>
+  </div>
+
+<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
+<div class="carte-export-pdf no-print">
+  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
+  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
+  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
+  « Enregistrer au format PDF », puis valide.</p>
+  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
+  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
+  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
+</div>
+</section>
+
+</main>
+
+<div id="zone-message"></div>
+
+<script>
+/* ================================================================
+   TRACKER SOLAIRE — APPLICATION INTERACTIVE COMPLÈTE
+   ================================================================ */
+
+// ─── État global ────────────────────────────────────────────────
+const STATE = {
+  quizScore: 0,
+  quizTotal: 5,
+  quizDone: { qcm1: false, qcm2: false, match1: false, match2: false, match3: false },
+  simRunning: false,
+  simTime: 6 * 60, // minutes depuis minuit (début à 6h)
+  simSpeed: 1,
+  simMode: 'tracker',
+  simWeather: 'clear',
+  sunAngle: 0,
+  panelAngle: 45,
+  manualAngle: 45,
+  powerTracker: 0,
+  powerFixe: 0,
+  cumulTracker: 0,
+  cumulFixe: 0,
+  historyTracker: [],
+  historyFixe: [],
+  historyTime: [],
+  codeLevel: 1,
+  codeEfficiency: 0,
+  labResults: null,
+  improveSaved: false
+};
+
+// ─── Navigation par onglets ─────────────────────────────────────
+document.querySelectorAll('#onglets button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#onglets button').forEach(b => b.classList.remove('actif'));
+    btn.classList.add('actif');
+    document.querySelectorAll('main > section').forEach(s => s.classList.remove('actif'));
+    const tab = btn.getAttribute('data-tab');
+    document.getElementById(tab).classList.add('actif');
+    if (tab === 'n2') initSim();
+    if (tab === 'bilan') updateBilan();
+  });
+});
+
+// ─── Message flash ──────────────────────────────────────────────
+function showMessage(text, duration = 2500) {
+  const el = document.getElementById('zone-message');
+  el.textContent = text;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), duration);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION N1 — QUIZ
+// ═══════════════════════════════════════════════════════════════
+
+function checkQCM(id, correct) {
+  const radios = document.querySelectorAll(`input[name="${id}"]`);
+  let selected = null;
+  radios.forEach(r => { if (r.checked) selected = r.value; });
+  const fb = document.getElementById(`fb-${id}`);
+  if (!selected) { fb.style.display = 'block'; fb.className = 'quiz-feedback wrong'; fb.textContent = '⚠ Sélectionne une réponse.'; return; }
+  fb.style.display = 'block';
+  if (selected === correct) {
+    fb.className = 'quiz-feedback correct';
+    fb.textContent = '✅ Bonne réponse !';
+    if (!STATE.quizDone[id]) { STATE.quizScore++; STATE.quizDone[id] = true; }
+  } else {
+    fb.className = 'quiz-feedback wrong';
+    fb.textContent = '❌ Incorrect. La bonne réponse était mise en évidence.';
+    if (!STATE.quizDone[id]) { STATE.quizDone[id] = true; }
+  }
+  updateQuizProgress();
+}
+
+// Matching game logic
+const matchState = {};
+function selectMatch(gameId, el, side) {
+  if (el.classList.contains('matched')) return;
+  const state = matchState[gameId] || { left: null, right: null, matched: 0, total: 3 };
+  matchState[gameId] = state;
+
+  // Clear previous selection on same side
+  const col = document.getElementById(`${gameId}-${side}`);
+  col.querySelectorAll('.match-item').forEach(i => { if (!i.classList.contains('matched')) i.classList.remove('selected'); });
+  el.classList.add('selected');
+  state[side] = el;
+
+  // Check match
+  if (state.left && state.right) {
+    const lid = state.left.getAttribute('data-id');
+    const rid = state.right.getAttribute('data-id');
+    if (lid === rid) {
+      state.left.classList.remove('selected'); state.right.classList.remove('selected');
+      state.left.classList.add('matched'); state.right.classList.add('matched');
+      state.matched++;
+      state.left = null; state.right = null;
+      if (state.matched >= state.total) {
+        const fb = document.getElementById(`fb-${gameId}`);
+        fb.style.display = 'block'; fb.className = 'quiz-feedback correct';
+        fb.textContent = '✅ Toutes les associations sont correctes !';
+        if (!STATE.quizDone[gameId]) { STATE.quizScore++; STATE.quizDone[gameId] = true; }
+        updateQuizProgress();
+      }
+    } else {
+      state.left.classList.add('wrong'); state.right.classList.add('wrong');
+      setTimeout(() => {
+        state.left.classList.remove('wrong', 'selected');
+        state.right.classList.remove('wrong', 'selected');
+        state.left = null; state.right = null;
+      }, 600);
+    }
+  }
+}
+
+function updateQuizProgress() {
+  const done = Object.values(STATE.quizDone).filter(Boolean).length;
+  document.getElementById('quiz-progress-text').textContent = `${STATE.quizScore} / ${STATE.quizTotal}`;
+  document.getElementById('quiz-progress-bar').style.width = `${(done / STATE.quizTotal) * 100}%`;
+  document.getElementById('score-n1').innerHTML = `Score actuel : <b>${STATE.quizScore} / ${STATE.quizTotal}</b>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION N2 — SIMULATION PHYSIQUE
+// ═══════════════════════════════════════════════════════════════
+
+let simAnimId = null;
+let simLastTime = 0;
+
+function initSim() {
+  drawSimFrame();
+  drawGraph();
+}
+
+// Sun position model: sunrise 6h, sunset 20h, peak at 13h
+function getSunAngle(timeMin) {
+  // timeMin in minutes from midnight
+  // Sun rises at 6h (360min), sets at 20h (1200min)
+  // Angle goes from 0° (horizon east) to 90° (zenith) to 0° (horizon west)
+  const sunrise = 360, sunset = 1200;
+  if (timeMin < sunrise || timeMin > sunset) return -10; // below horizon
+  const progress = (timeMin - sunrise) / (sunset - sunrise); // 0 to 1
+  return Math.sin(progress * Math.PI) * 90; // 0 → 90 → 0
+}
+
+function getSunAzimuth(timeMin) {
+  // Azimuth: 0° = East, 90° = South, 180° = West
+  const sunrise = 360, sunset = 1200;
+  if (timeMin < sunrise || timeMin > sunset) return -1;
+  return ((timeMin - sunrise) / (sunset - sunrise)) * 180;
+}
+
+function getWeatherFactor(timeMin, weather) {
+  if (weather === 'clear') return 1.0;
+  if (weather === 'overcast') return 0.25;
+  // Clouds: periodic variation
+  const t = timeMin / 60;
+  return 0.5 + 0.5 * Math.sin(t * 1.5) * Math.cos(t * 0.7);
+}
+
+function calcPower(sunAlt, panelAngle, weather) {
+  if (sunAlt <= 0) return 0;
+  // Optimal when panel angle matches sun altitude complement
+  // Simplified: power = maxPower * cos(angle_diff) * sin(sunAlt) * weather
+  const diff = Math.abs(sunAlt - panelAngle);
+  const incidence = Math.max(0, Math.cos(diff * Math.PI / 180));
+  const maxPower = 250; // Watts peak
+  return maxPower * incidence * Math.sin(sunAlt * Math.PI / 180) * weather;
+}
+
+function drawSimFrame() {
+  const canvas = document.getElementById('simCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Sky gradient
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.7);
+  skyGrad.addColorStop(0, '#87CEEB');
+  skyGrad.addColorStop(1, '#E0F0FF');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H * 0.7);
+
+  // Ground
+  ctx.fillStyle = '#8BC34A';
+  ctx.fillRect(0, H * 0.7, W, H * 0.3);
+
+  // Sun position
+  const azimuth = getSunAzimuth(STATE.simTime);
+  const altitude = getSunAngle(STATE.simTime);
+  if (altitude > -5) {
+    const sunX = (azimuth / 180) * W;
+    const sunY = H * 0.7 - (Math.max(0, altitude) / 90) * H * 0.6;
+    // Sun glow
+    const glow = ctx.createRadialGradient(sunX, sunY, 5, sunX, sunY, 40);
+    glow.addColorStop(0, '#FFF176');
+    glow.addColorStop(0.5, 'rgba(255,235,59,0.4)');
+    glow.addColorStop(1, 'rgba(255,235,59,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(sunX - 50, sunY - 50, 100, 100);
+    // Sun disc
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, 18, 0, Math.PI * 2);
+    ctx.fillStyle = '#F59E0B';
+    ctx.fill();
+    ctx.strokeStyle = '#D97706';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Rays
+    if (altitude > 0) {
+      ctx.strokeStyle = 'rgba(245,158,11,0.3)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(sunX + Math.cos(a) * 22, sunY + Math.sin(a) * 22);
+        ctx.lineTo(sunX + Math.cos(a) * 35, sunY + Math.sin(a) * 35);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Panel
+  const panelX = W / 2;
+  const panelY = H * 0.7 - 10;
+  const pAngle = STATE.panelAngle;
+  const rad = (90 - pAngle) * Math.PI / 180;
+  const panelLen = 60;
+  const px2 = panelX + Math.cos(rad) * panelLen;
+  const py2 = panelY - Math.sin(rad) * panelLen;
+
+  // Panel support
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(panelX, panelY);
+  ctx.lineTo(panelX, panelY + 30);
+  ctx.stroke();
+
+  // Panel surface
+  ctx.strokeStyle = '#1F4E79';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(panelX, panelY);
+  ctx.lineTo(px2, py2);
+  ctx.stroke();
+
+  // Panel fill (blue tint)
+  ctx.strokeStyle = '#2E75B6';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(panelX, panelY);
+  ctx.lineTo(px2, py2);
+  ctx.stroke();
+
+  // Sun rays hitting panel
+  if (altitude > 0) {
+    const sunX = (azimuth / 180) * W;
+    const sunY = H * 0.7 - (altitude / 90) * H * 0.6;
+    ctx.strokeStyle = 'rgba(255,200,0,0.25)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 5; i++) {
+      ctx.beginPath();
+      ctx.moveTo(sunX + (Math.random() - 0.5) * 20, sunY + (Math.random() - 0.5) * 20);
+      ctx.lineTo(panelX + (Math.random() - 0.5) * 20, panelY - 10 + (Math.random() - 0.5) * 20);
+      ctx.stroke();
+    }
+  }
+
+  // Info overlay
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillRect(10, 10, 200, 70);
+  ctx.strokeStyle = '#c9d6e4';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(10, 10, 200, 70);
+  ctx.fillStyle = '#1F4E79';
+  ctx.font = '13px Liberation Sans, Arial';
+  const h = Math.floor(STATE.simTime / 60);
+  const m = Math.floor(STATE.simTime % 60);
+  ctx.fillText(`Heure : ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`, 20, 30);
+  ctx.fillText(`Soleil : ${Math.max(0, altitude).toFixed(1)}°`, 20, 48);
+  ctx.fillText(`Panneau : ${pAngle.toFixed(1)}°`, 20, 66);
+
+  // Mode label
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Liberation Sans, Arial';
+  const modeLabel = STATE.simMode === 'tracker' ? 'TRACKER' : STATE.simMode === 'fixe' ? 'FIXE' : 'MANUEL';
+  const mlW = ctx.measureText(modeLabel).width + 16;
+  ctx.fillStyle = STATE.simMode === 'tracker' ? '#2E7D32' : STATE.simMode === 'fixe' ? '#9CA3AF' : '#D97706';
+  ctx.fillRect(W - mlW - 10, 10, mlW, 24);
+  ctx.fillStyle = '#fff';
+  ctx.fillText(modeLabel, W - mlW - 2, 27);
+}
+
+function drawGraph() {
+  const canvas = document.getElementById('graphCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#FAFAFA';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#E5E7EB';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 10; i++) {
+    const y = (i / 10) * H;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+  for (let h = 6; h <= 20; h++) {
+    const x = ((h - 6) / 14) * W;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    ctx.fillStyle = '#9CA3AF';
+    ctx.font = '10px Arial';
+    ctx.fillText(`${h}h`, x + 2, H - 4);
+  }
+
+  // Draw curves
+  if (STATE.historyTracker.length > 1) {
+    // Tracker curve
+    ctx.strokeStyle = '#2E7D32';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i < STATE.historyTracker.length; i++) {
+      const x = (STATE.historyTime[i] / (14 * 60)) * W;
+      const y = H - (STATE.historyTracker[i] / 300) * H;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Fixe curve
+    ctx.strokeStyle = '#9CA3AF';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.beginPath();
+    for (let i = 0; i < STATE.historyFixe.length; i++) {
+      const x = (STATE.historyTime[i] / (14 * 60)) * W;
+      const y = H - (STATE.historyFixe[i] / 300) * H;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Labels
+  ctx.fillStyle = '#2E7D32';
+  ctx.font = 'bold 11px Arial';
+  ctx.fillText('Tracker', 10, 16);
+  ctx.fillStyle = '#9CA3AF';
+  ctx.fillText('Fixe', 70, 16);
+}
+
+function simStep(dt) {
+  // dt in real seconds
+  const simDt = dt * STATE.simSpeed * 5; // simulated seconds
+  STATE.simTime += simDt / 60; // convert to minutes
+
+  if (STATE.simTime >= 1200) { // 20h = end
+    STATE.simRunning = false;
+    cancelAnimationFrame(simAnimId);
+    showMessage('Simulation terminée !');
+    return;
+  }
+
+  const sunAlt = getSunAngle(STATE.simTime);
+  const weather = getWeatherFactor(STATE.simTime, STATE.simWeather);
+
+  // Update panel angle based on mode
+  if (STATE.simMode === 'tracker' && sunAlt > 0) {
+    STATE.panelAngle = sunAlt; // Perfect tracking
+  } else if (STATE.simMode === 'fixe') {
+    STATE.panelAngle = 45; // Fixed at 45°
+  } else if (STATE.simMode === 'manuel') {
+    STATE.panelAngle = STATE.manualAngle;
+  }
+
+  // Calculate power
+  STATE.powerTracker = calcPower(sunAlt, STATE.panelAngle, weather);
+  STATE.powerFixe = calcPower(sunAlt, 45, weather);
+
+  // Accumulate energy (Wh)
+  const hoursDt = simDt / 3600;
+  STATE.cumulTracker += STATE.powerTracker * hoursDt;
+  STATE.cumulFixe += STATE.powerFixe * hoursDt;
+
+  // Record history every ~10 simulated minutes
+  if (STATE.historyTime.length === 0 ||
+      STATE.simTime - STATE.historyTime[STATE.historyTime.length - 1] > 10) {
+    STATE.historyTime.push(STATE.simTime - 360); // offset from 6h
+    STATE.historyTracker.push(STATE.powerTracker);
+    STATE.historyFixe.push(STATE.powerFixe);
+  }
+
+  // Update UI
+  const h = Math.floor(STATE.simTime / 60);
+  const m = Math.floor(STATE.simTime % 60);
+  document.getElementById('sim-time').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  document.getElementById('sim-sun-angle').textContent = `${Math.max(0, sunAlt).toFixed(1)}°`;
+  document.getElementById('sim-panel-angle').textContent = `${STATE.panelAngle.toFixed(1)}°`;
+  document.getElementById('sim-power').textContent = STATE.powerTracker.toFixed(0);
+  document.getElementById('cumul-tracker').textContent = STATE.cumulTracker.toFixed(1);
+  document.getElementById('cumul-fixe').textContent = STATE.cumulFixe.toFixed(1);
+  const gain = STATE.cumulFixe > 0 ? ((STATE.cumulTracker - STATE.cumulFixe) / STATE.cumulFixe * 100) : 0;
+  document.getElementById('gain-pourcent').textContent = gain.toFixed(1);
+
+  drawSimFrame();
+  drawGraph();
+}
+
+function simLoop(timestamp) {
+  if (!STATE.simRunning) return;
+  const dt = simLastTime ? (timestamp - simLastTime) / 1000 : 0.016;
+  simLastTime = timestamp;
+  simStep(Math.min(dt, 0.1));
+  simAnimId = requestAnimationFrame(simLoop);
+}
+
+// Sim controls
+document.getElementById('btn-sim-start').addEventListener('click', () => {
+  if (STATE.simRunning) return;
+  STATE.simRunning = true;
+  simLastTime = 0;
+  simAnimId = requestAnimationFrame(simLoop);
+});
+document.getElementById('btn-sim-pause').addEventListener('click', () => {
+  STATE.simRunning = false;
+  cancelAnimationFrame(simAnimId);
+});
+document.getElementById('btn-sim-reset').addEventListener('click', () => {
+  STATE.simRunning = false;
+  cancelAnimationFrame(simAnimId);
+  STATE.simTime = 360;
+  STATE.cumulTracker = 0;
+  STATE.cumulFixe = 0;
+  STATE.historyTracker = [];
+  STATE.historyFixe = [];
+  STATE.historyTime = [];
+  STATE.panelAngle = 45;
+  initSim();
+  document.getElementById('sim-time').textContent = '06:00';
+  document.getElementById('sim-sun-angle').textContent = '0°';
+  document.getElementById('sim-panel-angle').textContent = '45°';
+  document.getElementById('sim-power').textContent = '0';
+  document.getElementById('cumul-tracker').textContent = '0';
+  document.getElementById('cumul-fixe').textContent = '0';
+  document.getElementById('gain-pourcent').textContent = '0';
+});
+
+document.getElementById('sim-speed').addEventListener('input', e => {
+  STATE.simSpeed = parseInt(e.target.value);
+  document.getElementById('sim-speed-val').textContent = `${STATE.simSpeed}x`;
+});
+document.getElementById('sim-mode').addEventListener('change', e => {
+  STATE.simMode = e.target.value;
+  document.getElementById('manual-angle-champ').style.display = e.target.value === 'manuel' ? 'block' : 'none';
+});
+document.getElementById('manual-angle').addEventListener('input', e => {
+  STATE.manualAngle = parseInt(e.target.value);
+  document.getElementById('manual-angle-val').textContent = `${STATE.manualAngle}°`;
+});
+document.getElementById('sim-weather').addEventListener('change', e => {
+  STATE.simWeather = e.target.value;
+});
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION N3 — ÉDITEUR DE PSEUDO-CODE
+// ═══════════════════════════════════════════════════════════════
+
+const CODE_TEMPLATES = {
+  1: `// Niveau 1 : Afficher la valeur du capteur
+// Complète les lignes avec ___
+
+VARIABLE luminosite_g = ___
+AFFICHER(___)
+`,
+  2: `// Niveau 2 : Comparer et tourner
+// Complète les conditions et actions
+
+VARIABLE luminosite_g = capteur_gauche
+VARIABLE luminosite_d = capteur_droite
+
+SI luminosite_g ___ luminosite_d ALORS
+  ___
+SINON
+  ___
+FIN_SI
+`,
+  3: `// Niveau 3 : Seuil + arrêt nuit
+// Complète le programme complet
+
+VARIABLE luminosite_g = capteur_gauche
+VARIABLE luminosite_d = capteur_droite
+VARIABLE difference = ___
+VARIABLE seuil = ___
+VARIABLE lum_moyenne = (luminosite_g + luminosite_d) / 2
+
+SI lum_moyenne < ___ ALORS
+  ___
+SINON
+  SI difference > seuil ALORS
+    SI luminosite_g > luminosite_d ALORS
+      ___
+    SINON
+      ___
+    FIN_SI
+  SINON
+    ARRETER()
+  FIN_SI
+FIN_SI
+`
+};
+
+function loadLevel() {
+  const level = parseInt(document.getElementById('code-level').value);
+  STATE.codeLevel = level;
+  document.getElementById('code-area').value = CODE_TEMPLATES[level];
+  document.getElementById('code-result').style.display = 'none';
+  document.getElementById('code-efficiency-bar').style.width = '0%';
+  document.getElementById('code-efficiency-text').textContent = '—';
+  document.getElementById('code-feedback-detail').textContent = '';
+  // Show/hide consignes
+  document.getElementById('consigne-n1').open = level === 1;
+  document.getElementById('consigne-n2').open = level === 2;
+  document.getElementById('consigne-n3').open = level === 3;
+}
+
+function insertCode(text) {
+  const area = document.getElementById('code-area');
+  const start = area.selectionStart;
+  const end = area.selectionEnd;
+  const val = area.value;
+  area.value = val.substring(0, start) + text + val.substring(end);
+  area.selectionStart = area.selectionEnd = start + text.length;
+  area.focus();
+}
+
+document.getElementById('btn-clear-code').addEventListener('click', () => {
+  document.getElementById('code-area').value = '';
+});
+document.getElementById('btn-reset-code').addEventListener('click', loadLevel);
+
+// Pseudo-code interpreter
+function interpretCode(code, context) {
+  const lines = code.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('//'));
+  const vars = { ...context };
+  const actions = [];
+  let displayed = [];
+
+  function evalExpr(expr) {
+    expr = expr.trim();
+    // Replace variable names with values
+    for (const [k, v] of Object.entries(vars)) {
+      const regex = new RegExp('\\b' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'g');
+      expr = expr.replace(regex, String(v));
+    }
+    // Replace special values
+    expr = expr.replace(/capteur_gauche/g, String(context.capteur_gauche));
+    expr = expr.replace(/capteur_droite/g, String(context.capteur_droite));
+    try {
+      // Safe eval for arithmetic and comparisons
+      return Function('"use strict"; return (' + expr + ')')();
+    } catch (e) {
+      return NaN;
+    }
+  }
+
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // VARIABLE
+    const varMatch = line.match(/^VARIABLE\s+(\w+)\s*=\s*(.+)$/i);
+    if (varMatch) {
+      const name = varMatch[1];
+      const val = evalExpr(varMatch[2]);
+      vars[name] = val;
+      i++; continue;
+    }
+
+    // AFFICHER
+    const affMatch = line.match(/^AFFICHER\((.+)\)$/i);
+    if (affMatch) {
+      displayed.push(evalExpr(affMatch[1]));
+      i++; continue;
+    }
+
+    // ARRETER
+    if (/^ARRETER\(\)/i.test(line)) {
+      actions.push('stop');
+      i++; continue;
+    }
+
+    // tourner_gauche / tourner_droite
+    if (/^tourner_gauche\(\)/i.test(line)) { actions.push('left'); i++; continue; }
+    if (/^tourner_droite\(\)/i.test(line)) { actions.push('right'); i++; continue; }
+
+    // SI...ALORS...SINON...FIN_SI
+    const siMatch = line.match(/^SI\s+(.+)\s+ALORS$/i);
+    if (siMatch) {
+      const condVal = evalExpr(siMatch[1]);
+      // Find matching SINON and FIN_SI
+      let depth = 1, j = i + 1, sinonIdx = -1, finSiIdx = -1;
+      while (j < lines.length && depth > 0) {
+        if (/^SI\s+.+\s+ALORS$/i.test(lines[j])) depth++;
+        if (/^FIN_SI$/i.test(lines[j])) { depth--; if (depth === 0) finSiIdx = j; }
+        if (/^SINON$/i.test(lines[j]) && depth === 1) sinonIdx = j;
+        j++;
+      }
+      if (finSiIdx === -1) { i++; continue; } // malformed
+
+      if (condVal) {
+        // Execute ALORS block
+        const blockEnd = sinonIdx > -1 ? sinonIdx : finSiIdx;
+        for (let k = i + 1; k < blockEnd; k++) {
+          // Recursively process (simplified: just handle basic instructions)
+          const bl = lines[k].trim();
+          if (/^tourner_gauche\(\)/i.test(bl)) actions.push('left');
+          if (/^tourner_droite\(\)/i.test(bl)) actions.push('right');
+          if (/^ARRETER\(\)/i.test(bl)) actions.push('stop');
+          const avm = bl.match(/^VARIABLE\s+(\w+)\s*=\s*(.+)$/i);
+          if (avm) vars[avm[1]] = evalExpr(avm[2]);
+          const afm = bl.match(/^AFFICHER\((.+)\)$/i);
+          if (afm) displayed.push(evalExpr(afm[1]));
+        }
+      } else if (sinonIdx > -1) {
+        // Execute SINON block
+        for (let k = sinonIdx + 1; k < finSiIdx; k++) {
+          const bl = lines[k].trim();
+          if (/^tourner_gauche\(\)/i.test(bl)) actions.push('left');
+          if (/^tourner_droite\(\)/i.test(bl)) actions.push('right');
+          if (/^ARRETER\(\)/i.test(bl)) actions.push('stop');
+          const avm = bl.match(/^VARIABLE\s+(\w+)\s*=\s*(.+)$/i);
+          if (avm) vars[avm[1]] = evalExpr(avm[2]);
+          const afm = bl.match(/^AFFICHER\((.+)\)$/i);
+          if (afm) displayed.push(evalExpr(afm[1]));
+        }
+      }
+      i = finSiIdx + 1; continue;
+    }
+
+    i++;
+  }
+
+  return { vars, actions, displayed };
+}
+
+// Test scenarios for each level
+const TEST_SCENARIOS = {
+  1: [
+    { capteur_gauche: 150, capteur_droite: 120, expected: { display: true } },
+    { capteur_gauche: 80, capteur_droite: 200, expected: { display: true } }
+  ],
+  2: [
+    { capteur_gauche: 200, capteur_droite: 100, expected: { action: 'left' } },
+    { capteur_gauche: 80, capteur_droite: 180, expected: { action: 'right' } },
+    { capteur_gauche: 150, capteur_droite: 150, expected: { action: 'right' } } // equal → right (sinon)
+  ],
+  3: [
+    { capteur_gauche: 200, capteur_droite: 100, expected: { action: 'left' } },
+    { capteur_gauche: 80, capteur_droite: 180, expected: { action: 'right' } },
+    { capteur_gauche: 10, capteur_droite: 8, expected: { action: 'stop' } }, // night
+    { capteur_gauche: 152, capteur_droite: 148, expected: { action: 'stop' } } // below threshold
+  ]
+};
+
+document.getElementById('btn-test-code').addEventListener('click', () => {
+  const code = document.getElementById('code-area').value;
+  if (!code.trim()) { showMessage('Écris du code avant de tester !'); return; }
+
+  // Check for unfilled blanks
+  if (code.includes('___')) {
+    document.getElementById('code-result').style.display = 'block';
+    document.getElementById('code-verdict').innerHTML = '<span class="erreur">⚠ Il reste des trous (___) à compléter !</span>';
+    return;
+  }
+
+  const scenarios = TEST_SCENARIOS[STATE.codeLevel];
+  let passed = 0;
+  let details = [];
+
+  for (const scenario of scenarios) {
+    const result = interpretCode(code, scenario);
+    let ok = false;
+
+    if (STATE.codeLevel === 1) {
+      ok = result.displayed.length > 0 && !isNaN(result.displayed[0]);
+    } else {
+      const lastAction = result.actions[result.actions.length - 1];
+      ok = lastAction === scenario.expected.action;
+    }
+
+    if (ok) passed++;
+    details.push({
+      g: scenario.capteur_gauche,
+      d: scenario.capteur_droite,
+      ok,
+      got: STATE.codeLevel === 1 ?
+        (result.displayed.length > 0 ? `Affiché: ${result.displayed[0]}` : 'Rien affiché') :
+        (result.actions.length > 0 ? result.actions[result.actions.length - 1] : 'Aucune action')
+    });
+  }
+
+  const efficiency = Math.round((passed / scenarios.length) * 100);
+  STATE.codeEfficiency = efficiency;
+
+  document.getElementById('code-result').style.display = 'block';
+  const verdictEl = document.getElementById('code-verdict');
+  if (efficiency === 100) {
+    verdictEl.innerHTML = `<span class="ok">✅ ${passed}/${scenarios.length} tests réussis ! Efficacité : ${efficiency}%</span>`;
+  } else {
+    verdictEl.innerHTML = `<span class="erreur">⚠ ${passed}/${scenarios.length} tests réussis. Efficacité : ${efficiency}%</span>`;
+  }
+
+  document.getElementById('code-efficiency-bar').style.width = `${efficiency}%`;
+  document.getElementById('code-efficiency-text').textContent = `${efficiency}%`;
+
+  let detailText = details.map(d =>
+    `G=${d.g}, D=${d.d} → ${d.ok ? '✅' : '❌'} (${d.got})`
+  ).join('<br>');
+  document.getElementById('code-feedback-detail').innerHTML = detailText;
+
+  // Draw mini simulation
+  drawCodeSim(scenarios[0], code);
+});
+
+function drawCodeSim(scenario, code) {
+  const canvas = document.getElementById('codeCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#F0F4F8';
+  ctx.fillRect(0, 0, W, H);
+
+  // Result
+  const result = interpretCode(code, scenario);
+  const lastAction = result.actions.length > 0 ? result.actions[result.actions.length - 1] : 'none';
+
+  // Draw panel
+  const cx = W / 2, cy = H * 0.6;
+  let angle = 45;
+  if (lastAction === 'left') angle = 60;
+  if (lastAction === 'right') angle = 30;
+  if (lastAction === 'stop') angle = 45;
+
+  const rad = (90 - angle) * Math.PI / 180;
+  ctx.strokeStyle = '#1F4E79';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + Math.cos(rad) * 50, cy - Math.sin(rad) * 50);
+  ctx.stroke();
+
+  // Support
+  ctx.strokeStyle = '#555';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx, cy + 40);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#1F4E79';
+  ctx.font = '13px Arial';
+  ctx.fillText(`Capteur G: ${scenario.capteur_gauche}`, 20, 30);
+  ctx.fillText(`Capteur D: ${scenario.capteur_droite}`, 20, 50);
+  ctx.fillText(`Action: ${lastAction === 'left' ? '⬅ Gauche' : lastAction === 'right' ? '➡ Droite' : lastAction === 'stop' ? '🛑 Arrêt' : '— Aucune'}`, 20, 70);
+
+  if (result.displayed.length > 0) {
+    ctx.fillText(`Affiché: ${result.displayed.join(', ')}`, 20, 90);
+  }
+
+  // Update info
+  document.getElementById('cs-lum-g').textContent = scenario.capteur_gauche;
+  document.getElementById('cs-lum-d').textContent = scenario.capteur_droite;
+  document.getElementById('cs-action').textContent = lastAction === 'left' ? 'Tourner gauche' : lastAction === 'right' ? 'Tourner droite' : lastAction === 'stop' ? 'Arrêt' : '—';
+}
+
+// Initialize level 1
+loadLevel();
+
+// ═══════════════════════════════════════════════════════════════
+// SECTION N4 — LABO D'OPTIMISATION
+// ═══════════════════════════════════════════════════════════════
+
+function runLabSimulation() {
+  const seuil = parseInt(document.getElementById('lab-seuil').value);
+  const vitesse = parseFloat(document.getElementById('lab-vitesse').value);
+  const angleMax = parseInt(document.getElementById('lab-anglemax').value);
+  const freq = parseFloat(document.getElementById('lab-freq').value);
+  const weather = document.getElementById('lab-weather').value;
+  const motorW = parseFloat(document.getElementById('lab-motor-w').value);
+
+  let time = 360; // 6h in minutes
+  let panelAngle = 45;
+  let prodTracker = 0, prodFixe = 0;
+  let rotationTime = 0;
+  let lastMeasureTime = 0;
+  const dataPoints = [];
+
+  while (time <= 1200) {
+    const sunAlt = getSunAngle(time);
+    const wf = getWeatherFactor(time, weather);
+
+    // Tracker logic with parameters
+    if (sunAlt > 0 && time - lastMeasureTime >= freq) {
+      lastMeasureTime = time;
+      const targetAngle = Math.min(sunAlt, angleMax);
+      const diff = Math.abs(targetAngle - panelAngle);
+      if (diff > seuil / 10) { // threshold in degrees
+        const moveTime = diff / vitesse; // seconds to rotate
+        rotationTime += moveTime;
+        panelAngle = targetAngle;
+      }
+    }
+
+    const pt = calcPower(sunAlt, panelAngle, wf);
+    const pf = calcPower(sunAlt, 45, wf);
+    const dtH = 1 / 60; // 1 minute in hours
+    prodTracker += pt * dtH;
+    prodFixe += pf * dtH;
+
+    if (time % 30 === 0) {
+      dataPoints.push({ time: time - 360, tracker: pt, fixe: pf });
+    }
+    time += 1;
+  }
+
+  const consoMoteur = (rotationTime / 3600) * motorW; // Wh
+  const gainNet = prodTracker - prodFixe - consoMoteur;
+
+  // Break-even analysis
+  let breakEven = 'Jamais atteint';
+  if (gainNet > 0) {
+    // Find approximate time when cumulative gain exceeds consumption
+    let cumGain = 0, cumConso = 0;
+    let t = 360, pa = 45, lmt = 0;
+    while (t <= 1200) {
+      const sa = getSunAngle(t);
+      const w = getWeatherFactor(t, weather);
+      if (sa > 0 && t - lmt >= freq) {
+        lmt = t;
+        const ta = Math.min(sa, angleMax);
+        const d = Math.abs(ta - pa);
+        if (d > seuil / 10) {
+          cumConso += (d / vitesse / 3600) * motorW;
+          pa = ta;
+        }
+      }
+      cumGain += (calcPower(sa, pa, w) - calcPower(sa, 45, w)) / 60;
+      if (cumGain > cumConso) {
+        const bh = Math.floor(t / 60);
+        const bm = Math.floor(t % 60);
+        breakEven = `${String(bh).padStart(2,'0')}:${String(bm).padStart(2,'0')}`;
+        break;
+      }
+      t += 1;
+    }
+  }
+
+  STATE.labResults = { prodTracker, prodFixe, consoMoteur, gainNet, rotationTime, breakEven, dataPoints };
+
+  // Update UI
+  document.getElementById('lab-prod-tracker').textContent = prodTracker.toFixed(1);
+  document.getElementById('lab-prod-fixe').textContent = prodFixe.toFixed(1);
+  document.getElementById('lab-conso-moteur').textContent = consoMoteur.toFixed(2);
+  document.getElementById('lab-gain-net').textContent = gainNet.toFixed(2);
+  document.getElementById('lab-gain-net').className = gainNet >= 0 ? 'ok' : 'erreur';
+  document.getElementById('lab-rotation-time').textContent = rotationTime.toFixed(0);
+  document.getElementById('lab-energy-consumed').textContent = consoMoteur.toFixed(2);
+  document.getElementById('lab-break-even').textContent = breakEven;
+
+  // Analysis text
+  let analysis = '';
+  if (gainNet > 0) {
+    analysis = `✅ Le tracker est rentable ! Gain net de ${gainNet.toFixed(1)} Wh sur la journée.`;
+  } else {
+    analysis = `❌ Le tracker n'est pas rentable avec ces paramètres. Perte nette de ${Math.abs(gainNet).toFixed(1)} Wh.`;
+  }
+  if (breakEven !== 'Jamais atteint') {
+    analysis += ` Le point d'équilibre est atteint à ${breakEven}.`;
+  }
+  document.getElementById('lab-analysis-text').textContent = analysis;
+
+  // Bilan énergétique
+  document.getElementById('bilan-energetique').innerHTML =
+    `<b>Production tracker :</b> ${prodTracker.toFixed(1)} Wh<br>` +
+    `<b>Production fixe :</b> ${prodFixe.toFixed(1)} Wh<br>` +
+    `<b>Gain brut :</b> ${(prodTracker - prodFixe).toFixed(1)} Wh<br>` +
+    `<b>Consommation moteur :</b> ${consoMoteur.toFixed(2)} Wh<br>` +
+    `<b>Gain net :</b> <span class="${gainNet >= 0 ? 'ok' : 'erreur'}">${gainNet.toFixed(2)} Wh</span><br>` +
+    `<b>Temps de rotation :</b> ${rotationTime.toFixed(0)} s<br>` +
+    `<b>Point d'équilibre :</b> ${breakEven}`;
+
+  drawLabGraph(dataPoints);
+  showMessage('Simulation du labo terminée !');
+}
+
+function drawLabGraph(dataPoints) {
+  const canvas = document.getElementById('labCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = '#FAFAFA';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!dataPoints || dataPoints.length === 0) return;
+
+  const maxPower = 300;
+  const totalTime = 840; // 14h in minutes
+
+  // Grid
+  ctx.strokeStyle = '#E5E7EB';
+  ctx.lineWidth = 0.5;
+  for (let h = 6; h <= 20; h += 2) {
+    const x = ((h - 6) / 14) * W;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    ctx.fillStyle = '#9CA3AF';
+    ctx.font = '10px Arial';
+    ctx.fillText(`${h}h`, x + 2, H - 4);
+  }
+
+  // Tracker curve
+  ctx.strokeStyle = '#2E7D32';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  dataPoints.forEach((dp, i) => {
+    const x = (dp.time / totalTime) * W;
+    const y = H - (dp.tracker / maxPower) * H;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Fixe curve
+  ctx.strokeStyle = '#9CA3AF';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 3]);
+  ctx.beginPath();
+  dataPoints.forEach((dp, i) => {
+    const x = (dp.time / totalTime) * W;
+    const y = H - (dp.fixe / maxPower) * H;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Legend
+  ctx.fillStyle = '#2E7D32'; ctx.font = 'bold 11px Arial'; ctx.fillText('Tracker', 10, 16);
+  ctx.fillStyle = '#9CA3AF'; ctx.fillText('Fixe', 70, 16);
+}
+
+// Lab param sliders
+['seuil', 'vitesse', 'anglemax', 'freq'].forEach(param => {
+  document.getElementById(`lab-${param}`).addEventListener('input', e => {
+    document.getElementById(`lab-${param}-val`).textContent = e.target.value;
+  });
+});
+document.getElementById('lab-motor-w').addEventListener('input', e => {
+  document.getElementById('lab-motor-w-val').textContent = e.target.value;
+});
+
+document.getElementById('btn-lab-run').addEventListener('click', runLabSimulation);
+document.getElementById('btn-lab-reset').addEventListener('click', () => {
+  document.getElementById('lab-prod-tracker').textContent = '0';
+  document.getElementById('lab-prod-fixe').textContent = '0';
+  document.getElementById('lab-conso-moteur').textContent = '0';
+  document.getElementById('lab-gain-net').textContent = '0';
+  document.getElementById('lab-rotation-time').textContent = '0';
+  document.getElementById('lab-energy-consumed').textContent = '0';
+  document.getElementById('lab-break-even').textContent = '—';
+  document.getElementById('lab-analysis-text').textContent = 'Lance une simulation pour voir l\'analyse.';
+  document.getElementById('bilan-energetique').textContent = 'Lance une simulation dans le labo pour obtenir le bilan énergétique.';
+  const canvas = document.getElementById('labCanvas');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+});
+
+// Save improvement
+document.getElementById('btn-save-improve').addEventListener('click', () => {
+  const problem = document.getElementById('improve-problem').value.trim();
+  const solution = document.getElementById('improve-solution').value.trim();
+  if (!problem || !solution) {
+    const fb = document.getElementById('fb-improve');
+    fb.style.display = 'block';
+    fb.className = 'quiz-feedback wrong';
+    fb.textContent = '⚠ Remplis au moins le problème et la solution.';
+    return;
+  }
+  STATE.improveSaved = true;
+  const fb = document.getElementById('fb-improve');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback correct';
+  fb.textContent = '✅ Proposition enregistrée ! Tu peux la présenter à l\'oral.';
+  // Save to localStorage
+  const improveData = {
+    problem,
+    solution,
+    schema: document.getElementById('improve-schema').value,
+    benefit: document.getElementById('improve-benefit').value
+  };
+  localStorage.setItem('tracker_improve', JSON.stringify(improveData));
+  showMessage('Amélioration sauvegardée !');
+});
+
+// ═══════════════════════════════════════════════════════════════
+// BILAN & PROGRESSION
+// ═══════════════════════════════════════════════════════════════
+
+function updateBilan() {
+  // N1
+  const n1Done = Object.values(STATE.quizDone).filter(Boolean).length;
+  document.getElementById('bilan-n1').textContent = n1Done >= 5 ? '✅ Fait' : `⬜ ${n1Done}/5`;
+  document.getElementById('bilan-score-n1').textContent = `${STATE.quizScore} / ${STATE.quizTotal}`;
+  document.getElementById('bilan-bar-n1').style.width = `${(n1Done / 5) * 100}%`;
+
+  // N2
+  const n2Done = STATE.cumulTracker > 0;
+  document.getElementById('bilan-n2').textContent = n2Done ? '✅ Fait' : '⬜ Non fait';
+
+  // N3
+  const n3Done = STATE.codeEfficiency > 0;
+  document.getElementById('bilan-n3').textContent = n3Done ? `✅ ${STATE.codeEfficiency}%` : '⬜ Non fait';
+  document.getElementById('bilan-score-n3').textContent = n3Done ? `${STATE.codeEfficiency}%` : '—';
+  document.getElementById('bilan-bar-n3').style.width = `${STATE.codeEfficiency}%`;
+
+  // N4
+  const n4Done = STATE.labResults !== null || STATE.improveSaved;
+  document.getElementById('bilan-n4').textContent = n4Done ? '✅ Fait' : '⬜ Non fait';
+  document.getElementById('bilan-score-n4').textContent = n4Done ? 'Terminé' : '—';
+  document.getElementById('bilan-bar-n4').style.width = n4Done ? '100%' : '0%';
+}
+
+function saveProgress() {
+  const data = {
+    binome: document.getElementById('binome').value,
+    classe: document.getElementById('classe').value,
+    quizScore: STATE.quizScore,
+    quizDone: STATE.quizDone,
+    codeEfficiency: STATE.codeEfficiency,
+    labResults: STATE.labResults,
+    improveSaved: STATE.improveSaved,
+    timestamp: new Date().toISOString()
+  };
+  localStorage.setItem('tracker_progress', JSON.stringify(data));
+  showMessage('Progression sauvegardée !');
+}
+
+function loadProgress() {
+  const raw = localStorage.getItem('tracker_progress');
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    if (data.binome) document.getElementById('binome').value = data.binome;
+    if (data.classe) document.getElementById('classe').value = data.classe;
+    if (data.quizScore !== undefined) STATE.quizScore = data.quizScore;
+    if (data.quizDone) STATE.quizDone = data.quizDone;
+    if (data.codeEfficiency !== undefined) STATE.codeEfficiency = data.codeEfficiency;
+    if (data.labResults) STATE.labResults = data.labResults;
+    if (data.improveSaved) STATE.improveSaved = data.improveSaved;
+    updateQuizProgress();
+  } catch (e) { /* ignore */ }
+
+  // Load improvement
+  const impRaw = localStorage.getItem('tracker_improve');
+  if (impRaw) {
+    try {
+      const imp = JSON.parse(impRaw);
+      if (imp.problem) document.getElementById('improve-problem').value = imp.problem;
+      if (imp.solution) document.getElementById('improve-solution').value = imp.solution;
+      if (imp.schema) document.getElementById('improve-schema').value = imp.schema;
+      if (imp.benefit) document.getElementById('improve-benefit').value = imp.benefit;
+    } catch (e) { /* ignore */ }
+  }
+}
+
+function resetAll() {
+  if (!confirm('Réinitialiser toute la progression ?')) return;
+  localStorage.removeItem('tracker_progress');
+  localStorage.removeItem('tracker_improve');
+  location.reload();
+}
+
+// ─── Init ───────────────────────────────────────────────────────
+loadProgress();
+initSim();
+
+</script>
+
+<!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "3e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>
