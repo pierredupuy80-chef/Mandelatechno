@@ -164,6 +164,18 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
   .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
     outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
 }
+
+/* --- Cibles tactiles : jamais sous 44 px (onglets et liens de ressources) ---
+   Memes correctifs que le gabarit de reference ; ils passent apres la
+   coquille dans la feuille, donc ils gagnent sans la modifier. */
+.tabs button{min-height:44px}
+a.ress-lien{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px}
+.ressources-n1 .note a{display:inline-flex;align-items:center;min-height:44px;padding:0 6px}
+
+@media (max-width:600px){
+  .tabs button{min-height:44px;padding:8px 12px}
+  a.ress-lien{width:100%;justify-content:center}
+}
 </style>
 </head>
 <body>
