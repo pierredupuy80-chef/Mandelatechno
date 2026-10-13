@@ -285,7 +285,7 @@ var __h=renderTab(i);if(i===0&&window.__HTML_RESSOURCES_N1)__h+=window.__HTML_RE
 });
 }
 function switchTab(i){cur=i;document.querySelectorAll(".tabs button").forEach((b,j)=>b.className=j===i?"active":"");document.querySelectorAll("section").forEach((s,j)=>s.className=j===i?"active":"");}
-function renderTab(i){if(i===0)return renderCardSort();if(i===1)return renderEnergyChain();if(i===2)return renderCompat();return renderCompTable();}
+function renderTab(i){if(i===0)return renderCardSort()+renderN1Qcm()+renderN1VraiFaux();if(i===1)return renderEnergyChain();if(i===2)return renderCompat();return renderCompTable();}
 
 /* === N1 CARD SORT === */
 const CATEGORIES=["Électricité ⚡","Gaz 🔥","Biomasse 🪵","Pompe à chaleur ♻️"];
@@ -328,6 +328,77 @@ if(csCount===ITEMS.length){document.getElementById("cs-score").style.display="bl
 }else{csSel.el.classList.remove("selected");el.style.background="var(--rougeF)";setTimeout(()=>el.style.background="",500);}
 csSel=null;
 }
+};
+
+/* === N1 — EXERCICES COMPLEMENTAIRES (QCM et vrai/faux) === */
+const QCM_N1=[
+{q:"Quelle source d'énergie utilise un poêle à granulés ?",opts:["L'électricité","Le gaz naturel","La biomasse (le bois)","La géothermie"],bonne:2,expl:"Les granulés sont des déchets de bois compressés : c'est une énergie de biomasse, renouvelable si la forêt est gérée durablement."},
+{q:"Une pompe à chaleur affiche un COP de 3. Que signifie ce chiffre ?",opts:["Elle consomme 3 kWh d'électricité pour produire 1 kWh de chaleur","Pour 1 kWh d'électricité consommé, elle restitue environ 3 kWh de chaleur","Son rendement est de 3 %"],bonne:1,expl:"Le COP compare la chaleur fournie à l'électricité consommée : la PAC déplace la chaleur de l'air extérieur vers le logement, elle ne crée pas d'énergie."},
+{q:"Quel appareil produit sa chaleur par combustion ?",opts:["Le radiateur électrique","La chaudière gaz à condensation","Le plancher chauffant électrique","La PAC géothermique"],bonne:1,expl:"La chaudière brûle du gaz naturel. Les trois autres appareils fonctionnent à l'électricité."}
+];
+
+function renderN1Qcm(){
+let h='<div class="card"><span class="badge n1">N1 — Mémoriser</span><h2>Exercice 2 — QCM : reconnaître la source d\'énergie</h2>';
+h+='<p>Choisis une seule réponse par question. La correction s\'affiche dès que tu cliques.</p>';
+QCM_N1.forEach((item,qi)=>{
+h+='<div id="qcmn1-'+qi+'" style="margin:16px 0">';
+h+='<p><strong>'+(qi+1)+'. '+item.q+'</strong></p>';
+item.opts.forEach((op,oi)=>{
+h+='<div class="match-item" style="min-height:44px;display:flex;align-items:center" onclick="repQcmN1('+qi+','+oi+',this)">'+op+'</div>';
+});
+h+='<div id="qcmn1-fb-'+qi+'" class="info" style="display:none"></div></div>';
+});
+return h+'</div>';
+}
+
+window.repQcmN1=function(qi,oi,el){
+const zone=document.getElementById("qcmn1-"+qi);
+if(!zone||zone.getAttribute("data-repondu"))return;
+zone.setAttribute("data-repondu","1");
+const item=QCM_N1[qi],bon=(item.bonne===oi);
+el.style.background=bon?"var(--vertF)":"var(--rougeF)";
+el.style.borderColor=bon?"var(--vert)":"var(--rouge)";
+el.classList.add(bon?"correct-choice":"wrong-choice");
+const fb=document.getElementById("qcmn1-fb-"+qi);
+fb.className="info "+(bon?"success":"error");
+fb.style.display="block";
+fb.innerHTML=(bon?"✅ Bonne réponse. ":"❌ Réponse incorrecte. ")+item.expl;
+};
+
+const VF_N1=[
+{a:"Un radiateur électrique transforme l'électricité en chaleur par effet Joule.",v:true,expl:"C'est une conversion directe : presque toute l'électricité devient de la chaleur."},
+{a:"Une pompe à chaleur crée de l'énergie à partir de rien.",v:false,expl:"Elle ne crée pas d'énergie : elle déplace la chaleur de l'air ou du sol vers le logement."},
+{a:"Le gaz naturel est une énergie fossile.",v:true,expl:"Comme le pétrole et le charbon, c'est une énergie fossile disponible en quantité limitée."},
+{a:"Un poêle à granulés utilise une énergie renouvelable.",v:true,expl:"Le bois est une énergie renouvelable si la forêt est gérée durablement."}
+];
+
+function renderN1VraiFaux(){
+let h='<div class="card"><span class="badge n1">N1 — Mémoriser</span><h2>Exercice 3 — Vrai ou faux</h2>';
+h+='<p>Lis chaque affirmation, puis clique sur « Vrai » ou « Faux ». La correction s\'affiche aussitôt.</p>';
+VF_N1.forEach((item,vi)=>{
+h+='<div id="vfn1-'+vi+'" style="margin:16px 0">';
+h+='<p><strong>'+(vi+1)+'. '+item.a+'</strong></p>';
+h+='<div style="display:flex;gap:8px">';
+h+='<div class="match-item" style="flex:1;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center" onclick="repVfN1('+vi+',true,this)">Vrai</div>';
+h+='<div class="match-item" style="flex:1;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center" onclick="repVfN1('+vi+',false,this)">Faux</div>';
+h+='</div>';
+h+='<div id="vfn1-fb-'+vi+'" class="info" style="display:none"></div></div>';
+});
+return h+'</div>';
+}
+
+window.repVfN1=function(vi,choix,el){
+const zone=document.getElementById("vfn1-"+vi);
+if(!zone||zone.getAttribute("data-repondu"))return;
+zone.setAttribute("data-repondu","1");
+const item=VF_N1[vi],bon=(item.v===choix);
+el.style.background=bon?"var(--vertF)":"var(--rougeF)";
+el.style.borderColor=bon?"var(--vert)":"var(--rouge)";
+el.classList.add(bon?"correct-choice":"wrong-choice");
+const fb=document.getElementById("vfn1-fb-"+vi);
+fb.className="info "+(bon?"success":"error");
+fb.style.display="block";
+fb.innerHTML=(bon?"✅ Bonne réponse. ":"❌ Réponse incorrecte. ")+item.expl;
 };
 
 /* === N2 ENERGY CHAIN === */
