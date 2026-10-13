@@ -344,9 +344,9 @@ csSel=null;
 
 /* === N1 — EXERCICES COMPLEMENTAIRES (QCM et vrai/faux) === */
 const QCM_N1=[
-{q:"Quelle source d'énergie utilise un poêle à granulés ?",opts:["L'électricité","Le gaz naturel","La biomasse (le bois)","La géothermie"],bonne:2,expl:"Les granulés sont des déchets de bois compressés : c'est une énergie de biomasse, renouvelable si la forêt est gérée durablement."},
-{q:"Une pompe à chaleur affiche un COP de 3. Que signifie ce chiffre ?",opts:["Elle consomme 3 kWh d'électricité pour produire 1 kWh de chaleur","Pour 1 kWh d'électricité consommé, elle restitue environ 3 kWh de chaleur","Son rendement est de 3 %"],bonne:1,expl:"Le COP compare la chaleur fournie à l'électricité consommée : la PAC déplace la chaleur de l'air extérieur vers le logement, elle ne crée pas d'énergie."},
-{q:"Quel appareil produit sa chaleur par combustion ?",opts:["Le radiateur électrique","La chaudière gaz à condensation","Le plancher chauffant électrique","La PAC géothermique"],bonne:1,expl:"La chaudière brûle du gaz naturel. Les trois autres appareils fonctionnent à l'électricité."}
+{q:"Quelle source d'énergie utilise un poêle à granulés ?",opts:["L'électricité","Le gaz naturel","La biomasse (le bois)","La géothermie"],bonne:2,expl:"Les granulés sont des déchets de bois compressés : la source d'énergie est la biomasse (le bois)."},
+{q:"Quel appareil utilise l'énergie électrique ?",opts:["La chaudière gaz","Le poêle à bûches","Le radiateur électrique","Le poêle à granulés"],bonne:2,expl:"Le radiateur électrique est branché sur une prise : il utilise l'énergie électrique."},
+{q:"Quel appareil utilise le gaz naturel comme source d'énergie ?",opts:["Le radiateur électrique","La chaudière gaz","Le poêle à bûches","La PAC air-air"],bonne:1,expl:"La chaudière gaz utilise le gaz naturel pour chauffer le logement."}
 ];
 
 function renderN1Qcm(){
@@ -378,10 +378,10 @@ fb.innerHTML=(bon?"✅ Bonne réponse. ":"❌ Réponse incorrecte. ")+item.expl;
 };
 
 const VF_N1=[
-{a:"Un radiateur électrique transforme l'électricité en chaleur par effet Joule.",v:true,expl:"C'est une conversion directe : presque toute l'électricité devient de la chaleur."},
-{a:"Une pompe à chaleur crée de l'énergie à partir de rien.",v:false,expl:"Elle ne crée pas d'énergie : elle déplace la chaleur de l'air ou du sol vers le logement."},
-{a:"Le gaz naturel est une énergie fossile.",v:true,expl:"Comme le pétrole et le charbon, c'est une énergie fossile disponible en quantité limitée."},
-{a:"Un poêle à granulés utilise une énergie renouvelable.",v:true,expl:"Le bois est une énergie renouvelable si la forêt est gérée durablement."}
+{a:"Un radiateur électrique transforme l'énergie électrique en chaleur.",v:true,expl:"L'énergie électrique est convertie en chaleur : c'est une conversion d'énergie."},
+{a:"Une pompe à chaleur utilise le gaz naturel.",v:false,expl:"Une pompe à chaleur fonctionne à l'énergie électrique."},
+{a:"Un poêle à bûches utilise le bois comme source d'énergie.",v:true,expl:"Le bois est la source d'énergie du poêle à bûches."},
+{a:"Un poêle à granulés utilise l'énergie électrique.",v:false,expl:"Le poêle à granulés utilise la biomasse (le bois), pas l'électricité."}
 ];
 
 function renderN1VraiFaux(){
