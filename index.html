@@ -33,7 +33,9 @@
   header h1{margin:0 0 6px; font-size:clamp(1.25rem,4.5vw,1.7rem); line-height:1.2}
   header p{margin:0; opacity:.92; font-size:clamp(.9rem,3.4vw,1rem)}
 
-  /* Sommaire par niveau : liens simples, non collants */
+  /* Choix de la classe : les liens simples révèlent la liste du niveau.
+     La liste des activités reste masquée tant qu'aucune classe n'est choisie
+     (aucune ancre de niveau n'est alors la cible). */
   .sommaire{
     display:flex; flex-wrap:wrap; gap:8px;
     max-width:960px; margin:0 auto; padding:12px 14px 0;
@@ -48,7 +50,8 @@
   .sommaire a:hover,.sommaire a:focus{background:var(--bleuf)}
 
   main{max-width:960px; margin:0 auto; padding:18px 14px 40px}
-  .niveau{margin:0 0 34px; scroll-margin-top:12px}
+  .niveau{display:none; margin:0 0 34px; scroll-margin-top:12px}
+  .niveau:target{display:block}
   .niveau > h2{
     font-size:clamp(1.15rem,4.2vw,1.45rem);
     color:#fff;
@@ -144,7 +147,7 @@
   </div>
 </header>
 
-<nav class="sommaire" aria-label="Aller à un niveau">
+<nav class="sommaire" aria-label="Choisir sa classe">
   <a href="#niveau-3e">3<sup>e</sup></a>
   <a href="#niveau-4e">4<sup>e</sup></a>
   <a href="#niveau-5e">5<sup>e</sup></a>
