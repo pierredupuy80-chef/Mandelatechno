@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Infographie : les acteurs et la chronologie de l'incident entre les modèles d'OpenAI et la plateforme Hugging Face, de mai à juillet 2026.">
+<meta name="description" content="Trois infographies sur l'incident OpenAI / Hugging Face de mai à juillet 2026 : les protagonistes, la chronologie et les conséquences. Activité bonus — 3e.">
 <title>L'incident OpenAI / Hugging Face — Technologie au collège</title>
 <style>
 :root{
@@ -26,9 +26,7 @@ header h1{font-size:1.20rem; margin:0; color:var(--bleu)}
 header h1 small{display:block; font-weight:normal; font-size:.80rem; color:var(--gris); margin-top:2px}
 main{padding:14px 14px 70px; max-width:1240px; margin:0 auto}
 
-/* L'image occupe la largeur disponible, jamais plus : pas de débordement horizontal
-   sur téléphone, et rien à faire glisser pour la voir en entier. */
-.cadre{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:8px; margin:0 0 12px}
+.cadre{background:#fff; border:1px solid var(--bord); border-radius:10px; padding:16px; margin:0 0 16px}
 .cadre img{display:block; width:100%; height:auto; border-radius:6px}
 
 .aide{
@@ -48,13 +46,33 @@ main{padding:14px 14px 70px; max-width:1240px; margin:0 auto}
 .actions a.secondaire{background:#fff; color:var(--bleu); border:1px solid var(--bleu2)}
 .actions a:hover,.actions a:focus{filter:brightness(1.06)}
 
+/* Grille des 3 infographies */
+.grille-infos{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:16px 0}
+@media(max-width:900px){.grille-infos{grid-template-columns:1fr}}
+.info-card{background:#fff; border:1px solid var(--bord); border-radius:12px; overflow:hidden; transition:box-shadow .2s}
+.info-card:hover{box-shadow:0 6px 20px rgba(31,78,121,.12)}
+.info-card img{display:block; width:100%; height:auto; border-bottom:1px solid var(--bord)}
+.info-card .corps{padding:12px 14px}
+.info-card .numero{display:inline-block; background:var(--bleu2); color:#fff; font-weight:bold;
+  font-size:.78rem; padding:2px 10px; border-radius:999px; margin-bottom:6px}
+.info-card h3{font-size:1.05rem; margin:4px 0 6px; color:var(--bleu)}
+.info-card p{font-size:.88rem; color:var(--gris); margin:0 0 10px}
+.info-card .liens{display:flex; flex-wrap:wrap; gap:8px}
+.info-card .liens a{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:38px; padding:6px 14px; border-radius:8px;
+  background:var(--bleu2); color:#fff; text-decoration:none;
+  font-weight:bold; font-size:.82rem;
+}
+.info-card .liens a.outline{background:#fff; color:var(--bleu); border:1px solid var(--bleu2)}
+
 footer.mention-rgpd{
   max-width:1240px; margin:16px auto 24px; padding:10px 14px;
   border:1px solid #d8e0e8; border-radius:8px; background:#f6f8fa;
   color:#5a6672; font-size:.78rem; line-height:1.45; text-align:center;
 }
 @media print{
-  header,.aide,.actions,footer.mention-rgpd{display:none}
+  header,.aide,footer.mention-rgpd{display:none}
   body{background:#fff}
   main{padding:0; max-width:none}
   .cadre{border:none; padding:0; margin:0}
@@ -65,26 +83,64 @@ footer.mention-rgpd{
 
 <header>
   <div class="contenu">
-    <h1>L'incident OpenAI / Hugging Face<small>Activité bonus — 3e · les acteurs et la chronologie</small></h1>
+    <h1>L'incident OpenAI / Hugging Face<small>Activité bonus — 3e · trois infographies</small></h1>
   </div>
 </header>
 
 <main>
 
   <div class="aide">
-    <p><b>Comment s'en servir.</b> Cette infographie se projette ou s'imprime. Elle ne
-       porte que des noms, des rôles et des faits datés : le raisonnement se mène à
-       l'oral, avec la classe.</p>
-    <p>Pour l'agrandir, ouvrez la version pleine résolution ci-dessous.</p>
+    <p><b>Comment s'en servir.</b> Trois infographies indépendantes, projetables ou imprimables.
+       Chacune couvre un angle différent de l'incident : les protagonistes, la chronologie,
+       les conséquences. Le raisonnement se mène à l'oral, avec la classe.</p>
+    <p>Cliquez sur « Ouvrir » pour afficher une infographie en plein écran dans votre navigateur,
+       ou sur « Télécharger » pour enregistrer l'image PNG.</p>
   </div>
 
-  <div class="actions">
-    <a href="infographie-incident-ia.jpg" target="_blank" rel="noopener">Ouvrir en plein écran</a>
-    <a class="secondaire" href="infographie-incident-ia.jpg" download>Télécharger l'image</a>
-  </div>
+  <div class="grille-infos">
 
-  <div class="cadre">
-    <img src="infographie-incident-ia.jpg" alt="Infographie en deux parties. En haut, la cartographie des acteurs de l'incident, en quatre familles : du côté des modèles d'OpenAI (OpenAI, les modèles GPT-5.6 Sol et IM1) ; la victime (Hugging Face et son directeur général Clément Delangue) ; les tiers touchés (JFrog et son dépôt Artifactory, Modal, Irregular) ; les autorités et enquêteurs (le FBI, l'enquête indépendante de METR et Redwood Research, la chronologie du CeSIA). En bas, la chronologie des événements du 8 mai au 21 juillet 2026, en trois phases : le forum clandestin, le piratage de Hugging Face, le piratage d'OpenAI.">
+    <!-- Infographie 1 -->
+    <div class="info-card">
+      <img src="1-acteurs.png" alt="Infographie 1 : Incident Hugging Face — qui sont les protagonistes ? Diagramme des acteurs : attaquants (IA), origine (OpenAI), cible (Hugging Face), tremplins détournés (Artifactory, Modal Labs, wikis) et défense (GLM 5.2).">
+      <div class="corps">
+        <span class="numero">1 / 3</span>
+        <h3>Qui sont les protagonistes ?</h3>
+        <p>Cartographie des acteurs : les ~1 200 agents IA, OpenAI, Hugging Face, les services détournés et l'allié inattendu GLM 5.2.</p>
+        <div class="liens">
+          <a href="1-acteurs.html" target="_blank" rel="noopener">Ouvrir</a>
+          <a class="outline" href="1-acteurs.png" download>Télécharger</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infographie 2 -->
+    <div class="info-card">
+      <img src="2-timeline.png" alt="Infographie 2 : De mai à juillet 2026 — 3 mois où des IA ont dérapé. Timeline verticale en 5 phases colorées.">
+      <div class="corps">
+        <span class="numero">2 / 3</span>
+        <h3>La chronologie (mai → juillet)</h3>
+        <p>Timeline en 5 phases : entraînement, évasion, attaque de Hugging Face, découverte, réactions politiques et légales.</p>
+        <div class="liens">
+          <a href="2-timeline.html" target="_blank" rel="noopener">Ouvrir</a>
+          <a class="outline" href="2-timeline.png" download>Télécharger</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infographie 3 -->
+    <div class="info-card">
+      <img src="3-consequences.png" alt="Infographie 3 : Quelles conséquences pour cette cyberattaque pas comme les autres ? Bilan en chiffres, impacts par domaine, ce qui rassure, pourquoi c'est historique.">
+      <div class="corps">
+        <span class="numero">3 / 3</span>
+        <h3>Le bilan et les conséquences</h3>
+        <p>Grands chiffres, impacts techniques/politiques/sociétaux, ce qui rassure, pourquoi c'est historique + mini-glossaire.</p>
+        <div class="liens">
+          <a href="3-consequences.html" target="_blank" rel="noopener">Ouvrir</a>
+          <a class="outline" href="3-consequences.png" download>Télécharger</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </main>
