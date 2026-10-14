@@ -160,11 +160,12 @@ servent de référence pour mesurer les gains.
 ## Données et vie privée
 
 - **Aucune donnée personnelle n'est demandée aux élèves** : pas de champ nom, prénom
-  ou binôme, pas de compte, pas de courriel. La ligne *Élève(s) : …* des en-têtes se
-  remplit au stylo sur la feuille imprimée.
-- Les activités **n'enregistrent rien sur un serveur** : les réponses sont stockées
-  uniquement dans le navigateur de l'élève (`localStorage`), et les documents exportés
-  (PDF, texte, JSON) ne contiennent aucun nom : leurs noms de fichiers sont génériques.
+  ou binôme, pas de compte, pas de courriel, et **aucune ligne d'identification à
+  remplir**. Ces activités sont des exercices à faire, pas des devoirs à rendre.
+- Les activités **ne conservent rien** : ni sur un serveur, ni dans le navigateur de
+  l'élève. Aucun export (PDF, texte, JSON), aucune copie dans le presse-papiers, aucune
+  impression n'est proposé aux élèves : un élève qui revient refait l'exercice depuis le
+  début, avec le même lien fourni par la messagerie.
 - Aucun cookie, aucun traceur, aucune mesure d'audience n'est utilisé.
 - Les liens vers les fiches, vidéos et quiz externes (Podeduc, Nuage, Google Forms) ne sont
   sollicités que si l'élève clique dessus ; ils nécessitent une connexion.

@@ -803,12 +803,8 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     <h3>4. Enregistrer ton travail</h3>
     <p class="note">À la fin de l'heure, clique sur « Enregistrer mes réponses ».</p>
     <div class="boutons">
-      <button class="act" id="btn-export">Enregistrer mes réponses</button>
-      <button class="act sec" id="btn-copier">Copier</button>
-      <button class="act sec" id="btn-imprimer">Imprimer</button>
-    </div>
-    <p class="note" id="etat-export">Aucun enregistrement pour l'instant.</p>
-  </div>
+                      </div>
+      </div>
 </section>
 </main>
 
@@ -904,11 +900,8 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     <p class="consigne">Montre ton poème au professeur : il part avec tes réponses des autres
       ateliers.</p>
     <div class="boutons">
-      <button class="act" id="btn-poesie-export">Enregistrer mon travail</button>
-      <button class="act sec" id="btn-poesie-imprimer">Imprimer</button>
-    </div>
-    <p class="note" id="poesie-etat">Aucun enregistrement pour l'instant.</p>
-  </div>
+                </div>
+      </div>
 </section>
 
 <script>
@@ -3492,89 +3485,8 @@ function reponsesQCM() {
   return out;
 }
 
-function texteRapport() {
-  var d = new Date();
-  var t = 'TP « Comment les IA apprennent-elles ? » — les 4 modes d\'apprentissage\n';
-  t += 'Élève(s) : …………………………   Classe : …………\n';
-  t += 'Date : ' + d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR').slice(0, 5) + '\n';
-  t += '='.repeat(60) + '\n\n### Résultats des ateliers\n';
 
-  var e = ETAT.chiffres;
-  t += '\n1. Apprentissage supervisé — les chiffres\n';
-  t += '  au départ : ' + (e.scores.avant !== undefined ? e.scores.avant + ' / 10' : 'non fait') + '\n';
-  if (e.scores.apres !== undefined) t += '  après avoir montré les images ratées : ' + e.scores.apres + ' / 10\n';
-  if (e.scores.faux !== undefined) t += '  avec une donnée mal étiquetée : ' + e.scores.faux + ' / 10\n';
-  if (e.scores.avantB !== undefined) t += '  sur 10 jamais vus : ' + e.scores.avantB + ' / 10 → ' + e.scores.apresB + ' / 10\n';
-  if (e.scores.biaiseB !== undefined) t += '  sur 10 jamais vus avec le biais : ' + e.scores.biaiseB + ' / 10\n';
 
-  var a = DONNEES.modes.autoSupervise;
-  var somme = SONS.resultats.reduce(function (x, y) { return x + y; }, 0);
-  t += '\n2. Apprentissage auto-supervisé — les sons\n';
-  t += '  ressemblance moyenne de sa prédiction au vrai son : '
-    + (SONS.resultats.length ? Math.round(somme / SONS.resultats.length * 100) + ' % (' + SONS.resultats.length + ' sons devinés)' : 'non fait') + '\n';
-
-  var r = DONNEES.modes.renforcement;
-  t += '\n3. Apprentissage par renforcement — les échecs\n';
-  t += COURSE.essais > 0
-    ? '  ' + COURSE.essais + ' courses · meilleur temps : ' + COURSE.meilleurTemps.toFixed(1) + '\n'
-    : '  non fait\n';
-
-  t += '\n4. Apprentissage non supervisé — les paquets\n';
-  t += VISAGES.paquets
-    ? '  3 paquets de ' + DONNEES.modes.visages.repartition.join(' / ') + ' photos (aucun nom donné)'
-      + (VISAGES.verite ? ' · 1 photo mal rangée (plein soleil, chapeau clair)' : '') + '\n'
-    : '  non fait\n';
-
-  if (POESIE.vers.some(function (v) { return v.trim().length; })) {
-    t += '\n5. Bonus : le défi poésie\n';
-    POESIE.vers.forEach(function (v, i) { t += '  vers ' + (i + 1) + ' : ' + (v.trim() || '(vide)') + '\n'; });
-    t += '  poème : ' + (POESIE.aide === 'ia' ? 'commandé à une IA, puis recopié'
-      : (POESIE.aide === 'moule' ? 'rempli par la machine à poèmes (un moule à phrases, pas une IA)'
-        : 'écrit par l\'élève'))
-      + (POESIE.eleve && POESIE.aide ? ' et retouché par l\'élève' : '') + '\n';
-  }
-
-  t += '\n### Réponses aux questions\n';
-  reponsesQCM().forEach(function (rep) {
-    t += '\n[' + rep.question + '] ' + rep.choix + (rep.juste ? '  (juste)' : '  (faux)');
-  });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-rep]'), function (z) {
-    t += '\n\n' + z.getAttribute('data-rep') + ' :\n' + ((z.value || '').trim() || '(non répondu)');
-  });
-  t += '\n';
-  return t;
-}
-
-function exporter() {
-  var nom = 'compte-rendu_IA-modes.txt';
-  try {
-    var blob = new Blob([texteRapport()], { type: 'text/plain;charset=utf-8' });
-    var a2 = document.createElement('a');
-    a2.href = URL.createObjectURL(blob); a2.download = nom;
-    document.body.appendChild(a2); a2.click();
-    setTimeout(function () { URL.revokeObjectURL(a2.href); a2.remove(); }, 1500);
-    ligne('etat-export').textContent = 'Fichier proposé au téléchargement : ' + nom;
-    note('Fichier « ' + nom + ' » enregistré.', 4200);
-  } catch (e) {
-    note('Téléchargement impossible : utilise « Copier ».', 4200);
-  }
-}
-
-function copier() {
-  var t = texteRapport();
-  function ok() { note('Compte rendu copié.', 3200); }
-  function secours() {
-    var z = document.createElement('textarea');
-    z.value = t; z.style.position = 'fixed'; z.style.left = '-9999px';
-    document.body.appendChild(z); z.select();
-    try { document.execCommand('copy'); ok(); }
-    catch (e) { note('Copie impossible : recopie le texte à la main.', 4200); }
-    z.remove();
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(t).then(ok, secours);
-  } else secours();
-}
 
 /* =====================================================================
    Branchements
@@ -3647,9 +3559,6 @@ ligne('btn-poesie-copier-poeme').addEventListener('click', function () {
   }
   copierTexte(texte, 'Poème copié : colle-le dans la démo (case « texte »).');
 });
-ligne('btn-poesie-export').addEventListener('click', exporter);
-ligne('btn-poesie-imprimer').addEventListener('click', function () { window.print(); });
-ligne('btn-export').addEventListener('click', exporter);
 
 // Mettre en gras les questions des QCM
 document.querySelectorAll('.qcm').forEach(function (qcm) {
@@ -3657,8 +3566,6 @@ document.querySelectorAll('.qcm').forEach(function (qcm) {
   if (prev && prev.tagName === 'P') prev.style.fontWeight = 'bold';
 });
 
-ligne('btn-copier').addEventListener('click', copier);
-ligne('btn-imprimer').addEventListener('click', function () { window.print(); });
 
 Array.prototype.forEach.call(document.querySelectorAll('.qcm'), function (groupe) {
   Array.prototype.forEach.call(groupe.querySelectorAll('button'), function (bouton) {
@@ -4000,7 +3907,7 @@ function autotest() {
     majSons();
     if (SONS.resultats.length !== a.sons.length) throw new Error('sons devinés : ' + SONS.resultats.length);
     var textes = [ligne('sons-score').textContent, ligne('sons-note').textContent,
-      texteRapport()].join(' | ');
+      String(SONS.resultats.length) + ' sons devinés'].join(' | ');
     if (/undefined|NaN|null/.test(textes)) throw new Error('texte abîmé : ' + textes.slice(0, 200));
   });
   essayer('bilan : les quatre modes et les questions', function () {
@@ -4016,11 +3923,9 @@ function autotest() {
     // 18 questions : la question supprimee dans l'atelier des sons ne compte plus
     if (reponsesQCM().length !== 18) throw new Error(reponsesQCM().length + ' questions au lieu de 18');
   });
-  essayer('compte rendu complet', function () {
-    var t = texteRapport();
-    if (t.indexOf('échecs') < 0 || t.indexOf('réponse test') < 0 || t.indexOf('auto-supervisé') < 0) {
-      throw new Error('contenu incomplet');
-    }
+  essayer('réponses écrites conservées', function () {
+    var z = document.querySelector('[data-rep]');
+    if (!z || z.value !== 'réponse test') throw new Error('réponse écrite perdue');
   });
   essayer('cliquer sur un dessin de son', function () {
     afficherOnglet('sons');
@@ -4191,6 +4096,6 @@ if (/[?&]autotest=1/.test(location.search)) {
 </script>
 
 <!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte. Les réponses restent dans ton navigateur et ne sont envoyées à aucun serveur.</footer>
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 </body>
 </html>

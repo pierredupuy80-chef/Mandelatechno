@@ -286,29 +286,11 @@ a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
 a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
 a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
 a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
-.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
-  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
-.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
-.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
-  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,.15)}
-.bouton-export-pdf:hover{background:#256428}
-#entete-export-pdf{display:none}
-.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
-.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
-.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
-  padding:5px 7px;margin:4px 0 6px}
-table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
-table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
-.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
-  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
-.ep-vide{color:#999;font-style:italic}
-@media screen{.ajout-export{display:none !important}}
 @media print{
   @page{size:A4;margin:12mm 10mm}
   html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
   header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
-  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  .no-print.print-btn{display:none !important}
   main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
   section,.tab-content{display:block !important;page-break-before:always;break-before:page;
     opacity:1 !important;transform:none !important;animation:none !important}
@@ -316,11 +298,9 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
   section *, .tab-content *{animation:none !important;transition:none !important}
   section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
     opacity:1 !important;visibility:visible !important}
-  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
-  .ajout-export{display:block !important}
-  .masque-impression{display:none !important}
+  {display:block !important}
   .quiz-feedback{display:block !important}
-  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+  .carte.card.quiz-question.mesure.bilan-defi.ressources-n1.ress-carte{
     page-break-inside:avoid;break-inside:avoid}
   a{color:#000 !important;text-decoration:none}
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
@@ -502,10 +482,6 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
 <header>
   <div class="ligne-titre">
     <h1>Frise Interactive — 150 ans d'évolution des moyens de communication <small>3<sup>e</sup> · technologie · T1 · OST</small></h1>
-    <div class="ligne-identite">
-      <p class="nom-manuscrit">Élève(s) : ……………………………………………………………………………………… <span class="mention-donnees">Aucune donnée personnelle saisie sur cette page</span></p>
-      <p class="nom-manuscrit">Classe : ………………</p>
-    </div>
   </div>
   <div class="barre-progression">
     <span>Progression :</span>
@@ -1104,13 +1080,9 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
         <p class="note">Vos réponses et scores sont sauvegardés automatiquement dans le navigateur.
         Exportez-les pour les remettre au professeur.</p>
         <div class="boutons">
-          <button class="act" id="btn-export">💾 Enregistrer mes réponses</button>
-          <button class="act sec" id="btn-copier">⧉ Copier</button>
-          <button class="act sec" id="btn-imprimer">🖨 Imprimer / PDF</button>
-          <button class="act sec" id="btn-reset-all">🗑 Tout effacer</button>
+                                        <button class="act sec" id="btn-reset-all">🗑 Tout effacer</button>
         </div>
-        <p class="note" id="etat-export">Sauvegarde automatique activée.</p>
-      </div>
+              </div>
 
       <div class="carte">
         <h3 style="margin-top:0">Ressources pour aller plus loin</h3>
@@ -1124,15 +1096,6 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
   </div>
 
 <!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->
-<div class="carte-export-pdf no-print">
-  <h3>📄 Exporter le support en PDF (avec mes réponses)</h3>
-  <p class="note">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec
-  <b>tout le support (N1 → N4 et le bilan) et toutes tes réponses</b>. Choisis la destination
-  « Enregistrer au format PDF », puis valide.</p>
-  <button type="button" class="bouton-export-pdf" id="btn-export-pdf">📄 Exporter le support en PDF (avec mes réponses)</button>
-  <p class="note">Réglages conseillés dans la fenêtre d'impression : marges par défaut, « Graphiques d'arrière-plan »
-  activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.</p>
-</div>
 </section>
 
 </main>
@@ -1260,23 +1223,13 @@ var state = {
 };
 
 function loadState() {
-  try {
-    var saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      var parsed = JSON.parse(saved);
-      for (var k in parsed) { if (state.hasOwnProperty(k)) state[k] = parsed[k]; }
-    }
-  } catch(e) { /* ignore */ }
 }
 
 function saveState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { /* ignore */ }
-  updateUI();
 }
 
 function resetAll() {
   if (!confirm('Effacer toutes les réponses et scores ?')) return;
-  localStorage.removeItem(STORAGE_KEY);
   location.reload();
 }
 
@@ -1879,7 +1832,7 @@ function showDefiBilan(total) {
 }
 
 /* =====================================================================
-   TEXTAREAS — Sauvegarde automatique des réponses écrites
+   TEXTAREAS — Réponses écrites, reprises dans le récapitulatif
    ===================================================================== */
 function initTextareas() {
   $$('textarea[data-q]').forEach(function(ta) {
@@ -1922,56 +1875,6 @@ function recalcWrittenScores() {
 /* =====================================================================
    EXPORT / COPIER / IMPRIMER
    ===================================================================== */
-function initExport() {
-  $('btn-export').addEventListener('click', function() {
-    var data = {
-      date: new Date().toLocaleString('fr-FR'),
-      scores: state.scores,
-      reponses: state.textAnswers
-    };
-    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = 'frise-ost.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    $('etat-export').textContent = '✅ Fichier exporté !';
-    message('💾 Réponses exportées !');
-  });
-
-  $('btn-copier').addEventListener('click', function() {
-    var lines = ['=== FRISE OST — RÉPONSES ==='];
-    lines.push('Date : ' + new Date().toLocaleString('fr-FR'));
-    lines.push('');
-    lines.push('SCORES :');
-    lines.push('  N1 (Mémoriser) : ' + state.scores.n1 + '/' + state.maxScores.n1);
-    lines.push('  N2 (Comprendre) : ' + state.scores.n2 + '/' + state.maxScores.n2);
-    lines.push('  N3 (Appliquer) : ' + state.scores.n3 + '/' + state.maxScores.n3);
-    lines.push('  N4 (Analyser) : ' + state.scores.n4 + '/' + state.maxScores.n4);
-    lines.push('');
-    lines.push('RÉPONSES ÉCRITES :');
-    Object.keys(state.textAnswers).forEach(function(k) {
-      if (state.textAnswers[k] && state.textAnswers[k].trim()) {
-        lines.push('  [' + k + ']');
-        lines.push('  ' + state.textAnswers[k].trim());
-        lines.push('');
-      }
-    });
-    var text = lines.join('\n');
-    navigator.clipboard.writeText(text).then(function() {
-      message('⧉ Copié dans le presse-papier !');
-    }).catch(function() {
-      message('❌ Copie impossible');
-    });
-  });
-
-  $('btn-imprimer').addEventListener('click', function() {
-    window.print();
-  });
-
-  $('btn-reset-all').addEventListener('click', resetAll);
-}
 
 /* =====================================================================
    IDENTITÉ — aucune saisie de nom : la ligne de la feuille se remplit au stylo
@@ -1993,7 +1896,6 @@ function init() {
   initFrise();
   initDefi();
   initTextareas();
-  initExport();
   recalcScoreN1();
   recalcWrittenScores();
   updateUI();
@@ -2010,101 +1912,9 @@ if (document.readyState === 'loading') {
 </script>
 
 <!-- ===== Module d'export PDF : impression du support complet avec les réponses ===== -->
-<script>
-(function(){
-'use strict';
-var NIVEAU = "3e";
-var ID = 'entete-export-pdf';
 
-function val(selecteurs){
-  for (var i=0;i<selecteurs.length;i++){
-    var e = document.querySelector(selecteurs[i]);
-    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
-  }
-  return '';
-}
-function esc(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function estCible(e){
-  if (!e || e.disabled) return false;
-  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
-  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
-  return false;
-}
-function entete(){
-  var z = document.getElementById(ID);
-  if (!z){
-    z = document.createElement('div');
-    z.id = ID;
-    document.body.insertBefore(z, document.body.firstChild);
-  }
-  var titre = document.title || 'Activité de technologie';
-  var h1 = document.querySelector('h1');
-  if (h1){
-    var copie = h1.cloneNode(true);
-    var sm = copie.querySelector('small');
-    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
-    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
-    if (t) titre = t;
-  }
-  var d = new Date();
-  var quand = d.toLocaleDateString('fr-FR') + ' ' +
-              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
-    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
-    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
-    '<table class="ep-infos"><tr>' +
-    '<td><b>Élève(s) :</b> …………………………</td>' +
-    '<td><b>Classe :</b> …………</td>' +
-    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
-    '</tr></table>' +
-    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
-    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
-}
-function nettoyer(){
-  var a = document.querySelectorAll('.ajout-export');
-  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
-  var m = document.querySelectorAll('.masque-impression');
-  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
-}
-function materialiser(){
-  var champs = document.querySelectorAll('textarea,input[type=text]');
-  for (var i=0;i<champs.length;i++){
-    var e = champs[i];
-    if (!estCible(e)) continue;
-    var d = document.createElement('div');
-    d.className = 'ep-reponse ajout-export';
-    var v = (e.value || '').replace(/\s+$/,'');
-    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
-    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
-    e.classList.add('masque-impression');
-  }
-}
-function exporter(){
-  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
-  entete();
-  nettoyer();
-  materialiser();
-  var zone = document.getElementById(ID);
-  if (zone){
-    var t = zone.querySelector('.ep-titre');
-    if (t) t.setAttribute('tabindex','-1');
-  }
-  window.setTimeout(function(){ window.print(); }, 80);
-}
-document.addEventListener('click', function(ev){
-  var c = ev.target;
-  while (c && c !== document.body){
-    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
-    c = c.parentNode;
-  }
-}, false);
-window.exporterSupportPDF = exporter;
-})();
-</script>
 
 <!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte. Les réponses restent dans ton navigateur et ne sont envoyées à aucun serveur.</footer>
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 </body>
 </html>

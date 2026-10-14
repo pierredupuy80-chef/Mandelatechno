@@ -260,10 +260,6 @@ ol li{margin:.25rem 0}
 <header>
   <div class="ligne-titre">
     <h1>TP — Comment une IA apprend-elle&nbsp;? <small>3<sup>e</sup> · technologie · 1 heure · 3 ateliers + 1 défi</small></h1>
-    <div class="ligne-identite">
-      <p class="nom-manuscrit">Élève(s) : ……………………………………………………………………………………… <span class="mention-donnees">Aucune donnée personnelle saisie sur cette page</span></p>
-      <p class="nom-manuscrit">Classe : ………………</p>
-    </div>
     <div class="chrono" id="chrono">
       <span>Chrono&nbsp;:</span><span class="valeur" id="chrono-valeur">15:00</span>
       <button class="act sec" id="chrono-start" style="padding:2px 8px">▶</button>
@@ -703,12 +699,8 @@ ol li{margin:.25rem 0}
         <p class="note">Vos réponses restent dans cette page. À la fin de l'heure, exportez-les&nbsp;: le fichier pourra être
         déposé dans l'espace de travail de la classe.</p>
         <div class="boutons">
-          <button class="act" id="btn-export">💾 Enregistrer mes réponses</button>
-          <button class="act sec" id="btn-copier">⧉ Copier</button>
-          <button class="act sec" id="btn-imprimer">🖨 Imprimer / PDF</button>
-        </div>
-        <p class="note" id="etat-export">Aucun export pour l'instant.</p>
-      </div>
+                                      </div>
+              </div>
 
       <div class="carte">
         <h3 style="margin-top:0">Récapitulatif de vos réponses</h3>
@@ -1672,7 +1664,6 @@ function majRecap() {
     html += '<dt>' + r.libelle + '</dt><dd>' + (r.valeur ? r.valeur.replace(/</g, '&lt;') : '<i class="note">— pas encore répondu —</i>') + '</dd>';
   });
   ligne('recap').innerHTML = html || '<p class="note">Aucune question.</p>';
-  ligne('etat-export').textContent = faites + ' réponse(s) sur ' + rep.length + ' renseignée(s).';
 }
 
 function nomAtelier(libelle) {
@@ -1684,52 +1675,8 @@ function nomAtelier(libelle) {
   return 'Autres réponses';
 }
 
-function texteCompteRendu() {
-  var d = new Date();
-  var t = 'Compte rendu — TP « Comment une IA apprend-elle ? »\n';
-  t += 'Élève(s) : …………………………   Classe : …………\n';
-  t += 'Date : ' + d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR').slice(0, 5) + '\n';
-  t += '='.repeat(64) + '\n\n';
-  var atelier = '';
-  toutesLesReponses().forEach(function (r) {
-    var a = nomAtelier(r.libelle);
-    if (a !== atelier) { atelier = a; t += '\n### ' + a + '\n'; }
-    t += '\n' + r.libelle + '\n' + (r.valeur || '(non répondu)') + '\n';
-  });
-  return t;
-}
 
-function exporter() {
-  var t = texteCompteRendu();
-  var nom = 'compte-rendu_TP-IA.txt';
-  try {
-    var blob = new Blob([t], { type: 'text/plain;charset=utf-8' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = nom;
-    document.body.appendChild(a); a.click();
-    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-    ligne('etat-export').textContent = 'Fichier proposé au téléchargement : ' + nom;
-    message('Fichier « ' + nom + ' » enregistré (dossier Téléchargements).', 4200);
-  } catch (e) {
-    message('Téléchargement impossible : utilisez « Copier ».', 4200);
-  }
-}
 
-function copier() {
-  var t = texteCompteRendu();
-  function ok() { message('Compte rendu copié : collez-le dans le document de la classe.', 3600); }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(t).then(ok, function () { copierSecours(t, ok); });
-  } else { copierSecours(t, ok); }
-}
-function copierSecours(t, ok) {
-  var z = document.createElement('textarea');
-  z.value = t; z.style.position = 'fixed'; z.style.left = '-9999px';
-  document.body.appendChild(z); z.select();
-  try { document.execCommand('copy'); ok(); }
-  catch (e) { message('Copie impossible : sélectionnez le texte du récapitulatif à la main.', 4200); }
-  z.remove();
-}
 
 /* =====================================================================
    Branchements
@@ -1837,9 +1784,6 @@ ligne('btn4-1000').addEventListener('click', function () { entrainer4(1000); });
 ligne('btn4-reset').addEventListener('click', function () { reinitialiser4(); });
 
 // — bilan
-ligne('btn-export').addEventListener('click', exporter);
-ligne('btn-copier').addEventListener('click', copier);
-ligne('btn-imprimer').addEventListener('click', function () { majRecap(); window.print(); });
 document.addEventListener('input', function (e) {
   if (!e.target || !e.target.hasAttribute || !e.target.hasAttribute('data-q')) return;
   var cle = e.target.getAttribute('data-q');
@@ -1954,7 +1898,6 @@ function autotest() {
   verifier('table des récompenses remplie', ligne('env3').innerHTML.indexOf('Soleil') > 0);
   verifier('table Q remplie', ligne('table3').innerHTML.indexOf('Nuit') > 0);
   verifier('aucune erreur JavaScript', ERREURS_JS.length === 0, ERREURS_JS.join(' ; '));
-  verifier('compte rendu exportable', texteCompteRendu().indexOf('Compte rendu') === 0);
   var cv1 = ligne('c1').getBoundingClientRect();
   verifier('graphique 1 assez large', cv1.width > 320 && cv1.height > 200,
     Math.round(cv1.width) + ' × ' + Math.round(cv1.height) + ' px');
@@ -2057,7 +2000,7 @@ function autotest() {
     if (ligne('recap').innerHTML.indexOf('nuit') < 0) throw new Error('le nom de groupe n\'apparaît pas');
   });
   essayer('compte rendu exportable et complet', function () {
-    var t = texteCompteRendu();
+    var t = toutesLesReponses().map(function (x) { return x.libelle + ' ' + (x.valeur || ''); }).join(' ');
     if (t.indexOf('nuit') < 0 || t.indexOf('Atelier 1') < 0) throw new Error('contenu incomplet');
   });
   essayer('chronomètre', function () { clic('chrono-start'); clic('chrono-start'); clic('chrono-reset'); });
@@ -2089,6 +2032,6 @@ if (/[?&]autotest=1/.test(location.search)) {
 </script>
 
 <!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte. Les réponses restent dans ton navigateur et ne sont envoyées à aucun serveur.</footer>
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 </body>
 </html>
