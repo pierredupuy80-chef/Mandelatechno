@@ -10,7 +10,7 @@ utilisées sur ordinateur, tablette et téléphone.
 ## Ce que contient le dépôt
 
 ```
-index.html                          page d'accueil : les 17 activités, sommaire par niveau
+index.html                          page d'accueil : les 18 activités, sommaire par niveau
 .nojekyll                           demande à GitHub de servir les fichiers tels quels
 
 3e/ost1a/                           OST 1 — le smartphone
@@ -25,6 +25,9 @@ index.html                          page d'accueil : les 17 activités, sommaire
     atelier-ia-exemples.html        atelier « L'IA apprend avec des exemples »
     CREDITS-SONS.md                 crédits et licences des sons de l'atelier
     donnees/*.csv                   6 fichiers à ouvrir dans un tableur
+3e/bonus-incident-ia/               Activité bonus — l'incident OpenAI / Hugging Face
+    infographie-incident-ia.html    infographie à projeter et à commenter
+    infographie-incident-ia.jpg     l'infographie (1536 × 1024, JPEG, 374 Ko)
 
 4e/ost0/activite-iag-assistant.html               Séquence 0 — utiliser l'IAG
 4e/ost1/activite-securite-donnees.html            Séquence 1 — sécurité des données
@@ -93,8 +96,11 @@ git push
 
 ## Compatibilité téléphone
 
-Les **17 pages** (les 15 mini-apps + les 2 pages du TP) ont été auditées dans un navigateur en
-émulation de téléphone, puis corrigées pour l'usage au doigt. Chaque correction a été vérifiée
+Les **17 mini-apps** (15 activités + les 2 pages du TP) ont été auditées dans un navigateur en
+émulation de téléphone, puis corrigées pour l'usage au doigt. La page de l'activité bonus
+(l'infographie de l'incident OpenAI / Hugging Face) est **hors de ce périmètre** : elle n'a
+pas d'interaction au doigt, seulement une image et deux liens, et sa page se contente
+d'afficher l'image sur toute la largeur — il n'y a donc rien à corriger pour le mobile. Chaque correction a été vérifiée
 en comparant la page corrigée à sa sauvegarde `*.BACKUP-avant-correctifs-mobile.html`.
 
 | Point | Avant | Après |
