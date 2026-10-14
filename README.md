@@ -110,8 +110,9 @@ en comparant la page corrigée à sa sauvegarde `*.BACKUP-avant-correctifs-mobil
 
 Ce qui a été mis en place :
 
-- la barre du haut **se replie au défilement** : le titre et les champs binôme/classe
-  disparaissent vers le haut, seuls les onglets de niveau restent visibles (~46 px) ;
+- la barre du haut **se replie au défilement** : le titre et la ligne
+  *Élève(s) : …* disparaissent vers le haut, seuls les onglets de niveau restent
+  visibles (~46 px) ;
 - les onglets tiennent **sur une seule ligne** et défilent horizontalement au doigt ;
 - `scroll-padding-top` est calculé dynamiquement, donc les titres ne se cachent plus
   sous la barre ;
@@ -158,8 +159,12 @@ servent de référence pour mesurer les gains.
 
 ## Données et vie privée
 
+- **Aucune donnée personnelle n'est demandée aux élèves** : pas de champ nom, prénom
+  ou binôme, pas de compte, pas de courriel. La ligne *Élève(s) : …* des en-têtes se
+  remplit au stylo sur la feuille imprimée.
 - Les activités **n'enregistrent rien sur un serveur** : les réponses sont stockées
-  uniquement dans le navigateur de l'élève (`localStorage`).
+  uniquement dans le navigateur de l'élève (`localStorage`), et les documents exportés
+  (PDF, texte, JSON) ne contiennent aucun nom : leurs noms de fichiers sont génériques.
 - Aucun cookie, aucun traceur, aucune mesure d'audience n'est utilisé.
 - Les liens vers les fiches, vidéos et quiz externes (Podeduc, Nuage, Google Forms) ne sont
   sollicités que si l'élève clique dessus ; ils nécessitent une connexion.

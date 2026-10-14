@@ -322,7 +322,7 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
   header{padding:8px 10px 6px}
   header h1{font-size:.95rem; line-height:1.15}
   header h1 small{display:block; font-size:.68rem}
-  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .header-fields, header .meta{gap:6px; font-size:.78rem}
   header .barre-progression{display:none}
 
   /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
@@ -361,6 +361,16 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
 }
 </style>
 </head>
+<!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
+<style>
+  .nom-manuscrit{font-size:.85rem; color:var(--gris); margin:4px 0 0}
+  .nom-manuscrit .mention-donnees{display:block; font-size:.72rem; font-style:italic; opacity:.85}
+  .mention-rgpd{max-width:1240px; margin:16px auto 24px; padding:10px 14px; border:1px solid #d8e0e8;
+    border-radius:8px; background:#f6f8fa; color:#5a6672; font-size:.78rem; line-height:1.45;
+    text-align:center}
+@media print{.nom-manuscrit .mention-donnees{display:block}}
+</style>
+
 <body>
 
 <!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
@@ -456,8 +466,8 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
 <header>
   <h1>🖱️ Séquence 4 — La souris &amp; ses interactions</h1>
   <div class="meta">
-    <input type="text" id="binome" placeholder="Binôme / Nom" aria-label="Nom du binôme">
-    <input type="text" id="classe" placeholder="Classe" aria-label="Classe">
+    <p class="nom-manuscrit">Élève(s) : ……………………………………………………………………………………… <span class="mention-donnees">Aucune donnée personnelle saisie sur cette page</span></p>
+    <p class="nom-manuscrit">Classe : ………………</p>
     <div id="chrono">00:00</div>
   </div>
 </header>
@@ -1155,8 +1165,6 @@ function esc(s){
 function estCible(e){
   if (!e || e.disabled) return false;
   if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
-  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
-  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
   if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
   return false;
 }
@@ -1176,14 +1184,6 @@ function entete(){
     var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
     if (t) titre = t;
   }
-  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
-                   'header input[type=text][placeholder*="nom"]',
-                   'header input[type=text][placeholder*="Prenom"]',
-                   'header input[type=text]']);
-  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
-                    'input[type=text][placeholder*="classe"]',
-                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
-                    'input[type=text][placeholder*="3e"]']);
   var d = new Date();
   var quand = d.toLocaleDateString('fr-FR') + ' ' +
               d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
@@ -1191,8 +1191,8 @@ function entete(){
     '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
     " · Support d'activité imprimé avec les réponses de l'élève</div>" +
     '<table class="ep-infos"><tr>' +
-    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
-    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Élève(s) :</b> …………………………</td>' +
+    '<td><b>Classe :</b> …………</td>' +
     '<td><b>Date :</b> ' + esc(quand) + '</td>' +
     '</tr></table>' +
     '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
@@ -1239,5 +1239,8 @@ document.addEventListener('click', function(ev){
 window.exporterSupportPDF = exporter;
 })();
 </script>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte. Les réponses restent dans ton navigateur et ne sont envoyées à aucun serveur.</footer>
 </body>
 </html>

@@ -21,8 +21,6 @@ header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px so
 .ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
 h1{font-size:1.18rem; margin:0; color:var(--bleu)}
 h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
-.bloc-binome{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
-.bloc-binome input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
 .onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
 .onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
   color:var(--bleu); border-radius:999px; cursor:pointer}
@@ -118,7 +116,7 @@ ol li{margin:.25rem 0}
   header{padding:8px 10px 6px}
   header h1{font-size:.95rem; line-height:1.15}
   header h1 small{display:block; font-size:.68rem}
-  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .header-fields, header .meta{gap:6px; font-size:.78rem}
   header .barre-progression{display:none}
 
   /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
@@ -157,6 +155,16 @@ ol li{margin:.25rem 0}
 }
 </style>
 </head>
+<!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
+<style>
+  .nom-manuscrit{font-size:.85rem; color:var(--gris); margin:4px 0 0}
+  .nom-manuscrit .mention-donnees{display:block; font-size:.72rem; font-style:italic; opacity:.85}
+  .mention-rgpd{max-width:1240px; margin:16px auto 24px; padding:10px 14px; border:1px solid #d8e0e8;
+    border-radius:8px; background:#f6f8fa; color:#5a6672; font-size:.78rem; line-height:1.45;
+    text-align:center}
+@media print{.nom-manuscrit .mention-donnees{display:block}}
+</style>
+
 <body>
 
 <!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
@@ -252,9 +260,9 @@ ol li{margin:.25rem 0}
 <header>
   <div class="ligne-titre">
     <h1>TP — Comment une IA apprend-elle&nbsp;? <small>3<sup>e</sup> · technologie · 1 heure · 3 ateliers + 1 défi</small></h1>
-    <div class="bloc-binome">
-      <label>Binôme : <input type="text" id="binome" placeholder="Prénom1 / Prénom2" autocomplete="off"></label>
-      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    <div class="ligne-identite">
+      <p class="nom-manuscrit">Élève(s) : ……………………………………………………………………………………… <span class="mention-donnees">Aucune donnée personnelle saisie sur cette page</span></p>
+      <p class="nom-manuscrit">Classe : ………………</p>
     </div>
     <div class="chrono" id="chrono">
       <span>Chrono&nbsp;:</span><span class="valeur" id="chrono-valeur">15:00</span>
@@ -1677,11 +1685,9 @@ function nomAtelier(libelle) {
 }
 
 function texteCompteRendu() {
-  var b = (ligne('binome').value || '').trim() || '(binôme non renseigné)';
-  var cl = (ligne('classe').value || '').trim() || '(classe)';
   var d = new Date();
   var t = 'Compte rendu — TP « Comment une IA apprend-elle ? »\n';
-  t += 'Binôme : ' + b + '   Classe : ' + cl + '\n';
+  t += 'Élève(s) : …………………………   Classe : …………\n';
   t += 'Date : ' + d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR').slice(0, 5) + '\n';
   t += '='.repeat(64) + '\n\n';
   var atelier = '';
@@ -1695,8 +1701,7 @@ function texteCompteRendu() {
 
 function exporter() {
   var t = texteCompteRendu();
-  var b = (ligne('binome').value || 'binome').replace(/[^A-Za-z0-9À-ÿ _-]/g, '').replace(/\s+/g, '-');
-  var nom = 'compte-rendu_TP-IA_' + b + '.txt';
+  var nom = 'compte-rendu_TP-IA.txt';
   try {
     var blob = new Blob([t], { type: 'text/plain;charset=utf-8' });
     var a = document.createElement('a');
@@ -2082,5 +2087,8 @@ if (/[?&]autotest=1/.test(location.search)) {
 }
 
 </script>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte. Les réponses restent dans ton navigateur et ne sont envoyées à aucun serveur.</footer>
 </body>
 </html>

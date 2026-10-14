@@ -21,8 +21,6 @@ header{position:sticky; top:0; z-index:20; background:#fff; border-bottom:3px so
 .ligne-titre{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
 h1{font-size:1.18rem; margin:0; color:var(--bleu)}
 h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
-.bloc-eleve{display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--gris)}
-.bloc-eleve input{font:inherit; font-size:.85rem; padding:3px 6px; border:1px solid var(--bord); border-radius:6px; width:14rem}
 .onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
 .onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
   color:var(--bleu); border-radius:999px; cursor:pointer; transition:all .2s}
@@ -293,7 +291,7 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
   header{padding:8px 10px 6px}
   header h1{font-size:.95rem; line-height:1.15}
   header h1 small{display:block; font-size:.68rem}
-  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .header-fields, header .meta{gap:6px; font-size:.78rem}
   header .barre-progression{display:none}
 
   /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
@@ -332,6 +330,16 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
 }
 </style>
 </head>
+<!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
+<style>
+  .nom-manuscrit{font-size:.85rem; color:var(--gris); margin:4px 0 0}
+  .nom-manuscrit .mention-donnees{display:block; font-size:.72rem; font-style:italic; opacity:.85}
+  .mention-rgpd{max-width:1240px; margin:16px auto 24px; padding:10px 14px; border:1px solid #d8e0e8;
+    border-radius:8px; background:#f6f8fa; color:#5a6672; font-size:.78rem; line-height:1.45;
+    text-align:center}
+@media print{.nom-manuscrit .mention-donnees{display:block}}
+</style>
+
 <body>
 
 <!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
@@ -427,9 +435,9 @@ table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
 <header>
   <div class="ligne-titre">
     <h1>Comparateur OST — Trottinette vs VAE <small>3<sup>e</sup> · Technologie · Séquence 3 · OST2</small></h1>
-    <div class="bloc-eleve">
-      <label>Nom : <input type="text" id="nom" placeholder="Votre nom" autocomplete="off"></label>
-      <label>Classe : <input type="text" id="classe" placeholder="3e…" style="width:6rem" autocomplete="off"></label>
+    <div class="ligne-identite">
+      <p class="nom-manuscrit">Élève(s) : ……………………………………………………………………………………… <span class="mention-donnees">Aucune donnée personnelle saisie sur cette page</span></p>
+      <p class="nom-manuscrit">Classe : ………………</p>
     </div>
   </div>
   <div class="onglets" id="onglets">
@@ -1230,8 +1238,6 @@ try {
     Object.assign(state.scores, saved.scores||{});
     Object.assign(state.completed, saved.completed||{});
     Object.assign(state.parts, saved.parts||{});
-    if(saved.nom) document.getElementById('nom').value = saved.nom;
-    if(saved.classe) document.getElementById('classe').value = saved.classe;
   }
 } catch(e){}
 
@@ -1240,9 +1246,7 @@ function saveState(){
     localStorage.setItem('ost-comparateur-state', JSON.stringify({
       scores:state.scores,
       completed:state.completed,
-      parts:state.parts,
-      nom:document.getElementById('nom').value,
-      classe:document.getElementById('classe').value
+      parts:state.parts
     }));
   } catch(e){}
 }
@@ -2634,13 +2638,11 @@ function resetAll(){
 }
 
 function exporterResultats(){
-  const nom = document.getElementById('nom').value || 'Élève';
-  const classe = document.getElementById('classe').value || '3e';
   const total = Object.values(state.scores).reduce((a,b)=>a+b,0);
   const max = Object.values(state.maxScores).reduce((a,b)=>a+b,0);
 
   let txt = `RÉSULTATS — Comparateur OST\n`;
-  txt += `Nom : ${nom}\nClasse : ${classe}\nDate : ${new Date().toLocaleDateString('fr-FR')}\n\n`;
+  txt += `Élève(s) : …………………………   Classe : …………\nDate : ${new Date().toLocaleDateString('fr-FR')}\n\n`;
   txt += `Score global : ${total}/${max} (${Math.round(total/max*100)}%)\n\n`;
   txt += `N1 Connaissances : ${state.scores.n1}/${state.maxScores.n1}\n`;
   txt += `N2 Compréhension : ${state.scores.n2}/${state.maxScores.n2}\n`;
@@ -2650,7 +2652,7 @@ function exporterResultats(){
   const blob = new Blob([txt], {type:'text/plain'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `resultats-OST-${nom.replace(/\s+/g,'_')}.txt`;
+  a.download = 'resultats-OST.txt';
   a.click();
   showMessage('💾 Résultats exportés !');
 }
@@ -2686,10 +2688,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
   updateBilan();
   updateProgress();
 
-  // Auto-save on input change
-  ['nom','classe'].forEach(id=>{
-    document.getElementById(id).addEventListener('input', saveState);
-  });
 });
 
 // Polyfill roundRect pour navigateurs anciens
@@ -2732,8 +2730,6 @@ function esc(s){
 function estCible(e){
   if (!e || e.disabled) return false;
   if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
-  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
-  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
   if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
   return false;
 }
@@ -2753,14 +2749,6 @@ function entete(){
     var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
     if (t) titre = t;
   }
-  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
-                   'header input[type=text][placeholder*="nom"]',
-                   'header input[type=text][placeholder*="Prenom"]',
-                   'header input[type=text]']);
-  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
-                    'input[type=text][placeholder*="classe"]',
-                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
-                    'input[type=text][placeholder*="3e"]']);
   var d = new Date();
   var quand = d.toLocaleDateString('fr-FR') + ' ' +
               d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
@@ -2768,8 +2756,8 @@ function entete(){
     '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
     " · Support d'activité imprimé avec les réponses de l'élève</div>" +
     '<table class="ep-infos"><tr>' +
-    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
-    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Élève(s) :</b> …………………………</td>' +
+    '<td><b>Classe :</b> …………</td>' +
     '<td><b>Date :</b> ' + esc(quand) + '</td>' +
     '</tr></table>' +
     '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
@@ -2816,5 +2804,8 @@ document.addEventListener('click', function(ev){
 window.exporterSupportPDF = exporter;
 })();
 </script>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte. Les réponses restent dans ton navigateur et ne sont envoyées à aucun serveur.</footer>
 </body>
 </html>
