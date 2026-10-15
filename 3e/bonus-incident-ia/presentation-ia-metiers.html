@@ -148,59 +148,29 @@
             margin: 15px 0;
         }
 
-        .quiz-container {
+        .question-box {
             background: #f0f4ff;
             padding: 25px;
             border-radius: 12px;
             margin: 20px 0;
+            border-left: 5px solid #667eea;
         }
 
-        .quiz-question {
-            font-size: 1.2em;
-            font-weight: bold;
+        .question-box h3 {
             color: #764ba2;
             margin-bottom: 15px;
         }
 
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .quiz-option {
+        .question-item {
             background: white;
             padding: 15px;
+            margin: 10px 0;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            border-left: 3px solid #764ba2;
         }
 
-        .quiz-option:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-
-        .quiz-option.correct {
-            background: #d4edda;
-            border-color: #28a745;
-        }
-
-        .quiz-option.incorrect {
-            background: #f8d7da;
-            border-color: #dc3545;
-        }
-
-        .feedback {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .feedback.show {
-            display: block;
+        .question-item strong {
+            color: #667eea;
         }
 
         .timeline {
@@ -318,16 +288,20 @@
             <p>Cette technologie bouleverse déjà le monde du travail. Découvrons comment !</p>
         </div>
 
-        <!-- Slide 2: Impact chiffré -->
+        <!-- Slide 2: Impact chiffré - Sources fiables -->
         <div class="slide">
             <h2>⚠️ Un impact mesurable sur l'emploi</h2>
             
             <div class="stat-box">
-                <span class="stat-number">75 000</span>
-                <span class="stat-label">CDI en moins par an pour les jeunes (21-29 ans) dans les métiers exposés à l'IA depuis 2022</span>
+                <span class="stat-number">30%</span>
+                <span class="stat-label">Baisse du taux d'embauche en CDI pour les jeunes dans les métiers exposés à l'IA</span>
             </div>
 
-            <p>Selon une étude récente, l'arrivée de l'IA générative en France a fait perdre chaque année <strong>75 000 contrats à durée indéterminée</strong> aux jeunes diplômés dans les métiers les plus touchés.</p>
+            <p>Selon une étude de la <strong>Banque de France</strong>, l'arrivée de l'IA générative a fait chuter de <strong>30% le taux d'embauche des jeunes en CDI</strong> dans les métiers les plus exposés à cette technologie.</p>
+
+            <div class="highlight">
+                <strong>Source institutionnelle :</strong> Cette donnée provient de la Banque de France, organisme officiel qui analyse les tendances économiques françaises.
+            </div>
 
             <div class="grid-2">
                 <div class="card">
@@ -352,7 +326,7 @@
                 </div>
             </div>
 
-            <p><small>Sources : <a href="https://www.bfmtv.com/economie/emploi/dans-les-metiers-exposes-les-embauches-decrochent-une-etude-estime-que-l-arrivee-de-l-ia-en-france-a-fait-perdre-chaque-annee-75-000-cdi-aux-jeunes-de-21-a-29-ans-depuis-2022_AD-202610080787.html" target="_blank">BFM TV</a>, <a href="https://www.la-croix.com/economie/ia-75-000-cdi-en-moins-par-an-pour-les-jeunes-dans-les-metiers-les-plus-exposes-20261008" target="_blank">La Croix</a></small></p>
+            <p><small>Source : <a href="https://www.banque-france.fr/fr/publications-et-statistiques/publications/ia-generative-les-premiers-changements-du-marche-du-travail-sur-les-jeunes" target="_blank">Banque de France — IA générative et marché du travail</a></small></p>
         </div>
 
         <!-- Slide 3: Métiers transformés -->
@@ -385,7 +359,46 @@
             </div>
         </div>
 
-        <!-- Slide 4: Compétences importantes -->
+        <!-- Slide 4: Questions ouvertes - Réflexion -->
+        <div class="slide">
+            <h2>💭 Réfléchissons ensemble : Comment l'IA impacte-t-elle ces métiers ?</h2>
+            
+            <p>Par îlot (4-5 élèves), choisissez UN métier ci-dessous et discutez pendant 5 minutes :</p>
+
+            <div class="question-box">
+                <h3>Questions de réflexion</h3>
+                
+                <div class="question-item">
+                    <strong>1. Professeur :</strong> Comment l'IA pourrait-elle aider un enseignant dans son travail quotidien ? Quelles tâches resteront humaines ?
+                </div>
+
+                <div class="question-item">
+                    <strong>2. Boulanger :</strong> L'IA peut-elle transformer le métier de boulanger ? Si oui, comment ? (gestion des stocks, prévision des ventes, création de nouvelles recettes...)
+                </div>
+
+                <div class="question-item">
+                    <strong>3. Infirmier/Infirmière :</strong> Quels aspects du soin pourraient être assistés par l'IA ? Pourquoi le contact humain restera-t-il essentiel ?
+                </div>
+
+                <div class="question-item">
+                    <strong>4. Architecte :</strong> Comment l'IA peut-elle aider à concevoir des bâtiments ? Qu'apporte l'architecte humain que l'IA ne peut pas faire ?
+                </div>
+
+                <div class="question-item">
+                    <strong>5. Agriculteur/Agricultrice :</strong> L'IA est déjà utilisée dans l'agriculture de précision. Quels avantages ? Quels risques ?
+                </div>
+
+                <div class="question-item">
+                    <strong>6. Votre choix :</strong> Choisissez un autre métier qui vous intéresse et imaginez comment l'IA pourrait le transformer.
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>Consigne :</strong> Préparez une réponse courte (2-3 phrases) que vous partagerez à l'oral avec la classe.
+            </div>
+        </div>
+
+        <!-- Slide 5: Compétences importantes -->
         <div class="slide">
             <h2>🎯 Les compétences essentielles pour demain</h2>
             
@@ -416,44 +429,6 @@
 
             <div class="highlight">
                 <strong>🔑 À retenir :</strong> Les compétences humaines (créativité, empathie, jugement) deviennent PLUS importantes, pas moins !
-            </div>
-        </div>
-
-        <!-- Slide 5: Quiz interactif -->
-        <div class="slide">
-            <h2>🎮 Teste tes connaissances !</h2>
-            
-            <div class="quiz-container">
-                <div class="quiz-question">Question 1 : Combien de CDI en moins par an l'IA a-t-elle causé pour les jeunes en France depuis 2022 ?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">A) 10 000</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, true)">B) 75 000</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">C) 150 000</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">D) 5 000</div>
-                </div>
-                <div class="feedback" id="feedback1"></div>
-            </div>
-
-            <div class="quiz-container">
-                <div class="quiz-question">Question 2 : Quel métier NOUVEAU est apparu grâce à l'IA ?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">A) Boulanger</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">B) Maçon</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, true)">C) Prompt engineer</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">D) Coiffeur</div>
-                </div>
-                <div class="feedback" id="feedback2"></div>
-            </div>
-
-            <div class="quiz-container">
-                <div class="quiz-question">Question 3 : Quelle compétence devient PLUS importante avec l'IA ?</div>
-                <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">A) Mémoriser des faits</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, true)">B) Pensée critique</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">C) Calcul mental rapide</div>
-                    <div class="quiz-option" onclick="checkAnswer(this, false)">D) Recopier des textes</div>
-                </div>
-                <div class="feedback" id="feedback3"></div>
             </div>
         </div>
 
@@ -517,7 +492,7 @@
 
             <div style="text-align: center; margin-top: 20px;">
                 <button class="btn" onclick="window.print()">📄 Imprimer cette présentation</button>
-                <button class="btn" onclick="location.reload()">🔄 Recommencer le quiz</button>
+                <button class="btn" onclick="location.reload()">🔄 Recharger la page</button>
             </div>
         </div>
 
@@ -527,50 +502,5 @@
             <p class="mention-rgpd">🔒 Aucune donnée personnelle n'est collectée sur cette page</p>
         </footer>
     </div>
-
-    <script>
-        function checkAnswer(element, isCorrect) {
-            // Empêcher de cliquer plusieurs fois
-            const parent = element.parentElement;
-            if (parent.classList.contains('answered')) return;
-            
-            parent.classList.add('answered');
-            
-            // Marquer toutes les options
-            const options = parent.querySelectorAll('.quiz-option');
-            options.forEach(opt => {
-                opt.style.pointerEvents = 'none';
-            });
-            
-            // Montrer la réponse
-            if (isCorrect) {
-                element.classList.add('correct');
-            } else {
-                element.classList.add('incorrect');
-                // Montrer la bonne réponse
-                options.forEach(opt => {
-                    if (opt.onclick.toString().includes('true')) {
-                        opt.classList.add('correct');
-                    }
-                });
-            }
-            
-            // Afficher le feedback
-            const feedbackId = 'feedback' + (Array.from(document.querySelectorAll('.quiz-container')).indexOf(parent.closest('.quiz-container')) + 1);
-            const feedback = document.getElementById(feedbackId);
-            if (feedback) {
-                feedback.classList.add('show');
-                if (isCorrect) {
-                    feedback.innerHTML = '<strong>✅ Bravo !</strong> C\'est la bonne réponse.';
-                    feedback.style.background = '#d4edda';
-                    feedback.style.color = '#155724';
-                } else {
-                    feedback.innerHTML = '<strong>❌ Pas tout à fait.</strong> Regarde la réponse correcte en vert.';
-                    feedback.style.background = '#f8d7da';
-                    feedback.style.color = '#721c24';
-                }
-            }
-        }
-    </script>
 </body>
 </html>
