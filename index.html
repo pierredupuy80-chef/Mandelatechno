@@ -22,12 +22,26 @@
     font-size:17px;
     line-height:1.5;
     color:#1d2733;
-    background:var(--fond);
+    background:linear-gradient(180deg,#1a0a2e 0%,#2d1b4e 30%,#ff6b35 70%,#ff9a3c 100%);
+    background-attachment:fixed;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    top:0; left:0; right:0; bottom:0;
+    pointer-events:none;
+    z-index:-1;
+    opacity:0.15;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ctext x='10' y='30' font-size='24'%3E🎃%3C/text%3E%3Ctext x='60' y='70' font-size='20'%3E🦇%3C/text%3E%3C/svg%3E");
+    background-repeat:repeat;
   }
   header{
     background:linear-gradient(135deg,var(--bleu2),#1565c0);
     color:#fff;
     padding:22px 18px 20px;
+    border-radius:0 0 16px 16px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.3);
   }
   header .contenu{max-width:960px; margin:0 auto}
   header h1{margin:0 0 6px; font-size:clamp(1.25rem,4.5vw,1.7rem); line-height:1.2}
@@ -49,7 +63,7 @@
   }
   .sommaire a:hover,.sommaire a:focus{background:var(--bleuf)}
 
-  main{max-width:960px; margin:0 auto; padding:18px 14px 40px}
+  main{max-width:960px; margin:0 auto; padding:18px 14px 40px; background:rgba(255,255,255,0.85); border-radius:16px; margin-top:20px; margin-bottom:20px}
   .niveau{display:none; margin:0 0 34px; scroll-margin-top:12px}
   .niveau:target{display:block}
   .niveau > h2{
@@ -114,7 +128,7 @@
   .ouvrir:hover,.ouvrir:focus{background:var(--bleu)}
 
   .aide,.astuce{
-    background:#fff;
+    background:rgba(255,255,255,0.95);
     border:1px solid var(--bord);
     border-left:5px solid var(--bleu2);
     border-radius:12px;
@@ -133,8 +147,9 @@
     max-width:960px;
     margin:0 auto;
     padding:0 14px 34px;
-    color:var(--gris);
+    color:#fff;
     font-size:.85rem;
+    text-shadow:0 1px 3px rgba(0,0,0,0.5);
   }
 </style>
 </head>
