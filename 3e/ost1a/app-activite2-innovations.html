@@ -23,7 +23,7 @@ h1{font-size:1.18rem; margin:0; color:var(--bleu)}
 h1 small{font-weight:normal; font-size:.78rem; color:var(--gris)}
 .onglets{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
 .onglets button{font:inherit; font-size:.83rem; padding:6px 12px; border:1px solid var(--bleu2); background:#fff;
-  color:var(--bleu); border-radius:999px; cursor:pointer}
+  color:var(--bleu); border-radius:999px; cursor:pointer; min-height:44px}
 .onglets button:hover{background:var(--bleuf)}
 .onglets button.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
 main{padding:12px 14px 90px; max-width:1240px; margin:0 auto}
@@ -1049,6 +1049,12 @@ function checkOpenQuestion(id) {
   const keywords = getKeywordsForQuestion(id);
   const found = keywords.filter(k => text.toLowerCase().includes(k.toLowerCase()));
   const ratio = found.length / Math.max(keywords.length, 1);
+
+  // Ouvrir automatiquement l'élément <details> contenant les pistes de réponse
+  const detailsEl = fb.nextElementSibling;
+  if (detailsEl && detailsEl.tagName === 'DETAILS') {
+    detailsEl.open = true;
+  }
 
   if (ratio >= 0.4) {
     fb.className = 'quiz-feedback show correct';
