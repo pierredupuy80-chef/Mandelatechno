@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trottinettes et VAE : mission Halloween</title>
+<style>
+:root{--bleu:#1f4e79;--bleu2:#2e75b6;--bleuf:#e8f1fa;--orange:#d97706;--orangeF:#fdf1e0;--vert:#2e7d32;--vertF:#e8f5e9;--rouge:#b3261e;--rougeF:#fdecea;--gris:#5b6b7b;--bord:#c9d6e4;--noir:#1f2933}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Liberation Sans",Arial,sans-serif;font-size:17px;line-height:1.5;color:var(--noir);background:#f4f8fc}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid var(--bleu2);padding:10px 16px;box-shadow:0 2px 6px rgba(31,78,121,.08)}
+h1{font-size:1.2rem;color:var(--bleu)}h1 small{display:block;font-weight:normal;font-size:.75rem;color:var(--gris)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tabs button{font:inherit;font-size:.88rem;padding:8px 14px;border:2px solid var(--bleu2);background:#fff;color:var(--bleu);border-radius:999px;cursor:pointer;transition:all .2s}
+.tabs button.active{background:var(--bleu2);color:#fff}.tabs button:hover:not(.active){background:var(--bleuf)}
+main{padding:16px;max-width:900px;margin:0 auto}
+section{display:none;animation:fadeIn .3s}section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#fff;border:1px solid var(--bord);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.badge{display:inline-block;font-size:.7rem;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.badge.n1{background:#dbeafe;color:#1e40af}.badge.n2{background:#fef3c7;color:#92400e}.badge.n3{background:#d1fae5;color:#065f46}.badge.n4{background:#fce7f3;color:#9d174d}
+h2{font-size:1.15rem;color:var(--bleu);margin:0 0 8px}h3{font-size:1.05rem;color:var(--bleu);margin:12px 0 6px}
+p{margin:6px 0}
+.info{background:var(--bleuf);border-left:5px solid var(--bleu2);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.95rem}
+.success{background:var(--vertF);border-left-color:var(--vert)}.error{background:var(--rougeF);border-left-color:var(--rouge)}
+.match-item{padding:10px 14px;border:2px solid var(--bord);border-radius:10px;cursor:pointer;background:#fff;font-size:.9rem;transition:all .15s;margin-bottom:6px}
+.match-item:hover{border-color:var(--bleu2);background:var(--bleuf)}
+.match-item.selected{border-color:var(--bleu2);background:var(--bleuf);font-weight:bold}
+.match-item.matched{border-color:var(--vert);background:var(--vertF);cursor:default;opacity:.7}
+.score-display{font-size:1.3rem;font-weight:bold;color:var(--bleu);text-align:center;padding:12px;background:var(--bleuf);border-radius:10px;margin:12px 0}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.chain-step{display:inline-flex;align-items:center;padding:8px 14px;background:var(--bleuf);border:1px solid var(--bleu2);border-radius:8px;font-size:.9rem;font-weight:bold;margin:4px 0}
+.chain-arrow{color:var(--bleu2);font-size:1.2rem;margin:0 6px}
+footer{text-align:center;padding:20px;color:var(--gris);font-size:.8rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--bleu2);color:#fff;padding:10px;text-align:center}
+td{padding:8px;text-align:center;border-bottom:1px solid var(--bord)}
+td.best{background:var(--vertF);font-weight:bold}
+td:first-child{text-align:left;font-weight:bold}
+@media(max-width:600px){.tabs button{font-size:.78rem;padding:6px 10px}}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+
+/* =====================================================================
+   Composants du gabarit d'activité — à charger APRÈS coquille.css
+   =====================================================================
+   Ces composants complètent la charte d'origine. Ils répondent aux
+   exigences du banc d'essai mobile (Rapport-compatibilite-mobile-apps.md) :
+
+   - toute cible tactile fait au moins 44 px de haut ;
+   - aucun champ de saisie sous 16 px de police (sinon zoom automatique
+     sur iPhone) ;
+   - aucune interaction au glisser-déposer : tout se fait au clic, donc
+     utilisable au doigt ;
+   - ce que l'élève a répondu reste lisible à l'impression (PDF).
+   ===================================================================== */
+
+/* --- Bouton-réponse pleine largeur : le modèle recommandé par le rapport --- */
+.opt-btn{
+  display:block; width:100%; text-align:left;
+  font:inherit; font-size:1rem; line-height:1.35;
+  padding:12px 16px; margin:6px 0;
+  min-height:44px;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px;
+  background:#fff; color:var(--noir,#1f2933); cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.opt-btn:disabled{cursor:default}
+.opt-btn.choisi{border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa); font-weight:bold}
+.opt-btn.juste{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9)}
+.opt-btn.faux{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+.opt-btn.faux::after{content:" ✘"}
+.opt-btn.juste::after{content:" ✔"}
+
+/* --- Question de quiz --- */
+.quiz-question{margin:12px 0; padding:10px 0; border-top:1px solid var(--bord,#c9d6e4)}
+.quiz-question:first-of-type{border-top:none; padding-top:0}
+.quiz-question > p.enonce{font-weight:bold; margin:0 0 4px}
+.quiz-feedback{display:none; margin-top:6px; font-size:.92rem; border-radius:8px; padding:8px 12px}
+.quiz-feedback.visible{display:block}
+.quiz-feedback.juste{background:var(--vertF,#e8f5e9); border-left:4px solid var(--vert,#2e7d32)}
+.quiz-feedback.faux{background:var(--rougeF,#fdecea); border-left:4px solid var(--rouge,#b3261e)}
+
+/* --- Compteur de score --- */
+.compteur{
+  font-size:1rem; font-weight:bold; color:var(--bleu,#1f4e79);
+  text-align:center; padding:10px 12px; margin:12px 0;
+  background:var(--bleuf,#e8f1fa); border-radius:10px; min-height:44px;
+}
+
+/* --- Association par clic (jamais de glisser-déposer) --- */
+.assoc-grille{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+.assoc-colonne{display:flex; flex-direction:column; gap:6px}
+.assoc-titre{font-size:.82rem; font-weight:bold; text-transform:uppercase;
+  letter-spacing:.04em; color:var(--gris,#5b6b7b); margin:0 0 2px}
+.assoc-item{
+  display:flex; align-items:center; min-height:44px;
+  padding:10px 14px; font-size:.95rem;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px; background:#fff;
+  cursor:pointer; transition:all .15s;
+}
+.assoc-item:hover:not(.apparie){border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.assoc-item.selectionne{border-color:var(--orange,#d97706); background:var(--orangeF,#fdf1e0); font-weight:bold}
+.assoc-item.apparie{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9); cursor:default; opacity:.85}
+.assoc-item.rate{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+
+/* --- Remise en ordre par clic --- */
+.ordre-liste{display:flex; flex-direction:column; gap:6px; counter-reset:rang}
+.ordre-etape{
+  display:flex; align-items:center; gap:10px; min-height:44px;
+  padding:10px 14px; font-size:.95rem;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px; background:#fff; cursor:pointer;
+}
+.ordre-etape::before{
+  counter-increment:rang; content:counter(rang);
+  flex:0 0 26px; height:26px; line-height:26px; text-align:center;
+  background:var(--bleuf,#e8f1fa); color:var(--bleu,#1f4e79);
+  border-radius:50%; font-weight:bold; font-size:.85rem;
+}
+.ordre-etape:hover{border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.ordre-etape.selectionne{border-color:var(--orange,#d97706); background:var(--orangeF,#fdf1e0)}
+.ordre-etape.juste{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9)}
+.ordre-etape.faux{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+.ordre-actions{margin-top:10px}
+.bouton{
+  font:inherit; font-size:1rem; font-weight:bold;
+  min-height:44px; padding:12px 18px;
+  border:none; border-radius:10px; background:var(--bleu2,#2e75b6); color:#fff; cursor:pointer;
+}
+.bouton:hover{background:var(--bleu,#1f4e79)}
+.bouton.secondaire{background:#fff; color:var(--bleu,#1f4e79); border:2px solid var(--bleu2,#2e75b6)}
+.bouton.secondaire:hover{background:var(--bleuf,#e8f1fa)}
+
+/* --- Chaîne (énergie, information, étapes techniques) --- */
+.chaine-rail{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin:10px 0}
+.chaine-bloc{
+  display:inline-flex; align-items:center; min-height:44px;
+  padding:10px 14px; font-size:.92rem; font-weight:bold;
+  background:var(--bleuf,#e8f1fa); border:1px solid var(--bleu2,#2e75b6); border-radius:8px;
+}
+.chaine-fleche{color:var(--bleu2,#2e75b6); font-size:1.2rem; margin:0 4px}
+
+/* --- Saisie libre --- */
+.saisie textarea{
+  width:100%; min-height:90px; padding:10px 12px;
+  border:2px solid var(--bord,#c9d6e4); border-radius:8px;
+  font:inherit; font-size:1rem; /* >= 16px : évite le zoom automatique iOS */
+  resize:vertical; background:#fff; color:var(--noir,#1f2933);
+}
+.saisie textarea:focus{outline:none; border-color:var(--bleu2,#2e75b6); background:#fff}
+.saisie .aide{font-size:.82rem; color:var(--gris,#5b6b7b); margin-top:4px}
+
+/* --- Objectifs / bandeau d'ouverture --- */
+.objectifs{margin:8px 0 0; padding-left:1.2rem}
+.objectifs li{margin:4px 0}
+.fiche-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:.85rem;
+  color:var(--gris,#5b6b7b); margin:6px 0 0}
+.fiche-meta b{color:var(--bleu,#1f4e79)}
+.etiquette-code{
+  display:inline-block; font-weight:bold; font-size:.78rem; letter-spacing:.03em;
+  background:#dce9f7; color:var(--bleu,#1f4e79); border-radius:4px;
+  padding:3px 8px; margin:2px 4px 2px 0;
+}
+
+/* --- Ce que l'élève a répondu, visible uniquement à l'impression --- */
+.marque-impression{display:none}
+
+/* =====================================================================
+   Corrections appliquées PAR-DESSUS la coquille extraite
+   =====================================================================
+   La coquille (coquille.css) est extraite telle quelle du fichier de
+   référence : on n'y touche pas. Mais mesurée au navigateur en 390 px de
+   large, elle laisse deux cibles tactiles sous les 44 px exigés :
+
+     - les onglets de niveau : 36 px (la règle « max-width:600px » de la
+       coquille réduit la police à .78rem et le rembourrage à 6px) ;
+     - les liens de ressources (fiche, vidéo, quiz) : 29 px.
+
+   Ces deux règles viennent après dans la feuille, donc elles gagnent sans
+   qu'il soit besoin de modifier la coquille. Si la coquille est ré-extraite
+   depuis une activité plus récente, ces corrections restent valables : le
+   script de vérification de rendu les re-contrôle à chaque construction.
+   ===================================================================== */
+
+.tabs button{min-height:44px}
+a.ress-lien{
+  display:inline-flex; align-items:center;
+  min-height:44px; padding:8px 12px;
+}
+
+@media (max-width:600px){
+  /* On garde la police compacte choisie pour la coquille, mais on rend la
+     hauteur tactile minimale : c'est un doigt d'élève, pas un curseur. */
+  .tabs button{min-height:44px; padding:8px 12px}
+  a.ress-lien{width:100%; justify-content:center}
+}
+
+/* --- Message d'erreur de bloc : jamais de page blanche --- */
+.bloc-erreur{
+  background:var(--rougeF,#fdecea); border-left:5px solid var(--rouge,#b3261e);
+  border-radius:8px; padding:10px 14px; margin:10px 0; font-size:.88rem;
+}
+
+@media (max-width:600px){
+  /* On garde les cibles à 44 px : on réduit les marges, pas la hauteur. */
+  .quiz-question{margin:10px 0}
+  .assoc-grille{gap:8px}
+  .chaine-fleche{margin:0 2px}
+}
+
+@media print{
+  /* Les onglets sont masqués : toutes les sections doivent être visibles. */
+  .quiz-feedback{display:block !important}
+  .marque-impression{display:inline !important; font-size:8pt; font-weight:bold}
+  .ordre-etape,.assoc-item,.opt-btn,.chaine-bloc{min-height:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs téléphone (barre repliable, onglets sur une ligne, retour en haut
+     au changement de niveau). Extrait du fichier de référence validé :
+     ne pas modifier ici, relancer _outils/gabarit/extraire_coquille.py. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+<header>
+<h1>Trottinettes et VAE : mission Halloween<small>Séquence 5 — Sécurité et choix d&#x27;un OST sur le thème d&#x27;Halloween</small></h1>
+<div class="tabs" id="tabs"></div>
+</header>
+<main id="content"></main>
+<footer>Mini-application pédagogique — Niveau Bloom N1 à N4 — 4e Technologie</footer>
+
+<!-- Contenu pédagogique : une donnée, pas du code. -->
+<script>
+window.ACTIVITE = {
+ "id": "4e-ost5-trottinettes-halloween",
+ "titre": "Trottinettes et VAE : mission Halloween",
+ "niveau": "4e",
+ "onglets": [
+  {
+   "titre": "N1 — Les engins électriques",
+   "blocs": [
+    {
+     "type": "brut",
+     "html": "\n<!-- ===== RESSOURCES ASSOCIÉES (fiches, vidéos, quiz) ===== -->\n<div class=\"ressources-n1\">\n  <h3>📚 Ressources associées<\/h3>\n  <p class=\"note\">Ressources officielles en lien direct avec le programme de technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif, puis 📄 lis la fiche de connaissances.<\/p>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST2a<\/span>L&#x27;expérience utilisateur d&#x27;un OST<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/wg9X8aW6rgRaAYo\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113213-ost2a-lexperience-utilisateur-dun-ost/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113213-ost2a-lexperience-utilisateur-dun-ost/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/gYjXxK1CjQwngYSz5\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST3e<\/span>Les critères de choix : qualité, efficacité énergétique, durabilité, recyclabilité<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/bDpDp8wAATg6Qjy\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113190-ost3e-les-criteres-de-choix-la-qualite-lefficacite-energetique-la-durabilite-la-recyclabilite/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113190-ost3e-les-criteres-de-choix-la-qualite-lefficacite-energetique-la-durabilite-la-recyclabilite/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/uM7qoFzyE2EJ7U3r5\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n<\/div>\n"
+    },
+    {
+     "type": "intro",
+     "bloom": "n1",
+     "titre": "🎃 Mission Halloween : choisir ton engin électrique",
+     "texte": "C'est la nuit d'Halloween ! Tu dois te déplacer en ville pour aller chercher des bonbons. Deux engins électriques s'offrent à toi : la <b>trottinette électrique<\/b> et le <b>vélo à assistance électrique (VAE)<\/b>. Chacun a ses avantages et ses inconvénients. Ta mission : comprendre leurs caractéristiques pour faire le meilleur choix.",
+     "objectifs": [
+      "Identifier les différences entre une trottinette électrique et un VAE.",
+      "Comprendre comment fonctionne l'assistance électrique.",
+      "Reconnaître les éléments de sécurité essentiels."
+     ],
+     "duree": "15 min",
+     "modalite": "seul ou en binôme, sur ordinateur ou tablette",
+     "codes": [
+      "OST2"
+     ]
+    },
+    {
+     "type": "association",
+     "bloom": "n1",
+     "titre": "Associe chaque élément à son engin",
+     "consigne": "Clique un élément, puis clique l'engin auquel il correspond.",
+     "colonnes": [
+      {
+       "titre": "Élément",
+       "items": [
+        "Guidon avec poignées tournantes",
+        "Plateforme debout",
+        "Pédalier avec pédales",
+        "Petites roues (8-10 pouces)",
+        "Grandes roues (26-28 pouces)",
+        "Assise (selle)"
+       ]
+      },
+      {
+       "titre": "Engin",
+       "items": [
+        "Trottinette électrique 🛴",
+        "Vélo à assistance électrique 🚲"
+       ]
+      }
+     ],
+     "paires": [
+      [
+       "Guidon avec poignées tournantes",
+       "Trottinette électrique 🛴"
+      ],
+      [
+       "Plateforme debout",
+       "Trottinette électrique 🛴"
+      ],
+      [
+       "Pédalier avec pédales",
+       "Vélo à assistance électrique 🚲"
+      ],
+      [
+       "Petites roues (8-10 pouces)",
+       "Trottinette électrique 🛴"
+      ],
+      [
+       "Grandes roues (26-28 pouces)",
+       "Vélo à assistance électrique 🚲"
+      ],
+      [
+       "Assise (selle)",
+       "Vélo à assistance électrique 🚲"
+      ]
+     ]
+    },
+    {
+     "type": "quiz",
+     "bloom": "n1",
+     "titre": "Vérifie tes connaissances",
+     "questions": [
+      {
+       "question": "Quelle est la principale différence entre une trottinette électrique et un VAE ?",
+       "options": [
+        "Le VAE a des pédales et nécessite de pédaler",
+        "La trottinette est plus chère",
+        "Le VAE ne peut pas aller sur la route",
+        "La trottinette n'a pas de moteur"
+       ],
+       "bonne": 0,
+       "explication": "Le VAE (vélo à assistance électrique) possède un pédalier et l'assistance ne fonctionne que lorsque tu pédales. La trottinette se conduit debout, sans pédaler."
+      },
+      {
+       "question": "Quel équipement de sécurité est obligatoire pour circuler avec ces engins la nuit d'Halloween ?",
+       "options": [
+        "Un casque uniquement",
+        "Des vêtements lumineux ou réfléchissants",
+        "Rien, c'est Halloween !",
+        "Des gants seulement"
+       ],
+       "bonne": 1,
+       "explication": "La visibilité est essentielle, surtout la nuit ! Des vêtements lumineux ou réfléchissants permettent aux autres usagers de te voir. Le casque est fortement recommandé."
+      },
+      {
+       "question": "Quelle source d'énergie alimente ces engins ?",
+       "options": [
+        "De l'essence",
+        "Une batterie rechargeable",
+        "L'énergie solaire uniquement",
+        "Du vent"
+       ],
+       "bonne": 1,
+       "explication": "Les trottinettes électriques et les VAE utilisent une batterie rechargeable (généralement au lithium) qui alimente un moteur électrique."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "N2 — Sécurité et interactions",
+   "blocs": [
+    {
+     "type": "intro",
+     "bloom": "n2",
+     "titre": "👻 Les dangers de la nuit d'Halloween",
+     "texte": "La nuit d'Halloween présente des risques particuliers : visibilité réduite, piétons déguisés qui traversent sans regarder, décorations qui gênent la circulation. Tu dois anticiper ces dangers pour circuler en sécurité avec ton engin électrique.",
+     "objectifs": [
+      "Identifier les interactions entre l'engin, l'utilisateur et l'environnement.",
+      "Repérer les situations à risque spécifiques à Halloween.",
+      "Proposer des solutions pour améliorer la sécurité."
+     ],
+     "duree": "20 min",
+     "modalite": "seul ou en binôme",
+     "codes": [
+      "OST2"
+     ]
+    },
+    {
+     "type": "tri",
+     "bloom": "n2",
+     "titre": "Classe les situations : sécurisé ou dangereux ?",
+     "consigne": "Clique une situation, puis la catégorie correspondante.",
+     "categories": [
+      "Sécurisé ✅",
+      "Dangereux ⚠️"
+     ],
+     "items": [
+      {
+       "texte": "Porter un casque et des brassards réfléchissants",
+       "categorie": "Sécurisé ✅",
+       "icone": "✅"
+      },
+      {
+       "texte": "Rouler sur le trottoir parmi les piétons déguisés",
+       "categorie": "Dangereux ⚠️",
+       "icone": "⚠️"
+      },
+      {
+       "texte": "Respecter les feux rouges et céder le passage",
+       "categorie": "Sécurisé ✅",
+       "icone": "✅"
+      },
+      {
+       "texte": "Écouter de la musique au casque à fond",
+       "categorie": "Dangereux ⚠️",
+       "icone": "⚠️"
+      },
+      {
+       "texte": "Utiliser les pistes cyclables quand elles existent",
+       "categorie": "Sécurisé ✅",
+       "icone": "✅"
+      },
+      {
+       "texte": "Rouler sans éclairage dans une rue sombre",
+       "categorie": "Dangereux ⚠️",
+       "icone": "⚠️"
+      },
+      {
+       "texte": "Signaler ses changements de direction",
+       "categorie": "Sécurisé ✅",
+       "icone": "✅"
+      },
+      {
+       "texte": "Transporter un passager sur la plateforme",
+       "categorie": "Dangereux ⚠️",
+       "icone": "⚠️"
+      }
+     ]
+    },
+    {
+     "type": "quiz",
+     "bloom": "n2",
+     "titre": "Teste ta vigilance",
+     "questions": [
+      {
+       "question": "Tu vois un groupe d'enfants déguisés traverser la rue en courant. Que fais-tu ?",
+       "options": [
+        "Je klaxonne pour les prévenir",
+        "Je ralentis et m'arrête si nécessaire",
+        "Je continue, ils doivent faire attention",
+        "J'accélère pour passer avant eux"
+       ],
+       "bonne": 1,
+       "explication": "La priorité est de ralentir et d'être prêt à s'arrêter. Les enfants déguisés peuvent être moins visibles et moins attentifs à la circulation."
+      },
+      {
+       "question": "Pourquoi est-il interdit de rouler sur le trottoir avec une trottinette électrique ?",
+       "options": [
+        "Parce que c'est trop rapide",
+        "Parce que le trottoir est réservé aux piétons",
+        "Parce que ça abîme le trottoir",
+        "Ce n'est pas interdit"
+       ],
+       "bonne": 1,
+       "explication": "Le trottoir est un espace réservé aux piétons. Rouler dessus met en danger les piétons, surtout la nuit d'Halloween où ils sont nombreux et parfois peu visibles."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "N3 — Comparer et choisir",
+   "blocs": [
+    {
+     "type": "intro",
+     "bloom": "n3",
+     "titre": "🦇 Quel engin choisir pour ta mission ?",
+     "texte": "Maintenant que tu connais les caractéristiques et les règles de sécurité, il faut choisir l'engin le plus adapté à ta mission Halloween. Plusieurs critères entrent en jeu : autonomie, vitesse, confort, prix, impact environnemental.",
+     "objectifs": [
+      "Comparer deux OST selon plusieurs critères.",
+      "Justifier un choix en fonction du besoin.",
+      "Prendre en compte l'impact environnemental."
+     ],
+     "duree": "20 min",
+     "modalite": "seul ou en binôme",
+     "codes": [
+      "OST3"
+     ]
+    },
+    {
+     "type": "tableau",
+     "bloom": "n3",
+     "titre": "Compare les caractéristiques",
+     "consigne": "Le meilleur résultat de chaque ligne est surligné en vert. Repère les compromis : aucun engin n'est le meilleur partout.",
+     "enteteGauche": "Critère",
+     "lignes": [
+      {
+       "nom": "Trottinette électrique",
+       "valeurs": {
+        "vitesse": "25",
+        "autonomie": "25",
+        "poids": "14",
+        "prix": "450",
+        "confort": "2"
+       }
+      },
+      {
+       "nom": "VAE",
+       "valeurs": {
+        "vitesse": "25",
+        "autonomie": "65",
+        "poids": "22",
+        "prix": "1400",
+        "confort": "4"
+       }
+      }
+     ],
+     "criteres": [
+      {
+       "label": "Vitesse max",
+       "cle": "vitesse",
+       "unite": "km/h",
+       "meilleur": "egal"
+      },
+      {
+       "label": "Autonomie moyenne",
+       "cle": "autonomie",
+       "unite": "km",
+       "meilleur": "max"
+      },
+      {
+       "label": "Poids",
+       "cle": "poids",
+       "unite": "kg",
+       "meilleur": "min"
+      },
+      {
+       "label": "Prix moyen",
+       "cle": "prix",
+       "unite": "€",
+       "meilleur": "min"
+      },
+      {
+       "label": "Confort",
+       "cle": "confort",
+       "unite": "/5",
+       "meilleur": "max"
+      }
+     ]
+    },
+    {
+     "type": "quiz",
+     "bloom": "n3",
+     "titre": "Fais ton choix",
+     "questions": [
+      {
+       "question": "Tu dois parcourir 15 km pour aller chez tes amis. Quel engin choisis-tu ?",
+       "options": [
+        "La trottinette (plus légère)",
+        "Le VAE (plus grande autonomie)",
+        "Les deux conviennent également",
+        "Aucun, c'est trop loin"
+       ],
+       "bonne": 1,
+       "explication": "Le VAE offre une autonomie de 50-80 km, suffisante pour un trajet de 15 km aller-retour. La trottinette (20-30 km d'autonomie) serait juste, voire insuffisante."
+      },
+      {
+       "question": "Quel critère environnemental favorise le VAE par rapport à la trottinette ?",
+       "options": [
+        "Le VAE consomme moins d'électricité par kilomètre",
+        "Le VAE dure généralement plus longtemps",
+        "Le VAE est fabriqué avec des matériaux recyclés",
+        "Il n'y a pas de différence environnementale"
+       ],
+       "bonne": 1,
+       "explication": "Un VAE de qualité a une durée de vie plus longue qu'une trottinette entrée de gamme, ce qui réduit l'impact environnemental lié au renouvellement du matériel."
+      },
+      {
+       "question": "Pour un trajet urbain court (2-3 km), quel engin est le plus pratique ?",
+       "options": [
+        "Le VAE (plus confortable)",
+        "La trottinette (plus compacte et facile à transporter)",
+        "Les deux se valent",
+        "Aucun, mieux vaut marcher"
+       ],
+       "bonne": 1,
+       "explication": "Pour un court trajet, la trottinette est plus pratique : elle est légère, se plie facilement et se transporte dans les transports en commun ou au bureau."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "N4 — Bilan et réflexion",
+   "blocs": [
+    {
+     "type": "intro",
+     "bloom": "n4",
+     "titre": "🎃 Bilan de ta mission Halloween",
+     "texte": "Tu as exploré les caractéristiques, la sécurité et les critères de choix des engins électriques de mobilité douce. Maintenant, synthétise tes apprentissages et réfléchis à l'impact de ces nouvelles mobilités sur notre société.",
+     "objectifs": [
+      "Synthétiser les connaissances acquises.",
+      "Réfléchir à l'impact sociétal des nouvelles mobilités.",
+      "Évaluer ta propre pratique."
+     ],
+     "duree": "15 min",
+     "modalite": "seul",
+     "codes": [
+      "OST2",
+      "OST3"
+     ]
+    },
+    {
+     "type": "quiz",
+     "bloom": "n4",
+     "titre": "Vérifie ta compréhension globale",
+     "questions": [
+      {
+       "question": "Quel est l'avantage principal des engins électriques de mobilité douce ?",
+       "options": [
+        "Ils sont gratuits",
+        "Ils réduisent la pollution et les embouteillages",
+        "Ils vont plus vite que les voitures",
+        "Ils ne nécessitent aucun entretien"
+       ],
+       "bonne": 1,
+       "explication": "Les engins électriques de mobilité douce contribuent à réduire la pollution atmosphérique, les émissions de CO₂ et les embouteillages en ville."
+      },
+      {
+       "question": "Quelle règle de sécurité est la plus importante la nuit d'Halloween ?",
+       "options": [
+        "Rouler vite pour rentrer tôt",
+        "Être visible et rester vigilant",
+        "Éviter les zones décorées",
+        "Ne pas sortir seul"
+       ],
+       "bonne": 1,
+       "explication": "La visibilité (vêtements réfléchissants, éclairage) et la vigilance (attention aux piétons, respect du code de la route) sont essentielles pour circuler en sécurité, surtout lors d'événements comme Halloween."
+      },
+      {
+       "question": "Quel facteur doit guider ton choix entre trottinette et VAE ?",
+       "options": [
+        "La couleur de l'engin",
+        "Ton besoin réel (distance, usage, budget)",
+        "Ce que font tes amis",
+        "Le modèle le plus cher"
+       ],
+       "bonne": 1,
+       "explication": "Le choix doit se baser sur tes besoins réels : distance à parcourir, fréquence d'utilisation, budget, facilité de stockage et de transport."
+      }
+     ]
+    },
+    {
+     "type": "texte",
+     "bloom": "n4",
+     "titre": "Ta réflexion personnelle",
+     "consigne": "Réponds brièvement à cette question :",
+     "question": "Selon toi, les trottinettes électriques et les VAE contribuent-ils à rendre nos villes plus agréables à vivre ? Pourquoi ?",
+     "placeholder": "Écris ta réponse ici... (quelques lignes suffisent)"
+    },
+    {
+     "type": "brut",
+     "html": "\n<!-- ===== EXPORT PDF DU SUPPORT (avec les réponses de l'élève) ===== -->\n<div class=\"carte-export-pdf no-print\">\n  <h3>📄 Exporter le support en PDF (avec mes réponses)<\/h3>\n  <p class=\"note\">Tu as terminé le parcours ? Clique sur le bouton : une fenêtre d'impression s'ouvre avec <b>tout le support et toutes tes réponses<\/b>. Choisis la destination « Enregistrer au format PDF », puis valide.<\/p>\n  <button type=\"button\" class=\"bouton-export-pdf\" id=\"btn-export-pdf\">📄 Exporter le support en PDF (avec mes réponses)<\/button>\n  <p class=\"note\">Réglages conseillés : marges par défaut, « Graphiques d'arrière-plan » activé, « En-têtes et pieds de page » désactivé. Envoie ensuite le PDF à ton professeur.<\/p>\n<\/div>\n"
+    }
+   ]
+  }
+ ]
+};
+</script>
+
+<!-- Moteur d'activité : rend les blocs et gère les interactions. -->
+<script>
+/* =====================================================================
+   Moteur d'activité — rend les blocs décrits dans window.ACTIVITE
+   =====================================================================
+   Principe : le contenu pédagogique est une DONNÉE (JSON), pas du HTML
+   écrit à la main. Ce moteur le transforme en page interactive. Écrire
+   39 Ko de HTML+CSS à chaque nouvelle activité, c'était :
+
+     - cher à produire (le modèle rédigeait du code au lieu du cours) ;
+     - instable (chaque activité réinventait sa structure) ;
+     - risqué (les correctifs mobiles déjà faits ne se propageaient pas).
+
+   Règles de conception, tirées du banc d'essai mobile :
+     - aucune interaction au glisser-déposer : tout au clic ;
+     - toute cible tactile >= 44 px (voir composants.css) ;
+     - un bloc mal décrit n'efface jamais la page : il affiche une erreur
+       visible et les autres blocs continuent de s'afficher ;
+     - ce que l'élève a répondu reste lisible dans le PDF exporté.
+
+   Compatible ES5 volontairement (tablettes scolaires anciennes, file://).
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var A = window.ACTIVITE;
+  var hote = document.getElementById('content');
+
+  if (!hote) return;
+
+  if (!A || !A.onglets || !A.onglets.length) {
+    hote.innerHTML =
+      '<div class="bloc-erreur"><b>Activité vide.</b> Les données ' +
+      '<code>window.ACTIVITE</code> sont absentes ou sans onglet. ' +
+      'Regénérer le fichier avec <code>construire_activite.py</code>.</div>';
+    return;
+  }
+
+  /* ---------------------------------------------------------------- outils */
+
+  function esc(t) {
+    return String(t === undefined || t === null ? '' : t)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /** HTML déjà rédigé par l'auteur : inséré tel quel. */
+  function brut(t) { return String(t === undefined ? '' : t); }
+
+  function melanger(liste) {
+    var a = liste.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /** Le bloc carte qui contient un élément : indispensable pour que chaque
+      compteur de score ne compte QUE son propre exercice. */
+  function carteDe(el) {
+    return el && el.closest ? el.closest('.card') : null;
+  }
+
+  function dansCarte(el, selecteur) {
+    var c = carteDe(el);
+    return c ? c.querySelectorAll(selecteur) : [];
+  }
+
+  /* ---------------------------------------------------- état / progression */
+
+  var CLE = 'activite:' + (A.id || A.titre || 'sans-titre');
+
+  function chargerEtat() {
+    try { return JSON.parse(window.localStorage.getItem(CLE) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function ecrireEtat() {
+    try { window.localStorage.setItem(CLE, JSON.stringify(etat)); } catch (e) {}
+  }
+
+  var etat = chargerEtat();
+
+  /** Exposé au module d'export PDF, qui l'appelle avant d'imprimer. */
+  window.saveState = function () { ecrireEtat(); };
+
+  /* --------------------------------------------------------------- fabrique */
+
+  function carte(interne) { return '<div class="card">' + interne + '</div>'; }
+
+  var NOMS_BLOOM = {
+    n1: 'N1 — Mémoriser', n2: 'N2 — Comprendre',
+    n3: 'N3 — Appliquer', n4: 'N4 — Analyser'
+  };
+
+  function badge(bloom, libelle) {
+    if (!bloom) return '';
+    return '<span class="badge ' + esc(bloom) + '">' +
+           esc(libelle || NOMS_BLOOM[bloom] || '') + '</span>';
+  }
+
+  function enteteBloc(b, defaut) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    if (defaut) h += '<p>' + brut(defaut) + '</p>';
+    if (b.consigne) h += '<p>' + brut(b.consigne) + '</p>';
+    return h;
+  }
+
+  /** Marque lisible seulement à l'impression : ce que l'élève a répondu. */
+  function marque(texte) {
+    return '<span class="marque-impression"> ' + esc(texte) + '</span>';
+  }
+
+  function compteur(id, texte) {
+    return '<div class="compteur" id="' + id + '">' + esc(texte) + '</div>';
+  }
+
+  /* ---------------------------------------------------- rendu des blocs */
+
+  var BLOCS = {};
+
+  /* --- intro : ouverture de l'activité (objectifs, durée, matériel) --- */
+  BLOCS.intro = function (b) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    if (b.texte) h += '<p>' + brut(b.texte) + '</p>';
+    if (b.objectifs && b.objectifs.length) {
+      h += '<h3>Ce que tu vas apprendre</h3><ul class="objectifs">';
+      for (var i = 0; i < b.objectifs.length; i++) h += '<li>' + brut(b.objectifs[i]) + '</li>';
+      h += '</ul>';
+    }
+    if (b.materiel && b.materiel.length) {
+      h += '<h3>Matériel</h3><ul class="objectifs">';
+      for (var j = 0; j < b.materiel.length; j++) h += '<li>' + brut(b.materiel[j]) + '</li>';
+      h += '</ul>';
+    }
+    var meta = '';
+    if (b.duree) meta += '<span><b>Durée :</b> ' + esc(b.duree) + '</span>';
+    if (b.modalite) meta += '<span><b>Travail :</b> ' + esc(b.modalite) + '</span>';
+    if (b.codes && b.codes.length) {
+      meta += '<span><b>Programme :</b> ';
+      for (var k = 0; k < b.codes.length; k++) {
+        meta += '<span class="etiquette-code">' + esc(b.codes[k]) + '</span>';
+      }
+      meta += '</span>';
+    }
+    if (meta) h += '<div class="fiche-meta">' + meta + '</div>';
+    return carte(h);
+  };
+
+  /* --- info : encadré de cours, d'aide ou d'alerte --- */
+  BLOCS.info = function (b) {
+    var ton = b.ton === 'succes' ? ' success' : (b.ton === 'alerte' ? ' error' : '');
+    var h = '';
+    if (b.titre) h += '<strong>' + esc(b.titre) + '</strong> ';
+    h += brut(b.texte || '');
+    return '<div class="info' + ton + '">' + h + '</div>';
+  };
+
+  /* --- brut : HTML inséré sans habillage (cartes déjà stylées par la coquille :
+         ressources associées, carte d'export PDF) --- */
+  BLOCS.brut = function (b) { return brut(b.html || ''); };
+
+  /* --- texte : contenu libre déjà rédigé (HTML fourni par l'auteur) --- */
+  BLOCS.texte = function (b) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    h += brut(b.html || '');
+    return carte(h);
+  };
+
+  /* --- quiz à correction immédiate --- */
+  BLOCS.quiz = function (b, idx) {
+    var qs = b.questions || [];
+    var idScore = 'score-quiz-' + idx;
+    var h = enteteBloc(b, 'Clique sur la réponse qui te semble juste. La correction est immédiate.');
+
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      h += '<div class="quiz-question" data-q="' + i + '">';
+      h += '<p class="enonce">' + (i + 1) + '. ' + brut(q.question) + '</p>';
+      var options = q.options || [];
+      for (var j = 0; j < options.length; j++) {
+        h += '<button type="button" class="opt-btn" data-juste="' +
+             (j === q.bonne ? '1' : '0') + '">' + brut(options[j]) + '</button>';
+      }
+      h += '<div class="quiz-feedback"></div>';
+      if (q.explication) {
+        h += '<p class="aide" style="display:none" data-explication="1">' +
+             brut(q.explication) + '</p>';
+      }
+      h += '</div>';
+    }
+    h += compteur(idScore, 'Score : 0 / ' + qs.length);
+    return carte(h);
+  };
+
+  /* --- tri par catégories : on clique l'élément, puis la catégorie --- */
+  BLOCS.tri = function (b, idx) {
+    var cats = b.categories || [];
+    var items = b.items || [];
+    var idScore = 'score-tri-' + idx;
+    var h = enteteBloc(b, 'Clique un élément, puis la catégorie qui lui correspond.');
+
+    h += '<div class="assoc-colonne" style="margin-bottom:14px">';
+    for (var c = 0; c < cats.length; c++) {
+      h += '<button type="button" class="opt-btn tri-cat" data-cat="' + esc(cats[c]) +
+           '" style="text-align:center;font-weight:bold">' + brut(cats[c]) + '</button>';
+    }
+    h += '</div><div class="grid-3">';
+    var melange = melanger(items);
+    for (var i = 0; i < melange.length; i++) {
+      var it = melange[i];
+      h += '<button type="button" class="opt-btn tri-item" data-cat="' + esc(it.categorie) + '">';
+      if (it.icone) h += esc(it.icone) + ' ';
+      h += brut(it.texte) + '</button>';
+    }
+    h += '</div>' + compteur(idScore, 'Éléments classés : 0 / ' + items.length);
+    return carte(h);
+  };
+
+  /* --- association : deux colonnes, tout au clic --- */
+  BLOCS.association = function (b, idx) {
+    var paires = b.paires || [];
+    var idScore = 'score-assoc-' + idx;
+    var h = enteteBloc(b, 'Clique un élément de gauche, puis son correspondant à droite.');
+
+    h += '<div class="assoc-grille"><div class="assoc-colonne">';
+    h += '<p class="assoc-titre">' + esc(b.titreGauche || 'Éléments') + '</p>';
+    for (var i = 0; i < paires.length; i++) {
+      h += '<button type="button" class="assoc-item assoc-gauche" data-cle="' + i + '">' +
+           brut(paires[i].gauche) + '</button>';
+    }
+    h += '</div><div class="assoc-colonne">';
+    h += '<p class="assoc-titre">' + esc(b.titreDroite || 'Correspondances') + '</p>';
+    // La colonne de droite est mélangée ; data-cle porte l'indice de la paire.
+    var indices = [];
+    for (var n = 0; n < paires.length; n++) indices.push(n);
+    indices = melanger(indices);
+    for (var j = 0; j < indices.length; j++) {
+      h += '<button type="button" class="assoc-item assoc-droite" data-cle="' +
+           indices[j] + '">' + brut(paires[indices[j]].droite) + '</button>';
+    }
+    h += '</div></div>' + compteur(idScore, 'Paires trouvées : 0 / ' + paires.length);
+    return carte(h);
+  };
+
+  /* --- remise en ordre par clic (jamais de glisser-déposer) --- */
+  BLOCS.ordre = function (b, idx) {
+    var etapes = b.etapes || [];
+    var h = enteteBloc(b, 'Clique deux étapes pour les échanger, jusqu\'à retrouver le bon ordre.');
+
+    var affiche = etat['ordre-' + idx];
+    if (!affiche || affiche.length !== etapes.length) affiche = melanger(etapes);
+
+    // L'ordre attendu voyage avec la liste : aucune ambiguïté possible entre
+    // deux exercices de même longueur dans la même page.
+    h += '<div class="ordre-liste" id="ordre-' + idx + '" data-attendu="' +
+         esc(JSON.stringify(etapes)) + '">';
+    for (var i = 0; i < affiche.length; i++) {
+      h += '<button type="button" class="ordre-etape" data-mot="' + esc(affiche[i]) + '">' +
+           brut(affiche[i]) + '</button>';
+    }
+    h += '</div><div class="ordre-actions">';
+    h += '<button type="button" class="bouton" data-action="verifier">Vérifier mon ordre</button> ';
+    h += '<button type="button" class="bouton secondaire" data-action="melanger">Mélanger</button>';
+    h += '</div>';
+    h += '<div class="quiz-feedback" id="retour-ordre-' + idx + '"></div>';
+    return carte(h);
+  };
+
+  /* --- chaîne fonctionnelle : énergie, information, étapes techniques --- */
+  BLOCS.chaine = function (b) {
+    var h = enteteBloc(b, b.consigne || '');
+    var chaines = b.chaines || [];
+    for (var i = 0; i < chaines.length; i++) {
+      var ch = chaines[i];
+      if (chaines.length > 1 && ch.nom) h += '<h3>' + esc(ch.nom) + '</h3>';
+      h += '<div class="chaine-rail">';
+      var et = ch.etapes || [];
+      for (var j = 0; j < et.length; j++) {
+        h += '<span class="chaine-bloc">' + brut(et[j]) + '</span>';
+        if (j < et.length - 1) h += '<span class="chaine-fleche">→</span>';
+      }
+      h += '</div>';
+      if (ch.note) h += '<div class="info">' + brut(ch.note) + '</div>';
+    }
+    return carte(h);
+  };
+
+  /* --- tableau comparatif : la meilleure valeur de chaque critère est marquée --- */
+
+  /** Nombre lu « à la française » : « 1 800 » → 1800, « 4,5 » → 4.5.
+      Sans ce nettoyage, parseFloat("1 800") vaudrait 1 et le tableau
+      désignerait la mauvaise case — un tableau qui désigne un mauvais
+      « meilleur » est pire qu'un tableau sans surlignage. */
+  function nombre(v) {
+    if (typeof v === 'number') return v;
+    if (v === undefined || v === null) return null;
+    var t = String(v).replace(/[\s\u00a0\u202f]/g, '').replace(',', '.').replace(/[^0-9.\-]/g, '');
+    if (t === '' || t === '-' || t === '.') return null;
+    var n = parseFloat(t);
+    return isNaN(n) ? null : n;
+  }
+
+  BLOCS.tableau = function (b) {
+    var lignes = b.lignes || [];
+    var criteres = b.criteres || [];
+    var h = enteteBloc(b, b.consigne || '');
+
+    h += '<div style="overflow-x:auto"><table><thead><tr><th>' +
+         esc(b.enteteGauche || 'Critère') + '</th>';
+    for (var i = 0; i < lignes.length; i++) h += '<th>' + esc(lignes[i].nom) + '</th>';
+    h += '</tr></thead><tbody>';
+
+    for (var c = 0; c < criteres.length; c++) {
+      var cr = criteres[c];
+      var valeurs = [];
+      var numeriques = [];
+      for (var l = 0; l < lignes.length; l++) {
+        var n = nombre(lignes[l].valeurs ? lignes[l].valeurs[cr.cle] : undefined);
+        valeurs.push(n);
+        if (n !== null) numeriques.push(n);
+      }
+      var meilleure = null;
+      if (numeriques.length && cr.meilleur) {
+        meilleure = cr.meilleur === 'max'
+          ? Math.max.apply(null, numeriques)
+          : Math.min.apply(null, numeriques);
+      }
+      h += '<tr><td>' + esc(cr.label) + (cr.unite ? ' (' + esc(cr.unite) + ')' : '') + '</td>';
+      for (var m = 0; m < lignes.length; m++) {
+        var texte = lignes[m].valeurs ? lignes[m].valeurs[cr.cle] : '';
+        var estMeilleur = meilleure !== null && valeurs[m] === meilleure;
+        h += '<td' + (estMeilleur ? ' class="best"' : '') + '>' + brut(texte) + '</td>';
+      }
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    return carte(h);
+  };
+
+  /* --- saisie libre : la réponse part dans le PDF exporté --- */
+  BLOCS.saisie = function (b, idx) {
+    var h = enteteBloc(b, b.consigne || '');
+    var nom = 'saisie-' + idx;
+    h += '<div class="saisie"><textarea id="' + nom + '" placeholder="' +
+         esc(b.placeholder || 'Ta réponse ici...') + '">' + esc(etat[nom] || '') + '</textarea>';
+    if (b.aide) h += '<p class="aide">' + brut(b.aide) + '</p>';
+    h += '</div>';
+    return carte(h);
+  };
+
+  /* ------------------------------------------------------------ assemblage */
+
+  /** Rend un bloc ; une erreur reste locale et visible. */
+  function rendreBloc(b, idx) {
+    if (!b || !b.type) return '<div class="bloc-erreur">Bloc sans type.</div>';
+    var f = BLOCS[b.type];
+    if (!f) return '<div class="bloc-erreur">Type de bloc inconnu : <b>' + esc(b.type) + '</b></div>';
+    try {
+      return f(b, idx);
+    } catch (err) {
+      return '<div class="bloc-erreur">Bloc « ' + esc(b.type) + ' » invalide : ' +
+             esc(err && err.message ? err.message : err) + '</div>';
+    }
+  }
+
+  function construire() {
+    var barre = document.getElementById('tabs');
+    var sections = [];
+
+    for (var i = 0; i < A.onglets.length; i++) {
+      var o = A.onglets[i] || {};
+      var etiquette = o.titre || ('Partie ' + (i + 1));
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = etiquette;
+      btn.className = i === 0 ? 'active' : '';
+      btn.setAttribute('data-onglet', String(i));
+      if (barre) barre.appendChild(btn);
+
+      var blocs = o.blocs || [];
+      var contenu = '';
+      for (var j = 0; j < blocs.length; j++) {
+        // L'index doit être unique dans toute la page : « onglet-bloc ».
+        contenu += rendreBloc(blocs[j], i + '-' + j);
+      }
+      if (!blocs.length) contenu = '<div class="info">Cet onglet ne contient pas encore de contenu.</div>';
+
+      var s = document.createElement('section');
+      s.id = 's-' + i;
+      s.className = i === 0 ? 'active' : '';
+      s.innerHTML = contenu;
+      sections.push(s);
+      hote.appendChild(s);
+    }
+
+    if (barre) {
+      barre.addEventListener('click', function (e) {
+        var c = e.target;
+        while (c && c !== barre && !c.getAttribute('data-onglet')) c = c.parentNode;
+        if (!c || c === barre) return;
+        var n = parseInt(c.getAttribute('data-onglet'), 10);
+        var btns = barre.querySelectorAll('button');
+        for (var k = 0; k < sections.length; k++) {
+          sections[k].className = k === n ? 'active' : '';
+          if (btns[k]) btns[k].className = k === n ? 'active' : '';
+        }
+      });
+    }
+    return sections;
+  }
+
+  /* -------------------------------------------------------- interactions */
+
+  /** Quiz : correction immédiate, score du seul exercice concerné. */
+  function brancherQuiz() {
+    hote.addEventListener('click', function (e) {
+      var btn = e.target;
+      if (!btn || !btn.className || btn.className.indexOf('opt-btn') === -1) return;
+      if (btn.className.indexOf('tri-item') !== -1) return;
+      if (btn.className.indexOf('tri-cat') !== -1) return;
+      if (btn.disabled) return;
+
+      var question = btn.closest ? btn.closest('.quiz-question') : null;
+      if (!question) return;
+      var boite = question.querySelector('.quiz-feedback');
+      if (!boite) return;
+
+      var juste = btn.getAttribute('data-juste') === '1';
+      var boutons = question.querySelectorAll('.opt-btn');
+      for (var i = 0; i < boutons.length; i++) {
+        boutons[i].disabled = true;
+        if (boutons[i] !== btn) boutons[i].style.opacity = '.55';
+      }
+      btn.className = 'opt-btn ' + (juste ? 'juste' : 'faux');
+      // Trace conservée pour le PDF exporté.
+      btn.insertAdjacentHTML('beforeend',
+        marque(juste ? '← réponse choisie, correcte' : '← réponse choisie, incorrecte'));
+
+      boite.className = 'quiz-feedback visible ' + (juste ? 'juste' : 'faux');
+      boite.innerHTML = juste
+        ? '<b>Bonne réponse !</b>'
+        : '<b>Réponse incorrecte.</b> La bonne réponse est indiquée ci-dessus.';
+      var expl = question.querySelector('[data-explication]');
+      if (expl) expl.style.display = 'block';
+
+      majScoreQuiz(question);
+    });
+  }
+
+  function majScoreQuiz(question) {
+    var cartes = dansCarte(question, '.quiz-question');
+    if (!cartes.length) return;
+    var total = cartes.length;
+    var repondues = 0, justes = 0;
+    for (var i = 0; i < cartes.length; i++) {
+      if (cartes[i].querySelector('.quiz-feedback.visible')) repondues++;
+      if (cartes[i].querySelector('.opt-btn.juste')) justes++;
+    }
+    var cp = carteDe(question) ? carteDe(question).querySelector('.compteur') : null;
+    if (!cp) return;
+    cp.textContent = 'Score : ' + justes + ' / ' + total +
+      (repondues < total
+        ? '  (' + repondues + ' question' + (repondues > 1 ? 's' : '') +
+          ' traitée' + (repondues > 1 ? 's' : '') + ')'
+        : '  — exercice terminé !');
+  }
+
+  /** Tri : sélection d'un élément, puis d'une catégorie. */
+  function brancherTri() {
+    var selection = null;
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c || !c.className || c.className.indexOf('opt-btn') === -1) return;
+      var estItem = c.className.indexOf('tri-item') !== -1;
+      var estCat = c.className.indexOf('tri-cat') !== -1;
+      if (!estItem && !estCat) return;
+      if (c.className.indexOf('juste') !== -1 || c.disabled) return;
+
+      if (estItem) {
+        if (selection && selection !== c) selection.className = 'opt-btn tri-item';
+        selection = c;
+        c.className = 'opt-btn tri-item selectionne';
+        return;
+      }
+
+      if (!selection) {
+        c.className = 'opt-btn tri-cat faux';
+        window.setTimeout(function () { c.className = 'opt-btn tri-cat'; }, 600);
+        return;
+      }
+
+      var item = selection;
+      var ok = item.getAttribute('data-cat') === c.getAttribute('data-cat');
+      selection = null;
+
+      if (ok) {
+        item.className = 'opt-btn tri-item juste';
+        item.insertAdjacentHTML('beforeend', marque('← ' + c.textContent));
+        item.disabled = true;
+        var faits = dansCarte(item, '.tri-item.juste').length;
+        var tous = dansCarte(item, '.tri-item').length;
+        var cp = carteDe(item) ? carteDe(item).querySelector('.compteur') : null;
+        if (cp) {
+          cp.textContent = 'Éléments classés : ' + faits + ' / ' + tous +
+            (faits === tous ? '  — tout est classé, bravo !' : '');
+        }
+      } else {
+        item.className = 'opt-btn tri-item';
+        c.className = 'opt-btn tri-cat faux';
+        window.setTimeout(function () { c.className = 'opt-btn tri-cat'; }, 600);
+      }
+    });
+  }
+
+  /** Association : un élément de gauche, un de droite. */
+  function brancherAssociation() {
+    var gauche = null;
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c || !c.className || c.className.indexOf('assoc-item') === -1) return;
+      if (c.className.indexOf('apparie') !== -1) return;
+
+      var estGauche = c.className.indexOf('assoc-gauche') !== -1;
+
+      if (estGauche) {
+        if (gauche && gauche !== c) gauche.className = 'assoc-item assoc-gauche';
+        gauche = c;
+        c.className = 'assoc-item assoc-gauche selectionne';
+        return;
+      }
+
+      if (!gauche) return;
+      var g = gauche;
+      var ok = g.getAttribute('data-cle') === c.getAttribute('data-cle');
+      gauche = null;
+
+      if (ok) {
+        g.className = 'assoc-item assoc-gauche apparie';
+        c.className = 'assoc-item assoc-droite apparie';
+        g.insertAdjacentHTML('beforeend', marque('↔'));
+        var faits = dansCarte(g, '.assoc-item.apparie').length / 2;
+        var tous = dansCarte(g, '.assoc-gauche').length;
+        var cp = carteDe(g) ? carteDe(g).querySelector('.compteur') : null;
+        if (cp) {
+          cp.textContent = 'Paires trouvées : ' + faits + ' / ' + tous +
+            (faits === tous ? '  — toutes les paires sont trouvées !' : '');
+        }
+      } else {
+        g.className = 'assoc-item assoc-gauche';
+        c.className = 'assoc-item assoc-droite rate';
+        window.setTimeout(function () { c.className = 'assoc-item assoc-droite'; }, 700);
+      }
+    });
+  }
+
+  /** Remise en ordre : deux clics échangent deux étapes. */
+  function brancherOrdre() {
+    var premier = null;
+
+    function listeDe(el) { return el.closest ? el.closest('.card').querySelector('.ordre-liste') : null; }
+
+    function memoriser(liste) {
+      var idx = liste.id.replace('ordre-', '');
+      var bs = liste.querySelectorAll('.ordre-etape');
+      var seq = [];
+      for (var i = 0; i < bs.length; i++) seq.push(bs[i].getAttribute('data-mot'));
+      etat['ordre-' + idx] = seq;
+      ecrireEtat();
+    }
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c) return;
+
+      /* --- boutons d'action --- */
+      if (c.getAttribute && c.getAttribute('data-action')) {
+        var liste = listeDe(c);
+        if (!liste) return;
+        var action = c.getAttribute('data-action');
+        var boutons = liste.querySelectorAll('.ordre-etape');
+
+        if (action === 'melanger') {
+          var seq = [];
+          for (var i = 0; i < boutons.length; i++) seq.push(boutons[i].getAttribute('data-mot'));
+          seq = melanger(seq);
+          for (var j = 0; j < boutons.length; j++) {
+            boutons[j].setAttribute('data-mot', seq[j]);
+            boutons[j].textContent = seq[j];
+            boutons[j].className = 'ordre-etape';
+          }
+          memoriser(liste);
+          var r0 = document.getElementById('retour-' + liste.id);
+          if (r0) r0.className = 'quiz-feedback';
+          return;
+        }
+
+        /* --- vérification : l'ordre attendu est porté par la liste --- */
+        var attendu = [];
+        try { attendu = JSON.parse(liste.getAttribute('data-attendu') || '[]'); } catch (err) {}
+        var courant = [];
+        for (var k = 0; k < boutons.length; k++) courant.push(boutons[k].getAttribute('data-mot'));
+
+        var toutJuste = attendu.length === courant.length && attendu.length > 0;
+        for (var q = 0; q < courant.length; q++) {
+          var okPos = courant[q] === attendu[q];
+          boutons[q].className = 'ordre-etape ' + (okPos ? 'juste' : 'faux');
+          if (!okPos) toutJuste = false;
+        }
+        var retour = document.getElementById('retour-' + liste.id);
+        if (retour) {
+          retour.className = 'quiz-feedback visible ' + (toutJuste ? 'juste' : 'faux');
+          retour.innerHTML = toutJuste
+            ? '<b>Bravo, l\'ordre est correct !</b>'
+            : '<b>Pas encore.</b> Les étapes en rouge ne sont pas à leur place : échange-les à nouveau.';
+        }
+        memoriser(liste);
+        return;
+      }
+
+      /* --- échange de deux étapes --- */
+      if (c.className && c.className.indexOf('ordre-etape') !== -1) {
+        if (!premier) {
+          premier = c;
+          c.className = 'ordre-etape selectionne';
+          return;
+        }
+        if (premier === c) {
+          premier.className = 'ordre-etape';
+          premier = null;
+          return;
+        }
+        var a = premier, b = c;
+        var motA = a.getAttribute('data-mot'), motB = b.getAttribute('data-mot');
+        a.setAttribute('data-mot', motB); a.textContent = motB;
+        b.setAttribute('data-mot', motA); b.textContent = motA;
+        a.className = 'ordre-etape'; b.className = 'ordre-etape';
+        premier = null;
+        memoriser(a.parentNode);
+      }
+    });
+  }
+
+  /** Sauvegarde des réponses écrites (restituées au rechargement). */
+  function brancherSaisie() {
+    hote.addEventListener('input', function (e) {
+      var c = e.target;
+      if (!c || (c.tagName !== 'TEXTAREA' && c.tagName !== 'INPUT')) return;
+      if (!c.id) return;
+      etat[c.id] = c.value;
+      ecrireEtat();
+    });
+  }
+
+  /* -------------------------------------------------------------- départ */
+
+  try {
+    construire();
+    brancherQuiz();
+    brancherTri();
+    brancherAssociation();
+    brancherOrdre();
+    brancherSaisie();
+  } catch (err) {
+    hote.insertAdjacentHTML('afterbegin',
+      '<div class="bloc-erreur"><b>Erreur du moteur d\'activité :</b> ' +
+      esc(err && err.message ? err.message : err) + '</div>');
+  }
+})();
+</script>
+
+<!-- Module d'export PDF (en-tête élève/classe/date + réponses saisies). -->
+<script>
+(function(){
+'use strict';
+var NIVEAU = "4e";
+var ID = 'entete-export-pdf';
+
+function val(selecteurs){
+  for (var i=0;i<selecteurs.length;i++){
+    var e = document.querySelector(selecteurs[i]);
+    if (e && e.value && e.value.replace(/\s+/g,'')) return e.value.trim();
+  }
+  return '';
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function estCible(e){
+  if (!e || e.disabled) return false;
+  if (e.type === 'password' || e.type === 'number' || e.type === 'hidden') return false;
+  if (e.id === 'binome' || e.id === 'classe' || e.id === 'nom') return false;
+  if (e.closest && e.closest('header')) return false;   // champs binôme / classe (imprimés dans l'en-tête)
+  if (e.tagName === 'TEXTAREA' || e.tagName === 'INPUT') return true;
+  return false;
+}
+function entete(){
+  var z = document.getElementById(ID);
+  if (!z){
+    z = document.createElement('div');
+    z.id = ID;
+    document.body.insertBefore(z, document.body.firstChild);
+  }
+  var titre = document.title || 'Activité de technologie';
+  var h1 = document.querySelector('h1');
+  if (h1){
+    var copie = h1.cloneNode(true);
+    var sm = copie.querySelector('small');
+    if (sm && sm.parentNode) sm.parentNode.removeChild(sm);
+    var t = (copie.textContent || '').replace(/\s+/g,' ').trim();
+    if (t) titre = t;
+  }
+  var eleve = val(['#binome','#nom','#eleve','#nom-eleve','.bloc-binome input[type=text]',
+                   'header input[type=text][placeholder*="nom"]',
+                   'header input[type=text][placeholder*="Prenom"]',
+                   'header input[type=text]']);
+  var classe = val(['#classe','input[type=text][placeholder*="Classe"]',
+                    'input[type=text][placeholder*="classe"]',
+                    'input[type=text][placeholder*="5e"]','input[type=text][placeholder*="4e"]',
+                    'input[type=text][placeholder*="3e"]']);
+  var d = new Date();
+  var quand = d.toLocaleDateString('fr-FR') + ' ' +
+              d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  z.innerHTML = '<div class="ep-titre">' + esc(titre) + '</div>' +
+    '<div class="ep-sous">Technologie — cycle 4 — niveau ' + esc(NIVEAU) +
+    " · Support d'activité imprimé avec les réponses de l'élève</div>" +
+    '<table class="ep-infos"><tr>' +
+    '<td><b>Binôme / élève :</b> ' + esc(eleve || '…………………………') + '</td>' +
+    '<td><b>Classe :</b> ' + esc(classe || '…………') + '</td>' +
+    '<td><b>Date :</b> ' + esc(quand) + '</td>' +
+    '</tr></table>' +
+    '<div class="ep-legende">Repères de lecture : fond <b>vert</b> = réponse réussie ; fond <b>rouge</b> = réponse erronée ;' +
+    ' encadré = réponse écrite saisie par l’élève ; « — non répondu — » = question non traitée.</div>';
+}
+function nettoyer(){
+  var a = document.querySelectorAll('.ajout-export');
+  for (var i=0;i<a.length;i++){ if (a[i].parentNode) a[i].parentNode.removeChild(a[i]); }
+  var m = document.querySelectorAll('.masque-impression');
+  for (var j=0;j<m.length;j++){ m[j].classList.remove('masque-impression'); }
+}
+function materialiser(){
+  var champs = document.querySelectorAll('textarea,input[type=text]');
+  for (var i=0;i<champs.length;i++){
+    var e = champs[i];
+    if (!estCible(e)) continue;
+    var d = document.createElement('div');
+    d.className = 'ep-reponse ajout-export';
+    var v = (e.value || '').replace(/\s+$/,'');
+    d.innerHTML = v ? esc(v).replace(/\n/g,'<br>') : '<i class="ep-vide">— non répondu —</i>';
+    if (e.parentNode) e.parentNode.insertBefore(d, e.nextSibling);
+    e.classList.add('masque-impression');
+  }
+}
+function exporter(){
+  try { if (typeof saveState === 'function') saveState(); } catch (err) {}
+  entete();
+  nettoyer();
+  materialiser();
+  var zone = document.getElementById(ID);
+  if (zone){
+    var t = zone.querySelector('.ep-titre');
+    if (t) t.setAttribute('tabindex','-1');
+  }
+  window.setTimeout(function(){ window.print(); }, 80);
+}
+document.addEventListener('click', function(ev){
+  var c = ev.target;
+  while (c && c !== document.body){
+    if (c.id === 'btn-export-pdf'){ ev.preventDefault(); exporter(); return; }
+    c = c.parentNode;
+  }
+}, false);
+window.exporterSupportPDF = exporter;
+})();
+</script>
+</body>
+</html>
