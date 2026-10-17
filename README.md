@@ -10,9 +10,11 @@ utilisées sur ordinateur, tablette et téléphone.
 ## Ce que contient le dépôt
 
 ```
-index.html                          page d'accueil : les 18 activités, sommaire par niveau
+index.html                          page d'accueil : les 21 pages, sommaire par niveau
 .nojekyll                           demande à GitHub de servir les fichiers tels quels
 
+3e/revision-ost1/                   Réviser l'évaluation — séquences 1a et 2a
+    revision-evaluation.html        fiches de synthèse, lexique, méthode et 42 questions
 3e/ost1a/                           OST 1 — le smartphone
     app-activite1-frise-evolution.html
     app-activite2-innovations.html
@@ -140,11 +142,12 @@ reste collante et les onglets reviennent à la ligne.
 > Le correctif est appliqué par le script `_outils/appliquer_correctifs_mobile.py` du dossier de
 > préparation : pour une nouvelle activité, le lancer sur le fichier avant de le copier ici.
 
-### Export PDF
+### Pas d'export, pas d'impression
 
-Le bouton d'export utilise l'impression du navigateur. Il fonctionne sur **Chrome (Android,
-Windows, macOS)**, **Safari (iPhone, iPad)** et **Edge**, mais **pas sur Firefox Android**.
-À rappeler aux élèves qui travaillent sur téléphone.
+Il n'y a **volontairement plus** de bouton d'export PDF, de copie ou d'impression dans ces
+pages : l'élève fait l'exercice, il ne rend rien (voir « Données et vie privée » ci-dessous).
+Le générateur `_outils/gabarit/construire_activite.py` n'injecte plus ce module ; l'option
+`--avec-export` existe encore, mais aucune page publiée ne l'utilise.
 
 ---
 

@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réviser l&#x27;évaluation</title>
+<style>
+:root{--bleu:#1f4e79;--bleu2:#2e75b6;--bleuf:#e8f1fa;--orange:#d97706;--orangeF:#fdf1e0;--vert:#2e7d32;--vertF:#e8f5e9;--rouge:#b3261e;--rougeF:#fdecea;--gris:#5b6b7b;--bord:#c9d6e4;--noir:#1f2933}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Liberation Sans",Arial,sans-serif;font-size:17px;line-height:1.5;color:var(--noir);background:#f4f8fc}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid var(--bleu2);padding:10px 16px;box-shadow:0 2px 6px rgba(31,78,121,.08)}
+h1{font-size:1.2rem;color:var(--bleu)}h1 small{display:block;font-weight:normal;font-size:.75rem;color:var(--gris)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tabs button{font:inherit;font-size:.88rem;padding:8px 14px;border:2px solid var(--bleu2);background:#fff;color:var(--bleu);border-radius:999px;cursor:pointer;transition:all .2s}
+.tabs button.active{background:var(--bleu2);color:#fff}.tabs button:hover:not(.active){background:var(--bleuf)}
+main{padding:16px;max-width:900px;margin:0 auto}
+section{display:none;animation:fadeIn .3s}section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#fff;border:1px solid var(--bord);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.badge{display:inline-block;font-size:.7rem;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.badge.n1{background:#dbeafe;color:#1e40af}.badge.n2{background:#fef3c7;color:#92400e}.badge.n3{background:#d1fae5;color:#065f46}.badge.n4{background:#fce7f3;color:#9d174d}
+h2{font-size:1.15rem;color:var(--bleu);margin:0 0 8px}h3{font-size:1.05rem;color:var(--bleu);margin:12px 0 6px}
+p{margin:6px 0}
+.info{background:var(--bleuf);border-left:5px solid var(--bleu2);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.95rem}
+.success{background:var(--vertF);border-left-color:var(--vert)}.error{background:var(--rougeF);border-left-color:var(--rouge)}
+.match-item{padding:10px 14px;border:2px solid var(--bord);border-radius:10px;cursor:pointer;background:#fff;font-size:.9rem;transition:all .15s;margin-bottom:6px}
+.match-item:hover{border-color:var(--bleu2);background:var(--bleuf)}
+.match-item.selected{border-color:var(--bleu2);background:var(--bleuf);font-weight:bold}
+.match-item.matched{border-color:var(--vert);background:var(--vertF);cursor:default;opacity:.7}
+.score-display{font-size:1.3rem;font-weight:bold;color:var(--bleu);text-align:center;padding:12px;background:var(--bleuf);border-radius:10px;margin:12px 0}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.chain-step{display:inline-flex;align-items:center;padding:8px 14px;background:var(--bleuf);border:1px solid var(--bleu2);border-radius:8px;font-size:.9rem;font-weight:bold;margin:4px 0}
+.chain-arrow{color:var(--bleu2);font-size:1.2rem;margin:0 6px}
+footer{text-align:center;padding:20px;color:var(--gris);font-size:.8rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--bleu2);color:#fff;padding:10px;text-align:center}
+td{padding:8px;text-align:center;border-bottom:1px solid var(--bord)}
+td.best{background:var(--vertF);font-weight:bold}
+td:first-child{text-align:left;font-weight:bold}
+@media(max-width:600px){.tabs button{font-size:.78rem;padding:6px 10px}}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+
+/* =====================================================================
+   Composants du gabarit d'activité — à charger APRÈS coquille.css
+   =====================================================================
+   Ces composants complètent la charte d'origine. Ils répondent aux
+   exigences du banc d'essai mobile (Rapport-compatibilite-mobile-apps.md) :
+
+   - toute cible tactile fait au moins 44 px de haut ;
+   - aucun champ de saisie sous 16 px de police (sinon zoom automatique
+     sur iPhone) ;
+   - aucune interaction au glisser-déposer : tout se fait au clic, donc
+     utilisable au doigt ;
+   - ce que l'élève a répondu reste lisible à l'impression (PDF).
+   ===================================================================== */
+
+/* --- Bouton-réponse pleine largeur : le modèle recommandé par le rapport --- */
+.opt-btn{
+  display:block; width:100%; text-align:left;
+  font:inherit; font-size:1rem; line-height:1.35;
+  padding:12px 16px; margin:6px 0;
+  min-height:44px;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px;
+  background:#fff; color:var(--noir,#1f2933); cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.opt-btn:disabled{cursor:default}
+.opt-btn.choisi{border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa); font-weight:bold}
+.opt-btn.juste{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9)}
+.opt-btn.faux{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+.opt-btn.faux::after{content:" ✘"}
+.opt-btn.juste::after{content:" ✔"}
+
+/* --- Question de quiz --- */
+.quiz-question{margin:12px 0; padding:10px 0; border-top:1px solid var(--bord,#c9d6e4)}
+.quiz-question:first-of-type{border-top:none; padding-top:0}
+.quiz-question > p.enonce{font-weight:bold; margin:0 0 4px}
+.quiz-feedback{display:none; margin-top:6px; font-size:.92rem; border-radius:8px; padding:8px 12px}
+.quiz-feedback.visible{display:block}
+.quiz-feedback.juste{background:var(--vertF,#e8f5e9); border-left:4px solid var(--vert,#2e7d32)}
+.quiz-feedback.faux{background:var(--rougeF,#fdecea); border-left:4px solid var(--rouge,#b3261e)}
+
+/* --- Compteur de score --- */
+.compteur{
+  font-size:1rem; font-weight:bold; color:var(--bleu,#1f4e79);
+  text-align:center; padding:10px 12px; margin:12px 0;
+  background:var(--bleuf,#e8f1fa); border-radius:10px; min-height:44px;
+}
+
+/* --- Association par clic (jamais de glisser-déposer) --- */
+.assoc-grille{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+.assoc-colonne{display:flex; flex-direction:column; gap:6px}
+.assoc-titre{font-size:.82rem; font-weight:bold; text-transform:uppercase;
+  letter-spacing:.04em; color:var(--gris,#5b6b7b); margin:0 0 2px}
+.assoc-item{
+  display:flex; align-items:center; min-height:44px;
+  padding:10px 14px; font-size:.95rem;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px; background:#fff;
+  cursor:pointer; transition:all .15s;
+}
+.assoc-item:hover:not(.apparie){border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.assoc-item.selectionne{border-color:var(--orange,#d97706); background:var(--orangeF,#fdf1e0); font-weight:bold}
+.assoc-item.apparie{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9); cursor:default; opacity:.85}
+.assoc-item.rate{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+
+/* --- Remise en ordre par clic --- */
+.ordre-liste{display:flex; flex-direction:column; gap:6px; counter-reset:rang}
+.ordre-etape{
+  display:flex; align-items:center; gap:10px; min-height:44px;
+  padding:10px 14px; font-size:.95rem;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px; background:#fff; cursor:pointer;
+}
+.ordre-etape::before{
+  counter-increment:rang; content:counter(rang);
+  flex:0 0 26px; height:26px; line-height:26px; text-align:center;
+  background:var(--bleuf,#e8f1fa); color:var(--bleu,#1f4e79);
+  border-radius:50%; font-weight:bold; font-size:.85rem;
+}
+.ordre-etape:hover{border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.ordre-etape.selectionne{border-color:var(--orange,#d97706); background:var(--orangeF,#fdf1e0)}
+.ordre-etape.juste{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9)}
+.ordre-etape.faux{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+.ordre-actions{margin-top:10px}
+.bouton{
+  font:inherit; font-size:1rem; font-weight:bold;
+  min-height:44px; padding:12px 18px;
+  border:none; border-radius:10px; background:var(--bleu2,#2e75b6); color:#fff; cursor:pointer;
+}
+.bouton:hover{background:var(--bleu,#1f4e79)}
+.bouton.secondaire{background:#fff; color:var(--bleu,#1f4e79); border:2px solid var(--bleu2,#2e75b6)}
+.bouton.secondaire:hover{background:var(--bleuf,#e8f1fa)}
+
+/* --- Chaîne (énergie, information, étapes techniques) --- */
+.chaine-rail{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin:10px 0}
+.chaine-bloc{
+  display:inline-flex; align-items:center; min-height:44px;
+  padding:10px 14px; font-size:.92rem; font-weight:bold;
+  background:var(--bleuf,#e8f1fa); border:1px solid var(--bleu2,#2e75b6); border-radius:8px;
+}
+.chaine-fleche{color:var(--bleu2,#2e75b6); font-size:1.2rem; margin:0 4px}
+
+/* --- Saisie libre --- */
+.saisie textarea{
+  width:100%; min-height:90px; padding:10px 12px;
+  border:2px solid var(--bord,#c9d6e4); border-radius:8px;
+  font:inherit; font-size:1rem; /* >= 16px : évite le zoom automatique iOS */
+  resize:vertical; background:#fff; color:var(--noir,#1f2933);
+}
+.saisie textarea:focus{outline:none; border-color:var(--bleu2,#2e75b6); background:#fff}
+.saisie .aide{font-size:.82rem; color:var(--gris,#5b6b7b); margin-top:4px}
+
+/* --- Objectifs / bandeau d'ouverture --- */
+.objectifs{margin:8px 0 0; padding-left:1.2rem}
+.objectifs li{margin:4px 0}
+.fiche-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:.85rem;
+  color:var(--gris,#5b6b7b); margin:6px 0 0}
+.fiche-meta b{color:var(--bleu,#1f4e79)}
+.etiquette-code{
+  display:inline-block; font-weight:bold; font-size:.78rem; letter-spacing:.03em;
+  background:#dce9f7; color:var(--bleu,#1f4e79); border-radius:4px;
+  padding:3px 8px; margin:2px 4px 2px 0;
+}
+
+/* --- Ce que l'élève a répondu, visible uniquement à l'impression --- */
+.marque-impression{display:none}
+
+/* =====================================================================
+   Corrections appliquées PAR-DESSUS la coquille extraite
+   =====================================================================
+   La coquille (coquille.css) est extraite telle quelle du fichier de
+   référence : on n'y touche pas. Mais mesurée au navigateur en 390 px de
+   large, elle laisse deux cibles tactiles sous les 44 px exigés :
+
+     - les onglets de niveau : 36 px (la règle « max-width:600px » de la
+       coquille réduit la police à .78rem et le rembourrage à 6px) ;
+     - les liens de ressources (fiche, vidéo, quiz) : 29 px.
+
+   Ces deux règles viennent après dans la feuille, donc elles gagnent sans
+   qu'il soit besoin de modifier la coquille. Si la coquille est ré-extraite
+   depuis une activité plus récente, ces corrections restent valables : le
+   script de vérification de rendu les re-contrôle à chaque construction.
+   ===================================================================== */
+
+.tabs button{min-height:44px}
+a.ress-lien{
+  display:inline-flex; align-items:center;
+  min-height:44px; padding:8px 12px;
+}
+
+@media (max-width:600px){
+  /* On garde la police compacte choisie pour la coquille, mais on rend la
+     hauteur tactile minimale : c'est un doigt d'élève, pas un curseur. */
+  .tabs button{min-height:44px; padding:8px 12px}
+  a.ress-lien{width:100%; justify-content:center}
+}
+
+/* --- Message d'erreur de bloc : jamais de page blanche --- */
+.bloc-erreur{
+  background:var(--rougeF,#fdecea); border-left:5px solid var(--rouge,#b3261e);
+  border-radius:8px; padding:10px 14px; margin:10px 0; font-size:.88rem;
+}
+
+@media (max-width:600px){
+  /* On garde les cibles à 44 px : on réduit les marges, pas la hauteur. */
+  .quiz-question{margin:10px 0}
+  .assoc-grille{gap:8px}
+  .chaine-fleche{margin:0 2px}
+}
+
+@media print{
+  /* Les onglets sont masqués : toutes les sections doivent être visibles. */
+  .quiz-feedback{display:block !important}
+  .marque-impression{display:inline !important; font-size:8pt; font-weight:bold}
+  .ordre-etape,.assoc-item,.opt-btn,.chaine-bloc{min-height:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Correctifs téléphone (barre repliable, onglets sur une ligne, retour en haut
+     au changement de niveau). Extrait du fichier de référence validé :
+     ne pas modifier ici, relancer _outils/gabarit/extraire_coquille.py. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+<header>
+<h1>Réviser l&#x27;évaluation<small>3e — Le smartphone et l&#x27;impact du numérique · séquences 1a et 2a</small></h1>
+<div class="tabs" id="tabs"></div>
+</header>
+<main id="content"></main>
+<footer>Mini-application pédagogique — Niveau Bloom N1 à N4 — 3e Technologie</footer>
+
+<!-- Contenu pédagogique : une donnée, pas du code. -->
+<script>
+window.ACTIVITE = {
+ "id": "3e-revision-ost1-evaluation",
+ "titre": "Réviser l'évaluation",
+ "niveau": "3e",
+ "onglets": [
+  {
+   "titre": "Ce qui est évalué",
+   "blocs": [
+    {
+     "type": "brut",
+     "html": "\n<!-- ===== RESSOURCES ASSOCIÉES (fiches, vidéos, quiz) ===== -->\n<div class=\"ressources-n1\">\n  <h3>📚 Ressources associées<\/h3>\n  <p class=\"note\">Ressources officielles en lien direct avec le programme de technologie du cycle 4. Conseil d'usage : 🎬 regarde la vidéo, ✅ réponds au quiz auto-correctif, puis 📄 lis la fiche de connaissances.<\/p>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1a<\/span>Les éléments qui participent à l’évolution des besoins (invention, innovation, développement durable)<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/SW5baiZ2eJTqWfQ\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/2z1NaaZfmgGfKGF2A\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1c<\/span>La famille et la lignée d’OST<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/o2qoHTQBzyHqgGf\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113247-ost1c-la-famille-et-la-lignee-dost/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113247-ost1c-la-famille-et-la-lignee-dost/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/EmDcue7oq1mKGUcL8\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1d<\/span>Les contraintes sociétales<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/yrkbGNrTRKceMJp\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113246-ost1d-les-contraintes-societales/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113246-ost1d-les-contraintes-societales/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/B8sosjVCNbVSmehT6\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1e<\/span>Les grands types d’apprentissage des intelligences artificielles et leurs usages possibles (géolocalisation, identification, calcul, traduction, etc.)<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/tD2HPYQLCKKTgjG\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113245-ost1e-les-grands-types-dapprentissage-des-intelligences-artificielles-et-leurs-usages-possibles/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113245-ost1e-les-grands-types-dapprentissage-des-intelligences-artificielles-et-leurs-usages-possibles/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/k9TKZAtdqjhc3oW36\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1f<\/span>Les incidences sociétales, notamment l’étude du biais et de l’effet de l’usage d’une intelligence artificielle (IA).<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/kZSCaGnqFzFYE6C\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113242-ost1f-les-incidences-societales-notamment-letude-du-biais-et-de-leffet-de-lusage-dune-intelligence-artificielle-ia/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113242-ost1f-les-incidences-societales-notamment-letude-du-biais-et-de-leffet-de-lusage-dune-intelligence-artificielle-ia/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/Cshv2mxuyHTKWMcw9\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">Activité 1<\/span>Frise interactive : 150 ans d&#x27;évolution des moyens de communication<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien form\" href=\"../ost1a/app-activite1-frise-evolution.html\" target=\"_blank\" rel=\"noopener\">🔗 Ressource<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">Activité 2<\/span>Innovations et ruptures technologiques<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien form\" href=\"../ost1a/app-activite2-innovations.html\" target=\"_blank\" rel=\"noopener\">🔗 Ressource<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">Activité 3<\/span>Simulateur LexIA — découvrir les biais de l&#x27;IA<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien form\" href=\"../ost1a/app-activite3-biais-ia.html\" target=\"_blank\" rel=\"noopener\">🔗 Ressource<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">Séquence 2a<\/span>L&#x27;impact du numérique sur la société et les métiers<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien form\" href=\"../ost2a/app-impact-numerique.html\" target=\"_blank\" rel=\"noopener\">🔗 Ressource<\/a><\/div>\n  <\/div>\n<\/div>\n"
+    },
+    {
+     "type": "intro",
+     "titre": "Une évaluation, deux séquences, cinq connaissances",
+     "texte": "L'évaluation porte sur deux séquences de 3e qui se suivent : <b>1a — Le smartphone, entre innovation et responsabilité<\/b> et <b>2a — Comprendre l'impact du numérique sur la société et les métiers<\/b>.<br><br>Le sujet comporte <b>quatre parties de 5 points<\/b> : un QCM, de la compréhension, de l'application, puis une dernière partie où il faut <b>réfléchir et imaginer<\/b>. Il est <b>recto-verso<\/b> — pense à tourner ta feuille.",
+     "objectifs": [
+      "Connaître les définitions d'invention, d'innovation et de développement durable, et savoir classer un exemple.",
+      "Savoir expliquer ce qu'est une famille et une lignée d'OST.",
+      "Savoir citer les types de contraintes sociétales qui font évoluer un objet.",
+      "Connaître les quatre types d'apprentissage de l'intelligence artificielle et un usage de chacun.",
+      "Savoir reconnaître un biais et proposer deux solutions pour le limiter."
+     ],
+     "duree": "1 h à 1 h 30 de révision",
+     "modalite": "seul, sur ordinateur ou téléphone ; on refait les exercices autant de fois que nécessaire",
+     "codes": [
+      "OST1"
+     ]
+    },
+    {
+     "type": "info",
+     "titre": "Les deux pièges du sujet — ils valent des points",
+     "ton": "alerte",
+     "texte": "<b>1. Il existe quatre types d'apprentissage, pas trois.<\/b> Supervisé, non supervisé, <b>auto-supervisé<\/b> et par renforcement. « Apprentissage manuel » n'existe pas : c'est une proposition inventée pour te piéger.<br><br><b>2. « Contrainte environnementale » et « contrainte sociétale » ne se confondent pas.<\/b> Le prix de vente chez un seul fabricant n'est <b>ni<\/b> l'une <b>ni<\/b> l'autre."
+    },
+    {
+     "type": "texte",
+     "titre": "Les cinq connaissances à maîtriser, avec leur code",
+     "html": "<ul><li><b>OST1a<\/b> — les éléments qui participent à l'évolution des besoins : <b>invention<\/b>, <b>innovation<\/b>, <b>développement durable<\/b>.<\/li><li><b>OST1c<\/b> — la <b>famille<\/b> et la <b>lignée<\/b> d'OST.<\/li><li><b>OST1d<\/b> — les <b>contraintes sociétales<\/b>.<\/li><li><b>OST1e<\/b> — les <b>grands types d'apprentissage<\/b> de l'intelligence artificielle et leurs usages possibles.<\/li><li><b>OST1f<\/b> — les <b>incidences sociétales<\/b> de l'IA, notamment l'étude du <b>biais<\/b> et de l'effet de l'usage.<\/li><\/ul><p>Les trois onglets suivants reprennent ces cinq connaissances une par une. Ils suivent l'ordre des fiches de connaissances de l'académie : si tu as perdu ta trace écrite, c'est là que tu la retrouves.<\/p>"
+    },
+    {
+     "type": "info",
+     "titre": "Réviser en trois étapes, dans cet ordre",
+     "texte": "<b>1.<\/b> Lis la fiche de la connaissance (onglet 2, 3 ou 4) <b>et<\/b> sa fiche officielle, en bas de la page. &nbsp;<b>2.<\/b> Réponds aux QCM de l'onglet « S'entraîner ». &nbsp;<b>3.<\/b> Relis la méthode de l'onglet « Méthode » : c'est elle qui fait la différence sur les questions rédigées, celles qui rapportent le plus de points."
+    }
+   ]
+  },
+  {
+   "titre": "Fiche 1 · Le smartphone",
+   "blocs": [
+    {
+     "type": "intro",
+     "titre": "Comment un objet qui servait à téléphoner est devenu un smartphone",
+     "texte": "Pour répondre à ses besoins, l'être humain crée et fait évoluer des objets et systèmes techniques. Trois éléments expliquent cette évolution : <b>l'invention<\/b>, <b>l'innovation<\/b> et <b>le développement durable<\/b>.",
+     "duree": "20 min",
+     "codes": [
+      "OST1a",
+      "OST1c",
+      "OST1d"
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "1. Invention, innovation, développement durable (OST1a)",
+     "html": "<p><b>Une invention<\/b> est une idée nouvelle, une découverte scientifique ou technique qui permet de créer un objet qui n'existait pas. C'est une solution technique nouvelle.<\/p><p class='exemple'>Exemple : le téléphone, inventé par Alexander Graham Bell en 1876.<\/p><p><b>Une innovation<\/b> est la recherche constante de l'amélioration de l'existant. Une innovation réussie est <b>commercialisée<\/b> et <b>adoptée<\/b> par les utilisateurs.<\/p><p class='exemple'>Exemple : le développement des smartphones à partir de l'invention du téléphone portable.<\/p><p><b>Une innovation de rupture<\/b> est une innovation qui change radicalement les usages — pas seulement une amélioration.<\/p><p class='exemple'>Exemple : l'iPhone en 2007, qui fait disparaître le clavier physique.<\/p><p><b>Le développement durable<\/b> est l'idée que l'être humain répond à ses besoins <b>sans compromettre ceux des générations futures<\/b>. Les objets doivent donc être conçus et utilisés en respectant l'environnement, mais aussi l'équité sociale et économique.<\/p><p class='exemple'>Exemple : une batterie rechargeable qui remplace des piles jetables, ou un smartphone conçu pour être réparé.<\/p><p><b>D'où viennent ces évolutions ?<\/b> L'évolution des besoins humains est à l'origine de l'évolution des objets. Et ce sont les découvertes scientifiques — les <b>ondes électromagnétiques<\/b>, les <b>semi-conducteurs<\/b>, les batteries lithium-ion — qui rendent les avancées techniques possibles.<\/p>"
+    },
+    {
+     "type": "info",
+     "titre": "Le piège classique : invention ou innovation ?",
+     "texte": "Le <b>premier<\/b> appareil qui fait quelque chose est une <b>invention<\/b>. La <b>deuxième<\/b> version, celle qui améliore et qui se vend, est une <b>innovation<\/b>.<br><br>« Le premier téléphone portable (années 1980) » → invention. « L'ajout d'un écran tactile sur un téléphone existant » → innovation. « Une batterie rechargeable qui remplace les piles jetables » → développement durable."
+    },
+    {
+     "type": "texte",
+     "titre": "2. Famille et lignée d'OST (OST1c)",
+     "html": "<p>Les objets techniques n'apparaissent pas n'importe comment : ils sont le résultat d'évolutions. Pour comprendre ces évolutions, on utilise deux mots.<\/p><p><b>Une famille<\/b> regroupe tous les objets qui répondent au <b>même besoin<\/b> avec la <b>même fonction d'usage<\/b>. La fonction d'usage répond à la question « <i>à quoi sert l'objet ?<\/i> ».<\/p><p class='exemple'>Exemple : la famille des moyens de transport. Fonction d'usage : transporter des personnes et des marchandises d'un point à un autre.<\/p><p><b>Une lignée<\/b> montre, <b>dans un ordre chronologique<\/b>, du plus ancien au plus récent, les objets d'une même famille qui fonctionnent avec le <b>même principe technique<\/b>. Le principe technique répond à la question « <i>de quelle manière l'objet fonctionne-t-il ? quel phénomène scientifique ou technique ?<\/i> ».<\/p><p class='exemple'>Exemple : la lignée des téléphones portables — modèles à clapet, puis smartphones à écran tactile, puis smartphones pliables.<\/p><p>Chaque objet de la lignée apporte des améliorations par rapport à ses prédécesseurs : <b>performance<\/b>, <b>fonctionnalités<\/b>, <b>coût<\/b>.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "3. Les contraintes sociétales (OST1d)",
+     "html": "<p>La conception d'un objet ne dépend pas que de la technique. Des facteurs sociétaux — les lois, les valeurs, les attentes de la société — influencent son développement.<\/p><p><b>Les contraintes sociétales sont des limites imposées aux technologies par la société.<\/b> Elles prennent trois formes :<\/p><ul><li><b>Lois et réglementations<\/b> — ce qui est autorisé ou interdit. <span class='exemple'>Exemple : la loi limite la puissance des moteurs des voitures pour réduire la pollution.<\/span><\/li><li><b>Normes et standards<\/b> — les caractéristiques techniques que les produits doivent respecter. <span class='exemple'>Exemple : les normes de sécurité électrique.<\/span><\/li><li><b>Valeurs et attentes de la société<\/b> — ce que les clients attendent. <span class='exemple'>Exemple : l'importance du développement durable pousse les entreprises à concevoir des appareils plus économes en énergie.<\/span><\/li><\/ul><p>À quoi servent-elles ? À garantir la <b>sécurité<\/b> des utilisateurs, à <b>protéger l'environnement<\/b> et à <b>répondre aux attentes<\/b> de la société.<\/p>"
+    },
+    {
+     "type": "info",
+     "titre": "Ne confonds pas les deux familles de contraintes",
+     "ton": "alerte",
+     "texte": "<b>Contraintes environnementales<\/b> (ce qui pèse sur la planète) : choix des matériaux, consommation électrique, rejets de gaz à effet de serre comme le CO₂.<br><br><b>Contraintes sociétales<\/b> (ce qui vient de la société) : respect de l'environnement, évolution des modes de vie et des usages, réglementation et normes de sécurité, attentes des utilisateurs.<br><br>Et ce qui n'est <b>pas<\/b> une contrainte sociétale : « le prix de vente de l'objet chez un unique fabricant »."
+    },
+    {
+     "type": "quiz",
+     "titre": "As-tu retenu la fiche 1 ?",
+     "questions": [
+      {
+       "question": "Le premier téléphone, inventé par Graham Bell en 1876, est…",
+       "options": [
+        "une innovation",
+        "une invention",
+        "un développement durable"
+       ],
+       "bonne": 1,
+       "explication": "Une invention est une solution technique nouvelle qui n'existait pas avant. C'est l'amélioration et la commercialisation qui en font une innovation."
+      },
+      {
+       "question": "L'ajout d'un écran tactile sur un téléphone qui existait déjà est…",
+       "options": [
+        "une invention",
+        "une innovation",
+        "une découverte scientifique"
+       ],
+       "bonne": 1,
+       "explication": "C'est une amélioration de l'existant, adoptée par les utilisateurs : une innovation. Une invention aurait créé un objet entièrement nouveau."
+      },
+      {
+       "question": "Que signifie « développement durable » ?",
+       "options": [
+        "Fabriquer des objets qui durent le plus longtemps possible, quel qu'en soit le coût",
+        "Répondre aux besoins du présent sans compromettre ceux des générations futures",
+        "Créer de nouveaux objets pour faire évoluer la société"
+       ],
+       "bonne": 1,
+       "explication": "Le développement durable repose sur trois piliers : environnemental, social et économique. Un objet durable respecte l'environnement tout en restant juste socialement et viable économiquement."
+      },
+      {
+       "question": "Dans la famille des moyens de transport, la fonction d'usage est…",
+       "options": [
+        "transporter des personnes et des marchandises d'un point à un autre",
+        "fonctionner avec un moteur électrique",
+        "utiliser des roues et un guidon"
+       ],
+       "bonne": 0,
+       "explication": "La fonction d'usage répond à « à quoi ça sert ? ». Le moteur électrique ou les roues décrivent le principe technique, c'est-à-dire « comment ça marche ? »."
+      },
+      {
+       "question": "Une lignée d'OST, c'est…",
+       "options": [
+        "tous les objets qui répondent au même besoin, quelle que soit leur technique",
+        "les objets d'une même famille, classés du plus ancien au plus récent, qui utilisent le même principe technique",
+        "la liste des améliorations apportées à un seul objet"
+       ],
+       "bonne": 1,
+       "explication": "La famille regroupe par le besoin (la fonction d'usage) ; la lignée ajoute deux contraintes : un ordre chronologique et le même principe technique."
+      },
+      {
+       "question": "Parmi ces éléments, lequel est une contrainte sociétale ?",
+       "options": [
+        "Le choix des matériaux pour construire l'objet",
+        "La consommation électrique de l'objet",
+        "La réglementation et les normes de sécurité"
+       ],
+       "bonne": 2,
+       "explication": "Les deux premières sont des contraintes environnementales. La réglementation et les normes viennent de la société : c'est une contrainte sociétale."
+      },
+      {
+       "question": "Pourquoi les fabricants cherchent-ils à réduire la consommation d'énergie des smartphones ?",
+       "options": [
+        "uniquement pour diminuer leur prix",
+        "pour répondre aux contraintes du développement durable et aux attentes des utilisateurs",
+        "parce que les téléphones sont devenus trop lourds"
+       ],
+       "bonne": 1,
+       "explication": "La consommation d'énergie pèse sur l'environnement : la réduire répond à une attente de la société et à une contrainte de développement durable."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "Fiche 2 · L'IA dans notre poche",
+   "blocs": [
+    {
+     "type": "intro",
+     "titre": "L'intelligence artificielle : des calculs, pas une intelligence",
+     "texte": "Un moteur de recherche, une application de traduction, un assistant vocal : tous utilisent une intelligence artificielle. Comprendre comment ces systèmes apprennent permet de comprendre aussi pourquoi ils se trompent parfois.",
+     "duree": "25 min",
+     "codes": [
+      "OST1e",
+      "OST1f"
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "1. Ce qu'est l'intelligence artificielle (OST1e)",
+     "html": "<p><b>L'intelligence artificielle (IA)<\/b> est l'ensemble des techniques qui permettent de réaliser des machines capables de simuler l'intelligence humaine.<\/p><p><b>Une IA n'est pas une intelligence en soi : c'est un enchaînement de calculs.<\/b> C'est la phrase à retenir — elle explique à elle seule pourquoi une IA peut se tromper sans le vouloir.<\/p><p>L'IA est déjà là dans la santé (diagnostiquer des maladies), les transports (voitures autonomes), le commerce (recommander des produits), la création numérique (textes, images, voix) et le divertissement (jeux vidéo, musique).<\/p><p><b>Le machine learning<\/b> (apprentissage automatique) est le domaine de l'IA qui permet aux machines d'apprendre <b>à partir de données<\/b>, sans qu'on leur programme explicitement chaque cas.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "2. Les quatre types d'apprentissage (OST1e)",
+     "html": "<p>On distingue <b>quatre<\/b> types d'apprentissage. Le sujet peut te demander de les citer : apprends les quatre, pas trois.<\/p><ol><li><b>L'apprentissage supervisé<\/b> — on entraîne l'IA avec des données <b>étiquetées<\/b> (des photos de visages avec la légende « visage de … »). Elle apprend, puis applique la formule trouvée à des données qu'elle n'a jamais vues. <span class='exemple'>Exemple : reconnaître des déchets à partir de photos étiquetées avec leur nom.<\/span><\/li><li><b>L'apprentissage non supervisé<\/b> — on donne à l'IA un grand volume de données <b>non étiquetées<\/b> ; elle les regroupe et découvre des ressemblances toute seule. <span class='exemple'>Exemple : regrouper des clients qui se ressemblent pour recommander des produits.<\/span><\/li><li><b>L'apprentissage auto-supervisé<\/b> — variante du précédent : c'est l'IA elle-même qui fabrique ses étiquettes à partir des données. <span class='exemple'>Exemple : prédire le mot suivant dans un SMS, ou entraîner une IA générative de textes (ChatGPT, Gemini, Mistral) sur d'immenses corpus de textes.<\/span><\/li><li><b>L'apprentissage par renforcement<\/b> — l'IA apprend <b>par essais et erreurs<\/b>, en recevant des <b>récompenses<\/b> ou des <b>pénalités<\/b> selon ses actions. <span class='exemple'>Exemple : un robot qui apprend à jouer aux échecs, récompensé quand il gagne.<\/span><\/li><\/ol><p>Un même usage peut mobiliser plusieurs types ; ce qui compte à l'évaluation, c'est de <b>justifier<\/b> ton association avec les mots de la définition (des données étiquetées, des récompenses, des données non étiquetées…).<\/p>"
+    },
+    {
+     "type": "association",
+     "titre": "Associe chaque usage à son type d'apprentissage",
+     "consigne": "Clique un usage à gauche, puis le type d'apprentissage qui lui correspond à droite.",
+     "titreGauche": "Usage",
+     "titreDroite": "Type d'apprentissage",
+     "paires": [
+      {
+       "gauche": "Un robot apprend à jouer aux échecs grâce à des récompenses",
+       "droite": "Par renforcement"
+      },
+      {
+       "gauche": "Reconnaître un visage à partir de photos étiquetées",
+       "droite": "Supervisé"
+      },
+      {
+       "gauche": "Identifier le texte présent dans une image",
+       "droite": "Supervisé"
+      },
+      {
+       "gauche": "Prédire le mot suivant dans un SMS",
+       "droite": "Auto-supervisé"
+      },
+      {
+       "gauche": "Regrouper des clients qui se ressemblent, sans étiquette",
+       "droite": "Non supervisé"
+      }
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "3. Le biais, et les incidences de l'IA (OST1f)",
+     "html": "<p><b>Un biais est une erreur systématique due à des données qui ne sont pas représentatives.<\/b> L'IA ne fait pas exprès de se tromper : elle reproduit ce qu'on lui a montré, et parfois plus fort.<\/p><p class='exemple'>Exemple du cours : une reconnaissance faciale entraînée sur des photos où 9 personnes sur 10 ont le teint clair échoue beaucoup plus souvent sur les autres visages.<\/p><p class='exemple'>Exemple du sujet : un chatbot d'orientation conseille les filières scientifiques aux garçons et les filières littéraires aux filles parce qu'il a appris sur des données qui reproduisaient ce stéréotype.<\/p><p><b>Conséquence concrète pour l'utilisateur<\/b> : il est refusé, mal orienté, mal reconnu, exclu d'un service — alors qu'il a le même droit que les autres.<\/p><p><b>Trois façons de limiter les biais<\/b> — il en faut au moins deux :<\/p><ul><li><b>diversifier les données<\/b> d'entraînement, pour qu'elles représentent tout le monde ;<\/li><li><b>garder un contrôle humain<\/b> : une personne relit et valide les décisions ;<\/li><li><b>tester l'équité<\/b> du système, par exemple en comparant ses résultats selon les groupes.<\/li><\/ul><p><b>L'IA est un outil créé par des humains : la responsabilité reste humaine.<\/b> Une IA ne décide pas toute seule qu'il faut discriminer — ce sont les choix de conception et les données choisies qui produisent le résultat.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "4. Les effets de l'usage de l'IA sur la société",
+     "html": "<p><b>Des effets positifs :<\/b> de meilleurs diagnostics médicaux, un apprentissage plus personnalisé, plus de sécurité (voitures autonomes), la productivité des entreprises, de nouvelles idées et de nouveaux produits, la créativité aidée par les IA génératives.<\/p><p><b>Des effets négatifs :<\/b><\/p><ul><li><b>passivité intellectuelle<\/b> — ne plus avoir besoin de réfléchir soi-même ;<\/li><li><b>impact environnemental<\/b> — une consommation d'énergie considérable et donc plus d'émissions de gaz à effet de serre ;<\/li><li><b>perte d'emplois<\/b> — certaines tâches sont automatisées ;<\/li><li><b>dépendance technologique<\/b> — on devient vulnérable en cas de panne ;<\/li><li><b>biais et discrimination<\/b> — des décisions injustes ;<\/li><li><b>atteinte à la vie privée<\/b> — la collecte et l'analyse d'énormes quantités de données ;<\/li><li><b>fausses nouvelles<\/b> — articles et vidéos truqués (deepfakes) très réalistes.<\/li><\/ul><p>À l'évaluation, on peut te demander un <b>argumentaire<\/b> : cite un effet positif, un effet négatif, et propose une amélioration responsable.<\/p>"
+    },
+    {
+     "type": "quiz",
+     "titre": "As-tu retenu la fiche 2 ?",
+     "questions": [
+      {
+       "question": "Parmi ces propositions, lesquelles désignent des types d'apprentissage qui existent réellement ?",
+       "options": [
+        "Apprentissage supervisé, non supervisé, par renforcement",
+        "Apprentissage supervisé, non supervisé, auto-supervisé et par renforcement",
+        "Apprentissage supervisé, manuel et automatique"
+       ],
+       "bonne": 1,
+       "explication": "Il y a quatre types : supervisé, non supervisé, auto-supervisé et par renforcement. « Apprentissage manuel » n'existe pas."
+      },
+      {
+       "question": "Une IA qui apprend grâce à des récompenses et des pénalités utilise…",
+       "options": [
+        "l'apprentissage supervisé",
+        "l'apprentissage par renforcement",
+        "l'apprentissage non supervisé"
+       ],
+       "bonne": 1,
+       "explication": "Récompenses et pénalités, essais et erreurs : c'est l'apprentissage par renforcement. Exemple : un robot qui apprend les échecs."
+      },
+      {
+       "question": "Que signifie « données étiquetées » ?",
+       "options": [
+        "Des données rangées dans un dossier",
+        "Des données accompagnées de leur réponse attendue (une photo et son nom)",
+        "Des données effacées après l'entraînement"
+       ],
+       "bonne": 1,
+       "explication": "Une donnée étiquetée porte son nom ou sa catégorie. C'est ce qui permet l'apprentissage supervisé : l'IA compare sa réponse à l'étiquette."
+      },
+      {
+       "question": "Quelle est la définition d'un biais dans une IA ?",
+       "options": [
+        "Une panne informatique qui empêche l'IA de fonctionner",
+        "Une erreur ou une tendance dans les résultats, souvent liée aux données utilisées pour l'apprentissage",
+        "Un logiciel qui protège les données personnelles"
+       ],
+       "bonne": 1,
+       "explication": "Le biais vient des données d'entraînement, pas d'une panne. Une IA qui échoue surtout sur certains visages reproduit ce qu'on lui a montré."
+      },
+      {
+       "question": "« Cette IA est méchante : elle fait exprès de ne pas reconnaître ces personnes. »",
+       "options": [
+        "Vrai : l'IA a choisi de mal fonctionner",
+        "Faux : l'IA exécute des calculs, et ce sont les données d'entraînement qui sont en cause",
+        "Vrai, mais seulement pour les IA génératives"
+       ],
+       "bonne": 1,
+       "explication": "Une IA n'a pas d'intention : c'est un enchaînement de calculs. La responsabilité est humaine, et le défaut vient des données non représentatives."
+      },
+      {
+       "question": "Deux solutions pour limiter un biais dans une IA :",
+       "options": [
+        "Éteindre l'IA et diversifier les données",
+        "Diversifier les données d'entraînement et garder un contrôle humain",
+        "Augmenter la vitesse de calcul et changer l'écran"
+       ],
+       "bonne": 1,
+       "explication": "Les trois leviers sont : diversifier les données, garder un contrôle humain, et tester l'équité. Il faut en citer au moins deux."
+      },
+      {
+       "question": "Lequel de ces effets est un effet négatif de l'usage de l'IA ?",
+       "options": [
+        "De meilleurs diagnostics médicaux",
+        "La dépendance technologique et la perte d'emplois",
+        "La personnalisation de l'apprentissage"
+       ],
+       "bonne": 1,
+       "explication": "Dépendance, perte d'emplois, passivité, biais, atteinte à la vie privée et fausses nouvelles sont les effets négatifs. Les autres sont des effets positifs."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "Fiche 3 · Le numérique",
+   "blocs": [
+    {
+     "type": "intro",
+     "titre": "Ce que le numérique change dans la société et dans les métiers",
+     "texte": "Le développement du numérique et de l'intelligence artificielle transforme tous les secteurs et tous les métiers. Cette fiche donne les idées à réutiliser dans un argumentaire.",
+     "duree": "15 min",
+     "codes": [
+      "OST1"
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "1. Le numérique transforme les secteurs et les métiers",
+     "html": "<p>Le numérique transforme <b>tous les secteurs<\/b> : santé, éducation, agriculture, industrie, commerce.<\/p><p><b>Les métiers évoluent<\/b> : certains <b>disparaissent<\/b>, d'autres <b>se créent<\/b>, et tous <b>se transforment<\/b>.<\/p><p class='exemple'>L'exemple du cours : Marcel, chauffeur-livreur en 1995, travaillait avec une carte papier et un stylo. Inès, aujourd'hui, utilise un camion connecté, une tablette et une application GPS, et livre trois fois plus de colis grâce aux logiciels d'optimisation de tournées et aux robots de tri.<\/p><p>Ce que cela montre : l'arrivée d'Internet, des smartphones et du GPS a supprimé les outils papier ; ce sont des <b>choix technologiques stratégiques<\/b> pour une entreprise, qui doit évoluer pour rester compétitive.<\/p>"
+    },
+    {
+     "type": "chaine",
+     "titre": "2. La chaîne d'information",
+     "consigne": "Tout système numérique suit le même cycle.",
+     "chaines": [
+      {
+       "nom": "Toujours le même ordre",
+       "etapes": [
+        "Acquérir",
+        "Traiter",
+        "Communiquer",
+        "Stocker"
+       ],
+       "note": "Acquérir (un capteur, une saisie) → Traiter (un programme, un microcontrôleur) → Communiquer (envoyer la donnée) → Stocker (l'enregistrer). Ta trace écrite de la séquence 2a l'écrit exactement comme cela."
+      }
+     ]
+    },
+    {
+     "type": "ordre",
+     "titre": "Remets la chaîne d'information dans l'ordre",
+     "consigne": "Clique deux étapes pour les échanger, jusqu'à retrouver le bon ordre.",
+     "etapes": [
+      "Acquérir",
+      "Traiter",
+      "Communiquer",
+      "Stocker"
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "3. Impact environnemental et usage responsable",
+     "html": "<p><b>L'impact environnemental du numérique est réel :<\/b> il vient de la <b>fabrication<\/b> des appareils, de leur <b>consommation électrique<\/b> pendant l'usage, et des <b>centres de données<\/b> qui stockent et traitent nos informations.<\/p><p><b>Un usage responsable est possible :<\/b><\/p><ul><li><b>allonger la durée de vie<\/b> des appareils (les faire réparer plutôt que les remplacer) ;<\/li><li><b>réduire le streaming<\/b> et la qualité vidéo quand ce n'est pas nécessaire ;<\/li><li><b>préférer le reconditionné<\/b> au neuf ;<\/li><li>ne pas stocker indéfiniment des fichiers inutiles dans le nuage.<\/li><\/ul><p>Une donnée numérique a bien un coût : elle occupe du stockage, elle circule sur des réseaux, elle consomme de l'énergie. C'est pourquoi on parle d'<b>empreinte numérique<\/b>.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "4. L'ordre de grandeur des fichiers (bonus utile)",
+     "html": "<p>Pour donner un ordre de grandeur dans un argumentaire :<\/p><ul><li><b>une image<\/b> : quelques kilo-octets à des dizaines de méga-octets ;<\/li><li><b>un son<\/b> : des dizaines de kilo-octets à plusieurs méga-octets par minute ;<\/li><li><b>une vidéo<\/b> : des dizaines de méga-octets à quelques giga-octets par minute.<\/li><\/ul><p>Une vidéo pèse donc <b>beaucoup plus lourd<\/b> qu'un texte ou qu'une image : c'est ce qui explique qu'elle consomme plus d'énergie pour être transportée et stockée.<\/p>"
+    },
+    {
+     "type": "quiz",
+     "titre": "As-tu retenu la fiche 3 ?",
+     "questions": [
+      {
+       "question": "Dans quel ordre s'enchaîne la chaîne d'information ?",
+       "options": [
+        "Traiter → Acquérir → Stocker → Communiquer",
+        "Acquérir → Traiter → Communiquer → Stocker",
+        "Stocker → Communiquer → Traiter → Acquérir"
+       ],
+       "bonne": 1,
+       "explication": "On acquiert une information (capteur, saisie), on la traite (programme), on la communique, puis on la stocke."
+      },
+      {
+       "question": "D'où vient principalement l'impact environnemental du numérique ?",
+       "options": [
+        "Uniquement de la fabrication des appareils",
+        "De la fabrication des appareils, de la consommation électrique et des centres de données",
+        "Uniquement de l'utilisation du réseau Wi-Fi du collège"
+       ],
+       "bonne": 1,
+       "explication": "Les trois postes comptent : fabrication, usage (consommation électrique) et centres de données."
+      },
+      {
+       "question": "Lequel de ces gestes est un usage responsable du numérique ?",
+       "options": [
+        "Changer de téléphone tous les ans",
+        "Faire réparer son téléphone et choisir un reconditionné",
+        "Regarder toutes les vidéos en très haute définition"
+       ],
+       "bonne": 1,
+       "explication": "Allonger la durée de vie et préférer le reconditionné réduisent la fabrication, qui est le poste le plus lourd de l'empreinte numérique."
+      },
+      {
+       "question": "Comment les métiers évoluent-ils avec le numérique ?",
+       "options": [
+        "Ils restent identiques, seuls les outils changent",
+        "Certains disparaissent, d'autres se créent, et tous se transforment",
+        "Tous les métiers disparaissent"
+       ],
+       "bonne": 1,
+       "explication": "C'est la formulation de la trace écrite : des métiers disparaissent, d'autres se créent, et tous se transforment."
+      },
+      {
+       "question": "Quel fichier est le plus volumineux, à durée égale ?",
+       "options": [
+        "Un fichier texte",
+        "Un fichier image",
+        "Un fichier vidéo"
+       ],
+       "bonne": 2,
+       "explication": "Une vidéo pèse des dizaines de méga-octets à quelques giga-octets par minute : bien plus qu'une image (quelques kilo-octets à quelques méga-octets)."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "Vocabulaire",
+   "blocs": [
+    {
+     "type": "intro",
+     "titre": "Les mots que le sujet emploie, et qu'il faut savoir définir",
+     "texte": "Chaque question de l'évaluation utilise ces mots. Si tu sais les définir avec précision, tu gagnes des points même quand tu hésites sur l'exemple.",
+     "duree": "15 min pour le relire",
+     "codes": [
+      "OST1"
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "Le lexique complet",
+     "html": "<ul class='lexique'><li><b>Objet technique (OST)<\/b> — objet ou système fabriqué par l'être humain pour répondre à un besoin.<\/li><li><b>Besoin<\/b> — ce dont une personne a besoin et que l'objet doit satisfaire.<\/li><li><b>Invention<\/b> — idée nouvelle, découverte scientifique ou technique qui permet de créer un objet qui n'existait pas.<\/li><li><b>Innovation<\/b> — amélioration de l'existant ; elle est réussie quand elle est commercialisée et adoptée par les utilisateurs.<\/li><li><b>Innovation de rupture<\/b> — innovation qui change radicalement les usages.<\/li><li><b>Développement durable<\/b> — répondre aux besoins du présent sans compromettre ceux des générations futures (environnement, équité sociale, économie).<\/li><li><b>Découverte scientifique<\/b> — connaissance nouvelle sur le monde (par exemple les ondes électromagnétiques) qui permet ensuite des applications techniques.<\/li><li><b>Fonction d'usage<\/b> — à quoi sert l'objet.<\/li><li><b>Principe technique<\/b> — de quelle manière fonctionne l'objet, par quel phénomène scientifique ou technique.<\/li><li><b>Famille d'OST<\/b> — tous les objets qui répondent au même besoin avec la même fonction d'usage.<\/li><li><b>Lignée d'OST<\/b> — les objets d'une même famille, classés du plus ancien au plus récent, qui utilisent le même principe technique.<\/li><li><b>Contraintes sociétales<\/b> — limites imposées aux technologies par la société : lois et réglementations, normes et standards, valeurs et attentes.<\/li><li><b>Intelligence artificielle (IA)<\/b> — ensemble des techniques qui permettent à une machine de simuler l'intelligence humaine ; ce n'est pas une intelligence, mais un enchaînement de calculs.<\/li><li><b>Machine learning<\/b> — apprentissage automatique : la machine apprend à partir de données, sans programmation explicite de chaque cas.<\/li><li><b>Apprentissage supervisé<\/b> — entraînement avec des données étiquetées (chaque exemple porte sa réponse).<\/li><li><b>Apprentissage non supervisé<\/b> — entraînement avec des données non étiquetées, que l'IA regroupe elle-même.<\/li><li><b>Apprentissage auto-supervisé<\/b> — l'IA fabrique elle-même ses étiquettes à partir des données (mot suivant, IA génératives).<\/li><li><b>Apprentissage par renforcement<\/b> — essais et erreurs, avec des récompenses et des pénalités.<\/li><li><b>Données d'entraînement<\/b> — les exemples avec lesquels l'IA apprend ; ce sont eux qui déterminent ses résultats.<\/li><li><b>Biais<\/b> — erreur systématique due à des données non représentatives.<\/li><li><b>IA générative<\/b> — IA capable de produire du texte, des images, des sons (ChatGPT, Gemini, Mistral).<\/li><li><b>Deepfake<\/b> — vidéo ou image truquée, très réaliste, réalisée par une IA.<\/li><li><b>Chaîne d'information<\/b> — acquérir → traiter → communiquer → stocker.<\/li><li><b>Empreinte numérique<\/b> — l'impact environnemental de nos usages du numérique.<\/li><\/ul>"
+    },
+    {
+     "type": "tri",
+     "titre": "Classe ces exemples",
+     "consigne": "Clique un exemple, puis la famille à laquelle il appartient.",
+     "categories": [
+      "Invention",
+      "Innovation",
+      "Développement durable"
+     ],
+     "items": [
+      {
+       "texte": "Le premier téléphone (1876)",
+       "categorie": "Invention",
+       "icone": "💡"
+      },
+      {
+       "texte": "Le premier appareil de communication à distance par ondes",
+       "categorie": "Invention",
+       "icone": "💡"
+      },
+      {
+       "texte": "L'ajout d'un écran tactile sur un téléphone existant",
+       "categorie": "Innovation",
+       "icone": "🔧"
+      },
+      {
+       "texte": "Le smartphone pliable, qui change les usages",
+       "categorie": "Innovation",
+       "icone": "🔧"
+      },
+      {
+       "texte": "Une batterie rechargeable remplaçant les piles jetables",
+       "categorie": "Développement durable",
+       "icone": "♻️"
+      },
+      {
+       "texte": "Un smartphone conçu pour être réparé plutôt que remplacé",
+       "categorie": "Développement durable",
+       "icone": "♻️"
+      }
+     ]
+    },
+    {
+     "type": "quiz",
+     "titre": "Vérifie le vocabulaire",
+     "questions": [
+      {
+       "question": "Une innovation réussie, c'est une innovation qui…",
+       "options": [
+        "est restée dans un laboratoire",
+        "est commercialisée et adoptée par les utilisateurs",
+        "est plus chère que l'objet précédent"
+       ],
+       "bonne": 1,
+       "explication": "C'est la définition de la fiche : l'innovation est la recherche d'amélioration de l'existant, et elle est réussie quand elle est vendue et adoptée."
+      },
+      {
+       "question": "La fonction d'usage répond à la question…",
+       "options": [
+        "« comment ça marche ? »",
+        "« à quoi ça sert ? »",
+        "« combien ça coûte ? »"
+       ],
+       "bonne": 1,
+       "explication": "« À quoi ça sert ? » c'est la fonction d'usage. « Comment ça marche ? » c'est le principe technique."
+      },
+      {
+       "question": "Un biais, c'est…",
+       "options": [
+        "une panne de l'IA",
+        "une erreur systématique liée aux données d'entraînement",
+        "un réglage de l'écran"
+       ],
+       "bonne": 1,
+       "explication": "Le biais est une erreur systématique : elle ne vient pas du hasard mais des données, qui ne sont pas représentatives."
+      },
+      {
+       "question": "Les données d'entraînement, ce sont…",
+       "options": [
+        "les données que l'IA produit",
+        "les exemples avec lesquels l'IA apprend",
+        "les données supprimées par l'utilisateur"
+       ],
+       "bonne": 1,
+       "explication": "Ce sont les exemples donnés à l'IA pour apprendre. Ce sont eux qui déterminent ce qu'elle saura faire — et ce sur quoi elle se trompera."
+      },
+      {
+       "question": "Une IA générative, c'est une IA qui…",
+       "options": [
+        "génère de l'électricité",
+        "produit du texte, des images ou des sons",
+        "gère les notes du collège"
+       ],
+       "bonne": 1,
+       "explication": "ChatGPT, Gemini, Mistral sont des IA génératives : elles produisent un contenu nouveau à partir de ce qu'elles ont appris."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "titre": "Méthode",
+   "blocs": [
+    {
+     "type": "intro",
+     "titre": "Quatre parties, quatre méthodes",
+     "texte": "Chaque partie du sujet vaut 5 points. Les questions rédigées rapportent autant que le QCM : il serait dommage de les traiter à la dernière minute.",
+     "duree": "15 min",
+     "codes": [
+      "OST1"
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "Partie 1 et 3 — le QCM (5 points)",
+     "html": "<ul><li><b>Lis toutes les propositions avant de cocher.<\/b> Les pièges sont faits pour être séduisants : « apprentissage manuel », « le prix chez un unique fabricant ».<\/li><li><b>« Cocher le(s) »<\/b> veut dire qu'il peut y avoir plusieurs bonnes réponses : relis la consigne à chaque fois.<\/li><li><b>Élimine d'abord les propositions trop extrêmes<\/b> (« uniquement », « à tout prix », « tous ») : ce sont rarement les bonnes.<\/li><li><b>Ne laisse jamais une case vide<\/b> : un QCM ne retire pas de points, une case vide est une occasion perdue.<\/li><\/ul>"
+    },
+    {
+     "type": "texte",
+     "titre": "Partie 2 — Compréhension (5 points)",
+     "html": "<p>Deux formes possibles : <b>classer<\/b> (invention / innovation / développement durable) ou <b>associer<\/b> (usage ↔ type d'apprentissage).<\/p><p><b>Pour classer<\/b>, pose-toi trois questions dans l'ordre :<\/p><ol><li>Est-ce que l'objet <b>n'existait pas du tout<\/b> avant ? → invention.<\/li><li>Est-ce que c'est <b>une amélioration<\/b> d'un objet existant ? → innovation.<\/li><li>Est-ce que ça répond à un besoin <b>en pensant aux générations futures<\/b> ? → développement durable.<\/li><\/ol><p><b>Pour associer<\/b>, cherche le mot-clé de la définition dans l'énoncé :<\/p><ul><li>« récompense », « pénalité », « essais-erreurs » → <b>par renforcement<\/b> ;<\/li><li>« étiqueté », « photo avec son nom », « on lui montre » → <b>supervisé<\/b> ;<\/li><li>« sans étiquette », « regrouper », « ressemblances » → <b>non supervisé<\/b> ;<\/li><li>« mot suivant », « immense corpus de textes », « IA qui produit » → <b>auto-supervisé<\/b>.<\/li><\/ul>"
+    },
+    {
+     "type": "texte",
+     "titre": "Partie 4 — Application : l'argumentaire (5 points)",
+     "html": "<p>On te demande « un argumentaire court de 4 à 6 lignes » expliquant <b>l'incidence d'un OST sur la société<\/b>, avec <b>au moins deux changements concrets<\/b> dans les usages.<\/p><p><b>La structure en quatre temps :<\/b><\/p><ol><li><b>Phrase d'entrée<\/b> : nomme l'objet et son évolution.<\/li><li><b>Changement n° 1<\/b> : ce qui change concrètement (distance, instantanéité, mobilité, accès à l'information).<\/li><li><b>Changement n° 2<\/b> : un second changement, différent du premier.<\/li><li><b>Phrase de bilan<\/b> : ce que la société y gagne — et, si tu peux, ce qu'elle y perd.<\/li><\/ol><p><b>Exemple rédigé (à ne pas réciter : à imiter dans la forme)<\/b> :<\/p><p class='modele'>« Le smartphone a transformé la façon dont nous communiquons. D'abord, il a supprimé la distance : une famille séparée par des milliers de kilomètres peut se joindre en quelques secondes. Ensuite, il a rendu l'information instantanée et mobile : on consulte une carte, un horaire ou un message à tout moment, là où il y a quelques années il fallait rentrer chez soi. La société y gagne en réactivité, mais elle dépend désormais de cet appareil et de sa batterie. »<\/p><p><b>Ce qui fait perdre des points<\/b> : rester vague (« c'est plus pratique »), donner un seul changement, dépasser nettement les six lignes, ou oublier de nommer l'objet.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "Partie 4 — Réfléchir et imaginer (5 points)",
+     "html": "<p>Deux formes : analyser un <b>biais<\/b>, ou formuler une <b>problématique<\/b>.<\/p><p><b>Analyser un biais — trois temps, toujours les mêmes :<\/b><\/p><ol><li><b>Nommer la cause<\/b> : des données d'entraînement non représentatives (l'énoncé te donne toujours l'indice : « 9 photos sur 10 de personnes au teint clair »).<\/li><li><b>Donner une conséquence concrète<\/b> pour l'utilisateur : refus, erreur répétée, mauvaise orientation.<\/li><li><b>Proposer deux solutions<\/b> : une <b>technique<\/b> (diversifier les données, tester l'équité) et une <b>non technique<\/b> (contrôle humain, règle de protection, information des utilisateurs).<\/li><\/ol><p><b>Formuler une problématique<\/b> : c'est une question qui commence souvent par « Comment… ? » ou « En quoi… ? » et qui relie l'objet à un besoin ou à un effet sur la société. Elle ne contient pas sa propre réponse.<\/p><p class='modele'>Exemple : « En quoi le smartphone a-t-il modifié notre rapport au temps et à la distance ? »<\/p><p><b>Attention :<\/b> « L'ampoule est-elle une invention ? » n'est pas une problématique — la réponse est oui ou non. Une problématique ouvre une analyse.<\/p>"
+    },
+    {
+     "type": "info",
+     "titre": "Les erreurs qui coûtent le plus de points",
+     "ton": "alerte",
+     "texte": "<b>1.<\/b> Confondre invention et innovation. <b>2.<\/b> Oublier l'auto-supervisé en citant les types d'apprentissage. <b>3.<\/b> Dire qu'une IA « fait exprès » de se tromper. <b>4.<\/b> Donner un seul changement dans l'argumentaire alors qu'il en faut deux. <b>5.<\/b> Répondre « plus pratique » sans nommer ce qui change. <b>6.<\/b> Ne pas tourner la feuille : le sujet est recto-verso."
+    }
+   ]
+  },
+  {
+   "titre": "S'entraîner",
+   "blocs": [
+    {
+     "type": "intro",
+     "titre": "Dix-huit questions pour faire le tour du programme",
+     "texte": "Les questions ci-dessous mélangent les deux séquences, comme le fera le sujet. Tu peux recommencer autant de fois que tu veux : rien n'est enregistré.",
+     "duree": "25 min",
+     "codes": [
+      "OST1"
+     ]
+    },
+    {
+     "type": "quiz",
+     "titre": "QCM de révision générale",
+     "questions": [
+      {
+       "question": "Une idée nouvelle, une découverte qui permet de créer un objet qui n'existait pas, c'est…",
+       "options": [
+        "une invention",
+        "une innovation",
+        "une contrainte"
+       ],
+       "bonne": 0,
+       "explication": "C'est la définition de l'invention (OST1a)."
+      },
+      {
+       "question": "Pourquoi peut-on dire que le smartphone à écran tactile appartient à la même lignée que le téléphone portable à clapet ?",
+       "options": [
+        "Parce qu'ils ont le même prix",
+        "Parce qu'ils répondent au même besoin et utilisent le même principe technique (transmettre la voix par des ondes radio), du plus ancien au plus récent",
+        "Parce qu'ils sont fabriqués par la même entreprise"
+       ],
+       "bonne": 1,
+       "explication": "La lignée relie les objets d'une même famille qui fonctionnent avec le même principe technique (OST1c). Attention : le téléphone fixe est de la même famille (communiquer à distance) mais pas de la même lignée, puisque son principe technique est le fil, pas les ondes."
+      },
+      {
+       "question": "Les normes de sécurité électrique sont…",
+       "options": [
+        "une contrainte sociétale",
+        "une contrainte environnementale",
+        "une invention"
+       ],
+       "bonne": 0,
+       "explication": "Les normes et standards sont l'une des trois formes de contraintes sociétales (OST1d)."
+      },
+      {
+       "question": "Combien de types d'apprentissage automatique distingue-t-on ?",
+       "options": [
+        "deux",
+        "trois",
+        "quatre"
+       ],
+       "bonne": 2,
+       "explication": "Quatre : supervisé, non supervisé, auto-supervisé et par renforcement (OST1e)."
+      },
+      {
+       "question": "L'apprentissage qui utilise des données étiquetées est…",
+       "options": [
+        "l'apprentissage supervisé",
+        "l'apprentissage par renforcement",
+        "l'apprentissage non supervisé"
+       ],
+       "bonne": 0,
+       "explication": "Les données étiquetées (chaque exemple porte sa réponse) définissent l'apprentissage supervisé."
+      },
+      {
+       "question": "Un chatbot d'orientation conseille les filières scientifiques aux garçons et littéraires aux filles. La cause est…",
+       "options": [
+        "l'IA est méchante",
+        "les données d'entraînement reproduisaient ce stéréotype",
+        "le chatbot a été piraté"
+       ],
+       "bonne": 1,
+       "explication": "Le biais vient des données : l'IA reproduit ce qu'on lui a montré (OST1f)."
+      },
+      {
+       "question": "Pour limiter un biais, on peut…",
+       "options": [
+        "diversifier les données et garder un contrôle humain",
+        "changer la couleur de l'écran",
+        "utiliser l'IA plus souvent"
+       ],
+       "bonne": 0,
+       "explication": "Diversifier les données, contrôle humain, tests d'équité : ce sont les trois leviers."
+      },
+      {
+       "question": "« L'IA n'est pas une intelligence en soi mais… »",
+       "options": [
+        "un programme magique",
+        "un enchaînement de calculs",
+        "un être vivant artificiel"
+       ],
+       "bonne": 1,
+       "explication": "C'est la phrase de la fiche OST1e. Elle explique pourquoi une IA se trompe sans le vouloir."
+      },
+      {
+       "question": "Le développement durable, c'est répondre aux besoins…",
+       "options": [
+        "du présent sans compromettre ceux des générations futures",
+        "des entreprises avant ceux des personnes",
+        "de la technologie avant tout"
+       ],
+       "bonne": 0,
+       "explication": "Définition de la fiche OST1a : environnement, équité sociale et économique."
+      },
+      {
+       "question": "Quels sont les trois types de contraintes sociétales ?",
+       "options": [
+        "Lois et réglementations, normes et standards, valeurs et attentes de la société",
+        "Prix, poids, couleur",
+        "Électricité, eau, air"
+       ],
+       "bonne": 0,
+       "explication": "Ce sont les trois formes décrites dans la fiche OST1d."
+      },
+      {
+       "question": "La chaîne d'information, c'est…",
+       "options": [
+        "Acquérir → Traiter → Communiquer → Stocker",
+        "Stocker → Traiter → Acquérir → Communiquer",
+        "Communiquer → Stocker → Acquérir → Traiter"
+       ],
+       "bonne": 0,
+       "explication": "C'est l'ordre de la trace écrite de la séquence 2a."
+      },
+      {
+       "question": "Un usage responsable du numérique, c'est…",
+       "options": [
+        "allonger la durée de vie des appareils et préférer le reconditionné",
+        "acheter le dernier modèle chaque année",
+        "stocker tous ses fichiers dans le nuage"
+       ],
+       "bonne": 0,
+       "explication": "La fabrication est le poste le plus lourd de l'empreinte numérique : durer plus longtemps, c'est le meilleur geste."
+      },
+      {
+       "question": "Les métiers, avec le numérique…",
+       "options": [
+        "disparaissent tous",
+        "disparaissent, se créent ou se transforment",
+        "ne changent pas"
+       ],
+       "bonne": 1,
+       "explication": "Certains disparaissent, d'autres se créent, et tous se transforment (séquence 2a)."
+      },
+      {
+       "question": "Une innovation de rupture, c'est…",
+       "options": [
+        "une amélioration discrète d'un objet existant",
+        "un changement radical des usages",
+        "un objet cassé qu'on répare"
+       ],
+       "bonne": 1,
+       "explication": "L'iPhone en 2007 est l'exemple donné : il fait disparaître le clavier physique et change les usages."
+      },
+      {
+       "question": "Les outils numériques ont transformé le métier de chauffeur-livreur parce que…",
+       "options": [
+        "les livraisons ont été interdites",
+        "Internet, les smartphones et le GPS ont remplacé les cartes papier et optimisé les tournées",
+        "les camions sont devenus plus gros"
+       ],
+       "bonne": 1,
+       "explication": "C'est l'exemple du cours : Marcel en 1995 et Inès aujourd'hui. Les choix technologiques sont stratégiques pour l'entreprise."
+      },
+      {
+       "question": "Pourquoi une IA peut-elle discriminer sans le « vouloir » ?",
+       "options": [
+        "Parce qu'elle a des émotions",
+        "Parce qu'elle reproduit les schémas présents dans ses données d'entraînement",
+        "Parce qu'elle est trop lente"
+       ],
+       "bonne": 1,
+       "explication": "L'IA n'a pas d'intention : elle reproduit ce qu'on lui a montré, parfois en l'amplifiant."
+      },
+      {
+       "question": "Quel est un effet négatif de l'usage de l'IA sur la société ?",
+       "options": [
+        "De meilleurs diagnostics médicaux",
+        "La dépendance technologique et la passivité intellectuelle",
+        "Une meilleure personnalisation de l'apprentissage"
+       ],
+       "bonne": 1,
+       "explication": "Dépendance, passivité, perte d'emplois, biais, atteinte à la vie privée, fausses nouvelles : les effets négatifs de la fiche OST1f."
+      },
+      {
+       "question": "Dans un argumentaire de 4 à 6 lignes, il faut au minimum…",
+       "options": [
+        "un changement concret dans les usages",
+        "deux changements concrets dans les usages",
+        "cinq exemples différents"
+       ],
+       "bonne": 1,
+       "explication": "La consigne du sujet demande explicitement au moins deux changements concrets."
+      }
+     ]
+    },
+    {
+     "type": "association",
+     "titre": "Dernière vérification : les définitions",
+     "consigne": "Clique un mot à gauche, puis sa définition à droite.",
+     "titreGauche": "Mot",
+     "titreDroite": "Définition",
+     "paires": [
+      {
+       "gauche": "Invention",
+       "droite": "Idée nouvelle qui permet de créer un objet qui n'existait pas"
+      },
+      {
+       "gauche": "Innovation",
+       "droite": "Amélioration de l'existant, commercialisée et adoptée"
+      },
+      {
+       "gauche": "Lignée",
+       "droite": "Objets d'une même famille, du plus ancien au plus récent, avec le même principe technique"
+      },
+      {
+       "gauche": "Contraintes sociétales",
+       "droite": "Limites imposées aux technologies par la société"
+      },
+      {
+       "gauche": "Biais",
+       "droite": "Erreur systématique due à des données non représentatives"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};
+</script>
+
+<!-- Moteur d'activité : rend les blocs et gère les interactions. -->
+<script>
+/* =====================================================================
+   Moteur d'activité — rend les blocs décrits dans window.ACTIVITE
+   =====================================================================
+   Principe : le contenu pédagogique est une DONNÉE (JSON), pas du HTML
+   écrit à la main. Ce moteur le transforme en page interactive. Écrire
+   39 Ko de HTML+CSS à chaque nouvelle activité, c'était :
+
+     - cher à produire (le modèle rédigeait du code au lieu du cours) ;
+     - instable (chaque activité réinventait sa structure) ;
+     - risqué (les correctifs mobiles déjà faits ne se propageaient pas).
+
+   Règles de conception, tirées du banc d'essai mobile :
+     - aucune interaction au glisser-déposer : tout au clic ;
+     - toute cible tactile >= 44 px (voir composants.css) ;
+     - un bloc mal décrit n'efface jamais la page : il affiche une erreur
+       visible et les autres blocs continuent de s'afficher ;
+     - ce que l'élève a répondu reste lisible dans le PDF exporté.
+
+   Compatible ES5 volontairement (tablettes scolaires anciennes, file://).
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var A = window.ACTIVITE;
+  var hote = document.getElementById('content');
+
+  if (!hote) return;
+
+  if (!A || !A.onglets || !A.onglets.length) {
+    hote.innerHTML =
+      '<div class="bloc-erreur"><b>Activité vide.</b> Les données ' +
+      '<code>window.ACTIVITE</code> sont absentes ou sans onglet. ' +
+      'Regénérer le fichier avec <code>construire_activite.py</code>.</div>';
+    return;
+  }
+
+  /* ---------------------------------------------------------------- outils */
+
+  function esc(t) {
+    return String(t === undefined || t === null ? '' : t)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /** HTML déjà rédigé par l'auteur : inséré tel quel. */
+  function brut(t) { return String(t === undefined ? '' : t); }
+
+  function melanger(liste) {
+    var a = liste.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /** Le bloc carte qui contient un élément : indispensable pour que chaque
+      compteur de score ne compte QUE son propre exercice. */
+  function carteDe(el) {
+    return el && el.closest ? el.closest('.card') : null;
+  }
+
+  function dansCarte(el, selecteur) {
+    var c = carteDe(el);
+    return c ? c.querySelectorAll(selecteur) : [];
+  }
+
+  /* ---------------------------------------------------- état / progression */
+
+  var CLE = 'activite:' + (A.id || A.titre || 'sans-titre');
+
+  /* Aucune conservation (RGPD) : l'état des réponses vit en mémoire le temps
+     de la page. Un rechargement repart de zéro, et rien n'est écrit sur
+     l'appareil de l'élève. */
+  function chargerEtat() { return {}; }
+  function ecrireEtat() {}
+
+  var etat = chargerEtat();
+
+  /** Exposé au module d'export PDF, qui l'appelle avant d'imprimer. */
+  window.saveState = function () { ecrireEtat(); };
+
+  /* --------------------------------------------------------------- fabrique */
+
+  function carte(interne) { return '<div class="card">' + interne + '</div>'; }
+
+  var NOMS_BLOOM = {
+    n1: 'N1 — Mémoriser', n2: 'N2 — Comprendre',
+    n3: 'N3 — Appliquer', n4: 'N4 — Analyser'
+  };
+
+  function badge(bloom, libelle) {
+    if (!bloom) return '';
+    return '<span class="badge ' + esc(bloom) + '">' +
+           esc(libelle || NOMS_BLOOM[bloom] || '') + '</span>';
+  }
+
+  function enteteBloc(b, defaut) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    if (defaut) h += '<p>' + brut(defaut) + '</p>';
+    if (b.consigne) h += '<p>' + brut(b.consigne) + '</p>';
+    return h;
+  }
+
+  /** Marque lisible seulement à l'impression : ce que l'élève a répondu. */
+  function marque(texte) {
+    return '<span class="marque-impression"> ' + esc(texte) + '</span>';
+  }
+
+  function compteur(id, texte) {
+    return '<div class="compteur" id="' + id + '">' + esc(texte) + '</div>';
+  }
+
+  /* ---------------------------------------------------- rendu des blocs */
+
+  var BLOCS = {};
+
+  /* --- intro : ouverture de l'activité (objectifs, durée, matériel) --- */
+  BLOCS.intro = function (b) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    if (b.texte) h += '<p>' + brut(b.texte) + '</p>';
+    if (b.objectifs && b.objectifs.length) {
+      h += '<h3>Ce que tu vas apprendre</h3><ul class="objectifs">';
+      for (var i = 0; i < b.objectifs.length; i++) h += '<li>' + brut(b.objectifs[i]) + '</li>';
+      h += '</ul>';
+    }
+    if (b.materiel && b.materiel.length) {
+      h += '<h3>Matériel</h3><ul class="objectifs">';
+      for (var j = 0; j < b.materiel.length; j++) h += '<li>' + brut(b.materiel[j]) + '</li>';
+      h += '</ul>';
+    }
+    var meta = '';
+    if (b.duree) meta += '<span><b>Durée :</b> ' + esc(b.duree) + '</span>';
+    if (b.modalite) meta += '<span><b>Travail :</b> ' + esc(b.modalite) + '</span>';
+    if (b.codes && b.codes.length) {
+      meta += '<span><b>Programme :</b> ';
+      for (var k = 0; k < b.codes.length; k++) {
+        meta += '<span class="etiquette-code">' + esc(b.codes[k]) + '</span>';
+      }
+      meta += '</span>';
+    }
+    if (meta) h += '<div class="fiche-meta">' + meta + '</div>';
+    return carte(h);
+  };
+
+  /* --- info : encadré de cours, d'aide ou d'alerte --- */
+  BLOCS.info = function (b) {
+    var ton = b.ton === 'succes' ? ' success' : (b.ton === 'alerte' ? ' error' : '');
+    var h = '';
+    if (b.titre) h += '<strong>' + esc(b.titre) + '</strong> ';
+    h += brut(b.texte || '');
+    return '<div class="info' + ton + '">' + h + '</div>';
+  };
+
+  /* --- brut : HTML inséré sans habillage (cartes déjà stylées par la coquille :
+         ressources associées, carte d'export PDF) --- */
+  BLOCS.brut = function (b) { return brut(b.html || ''); };
+
+  /* --- texte : contenu libre déjà rédigé (HTML fourni par l'auteur) --- */
+  BLOCS.texte = function (b) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    h += brut(b.html || '');
+    return carte(h);
+  };
+
+  /* --- quiz à correction immédiate --- */
+  BLOCS.quiz = function (b, idx) {
+    var qs = b.questions || [];
+    var idScore = 'score-quiz-' + idx;
+    var h = enteteBloc(b, 'Clique sur la réponse qui te semble juste. La correction est immédiate.');
+
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      h += '<div class="quiz-question" data-q="' + i + '">';
+      h += '<p class="enonce">' + (i + 1) + '. ' + brut(q.question) + '</p>';
+      var options = q.options || [];
+      for (var j = 0; j < options.length; j++) {
+        h += '<button type="button" class="opt-btn" data-juste="' +
+             (j === q.bonne ? '1' : '0') + '">' + brut(options[j]) + '</button>';
+      }
+      h += '<div class="quiz-feedback"></div>';
+      if (q.explication) {
+        h += '<p class="aide" style="display:none" data-explication="1">' +
+             brut(q.explication) + '</p>';
+      }
+      h += '</div>';
+    }
+    h += compteur(idScore, 'Score : 0 / ' + qs.length);
+    return carte(h);
+  };
+
+  /* --- tri par catégories : on clique l'élément, puis la catégorie --- */
+  BLOCS.tri = function (b, idx) {
+    var cats = b.categories || [];
+    var items = b.items || [];
+    var idScore = 'score-tri-' + idx;
+    var h = enteteBloc(b, 'Clique un élément, puis la catégorie qui lui correspond.');
+
+    h += '<div class="assoc-colonne" style="margin-bottom:14px">';
+    for (var c = 0; c < cats.length; c++) {
+      h += '<button type="button" class="opt-btn tri-cat" data-cat="' + esc(cats[c]) +
+           '" style="text-align:center;font-weight:bold">' + brut(cats[c]) + '</button>';
+    }
+    h += '</div><div class="grid-3">';
+    var melange = melanger(items);
+    for (var i = 0; i < melange.length; i++) {
+      var it = melange[i];
+      h += '<button type="button" class="opt-btn tri-item" data-cat="' + esc(it.categorie) + '">';
+      if (it.icone) h += esc(it.icone) + ' ';
+      h += brut(it.texte) + '</button>';
+    }
+    h += '</div>' + compteur(idScore, 'Éléments classés : 0 / ' + items.length);
+    return carte(h);
+  };
+
+  /* --- association : deux colonnes, tout au clic --- */
+  BLOCS.association = function (b, idx) {
+    var paires = b.paires || [];
+    var idScore = 'score-assoc-' + idx;
+    var h = enteteBloc(b, 'Clique un élément de gauche, puis son correspondant à droite.');
+
+    h += '<div class="assoc-grille"><div class="assoc-colonne">';
+    h += '<p class="assoc-titre">' + esc(b.titreGauche || 'Éléments') + '</p>';
+    for (var i = 0; i < paires.length; i++) {
+      h += '<button type="button" class="assoc-item assoc-gauche" data-cle="' + i + '">' +
+           brut(paires[i].gauche) + '</button>';
+    }
+    h += '</div><div class="assoc-colonne">';
+    h += '<p class="assoc-titre">' + esc(b.titreDroite || 'Correspondances') + '</p>';
+    // La colonne de droite est mélangée ; data-cle porte l'indice de la paire.
+    var indices = [];
+    for (var n = 0; n < paires.length; n++) indices.push(n);
+    indices = melanger(indices);
+    for (var j = 0; j < indices.length; j++) {
+      h += '<button type="button" class="assoc-item assoc-droite" data-cle="' +
+           indices[j] + '">' + brut(paires[indices[j]].droite) + '</button>';
+    }
+    h += '</div></div>' + compteur(idScore, 'Paires trouvées : 0 / ' + paires.length);
+    return carte(h);
+  };
+
+  /* --- remise en ordre par clic (jamais de glisser-déposer) --- */
+  BLOCS.ordre = function (b, idx) {
+    var etapes = b.etapes || [];
+    var h = enteteBloc(b, 'Clique deux étapes pour les échanger, jusqu\'à retrouver le bon ordre.');
+
+    var affiche = etat['ordre-' + idx];
+    if (!affiche || affiche.length !== etapes.length) affiche = melanger(etapes);
+
+    // L'ordre attendu voyage avec la liste : aucune ambiguïté possible entre
+    // deux exercices de même longueur dans la même page.
+    h += '<div class="ordre-liste" id="ordre-' + idx + '" data-attendu="' +
+         esc(JSON.stringify(etapes)) + '">';
+    for (var i = 0; i < affiche.length; i++) {
+      h += '<button type="button" class="ordre-etape" data-mot="' + esc(affiche[i]) + '">' +
+           brut(affiche[i]) + '</button>';
+    }
+    h += '</div><div class="ordre-actions">';
+    h += '<button type="button" class="bouton" data-action="verifier">Vérifier mon ordre</button> ';
+    h += '<button type="button" class="bouton secondaire" data-action="melanger">Mélanger</button>';
+    h += '</div>';
+    h += '<div class="quiz-feedback" id="retour-ordre-' + idx + '"></div>';
+    return carte(h);
+  };
+
+  /* --- chaîne fonctionnelle : énergie, information, étapes techniques --- */
+  BLOCS.chaine = function (b) {
+    var h = enteteBloc(b, b.consigne || '');
+    var chaines = b.chaines || [];
+    for (var i = 0; i < chaines.length; i++) {
+      var ch = chaines[i];
+      if (chaines.length > 1 && ch.nom) h += '<h3>' + esc(ch.nom) + '</h3>';
+      h += '<div class="chaine-rail">';
+      var et = ch.etapes || [];
+      for (var j = 0; j < et.length; j++) {
+        h += '<span class="chaine-bloc">' + brut(et[j]) + '</span>';
+        if (j < et.length - 1) h += '<span class="chaine-fleche">→</span>';
+      }
+      h += '</div>';
+      if (ch.note) h += '<div class="info">' + brut(ch.note) + '</div>';
+    }
+    return carte(h);
+  };
+
+  /* --- tableau comparatif : la meilleure valeur de chaque critère est marquée --- */
+
+  /** Nombre lu « à la française » : « 1 800 » → 1800, « 4,5 » → 4.5.
+      Sans ce nettoyage, parseFloat("1 800") vaudrait 1 et le tableau
+      désignerait la mauvaise case — un tableau qui désigne un mauvais
+      « meilleur » est pire qu'un tableau sans surlignage. */
+  function nombre(v) {
+    if (typeof v === 'number') return v;
+    if (v === undefined || v === null) return null;
+    var t = String(v).replace(/[\s\u00a0\u202f]/g, '').replace(',', '.').replace(/[^0-9.\-]/g, '');
+    if (t === '' || t === '-' || t === '.') return null;
+    var n = parseFloat(t);
+    return isNaN(n) ? null : n;
+  }
+
+  BLOCS.tableau = function (b) {
+    var lignes = b.lignes || [];
+    var criteres = b.criteres || [];
+    var h = enteteBloc(b, b.consigne || '');
+
+    h += '<div style="overflow-x:auto"><table><thead><tr><th>' +
+         esc(b.enteteGauche || 'Critère') + '</th>';
+    for (var i = 0; i < lignes.length; i++) h += '<th>' + esc(lignes[i].nom) + '</th>';
+    h += '</tr></thead><tbody>';
+
+    for (var c = 0; c < criteres.length; c++) {
+      var cr = criteres[c];
+      var valeurs = [];
+      var numeriques = [];
+      for (var l = 0; l < lignes.length; l++) {
+        var n = nombre(lignes[l].valeurs ? lignes[l].valeurs[cr.cle] : undefined);
+        valeurs.push(n);
+        if (n !== null) numeriques.push(n);
+      }
+      var meilleure = null;
+      if (numeriques.length && cr.meilleur) {
+        meilleure = cr.meilleur === 'max'
+          ? Math.max.apply(null, numeriques)
+          : Math.min.apply(null, numeriques);
+      }
+      h += '<tr><td>' + esc(cr.label) + (cr.unite ? ' (' + esc(cr.unite) + ')' : '') + '</td>';
+      for (var m = 0; m < lignes.length; m++) {
+        var texte = lignes[m].valeurs ? lignes[m].valeurs[cr.cle] : '';
+        var estMeilleur = meilleure !== null && valeurs[m] === meilleure;
+        h += '<td' + (estMeilleur ? ' class="best"' : '') + '>' + brut(texte) + '</td>';
+      }
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    return carte(h);
+  };
+
+  /* --- saisie libre : la réponse part dans le PDF exporté --- */
+  BLOCS.saisie = function (b, idx) {
+    var h = enteteBloc(b, b.consigne || '');
+    var nom = 'saisie-' + idx;
+    h += '<div class="saisie"><textarea id="' + nom + '" placeholder="' +
+         esc(b.placeholder || 'Ta réponse ici...') + '">' + esc(etat[nom] || '') + '</textarea>';
+    if (b.aide) h += '<p class="aide">' + brut(b.aide) + '</p>';
+    h += '</div>';
+    return carte(h);
+  };
+
+  /* ------------------------------------------------------------ assemblage */
+
+  /** Rend un bloc ; une erreur reste locale et visible. */
+  function rendreBloc(b, idx) {
+    if (!b || !b.type) return '<div class="bloc-erreur">Bloc sans type.</div>';
+    var f = BLOCS[b.type];
+    if (!f) return '<div class="bloc-erreur">Type de bloc inconnu : <b>' + esc(b.type) + '</b></div>';
+    try {
+      return f(b, idx);
+    } catch (err) {
+      return '<div class="bloc-erreur">Bloc « ' + esc(b.type) + ' » invalide : ' +
+             esc(err && err.message ? err.message : err) + '</div>';
+    }
+  }
+
+  function construire() {
+    var barre = document.getElementById('tabs');
+    var sections = [];
+
+    for (var i = 0; i < A.onglets.length; i++) {
+      var o = A.onglets[i] || {};
+      var etiquette = o.titre || ('Partie ' + (i + 1));
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = etiquette;
+      btn.className = i === 0 ? 'active' : '';
+      btn.setAttribute('data-onglet', String(i));
+      if (barre) barre.appendChild(btn);
+
+      var blocs = o.blocs || [];
+      var contenu = '';
+      for (var j = 0; j < blocs.length; j++) {
+        // L'index doit être unique dans toute la page : « onglet-bloc ».
+        contenu += rendreBloc(blocs[j], i + '-' + j);
+      }
+      if (!blocs.length) contenu = '<div class="info">Cet onglet ne contient pas encore de contenu.</div>';
+
+      var s = document.createElement('section');
+      s.id = 's-' + i;
+      s.className = i === 0 ? 'active' : '';
+      s.innerHTML = contenu;
+      sections.push(s);
+      hote.appendChild(s);
+    }
+
+    if (barre) {
+      barre.addEventListener('click', function (e) {
+        var c = e.target;
+        while (c && c !== barre && !c.getAttribute('data-onglet')) c = c.parentNode;
+        if (!c || c === barre) return;
+        var n = parseInt(c.getAttribute('data-onglet'), 10);
+        var btns = barre.querySelectorAll('button');
+        for (var k = 0; k < sections.length; k++) {
+          sections[k].className = k === n ? 'active' : '';
+          if (btns[k]) btns[k].className = k === n ? 'active' : '';
+        }
+      });
+    }
+    return sections;
+  }
+
+  /* -------------------------------------------------------- interactions */
+
+  /** Quiz : correction immédiate, score du seul exercice concerné. */
+  function brancherQuiz() {
+    hote.addEventListener('click', function (e) {
+      var btn = e.target;
+      if (!btn || !btn.className || btn.className.indexOf('opt-btn') === -1) return;
+      if (btn.className.indexOf('tri-item') !== -1) return;
+      if (btn.className.indexOf('tri-cat') !== -1) return;
+      if (btn.disabled) return;
+
+      var question = btn.closest ? btn.closest('.quiz-question') : null;
+      if (!question) return;
+      var boite = question.querySelector('.quiz-feedback');
+      if (!boite) return;
+
+      var juste = btn.getAttribute('data-juste') === '1';
+      var boutons = question.querySelectorAll('.opt-btn');
+      for (var i = 0; i < boutons.length; i++) {
+        boutons[i].disabled = true;
+        if (boutons[i] !== btn) boutons[i].style.opacity = '.55';
+      }
+      btn.className = 'opt-btn ' + (juste ? 'juste' : 'faux');
+      // Trace conservée pour le PDF exporté.
+      btn.insertAdjacentHTML('beforeend',
+        marque(juste ? '← réponse choisie, correcte' : '← réponse choisie, incorrecte'));
+
+      boite.className = 'quiz-feedback visible ' + (juste ? 'juste' : 'faux');
+      boite.innerHTML = juste
+        ? '<b>Bonne réponse !</b>'
+        : '<b>Réponse incorrecte.</b> La bonne réponse est indiquée ci-dessus.';
+      var expl = question.querySelector('[data-explication]');
+      if (expl) expl.style.display = 'block';
+
+      majScoreQuiz(question);
+    });
+  }
+
+  function majScoreQuiz(question) {
+    var cartes = dansCarte(question, '.quiz-question');
+    if (!cartes.length) return;
+    var total = cartes.length;
+    var repondues = 0, justes = 0;
+    for (var i = 0; i < cartes.length; i++) {
+      if (cartes[i].querySelector('.quiz-feedback.visible')) repondues++;
+      if (cartes[i].querySelector('.opt-btn.juste')) justes++;
+    }
+    var cp = carteDe(question) ? carteDe(question).querySelector('.compteur') : null;
+    if (!cp) return;
+    cp.textContent = 'Score : ' + justes + ' / ' + total +
+      (repondues < total
+        ? '  (' + repondues + ' question' + (repondues > 1 ? 's' : '') +
+          ' traitée' + (repondues > 1 ? 's' : '') + ')'
+        : '  — exercice terminé !');
+  }
+
+  /** Tri : sélection d'un élément, puis d'une catégorie. */
+  function brancherTri() {
+    var selection = null;
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c || !c.className || c.className.indexOf('opt-btn') === -1) return;
+      var estItem = c.className.indexOf('tri-item') !== -1;
+      var estCat = c.className.indexOf('tri-cat') !== -1;
+      if (!estItem && !estCat) return;
+      if (c.className.indexOf('juste') !== -1 || c.disabled) return;
+
+      if (estItem) {
+        if (selection && selection !== c) selection.className = 'opt-btn tri-item';
+        selection = c;
+        c.className = 'opt-btn tri-item selectionne';
+        return;
+      }
+
+      if (!selection) {
+        c.className = 'opt-btn tri-cat faux';
+        window.setTimeout(function () { c.className = 'opt-btn tri-cat'; }, 600);
+        return;
+      }
+
+      var item = selection;
+      var ok = item.getAttribute('data-cat') === c.getAttribute('data-cat');
+      selection = null;
+
+      if (ok) {
+        item.className = 'opt-btn tri-item juste';
+        item.insertAdjacentHTML('beforeend', marque('← ' + c.textContent));
+        item.disabled = true;
+        var faits = dansCarte(item, '.tri-item.juste').length;
+        var tous = dansCarte(item, '.tri-item').length;
+        var cp = carteDe(item) ? carteDe(item).querySelector('.compteur') : null;
+        if (cp) {
+          cp.textContent = 'Éléments classés : ' + faits + ' / ' + tous +
+            (faits === tous ? '  — tout est classé, bravo !' : '');
+        }
+      } else {
+        item.className = 'opt-btn tri-item';
+        c.className = 'opt-btn tri-cat faux';
+        window.setTimeout(function () { c.className = 'opt-btn tri-cat'; }, 600);
+      }
+    });
+  }
+
+  /** Association : un élément de gauche, un de droite. */
+  function brancherAssociation() {
+    var gauche = null;
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c || !c.className || c.className.indexOf('assoc-item') === -1) return;
+      if (c.className.indexOf('apparie') !== -1) return;
+
+      var estGauche = c.className.indexOf('assoc-gauche') !== -1;
+
+      if (estGauche) {
+        if (gauche && gauche !== c) gauche.className = 'assoc-item assoc-gauche';
+        gauche = c;
+        c.className = 'assoc-item assoc-gauche selectionne';
+        return;
+      }
+
+      if (!gauche) return;
+      var g = gauche;
+      var ok = g.getAttribute('data-cle') === c.getAttribute('data-cle');
+      gauche = null;
+
+      if (ok) {
+        g.className = 'assoc-item assoc-gauche apparie';
+        c.className = 'assoc-item assoc-droite apparie';
+        g.insertAdjacentHTML('beforeend', marque('↔'));
+        var faits = dansCarte(g, '.assoc-item.apparie').length / 2;
+        var tous = dansCarte(g, '.assoc-gauche').length;
+        var cp = carteDe(g) ? carteDe(g).querySelector('.compteur') : null;
+        if (cp) {
+          cp.textContent = 'Paires trouvées : ' + faits + ' / ' + tous +
+            (faits === tous ? '  — toutes les paires sont trouvées !' : '');
+        }
+      } else {
+        g.className = 'assoc-item assoc-gauche';
+        c.className = 'assoc-item assoc-droite rate';
+        window.setTimeout(function () { c.className = 'assoc-item assoc-droite'; }, 700);
+      }
+    });
+  }
+
+  /** Remise en ordre : deux clics échangent deux étapes. */
+  function brancherOrdre() {
+    var premier = null;
+
+    function listeDe(el) { return el.closest ? el.closest('.card').querySelector('.ordre-liste') : null; }
+
+    function memoriser(liste) {
+      var idx = liste.id.replace('ordre-', '');
+      var bs = liste.querySelectorAll('.ordre-etape');
+      var seq = [];
+      for (var i = 0; i < bs.length; i++) seq.push(bs[i].getAttribute('data-mot'));
+      etat['ordre-' + idx] = seq;
+      ecrireEtat();
+    }
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c) return;
+
+      /* --- boutons d'action --- */
+      if (c.getAttribute && c.getAttribute('data-action')) {
+        var liste = listeDe(c);
+        if (!liste) return;
+        var action = c.getAttribute('data-action');
+        var boutons = liste.querySelectorAll('.ordre-etape');
+
+        if (action === 'melanger') {
+          var seq = [];
+          for (var i = 0; i < boutons.length; i++) seq.push(boutons[i].getAttribute('data-mot'));
+          seq = melanger(seq);
+          for (var j = 0; j < boutons.length; j++) {
+            boutons[j].setAttribute('data-mot', seq[j]);
+            boutons[j].textContent = seq[j];
+            boutons[j].className = 'ordre-etape';
+          }
+          memoriser(liste);
+          var r0 = document.getElementById('retour-' + liste.id);
+          if (r0) r0.className = 'quiz-feedback';
+          return;
+        }
+
+        /* --- vérification : l'ordre attendu est porté par la liste --- */
+        var attendu = [];
+        try { attendu = JSON.parse(liste.getAttribute('data-attendu') || '[]'); } catch (err) {}
+        var courant = [];
+        for (var k = 0; k < boutons.length; k++) courant.push(boutons[k].getAttribute('data-mot'));
+
+        var toutJuste = attendu.length === courant.length && attendu.length > 0;
+        for (var q = 0; q < courant.length; q++) {
+          var okPos = courant[q] === attendu[q];
+          boutons[q].className = 'ordre-etape ' + (okPos ? 'juste' : 'faux');
+          if (!okPos) toutJuste = false;
+        }
+        var retour = document.getElementById('retour-' + liste.id);
+        if (retour) {
+          retour.className = 'quiz-feedback visible ' + (toutJuste ? 'juste' : 'faux');
+          retour.innerHTML = toutJuste
+            ? '<b>Bravo, l\'ordre est correct !</b>'
+            : '<b>Pas encore.</b> Les étapes en rouge ne sont pas à leur place : échange-les à nouveau.';
+        }
+        memoriser(liste);
+        return;
+      }
+
+      /* --- échange de deux étapes --- */
+      if (c.className && c.className.indexOf('ordre-etape') !== -1) {
+        if (!premier) {
+          premier = c;
+          c.className = 'ordre-etape selectionne';
+          return;
+        }
+        if (premier === c) {
+          premier.className = 'ordre-etape';
+          premier = null;
+          return;
+        }
+        var a = premier, b = c;
+        var motA = a.getAttribute('data-mot'), motB = b.getAttribute('data-mot');
+        a.setAttribute('data-mot', motB); a.textContent = motB;
+        b.setAttribute('data-mot', motA); b.textContent = motA;
+        a.className = 'ordre-etape'; b.className = 'ordre-etape';
+        premier = null;
+        memoriser(a.parentNode);
+      }
+    });
+  }
+
+  /** Sauvegarde des réponses écrites (restituées au rechargement). */
+  function brancherSaisie() {
+    hote.addEventListener('input', function (e) {
+      var c = e.target;
+      if (!c || (c.tagName !== 'TEXTAREA' && c.tagName !== 'INPUT')) return;
+      if (!c.id) return;
+      etat[c.id] = c.value;
+      ecrireEtat();
+    });
+  }
+
+  /* -------------------------------------------------------------- départ */
+
+  try {
+    construire();
+    brancherQuiz();
+    brancherTri();
+    brancherAssociation();
+    brancherOrdre();
+    brancherSaisie();
+  } catch (err) {
+    hote.insertAdjacentHTML('afterbegin',
+      '<div class="bloc-erreur"><b>Erreur du moteur d\'activité :</b> ' +
+      esc(err && err.message ? err.message : err) + '</div>');
+  }
+})();
+</script>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+</body>
+</html>
