@@ -1943,12 +1943,12 @@
         // ============================================
         // MODE DÉVELOPPEMENT
         // ============================================
-        // Déverrouille TOUS les onglets (pratique pour tester les jeux bonus
-        // sans refaire le parcours). Activé par le paramètre d'URL ?dev=1 :
-        //     activite-reseau.html?dev=1
-        // Sans ce paramètre, le parcours normal (onglets verrouillés) s'applique.
-        // Pour forcer en dur : remplacer par  const MODE_DEVELOPPEMENT = true;
-        const MODE_DEVELOPPEMENT = /[?&]dev=1/.test(location.search);
+        // true la plupart du temps : tous les onglets sont déverrouillés pour
+        // tester librement les jeux bonus et la navigation.
+        // Pour tester comme un élève (progression verrouillée), ouvrir la page
+        // avec le paramètre ?dev=0 :   activite-reseau.html?dev=0
+        // Penser à repasser la valeur à false avant une vraie séance élève.
+        const MODE_DEVELOPPEMENT = !/[?&]dev=0/.test(location.search);
 
         let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
