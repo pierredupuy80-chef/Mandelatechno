@@ -896,7 +896,76 @@
             88% { opacity: 1; }
             100% { top: 100%; opacity: 0; }
         }
-    </style>
+    
+/* === Jeu « Relie les points » (bonus) === */
+.jeu-relie {
+    background: #fff;
+    border: 2px solid var(--couleur-primaire);
+    border-radius: 16px;
+    padding: var(--espacement-md);
+    margin: var(--espacement-md) 0;
+}
+.jeu-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--espacement-sm);
+    margin-bottom: var(--espacement-sm);
+}
+.jeu-titre { font-weight: 800; color: var(--couleur-primaire); font-size: 1.1rem; }
+.jeu-niveau { font-weight: 700; color: var(--couleur-secondaire); }
+.jeu-consigne { font-size: 0.9rem; color: var(--couleur-texte); margin: 0 0 var(--espacement-md) 0; }
+.jeu-grille {
+    display: grid;
+    gap: 4px;
+    max-width: 440px;
+    margin: 0 auto;
+    background: #f1f5f9;
+    padding: 8px;
+    border-radius: 14px;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.jeu-cell {
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    padding: 0;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.jeu-cell:hover { transform: scale(1.06); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); }
+.jeu-cell:focus-visible { outline: 3px solid var(--couleur-primaire); outline-offset: 2px; }
+.jeu-cell.point { background: #fff; }
+.jeu-cell .jeu-point {
+    width: 76%;
+    height: 76%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.82rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.jeu-cell.chemin { border-color: transparent; }
+.jeu-cell.actif { box-shadow: inset 0 0 0 3px rgba(37, 99, 235, 0.65); }
+.jeu-actions { display: flex; flex-wrap: wrap; gap: var(--espacement-sm); margin-top: var(--espacement-md); }
+.jeu-statut { font-weight: 700; color: var(--couleur-succes); min-height: 1.4em; margin-top: var(--espacement-sm); }
+@media (max-width: 480px) {
+    .jeu-grille { gap: 3px; padding: 5px; }
+    .jeu-cell .jeu-point { font-size: 0.68rem; }
+}
+</style>
 </head>
 <body>
     <!-- Skip link pour accessibilité -->
@@ -1688,36 +1757,21 @@
 
                 <div class="carte-contenu">
                     <h2>🎮 Défi ludique</h2>
-                    <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
+                    <p>Relie les points de même couleur en évitant de croiser les chemins. 10 niveaux de difficulté croissante !</p>
 
-                    <div class="jeux-bonus">
-                        
-                    <article class="carte-jeu marge-haut">
-                        <h3>Packet Defender — Aiguille les paquets</h3>
-                        <p>Un jeu de défense : route les paquets de données vers la bonne adresse IP en lisant le nom de domaine et la table DNS. Créé pour des collégiens !</p>
-                        <a href="https://wfryer.github.io/packet-defender/" class="bouton-action" target="_blank" rel="noopener noreferrer">
-                            Jouer maintenant →
-                        </a>
-                        <p class="texte-secondaire marge-haut">Durée : 10 minutes</p>
-                    </article>
-
-                    <article class="carte-jeu marge-haut">
-                        <h3>Scratch — Programme un mini-réseau</h3>
-                        <p>Code un lutin « poste client » qui envoie un message à un lutin « serveur », qui le renvoie avec une confirmation. Utilise les blocs « envoyer à tous » et « quand je reçois ».</p>
-                        <a href="https://scratch.mit.edu/projects/editor/" class="bouton-action" target="_blank" rel="noopener noreferrer">
-                            Jouer maintenant →
-                        </a>
-                        <p class="texte-secondaire marge-haut">Durée : 15 minutes</p>
-                    </article>
-
-                    <article class="carte-jeu marge-haut">
-                        <h3>Carte des câbles sous-marins d'Internet</h3>
-                        <p>Explore la carte mondiale des câbles sous-marins en fibre optique qui relient les réseaux locaux entre eux : c'est l'épine dorsale du réseau mondial Internet.</p>
-                        <a href="https://www.submarinecablemap.com/" class="bouton-action" target="_blank" rel="noopener noreferrer">
-                            Jouer maintenant →
-                        </a>
-                        <p class="texte-secondaire marge-haut">Durée : 10 minutes</p>
-                    </article>
+                                        <div class="jeu-relie" id="jeu-relie">
+                        <div class="jeu-entete">
+                            <span class="jeu-titre">🧩 Relie les points</span>
+                            <span class="jeu-niveau">Niveau <strong id="jeu-num">1</strong> / 10</span>
+                        </div>
+                        <p class="jeu-consigne">Relie chaque paire de points de même couleur par un chemin. Les chemins ne doivent pas se croiser et chaque case ne peut servir qu'à un seul chemin. <strong>Clique</strong> un point, puis les cases voisines, puis le point de la même couleur.</p>
+                        <div class="jeu-grille" id="jeu-grille" role="grid" aria-label="Grille du jeu Relie les points"></div>
+                        <div class="jeu-actions">
+                            <button type="button" class="bouton-action secondaire" id="jeu-reset">🔄 Recommencer le niveau</button>
+                            <button type="button" class="bouton-action succes cache" id="jeu-suivant">Niveau suivant →</button>
+                        </div>
+                        <p class="jeu-statut" id="jeu-statut" role="status" aria-live="polite"></p>
+                        <p class="texte-secondaire marge-haut">Jeu inspiré de « Connect the dots » — <a class="bouton-action secondaire" href="https://play.google.com/store/apps/details?id=com.ai.link.connect.dots&amp;hl=fr" target="_blank" rel="noopener noreferrer">Voir l'application d'origine ↗</a></p>
                     </div>
 
                     <div class="info-block marge-haut">
@@ -2279,5 +2333,264 @@
             changerOnglet(niveauActuel);
         });
     </script>
+
+<script>
+(function () {
+  'use strict';
+
+  var NIVEAUX = [{"size":4,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[2,1]},{"color":"#ea580c","lettre":"B","a":[2,2],"b":[3,0]}]},{"size":4,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[1,3],"b":[2,1]},{"color":"#ca8a04","lettre":"C","a":[2,2],"b":[3,0]}]},{"size":5,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[1,2]},{"color":"#ea580c","lettre":"B","a":[1,1],"b":[4,0]},{"color":"#ca8a04","lettre":"C","a":[4,1],"b":[4,4]}]},{"size":5,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[1,2]},{"color":"#ea580c","lettre":"B","a":[1,1],"b":[3,3]},{"color":"#ca8a04","lettre":"C","a":[3,2],"b":[4,0]},{"color":"#16a34a","lettre":"D","a":[4,1],"b":[4,4]}]},{"size":6,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[0,4],"b":[1,1]},{"color":"#ca8a04","lettre":"C","a":[1,0],"b":[2,4]},{"color":"#16a34a","lettre":"D","a":[2,5],"b":[5,0]}]},{"size":6,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,4]},{"color":"#ea580c","lettre":"B","a":[0,5],"b":[2,2]},{"color":"#ca8a04","lettre":"C","a":[2,3],"b":[3,5]},{"color":"#16a34a","lettre":"D","a":[3,4],"b":[4,1]},{"color":"#0891b2","lettre":"E","a":[4,2],"b":[5,0]}]},{"size":6,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,5]},{"color":"#ea580c","lettre":"B","a":[1,5],"b":[1,2]},{"color":"#ca8a04","lettre":"C","a":[1,1],"b":[2,3]},{"color":"#16a34a","lettre":"D","a":[2,4],"b":[3,2]},{"color":"#0891b2","lettre":"E","a":[3,1],"b":[4,5]},{"color":"#2563eb","lettre":"F","a":[5,5],"b":[5,0]}]},{"size":7,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[1,6]},{"color":"#ea580c","lettre":"B","a":[1,5],"b":[1,2]},{"color":"#ca8a04","lettre":"C","a":[1,1],"b":[3,6]},{"color":"#16a34a","lettre":"D","a":[3,5],"b":[4,0]},{"color":"#0891b2","lettre":"E","a":[4,1],"b":[6,0]},{"color":"#2563eb","lettre":"F","a":[6,1],"b":[6,6]}]},{"size":7,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[0,4],"b":[1,6]},{"color":"#ca8a04","lettre":"C","a":[1,5],"b":[1,2]},{"color":"#16a34a","lettre":"D","a":[1,1],"b":[3,3]},{"color":"#0891b2","lettre":"E","a":[3,2],"b":[4,6]},{"color":"#2563eb","lettre":"F","a":[5,6],"b":[5,0]},{"color":"#7c3aed","lettre":"G","a":[6,0],"b":[6,6]}]},{"size":8,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[0,4],"b":[0,7]},{"color":"#ca8a04","lettre":"C","a":[1,7],"b":[1,1]},{"color":"#16a34a","lettre":"D","a":[1,0],"b":[2,6]},{"color":"#0891b2","lettre":"E","a":[2,7],"b":[4,6]},{"color":"#2563eb","lettre":"F","a":[4,7],"b":[7,5]},{"color":"#7c3aed","lettre":"G","a":[7,4],"b":[7,0]}]}];
+
+  var gridEl = document.getElementById('jeu-grille');
+  var numEl = document.getElementById('jeu-num');
+  var statutEl = document.getElementById('jeu-statut');
+  var resetBtn = document.getElementById('jeu-reset');
+  var suivantBtn = document.getElementById('jeu-suivant');
+  if (!gridEl || !numEl || !statutEl || !resetBtn || !suivantBtn) return;
+
+  var levelIndex = 0;
+  var niveau = null;
+  var N = 0;
+  var cells = [];
+  var dotMap = {};
+  var pathMap = {};
+  var paths = {};
+  var connected = {};
+  var activeColor = null;
+  var termine = false;
+  var dragging = false;
+  var dragLast = null;
+
+  function k(r, c) { return r + ',' + c; }
+  function parts(key) { var p = key.split(','); return [parseInt(p[0], 10), parseInt(p[1], 10)]; }
+  function adj(a, b) {
+    var A = parts(a), B = parts(b);
+    return Math.abs(A[0] - B[0]) + Math.abs(A[1] - B[1]) === 1;
+  }
+
+  function charger(index) {
+    levelIndex = index;
+    niveau = NIVEAUX[index];
+    N = niveau.size;
+    dotMap = {};
+    pathMap = {};
+    paths = {};
+    connected = {};
+    activeColor = null;
+    termine = false;
+    niveau.pairs.forEach(function (p) {
+      dotMap[k(p.a[0], p.a[1])] = { color: p.color, lettre: p.lettre };
+      dotMap[k(p.b[0], p.b[1])] = { color: p.color, lettre: p.lettre };
+      connected[p.color] = false;
+      paths[p.color] = [];
+    });
+    numEl.textContent = String(index + 1);
+    suivantBtn.classList.add('cache');
+    statutEl.textContent = '';
+    construireGrille();
+    rendre();
+  }
+
+  function construireGrille() {
+    gridEl.innerHTML = '';
+    gridEl.style.gridTemplateColumns = 'repeat(' + N + ', 1fr)';
+    cells = [];
+    for (var r = 0; r < N; r++) {
+      cells[r] = [];
+      for (var c = 0; c < N; c++) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'jeu-cell';
+        b.dataset.r = String(r);
+        b.dataset.c = String(c);
+        b.setAttribute('aria-label', 'Case ' + (r + 1) + ',' + (c + 1));
+        cells[r][c] = b;
+        gridEl.appendChild(b);
+      }
+    }
+  }
+
+  function rendre() {
+    for (var r = 0; r < N; r++) {
+      for (var c = 0; c < N; c++) {
+        var b = cells[r][c];
+        var key = k(r, c);
+        var dot = dotMap[key];
+        var col = pathMap[key];
+        b.className = 'jeu-cell';
+        b.style.background = '';
+        b.innerHTML = '';
+        if (dot) {
+          b.classList.add('point');
+          var s = document.createElement('span');
+          s.className = 'jeu-point';
+          s.style.background = dot.color;
+          s.textContent = connected[dot.color] ? '\u2713' : dot.lettre;
+          if (connected[dot.color]) {
+            s.style.boxShadow = '0 0 0 3px #fff, 0 0 0 5px rgba(0,0,0,0.18)';
+          }
+          b.appendChild(s);
+          b.setAttribute('aria-label', 'Point ' + dot.lettre);
+        } else if (col) {
+          b.classList.add('chemin');
+          b.style.background = col;
+          var p = paths[col] || [];
+          if (activeColor === col && p.length && p[p.length - 1] === key) {
+            b.classList.add('actif');
+          }
+        } else {
+          b.setAttribute('aria-label', 'Case ' + (r + 1) + ',' + (c + 1) + ' vide');
+        }
+      }
+    }
+    statutEl.textContent = '';
+  }
+
+  function annulerTrait() {
+    if (!activeColor) return;
+    var p = paths[activeColor] || [];
+    for (var i = 1; i < p.length; i++) {
+      if (!dotMap[p[i]]) delete pathMap[p[i]];
+    }
+    paths[activeColor] = [];
+    activeColor = null;
+    rendre();
+  }
+
+  function trimmer(key) {
+    if (!activeColor) return;
+    var p = paths[activeColor];
+    var idx = p.lastIndexOf(key);
+    if (idx === -1) return;
+    for (var i = idx + 1; i < p.length; i++) {
+      if (!dotMap[p[i]]) delete pathMap[p[i]];
+    }
+    p.length = idx + 1;
+    rendre();
+  }
+
+  function etendre(key) {
+    var p = paths[activeColor];
+    var last = p[p.length - 1];
+    if (adj(last, key) && !dotMap[key] && !pathMap[key]) {
+      p.push(key);
+      pathMap[key] = activeColor;
+      rendre();
+    }
+  }
+
+  function completer(color, targetKey) {
+    paths[color].push(targetKey);
+    connected[color] = true;
+    activeColor = null;
+    rendre();
+    verifierFin();
+  }
+
+  function verifierFin() {
+    var all = niveau.pairs.every(function (p) { return !!connected[p.color]; });
+    if (!all) return;
+    termine = true;
+    var couvertes = Object.keys(pathMap).length + Object.keys(dotMap).length;
+    var remplies = (couvertes === N * N);
+    statutEl.textContent = '🎉 Bravo ! Toutes les paires sont reliées.'
+      + (remplies ? ' 🌟 Grille parfaitement remplie !' : '');
+    suivantBtn.classList.remove('cache');
+    suivantBtn.textContent = (levelIndex < NIVEAUX.length - 1)
+      ? 'Niveau suivant →'
+      : '🎉 Rejouer depuis le début';
+  }
+
+  function appliquer(r, c) {
+    if (termine) return;
+    var key = k(r, c);
+    var dot = dotMap[key];
+
+    if (dot) {
+      if (activeColor === dot.color) {
+        var p = paths[dot.color];
+        if (key === p[0]) { annulerTrait(); return; }
+        var last = p[p.length - 1];
+        if (adj(last, key)) { completer(dot.color, key); return; }
+        return;
+      }
+      annulerTrait();
+      if (!connected[dot.color] && !(paths[dot.color] && paths[dot.color].length)) {
+        activeColor = dot.color;
+        paths[dot.color] = [key];
+        rendre();
+      }
+      return;
+    }
+
+    var col = pathMap[key];
+    if (col) {
+      if (col === activeColor) trimmer(key);
+      return;
+    }
+
+    if (activeColor) etendre(key);
+  }
+
+  function cellDe(e) {
+    var el = e.target;
+    var cell = el && el.closest ? el.closest('.jeu-cell') : null;
+    if (cell && gridEl.contains(cell)) return cell;
+    return null;
+  }
+
+  gridEl.addEventListener('pointerdown', function (e) {
+    var cell = cellDe(e);
+    if (!cell) return;
+    e.preventDefault();
+    dragging = true;
+    dragLast = k(cell.dataset.r, cell.dataset.c);
+    appliquer(parseInt(cell.dataset.r, 10), parseInt(cell.dataset.c, 10));
+  });
+
+  document.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var el = document.elementFromPoint(e.clientX, e.clientY);
+    var cell = el && el.closest ? el.closest('.jeu-cell') : null;
+    if (cell && gridEl.contains(cell)) {
+      var key = k(cell.dataset.r, cell.dataset.c);
+      if (key !== dragLast) {
+        dragLast = key;
+        appliquer(parseInt(cell.dataset.r, 10), parseInt(cell.dataset.c, 10));
+      }
+    }
+  });
+
+  function finGlisser() { dragging = false; dragLast = null; }
+  document.addEventListener('pointerup', finGlisser);
+  document.addEventListener('pointercancel', finGlisser);
+
+  gridEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      var cell = cellDe(e);
+      if (cell) {
+        e.preventDefault();
+        appliquer(parseInt(cell.dataset.r, 10), parseInt(cell.dataset.c, 10));
+      }
+    }
+  });
+
+  resetBtn.addEventListener('click', function () { charger(levelIndex); });
+  suivantBtn.addEventListener('click', function () {
+    charger((levelIndex + 1) % NIVEAUX.length);
+  });
+
+  // Petit crochet utilisé par les tests automatisés.
+  window.__relie = {
+    cliquer: function (r, c) { appliquer(r, c); },
+    gagne: function () {
+      return !!niveau && niveau.pairs.every(function (p) { return !!connected[p.color]; });
+    },
+    niveau: function () { return levelIndex; },
+    recommencer: function () { charger(levelIndex); }
+  };
+
+  charger(0);
+})();
+</script>
 </body>
 </html>
