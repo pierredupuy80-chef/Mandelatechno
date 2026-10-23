@@ -1811,7 +1811,7 @@
 
                 <div class="carte-contenu">
                     <h2>🎮 Le prof de techno : livraison en drone</h2>
-                    <p>Le prof de techno a préparé un colis pour le refuge, mais le quartier est encombré. Pilotez son drone en vue de dessus à travers le quartier : évitez les maisons et les pylônes, esquivez les objets que les enfants lancent, ramassez les batteries pour réparer le drone et les composants pour l'améliorer. Livrez le colis au point de livraison !</p>
+                    <p>Le prof de techno a préparé un colis pour le refuge, mais le quartier est encombré. Pilotez son drone en vue de dessus à travers 5 niveaux de difficulté croissante : évitez les maisons et les pylônes, esquivez les objets que les enfants lancent, ramassez les batteries pour réparer le drone (la vie descend avec le temps !) et les composants pour l'améliorer. Livrez le colis au point de livraison de chaque niveau !</p>
 
                     <div class="jeu-bonus" id="jeu-bonus">
                         <div class="hud-jeu">
@@ -1822,6 +1822,7 @@
                             <span id="texte-vie-jeu">Vie : 100 / 100</span>
                             <span id="score-jeu">Score : 0</span>
                             <span id="temps-jeu">Temps : 0 s</span>
+                            <span id="niveau-jeu" style="color: #fbbf24; font-weight: 700;">Niveau 1 / 5</span>
                             <span class="badges-jeu" aria-label="Améliorations récupérées">
                                 <span class="badge" id="badge-carbone" title="Fibre de carbone : moins de dégâts">🛡️ Carbone</span>
                                 <span class="badge" id="badge-lipo" title="Batterie Li-Po 6000 : plus de vie et de vitesse">🔋 Li-Po</span>
@@ -1836,7 +1837,7 @@
                                     aria-describedby="aide-jeu"></canvas>
                             <div class="voile-jeu" id="voile-jeu">
                                 <h4 id="titre-voile">🚁 Prêt à décoller ?</h4>
-                                <p id="texte-voile">Livrez le colis au point de livraison, en haut à droite du quartier. Évitez les maisons et les pylônes, esquivez les objets lancés par les enfants.</p>
+                                <p id="texte-voile">5 niveaux de difficulté croissante. Livrez le colis au point de livraison de chaque niveau. La barre de vie descend avec le temps : ramassez les batteries pour tenir !</p>
                                 <p class="score-final" id="score-final-voile"></p>
                                 <button type="button" class="bouton-action succes" id="btn-demarrer-jeu" onclick="demarrerJeuDrone()">
                                     Démarrer la partie
@@ -1867,8 +1868,8 @@
 
                         <p id="aide-jeu" class="texte-secondaire">
                             <strong>Commandes :</strong> flèches du clavier, ou touches ZQSD / WASD, ou les boutons ci-dessus.
-                            <strong>Objectif :</strong> atteindre le point de livraison en haut à droite.
-                            <strong>À savoir :</strong> les <strong>batteries</strong> 🟩 rendent de la vie,
+                            <strong>Objectif :</strong> atteindre le point de livraison de chaque niveau (5 niveaux de difficulté croissante).
+                            <strong>Attention :</strong> la barre de vie descend avec le temps ! Les <strong>batteries</strong> 🟩 rendent de la vie,
                             la <strong>fibre de carbone</strong> 🛡️ réduit les dégâts, la <strong>Li-Po 6000</strong> 🔋 augmente
                             la vie maximale et la vitesse, la <strong>caméra thermique</strong> 📷 signale les enfants avant qu'ils ne lancent.
                         </p>
@@ -2786,22 +2787,246 @@
             var ETAT = 'pret';           // pret | en_cours | pause | gagne | perdu
             var ACCEL = 950;
             var AMORTI = 5.5;
+            var DEGATS_TEMPS = 2;        // 2 HP par seconde
 
             var drone = null;
             var temps = 0;
             var score = 0;
             var dernierAppel = 0;
+            var niveauActuel = 0;
 
             var solides = [];
             var enfants = [];
             var objets = [];
             var projectiles = [];
             var arbres = [];
-            var livraison = { x: 1310, y: 40, l: 200, h: 74 };
+            var livraison = null;
             var camera = { x: 0, y: 0 };
             var carte = null;
+            var prof = { x: 150, y: 1060 };
 
             var cles = { haut: false, bas: false, gauche: false, droite: false };
+
+            // Définition des 5 niveaux
+            var NIVEAUX = [
+                {
+                    nom: "Le quartier calme",
+                    vitesseProjectiles: 100,
+                    cadenceEnfants: 3.0,
+                    routes: [
+                        { x: 680, y: 80, l: 120, h: 1060 },
+                        { x: 80, y: 1000, l: 1440, h: 120 },
+                        { x: 680, y: 120, l: 840, h: 120 }
+                    ],
+                    maisons: [
+                        { x: 180, y: 300, l: 170, h: 130, couleur: '#c2410c' },
+                        { x: 400, y: 300, l: 170, h: 130, couleur: '#0369a1' },
+                        { x: 880, y: 300, l: 180, h: 130, couleur: '#7c3aed' },
+                        { x: 1150, y: 300, l: 160, h: 130, couleur: '#15803d' },
+                        { x: 180, y: 620, l: 170, h: 130, couleur: '#c2410c' },
+                        { x: 400, y: 620, l: 170, h: 130, couleur: '#0369a1' },
+                        { x: 880, y: 620, l: 180, h: 130, couleur: '#7c3aed' },
+                        { x: 1150, y: 620, l: 160, h: 130, couleur: '#15803d' }
+                    ],
+                    pylones: [
+                        { x: 640, y: 420 }, { x: 860, y: 560 }
+                    ],
+                    enfants: [
+                        { x: 360, y: 980, couleur: '#22d3ee' },
+                        { x: 1085, y: 252, couleur: '#facc15' }
+                    ],
+                    batteries: [
+                        { x: 300, y: 1060 }, { x: 500, y: 1060 }, { x: 740, y: 700 },
+                        { x: 740, y: 400 }, { x: 900, y: 180 }, { x: 1100, y: 180 },
+                        { x: 1300, y: 180 }, { x: 1450, y: 180 }
+                    ],
+                    composants: [
+                        { type: 'carbone', x: 610, y: 660 },
+                        { type: 'lipo', x: 1450, y: 480 },
+                        { type: 'camera', x: 1450, y: 900 }
+                    ],
+                    livraison: { x: 1310, y: 40, l: 200, h: 74 }
+                },
+                {
+                    nom: "La zone industrielle",
+                    vitesseProjectiles: 120,
+                    cadenceEnfants: 2.5,
+                    routes: [
+                        { x: 400, y: 80, l: 120, h: 1060 },
+                        { x: 1000, y: 80, l: 120, h: 1060 },
+                        { x: 80, y: 540, l: 1440, h: 120 }
+                    ],
+                    maisons: [
+                        { x: 150, y: 200, l: 160, h: 120, couleur: '#991b1b' },
+                        { x: 600, y: 200, l: 160, h: 120, couleur: '#1e40af' },
+                        { x: 1200, y: 200, l: 160, h: 120, couleur: '#6b21a8' },
+                        { x: 150, y: 750, l: 160, h: 120, couleur: '#166534' },
+                        { x: 600, y: 750, l: 160, h: 120, couleur: '#991b1b' },
+                        { x: 1200, y: 750, l: 160, h: 120, couleur: '#1e40af' },
+                        { x: 150, y: 900, l: 160, h: 120, couleur: '#6b21a8' },
+                        { x: 1200, y: 900, l: 160, h: 120, couleur: '#166534' },
+                        { x: 600, y: 900, l: 160, h: 120, couleur: '#991b1b' }
+                    ],
+                    pylones: [
+                        { x: 460, y: 300 }, { x: 1060, y: 300 }, { x: 460, y: 800 }, { x: 1060, y: 800 }
+                    ],
+                    enfants: [
+                        { x: 300, y: 580, couleur: '#f472b6' },
+                        { x: 800, y: 580, couleur: '#a78bfa' },
+                        { x: 1300, y: 580, couleur: '#fb923c' }
+                    ],
+                    batteries: [
+                        { x: 200, y: 600 }, { x: 600, y: 600 }, { x: 1000, y: 600 },
+                        { x: 1400, y: 600 }, { x: 460, y: 300 }, { x: 1060, y: 300 }
+                    ],
+                    composants: [
+                        { type: 'carbone', x: 300, y: 300 },
+                        { type: 'lipo', x: 1200, y: 300 }
+                    ],
+                    livraison: { x: 1350, y: 1000, l: 180, h: 80 }
+                },
+                {
+                    nom: "Le centre-ville",
+                    vitesseProjectiles: 140,
+                    cadenceEnfants: 2.0,
+                    routes: [
+                        { x: 200, y: 80, l: 100, h: 1060 },
+                        { x: 600, y: 80, l: 100, h: 1060 },
+                        { x: 1000, y: 80, l: 100, h: 1060 },
+                        { x: 1400, y: 80, l: 100, h: 1060 },
+                        { x: 80, y: 300, l: 1440, h: 100 },
+                        { x: 80, y: 600, l: 1440, h: 100 },
+                        { x: 80, y: 900, l: 1440, h: 100 }
+                    ],
+                    maisons: [
+                        { x: 350, y: 150, l: 140, h: 100, couleur: '#dc2626' },
+                        { x: 750, y: 150, l: 140, h: 100, couleur: '#2563eb' },
+                        { x: 1150, y: 150, l: 140, h: 100, couleur: '#9333ea' },
+                        { x: 350, y: 450, l: 140, h: 100, couleur: '#16a34a' },
+                        { x: 750, y: 450, l: 140, h: 100, couleur: '#dc2626' },
+                        { x: 1150, y: 450, l: 140, h: 100, couleur: '#2563eb' },
+                        { x: 350, y: 750, l: 140, h: 100, couleur: '#9333ea' },
+                        { x: 750, y: 750, l: 140, h: 100, couleur: '#16a34a' },
+                        { x: 1150, y: 750, l: 140, h: 100, couleur: '#dc2626' }
+                    ],
+                    pylones: [
+                        { x: 250, y: 200 }, { x: 650, y: 200 }, { x: 1050, y: 200 }, { x: 1450, y: 200 },
+                        { x: 250, y: 500 }, { x: 650, y: 500 }, { x: 1050, y: 500 }, { x: 1450, y: 500 }
+                    ],
+                    enfants: [
+                        { x: 350, y: 350, couleur: '#22d3ee' },
+                        { x: 750, y: 350, couleur: '#f472b6' },
+                        { x: 1150, y: 350, couleur: '#a78bfa' },
+                        { x: 350, y: 650, couleur: '#fb923c' }
+                    ],
+                    batteries: [
+                        { x: 250, y: 350 }, { x: 650, y: 350 }, { x: 1050, y: 350 },
+                        { x: 250, y: 650 }, { x: 650, y: 650 }, { x: 1050, y: 650 }
+                    ],
+                    composants: [
+                        { type: 'carbone', x: 1450, y: 350 },
+                        { type: 'lipo', x: 1450, y: 650 }
+                    ],
+                    livraison: { x: 100, y: 100, l: 160, h: 70 }
+                },
+                {
+                    nom: "La banlieue",
+                    vitesseProjectiles: 160,
+                    cadenceEnfants: 1.8,
+                    routes: [
+                        { x: 300, y: 80, l: 100, h: 500 },
+                        { x: 300, y: 620, l: 100, h: 500 },
+                        { x: 800, y: 80, l: 100, h: 500 },
+                        { x: 800, y: 620, l: 100, h: 500 },
+                        { x: 1200, y: 80, l: 100, h: 500 },
+                        { x: 1200, y: 620, l: 100, h: 500 },
+                        { x: 80, y: 550, l: 1440, h: 100 }
+                    ],
+                    maisons: [
+                        { x: 150, y: 200, l: 120, h: 100, couleur: '#b91c1c' },
+                        { x: 450, y: 200, l: 120, h: 100, couleur: '#1d4ed8' },
+                        { x: 950, y: 200, l: 120, h: 100, couleur: '#7e22ce' },
+                        { x: 1350, y: 200, l: 120, h: 100, couleur: '#15803d' },
+                        { x: 150, y: 750, l: 120, h: 100, couleur: '#b91c1c' },
+                        { x: 450, y: 750, l: 120, h: 100, couleur: '#1d4ed8' },
+                        { x: 950, y: 750, l: 120, h: 100, couleur: '#7e22ce' },
+                        { x: 1350, y: 750, l: 120, h: 100, couleur: '#15803d' },
+                        { x: 450, y: 400, l: 120, h: 100, couleur: '#b91c1c' },
+                        { x: 950, y: 400, l: 120, h: 100, couleur: '#1d4ed8' }
+                    ],
+                    pylones: [
+                        { x: 350, y: 300 }, { x: 850, y: 300 }, { x: 1250, y: 300 },
+                        { x: 350, y: 800 }, { x: 850, y: 800 }, { x: 1250, y: 800 }
+                    ],
+                    enfants: [
+                        { x: 350, y: 580, couleur: '#f472b6' },
+                        { x: 850, y: 580, couleur: '#a78bfa' },
+                        { x: 1250, y: 580, couleur: '#fb923c' },
+                        { x: 600, y: 350, couleur: '#22d3ee' },
+                        { x: 1100, y: 350, couleur: '#f472b6' }
+                    ],
+                    batteries: [
+                        { x: 350, y: 400 }, { x: 850, y: 400 }, { x: 1250, y: 400 },
+                        { x: 350, y: 700 }, { x: 850, y: 700 }
+                    ],
+                    composants: [
+                        { type: 'carbone', x: 1250, y: 700 }
+                    ],
+                    livraison: { x: 700, y: 100, l: 160, h: 70 }
+                },
+                {
+                    nom: "Le labyrinthe",
+                    vitesseProjectiles: 180,
+                    cadenceEnfants: 1.5,
+                    routes: [
+                        { x: 200, y: 80, l: 80, h: 300 },
+                        { x: 200, y: 420, l: 80, h: 300 },
+                        { x: 200, y: 760, l: 80, h: 360 },
+                        { x: 500, y: 80, l: 80, h: 300 },
+                        { x: 500, y: 420, l: 80, h: 300 },
+                        { x: 500, y: 760, l: 80, h: 360 },
+                        { x: 800, y: 80, l: 80, h: 300 },
+                        { x: 800, y: 420, l: 80, h: 300 },
+                        { x: 800, y: 760, l: 80, h: 360 },
+                        { x: 1100, y: 80, l: 80, h: 300 },
+                        { x: 1100, y: 420, l: 80, h: 300 },
+                        { x: 1100, y: 760, l: 80, h: 360 },
+                        { x: 80, y: 350, l: 1440, h: 80 },
+                        { x: 80, y: 700, l: 1440, h: 80 }
+                    ],
+                    maisons: [
+                        { x: 320, y: 150, l: 120, h: 100, couleur: '#991b1b' },
+                        { x: 620, y: 150, l: 120, h: 100, couleur: '#1e40af' },
+                        { x: 920, y: 150, l: 120, h: 100, couleur: '#6b21a8' },
+                        { x: 1220, y: 150, l: 120, h: 100, couleur: '#166534' },
+                        { x: 320, y: 500, l: 120, h: 100, couleur: '#991b1b' },
+                        { x: 620, y: 500, l: 120, h: 100, couleur: '#1e40af' },
+                        { x: 920, y: 500, l: 120, h: 100, couleur: '#6b21a8' },
+                        { x: 1220, y: 500, l: 120, h: 100, couleur: '#166534' },
+                        { x: 320, y: 850, l: 120, h: 100, couleur: '#991b1b' },
+                        { x: 620, y: 850, l: 120, h: 100, couleur: '#1e40af' },
+                        { x: 920, y: 850, l: 120, h: 100, couleur: '#6b21a8' },
+                        { x: 1220, y: 850, l: 120, h: 100, couleur: '#166534' }
+                    ],
+                    pylones: [
+                        { x: 240, y: 250 }, { x: 540, y: 250 }, { x: 840, y: 250 }, { x: 1140, y: 250 },
+                        { x: 240, y: 600 }, { x: 540, y: 600 }, { x: 840, y: 600 }, { x: 1140, y: 600 }
+                    ],
+                    enfants: [
+                        { x: 240, y: 390, couleur: '#22d3ee' },
+                        { x: 540, y: 390, couleur: '#f472b6' },
+                        { x: 840, y: 390, couleur: '#a78bfa' },
+                        { x: 1140, y: 390, couleur: '#fb923c' },
+                        { x: 240, y: 740, couleur: '#22d3ee' },
+                        { x: 840, y: 740, couleur: '#a78bfa' }
+                    ],
+                    batteries: [
+                        { x: 240, y: 500 }, { x: 540, y: 500 }, { x: 840, y: 500 }, { x: 1140, y: 500 }
+                    ],
+                    composants: [],
+                    livraison: { x: 1350, y: 100, l: 150, h: 70 }
+                }
+            ];
 
             // ---------------------------------------------------------------
             // Construction du monde (uniquement au premier démarrage)
@@ -2816,6 +3041,7 @@
             }
 
             function construireMonde() {
+                var niveau = NIVEAUX[niveauActuel];
                 carte = document.createElement('canvas');
                 carte.width = MONDE_L;
                 carte.height = MONDE_H;
@@ -2825,7 +3051,7 @@
                 // Herbe + grain pixel
                 g.fillStyle = '#2f4f34';
                 g.fillRect(0, 0, MONDE_L, MONDE_H);
-                var rnd = alea(4242);
+                var rnd = alea(4242 + niveauActuel);
                 for (var i = 0; i < 3600; i++) {
                     var gx = Math.floor(rnd() * MONDE_L / 4) * 4;
                     var gy = Math.floor(rnd() * MONDE_H / 4) * 4;
@@ -2833,13 +3059,8 @@
                     g.fillRect(gx, gy, 4, 4);
                 }
 
-                // Routes : tronc vertical + branche basse + branche haute
-                var routes = [
-                    { x: 680, y: 80, l: 120, h: 1060 },
-                    { x: 80, y: 1000, l: 1440, h: 120 },
-                    { x: 680, y: 120, l: 840, h: 120 }
-                ];
-                routes.forEach(function (r) {
+                // Routes du niveau
+                niveau.routes.forEach(function (r) {
                     g.fillStyle = '#52525b';
                     g.fillRect(r.x - 8, r.y - 8, r.l + 16, r.h + 16);
                     g.fillStyle = '#3f3f46';
@@ -2857,52 +3078,41 @@
                     }
                 });
 
-                // Maisons
-                var maisons = [
-                    { x: 180, y: 300, l: 170, h: 130 },
-                    { x: 400, y: 300, l: 170, h: 130 },
-                    { x: 880, y: 300, l: 180, h: 130 },
-                    { x: 1150, y: 300, l: 160, h: 130 },
-                    { x: 180, y: 620, l: 170, h: 130 },
-                    { x: 400, y: 620, l: 170, h: 130 },
-                    { x: 880, y: 620, l: 180, h: 130 },
-                    { x: 1150, y: 620, l: 160, h: 130 },
-                    { x: 180, y: 820, l: 170, h: 120 },
-                    { x: 400, y: 820, l: 170, h: 120 },
-                    { x: 880, y: 800, l: 180, h: 130 },
-                    { x: 1150, y: 800, l: 160, h: 150 },
-                    { x: 1300, y: 300, l: 180, h: 130 }
-                ];
-                maisons.forEach(function (m) {
+                // Maisons détaillées
+                niveau.maisons.forEach(function (m) {
                     // ombre
                     g.fillStyle = '#1f2937';
                     g.fillRect(m.x + 6, m.y + 8, m.l, m.h);
-                    // toit
-                    g.fillStyle = '#a9694f';
+                    // toit coloré
+                    g.fillStyle = m.couleur;
                     g.fillRect(m.x, m.y, m.l, m.h);
-                    g.fillStyle = '#8a5a44';
+                    // détails toit
+                    g.fillStyle = '#000000';
+                    g.globalAlpha = 0.2;
                     for (var yy = m.y + 8; yy < m.y + m.h; yy += 16) {
                         g.fillRect(m.x, yy, m.l, 6);
                     }
+                    g.globalAlpha = 1;
                     // fenêtres
                     g.fillStyle = '#ffd166';
                     for (var wx = m.x + 16; wx < m.x + m.l - 20; wx += 40) {
                         for (var wy = m.y + 22; wy < m.y + m.h - 30; wy += 34) {
                             g.fillRect(wx, wy, 18, 16);
+                            g.fillStyle = '#fbbf24';
+                            g.fillRect(wx + 2, wy + 2, 14, 12);
+                            g.fillStyle = '#ffd166';
                         }
                     }
                     // porte
                     g.fillStyle = '#4b2e1e';
                     g.fillRect(m.x + m.l / 2 - 12, m.y + m.h - 26, 24, 26);
+                    g.fillStyle = '#fbbf24';
+                    g.fillRect(m.x + m.l / 2 + 6, m.y + m.h - 14, 3, 3);
                     solides.push({ x: m.x, y: m.y, l: m.l, h: m.h, type: 'maison' });
                 });
 
-                // Pylônes
-                var pylones = [
-                    { x: 640, y: 420 }, { x: 860, y: 560 }, { x: 1330, y: 600 },
-                    { x: 600, y: 900 }, { x: 620, y: 780 }, { x: 1380, y: 700 }
-                ];
-                pylones.forEach(function (p) {
+                // Pylônes détaillés
+                niveau.pylones.forEach(function (p) {
                     g.fillStyle = '#1f2937';
                     g.fillRect(p.x + 3, p.y + 4, 26, 26);
                     g.fillStyle = '#9aa4b2';
@@ -2912,11 +3122,15 @@
                     g.fillStyle = '#e2e8f0';
                     g.fillRect(p.x + 11, p.y + 2, 4, 22);
                     g.fillRect(p.x + 2, p.y + 11, 22, 4);
+                    // isolateurs
+                    g.fillStyle = '#dc2626';
+                    g.fillRect(p.x + 8, p.y + 8, 4, 4);
+                    g.fillRect(p.x + 14, p.y + 8, 4, 4);
                     solides.push({ x: p.x, y: p.y, l: 26, h: 26, type: 'pylone' });
                 });
 
-                // Arbres décoratifs (traversables : le drone vole au-dessus)
-                var rnd2 = alea(99);
+                // Arbres décoratifs
+                var rnd2 = alea(99 + niveauActuel);
                 for (var a = 0; a < 26; a++) {
                     var tx = Math.floor(rnd2() * (MONDE_L - 60)) + 20;
                     var ty = Math.floor(rnd2() * (MONDE_H - 60)) + 20;
@@ -2926,8 +3140,10 @@
                         if (tx > so.x - 30 && tx < so.x + so.l + 30 &&
                             ty > so.y - 30 && ty < so.y + so.h + 30) { libre = false; break; }
                     }
-                    // hors des routes
-                    if ((tx > 650 && tx < 830) || (ty > 970 && ty < 1150)) libre = false;
+                    niveau.routes.forEach(function(r) {
+                        if (tx > r.x - 30 && tx < r.x + r.l + 30 &&
+                            ty > r.y - 30 && ty < r.y + r.h + 30) libre = false;
+                    });
                     if (libre) arbres.push({ x: tx, y: ty });
                 }
                 arbres.forEach(function (t) {
@@ -2939,9 +3155,12 @@
                     g.fillRect(t.x, t.y, 24, 20);
                     g.fillStyle = '#3d8b45';
                     g.fillRect(t.x + 4, t.y + 4, 16, 12);
+                    g.fillStyle = '#4ade80';
+                    g.fillRect(t.x + 8, t.y + 8, 8, 8);
                 });
 
-                // Point de livraison (héliport / refuge)
+                // Point de livraison détaillé
+                livraison = niveau.livraison;
                 g.fillStyle = '#1f2937';
                 g.fillRect(livraison.x + 6, livraison.y + 8, livraison.l, livraison.h);
                 g.fillStyle = '#1d4ed8';
@@ -2951,31 +3170,15 @@
                 g.fillStyle = '#1d4ed8';
                 g.fillRect(livraison.x + livraison.l / 2 - 6, livraison.y + 18, 12, livraison.h - 36);
                 g.fillRect(livraison.x + 24, livraison.y + livraison.h / 2 - 6, livraison.l - 48, 12);
-                // drapeau
+                // drapeau animé
                 g.fillStyle = '#e2e8f0';
                 g.fillRect(livraison.x + 14, livraison.y - 26, 4, 26);
                 g.fillStyle = '#ef4444';
                 g.fillRect(livraison.x + 18, livraison.y - 26, 22, 12);
+                // balise lumineuse
+                g.fillStyle = '#fbbf24';
+                g.fillRect(livraison.x + livraison.l / 2 - 4, livraison.y - 8, 8, 8);
             }
-
-            var POSITIONS_ENFANTS = [
-                { x: 360, y: 980, couleur: '#22d3ee' },
-                { x: 940, y: 980, couleur: '#f472b6' },
-                { x: 1085, y: 252, couleur: '#facc15' },
-                { x: 520, y: 150, couleur: '#a78bfa' },
-                { x: 640, y: 520, couleur: '#fb923c' },
-                { x: 1430, y: 960, couleur: '#4ade80' }
-            ];
-
-            var POSITIONS_OBJETS = [
-                { type: 'batterie', x: 500, y: 1060 },
-                { type: 'batterie', x: 740, y: 700 },
-                { type: 'batterie', x: 740, y: 400 },
-                { type: 'batterie', x: 1180, y: 190 },
-                { type: 'carbone', x: 610, y: 660 },
-                { type: 'lipo', x: 1450, y: 480 },
-                { type: 'camera', x: 1450, y: 900 }
-            ];
 
             function creerDrone() {
                 return {
@@ -2992,20 +3195,27 @@
             }
 
             function reinitialiserEntites() {
+                var niveau = NIVEAUX[niveauActuel];
                 drone = creerDrone();
                 temps = 0;
                 score = 0;
                 projectiles = [];
-                enfants = POSITIONS_ENFANTS.map(function (e, i) {
+                solides = [];
+                arbres = [];
+                enfants = niveau.enfants.map(function (e, i) {
                     return {
                         x: e.x, y: e.y, couleur: e.couleur,
                         timer: 1.2 + i * 0.4,
-                        cadence: 2.4 + (i % 3) * 0.35,
+                        cadence: niveau.cadenceEnfants + (i % 3) * 0.35,
                         preavis: 0
                     };
                 });
-                objets = POSITIONS_OBJETS.map(function (o) {
-                    return { type: o.type, x: o.x, y: o.y, pris: false };
+                objets = [];
+                niveau.batteries.forEach(function (b) {
+                    objets.push({ type: 'batterie', x: b.x, y: b.y, pris: false });
+                });
+                niveau.composants.forEach(function (c) {
+                    objets.push({ type: c.type, x: c.x, y: c.y, pris: false });
                 });
                 camera.x = 0;
                 camera.y = 0;
@@ -3028,6 +3238,7 @@
                 var texte = document.getElementById('texte-vie-jeu');
                 var scoreEl = document.getElementById('score-jeu');
                 var tempsEl = document.getElementById('temps-jeu');
+                var niveauEl = document.getElementById('niveau-jeu');
                 if (barre) {
                     barre.style.width = pct + '%';
                     barre.className = 'remplissage-vie' +
@@ -3040,6 +3251,7 @@
                 if (texte) texte.textContent = 'Vie : ' + Math.max(0, Math.round(drone.hp)) + ' / ' + drone.maxHp;
                 if (scoreEl) scoreEl.textContent = 'Score : ' + Math.round(score);
                 if (tempsEl) tempsEl.textContent = 'Temps : ' + Math.floor(temps) + ' s';
+                if (niveauEl) niveauEl.textContent = 'Niveau ' + (niveauActuel + 1) + ' / ' + NIVEAUX.length + ' — ' + NIVEAUX[niveauActuel].nom;
                 var b1 = document.getElementById('badge-carbone');
                 var b2 = document.getElementById('badge-lipo');
                 var b3 = document.getElementById('badge-camera');
@@ -3163,7 +3375,8 @@
                         enf.timer = enf.cadence + Math.random() * 1.2;
                         if (drone.cameraUp) enf.preavis = 0.55;
                         var norme2 = distance || 1;
-                        var vitesseP = drone.cameraUp ? 132 : 152;
+                        var vitesseBase = NIVEAUX[niveauActuel].vitesseProjectiles;
+                        var vitesseP = drone.cameraUp ? vitesseBase * 0.87 : vitesseBase;
                         projectiles.push({
                             x: enf.x, y: enf.y - 6,
                             vx: dxD / norme2 * vitesseP,
@@ -3208,18 +3421,45 @@
                     }
                 }
 
+                // Dégradation de la vie au fil du temps (2 HP/s)
+                drone.hp -= DEGATS_TEMPS * dt;
+                if (drone.hp <= 0) {
+                    drone.hp = 0;
+                    ETAT = 'perdu';
+                    dire('« Aïe, le drone est hors service… Il n\'avait plus d\'énergie. Récupère les batteries pour tenir plus longtemps ! »');
+                    afficherVoile('💥 Drone hors service',
+                        'Le drone a épuisé toute son énergie. Astuce : les batteries vertes rendent de la vie, et la fibre de carbone réduit les dégâts.',
+                        'Score : ' + Math.round(score), 'Réessayer');
+                    var bp = document.getElementById('btn-pause-jeu');
+                    if (bp) bp.disabled = true;
+                }
+
                 // Victoire : atteindre le point de livraison
                 if (drone.x > livraison.x && drone.x < livraison.x + livraison.l &&
                     drone.y > livraison.y && drone.y < livraison.y + livraison.h) {
-                    ETAT = 'gagne';
-                    score += Math.max(0, Math.round(1000 + drone.hp * 4 - temps * 3));
+                    score += Math.max(0, Math.round(500 + drone.hp * 3 - temps * 2));
                     majHUD();
-                    dire('« Colis livré ! Le refuge a reçu le matériel de secours. Mission accomplie, et en drone, s\'il te plaît ! »');
-                    afficherVoile('🎉 Colis livré !',
-                        'Le prof de techno est fier de toi : le colis est arrivé au refuge. Compare ton score avec celui de la classe.',
-                        'Score final : ' + Math.round(score), 'Rejouer');
-                    var bp2 = document.getElementById('btn-pause-jeu');
-                    if (bp2) bp2.disabled = true;
+
+                    // Progression de niveau
+                    if (niveauActuel < NIVEAUX.length - 1) {
+                        niveauActuel++;
+                        construireMonde();
+                        reinitialiserEntites();
+                        dire('« Niveau ' + (niveauActuel + 1) + ' : ' + NIVEAUX[niveauActuel].nom + ' ! La difficulté augmente… »');
+                        afficherVoile('🎉 Niveau terminé !',
+                            'Bravo ! Tu passes au niveau ' + (niveauActuel + 1) + ' : ' + NIVEAUX[niveauActuel].nom + '. Les obstacles sont plus nombreux et les enfants plus rapides.',
+                            'Score : ' + Math.round(score), 'Continuer');
+                    } else {
+                        ETAT = 'gagne';
+                        score += 1000; // Bonus de victoire finale
+                        majHUD();
+                        dire('« Tous les niveaux terminés ! Le prof de techno est fier de toi. Mission accomplie ! »');
+                        afficherVoile('🏆 Victoire finale !',
+                            'Tu as terminé les 5 niveaux ! Le prof de techno a livré tous les colis. Compare ton score avec celui de la classe.',
+                            'Score final : ' + Math.round(score), 'Rejouer');
+                        var bp2 = document.getElementById('btn-pause-jeu');
+                        if (bp2) bp2.disabled = true;
+                    }
                 }
 
                 // Caméra : suit le drone et reste dans le monde
@@ -3283,10 +3523,16 @@
                 var x = Math.round(e.x), y = Math.round(e.y);
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.3)';
                 ctx.fillRect(x - 5, y + 12, 10, 4);
-                // jambes
+                // jambes animées
+                var frame = Math.floor(temps * 3) % 2;
                 ctx.fillStyle = '#1e293b';
-                ctx.fillRect(x - 4, y + 8, 3, 6);
-                ctx.fillRect(x + 1, y + 8, 3, 6);
+                if (frame === 0) {
+                    ctx.fillRect(x - 4, y + 8, 3, 6);
+                    ctx.fillRect(x + 1, y + 8, 3, 6);
+                } else {
+                    ctx.fillRect(x - 3, y + 8, 3, 6);
+                    ctx.fillRect(x, y + 8, 3, 6);
+                }
                 // corps
                 ctx.fillStyle = e.couleur;
                 ctx.fillRect(x - 5, y - 2, 10, 11);
@@ -3296,6 +3542,10 @@
                 // cheveux
                 ctx.fillStyle = '#3f2a1d';
                 ctx.fillRect(x - 4, y - 12, 8, 3);
+                // yeux
+                ctx.fillStyle = '#000';
+                ctx.fillRect(x - 2, y - 8, 2, 2);
+                ctx.fillRect(x + 1, y - 8, 2, 2);
                 // préavis (caméra thermique)
                 if (e.preavis > 0) {
                     ctx.fillStyle = Math.sin(e.preavis * 30) > 0 ? '#fbbf24' : '#ef4444';
@@ -3304,18 +3554,69 @@
                 }
             }
 
+            function dessinerProf(x, y) {
+                // Le prof de techno au point de départ
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.3)';
+                ctx.fillRect(x - 6, y + 14, 12, 4);
+                // jambes
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(x - 4, y + 8, 3, 7);
+                ctx.fillRect(x + 1, y + 8, 3, 7);
+                // corps (chemise)
+                ctx.fillStyle = '#2563eb';
+                ctx.fillRect(x - 5, y - 4, 10, 13);
+                // cravate
+                ctx.fillStyle = '#dc2626';
+                ctx.fillRect(x - 1, y - 2, 2, 8);
+                // tête
+                ctx.fillStyle = '#f2c9a0';
+                ctx.fillRect(x - 4, y - 12, 8, 8);
+                // cheveux
+                ctx.fillStyle = '#5b3a20';
+                ctx.fillRect(x - 4, y - 14, 8, 3);
+                // lunettes
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(x - 3, y - 10, 2, 2);
+                ctx.fillRect(x + 1, y - 10, 2, 2);
+                ctx.fillRect(x - 1, y - 9, 2, 1);
+                // bras qui fait signe (animation)
+                var frame = Math.floor(temps * 2) % 2;
+                ctx.fillStyle = '#2563eb';
+                if (frame === 0) {
+                    ctx.fillRect(x + 5, y - 2, 3, 8);
+                } else {
+                    ctx.fillRect(x + 5, y - 6, 3, 8);
+                }
+                // main
+                ctx.fillStyle = '#f2c9a0';
+                if (frame === 0) {
+                    ctx.fillRect(x + 5, y + 6, 3, 3);
+                } else {
+                    ctx.fillRect(x + 5, y + 2, 3, 3);
+                }
+            }
+
             function dessinerObjet(ob) {
                 var x = Math.round(ob.x), y = Math.round(ob.y);
                 if (ob.type === 'batterie') {
-                    ctx.fillStyle = 'rgba(15, 23, 42, 0.3)';
-                    ctx.fillRect(x - 7, y + 6, 14, 4);
+                    // Batterie plus grande et visible avec pulsation
+                    var pulse = Math.sin(temps * 4) * 0.3 + 0.7;
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.4)';
+                    ctx.fillRect(x - 10, y + 8, 20, 5);
+                    // halo lumineux
+                    ctx.fillStyle = 'rgba(34, 197, 94, ' + (pulse * 0.3) + ')';
+                    ctx.fillRect(x - 12, y - 8, 24, 20);
+                    // batterie
                     ctx.fillStyle = '#22c55e';
+                    ctx.fillRect(x - 8, y - 6, 16, 14);
+                    ctx.fillStyle = '#86efac';
                     ctx.fillRect(x - 6, y - 4, 12, 10);
-                    ctx.fillStyle = '#dcfce7';
+                    ctx.fillStyle = '#22c55e';
                     ctx.fillRect(x - 1, y - 2, 2, 6);
                     ctx.fillRect(x - 3, y, 6, 2);
+                    // borne positive
                     ctx.fillStyle = '#166534';
-                    ctx.fillRect(x + 6, y - 1, 2, 4);
+                    ctx.fillRect(x + 8, y - 1, 3, 4);
                 } else if (ob.type === 'carbone') {
                     ctx.fillStyle = 'rgba(15, 23, 42, 0.3)';
                     ctx.fillRect(x - 8, y + 6, 16, 4);
@@ -3357,19 +3658,29 @@
                 // Repères d'écran
                 var ox = -camera.x, oy = -camera.y;
 
+                // Le prof au point de départ (visible au début)
+                if (ETAT === 'pret' || ETAT === 'en_cours') {
+                    dessinerProf(Math.round(prof.x + ox), Math.round(prof.y + oy));
+                }
+
                 // Objets
                 for (var o = 0; o < objets.length; o++) {
                     if (!objets[o].pris) dessinerObjet(objets[o]);
                 }
                 // Enfants
                 for (var e = 0; e < enfants.length; e++) dessinerEnfant(enfants[e]);
-                // Projectiles
+                // Projectiles (plus visibles avec traînée)
                 for (var p = 0; p < projectiles.length; p++) {
                     var pr = projectiles[p];
+                    // traînée
+                    ctx.fillStyle = 'rgba(248, 250, 252, 0.4)';
+                    ctx.fillRect(Math.round(pr.x - pr.vx * 0.02) - 2, Math.round(pr.y - pr.vy * 0.02) - 2, 4, 4);
+                    ctx.fillRect(Math.round(pr.x - pr.vx * 0.04) - 1, Math.round(pr.y - pr.vy * 0.04) - 1, 2, 2);
+                    // projectile
                     ctx.fillStyle = '#f8fafc';
-                    ctx.fillRect(Math.round(pr.x) - 3, Math.round(pr.y) - 3, 6, 6);
+                    ctx.fillRect(Math.round(pr.x) - 4, Math.round(pr.y) - 4, 8, 8);
                     ctx.fillStyle = '#ef4444';
-                    ctx.fillRect(Math.round(pr.x) - 1, Math.round(pr.y) - 1, 3, 3);
+                    ctx.fillRect(Math.round(pr.x) - 2, Math.round(pr.y) - 2, 4, 4);
                 }
                 // Drone
                 if (drone) dessinerDrone(Math.round(drone.x + ox), Math.round(drone.y + oy), temps);
@@ -3427,11 +3738,12 @@
             // Commandes publiques
             // ---------------------------------------------------------------
             function demarrer() {
+                niveauActuel = 0;
                 if (!carte) construireMonde();
                 reinitialiserEntites();
                 ETAT = 'en_cours';
                 masquerVoile();
-                dire('« Objectif : livrer le colis au point de livraison, en haut à droite. Évite les maisons et les pylônes ! »');
+                dire('« Niveau 1 : ' + NIVEAUX[0].nom + '. Objectif : livrer le colis au point de livraison. Évite les maisons et les pylônes ! »');
                 var bp = document.getElementById('btn-pause-jeu');
                 if (bp) { bp.disabled = false; bp.textContent = '⏸️ Pause'; }
                 lancerBoucle();
@@ -3452,6 +3764,7 @@
             }
 
             function rejouer() {
+                niveauActuel = 0;
                 demarrer();
             }
 
