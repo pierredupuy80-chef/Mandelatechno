@@ -897,13 +897,14 @@
             100% { top: 100%; opacity: 0; }
         }
     
-/* === Jeu « Relie les points » (bonus) === */
+/* === Jeu « Relie les points » (bonus) — thème sombre === */
 .jeu-relie {
-    background: #fff;
-    border: 2px solid var(--couleur-primaire);
+    background: #0b1220;
+    border: 2px solid #1e293b;
     border-radius: 16px;
     padding: var(--espacement-md);
     margin: var(--espacement-md) 0;
+    color: #e2e8f0;
 }
 .jeu-entete {
     display: flex;
@@ -913,15 +914,16 @@
     gap: var(--espacement-sm);
     margin-bottom: var(--espacement-sm);
 }
-.jeu-titre { font-weight: 800; color: var(--couleur-primaire); font-size: 1.1rem; }
-.jeu-niveau { font-weight: 700; color: var(--couleur-secondaire); }
-.jeu-consigne { font-size: 0.9rem; color: var(--couleur-texte); margin: 0 0 var(--espacement-md) 0; }
+.jeu-titre { font-weight: 800; color: #93c5fd; font-size: 1.1rem; }
+.jeu-niveau { font-weight: 700; color: #c4b5fd; font-size: 0.95rem; }
+.jeu-cases { color: #94a3b8; font-weight: 600; }
+.jeu-consigne { font-size: 0.9rem; color: #cbd5e1; margin: 0 0 var(--espacement-md) 0; }
 .jeu-grille {
     display: grid;
     gap: 4px;
-    max-width: 440px;
+    max-width: 460px;
     margin: 0 auto;
-    background: #f1f5f9;
+    background: #0f172a;
     padding: 8px;
     border-radius: 14px;
     touch-action: none;
@@ -933,185 +935,34 @@
     aspect-ratio: 1 / 1;
     min-width: 0;
     padding: 0;
-    border: 2px solid #e2e8f0;
+    border: 2px solid #334155;
     border-radius: 6px;
-    background: #fff;
+    background: #1e293b;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    transition: transform 0.1s ease, border-color 0.1s ease;
 }
-.jeu-cell:hover { transform: scale(1.06); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); }
-.jeu-cell:focus-visible { outline: 3px solid var(--couleur-primaire); outline-offset: 2px; }
-.jeu-cell.point { background: #fff; }
+.jeu-cell:hover { transform: scale(1.06); border-color: #60a5fa; }
+.jeu-cell:focus-visible { outline: 3px solid #60a5fa; outline-offset: 2px; }
+.jeu-cell.point { background: #0f172a; border-color: #475569; }
 .jeu-cell .jeu-point {
-    width: 76%;
-    height: 76%;
+    width: 74%;
+    height: 74%;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 800;
-    font-size: 0.82rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.35);
 }
 .jeu-cell.chemin { border-color: transparent; }
-.jeu-cell.actif { box-shadow: inset 0 0 0 3px rgba(37, 99, 235, 0.65); }
+.jeu-cell.actif { box-shadow: inset 0 0 0 3px rgba(147, 197, 253, 0.9); }
 .jeu-actions { display: flex; flex-wrap: wrap; gap: var(--espacement-sm); margin-top: var(--espacement-md); }
-.jeu-statut { font-weight: 700; color: var(--couleur-succes); min-height: 1.4em; margin-top: var(--espacement-sm); }
+.jeu-statut { font-weight: 700; color: #86efac; min-height: 1.4em; margin-top: var(--espacement-sm); }
 @media (max-width: 480px) {
     .jeu-grille { gap: 3px; padding: 5px; }
-    .jeu-cell .jeu-point { font-size: 0.68rem; }
-}
-
-/* =====================================================================
-   ADAPTATION TELEPHONE (correctifs mobiles)
-   Voir Rapport-compatibilite-mobile-apps.md
-   - la barre du haut se replie au defilement : seuls les onglets restent
-   - onglets sur une seule ligne, defilement horizontal au doigt
-   - champs a 16 px : supprime le zoom automatique d'iOS
-   - cibles tactiles des QCM et des etiquettes portees a 44 px
-   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
-   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
-   ===================================================================== */
-@media screen and (max-width: 700px), screen and (max-height: 500px) {
-
-  /* --- En-tete plus compact --- */
-  header{padding:8px 10px 6px}
-  header h1{font-size:.95rem; line-height:1.15}
-  header h1 small{display:block; font-size:.68rem}
-  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
-  header .barre-progression{display:none}
-
-  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
-  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
-    flex-wrap:nowrap !important;
-    overflow-x:auto; overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-    gap:6px;
-  }
-  header .onglets button, header .tabs button, header .tabs-nav button,
-  nav.tabs button, header + nav button, body > nav button{
-    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
-  }
-
-  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
-  input, textarea, select{font-size:16px !important}
-
-  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
-  /* min-height est ignore sur un <label> reste en display:inline : on force
-     donc un affichage qui tient compte de la hauteur (inline-flex centre le
-     texte verticalement et laisse la ligne se poursuivre comme avant). */
-  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
-    display:inline-flex; align-items:center;
-    min-height:44px; min-width:44px; box-sizing:border-box}
-  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
-  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
-
-  /* --- Etiquettes a deplacer --- */
-  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
-  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
-  .etiquette-drop{display:flex; align-items:center}
-
-  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
-  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
-    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
 }
 </style>
 </head>
 <body>
-
-<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
-     haut au changement de niveau, compensation des sauts d'ancre.
-     Voir Rapport-compatibilite-mobile-apps.md
-     Ce script est place juste apres <body> : il attend que le DOM soit
-     construit avant de mesurer quoi que ce soit. -->
-<script>
-(function () {
-  // Conteneurs d'onglets possibles, selon la structure de l'app.
-  var SELECTEUR_ONGLETS =
-    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
-
-  function trouverOnglets() {
-    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
-    for (var i = 0; i < liste.length; i++) {
-      if (liste[i].querySelector('button')) return liste[i];
-    }
-    return null;
-  }
-
-  function ajuster() {
-    var entete = document.querySelector('header');
-    var onglets = trouverOnglets();
-    if (!entete || !onglets) return;
-    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
-
-    if (!petit) {
-      // Ordinateur : on rend la main au CSS d'origine.
-      entete.style.top = '0px';
-      onglets.style.position = '';
-      onglets.style.top = '';
-      document.documentElement.style.scrollPaddingTop =
-        (entete.offsetHeight + 8) + 'px';
-      return;
-    }
-
-    if (entete.contains(onglets)) {
-      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
-      // Le titre et les champs binome/classe sortent de l'ecran au
-      // defilement, les onglets restent sous les yeux.
-      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
-      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
-      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
-      entete.style.top = (-dessus) + 'px';
-    } else {
-      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
-      // defilement et la barre d'onglets se colle en haut de l'ecran.
-      entete.style.top = (-entete.offsetHeight) + 'px';
-      onglets.style.position = 'sticky';
-      onglets.style.top = '0px';
-      var fond = getComputedStyle(onglets).backgroundColor;
-      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
-        onglets.style.background = '#fff';
-      }
-      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
-    }
-
-    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
-    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
-    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
-  }
-
-  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
-  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
-  function retourEnHaut(e) {
-    var cible = e.target;
-    if (!cible || !cible.closest) return;
-    var bouton = cible.closest('button');
-    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
-
-  function demarrer() {
-    ajuster();
-    document.addEventListener('click', retourEnHaut, true);
-    window.addEventListener('resize', ajuster);
-    window.addEventListener('orientationchange', ajuster);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
-    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', demarrer);
-  } else {
-    demarrer();
-  }
-  window.addEventListener('load', demarrer);
-})();
-</script>
-
     <!-- Skip link pour accessibilité -->
     <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
@@ -1903,12 +1754,12 @@
                     <h2>🎮 Défi ludique</h2>
                     <p>Relie les points de même couleur en évitant de croiser les chemins. 10 niveaux de difficulté croissante !</p>
 
-                                        <div class="jeu-relie" id="jeu-relie">
+                                                            <div class="jeu-relie" id="jeu-relie">
                         <div class="jeu-entete">
                             <span class="jeu-titre">🧩 Relie les points</span>
-                            <span class="jeu-niveau">Niveau <strong id="jeu-num">1</strong> / 10</span>
+                            <span class="jeu-niveau">Niveau <strong id="jeu-num">1</strong> / 10 · <span class="jeu-cases">Cases <strong id="jeu-remplies">0</strong>/<strong id="jeu-total">0</strong></span></span>
                         </div>
-                        <p class="jeu-consigne">Relie chaque paire de points de même couleur par un chemin. Les chemins ne doivent pas se croiser et chaque case ne peut servir qu'à un seul chemin. <strong>Clique</strong> un point, puis les cases voisines, puis le point de la même couleur.</p>
+                        <p class="jeu-consigne">Relie chaque paire de points de même couleur et <strong>remplis toute la grille</strong>. Les chemins ne doivent pas se croiser et chaque case ne peut servir qu'à un seul chemin. <strong>Clique</strong> un point, puis les cases voisines, puis le point de la même couleur. Pour corriger, reclique le point d'une paire déjà reliée.</p>
                         <div class="jeu-grille" id="jeu-grille" role="grid" aria-label="Grille du jeu Relie les points"></div>
                         <div class="jeu-actions">
                             <button type="button" class="bouton-action secondaire" id="jeu-reset">🔄 Recommencer le niveau</button>
@@ -1946,15 +1797,7 @@
         // GESTION DES ONGLETS
         // ============================================
         
-                // ============================================
-        // MODE DÉVELOPPEMENT
-        // ============================================
-        // Passer à true pour désactiver tous les blocages d'onglets
-        // pendant le développement/test des jeux bonus.
-        // Penser à remettre à false avant publication !
-        const MODE_DEVELOPPEMENT = true;
-
-let niveauActuel = 'n1-intro';
+        let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
         const niveauxValides = new Set();
 
@@ -2467,27 +2310,6 @@ let niveauActuel = 'n1-intro';
             });
 
             preparerDetailsChaine();
-
-            // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
-            // Si activé, déverrouille tous les onglets et boutons pour
-            // permettre de tester librement (jeux bonus, navigation, etc.)
-            if (MODE_DEVELOPPEMENT) {
-                const tousNiveaux = ['n1-intro', 'n1-quiz', 'n2-intro', 'n2-quiz',
-                                     'n3-enigme', 'n4-probleme', 'synthese', 'bonus'];
-                tousNiveaux.forEach(niveauId => {
-                    debloquerNiveau(niveauId);
-                    niveauxDebloques.push(niveauId);
-                });
-                // Activer aussi les boutons de suite qui seraient désactivés
-                const btnSuiteN2 = document.getElementById('bouton-suite-n2-intro');
-                if (btnSuiteN2) btnSuiteN2.disabled = false;
-                // Marquer tous les onglets comme accessibles (sans la classe verrouille)
-                document.querySelectorAll('.bouton-onglet.verrouille').forEach(bouton => {
-                    bouton.classList.remove('verrouille');
-                    bouton.disabled = false;
-                });
-                console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
-            }
         });
 
         // Support pour impression PDF
@@ -2511,14 +2333,21 @@ let niveauActuel = 'n1-intro';
 (function () {
   'use strict';
 
-  var NIVEAUX = [{"size":4,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[2,1]},{"color":"#ea580c","lettre":"B","a":[2,2],"b":[3,0]}]},{"size":4,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[1,3],"b":[2,1]},{"color":"#ca8a04","lettre":"C","a":[2,2],"b":[3,0]}]},{"size":5,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[1,2]},{"color":"#ea580c","lettre":"B","a":[1,1],"b":[4,0]},{"color":"#ca8a04","lettre":"C","a":[4,1],"b":[4,4]}]},{"size":5,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[1,2]},{"color":"#ea580c","lettre":"B","a":[1,1],"b":[3,3]},{"color":"#ca8a04","lettre":"C","a":[3,2],"b":[4,0]},{"color":"#16a34a","lettre":"D","a":[4,1],"b":[4,4]}]},{"size":6,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[0,4],"b":[1,1]},{"color":"#ca8a04","lettre":"C","a":[1,0],"b":[2,4]},{"color":"#16a34a","lettre":"D","a":[2,5],"b":[5,0]}]},{"size":6,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,4]},{"color":"#ea580c","lettre":"B","a":[0,5],"b":[2,2]},{"color":"#ca8a04","lettre":"C","a":[2,3],"b":[3,5]},{"color":"#16a34a","lettre":"D","a":[3,4],"b":[4,1]},{"color":"#0891b2","lettre":"E","a":[4,2],"b":[5,0]}]},{"size":6,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,5]},{"color":"#ea580c","lettre":"B","a":[1,5],"b":[1,2]},{"color":"#ca8a04","lettre":"C","a":[1,1],"b":[2,3]},{"color":"#16a34a","lettre":"D","a":[2,4],"b":[3,2]},{"color":"#0891b2","lettre":"E","a":[3,1],"b":[4,5]},{"color":"#2563eb","lettre":"F","a":[5,5],"b":[5,0]}]},{"size":7,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[1,6]},{"color":"#ea580c","lettre":"B","a":[1,5],"b":[1,2]},{"color":"#ca8a04","lettre":"C","a":[1,1],"b":[3,6]},{"color":"#16a34a","lettre":"D","a":[3,5],"b":[4,0]},{"color":"#0891b2","lettre":"E","a":[4,1],"b":[6,0]},{"color":"#2563eb","lettre":"F","a":[6,1],"b":[6,6]}]},{"size":7,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[0,4],"b":[1,6]},{"color":"#ca8a04","lettre":"C","a":[1,5],"b":[1,2]},{"color":"#16a34a","lettre":"D","a":[1,1],"b":[3,3]},{"color":"#0891b2","lettre":"E","a":[3,2],"b":[4,6]},{"color":"#2563eb","lettre":"F","a":[5,6],"b":[5,0]},{"color":"#7c3aed","lettre":"G","a":[6,0],"b":[6,6]}]},{"size":8,"pairs":[{"color":"#e11d48","lettre":"A","a":[0,0],"b":[0,3]},{"color":"#ea580c","lettre":"B","a":[0,4],"b":[0,7]},{"color":"#ca8a04","lettre":"C","a":[1,7],"b":[1,1]},{"color":"#16a34a","lettre":"D","a":[1,0],"b":[2,6]},{"color":"#0891b2","lettre":"E","a":[2,7],"b":[4,6]},{"color":"#2563eb","lettre":"F","a":[4,7],"b":[7,5]},{"color":"#7c3aed","lettre":"G","a":[7,4],"b":[7,0]}]}];
+  var NIVEAUX = [{"size":5,"pairs":[{"color":"#ff4d6d","a":[0,3],"b":[2,0]},{"color":"#ff9f43","a":[2,3],"b":[4,0]},{"color":"#ffd166","a":[1,2],"b":[3,2]},{"color":"#8ac926","a":[0,4],"b":[1,3]},{"color":"#06d6a0","a":[2,4],"b":[4,4]}]},{"size":5,"pairs":[{"color":"#ff4d6d","a":[4,3],"b":[2,2]},{"color":"#ff9f43","a":[2,4],"b":[0,0]},{"color":"#ffd166","a":[3,3],"b":[4,4]},{"color":"#8ac926","a":[0,1],"b":[1,4]},{"color":"#06d6a0","a":[2,1],"b":[3,0]},{"color":"#00b4d8","a":[3,1],"b":[4,0]}]},{"size":6,"pairs":[{"color":"#ff4d6d","a":[0,1],"b":[1,3]},{"color":"#ff9f43","a":[3,5],"b":[4,4]},{"color":"#ffd166","a":[4,1],"b":[0,0]},{"color":"#8ac926","a":[2,2],"b":[1,1]},{"color":"#06d6a0","a":[1,4],"b":[2,3]},{"color":"#00b4d8","a":[3,0],"b":[5,0]}]},{"size":6,"pairs":[{"color":"#ff4d6d","a":[3,2],"b":[1,0]},{"color":"#ff9f43","a":[3,3],"b":[4,0]},{"color":"#ffd166","a":[0,3],"b":[0,0]},{"color":"#8ac926","a":[1,5],"b":[1,2]},{"color":"#06d6a0","a":[3,1],"b":[2,0]},{"color":"#00b4d8","a":[2,5],"b":[2,3]},{"color":"#3a86ff","a":[4,4],"b":[4,1]}]},{"size":7,"pairs":[{"color":"#ff4d6d","a":[6,0],"b":[5,2]},{"color":"#ff9f43","a":[6,6],"b":[6,4]},{"color":"#ffd166","a":[1,6],"b":[5,6]},{"color":"#8ac926","a":[2,3],"b":[4,4]},{"color":"#06d6a0","a":[3,1],"b":[3,3]},{"color":"#00b4d8","a":[1,1],"b":[0,2]},{"color":"#3a86ff","a":[5,0],"b":[2,1]}]},{"size":7,"pairs":[{"color":"#ff4d6d","a":[5,2],"b":[4,1]},{"color":"#ff9f43","a":[5,4],"b":[0,0]},{"color":"#ffd166","a":[1,6],"b":[0,5]},{"color":"#8ac926","a":[5,3],"b":[2,3]},{"color":"#06d6a0","a":[3,5],"b":[4,4]},{"color":"#00b4d8","a":[2,2],"b":[3,0]},{"color":"#3a86ff","a":[6,4],"b":[4,0]},{"color":"#7b2cbf","a":[4,2],"b":[3,1]}]},{"size":8,"pairs":[{"color":"#ff4d6d","a":[6,7],"b":[3,6]},{"color":"#ff9f43","a":[3,2],"b":[5,6]},{"color":"#ffd166","a":[3,1],"b":[0,4]},{"color":"#8ac926","a":[4,4],"b":[5,2]},{"color":"#06d6a0","a":[3,7],"b":[2,4]},{"color":"#00b4d8","a":[7,5],"b":[7,7]},{"color":"#3a86ff","a":[0,7],"b":[0,5]},{"color":"#7b2cbf","a":[1,2],"b":[0,0]}]},{"size":8,"pairs":[{"color":"#ff4d6d","a":[6,2],"b":[6,0]},{"color":"#ff9f43","a":[1,5],"b":[3,7]},{"color":"#ffd166","a":[0,3],"b":[1,1]},{"color":"#8ac926","a":[3,4],"b":[3,6]},{"color":"#06d6a0","a":[3,2],"b":[6,1]},{"color":"#00b4d8","a":[0,0],"b":[2,1]},{"color":"#3a86ff","a":[5,6],"b":[7,4]},{"color":"#7b2cbf","a":[4,4],"b":[5,5]},{"color":"#f72585","a":[4,7],"b":[7,7]}]},{"size":9,"pairs":[{"color":"#ff4d6d","a":[7,2],"b":[7,4]},{"color":"#ff9f43","a":[1,2],"b":[3,8]},{"color":"#ffd166","a":[2,8],"b":[1,4]},{"color":"#8ac926","a":[5,1],"b":[0,3]},{"color":"#06d6a0","a":[4,2],"b":[1,1]},{"color":"#00b4d8","a":[3,3],"b":[6,2]},{"color":"#3a86ff","a":[8,8],"b":[5,6]},{"color":"#7b2cbf","a":[4,4],"b":[6,3]},{"color":"#f72585","a":[8,4],"b":[7,5]}]},{"size":9,"pairs":[{"color":"#ff4d6d","a":[5,0],"b":[5,5]},{"color":"#ff9f43","a":[0,3],"b":[0,0]},{"color":"#ffd166","a":[8,2],"b":[7,1]},{"color":"#8ac926","a":[3,5],"b":[0,7]},{"color":"#06d6a0","a":[4,7],"b":[0,8]},{"color":"#00b4d8","a":[3,4],"b":[3,2]},{"color":"#3a86ff","a":[6,8],"b":[8,8]},{"color":"#7b2cbf","a":[0,4],"b":[0,6]},{"color":"#f72585","a":[4,5],"b":[5,4]}]}];
+  var NOMS = {
+    '#ff4d6d': 'rouge', '#ff9f43': 'orange', '#ffd166': 'jaune',
+    '#8ac926': 'vert', '#06d6a0': 'turquoise', '#00b4d8': 'cyan',
+    '#3a86ff': 'bleu', '#7b2cbf': 'violet', '#f72585': 'rose'
+  };
 
   var gridEl = document.getElementById('jeu-grille');
   var numEl = document.getElementById('jeu-num');
   var statutEl = document.getElementById('jeu-statut');
+  var rempliesEl = document.getElementById('jeu-remplies');
+  var totalEl = document.getElementById('jeu-total');
   var resetBtn = document.getElementById('jeu-reset');
   var suivantBtn = document.getElementById('jeu-suivant');
-  if (!gridEl || !numEl || !statutEl || !resetBtn || !suivantBtn) return;
+  if (!gridEl || !numEl || !statutEl || !rempliesEl || !totalEl || !resetBtn || !suivantBtn) return;
 
   var levelIndex = 0;
   var niveau = null;
@@ -2539,6 +2368,8 @@ let niveauActuel = 'n1-intro';
     var A = parts(a), B = parts(b);
     return Math.abs(A[0] - B[0]) + Math.abs(A[1] - B[1]) === 1;
   }
+  function totalIntermediaires() { return N * N - 2 * niveau.pairs.length; }
+  function nbParcelles() { return Object.keys(pathMap).length; }
 
   function charger(index) {
     levelIndex = index;
@@ -2550,13 +2381,17 @@ let niveauActuel = 'n1-intro';
     connected = {};
     activeColor = null;
     termine = false;
+    dragging = false;
+    dragLast = null;
     niveau.pairs.forEach(function (p) {
-      dotMap[k(p.a[0], p.a[1])] = { color: p.color, lettre: p.lettre };
-      dotMap[k(p.b[0], p.b[1])] = { color: p.color, lettre: p.lettre };
+      dotMap[k(p.a[0], p.a[1])] = { color: p.color };
+      dotMap[k(p.b[0], p.b[1])] = { color: p.color };
       connected[p.color] = false;
       paths[p.color] = [];
     });
     numEl.textContent = String(index + 1);
+    totalEl.textContent = String(N * N);
+    rempliesEl.textContent = '0';
     suivantBtn.classList.add('cache');
     statutEl.textContent = '';
     construireGrille();
@@ -2582,6 +2417,10 @@ let niveauActuel = 'n1-intro';
     }
   }
 
+  function majRemplissage() {
+    rempliesEl.textContent = String(nbParcelles() + 2 * niveau.pairs.length);
+  }
+
   function rendre() {
     for (var r = 0; r < N; r++) {
       for (var c = 0; c < N; c++) {
@@ -2597,12 +2436,11 @@ let niveauActuel = 'n1-intro';
           var s = document.createElement('span');
           s.className = 'jeu-point';
           s.style.background = dot.color;
-          s.textContent = connected[dot.color] ? '\u2713' : dot.lettre;
           if (connected[dot.color]) {
-            s.style.boxShadow = '0 0 0 3px #fff, 0 0 0 5px rgba(0,0,0,0.18)';
+            s.style.boxShadow = '0 0 0 3px #e2e8f0, 0 0 10px rgba(255,255,255,0.4)';
           }
           b.appendChild(s);
-          b.setAttribute('aria-label', 'Point ' + dot.lettre);
+          b.setAttribute('aria-label', 'Point ' + (NOMS[dot.color] || 'coloré'));
         } else if (col) {
           b.classList.add('chemin');
           b.style.background = col;
@@ -2610,22 +2448,35 @@ let niveauActuel = 'n1-intro';
           if (activeColor === col && p.length && p[p.length - 1] === key) {
             b.classList.add('actif');
           }
+          b.setAttribute('aria-label', 'Chemin ' + (NOMS[col] || ''));
         } else {
           b.setAttribute('aria-label', 'Case ' + (r + 1) + ',' + (c + 1) + ' vide');
         }
       }
     }
-    statutEl.textContent = '';
+    majRemplissage();
+  }
+
+  function retirerCellules(color) {
+    var p = paths[color] || [];
+    for (var i = 0; i < p.length; i++) {
+      if (!dotMap[p[i]]) delete pathMap[p[i]];
+    }
   }
 
   function annulerTrait() {
     if (!activeColor) return;
-    var p = paths[activeColor] || [];
-    for (var i = 1; i < p.length; i++) {
-      if (!dotMap[p[i]]) delete pathMap[p[i]];
-    }
+    retirerCellules(activeColor);
     paths[activeColor] = [];
     activeColor = null;
+    rendre();
+  }
+
+  function reouvrir(color, startKey) {
+    retirerCellules(color);
+    connected[color] = false;
+    paths[color] = [startKey];
+    activeColor = color;
     rendre();
   }
 
@@ -2656,21 +2507,22 @@ let niveauActuel = 'n1-intro';
     connected[color] = true;
     activeColor = null;
     rendre();
-    verifierFin();
+    verifier();
   }
 
-  function verifierFin() {
+  function verifier() {
     var all = niveau.pairs.every(function (p) { return !!connected[p.color]; });
     if (!all) return;
+    if (nbParcelles() !== totalIntermediaires()) {
+      statutEl.textContent = 'Toutes les paires sont reliées, mais la grille n\u2019est pas complète : reclique un point pour ajuster un chemin.';
+      return;
+    }
     termine = true;
-    var couvertes = Object.keys(pathMap).length + Object.keys(dotMap).length;
-    var remplies = (couvertes === N * N);
-    statutEl.textContent = '🎉 Bravo ! Toutes les paires sont reliées.'
-      + (remplies ? ' 🌟 Grille parfaitement remplie !' : '');
+    statutEl.textContent = '\uD83C\uDF89 Bravo ! Grille parfaitement remplie !';
     suivantBtn.classList.remove('cache');
     suivantBtn.textContent = (levelIndex < NIVEAUX.length - 1)
-      ? 'Niveau suivant →'
-      : '🎉 Rejouer depuis le début';
+      ? 'Niveau suivant \u2192'
+      : '\uD83C\uDF89 Rejouer depuis le début';
   }
 
   function appliquer(r, c) {
@@ -2682,12 +2534,12 @@ let niveauActuel = 'n1-intro';
       if (activeColor === dot.color) {
         var p = paths[dot.color];
         if (key === p[0]) { annulerTrait(); return; }
-        var last = p[p.length - 1];
-        if (adj(last, key)) { completer(dot.color, key); return; }
+        if (adj(p[p.length - 1], key)) { completer(dot.color, key); return; }
         return;
       }
       annulerTrait();
-      if (!connected[dot.color] && !(paths[dot.color] && paths[dot.color].length)) {
+      if (connected[dot.color]) { reouvrir(dot.color, key); return; }
+      if (!(paths[dot.color] && paths[dot.color].length)) {
         activeColor = dot.color;
         paths[dot.color] = [key];
         rendre();
@@ -2752,11 +2604,12 @@ let niveauActuel = 'n1-intro';
     charger((levelIndex + 1) % NIVEAUX.length);
   });
 
-  // Petit crochet utilisé par les tests automatisés.
   window.__relie = {
     cliquer: function (r, c) { appliquer(r, c); },
     gagne: function () {
-      return !!niveau && niveau.pairs.every(function (p) { return !!connected[p.color]; });
+      if (!niveau) return false;
+      var all = niveau.pairs.every(function (p) { return !!connected[p.color]; });
+      return all && (nbParcelles() === totalIntermediaires());
     },
     niveau: function () { return levelIndex; },
     recommencer: function () { charger(levelIndex); }
