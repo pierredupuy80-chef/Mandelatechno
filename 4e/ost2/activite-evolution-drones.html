@@ -2037,8 +2037,14 @@ font-size: 0.78rem;
             "maison2": "assets-jeu/maison-j2.png",
             "maison3": "assets-jeu/maison-j3.png",
             "enfantAcourse1": "assets-jeu/enfantA-course1.png",
+            "enfantAcourse2": "assets-jeu/enfantA-course2.png",
+            "enfantAlancer": "assets-jeu/enfantA-lancer.png",
             "enfantBcourse1": "assets-jeu/enfantB-course1.png",
+            "enfantBcourse2": "assets-jeu/enfantB-course2.png",
+            "enfantBlancer": "assets-jeu/enfantB-lancer.png",
             "enfantCcourse1": "assets-jeu/enfantC-course1.png",
+            "enfantCcourse2": "assets-jeu/enfantC-course2.png",
+            "enfantClancer": "assets-jeu/enfantC-lancer.png",
             "chienA": "assets-jeu/chien-a.png",
             "chienB": "assets-jeu/chien-b.png",
             "chatA": "assets-jeu/chat-a.png",
@@ -3149,7 +3155,11 @@ if (ASSETS.profPilote) imgProfPilote = imgAsset('profPilote');
 ['maison1', 'maison2', 'maison3',
 'decorFleurs', 'chienA', 'chienB', 'chatA', 'chatB']
 .forEach(imgAsset);
-MODELES_ENFANT.forEach(function (m) { imgAsset('enfant' + m + 'course1'); });
+MODELES_ENFANT.forEach(function (m) {
+['course1', 'course2', 'lancer'].forEach(function (f) {
+imgAsset('enfant' + m + f);
+});
+});
 try {
 var v = getComputedStyle(document.documentElement).getPropertyValue('--sprite-prof');
 var m = v && v.match(/url\(["']?(data:image\/[^"')]+)["']?\)/);
@@ -3207,14 +3217,21 @@ var rowDebut = bj === 0 ? 1 : ROWS_ROUTES[bj - 1] + 2;
 var rowFin = bj < ROWS_ROUTES.length ? ROWS_ROUTES[bj] - 1 : ROWS - 2;
 for (var cx2 = colDebut; cx2 <= colFin - 6; cx2 += 7) {
 for (var cy2 = rowDebut; cy2 <= rowFin - 6; cy2 += 7) {
-if (rnd() > 0.75) continue;
+if (rnd() > 0.98) continue;
 var mx = cx2 * TUILE, my = cy2 * TUILE;
 var gene = false;
-if (Math.abs(mx - DEPOT.x) < 210 && Math.abs(my - DEPOT.y) < 210) gene = true;
-if (Math.abs(mx - PROF_JEU.x) < 200 && Math.abs(my - PROF_JEU.y) < 200) gene = true;
+var zonesInterdites = [
+{ x: DEPOT.x - 50, y: DEPOT.y - 50, l: 156, h: 156 },
+{ x: PROF_JEU.x - 34, y: PROF_JEU.y - 34, l: 124, h: 124 }
+];
 for (var z2 = 0; z2 < ZONES_CANDIDATES.length; z2++) {
 var zz = ZONES_CANDIDATES[z2];
-if (Math.abs(mx - zz.x) < 170 && Math.abs(my - zz.y) < 170) gene = true;
+zonesInterdites.push({ x: zz.x - 34, y: zz.y - 34, l: 112, h: 112 });
+}
+for (var zi = 0; zi < zonesInterdites.length; zi++) {
+var ni = zonesInterdites[zi];
+if (mx + MAISON_AFF > ni.x && mx < ni.x + ni.l &&
+my + MAISON_AFF > ni.y && my < ni.y + ni.h) { gene = true; break; }
 }
 if (gene || collisionne(mx, my, 200, 200)) continue;
 maisons.push({ x: mx, y: my, v: Math.floor(rnd() * 3) });
@@ -3832,24 +3849,22 @@ ctx.textAlign = 'start';
 var MODELES_ENFANT = ['A', 'B', 'C'];
 function dessinerEnfant(enf, ox, oy) {
 var modele = MODELES_ENFANT[enf.i % 3];
-var im = imgAsset('enfant' + modele + 'course1');
-var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
-var bond = 0, ecrase = 1;
+var cle = 'enfant' + modele + 'course1';
 if (enf.course > 0) {
-var phase = enf.course * 8;                 // cadence du pas
-bond = Math.round(Math.abs(Math.sin(phase)) * 2);
-ecrase = Math.cos(phase) > 0 ? 1 : 0.97;
+var reste = enf.dureeCourse - enf.course;
+if (reste < 0.32) {
+cle = 'enfant' + modele + 'lancer';
+} else {
+cle = 'enfant' + modele +
+(Math.floor(enf.course / 0.16) % 2 === 0 ? 'course1' : 'course2');
 }
+}
+var im = imgAsset(cle) || imgAsset('enfant' + modele + 'course1');
+var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
 if (assetPret(im)) {
-var hh = Math.round(ENFANT_AFF * ecrase);
+var hh = ENFANT_AFF;
 var ll = Math.round(im.naturalWidth * hh / im.naturalHeight);
-ctx.drawImage(im, x - Math.round(ll / 2), y - hh + 12 - bond, ll, hh);
-if (enf.course > 0 && (enf.dureeCourse - enf.course) < 0.45) {
-var mainX = x + Math.round(ll / 2) - 2;
-var mainY = y - hh + 18 - bond;
-disque(ctx, mainX, mainY, 2, C.contour);
-disque(ctx, mainX, mainY, 1, '#f97316');
-}
+ctx.drawImage(im, x - Math.round(ll / 2), y - hh + 12, ll, hh);
 } else {
 ctx.fillStyle = enf.c;
 ctx.fillRect(x - 6, y - 12, 12, 16);
