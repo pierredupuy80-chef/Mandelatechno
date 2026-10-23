@@ -1486,6 +1486,15 @@
         // GESTION DES ONGLETS
         // ============================================
         
+        // ============================================
+        // MODE DÉVELOPPEMENT
+        // ============================================
+        // true la plupart du temps : tous les onglets sont déverrouillés pour
+        // tester librement les jeux bonus et la navigation.
+        // Pour tester comme un élève (progression verrouillée), ouvrir la page
+        // avec le paramètre ?dev=0 :   activite-reseau.html?dev=0
+        // Penser à repasser la valeur à false avant une vraie séance élève.
+        const MODE_DEVELOPPEMENT = !/[?&]dev=0/.test(location.search);
         let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
         const niveauxValides = new Set();
@@ -1999,6 +2008,27 @@
             });
 
             preparerDetailsChaine();
+
+// ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
+            // Si activé, déverrouille tous les onglets et boutons pour
+            // permettre de tester librement (jeux bonus, navigation, etc.)
+            if (MODE_DEVELOPPEMENT) {
+                const tousNiveaux = ['n1-intro', 'n1-quiz', 'n2-intro', 'n2-quiz',
+                                     'n3-enigme', 'n4-probleme', 'synthese', 'bonus'];
+                tousNiveaux.forEach(niveauId => {
+                    debloquerNiveau(niveauId);
+                    niveauxDebloques.push(niveauId);
+                });
+                // Activer aussi les boutons de suite qui seraient désactivés
+                const btnSuiteN2 = document.getElementById('bouton-suite-n2-intro');
+                if (btnSuiteN2) btnSuiteN2.disabled = false;
+                // Marquer tous les onglets comme accessibles (sans la classe verrouille)
+                document.querySelectorAll('.bouton-onglet.verrouille').forEach(bouton => {
+                    bouton.classList.remove('verrouille');
+                    bouton.disabled = false;
+                });
+                console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
+            }
         });
 
         // Support pour impression PDF

@@ -2080,10 +2080,15 @@
                 // ============================================
         // MODE DÉVELOPPEMENT
         // ============================================
-        // Passer à true pour désactiver tous les blocages d'onglets
-        // pendant le développement/test des jeux bonus.
-        // Penser à remettre à false avant publication !
-        const MODE_DEVELOPPEMENT = true;
+        // ============================================
+        // MODE DÉVELOPPEMENT
+        // ============================================
+        // true la plupart du temps : tous les onglets sont déverrouillés pour
+        // tester librement les jeux bonus et la navigation.
+        // Pour tester comme un élève (progression verrouillée), ouvrir la page
+        // avec le paramètre ?dev=0 :   activite-reseau.html?dev=0
+        // Penser à repasser la valeur à false avant une vraie séance élève.
+        const MODE_DEVELOPPEMENT = !/[?&]dev=0/.test(location.search);
 
 let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
