@@ -20,7 +20,9 @@ index.html                          page d'accueil : les 21 pages, sommaire par 
     app-activite2-innovations.html
     app-activite3-biais-ia.html
 3e/ost2a/app-impact-numerique.html  OST 2a — l'impact du numérique
-3e/ost3/app-comparateur-ost.html    OST 3 — trottinette électrique et VAE
+3e/ost3/app-comparateur-ost.html    OST 3 — comparateur trottinette / VAE
+3e/ost3/activite-ost-ideal.html     OST 3 — la trottinette dans son environnement (jeu bonus)
+3e/ost3/jeu-trottinette.html        Bonus — « Le trajet du prof de techno »
 3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
 3e/tp-ia/                           TP d'apprentissage IA
     tp-ia.html
@@ -34,8 +36,10 @@ index.html                          page d'accueil : les 21 pages, sommaire par 
 4e/ost1/activite-securite-donnees.html            Séquence 1 — sécurité des données
 4e/ost2/activite-evolution-drones.html            Séquence 2 — les drones
 4e/ost3/activite-maison-connectee-eclairage.html  Séquence 3 — maison connectée
+4e/ost4/activite-chauffage-choix-tapo.html        Séquence 4 — choisir un chauffage (choix de l'OST)
 4e/ost4/activite-chauffage-domotique.html         Séquence 4 — chauffage domotique
 
+5e/sfc1/activite-reseau.html                      SFC 1 — exploiter le réseau informatique
 5e/ost2/activite-outils-numeriques.html           Séquence 2 — outils numériques
 5e/ost3/activite-evolution-ost.html               Séquence 3 — évolution des OST
 5e/ost4/activite-souris-interaction.html          Séquence 4 — la souris
@@ -97,7 +101,7 @@ git push
 
 ## Compatibilité téléphone
 
-Les **17 mini-apps** (15 activités + les 2 pages du TP) ont été auditées dans un navigateur en
+Les **18 mini-apps** (16 activités + les 2 pages du TP) ont été auditées dans un navigateur en
 émulation de téléphone, puis corrigées pour l'usage au doigt. La page de l'activité bonus
 (l'infographie de l'incident OpenAI / Hugging Face) est **hors de ce périmètre** : elle n'a
 pas d'interaction au doigt, seulement une image et deux liens, et sa page se contente

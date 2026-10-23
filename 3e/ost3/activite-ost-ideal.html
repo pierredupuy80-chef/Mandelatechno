@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Activité interactive de technologie - Cycle 4">
+    <title>Activité Interactive - Technologie Cycle 4</title>
+    <style>
+        /* ============================================
+           VARIABLES ET RESET RGAA/FALC
+           ============================================ */
+        :root {
+            --couleur-primaire: #2563eb;
+            --couleur-secondaire: #7c3aed;
+            --couleur-succes: #059669;
+            --couleur-alerte: #dc2626;
+            --couleur-info: #0891b2;
+            --couleur-fond: #f8fafc;
+            --couleur-texte: #1e293b;
+            --couleur-texte-leger: #64748b;
+            --espacement-xs: 0.25rem;
+            --espacement-sm: 0.5rem;
+            --espacement-md: 1rem;
+            --espacement-lg: 1.5rem;
+            --espacement-xl: 2rem;
+            --taille-police-base: 16px;
+            --taille-police-titre: 1.5rem;
+            --hauteur-cible-min: 44px;
+            --rayon-bordure: 8px;
+            --ombre-legere: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --ombre-moyenne: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: var(--taille-police-base);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--couleur-texte);
+            background-color: var(--couleur-fond);
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           ACCESSIBILITÉ RGAA
+           ============================================ */
+        
+        /* Focus visible pour navigation clavier */
+        *:focus {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        /* Skip link pour accessibilité clavier */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--couleur-primaire);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Contraste suffisant (WCAG AA) */
+        .texte-principal {
+            color: var(--couleur-texte);
+        }
+
+        .texte-secondaire {
+            color: var(--couleur-texte-leger);
+        }
+
+        /* ============================================
+           STRUCTURE PRINCIPALE
+           ============================================ */
+        
+        .conteneur-principal {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--espacement-md);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--couleur-primaire), var(--couleur-secondaire));
+            color: white;
+            padding: var(--espacement-xl);
+            border-radius: var(--rayon-bordure);
+            margin-bottom: var(--espacement-lg);
+            box-shadow: var(--ombre-moyenne);
+        }
+
+        header h1 {
+            font-size: clamp(1.25rem, 4vw, 2rem);
+            margin-bottom: var(--espacement-sm);
+            line-height: 1.3;
+        }
+
+        header .sous-titre {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* ============================================
+           NAVIGATION PAR ONGLETS
+           ============================================ */
+        
+        .navigation-onglets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-xs);
+            margin-bottom: var(--espacement-lg);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: var(--espacement-sm);
+        }
+
+        .bouton-onglet {
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-sm) var(--espacement-md);
+            border: 2px solid transparent;
+            border-radius: var(--rayon-bordure);
+            background-color: #e2e8f0;
+            color: var(--couleur-texte);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .bouton-onglet:hover {
+            background-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .bouton-onglet.actif {
+            background-color: var(--couleur-primaire);
+            color: white;
+            border-color: var(--couleur-primaire);
+        }
+
+        .bouton-onglet.verrouille {
+            opacity: 0.5;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .bouton-onglet.verrouille::after {
+            content: "🔒";
+            margin-left: var(--espacement-xs);
+        }
+
+        .bouton-onglet.valide {
+            background-color: var(--couleur-succes);
+            color: white;
+            border-color: var(--couleur-succes);
+        }
+
+        .bouton-onglet.valide::after {
+            content: "✓";
+            margin-left: var(--espacement-xs);
+        }
+
+        /* ============================================
+           CONTENU DES ONGLETS
+           ============================================ */
+        
+        .contenu-onglet {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .contenu-onglet.actif {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .carte-contenu {
+            background: white;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin-bottom: var(--espacement-lg);
+            box-shadow: var(--ombre-legere);
+            border: 1px solid #e2e8f0;
+        }
+
+        .carte-contenu h2 {
+            color: var(--couleur-primaire);
+            margin-bottom: var(--espacement-md);
+            font-size: 1.25rem;
+        }
+
+        .carte-contenu h3 {
+            color: var(--couleur-secondaire);
+            margin: var(--espacement-lg) 0 var(--espacement-md) 0;
+            font-size: 1.125rem;
+        }
+
+        /* ============================================
+           ÉLÉMENTS INTERACTIFS
+           ============================================ */
+        
+        .bouton-action {
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-md) var(--espacement-xl);
+            background-color: var(--couleur-primaire);
+            color: white;
+            border: none;
+            border-radius: var(--rayon-bordure);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--espacement-sm);
+            text-decoration: none;
+        }
+
+        .bouton-action:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: var(--ombre-moyenne);
+        }
+
+        .bouton-action:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .bouton-action.secondaire {
+            background-color: #e2e8f0;
+            color: var(--couleur-texte);
+        }
+
+        .bouton-action.secondaire:hover {
+            background-color: #cbd5e1;
+        }
+
+        .bouton-action.succes {
+            background-color: var(--couleur-succes);
+        }
+
+        .bouton-action.succes:hover {
+            background-color: #047857;
+        }
+
+        /* ============================================
+           QUIZ - NIVEAU N1 & N2
+           ============================================ */
+        
+        .question-quiz {
+            margin-bottom: var(--espacement-lg);
+            padding: var(--espacement-md);
+            background-color: #f1f5f9;
+            border-radius: var(--rayon-bordure);
+            border-left: 4px solid var(--couleur-primaire);
+        }
+
+        .question-quiz p {
+            font-weight: 600;
+            margin-bottom: var(--espacement-md);
+            font-size: 1rem;
+        }
+
+        .options-reponse {
+            display: flex;
+            flex-direction: column;
+            gap: var(--espacement-sm);
+        }
+
+        .option-reponse {
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-md);
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+        }
+
+        .option-reponse:hover {
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        /* La surbrillance est le SEUL signal de sélection (plus de bouton
+           radio). Elle associe un fond, une bordure ET un repère non
+           chromatique (coche), pour rester lisible sans percevoir les
+           couleurs (RGAA 3.1). */
+        .option-reponse.selectionnee {
+            border-color: var(--couleur-primaire);
+            background-color: #dbeafe;
+            box-shadow: inset 4px 0 0 var(--couleur-primaire);
+        }
+
+        .option-reponse.selectionnee::after {
+            content: "✓";
+            margin-left: auto;
+            font-weight: 700;
+            color: var(--couleur-primaire);
+        }
+
+        .option-reponse.correcte {
+            border-color: var(--couleur-succes);
+            background-color: #d1fae5;
+        }
+
+        .option-reponse.incorrecte {
+            border-color: var(--couleur-alerte);
+            background-color: #fee2e2;
+        }
+
+        /* Repère cohérent avec le verdict une fois les réponses vérifiées */
+        .option-reponse.selectionnee.correcte::after {
+            color: var(--couleur-succes);
+        }
+
+        .option-reponse.selectionnee.incorrecte::after {
+            content: "✗";
+            color: var(--couleur-alerte);
+        }
+
+        /* Focus clavier visible (les options sont focusables via tabindex) */
+        .option-reponse:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        .feedback-reponse {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-sm);
+            border-radius: var(--rayon-bordure);
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .feedback-reponse.visible {
+            display: block;
+        }
+
+        .feedback-reponse.correct {
+            background-color: #d1fae5;
+            color: var(--couleur-succes);
+        }
+
+        .feedback-reponse.incorrect {
+            background-color: #fee2e2;
+            color: var(--couleur-alerte);
+        }
+
+        /* Explication affichée systématiquement après vérification des réponses */
+        .feedback-reponse .explication {
+            display: block;
+            margin-top: var(--espacement-xs);
+            padding-top: var(--espacement-xs);
+            border-top: 1px solid currentColor;
+            color: var(--couleur-texte);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .feedback-reponse .explication strong {
+            color: var(--couleur-texte);
+        }
+
+        /* ============================================
+           CHAÎNE INTERACTIVE - NIVEAU N2
+           ============================================ */
+        
+        .chaine-interactive {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: var(--espacement-md);
+            padding: var(--espacement-lg);
+            background-color: #f8fafc;
+            border-radius: var(--rayon-bordure);
+            margin: var(--espacement-lg) 0;
+        }
+
+        .element-chaine {
+            min-width: 120px;
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-md);
+            background-color: white;
+            border: 2px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .element-chaine:hover {
+            background-color: var(--couleur-primaire);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .element-chaine.revele {
+            background-color: var(--couleur-secondaire);
+            color: white;
+            border-color: var(--couleur-secondaire);
+        }
+
+        .info-element {
+            display: none;
+            background-color: white;
+            border: 2px solid var(--couleur-secondaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            margin-top: var(--espacement-sm);
+            box-shadow: var(--ombre-moyenne);
+            font-size: 0.875rem;
+        }
+
+        /* Zone des descriptions : les explications des tuiles explorées y sont
+           affichées EN FLUX NORMAL, les unes sous les autres. Auparavant chaque
+           description s'affichait en position absolue sous sa tuile : sur
+           mobile (chaîne en colonne) elle recouvrait la tuile suivante, qui
+           devenait incliquable ; en large elle recouvrait la description
+           voisine. Aucun recouvrement n'est possible ici. */
+        .details-chaine {
+            display: flex;
+            flex-direction: column;
+            gap: var(--espacement-md);
+            margin: var(--espacement-md) 0 0 0;
+        }
+
+        .details-chaine:empty {
+            margin: 0;
+        }
+
+        .details-chaine .info-element {
+            display: block;
+            margin-top: 0;
+            border-left: 6px solid var(--couleur-secondaire);
+            box-shadow: var(--ombre-legere);
+        }
+
+        .details-chaine .titre-detail {
+            display: block;
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .fleuve-chaine {
+            font-size: 1.5rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        /* ============================================
+           ÉNIGMES - NIVEAU N3
+           ============================================ */
+        
+        .enigme-conteneur {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin: var(--espacement-lg) 0;
+        }
+
+        .enigme-conteneur h3 {
+            color: #92400e;
+            margin-bottom: var(--espacement-md);
+        }
+
+        .zone-exploration {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--espacement-md);
+            margin: var(--espacement-lg) 0;
+        }
+
+        .objet-explorable {
+            min-height: 100px;
+            padding: var(--espacement-md);
+            background-color: white;
+            border: 2px dashed #d1d5db;
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--espacement-sm);
+        }
+
+        .objet-explorable:hover {
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .objet-explorable.explore {
+            border-style: solid;
+            border-color: var(--couleur-succes);
+            background-color: #d1fae5;
+        }
+
+        .indice-decouvert {
+            display: none;
+            margin-top: var(--espacement-sm);
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+            font-style: italic;
+        }
+
+        .objet-explorable.explore .indice-decouvert {
+            display: block;
+        }
+
+        /* ============================================
+           PROBLÈME OUVERT - NIVEAU N4
+           ============================================ */
+        
+        .probleme-ouvert {
+            background-color: #ede9fe;
+            border: 2px solid var(--couleur-secondaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin: var(--espacement-lg) 0;
+        }
+
+        .probleme-ouvert h3 {
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-md);
+        }
+
+        .etape-conception {
+            margin-bottom: var(--espacement-lg);
+            padding: var(--espacement-md);
+            background-color: white;
+            border-radius: var(--rayon-bordure);
+            border-left: 4px solid var(--couleur-secondaire);
+        }
+
+        .etape-conception h4 {
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: var(--espacement-md);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--rayon-bordure);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--couleur-primaire);
+            outline: none;
+        }
+
+        .solution-personnelle {
+            background-color: #f0fdf4;
+            border: 2px solid var(--couleur-succes);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin-top: var(--espacement-lg);
+        }
+
+        /* ============================================
+           FICHES DE SYNTHÈSE - CONCLUSION
+           ============================================ */
+        
+        .fiche-synthese {
+            background-color: #ecfdf5;
+            border: 2px solid var(--couleur-succes);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin: var(--espacement-lg) 0;
+        }
+
+        .fiche-synthese h3 {
+            color: var(--couleur-succes);
+            margin-bottom: var(--espacement-md);
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+        }
+
+        .point-cle {
+            margin-bottom: var(--espacement-md);
+            padding: var(--espacement-md);
+            background-color: white;
+            border-radius: var(--rayon-bordure);
+            border-left: 4px solid var(--couleur-succes);
+        }
+
+        .point-cle strong {
+            color: var(--couleur-succes);
+        }
+
+        /* ============================================
+           ACTIVITÉ BONUS
+           ============================================ */
+        
+        .activite-bonus {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-xl);
+            text-align: center;
+            margin: var(--espacement-xl) 0;
+            display: none;
+        }
+
+        .activite-bonus.deverrouille {
+            display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .activite-bonus h3 {
+            color: white;
+            margin-bottom: var(--espacement-md);
+            font-size: 1.5rem;
+        }
+
+        /* ============================================
+           BARRE DE PROGRESSION
+           ============================================ */
+        
+        .barre-progression {
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            height: 8px;
+            margin: var(--espacement-lg) 0;
+            overflow: hidden;
+        }
+
+        .progression-actuelle {
+            background: linear-gradient(90deg, var(--couleur-primaire), var(--couleur-secondaire));
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .texte-progression {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+            margin-top: var(--espacement-xs);
+        }
+
+        /* ============================================
+           RESPONSIVE MOBILE
+           ============================================ */
+        
+        @media (max-width: 768px) {
+            .conteneur-principal {
+                padding: var(--espacement-sm);
+            }
+
+            header {
+                padding: var(--espacement-md);
+            }
+
+            .navigation-onglets {
+                flex-direction: column;
+            }
+
+            .bouton-onglet {
+                min-width: 100%;
+                text-align: left;
+                justify-content: flex-start;
+            }
+
+            .chaine-interactive {
+                flex-direction: column;
+            }
+
+            .fleuve-chaine {
+                transform: rotate(90deg);
+            }
+
+            .zone-exploration {
+                grid-template-columns: 1fr;
+            }
+
+            .carte-contenu {
+                padding: var(--espacement-md);
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+
+            .conteneur-principal {
+                padding: var(--espacement-xs);
+            }
+
+            header h1 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* ============================================
+           IMPRESSION
+           ============================================ */
+        
+        @media print {
+            .navigation-onglets,
+            .bouton-action,
+            .skip-link {
+                display: none !important;
+            }
+
+            .contenu-onglet {
+                display: block !important;
+                page-break-inside: avoid;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .carte-contenu {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+
+        /* ============================================
+           UTILITAIRES
+           ============================================ */
+        
+        .cache {
+            display: none !important;
+        }
+
+        .visible {
+            display: block !important;
+        }
+
+        .centre {
+            text-align: center;
+        }
+
+        .marge-haut {
+            margin-top: var(--espacement-lg);
+        }
+
+        .marge-bas {
+            margin-bottom: var(--espacement-lg);
+        }
+
+        /* Réduction de mouvement pour accessibilité */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+    <!-- Skip link pour accessibilité -->
+    <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
+
+    <div class="conteneur-principal">
+        <!-- En-tête -->
+        <header role="banner">
+            <h1 id="titre-activite">La trottinette électrique dans son environnement</h1>
+            <p class="sous-titre" id="sous-titre-activite">Séquence 3 — L'OST idéal : trottinette électrique et VAE (3e · OST2-OST3)</p>
+        </header>
+
+        <!-- Barre de progression -->
+        <nav aria-label="Progression de l'activité">
+            <div class="barre-progression" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progression-actuelle" id="barre-progression"></div>
+            </div>
+            <p class="texte-progression" id="texte-progression">Progression : 0%</p>
+        </nav>
+
+        <!-- Navigation par onglets -->
+        <nav aria-label="Navigation des niveaux" class="navigation-onglets" role="tablist">
+            <button class="bouton-onglet actif" data-niveau="n1-intro" role="tab" aria-selected="true" aria-controls="contenu-n1-intro" tabindex="0">
+                N1 - Introduction
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="n1-quiz" role="tab" aria-selected="false" aria-controls="contenu-n1-quiz" tabindex="-1" disabled>
+                N1 - Quiz
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="n2-intro" role="tab" aria-selected="false" aria-controls="contenu-n2-intro" tabindex="-1" disabled>
+                N2 - Découverte
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="n2-quiz" role="tab" aria-selected="false" aria-controls="contenu-n2-quiz" tabindex="-1" disabled>
+                N2 - Quiz
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="n3-enigme" role="tab" aria-selected="false" aria-controls="contenu-n3-enigme" tabindex="-1" disabled>
+                N3 - Énigme
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="n4-probleme" role="tab" aria-selected="false" aria-controls="contenu-n4-probleme" tabindex="-1" disabled>
+                N4 - Problème
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="synthese" role="tab" aria-selected="false" aria-controls="contenu-synthese" tabindex="-1" disabled>
+                Synthèse
+            </button>
+            <button class="bouton-onglet verrouille" data-niveau="bonus" role="tab" aria-selected="false" aria-controls="contenu-bonus" tabindex="-1" disabled>
+                Bonus 🎮
+            </button>
+        </nav>
+
+        <!-- Contenu principal -->
+        <main id="contenu-principal" role="main">
+            
+            <!-- N1 - Introduction avec vidéos -->
+            <section id="contenu-n1-intro" class="contenu-onglet actif" role="tabpanel" aria-labelledby="onglet-n1-intro">
+                <div class="carte-contenu">
+                    <h2>Niveau 1 : Comprendre les bases</h2>
+                    <p>Commencez par observer ces vidéos pour comprendre les concepts fondamentaux.</p>
+                    
+                    <h3>Vidéos à regarder</h3>
+                    <div class="ressources-video">
+                        <article class="carte-video">
+                            <h4>Vidéo 1 : Les interacteurs extérieurs (OST2a)</h4>
+                            <iframe 
+                                src="https://podeduc.apps.education.fr/video/113224-ost2a-les-interacteurs-exterieurs-usagers-donnees-autres-objets-elements-de-lenvironnement/?is_iframe=true" 
+                                title="Vidéo pédagogique 1 : Les interacteurs extérieurs (OST2a)"
+                                width="100%" 
+                                height="315" 
+                                frameborder="0" 
+                                allowfullscreen
+                                loading="lazy">
+                            </iframe>
+                            <p class="texte-secondaire marge-haut">Durée estimée : 2 min 33</p>
+                            <p class="texte-secondaire">Usagers, données, autres objets, éléments de l'environnement : les quatre catégories d'interacteurs d'un objet technique.</p>
+                        </article>
+
+                        <article class="carte-video marge-haut">
+                            <h4>Vidéo 2 : Les critères de choix d'un OST (OST3e)</h4>
+                            <iframe 
+                                src="https://podeduc.apps.education.fr/video/113190-ost3e-les-criteres-de-choix-la-qualite-lefficacite-energetique-la-durabilite-la-recyclabilite/?is_iframe=true" 
+                                title="Vidéo pédagogique 2 : Les critères de choix d'un OST (OST3e)"
+                                width="100%" 
+                                height="315" 
+                                frameborder="0" 
+                                allowfullscreen
+                                loading="lazy">
+                            </iframe>
+                            <p class="texte-secondaire marge-haut">Durée estimée : 4 min 36</p>
+                            <p class="texte-secondaire">Qualité, efficacité énergétique, durabilité, recyclabilité : les critères qui permettent de comparer plusieurs objets techniques.</p>
+                        </article>
+                    </div>
+
+                    <div class="info-block marge-haut">
+                        <p><strong>Consigne :</strong> Regardez attentivement les vidéos ci-dessus. Prenez des notes si nécessaire. Lorsque vous vous sentez prêt, passez à l'onglet suivant pour tester vos connaissances.</p>
+                    </div>
+
+                    <button class="bouton-action marge-haut" onclick="passerOngletSuivant('n1-intro')">
+                        J'ai regardé les vidéos →
+                    </button>
+                </div>
+            </section>
+
+            <!-- N1 - Quiz -->
+            <section id="contenu-n1-quiz" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n1-quiz">
+                <div class="carte-contenu">
+                    <h2>Niveau 1 : Vérification des connaissances</h2>
+                    <p>Répondez aux questions suivantes pour valider ce niveau. Vous devez obtenir toutes les bonnes réponses pour continuer.</p>
+
+                    <form id="quiz-n1" class="quiz-conteneur">
+
+                        <div class="question-quiz" data-question="1" data-explication="Un interacteur est un élément humain, matériel ou environnemental situé hors du système, qui agit sur l'OST ou échange avec lui (le conducteur, la route, la pluie, un smartphone).">
+                            <p>1. Qu'est-ce qu'un interacteur extérieur d'un objet technique ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Une pièce située à l'intérieur du système, comme le moteur</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Un élément extérieur qui agit sur le système ou échange avec lui de la matière, de l'énergie ou des informations</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Un outil utilisé uniquement pour réparer l'objet</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="2" data-explication="La météo est un élément de l'environnement qui influence l'utilisation de la trottinette. Le moteur et le chargeur sont des constituants internes du système, donc pas des interacteurs.">
+                            <p>2. Parmi ces éléments, lequel est un interacteur extérieur de la trottinette électrique ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Le moteur électrique</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Le chargeur de batterie intégré au châssis</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>La météo (la pluie, la température)</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="3" data-explication="Le programme distingue quatre familles d'interacteurs : les usagers, les données, les autres objets techniques (mobilier urbain, smartphone) et les éléments de l'environnement (météo, route).">
+                            <p>3. Quelles sont les quatre catégories d'interacteurs extérieurs d'un OST ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Usagers, données, autres objets, éléments de l'environnement</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Métal, plastique, verre, bois</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Acheter, utiliser, casser, jeter</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="4" data-explication="Pour comparer des OST, le programme retient la qualité, l'efficacité énergétique, la durabilité et la recyclabilité, complétées par le coût et l'indice de réparabilité.">
+                            <p>4. Quels sont les critères de choix d'un OST cités dans le programme ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>La couleur et le nombre de vitesses</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>La qualité, l'efficacité énergétique, la durabilité et la recyclabilité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>La marque et le pays de fabrication uniquement</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="5" data-explication="Un choix raisonné consiste à comparer plusieurs OST possibles selon des critères précis (coût, autonomie, réparabilité, impact environnemental) afin de retenir la solution la plus adaptée au besoin exprimé.">
+                            <p>5. Qu'est-ce qu'un choix raisonné d'un objet technique ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Choisir l'objet le plus cher pour être sûr de la qualité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Comparer plusieurs solutions selon plusieurs critères pour retenir la plus adaptée au besoin</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Acheter le premier modèle trouvé sur Internet</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <button type="button" class="bouton-action" onclick="validerQuiz('n1')">
+                            Valider mes réponses
+                        </button>
+                        
+                        <div id="resultat-quiz-n1" class="marge-haut" style="display: none;">
+                            <p id="message-resultat-n1"></p>
+                            <button type="button" class="bouton-action succes cache" id="bouton-suite-n1" onclick="debloquerNiveauSuivant('n1')">
+                                Continuer vers N2 →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- N2 - Découverte interactive -->
+            <section id="contenu-n2-intro" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-intro">
+                <div class="carte-contenu">
+                    <h2>Niveau 2 : Explorer en détail</h2>
+                    <p>Cliquez sur chaque élément de la chaîne ci-dessous pour découvrir son rôle et ses caractéristiques.</p>
+
+                    <h3>Chaîne de fonctionnement</h3>
+                    <div class="chaine-interactive" role="list" aria-label="Chaîne d'éléments interactifs">
+
+                        <div class="element-chaine" role="listitem" tabindex="0" 
+                             aria-label="Acquérir : Cliquer pour plus d'informations" 
+                             onclick="revelerElement(this)">
+                            Acquérir
+                            <div class="info-element">
+                                <strong>Description détaillée :</strong>
+                                <p>Les capteurs relèvent des grandeurs physiques de l'environnement et de l'OST : vitesse, niveau de batterie, position GPS, état de la chaussée. C'est l'interface avec les interacteurs extérieurs (environnement, usager).</p>
+                            </div>
+                        </div>
+                        <span class="fleuve-chaine" aria-hidden="true">→</span>
+
+                        <div class="element-chaine" role="listitem" tabindex="0" 
+                             aria-label="Traiter : Cliquer pour plus d'informations" 
+                             onclick="revelerElement(this)">
+                            Traiter
+                            <div class="info-element">
+                                <strong>Description détaillée :</strong>
+                                <p>Le calculateur (contrôleur électronique) analyse les données des capteurs, les compare aux consignes et prend des décisions : adapter l'assistance du moteur, alerter l'utilisateur d'un danger.</p>
+                            </div>
+                        </div>
+                        <span class="fleuve-chaine" aria-hidden="true">→</span>
+
+                        <div class="element-chaine" role="listitem" tabindex="0" 
+                             aria-label="Communiquer : Cliquer pour plus d'informations" 
+                             onclick="revelerElement(this)">
+                            Communiquer
+                            <div class="info-element">
+                                <strong>Description détaillée :</strong>
+                                <p>L'application mobile sur le smartphone affiche les informations à l'usager : autonomie restante, vitesse, position GPS, alertes de sécurité (chaussée glissante). L'OST échange des données avec l'usager.</p>
+                            </div>
+                        </div>
+                        <span class="fleuve-chaine" aria-hidden="true">→</span>
+
+                        <div class="element-chaine" role="listitem" tabindex="0" 
+                             aria-label="Agir : Cliquer pour plus d'informations" 
+                             onclick="revelerElement(this)">
+                            Agir
+                            <div class="info-element">
+                                <strong>Description détaillée :</strong>
+                                <p>Le moteur électrique fournit la propulsion et adapte l'assistance selon les ordres du contrôleur. C'est l'action de l'OST sur son environnement : déplacer l'usager d'un point à un autre.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-chaine" id="details-chaine"
+                         aria-label="Descriptions des éléments explorés"></div>
+
+                    <style>
+.bloc-animation{background:#f7f9fc;border:1px solid #dce3ed;border-radius:12px;padding:1rem 1.1rem;margin-top:1.5rem}
+.bloc-animation h3{margin-top:0}
+.chaine-fonctionnement{display:flex;flex-wrap:wrap;align-items:stretch;gap:.35rem;margin:1rem 0}
+.cf-etape{flex:1 1 120px;min-width:108px;background:#fff;border:2px solid #dce3ed;border-radius:10px;padding:.7rem .5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.25rem;transition:transform .3s,box-shadow .3s,border-color .3s}
+.cf-etape .cf-icone{font-size:1.7rem;line-height:1}
+.cf-etape strong{font-size:.92rem}
+.cf-etape em{font-size:.74rem;color:#3a6ea5;font-style:normal;background:#eaf1f8;padding:.1rem .45rem;border-radius:6px}
+.cf-fleche{display:flex;align-items:center;font-size:1.4rem;color:#3a6ea5;font-weight:bold}
+.cf-etape.actif{border-color:#2e7d32;background:#e8f5e9;transform:translateY(-3px);box-shadow:0 4px 12px rgba(46,125,50,.25)}
+.cf-etape.actif .cf-icone{transform:scale(1.15)}
+.legende-animation{min-height:1.5rem;font-weight:600;color:#2e7d32;margin-top:.5rem}
+.interactions-widget{display:flex;flex-wrap:wrap;gap:1rem;align-items:stretch;margin:1rem 0}
+.inter-colonne{flex:1 1 190px;min-width:170px}
+.inter-colonne h4{margin:0 0 .5rem;font-size:.95rem;color:#3a6ea5}
+.inter-choix{display:flex;flex-direction:column;gap:.4rem}
+.inter-bouton{text-align:left;background:#fff;border:2px solid #dce3ed;border-radius:8px;padding:.5rem .7rem;cursor:pointer;font-size:.9rem;transition:border-color .2s,background .2s;min-height:44px}
+.inter-bouton:hover{border-color:#3a6ea5}
+.inter-bouton.selectionne{border-color:#2e74b5;background:#eaf1f8;font-weight:600}
+.inter-icone{font-size:1.1rem}
+.inter-fleche{display:flex;align-items:center;font-size:1.8rem;color:#3a6ea5}
+.interactions-resultat{min-height:2rem;padding:.6rem .8rem;border-radius:8px;background:#fff;border:1px solid #dce3ed;margin-top:.5rem}
+.interactions-resultat.info-block{background:#eaf1f8;border-color:#2e74b5}
+@media(max-width:480px){.cf-fleche{transform:rotate(90deg);font-size:1.1rem}}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+</style>
+
+                                        <div class="bloc-animation marge-haut">
+                        <h3>🔁 La chaîne de fonctionnement du vélo à assistance électrique</h3>
+                        <p class="texte-secondaire">Cliquez sur « Démarrer l'animation » pour suivre le parcours de l'énergie, de la batterie jusqu'à la roue.</p>
+                        <div class="chaine-fonctionnement" id="chaine-fonctionnement">
+                            <div class="cf-etape" data-etape="1" data-desc="Stocke l'énergie électrique et alimente tout le système."><span class="cf-icone">🔋</span><strong>Batterie</strong><em>Alimenter</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="2" data-desc="Répartit et règle l'énergie envoyée au moteur selon le pédalage et la vitesse."><span class="cf-icone">⚡</span><strong>Contrôleur</strong><em>Distribuer</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="3" data-desc="Convertit l'énergie électrique en énergie mécanique (rotation de l'axe)."><span class="cf-icone">⚙️</span><strong>Moteur électrique</strong><em>Convertir</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="4" data-desc="Transmet le mouvement du moteur à la roue par la chaîne et les pignons."><span class="cf-icone">🔗</span><strong>Transmission</strong><em>Transmettre</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="5" data-desc="La roue propulse le vélo : l'énergie mécanique devient le déplacement de l'usager."><span class="cf-icone">🛞</span><strong>Roue</strong><em>Agir</em></div>
+                        </div>
+                        <button type="button" class="bouton-action" onclick="demarrerChaineFonctionnement(this)">▶ Démarrer l'animation</button>
+                        <p class="legende-animation" id="legende-cf" role="status" aria-live="polite"></p>
+                    </div>
+
+                                        <div class="bloc-animation marge-haut">
+                        <h3>🌐 Interactions entre un interacteur et la chaîne de fonctionnement</h3>
+                        <p class="texte-secondaire">Choisissez un interacteur extérieur, puis un élément de la chaîne : découvrez comment l'environnement et l'usage influencent le fonctionnement.</p>
+                        <div class="interactions-widget">
+                            <div class="inter-colonne">
+                                <h4>Interacteur extérieur</h4>
+                                <div class="inter-choix" id="inter-interacteurs" role="group" aria-label="Interacteurs">
+                                    <button type="button" class="inter-bouton" data-interacteur="Froid" onclick="choisirInteracteur(this)"><span class="inter-icone">🥶</span> Froid</button><button type="button" class="inter-bouton" data-interacteur="Pluie" onclick="choisirInteracteur(this)"><span class="inter-icone">🌧️</span> Pluie</button><button type="button" class="inter-bouton" data-interacteur="Chaleur" onclick="choisirInteracteur(this)"><span class="inter-icone">🔥</span> Chaleur</button><button type="button" class="inter-bouton" data-interacteur="Usager" onclick="choisirInteracteur(this)"><span class="inter-icone">🧑</span> Usager</button><button type="button" class="inter-bouton" data-interacteur="Route" onclick="choisirInteracteur(this)"><span class="inter-icone">🛣️</span> Route</button>
+                                </div>
+                            </div>
+                            <div class="inter-fleche" aria-hidden="true">↔</div>
+                            <div class="inter-colonne">
+                                <h4>Élément de la chaîne</h4>
+                                <div class="inter-choix" id="inter-elements" role="group" aria-label="Éléments de la chaîne">
+                                    <button type="button" class="inter-bouton" data-element="Batterie" onclick="choisirElement(this)"><span class="inter-icone">🔋</span> Batterie</button><button type="button" class="inter-bouton" data-element="Moteur" onclick="choisirElement(this)"><span class="inter-icone">⚙️</span> Moteur</button><button type="button" class="inter-bouton" data-element="Cadre et matériaux" onclick="choisirElement(this)"><span class="inter-icone">🛠️</span> Cadre et matériaux</button><button type="button" class="inter-bouton" data-element="Transmission" onclick="choisirElement(this)"><span class="inter-icone">🔗</span> Transmission</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="interactions-resultat" id="inter-resultat" role="status" aria-live="polite">Sélectionnez un interacteur puis un élément pour afficher leur interaction.</div>
+                    </div>
+
+                    <script>
+function demarrerChaineFonctionnement(btn){
+  var c=document.getElementById("chaine-fonctionnement");if(!c)return;
+  var etapes=c.querySelectorAll(".cf-etape");var legende=document.getElementById("legende-cf");
+  if(!etapes.length)return;
+  for(var i=0;i<etapes.length;i++)etapes[i].classList.remove("actif");
+  if(btn)btn.disabled=true;var k=0;
+  var t=setInterval(function(){
+    if(k>0)etapes[k-1].classList.remove("actif");
+    if(k>=etapes.length){clearInterval(t);if(legende)legende.textContent="\u2705 L'énergie électrique est convertie en mouvement : le vélo avance.";if(btn)btn.disabled=false;return;}
+    etapes[k].classList.add("actif");
+    if(legende){var s=etapes[k].querySelector("strong");var nom=s?s.textContent:"";var desc=etapes[k].getAttribute("data-desc")||"";legende.textContent=(k+1)+"/"+etapes.length+" \u2014 "+nom+" : "+desc;}
+    k++;
+  },1100);
+}
+var __interSel={interacteur:null,element:null};
+function choisirInteracteur(btn){
+  var l=btn.parentNode.querySelectorAll(".inter-bouton");for(var i=0;i<l.length;i++)l[i].classList.remove("selectionne");
+  btn.classList.add("selectionne");__interSel.interacteur=btn.getAttribute("data-interacteur");__afficherInteraction();
+}
+function choisirElement(btn){
+  var l=btn.parentNode.querySelectorAll(".inter-bouton");for(var i=0;i<l.length;i++)l[i].classList.remove("selectionne");
+  btn.classList.add("selectionne");__interSel.element=btn.getAttribute("data-element");__afficherInteraction();
+}
+function __afficherInteraction(){
+  if(!__interSel.interacteur||!__interSel.element)return;
+  var r=document.getElementById("inter-resultat");if(!r)return;
+  var cle=__interSel.interacteur+"|"+__interSel.element;
+  var effets=window.__EFFETS_INTERACTIONS__||{};var e=effets[cle];
+  if(e){r.innerHTML="<strong>"+__interSel.interacteur+" \u2192 "+__interSel.element+" :</strong> "+e;r.className="interactions-resultat info-block";}
+  else{r.innerHTML="<strong>"+__interSel.interacteur+" \u2194 "+__interSel.element+" :</strong> pas d'interaction directe majeure entre ces deux.";r.className="interactions-resultat info-block";}
+}
+window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairement la performance de la batterie lithium-ion : l'autonomie diminue.", "Froid|Moteur": "Le froid augmente la résistance mécanique et l'usure des roulements du moteur.", "Froid|Cadre et matériaux": "Le froid rend certains matériaux plus cassants (fragilité accrue des plastiques et des soudures).", "Pluie|Cadre et matériaux": "La pluie accélère la corrosion et l'oxydation des pièces métalliques (apparition de rouille).", "Pluie|Transmission": "L'eau et les projections de boue usent la chaîne et les pignons plus vite.", "Pluie|Moteur": "L'humidité peut s'infiltrer et oxyder ou court-circuiter les composants électriques du moteur.", "Chaleur|Batterie": "La chaleur accélère le vieillissement de la batterie et réduit sa durée de vie.", "Chaleur|Moteur": "La chaleur oblige le moteur à davantage solliciter le refroidissement et augmente l'usure.", "Usager|Moteur": "L'usager règle le niveau d'assistance : il commande la puissance délivrée par le moteur.", "Usager|Transmission": "L'usager pédale : son effort complète celui du moteur via la transmission.", "Route|Moteur": "Une route en pente ou dégradée sollicite davantage le moteur : la consommation augmente.", "Route|Cadre et matériaux": "Les chocs et les vibrations de la route fatiguent le cadre et les soudures.", "Route|Transmission": "Une route humide ou sale encrasse la transmission et accélère son usure."};
+</script>
+
+                    <div class="info-block marge-haut">
+                        <p><strong>Consigne :</strong> Explorez tous les éléments en cliquant dessus. Une fois que vous avez découvert toutes les informations, passez au quiz pour valider ce niveau.</p>
+                    </div>
+
+                    <button class="bouton-action marge-haut" onclick="passerOngletSuivant('n2-intro')" id="bouton-suite-n2-intro" disabled>
+                        J'ai tout exploré →
+                    </button>
+                </div>
+            </section>
+
+            <!-- N2 - Quiz -->
+            <section id="contenu-n2-quiz" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-quiz">
+                <div class="carte-contenu">
+                    <h2>Niveau 2 : Maîtriser les détails</h2>
+                    <p>Testez votre compréhension approfondie du système.</p>
+
+                    <form id="quiz-n2" class="quiz-conteneur">
+
+                        <div class="question-quiz" data-question="1" data-explication="La chaîne d'information suit le flux : mesure par les capteurs (Acquérir), analyse par le calculateur (Traiter), affichage à l'usager (Communiquer), puis action du moteur (Agir).">
+                            <p>1. Dans quel ordre les éléments de la chaîne d'information fonctionnent-ils ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Agir → Acquérir → Traiter → Communiquer</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Acquérir → Traiter → Communiquer → Agir</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Communiquer → Agir → Traiter → Acquérir</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="2" data-explication="L'étape Communiquer présente les données traitées à l'usager : l'application affiche l'autonomie, la vitesse et les alertes. Les capteurs mesurent, le moteur agit.">
+                            <p>2. Quel élément de la chaîne transforme les données en informations lisibles par l'usager ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Acquérir (les capteurs)</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Communiquer (l'application smartphone)</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Agir (le moteur)</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="3" data-explication="Sans mesure du niveau de batterie, l'étape Acquérir est défaillante : le calculateur et l'application ne peuvent plus informer l'usager de l'autonomie restante, ce qui rend le trajet risqué.">
+                            <p>3. Que se passe-t-il si le capteur de niveau de batterie tombe en panne ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>La trottinette roule plus vite</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Le système ne peut plus afficher l'autonomie réelle à l'usager</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Le moteur s'arrête immédiatement</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="4" data-explication="Le cycle de vie commence par l'extraction des matières premières, puis la fabrication, le transport, l'utilisation et enfin la fin de vie ou le recyclage. Chaque étape a un impact environnemental.">
+                            <p>4. Quel est l'ordre correct des étapes du cycle de vie d'un OST ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Utilisation → Fabrication → Fin de vie → Extraction des matières → Transport</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Extraction des matières premières → Fabrication → Transport → Utilisation → Fin de vie / recyclage</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Fabrication → Utilisation → Extraction → Transport → Recyclage</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-question="5" data-explication="Se focaliser sur un seul critère (ex. l'autonomie) biaise le choix : un OST peut être performant sur un point mais mauvais sur la réparabilité, le coût ou l'impact environnemental. C'est une analyse multicritère qui éclaire la décision.">
+                            <p>5. Pourquoi un seul critère ne suffit-il pas pour choisir un OST ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a">
+                                    <span>Parce qu'un seul critère est toujours suffisant</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b">
+                                    <span>Parce qu'un modèle peut avoir la meilleure autonomie mais un mauvais indice de réparabilité ou un coût élevé</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c">
+                                    <span>Parce qu'il faut toujours choisir le modèle le moins cher</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <button type="button" class="bouton-action" onclick="validerQuiz('n2')">
+                            Valider mes réponses
+                        </button>
+                        
+                        <div id="resultat-quiz-n2" class="marge-haut" style="display: none;">
+                            <p id="message-resultat-n2"></p>
+                            <button type="button" class="bouton-action succes cache" id="bouton-suite-n2" onclick="debloquerNiveauSuivant('n2')">
+                                Continuer vers N3 →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- N3 - Énigme interactive -->
+            <section id="contenu-n3-enigme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n3-enigme">
+                <div class="carte-contenu">
+                    <h2>Niveau 3 : Résoudre l'énigme</h2>
+                    <p>Explorez les objets ci-dessous pour trouver les indices qui vous permettront de résoudre l'énigme.</p>
+
+                    <div class="enigme-conteneur">
+                        <h3>🔍 L'énigme du système</h3>
+                        <p><strong>Mission :</strong> Un élève utilise chaque jour sa trottinette électrique pour se rendre au collège. Ce matin, sous une pluie importante, il remarque que l'autonomie diminue plus vite que d'habitude et son smartphone affiche une alerte « chaussée glissante ». Il se demande pourquoi sa trottinette ne fonctionne pas de la même façon selon les conditions. Explorez les quatre éléments ci-dessous, puis rédigez votre diagnostic : quel interacteur extérieur influence le fonctionnement de l'OST ?</p>
+                    </div>
+
+                    <h3>Zone d'exploration</h3>
+                    <p>Cliquez sur chaque objet pour découvrir des indices :</p>
+                    
+                    <div class="zone-exploration">
+
+                        <div class="objet-explorable" tabindex="0" onclick="explorerObjet(this)" 
+                             aria-label="Batterie lithium-ion : Cliquer pour explorer">
+                            <span>🔋</span>
+                            <strong>Batterie lithium-ion</strong>
+                            <div class="indice-decouvert">
+                                Indice : La batterie est en bon état, chargée à 100 % ce matin. Sa capacité n'a pas diminué depuis hier : elle n'est pas la cause de la baisse d'autonomie.
+                            </div>
+                        </div>
+
+                        <div class="objet-explorable" tabindex="0" onclick="explorerObjet(this)" 
+                             aria-label="Moteur et contrôleur : Cliquer pour explorer">
+                            <span>⚙️</span>
+                            <strong>Moteur et contrôleur</strong>
+                            <div class="indice-decouvert">
+                                Indice : Le contrôleur sollicite davantage le moteur pour conserver la vitesse sur une chaussée humide et glissante, ce qui augmente la consommation. Mais ce n'est qu'une conséquence : cherchez ce qui a changé dans l'environnement.
+                            </div>
+                        </div>
+
+                        <div class="objet-explorable" tabindex="0" onclick="explorerObjet(this)" 
+                             aria-label="Application smartphone : Cliquer pour explorer">
+                            <span>📱</span>
+                            <strong>Application smartphone</strong>
+                            <div class="indice-decouvert">
+                                Indice : L'application affiche correctement l'autonomie restante et l'alerte « chaussée glissante ». Les données sont exactes : l'application n'est que le messager, pas la cause.
+                            </div>
+                        </div>
+
+                        <div class="objet-explorable" tabindex="0" onclick="explorerObjet(this)" 
+                             aria-label="Environnement (météo) : Cliquer pour explorer">
+                            <span>🌧️</span>
+                            <strong>Environnement (météo)</strong>
+                            <div class="indice-decouvert">
+                                Indice : LA CAUSE : la pluie et le froid du matin sont des interacteurs extérieurs de la trottinette. Le froid dégrade temporairement la performance de la batterie, et la chaussée humide augmente la résistance et la consommation du moteur. L'environnement influence donc directement l'autonomie.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="solution-enigme marge-haut">
+                        <h3>Votre diagnostic</h3>
+                        <p>Après avoir exploré tous les composants, formulez votre diagnostic :</p>
+                        
+                        <textarea 
+                            id="diagnostic-eleve" 
+                            placeholder="Rédigez votre diagnostic : quel interacteur extérieur influence l'autonomie de la trottinette, et pourquoi ?"
+                            aria-label="Votre diagnostic du problème"></textarea>
+                        
+                        <button class="bouton-action marge-haut" onclick="soumettreDiagnostic()">
+                            Soumettre mon diagnostic
+                        </button>
+
+                        <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
+                            <div class="info-block">
+                                <p><strong>Bien joué !</strong> L'interacteur extérieur en cause est l'environnement, c'est-à-dire la météo (pluie et froid). Le froid dégrade temporairement la performance de la batterie lithium-ion, et la chaussée humide augmente la résistance de roulement, donc la consommation du moteur. La trottinette fonctionne donc différemment selon les conditions météorologiques : c'est bien l'influence d'un interacteur extérieur (l'environnement) sur le fonctionnement de l'OST.</p>
+                            </div>
+                            <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
+                                Continuer vers N4 →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- N4 - Problème ouvert -->
+            <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
+                <div class="carte-contenu">
+                    <h2>Niveau 4 : Concevoir votre solution</h2>
+                    <p>Il n'y a pas de bonne ou mauvaise réponse. L'important est de réfléchir, d'exprimer vos besoins et de concevoir une solution qui vous est propre.</p>
+
+                    <div class="probleme-ouvert">
+                        <h3>🎯 Le défi</h3>
+                        <p><strong>Situation :</strong> Une municipalité souhaite mettre à disposition des vélos à assistance électrique (VAE) en libre-service pour les habitants. Quatre modèles ont été présélectionnés, mais ils n'ont pas les mêmes caractéristiques : autonomie, coût, indice de réparabilité, vitesse, consommation d'énergie et impacts environnementaux. Concevez une recommandation argumentée pour aider la municipalité à choisir le modèle le plus adapté, en respectant un budget limité et les principes du développement durable.</p>
+                    </div>
+
+                    <h3>Étapes de conception</h3>
+                    
+                    <div class="etape-conception">
+                        <h4>Étape 1 : Identifier le besoin</h4>
+                        <p>Qui sont les utilisateurs ? Quels trajets doivent-ils réaliser (distance, relief) ? Quel besoin la municipalité cherche-t-elle à satisfaire en mettant des VAE en libre-service ?</p>
+                        <textarea 
+                            id="besoin-identifie" 
+                            placeholder="Décrivez le besoin : usagers, trajets, distance domicile-travail…"
+                            aria-label="Description du besoin identifié"></textarea>
+                    </div>
+
+                    <div class="etape-conception">
+                        <h4>Étape 2 : Exprimer les contraintes</h4>
+                        <p>Listez les contraintes à respecter : budget maximal, réglementation (VAE limité à 25 km/h et 250 W), impact environnemental, indice de réparabilité, autonomie minimale pour les trajets envisagés.</p>
+                        <textarea 
+                            id="contraintes-definies" 
+                            placeholder="Listez les contraintes techniques, économiques et environnementales…"
+                            aria-label="Contraintes du projet"></textarea>
+                    </div>
+
+                    <div class="etape-conception">
+                        <h4>Étape 3 : Imaginer des solutions</h4>
+                        <p>Proposez au moins deux approches pour comparer objectivement les modèles : une analyse multicritère pondérée (notes /5) et un protocole d'essai en conditions identiques. Listez les critères que vous retiendrez.</p>
+                        <textarea 
+                            id="solutions-imaginees" 
+                            placeholder="Décrivez vos méthodes de comparaison et les critères retenus…"
+                            aria-label="Solutions imaginées"></textarea>
+                    </div>
+
+                    <div class="etape-conception">
+                        <h4>Étape 4 : Choisir et justifier</h4>
+                        <p>Quel modèle retenez-vous ? Comparez les avantages et les inconvénients des modèles. Justifiez votre choix avec au moins deux données chiffrées (autonomie, indice de réparabilité, coût, impact CO₂).</p>
+                        <textarea 
+                            id="solution-choisie" 
+                            placeholder="Nommez le modèle retenu et justifiez avec des valeurs chiffrées…"
+                            aria-label="Solution choisie et justification"></textarea>
+                    </div>
+
+                    <div class="etape-conception">
+                        <h4>Étape 5 : Schématiser la solution</h4>
+                        <p>Décrivez le protocole de comparaison (parcours choisi, distance, conditions météorologiques, charge de départ, informations à relever) puis présentez votre recommandation finale à la municipalité.</p>
+                        <textarea 
+                            id="schema-solution" 
+                            placeholder="Décrivez le protocole d'essai et votre recommandation finale…"
+                            aria-label="Description technique de la solution"></textarea>
+                    </div>
+
+                    <button class="bouton-action marge-haut" onclick="finaliserConception()">
+                        Finaliser ma conception
+                    </button>
+
+                    <div id="confirmation-conception" class="marge-haut" style="display: none;">
+                        <div class="solution-personnelle">
+                            <h3>✨ Félicitations !</h3>
+                            <p>Vous avez complété tous les niveaux de l'activité. Votre démarche de conception est personnelle et réfléchie. C'est exactement ce qu'on attend d'un esprit ingénieur !</p>
+                            <p>Maintenant, consultez la synthèse de l'activité pour consolider vos apprentissages.</p>
+                        </div>
+                        <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n4')">
+                            Voir la synthèse →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Synthèse - Fiches de cours -->
+            <section id="contenu-synthese" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-synthese">
+                <div class="carte-contenu">
+                    <h2>📚 Synthèse de l'activité</h2>
+                    <p>Voici les points clés à retenir de cette activité. Ces fiches constituent la conclusion de votre parcours d'apprentissage.</p>
+
+                    
+                    
+                    <div class="fiche-synthese">
+                        <h3>📖 Concepts fondamentaux (N1 - Connaissance)</h3>
+                        
+                                    <div class="point-cle">
+                                        <strong>Interacteur extérieur :</strong>
+                                        <p>Élément humain, matériel ou environnemental situé hors du système, qui agit sur l'OST ou échange avec lui de la matière, d'énergie ou d'informations (le conducteur, la route, la pluie, un smartphone).</p>
+                                    </div>
+                                    <div class="point-cle">
+                                        <strong>Quatre catégories d'interacteurs :</strong>
+                                        <p>Les usagers, les données, les autres objets techniques (mobilier urbain) et les éléments de l'environnement (météo, route).</p>
+                                    </div>
+                                    <div class="point-cle">
+                                        <strong>Documentation technique et notice :</strong>
+                                        <p>Documents qui présentent les caractéristiques, les performances et les conditions d'utilisation d'un objet technique : elles organisent les informations utiles au choix et à l'usage.</p>
+                                    </div>
+                                    <div class="point-cle">
+                                        <strong>Indice de réparabilité et indice énergétique :</strong>
+                                        <p>L'indice de réparabilité note la facilité à réparer un objet (sur 10) ; l'indice énergétique classe sa consommation. Ces indices guident un choix durable.</p>
+                                    </div>
+                    </div>
+
+                    <div class="fiche-synthese">
+                        <h3>📖 Interactions et chaîne d'information (N2 - Compréhension)</h3>
+                        
+                                    <div class="point-cle">
+                                        <strong>Chaîne d'information : Acquérir → Traiter → Communiquer → Agir :</strong>
+                                        <p>La trottinette connectée capte des grandeurs (Acquérir), les analyse (Traiter), les affiche à l'usager (Communiquer) puis agit via le moteur (Agir). Elle interagit ainsi avec son environnement et son usager.</p>
+                                    </div>
+                                    <div class="point-cle">
+                                        <strong>Cycle de vie d'un OST :</strong>
+                                        <p>Extraction des matières premières → Fabrication → Transport → Utilisation → Fin de vie / recyclage. Chaque étape a un impact environnemental ; la fabrication pèse souvent plus lourd que l'usage.</p>
+                                    </div>
+                                    <div class="point-cle">
+                                        <strong>Critères de choix :</strong>
+                                        <p>Qualité, efficacité énergétique, durabilité, recyclabilité, auxquels s'ajoutent le coût et l'indice de réparabilité : un seul critère ne suffit pas à justifier un choix.</p>
+                                    </div>
+                    </div>
+
+                    <div class="fiche-synthese">
+                        <h3>📖 Comparer et diagnostiquer (N3 - Application)</h3>
+                        
+                                        <div class="point-cle">
+                                            <strong>Analyse multicritère :</strong>
+                                            <p>Attribuer une note à chaque modèle sur chaque critère, puis pondérer les critères selon les priorités (ex. réparabilité coefficient 2, budget coefficient 3) pour obtenir un score total comparable.</p>
+                                        </div>
+                                        <div class="point-cle">
+                                            <strong>Protocole d'essai en conditions identiques :</strong>
+                                            <p>Pour comparer l'autonomie réelle, réaliser les essais sur le même parcours, même distance, mêmes conditions météo, même charge de batterie, et relever les mêmes informations.</p>
+                                        </div>
+                    </div>
+
+                    <div class="fiche-synthese">
+                        <h3>📖 Choix raisonné et développement durable (N4 - Création)</h3>
+                        
+                                        <div class="point-cle">
+                                            <strong>Choix raisonné d'un OST :</strong>
+                                            <p>Comparer plusieurs solutions selon des critères précis et retenir la plus adaptée au besoin, en justifiant par des données mesurées.</p>
+                                        </div>
+                                        <div class="point-cle">
+                                            <strong>Les trois piliers du développement durable :</strong>
+                                            <p>Équilibrer le pilier environnemental (impact CO₂, recyclabilité), le pilier économique (coût, réparabilité) et le pilier social (accessibilité, sécurité) dans la recommandation.</p>
+                                        </div>
+                    </div>
+
+                    <div class="info-block marge-haut">
+                        <p><strong>💡 Astuce :</strong> Relisez régulièrement ces fiches pour consolider vos connaissances. Elles constituent la base pour les activités suivantes.</p>
+                    </div>
+
+                    <button class="bouton-action succes marge-haut" onclick="debloquerBonus()">
+                        Débloquer l'activité bonus 🎮
+                    </button>
+                </div>
+            </section>
+
+            <!-- Activité Bonus -->
+            <section id="contenu-bonus" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-bonus">
+                <div class="activite-bonus deverrouille">
+                    <h3>🎉 Activité Bonus Déverrouillée !</h3>
+                    <p>Félicitations ! Vous avez terminé tous les niveaux. Voici une activité ludique pour approfondir vos connaissances de manière amusante.</p>
+                </div>
+
+                <div class="carte-contenu">
+                    <h2>🎮 Défi ludique</h2>
+                    <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
+
+                    <div class="jeux-bonus">
+                        
+                    <article class="carte-jeu marge-haut">
+                        <h3>🛴 Le trajet du prof de techno</h3>
+                        <p>Un jeu en pixel art où tu incarnes le prof de techno qui doit rejoindre le collège en trottinette électrique ! Choisis ta trottinette selon ses caractéristiques (batterie, vitesse, poids, freinage) et affronte les conditions météo (pluie, froid, chaleur). Évite les obstacles sur la route et gère ta batterie pour arriver à bon port !</p>
+                        <a href="jeu-trottinette.html" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 10-15 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut">
+                        <h3>Quiz : Les interacteurs extérieurs (OST2a)</h3>
+                        <p>Quiz auto-correctif officiel : reconnaître les interacteurs extérieurs d'un objet technique.</p>
+                        <a href="https://podeduc.apps.education.fr/quiz/113224-ost2a-les-interacteurs-exterieurs-usagers-donnees-autres-objets-elements-de-lenvironnement/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 5 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut">
+                        <h3>Quiz : Les critères de choix d'un OST (OST3e)</h3>
+                        <p>Quiz auto-correctif officiel : qualité, efficacité énergétique, durabilité, recyclabilité.</p>
+                        <a href="https://podeduc.apps.education.fr/quiz/113190-ost3e-les-criteres-de-choix-la-qualite-lefficacite-energetique-la-durabilite-la-recyclabilite/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 5 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut">
+                        <h3>Quiz : Cycle de vie et développement durable (OST3d)</h3>
+                        <p>Quiz auto-correctif officiel : les piliers du développement durable et les étapes du cycle de vie d'un OST.</p>
+                        <a href="https://podeduc.apps.education.fr/quiz/113209-ost3d-les-piliers-du-developpement-durable-et-les-differentes-etapes-du-cycle-de-vie-dun-ost/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 5 minutes</p>
+                    </article>
+                    </div>
+
+                    <div class="info-block marge-haut">
+                        <p><strong>🏆 Bravo !</strong> Vous avez complété l'intégralité de l'activité. Continuez à explorer et à apprendre !</p>
+                    </div>
+
+                    <button class="bouton-action secondaire marge-haut" onclick="recommencerActivite()">
+                        🔄 Recommencer l'activité
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Pied de page -->
+        <footer role="contentinfo" class="marge-haut centre">
+            <p class="texte-secondaire">
+                Activité créée avec le Template Interactif Technologie | 
+                Conforme RGAA & FALC | 
+                Optimisé mobile
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript de l'activité -->
+    <script>
+        // ============================================
+        // GESTION DES ONGLETS
+        // ============================================
+        
+                // ============================================
+        // MODE DÉVELOPPEMENT
+        // ============================================
+        // Passer à true pour désactiver tous les blocages d'onglets
+        // pendant le développement/test des jeux bonus.
+        // Penser à remettre à false avant publication !
+        const MODE_DEVELOPPEMENT = true;
+
+let niveauActuel = 'n1-intro';
+        const niveauxDebloques = ['n1-intro'];
+        const niveauxValides = new Set();
+
+        function changerOnglet(niveauId) {
+            // Masquer tous les contenus
+            document.querySelectorAll('.contenu-onglet').forEach(contenu => {
+                contenu.classList.remove('actif');
+            });
+            
+            // Désactiver tous les boutons
+            document.querySelectorAll('.bouton-onglet').forEach(bouton => {
+                bouton.classList.remove('actif');
+                bouton.setAttribute('aria-selected', 'false');
+                bouton.setAttribute('tabindex', '-1');
+            });
+            
+            // Activer l'onglet sélectionné
+            const contenuCible = document.getElementById(`contenu-${niveauId}`);
+            const boutonCible = document.querySelector(`[data-niveau="${niveauId}"]`);
+            
+            if (contenuCible && boutonCible) {
+                contenuCible.classList.add('actif');
+                boutonCible.classList.add('actif');
+                boutonCible.setAttribute('aria-selected', 'true');
+                boutonCible.setAttribute('tabindex', '0');
+                boutonCible.focus();
+                
+                niveauActuel = niveauId;
+                mettreAJourProgression();
+            }
+        }
+
+        // Gestionnaires d'événements pour les onglets
+        document.querySelectorAll('.bouton-onglet').forEach(bouton => {
+            bouton.addEventListener('click', function() {
+                const niveauId = this.getAttribute('data-niveau');
+                if (!this.classList.contains('verrouille')) {
+                    changerOnglet(niveauId);
+                }
+            });
+            
+            // Support clavier
+            bouton.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const niveauId = this.getAttribute('data-niveau');
+                    if (!this.classList.contains('verrouille')) {
+                        changerOnglet(niveauId);
+                    }
+                }
+            });
+        });
+
+        // ============================================
+        // VALIDATION DES NIVEAUX
+        // ============================================
+        
+        function passerOngletSuivant(niveauActuel) {
+            const correspondance = {
+                'n1-intro': 'n1-quiz',
+                'n2-intro': 'n2-quiz'
+            };
+            
+            const niveauSuivant = correspondance[niveauActuel];
+            if (niveauSuivant) {
+                debloquerNiveau(niveauSuivant);
+                changerOnglet(niveauSuivant);
+            }
+        }
+
+        function debloquerNiveau(niveauId) {
+            if (!niveauxDebloques.includes(niveauId)) {
+                niveauxDebloques.push(niveauId);
+                
+                const bouton = document.querySelector(`[data-niveau="${niveauId}"]`);
+                if (bouton) {
+                    bouton.classList.remove('verrouille');
+                    bouton.disabled = false;
+                }
+                
+                mettreAJourProgression();
+            }
+        }
+
+        function debloquerNiveauSuivant(niveauPrecedent) {
+            niveauxValides.add(niveauPrecedent);
+            
+            const correspondance = {
+                'n1': 'n2-intro',
+                'n2': 'n3-enigme',
+                'n3': 'n4-probleme',
+                'n4': 'synthese'
+            };
+            
+            const niveauSuivant = correspondance[niveauPrecedent];
+            if (niveauSuivant) {
+                debloquerNiveau(niveauSuivant);
+                
+                // Marquer l'onglet précédent comme validé
+                const boutonPrecedent = document.querySelector(`[data-niveau="${niveauPrecedent}-quiz"]`) || 
+                                       document.querySelector(`[data-niveau="${niveauPrecedent}-enigme"]`) ||
+                                       document.querySelector(`[data-niveau="${niveauPrecedent}-probleme"]`);
+                if (boutonPrecedent) {
+                    boutonPrecedent.classList.add('valide');
+                }
+                
+                changerOnglet(niveauSuivant);
+            }
+        }
+
+        function debloquerBonus() {
+            debloquerNiveau('bonus');
+            changerOnglet('bonus');
+        }
+
+        // ============================================
+        // QUIZ INTERACTIF
+        // ============================================
+        
+        // Configuration des bonnes réponses (à adapter selon le contenu)
+        const bonnesReponses = {
+            'n1': {
+            'q1': 'b',
+            'q2': 'c',
+            'q3': 'a',
+            'q4': 'b',
+            'q5': 'b'
+},
+            'n2': {
+            'q1': 'b',
+            'q2': 'b',
+            'q3': 'b',
+            'q4': 'b',
+            'q5': 'b'
+}
+        };
+
+        // Échappe un texte destiné à être inséré dans du HTML
+        function echapperHtml(texte) {
+            const div = document.createElement('div');
+            div.textContent = texte == null ? '' : String(texte);
+            return div.innerHTML;
+        }
+
+        // Retour affiché sous une question : verdict + explication.
+        // L'explication est affichée SYSTÉMATIQUEMENT, que la réponse soit juste
+        // ou fausse : c'est le bouton « Vérifier mes réponses » qui l'apporte.
+        function construireFeedback(question, verdict) {
+            let explication = question.getAttribute('data-explication') || '';
+            if (!explication) {
+                const blocVierge = question.querySelector('.explication-quiz');
+                if (blocVierge) explication = blocVierge.textContent.trim();
+            }
+
+            let html = echapperHtml(verdict);
+            if (explication) {
+                html += '<span class="explication"><strong>Explication :</strong> ' +
+                        echapperHtml(explication) + '</span>';
+            }
+            return html;
+        }
+
+        // Sélection d'une proposition : elle est signalée par la surbrillance
+        // (classe .selectionnee) et non plus par un bouton radio. Le rôle
+        // ARIA « radio » et aria-checked gardent l'information accessible
+        // aux lecteurs d'écran.
+        function selectionnerOption(option) {
+            const groupe = option.closest('.options-reponse');
+            if (!groupe) return;
+
+            groupe.querySelectorAll('.option-reponse').forEach(autre => {
+                autre.classList.remove('selectionnee');
+                autre.setAttribute('aria-checked', 'false');
+            });
+
+            option.classList.add('selectionnee');
+            option.setAttribute('aria-checked', 'true');
+        }
+
+        function validerQuiz(niveau) {
+            const formulaire = document.getElementById(`quiz-${niveau}`);
+            const questions = formulaire.querySelectorAll('.question-quiz');
+            let score = 0;
+            let toutesRepondues = true;
+
+            questions.forEach((question, index) => {
+                const numeroQuestion = index + 1;
+                const optionChoisie = question.querySelector('.option-reponse.selectionnee');
+                const feedback = question.querySelector('.feedback-reponse');
+
+                if (!optionChoisie) {
+                    toutesRepondues = false;
+                    return;
+                }
+
+                const valeurReponse = optionChoisie.getAttribute('data-value');
+                const bonneReponse = bonnesReponses[niveau][`q${numeroQuestion}`];
+
+                // Réinitialiser les classes
+                question.querySelectorAll('.option-reponse').forEach(option => {
+                    option.classList.remove('correcte', 'incorrecte');
+                });
+
+                if (valeurReponse === bonneReponse) {
+                    score++;
+                    optionChoisie.classList.add('correcte');
+                    feedback.innerHTML = construireFeedback(question, '\u2705 Correct ! Bien jou\u00e9.');
+                    feedback.className = 'feedback-reponse visible correct';
+                } else {
+                    optionChoisie.classList.add('incorrecte');
+                    // Montrer la bonne réponse
+                    const bonneOption = question.querySelector(`.option-reponse[data-value="${bonneReponse}"]`);
+                    if (bonneOption) {
+                        bonneOption.classList.add('correcte');
+                    }
+                    feedback.innerHTML = construireFeedback(question, '\u274c Incorrect. La bonne r\u00e9ponse est surlign\u00e9e en vert.');
+                    feedback.className = 'feedback-reponse visible incorrect';
+                }
+            });
+
+            if (!toutesRepondues) {
+                alert('Veuillez répondre à toutes les questions avant de valider.');
+                return;
+            }
+
+            // Afficher le résultat
+            const resultatDiv = document.getElementById(`resultat-quiz-${niveau}`);
+            const messageResultat = document.getElementById(`message-resultat-${niveau}`);
+            const boutonSuite = document.getElementById(`bouton-suite-${niveau}`);
+            
+            resultatDiv.style.display = 'block';
+            
+            if (score === questions.length) {
+                messageResultat.innerHTML = `<strong>🎉 Parfait !</strong> Vous avez obtenu ${score}/${questions.length}. Vous maîtrisez ce niveau !`;
+                messageResultat.style.color = 'var(--couleur-succes)';
+                boutonSuite.classList.remove('cache');
+            } else {
+                messageResultat.innerHTML = `<strong>📊 Score :</strong> ${score}/${questions.length}. Vous devez obtenir toutes les bonnes réponses pour continuer. Réessayez !`;
+                messageResultat.style.color = 'var(--couleur-alerte)';
+                boutonSuite.classList.add('cache');
+            }
+        }
+
+        // ============================================
+        // ÉLÉMENTS INTERACTIFS N2
+        // ============================================
+        
+        // Nombre de tuiles : compté dans le document (et non figé à 4), sinon
+        // une chaîne générée avec un autre nombre d'éléments ne débloquerait
+        // jamais le bouton de suite et l'élève resterait bloqué au N2.
+        let totalElements = 0;
+
+        // Mémorise les tuiles déjà activées au moins une fois (visite
+        // permanente : survit au décochage, contrairement à « revele »).
+        const elementsVisites = new Set();
+
+        // Chaque description est déplacée dans #details-chaine quand la tuile
+        // est révélée, et remise dans sa tuile quand elle est décochée. On
+        // retient son propriétaire par un index, car une fois déplacée elle
+        // n'est plus un descendant de la tuile.
+        function nomElement(element) {
+            for (const noeud of element.childNodes) {
+                if (noeud.nodeType === 3 && noeud.textContent.trim()) {
+                    return noeud.textContent.trim();
+                }
+            }
+            const libelle = element.getAttribute('aria-label') || '';
+            return libelle.split(':')[0].trim() || 'Élément';
+        }
+
+        function preparerDetailsChaine() {
+            const tuiles = document.querySelectorAll('.element-chaine');
+            totalElements = tuiles.length;
+            tuiles.forEach((element, index) => {
+                const info = element.querySelector('.info-element');
+                if (info) {
+                    info.setAttribute('data-pour-tuile', String(index));
+                }
+            });
+        }
+
+        function revelerElement(element) {
+            // Bascule visuelle : un clic révèle, un nouveau clic masque.
+            // Cela garde la visibilité demandée : l'élève peut décocher
+            // une tuile pour ne plus voir sa description.
+            const revele = element.classList.toggle('revele');
+
+            const zone = document.getElementById('details-chaine');
+            const index = String(Array.prototype.indexOf.call(
+                document.querySelectorAll('.element-chaine'), element));
+            const info = element.querySelector('.info-element') ||
+                         (zone && zone.querySelector(`.info-element[data-pour-tuile="${index}"]`));
+
+            if (info && zone) {
+                if (revele) {
+                    // Titre de la description, pour savoir à quelle tuile elle
+                    // se rapporte maintenant qu'elle est sortie de la tuile.
+                    if (!info.querySelector('.titre-detail')) {
+                        const titre = document.createElement('strong');
+                        titre.className = 'titre-detail';
+                        titre.textContent = nomElement(element);
+                        info.insertBefore(titre, info.firstChild);
+                    }
+                    info.setAttribute('data-pour-tuile', index);
+                    zone.appendChild(info);
+                } else {
+                    element.appendChild(info);
+                }
+            }
+
+            // Mémoriser la visite (permanent, non remis à zéro par un
+            // décochage ultérieur). Dès qu'une tuile a été activée une
+            // fois, elle compte comme « explorée ».
+            elementsVisites.add(element);
+
+            // Le bouton de suite ne s'active que lorsque chaque tuile a
+            // été visitée au moins une fois, même si elles ne sont plus
+            // toutes cochées simultanément à l'instant T.
+            const boutonSuite = document.getElementById('bouton-suite-n2-intro');
+            if (boutonSuite) {
+                boutonSuite.disabled = elementsVisites.size < totalElements;
+            }
+        }
+
+        // ============================================
+        // ÉNIGME N3
+        // ============================================
+        
+        let objetsExplores = 0;
+        const totalObjets = 4;
+
+        function explorerObjet(objet) {
+            if (!objet.classList.contains('explore')) {
+                objet.classList.add('explore');
+                objetsExplores++;
+            }
+        }
+
+        function soumettreDiagnostic() {
+            const diagnostic = document.getElementById('diagnostic-eleve').value.trim();
+            
+            if (diagnostic.length < 20) {
+                alert('Veuillez fournir un diagnostic plus détaillé (au moins 20 caractères).');
+                return;
+            }
+
+            const feedback = document.getElementById('feedback-diagnostic');
+            feedback.style.display = 'block';
+            
+            // Scroll vers le feedback
+            feedback.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============================================
+        // PROBLÈME OUVERT N4
+        // ============================================
+        
+        function finaliserConception() {
+            const champs = [
+                'besoin-identifie',
+                'contraintes-definies',
+                'solutions-imaginees',
+                'solution-choisie',
+                'schema-solution'
+            ];
+
+            let tousRemplis = true;
+            champs.forEach(champId => {
+                const champ = document.getElementById(champId);
+                if (champ.value.trim().length < 10) {
+                    tousRemplis = false;
+                    champ.style.borderColor = 'var(--couleur-alerte)';
+                } else {
+                    champ.style.borderColor = '#e2e8f0';
+                }
+            });
+
+            if (!tousRemplis) {
+                alert('Veuillez remplir tous les champs avec au moins 10 caractères chacun.');
+                return;
+            }
+
+            const confirmation = document.getElementById('confirmation-conception');
+            confirmation.style.display = 'block';
+            confirmation.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============================================
+        // BARRE DE PROGRESSION
+        // ============================================
+        
+        function mettreAJourProgression() {
+            const progression = Math.round((niveauxDebloques.length / 8) * 100);
+            const barre = document.getElementById('barre-progression');
+            const texte = document.getElementById('texte-progression');
+            
+            if (barre && texte) {
+                barre.style.width = `${progression}%`;
+                barre.parentElement.setAttribute('aria-valuenow', progression);
+                texte.textContent = `Progression : ${progression}%`;
+            }
+        }
+
+        // ============================================
+        // FONCTIONS UTILITAIRES
+        // ============================================
+        
+        function recommencerActivite() {
+            if (confirm('Êtes-vous sûr de vouloir recommencer l\'activité ? Toute votre progression sera perdue.')) {
+                // Réinitialiser tous les états
+                niveauxDebloques.length = 0;
+                niveauxDebloques.push('n1-intro');
+                niveauxValides.clear();
+                elementsVisites.clear();
+                objetsExplores = 0;
+                
+                // Réinitialiser les formulaires
+                document.querySelectorAll('form').forEach(form => form.reset());
+                document.querySelectorAll('textarea').forEach(textarea => textarea.value = '');
+                
+                // Réinitialiser les styles
+                document.querySelectorAll('.option-reponse').forEach(option => {
+                    option.classList.remove('correcte', 'incorrecte', 'selectionnee');
+                    option.setAttribute('aria-checked', 'false');
+                });
+                document.querySelectorAll('.feedback-reponse').forEach(feedback => {
+                    feedback.classList.remove('visible');
+                });
+                document.querySelectorAll('.element-chaine').forEach((element, index) => {
+                    element.classList.remove('revele', 'visite');
+                    // Rapatrier les descriptions sorties dans la zone de détails
+                    const info = document.querySelector(
+                        `#details-chaine .info-element[data-pour-tuile="${index}"]`);
+                    if (info) {
+                        element.appendChild(info);
+                    }
+                });
+                const boutonSuiteN2 = document.getElementById('bouton-suite-n2-intro');
+                if (boutonSuiteN2) {
+                    boutonSuiteN2.disabled = true;
+                }
+                document.querySelectorAll('.objet-explorable').forEach(objet => {
+                    objet.classList.remove('explore');
+                });
+                
+                // Réinitialiser les boutons
+                document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
+                    if (index === 0) {
+                        bouton.classList.remove('verrouille', 'valide');
+                        bouton.disabled = false;
+                    } else {
+                        bouton.classList.add('verrouille');
+                        bouton.classList.remove('valide');
+                        bouton.disabled = true;
+                    }
+                });
+                
+                // Masquer les résultats
+                document.querySelectorAll('[id^="resultat-quiz-"]').forEach(div => {
+                    div.style.display = 'none';
+                });
+                document.getElementById('feedback-diagnostic').style.display = 'none';
+                document.getElementById('confirmation-conception').style.display = 'none';
+                
+                // Retour au premier onglet
+                changerOnglet('n1-intro');
+                mettreAJourProgression();
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            mettreAJourProgression();
+
+            // Options de quiz : clic (la surbrillance marque la sélection) et
+            // clavier (Entrée / Espace), puisqu'il n'y a plus de bouton radio
+            // natif pour assurer cette navigation.
+            document.querySelectorAll('.option-reponse').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectionnerOption(this);
+                });
+                option.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                        e.preventDefault();
+                        selectionnerOption(this);
+                    }
+                });
+            });
+
+            // Tuiles N2 et objets N3 : un simple onclick ne réagit pas à la
+            // touche Entrée ; on l'ajoute pour que le clavier suffise.
+            document.querySelectorAll('.element-chaine').forEach(element => {
+                element.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                        e.preventDefault();
+                        revelerElement(this);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.objet-explorable').forEach(objet => {
+                objet.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                        e.preventDefault();
+                        explorerObjet(this);
+                    }
+                });
+            });
+
+            preparerDetailsChaine();
+
+            // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
+            // Si activé, déverrouille tous les onglets et boutons pour
+            // permettre de tester librement (jeux bonus, navigation, etc.)
+            if (MODE_DEVELOPPEMENT) {
+                const tousNiveaux = ['n1-intro', 'n1-quiz', 'n2-intro', 'n2-quiz',
+                                     'n3-enigme', 'n4-probleme', 'synthese', 'bonus'];
+                tousNiveaux.forEach(niveauId => {
+                    debloquerNiveau(niveauId);
+                    niveauxDebloques.push(niveauId);
+                });
+                // Activer aussi les boutons de suite qui seraient désactivés
+                const btnSuiteN2 = document.getElementById('bouton-suite-n2-intro');
+                if (btnSuiteN2) btnSuiteN2.disabled = false;
+                // Marquer tous les onglets comme accessibles (sans la classe verrouille)
+                document.querySelectorAll('.bouton-onglet.verrouille').forEach(bouton => {
+                    bouton.classList.remove('verrouille');
+                    bouton.disabled = false;
+                });
+                console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
+            }
+        });
+
+        // Support pour impression PDF
+        window.addEventListener('beforeprint', function() {
+            // Développer tous les onglets pour l'impression
+            document.querySelectorAll('.contenu-onglet').forEach(contenu => {
+                contenu.style.display = 'block';
+            });
+        });
+
+        window.addEventListener('afterprint', function() {
+            // Restaurer l'affichage normal
+            document.querySelectorAll('.contenu-onglet').forEach(contenu => {
+                contenu.style.display = '';
+            });
+            changerOnglet(niveauActuel);
+        });
+    </script>
+</body>
+</html>

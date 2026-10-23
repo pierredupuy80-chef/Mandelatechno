@@ -965,9 +965,153 @@
     .jeu-grille { gap: 3px; padding: 5px; }
     .jeu-cell .jeu-point { font-size: 0.68rem; }
 }
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
 </style>
 </head>
 <body>
+
+<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
+     haut au changement de niveau, compensation des sauts d'ancre.
+     Voir Rapport-compatibilite-mobile-apps.md
+     Ce script est place juste apres <body> : il attend que le DOM soit
+     construit avant de mesurer quoi que ce soit. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
     <!-- Skip link pour accessibilité -->
     <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
@@ -1802,7 +1946,15 @@
         // GESTION DES ONGLETS
         // ============================================
         
-        let niveauActuel = 'n1-intro';
+                // ============================================
+        // MODE DÉVELOPPEMENT
+        // ============================================
+        // Passer à true pour désactiver tous les blocages d'onglets
+        // pendant le développement/test des jeux bonus.
+        // Penser à remettre à false avant publication !
+        const MODE_DEVELOPPEMENT = true;
+
+let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
         const niveauxValides = new Set();
 
@@ -2315,6 +2467,27 @@
             });
 
             preparerDetailsChaine();
+
+            // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
+            // Si activé, déverrouille tous les onglets et boutons pour
+            // permettre de tester librement (jeux bonus, navigation, etc.)
+            if (MODE_DEVELOPPEMENT) {
+                const tousNiveaux = ['n1-intro', 'n1-quiz', 'n2-intro', 'n2-quiz',
+                                     'n3-enigme', 'n4-probleme', 'synthese', 'bonus'];
+                tousNiveaux.forEach(niveauId => {
+                    debloquerNiveau(niveauId);
+                    niveauxDebloques.push(niveauId);
+                });
+                // Activer aussi les boutons de suite qui seraient désactivés
+                const btnSuiteN2 = document.getElementById('bouton-suite-n2-intro');
+                if (btnSuiteN2) btnSuiteN2.disabled = false;
+                // Marquer tous les onglets comme accessibles (sans la classe verrouille)
+                document.querySelectorAll('.bouton-onglet.verrouille').forEach(bouton => {
+                    bouton.classList.remove('verrouille');
+                    bouton.disabled = false;
+                });
+                console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
+            }
         });
 
         // Support pour impression PDF
