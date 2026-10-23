@@ -1060,7 +1060,7 @@
         }
 
         .jeu-hud .jauge {
-            flex: 1 1 110px;
+            flex: 1 1 160px;
             min-width: 96px;
             height: 14px;
             background: #24314d;
@@ -1075,11 +1075,10 @@
             width: 100%;
             transition: width 0.1s linear;
         }
-        .jeu-hud .jauge-vie > span { background: #22c55e; }
-        .jeu-hud .jauge-vie > span.bas { background: #f59e0b; }
-        .jeu-hud .jauge-vie > span.critique { background: #ef4444; }
-        .jeu-hud .jauge-energie > span { background: #38bdf8; }
-        .jeu-hud .jauge-energie > span.bas { background: #f59e0b; }
+        .jeu-hud .bloc-jauge { flex: 2 1 180px; }
+        .jeu-hud .jauge-batterie > span { background: #22c55e; }
+        .jeu-hud .jauge-batterie > span.bas { background: #f59e0b; }
+        .jeu-hud .jauge-batterie > span.critique { background: #ef4444; }
         .jeu-hud .etiquette {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -1848,24 +1847,18 @@
 
                 <div class="carte-contenu">
                     <h2>🎮 Le prof de techno : colis express</h2>
-                    <p>Le prof de techno s'est lancé un défi : livrer cinq colis dans le quartier avec son drone. À toi de piloter. Le drone a une <strong>réserve d'énergie</strong> qui se vide en vol (et beaucoup plus vite quand tu utilises le <strong>boost</strong>). Ramasse les <strong>batteries</strong> pour recharger et réparer, et les <strong>composants</strong> pour améliorer l'appareil. Attention aux enfants qui lancent des ballons, aux pylônes et aux maisons.</p>
+                    <p>Le prof de techno s'est lancé un défi : livrer cinq colis dans le quartier avec son drone. À toi de piloter. Le drone n'a qu'une <strong>batterie</strong>, qui lui sert à la fois de réserve d'énergie et de vie : elle se vide toute seule en vol, et plus vite quand tu utilises le <strong>boost</strong> ou que tu cognes un obstacle. Ramasse les <strong>batteries</strong> pour la recharger, et les <strong>composants</strong> pour améliorer l'appareil. Attention aux enfants qui lancent des ballons, aux pylônes et aux maisons.</p>
 
                     <div class="jeu" id="jeu">
                         <div class="jeu-hud">
                             <div class="portrait-prof" id="portrait-prof" data-etat="repos"
                                  role="img" aria-label="Le prof de techno"></div>
-                            <div>
-                                <div class="etiquette">Vie</div>
-                                <div class="jauge jauge-vie" id="jauge-vie" role="progressbar"
-                                     aria-label="Vie du drone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
-                                    <span id="barre-vie"></span>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="etiquette">Énergie</div>
-                                <div class="jauge jauge-energie" id="jauge-energie" role="progressbar"
-                                     aria-label="Énergie du drone" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
-                                    <span id="barre-energie"></span>
+                            <div class="bloc-jauge">
+                                <div class="etiquette">Batterie (vie du drone)</div>
+                                <div class="jauge jauge-batterie" id="jauge-batterie" role="progressbar"
+                                     aria-label="Batterie du drone, qui sert aussi de vie"
+                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+                                    <span id="barre-batterie"></span>
                                 </div>
                             </div>
                             <div><span class="etiquette">Tournée</span> <span class="valeur" id="tournee-jeu">1 / 5</span></div>
@@ -1880,7 +1873,7 @@
                                     aria-describedby="jeu-aide"></canvas>
                             <div class="jeu-voile" id="jeu-voile">
                                 <h4 id="jeu-voile-titre">🚁 Colis express</h4>
-                                <p id="jeu-voile-texte">Cinq colis à livrer en 2 min 30. Récupère le colis au dépôt (à gauche), puis rejoins la zone clignotante. Le boost (Maj) va deux fois plus vite mais vide l'énergie.</p>
+                                <p id="jeu-voile-texte">Cinq colis à livrer en 2 min 30. Récupère le colis au dépôt (à gauche), puis rejoins la zone clignotante. La batterie se vide avec le temps : ramasse-les en vert. Le boost (Maj) va deux fois plus vite mais la vide beaucoup plus vite.</p>
                                 <p class="recap" id="jeu-voile-recap"></p>
                                 <button type="button" class="bouton-action succes" id="jeu-btn-demarrer" onclick="demarrerJeuColis()">
                                     Démarrer la partie
@@ -1911,8 +1904,8 @@
                         <p class="jeu-aide" id="jeu-aide">
                             <strong>Commandes :</strong> flèches, ZQSD ou WASD ; <strong>Maj</strong> (ou le bouton Boost) pour accélérer ; boutons ▲◀▼▶ sur tablette.
                             <strong>But :</strong> livrer les 5 colis avant la fin du temps.
-                            <strong>À savoir :</strong> sans énergie le drone ralentit — les batteries 🟩 rechargent vie et énergie ;
-                            la <strong>fibre de carbone</strong> 🛡️ réduit les dégâts, la <strong>Li-Po</strong> 🔋 augmente l'énergie max,
+                            <strong>À savoir :</strong> la batterie 🟩 sert de vie <em>et</em> d'énergie : elle se vide avec le temps et les chocs ;
+                            la <strong>fibre de carbone</strong> 🛡️ réduit les dégâts, la <strong>Li-Po</strong> 🔋 augmente la réserve maximale,
                             la <strong>caméra thermique</strong> 📷 allonge le temps d'alerte avant les lancers.
                         </p>
                     </div>
@@ -3353,8 +3346,9 @@
                 return {
                     x: DEPOT.x + 28, y: DEPOT.y + 28,
                     vx: 0, vy: 0, r: DRONE_R,
+                    // Une seule réserve : la batterie sert à la fois de vie et
+                    // d'énergie (le temps et les chocs la vident).
                     hp: 100, hpMax: 100,
-                    energie: 100, energieMax: 100,
                     cooldown: 0, boost: false,
                     armure: false, cameraUp: false
                 };
@@ -3404,23 +3398,13 @@
             function majHUD() {
                 if (!drone) return;
                 var pv = Math.max(0, Math.round(drone.hp / drone.hpMax * 100));
-                var pe = Math.max(0, Math.round(drone.energie / drone.energieMax * 100));
-
-                var bv = document.getElementById('barre-vie');
-                var jv = document.getElementById('jauge-vie');
+                var bv = document.getElementById('barre-batterie');
+                var jv = document.getElementById('jauge-batterie');
                 if (bv) {
                     bv.style.width = pv + '%';
                     bv.className = pv <= 25 ? 'critique' : (pv <= 55 ? 'bas' : '');
                 }
                 if (jv) jv.setAttribute('aria-valuenow', String(pv));
-
-                var be = document.getElementById('barre-energie');
-                var je = document.getElementById('jauge-energie');
-                if (be) {
-                    be.style.width = pe + '%';
-                    be.className = pe <= 25 ? 'bas' : '';
-                }
-                if (je) je.setAttribute('aria-valuenow', String(pe));
 
                 var t = document.getElementById('tournee-jeu');
                 if (t) t.textContent = Math.min(tournee + 1, TOURNEES) + ' / ' + TOURNEES;
@@ -3464,19 +3448,18 @@
 
             function ramasser(type) {
                 if (type === 'batterie') {
-                    drone.hp = Math.min(drone.hpMax, drone.hp + 26);
-                    drone.energie = Math.min(drone.energieMax, drone.energie + 40);
+                    drone.hp = Math.min(drone.hpMax, drone.hp + 30);
                     score += 40;
-                    dire('« Batterie récupérée : vie et énergie remontent. »');
+                    dire('« Batterie récupérée : la réserve remonte. »');
                 } else if (type === 'carbone') {
                     drone.armure = true;
                     score += 120;
                     dire('« Fibre de carbone : la coque encaisse mieux les chocs. »');
                 } else if (type === 'lipo') {
-                    drone.energieMax = 140;
-                    drone.energie = 140;
+                    drone.hpMax = 140;
+                    drone.hp = 140;
                     score += 120;
-                    dire('« Li-Po haute capacité : réserve d\'énergie augmentée. »');
+                    dire('« Li-Po haute capacité : réserve augmentée (140). »');
                 } else if (type === 'camera') {
                     drone.cameraUp = true;
                     score += 120;
@@ -3538,7 +3521,7 @@
                     ax /= n; ay /= n;
                 }
 
-                var veutBoost = cles.boost && drone.energie > 2;
+                var veutBoost = cles.boost && drone.hp > 4;
                 drone.boost = veutBoost;
                 var accel = veutBoost ? 1500 : 900;
                 var vmax = veutBoost ? 340 : 185;
@@ -3551,18 +3534,18 @@
                 var v = Math.sqrt(drone.vx * drone.vx + drone.vy * drone.vy);
                 if (v > vmax) { drone.vx = drone.vx / v * vmax; drone.vy = drone.vy / v * vmax; }
 
-                // Énergie : consommation de base + surconsommation du boost
-                var conso = 0.9 + (veutBoost ? 3.2 : 0) + tournee * 0.08;
-                drone.energie = Math.max(0, drone.energie - conso * dt);
-                if (drone.energie <= 0 && !veutBoost) {
-                    // sans énergie : le drone traîne et perd un peu de vie
-                    drone.vx *= 0.985; drone.vy *= 0.985;
-                    if (temps % 1 < dt) subirDegats(1);
+                // La réserve unique se vide avec le temps, et plus vite avec
+                // le boost. À zéro, le drone tombe : c'est la fin de la partie.
+                var conso = 0.7 + (veutBoost ? 2.6 : 0) + tournee * 0.05;
+                drone.hp -= conso * dt;
+                if (drone.hp <= 0) {
+                    drone.hp = 0;
+                    majHUD();
+                    return terminer(false);
                 }
 
-                var facteur = drone.energie <= 0 ? 0.55 : 1;
-                drone.x += drone.vx * dt * facteur;
-                drone.y += drone.vy * dt * facteur;
+                drone.x += drone.vx * dt;
+                drone.y += drone.vy * dt;
 
                 if (drone.x < 14) { drone.x = 14; drone.vx = 0; }
                 if (drone.x > MONDE_L - 14) { drone.x = MONDE_L - 14; drone.vx = 0; }
@@ -3589,7 +3572,7 @@
 
                 // Enfants : armement télégraphié puis tir
                 var actifs = Math.min(enfants.length, 2 + tournee);
-                var cadence = Math.max(1.1, 2.8 - tournee * 0.3);
+                var cadence = Math.max(1.3, 3.3 - tournee * 0.35);
                 var vitesseTir = 118 + tournee * 16;
                 for (var e = 0; e < actifs; e++) {
                     var enf = enfants[e];
@@ -3597,14 +3580,16 @@
                     var dist = Math.sqrt(dxE * dxE + dyE * dyE);
                     enf.timer -= dt;
                     if (enf.preavis > 0) enf.preavis -= dt;
-                    if (dist < 330 && enf.timer <= 0) {
+                    if (dist < 300 && enf.timer <= 0) {
                         enf.timer = cadence + Math.random() * 0.8;
                         enf.preavis = drone.cameraUp ? 1.05 : 0.7;
-                        var nn = dist || 1;
+                        // Le ballon est d'abord ARMÉ (tenu à la main, immobile) :
+                        // la direction sera calculée au lancer, à partir de la
+                        // vitesse du drone à cet instant.
                         projectiles.push({
                             x: enf.x, y: enf.y - 4,
-                            vx: (dxE / nn) * vitesseTir,
-                            vy: (dyE / nn) * vitesseTir,
+                            vx: 0, vy: 0,
+                            vitesse: vitesseTir,
                             vie: 4, arme: enf.preavis
                         });
                     }
@@ -3613,7 +3598,11 @@
                 // Projectiles
                 for (var p = projectiles.length - 1; p >= 0; p--) {
                     var pr = projectiles[p];
-                    if (pr.arme > 0) { pr.arme -= dt; continue; }   // encore armé : immobile
+                    if (pr.arme > 0) {
+                        pr.arme -= dt;
+                        if (pr.arme <= 0) viserEnAvance(pr);   // lancer effectif
+                        continue;
+                    }
                     pr.x += pr.vx * dt;
                     pr.y += pr.vy * dt;
                     pr.vie -= dt;
@@ -3621,7 +3610,7 @@
                     if (dxp * dxp + dyp * dyp < (drone.r + 4) * (drone.r + 4)) {
                         projectiles.splice(p, 1);
                         if (drone.cooldown === 0) {
-                            subirDegats(10);
+                            subirDegats(8);
                             dire('« Touché ! Passe plus loin des enfants, ou récupère la caméra thermique. »');
                         }
                         continue;
@@ -3673,6 +3662,25 @@
                 camera.y = Math.max(0, Math.min(MONDE_H - VUE_H, Math.round(drone.y - VUE_H / 2)));
             }
 
+            // L'enfant ne vise pas la position ACTUELLE du drone, mais celle
+            // vers laquelle il se dirige : on estime le temps de vol, puis on
+            // prend le point d'interception (position + vitesse x temps).
+            // L'anticipation monte avec la tournée : les tirs deviennent de
+            // plus en plus « intelligents », il faut donc changer de trajectoire.
+            function viserEnAvance(pr) {
+                if (!drone) return;
+                var dx = drone.x - pr.x, dy = drone.y - pr.y;
+                var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                var tempsVol = dist / (pr.vitesse || 120);
+                var anticipation = Math.min(1, 0.75 + tournee * 0.06);
+                var cibleX = drone.x + drone.vx * tempsVol * anticipation;
+                var cibleY = drone.y + drone.vy * tempsVol * anticipation;
+                var vx = cibleX - pr.x, vy = cibleY - pr.y;
+                var n = Math.sqrt(vx * vx + vy * vy) || 1;
+                pr.vx = (vx / n) * (pr.vitesse || 120);
+                pr.vy = (vy / n) * (pr.vitesse || 120);
+            }
+
             function compas(zone) {
                 var dx = zone.x - drone.x, dy = zone.y - drone.y;
                 if (Math.abs(dx) > Math.abs(dy)) return dx > 0 ? 'est' : 'ouest';
@@ -3703,19 +3711,22 @@
                 ctx.fillRect(x - 2, y + 4, 4, 3);
             }
 
-            function dessinerEnfant(enf, pos) {
+            function dessinerEnfant(enf, ox, oy) {
                 var s = solEnfant[enf.i % solEnfant.length];
-                ctx.drawImage(s, Math.round(enf.x - 9), Math.round(enf.y - 11));
+                // Les enfants sont posés dans le MONDE : il faut l'offset de
+                // caméra, sinon ils suivent l'écran et semblent collés au drone.
+                var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
+                ctx.drawImage(s, x - 9, y - 11);
                 if (enf.preavis > 0 && ETAT === 'en_cours') {
                     var clign = Math.sin(temps * 26) > 0;
                     ctx.fillStyle = clign ? '#ef4444' : '#fbbf24';
-                    ctx.fillRect(Math.round(enf.x) - 2, Math.round(enf.y) - 24, 4, 8);
-                    ctx.fillRect(Math.round(enf.x) - 1, Math.round(enf.y) - 15, 2, 2);
+                    ctx.fillRect(x - 2, y - 24, 4, 8);
+                    ctx.fillRect(x - 1, y - 15, 2, 2);
                 }
             }
 
-            function dessinerProjectile(pr, t) {
-                var x = Math.round(pr.x), y = Math.round(pr.y);
+            function dessinerProjectile(pr, ox, oy) {
+                var x = Math.round(pr.x + ox), y = Math.round(pr.y + oy);
                 if (pr.arme > 0) {
                     // ballon tenu en main : petit, il grossit quand il part
                     var gros = pr.arme < 0.25 ? 3 : 2;
@@ -3769,11 +3780,11 @@
 
                 // Enfants
                 for (var e = 0; e < enfants.length; e++) {
-                    dessinerEnfant(enfants[e]);
+                    dessinerEnfant(enfants[e], ox, oy);
                 }
 
                 // Projectiles
-                for (var p = 0; p < projectiles.length; p++) dessinerProjectile(projectiles[p], temps);
+                for (var p = 0; p < projectiles.length; p++) dessinerProjectile(projectiles[p], ox, oy);
 
                 // Drone
                 if (drone) {
@@ -3888,7 +3899,6 @@
                 deplacer: function (d, v) { cles[d] = !!v; },
                 teleporter: function (x, y) { if (drone) { drone.x = x; drone.y = y; } },
                 blesser: function (n) { if (drone) { drone.cooldown = 0; subirDegats(n); } },
-                viderEnergie: function () { if (drone) drone.energie = 0; },
                 // Contrôle de conception : rien d'important ne doit être posé
                 // sur un obstacle solide, ni sortir du monde.
                 verifierPlacement: function () {
