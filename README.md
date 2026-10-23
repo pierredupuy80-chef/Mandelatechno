@@ -31,7 +31,6 @@ index.html                          page d'accueil : les 21 pages, sommaire par 
     infographie-incident-ia.html    infographie à projeter et à commenter
     infographie-incident-ia.jpg     l'infographie (1536 × 1024, JPEG, 374 Ko)
 
-4e/ost0/activite-iag-assistant.html               Séquence 0 — utiliser l'IAG
 4e/ost1/activite-securite-donnees.html            Séquence 1 — sécurité des données
 4e/ost2/activite-evolution-drones.html            Séquence 2 — les drones
 4e/ost3/activite-maison-connectee-eclairage.html  Séquence 3 — maison connectée
