@@ -4108,6 +4108,22 @@ function animerRouteur(btn) {
             retour.className = 'etape-selection-retour' + (type ? ' ' + type : '');
         }
 
+        // « Recommencer » efface la sélection et ses marques : l'élève ne doit
+        // pas retrouver une étape déjà validée après avoir demandé à repartir
+        // de zéro.
+        function n4ReinitialiserSelections() {
+            document.querySelectorAll('#contenu-n4-probleme [data-conception-selection]')
+                .forEach(function (conteneur) {
+                    conteneur.removeAttribute('data-termine');
+                    conteneur.querySelectorAll('.choix-contrainte').forEach(function (choix) {
+                        choix.setAttribute('aria-pressed', 'false');
+                    });
+                    n4EffacerVerdicts(conteneur);
+                    n4RetourSelection(conteneur, '', '');
+                    n4CompterSelection(conteneur);
+                });
+        }
+
         // Efface les marques et les explications d'une vérification précédente.
         function n4EffacerVerdicts(conteneur) {
             conteneur.querySelectorAll('.choix-item').forEach(function (item) {
@@ -4222,10 +4238,24 @@ function animerRouteur(btn) {
         // des charges. Régler un curseur n'est jamais obligatoire — c'est un
         // outil pour aller au bout de son idée, pas une saisie de plus.
 
+        function n4GrouperMilliers(chiffres) {
+            let sortie = '';
+            while (chiffres.length > 3) {
+                sortie = '\u00a0' + chiffres.slice(-3) + sortie;
+                chiffres = chiffres.slice(0, -3);
+            }
+            return chiffres + sortie;
+        }
+
         function n4Nombre(valeur, decimales) {
-            const nombre = Math.round(valeur * 10) / 10;
-            let texte = (decimales ? nombre.toFixed(1) : String(Math.round(nombre)));
-            return texte.replace('.', ',');
+            const arrondi = Math.round(valeur * 10) / 10;
+            const signe = arrondi < 0 ? '-' : '';
+            const absolu = Math.abs(arrondi);
+            const entier = Math.floor(absolu);
+            let texte = signe + n4GrouperMilliers(String(entier));
+            const dixiemes = Math.round((absolu - entier) * 10);
+            if (dixiemes) texte += ',' + dixiemes;
+            return texte;
         }
 
         function n4Formatage(curseur, valeur) {
@@ -4233,8 +4263,8 @@ function animerRouteur(btn) {
             const decimales = pas < 1 || valeur % 1 !== 0;
             const unite = curseur.getAttribute('data-unite') || '';
             const texte = n4Nombre(parseFloat(valeur), decimales);
-            if (!unite) return texte;
-            return /^[€$%]$/.test(unite) ? texte + ' ' + unite : texte + ' ' + unite;
+            // Espace insécable : « 1 500 € » ne se coupe pas en fin de ligne.
+            return unite ? texte + '\u00a0' + unite : texte;
         }
 
         function n4ContraintesReglees() {
@@ -4461,6 +4491,11 @@ function animerRouteur(btn) {
                 // aussi de zéro (ce sont des champs hors formulaire, donc
                 // form.reset() ne les voit pas).
                 n4ReinitialiserConception();
+
+                // Étapes à choix multiple : aucune proposition retenue, aucune
+                // marque de vérification. Sans cela, l'élève relancerait
+                // l'activité avec sa sélection précédente déjà validée.
+                n4ReinitialiserSelections();
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
