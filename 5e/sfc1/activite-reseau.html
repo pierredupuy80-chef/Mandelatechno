@@ -620,6 +620,355 @@
             margin-bottom: var(--espacement-sm);
         }
 
+        /* ============================================
+           ÉTAPE N4 À CHOIX MULTIPLE
+           (n4.etapes[].type = "selection" : retenir N propositions
+            parmi une liste ; le moteur marque chaque proposition après
+            vérification, et l'étape validée porte data-termine="1")
+           ============================================ */
+
+        .etape-selection {
+            margin-top: var(--espacement-md);
+        }
+
+        .compteur-selection {
+            margin-bottom: var(--espacement-sm);
+            font-weight: 700;
+            color: #1a4f7a;
+        }
+
+        .choix-contraintes {
+            list-style: none;
+            margin: 0 0 var(--espacement-md) 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--espacement-sm);
+        }
+
+        .choix-contrainte {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            width: 100%;
+            min-height: 44px;
+            padding: var(--espacement-sm) var(--espacement-md);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: #ffffff;
+            color: var(--couleur-texte);
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.35;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .choix-contrainte:hover {
+            border-color: var(--couleur-primaire);
+        }
+
+        .choix-contrainte:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .choix-icone {
+            flex: 0 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.2;
+        }
+
+        .choix-texte {
+            flex: 1 1 auto;
+        }
+
+        .choix-marque {
+            flex: 0 0 auto;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .choix-contrainte[aria-pressed="true"] {
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        /* États posés par n4VerifierSelection() : la couleur ne porte JAMAIS
+           seule l'information — la marque et l'explication textuelle disent
+           la même chose (RGAA). */
+        .choix-item[data-etat="juste"] .choix-contrainte {
+            border-color: var(--couleur-succes);
+            background-color: #f0fdf4;
+        }
+
+        .choix-item[data-etat="juste"] .choix-marque::after {
+            content: "✔";
+            color: var(--couleur-succes);
+        }
+
+        .choix-item[data-etat="faux"] .choix-contrainte {
+            border-color: var(--couleur-alerte);
+            border-style: dashed;
+            background-color: #fef2f2;
+        }
+
+        .choix-item[data-etat="faux"] .choix-marque::after {
+            content: "✘";
+            color: var(--couleur-alerte);
+        }
+
+        .choix-item[data-etat="manquante"] .choix-contrainte {
+            border-color: #b45309;
+            border-style: dashed;
+            background-color: #fffbeb;
+        }
+
+        .choix-item[data-etat="manquante"] .choix-marque::after {
+            content: "à retenir";
+            color: #b45309;
+            font-size: 0.72rem;
+        }
+
+        .choix-explication {
+            margin: var(--espacement-xs) 0 0 0;
+            padding-left: var(--espacement-md);
+            border-left: 3px solid #cbd5e1;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .etape-selection-retour {
+            margin-top: var(--espacement-sm);
+            font-weight: 600;
+        }
+
+        .etape-selection-retour.succes {
+            color: var(--couleur-succes);
+        }
+
+        .etape-selection-retour.echec {
+            color: var(--couleur-alerte);
+        }
+
+        .etape-selection-explication {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-md);
+            border-left: 4px solid var(--couleur-succes);
+            background-color: #f0fdf4;
+            border-radius: var(--rayon-bordure);
+        }
+
+        /* ============================================
+           CONCEPTION GUIDÉE - NIVEAU N4
+           (bloc produit depuis n4.contraintes et n4.comparateur ;
+            marqueurs CONCEPTION-GUIDEE-N4 retirés si la
+            configuration n'en déclare pas)
+           ============================================ */
+
+        .note-liberte {
+            background-color: #f5f3ff;
+            border-left: 4px solid var(--couleur-secondaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            margin-bottom: var(--espacement-md);
+            color: var(--couleur-texte);
+        }
+
+        .reglages-contraintes {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--espacement-md);
+        }
+
+        .curseur-contrainte {
+            background-color: var(--couleur-fond);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-sm) var(--espacement-md) var(--espacement-md);
+        }
+
+        .curseur-entete {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: var(--espacement-xs);
+        }
+
+        .curseur-entete label {
+            font-weight: 600;
+            color: var(--couleur-texte);
+        }
+
+        .curseur-valeur {
+            font-weight: 700;
+            color: var(--couleur-primaire);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .curseur-contrainte input[type="range"] {
+            width: 100%;
+            min-height: var(--hauteur-cible-min);
+            margin: var(--espacement-xs) 0;
+            accent-color: var(--couleur-primaire);
+            cursor: pointer;
+        }
+
+        .curseur-bornes {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--espacement-sm);
+            font-size: 0.8125rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .curseur-aide {
+            margin-top: var(--espacement-xs);
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .comparateur-outils {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--espacement-sm);
+            margin-bottom: var(--espacement-md);
+        }
+
+        .comparateur-outils label {
+            font-weight: 600;
+        }
+
+        .comparateur-outils select {
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-xs) var(--espacement-sm);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: white;
+            max-width: 100%;
+        }
+
+        .comparateur-compte {
+            width: 100%;
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .comparateur-modeles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--espacement-md);
+        }
+
+        .modele-ost {
+            background-color: white;
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            cursor: pointer;
+            min-height: var(--hauteur-cible-min);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .modele-ost:hover {
+            border-color: var(--couleur-primaire);
+        }
+
+        .modele-ost:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        .modele-ost.choisi {
+            border-color: var(--couleur-succes);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.25);
+        }
+
+        .modele-entete {
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .modele-entete h4 {
+            color: var(--couleur-secondaire);
+            margin: 0;
+            font-size: 1.0625rem;
+        }
+
+        .modele-icone {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .modele-description {
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .modele-valeurs {
+            list-style: none;
+            margin: 0 0 var(--espacement-sm);
+            padding: 0;
+            font-size: 0.9375rem;
+        }
+
+        .modele-valeurs li {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--espacement-sm);
+            padding: 0.15rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .modele-valeurs li:last-child {
+            border-bottom: none;
+        }
+
+        .modele-critere {
+            color: var(--couleur-texte-leger);
+        }
+
+        .modele-verdict {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .verdict-ok {
+            color: var(--couleur-succes);
+        }
+
+        .verdict-non {
+            color: var(--couleur-alerte);
+        }
+
+        .modele-alerte {
+            display: inline-block;
+            margin-top: var(--espacement-xs);
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            background-color: #fef2f2;
+            color: #b91c1c;
+            font-size: 0.8125rem;
+            font-weight: 700;
+        }
+
+        .comparateur-choix {
+            margin-top: var(--espacement-md);
+            padding: var(--espacement-sm) var(--espacement-md);
+            border-radius: var(--rayon-bordure);
+            background-color: #ecfdf5;
+            border: 2px solid #a7f3d0;
+            color: var(--couleur-texte);
+        }
+
         textarea {
             width: 100%;
             min-height: 120px;
@@ -824,6 +1173,22 @@
             background-color: #f5f3ff;
         }
 
+        /* Internet n'est pas un appareil du collège : c'est le réseau mondial,
+           dessiné comme un nuage, en dehors des deux sous-réseaux. Il ne se
+           relie qu'au routeur — le moteur refuse tout autre fil. */
+        .noeud-reseau[data-type="internet"] {
+            min-height: 68px;
+            border-style: dashed;
+            border-color: var(--couleur-info);
+            border-radius: 50% 50% 42% 42% / 62% 62% 38% 38%;
+            background-color: #ecfeff;
+            background-image: radial-gradient(circle at 50% 32%, #ffffff 0%, #ecfeff 72%);
+        }
+
+        .noeud-reseau[data-type="internet"] .noeud-icone {
+            font-size: 1.5rem;
+        }
+
         .noeud-reseau.sur-plateau {
             position: absolute;
             left: 0;
@@ -992,6 +1357,262 @@
 
         .carte-jeu {
             text-align: center;
+        }
+
+        /* ============================================
+           PUZZLE DE COMPLÉTION DU BONUS (bonus.puzzle)
+           (bloc produit depuis bonus.puzzle ; marqueurs
+            PUZZLE-BONUS retirés si la configuration
+            n'en déclare pas)
+
+           Deux dispositions, un seul moteur :
+           - « chaine » : des emplacements successifs à remplir
+             (chaîne d'énergie, chaîne d'information, étapes) ;
+           - « schema » : des emplacements posés sur une
+             illustration technique (étiquettes).
+
+           Le placement se fait au CLIC : on choisit une pièce,
+           puis son emplacement. Le glisser-déposer seul est
+           inutilisable au doigt — le geste fait défiler la
+           page — et impossible au clavier. Toutes les cibles
+           font au moins 44 px (règle RGAA du dépôt).
+           ============================================ */
+
+        .puzzle-bonus {
+            margin: var(--espacement-lg) 0;
+            padding: var(--espacement-md);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: #f1f5f9;
+        }
+
+        .puzzle-bonus h3 {
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .puzzle-consigne {
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .puzzle-aide {
+            font-size: 0.9rem;
+            /* Gris foncé : 6:1 sur le fond du cadre (RGAA AA attend 4,5:1) */
+            color: #475569;
+            margin-bottom: var(--espacement-md);
+        }
+
+        .puzzle-reserve {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            min-height: 76px;
+            padding: var(--espacement-sm);
+            margin-bottom: var(--espacement-md);
+            border: 2px dashed #94a3b8;
+            border-radius: var(--rayon-bordure);
+            background-color: #e2e8f0;
+        }
+
+        .puzzle-reserve.vide::after {
+            content: "Toutes les pièces sont posées.";
+            align-self: center;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        /* Une pièce : cible tactile de 44 px, jamais réduite, qui reste lisible
+           quand elle est posée dans un emplacement étroit. */
+        .puzzle-piece {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: var(--hauteur-cible-min);
+            max-width: 100%;
+            padding: var(--espacement-sm) var(--espacement-md);
+            font: inherit;
+            font-size: 0.95rem;
+            line-height: 1.25;
+            text-align: center;
+            color: var(--couleur-texte);
+            background-color: #ffffff;
+            border: 2px solid #64748b;
+            border-radius: var(--rayon-bordure);
+            box-shadow: var(--ombre-legere);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .puzzle-piece:hover {
+            border-color: var(--couleur-primaire);
+        }
+
+        /* La pièce choisie est entourée : c'est le seul repère dont dispose
+           l'élève pour savoir ce qu'il va poser. */
+        .puzzle-piece[aria-pressed="true"] {
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
+
+        .puzzle-piece.placee {
+            box-shadow: none;
+        }
+
+        .puzzle-plateau {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: var(--espacement-sm);
+        }
+
+        .puzzle-slot {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--espacement-xs);
+            min-height: calc(var(--hauteur-cible-min) + 20px);
+            padding: var(--espacement-sm);
+            text-align: center;
+            background-color: #ffffff;
+            border: 2px dashed #64748b;
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .puzzle-slot-libelle {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--couleur-primaire);
+        }
+
+        /* ── Disposition « chaîne » : des étapes côte à côte ── */
+        .puzzle-plateau[data-layout="chaine"] .puzzle-slot {
+            flex: 1 1 150px;
+        }
+
+        /* ── Disposition « schéma » : les emplacements sont posés sur l'image.
+           `left` et `top` viennent de la configuration, en pourcentage : le
+           schéma se replace donc tout seul quand la page change de largeur. ── */
+        .puzzle-plateau[data-layout="schema"] {
+            position: relative;
+            display: block;
+        }
+
+        .puzzle-plateau[data-layout="schema"] .puzzle-fond {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 2px solid #64748b;
+            border-radius: var(--rayon-bordure);
+            background-color: #ffffff;
+        }
+
+        .puzzle-plateau[data-layout="schema"] .puzzle-slot {
+            position: absolute;
+            min-width: 78px;
+            max-width: 40%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+        }
+
+        /* États d'un emplacement après vérification */
+        .puzzle-slot.juste {
+            border-style: solid;
+            border-color: var(--couleur-succes);
+            background-color: #ecfdf5;
+        }
+
+        .puzzle-slot.faux {
+            border-style: solid;
+            border-color: var(--couleur-alerte);
+            background-color: #fef2f2;
+        }
+
+        .puzzle-slot.cible {
+            border-style: solid;
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        .puzzle-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+            margin-top: var(--espacement-md);
+        }
+
+        .puzzle-actions .bouton-action {
+            margin: 0;
+        }
+
+        .puzzle-retour {
+            margin-top: var(--espacement-sm);
+            font-weight: 600;
+        }
+
+        .puzzle-retour.succes {
+            color: var(--couleur-succes);
+        }
+
+        .puzzle-retour.echec {
+            color: var(--couleur-alerte);
+        }
+
+        .puzzle-bilan {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-sm);
+            border: 2px solid;
+            border-radius: var(--rayon-bordure);
+        }
+
+        .puzzle-bilan.succes {
+            border-color: var(--couleur-succes);
+            background-color: #ecfdf5;
+        }
+
+        .puzzle-bilan.echec {
+            border-color: var(--couleur-alerte);
+            background-color: #fef2f2;
+        }
+
+        .puzzle-bilan ul {
+            margin: var(--espacement-xs) 0 0 var(--espacement-lg);
+        }
+
+        .puzzle-explication {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-sm);
+            border-left: 4px solid var(--couleur-info);
+            background-color: #ecfeff;
+        }
+
+        @media (max-width: 600px) {
+            .puzzle-plateau[data-layout="chaine"] .puzzle-slot {
+                flex-basis: 100%;
+            }
+
+            .puzzle-plateau[data-layout="schema"] .puzzle-slot {
+                /* 40 % au plus : deux étiquettes posées à 47 % l'une de
+                   l'autre ne peuvent plus se recouvrir sur un écran étroit.
+                   Le recouvrement reste possible si la configuration place
+                   deux emplacements trop près — c'est justement ce que
+                   `verifier_puzzle.py` signale. */
+                min-width: 68px;
+                max-width: 40%;
+                font-size: 0.85rem;
+            }
+
+            .puzzle-piece {
+                padding: var(--espacement-xs) var(--espacement-sm);
+            }
         }
 
         /* ============================================
@@ -2297,7 +2918,7 @@ function animerRouteur(btn) {
                         <h3>🔧 Ateliers de découverte</h3>
                     <p class="texte-secondaire">Reconstitue d'abord le câblage du réseau de la salle 102, puis associe chaque composant à son rôle.</p>
 
-                    <article class="atelier-carte" data-type="reseau" data-atelier="cablage-salle-102" data-liens="[{&quot;de&quot;: &quot;poste-1&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;un poste client se relie au commutateur par un câble Ethernet (prise RJ45).&quot;}, {&quot;de&quot;: &quot;poste-2&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;chaque poste client rejoint le même commutateur : c'est lui qui aiguille les données vers le bon appareil.&quot;}, {&quot;de&quot;: &quot;imprimante&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;l'imprimante est un matériel partagé : reliée au commutateur, elle sert tous les postes de la salle.&quot;}, {&quot;de&quot;: &quot;serveur&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;le serveur, qui stocke et partage les fichiers du collège, se relie lui aussi au commutateur.&quot;}, {&quot;de&quot;: &quot;commutateur&quot;, &quot;vers&quot;: &quot;routeur&quot;, &quot;pourquoi&quot;: &quot;pour sortir de la salle, les données passent du commutateur au routeur.&quot;}, {&quot;de&quot;: &quot;routeur&quot;, &quot;vers&quot;: &quot;internet&quot;, &quot;pourquoi&quot;: &quot;le routeur relie le réseau local à Internet : c'est le seul passage entre le collège et le monde.&quot;}]" aria-labelledby="atelier-titre-cablage-salle-102">
+                    <article class="atelier-carte" data-type="reseau" data-atelier="cablage-salle-102" data-obligatoire="1" data-liens="[{&quot;de&quot;: &quot;poste-1&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;un poste client se relie au commutateur par un câble Ethernet (prise RJ45).&quot;}, {&quot;de&quot;: &quot;poste-2&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;chaque poste client rejoint le même commutateur : c'est lui qui aiguille les données vers le bon appareil.&quot;}, {&quot;de&quot;: &quot;imprimante&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;l'imprimante est un matériel partagé : reliée au commutateur, elle sert tous les postes de la salle.&quot;}, {&quot;de&quot;: &quot;serveur&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;le serveur, qui stocke et partage les fichiers du collège, se relie lui aussi au commutateur.&quot;}, {&quot;de&quot;: &quot;commutateur&quot;, &quot;vers&quot;: &quot;routeur&quot;, &quot;pourquoi&quot;: &quot;pour sortir de la salle, les données passent du commutateur au routeur.&quot;}, {&quot;de&quot;: &quot;routeur&quot;, &quot;vers&quot;: &quot;internet&quot;, &quot;pourquoi&quot;: &quot;le routeur relie le réseau local à Internet : c'est le seul passage entre le collège et le monde.&quot;}]" aria-labelledby="atelier-titre-cablage-salle-102">
                         <h3 id="atelier-titre-cablage-salle-102">🖧 Reconstitue le câblage du réseau de la salle 102</h3>
                         <p class="atelier-consigne">Le réseau de la salle 102 a été débranché : tous les câbles sont à refaire. Clique un premier appareil, puis un second, pour tendre un fil entre eux. Chaque fil trouvé est vérifié et expliqué tout de suite.</p>
                         <div class="atelier-reseau" role="group" aria-label="Appareils à relier">
@@ -2611,7 +3232,7 @@ function animerRouteur(btn) {
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>Ta démarche de conception est libre : plusieurs câblages se défendent, et c'est ta réflexion qui compte. Le schéma, lui, se vérifie : quand tu auras répondu aux étapes ci-dessous, construis ton réseau dans l'atelier de câblage, puis vérifie-le.</p>
+                    <p>Ta démarche de conception est libre : c'est ta réflexion qui compte. Réponds aux deux étapes ci-dessous — le besoin des deux salles, puis les contraintes qui décident du schéma —, construis ensuite ton réseau dans l'atelier de câblage, puis vérifie-le : le schéma, lui, se vérifie.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
@@ -2619,56 +3240,134 @@ function animerRouteur(btn) {
                     </div>
 
                     <h3>Étapes de conception</h3>
-                    
+
+                    <!-- ETAPES-CONCEPTION-N4 : DEBUT -->
                     <div class="etape-conception">
                         <h4>Étape 1 : Identifier le besoin des deux salles</h4>
-                        <p>Quels appareils doivent communiquer entre eux dans la salle 102 ? Dans la salle des profs ? De quels services ces deux salles ont-elles besoin (serveur, Internet, imprimantes) ?</p>
-                        <textarea 
-                            id="besoin-identifie" 
+                        <p>Quels appareils doivent communiquer entre eux dans la salle 102 ? Dans la salle des profs ? De quels services ces deux salles ont-elles besoin (serveur du collège, Internet, imprimantes) ?</p>
+                        <textarea id="besoin-identifie"
+                            data-conception-texte
+                            data-min="10"
                             placeholder="Décris qui doit communiquer avec qui dans chaque salle…"
                             aria-label="Description du besoin identifié"></textarea>
                     </div>
-
-                    <div class="etape-conception">
-                        <h4>Étape 2 : Exprimer les contraintes du collège</h4>
-                        <p>Quelles limites dois-tu respecter ? Pense à la séparation des deux salles (les imprimantes des professeurs restent inaccessibles aux élèves), au nombre de prises des commutateurs et aux câbles à tirer dans les murs.</p>
-                        <textarea 
-                            id="contraintes-definies" 
-                            placeholder="Liste tes contraintes principales…"
-                            aria-label="Contraintes du projet"></textarea>
+                    <div class="etape-conception" id="etape-selection-2">
+                        <h4>Étape 2 : Retenir les 5 contraintes les plus importantes</h4>
+                        <p>Voici douze contraintes possibles pour le câblage du collège. Clique celles qui décident vraiment ton schéma, puis vérifie : tu dois en retenir exactement 5.</p>
+                            <p class="note-liberte">Il n'y a qu'une seule bonne sélection : les cinq contraintes qui obligent à séparer les deux salles. Les autres sont vraies, mais elles ne changent rien à ton schéma.</p>
+                        <div class="etape-selection" data-conception-selection data-maximum="5" data-conception-consigne="Choisis exactement 5 proposition(s) dans l'étape « Retenir les 5 contraintes les plus importantes », puis clique sur « Vérifier mes contraintes ».">
+                            <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 5</p>
+                            <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : c'est elle qui impose deux commutateurs. Tous les appareils branchés sur un même commutateur forment un même sous-réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔀</span>
+                                        <span class="choix-texte">Les deux salles doivent rester dans deux sous-réseaux séparés : un commutateur par salle.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : c'est la raison de la séparation. Une imprimante placée sur le commutateur de la salle des profs ne peut pas être atteinte par un poste de la salle 102." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🖨️</span>
+                                        <span class="choix-texte">Les imprimantes de la salle des profs ne doivent pas être accessibles depuis les postes élèves.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : les deux sous-réseaux doivent rejoindre le routeur, sinon les fichiers de la salle 102 n'atteindraient plus le serveur." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🗄️</span>
+                                        <span class="choix-texte">Toutes les salles doivent pouvoir utiliser le serveur du collège.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : le routeur est le seul passage entre le réseau local du collège et Internet. Chaque commutateur doit donc le rejoindre." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🌐</span>
+                                        <span class="choix-texte">Toutes les salles ont besoin d'Internet, et le routeur est le seul passage vers l'extérieur.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : un poste ou une imprimante se relie toujours à un seul commutateur, par un seul fil. C'est ce qui délimite le sous-réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔌</span>
+                                        <span class="choix-texte">Chaque appareil se relie à un seul commutateur, avec une prise RJ45 par appareil.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Vraie pendant les travaux, mais elle ne change pas ton schéma : ton schéma montre qui est relié à qui, pas le chemin des câbles dans les murs." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🧰</span>
+                                        <span class="choix-texte">Les câbles doivent longer les murs dans les gaines déjà posées.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est la limite réelle d'un câble Ethernet, mais dans un collège un câble fait quelques dizaines de mètres : cette limite ne modifie pas le schéma." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">📏</span>
+                                        <span class="choix-texte">Aucun câble ne doit dépasser 100 mètres entre un appareil et son commutateur.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Une contrainte ne peut pas contredire le besoin : avec un seul commutateur, les deux salles partageraient le même sous-réseau, ce qui est interdit. Cette contrainte est donc incompatible avec le problème." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">💰</span>
+                                        <span class="choix-texte">Le collège ne peut acheter qu'un seul commutateur cette année.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Hors sujet ici : aucun appareil de la cour ne figure dans ton schéma. Le schéma ne concerne que la salle 102 et la salle des profs." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">📶</span>
+                                        <span class="choix-texte">Le Wi-Fi doit couvrir la cour de récréation.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Une question de matériel, pas de câblage : la marque d'un poste ne change ni son commutateur ni ses fils." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🏷️</span>
+                                        <span class="choix-texte">Tous les postes de travail doivent être de la même marque.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une règle de sécurité, pas une contrainte de conception : elle ne dit rien sur les liaisons du réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔒</span>
+                                        <span class="choix-texte">L'armoire électrique de la salle doit rester fermée à clé.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Cela concerne l'organisation de la classe. Le nombre d'élèves par poste ne change pas le nombre de fils du schéma." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🧑‍🤝‍🧑</span>
+                                        <span class="choix-texte">Les élèves doivent travailler en binôme devant chaque poste.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                            </ul>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Vérifier mes contraintes</button>
+                            <p class="etape-selection-retour" role="status" aria-live="polite"></p>
+                            <p class="etape-selection-explication cache">Cinq contraintes décident du schéma : séparer les deux salles en deux sous-réseaux (un commutateur par salle), rendre les imprimantes des professeurs inaccessibles aux élèves, donner à tous accès au serveur et à Internet par le routeur, et relier chaque appareil à un seul commutateur. Les autres contraintes sont réelles, mais elles concernent le chantier, l'organisation de la classe ou la sécurité : elles ne modifient pas les fils de ton schéma.</p>
+                        </div>
                     </div>
+                    <!-- ETAPES-CONCEPTION-N4 : FIN -->
 
-                    <div class="etape-conception">
-                        <h4>Étape 3 : Imaginer deux câblages possibles</h4>
-                        <p>Propose deux façons de câbler les deux salles : par exemple un seul commutateur pour tout le monde, ou un commutateur par salle relié au routeur.</p>
-                        <textarea 
-                            id="solutions-imaginees" 
-                            placeholder="Décris deux câblages différents et leurs conséquences…"
-                            aria-label="Solutions imaginées"></textarea>
-                    </div>
 
-                    <div class="etape-conception">
-                        <h4>Étape 4 : Choisir et justifier ta solution</h4>
-                        <p>Quel câblage retiens-tu ? Explique pourquoi il respecte la contrainte des deux sous-réseaux séparés.</p>
-                        <textarea 
-                            id="solution-choisie" 
-                            placeholder="Indique le câblage retenu et justifie-le…"
-                            aria-label="Solution choisie et justification"></textarea>
-                    </div>
-
-                    <div class="etape-conception">
-                        <h4>Étape 5 : Schématiser ton réseau</h4>
-                        <p>Décris ton schéma avant de le câbler : quel appareil branches-tu sur quel commutateur ? Puis réalise-le dans l'atelier de câblage ci-dessous et vérifie-le.</p>
-                        <textarea 
-                            id="schema-solution" 
-                            placeholder="Décris ton schéma : chaque appareil, son commutateur, et le routeur…"
-                            aria-label="Description technique de la solution"></textarea>
-                    </div>
 
 
                     <article class="cablage-n4" id="cablage-atelier" aria-labelledby="cablage-titre">
                         <h3 id="cablage-titre">🖧 Atelier : câbler le réseau du collège</h3>
-                        <p class="cablage-consigne">Deux salles, deux sous-réseaux : place le routeur, les deux commutateurs, les postes et les imprimantes sur le fond blanc, puis relie-les par des fils. Les postes de la salle 102 doivent rejoindre un commutateur, les postes et les imprimantes de la salle des profs un autre commutateur, et chaque commutateur doit rejoindre le routeur.</p>
+                        <p class="cablage-consigne">Deux salles, deux sous-réseaux : place le routeur, les deux commutateurs, les postes, les imprimantes et le nuage Internet sur le fond blanc, puis relie-les par des fils. Les postes de la salle 102 doivent rejoindre un commutateur, les postes et les imprimantes de la salle des profs un autre commutateur, chaque commutateur doit rejoindre le routeur, et le routeur doit rejoindre Internet.</p>
                         <p class="cablage-aide">Glisse un équipement de la réserve vers le fond blanc. Pour tendre un fil, clique un équipement puis un autre. Pour retirer un fil, clique dessus. Au clavier : Entrée choisit et relie, les flèches déplacent l'équipement sélectionné.</p>
                         <div class="cablage-reserve" id="cablage-reserve" role="group" aria-label="Équipements à placer sur le fond blanc">
                             <button type="button" class="noeud-reseau" data-noeud="routeur" data-type="routeur" data-nom="Routeur du collège" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
@@ -2711,6 +3410,10 @@ function animerRouteur(btn) {
                                 <span class="noeud-icone" aria-hidden="true">🖨️</span>
                                 <span class="noeud-nom">Imprimante 2</span>
                             </button>
+                            <button type="button" class="noeud-reseau" data-noeud="internet" data-type="internet" data-nom="Internet" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">☁️</span>
+                                <span class="noeud-nom">Internet</span>
+                            </button>
                         </div>
                         <div class="cablage-zone" id="cablage-zone" role="group" aria-label="Fond blanc du schéma : dépose les équipements et relie-les">
                             <svg class="cablage-fils" id="cablage-fils" role="group" aria-label="Fils du schéma" focusable="false"></svg>
@@ -2723,7 +3426,7 @@ function animerRouteur(btn) {
                         </div>
                         <p class="cablage-retour" id="cablage-retour" role="status" aria-live="polite"></p>
                         <div class="cablage-bilan cache" id="cablage-bilan" aria-live="polite"></div>
-                        <p class="cablage-explication cache" id="cablage-explication">Chaque commutateur délimite un sous-réseau : les appareils branchés sur le même commutateur échangent directement entre eux. En plaçant les postes de la salle 102 sur un commutateur et les postes et imprimantes de la salle des profs sur l'autre, les élèves ne peuvent pas atteindre les imprimantes des professeurs. Les deux commutateurs rejoignent le routeur : c'est le seul passage entre les deux sous-réseaux, et c'est lui qui ouvre vers le serveur du collège et vers Internet.</p>
+                        <p class="cablage-explication cache" id="cablage-explication">Chaque commutateur délimite un sous-réseau : les appareils branchés sur le même commutateur échangent directement entre eux. En plaçant les postes de la salle 102 sur un commutateur et les postes et imprimantes de la salle des profs sur l'autre, les élèves ne peuvent pas atteindre les imprimantes des professeurs. Les deux commutateurs rejoignent le routeur : c'est le seul passage entre les deux sous-réseaux, et c'est lui qui ouvre vers le serveur du collège et vers Internet. Internet, enfin, ne se relie qu'au routeur : c'est le réseau mondial, il est en dehors des deux sous-réseaux du collège, et aucun poste ne s'y branche directement.</p>
                     </article>
 
                     <button class="bouton-action marge-haut" onclick="finaliserConception()">
@@ -2835,6 +3538,8 @@ function animerRouteur(btn) {
                 <div class="carte-contenu">
                     <h2>🎮 Défi ludique</h2>
                     <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
+
+
 
                     <div class="jeux-bonus">
                         
@@ -3221,10 +3926,23 @@ function animerRouteur(btn) {
             // Le bouton de suite ne s'active que lorsque chaque tuile a
             // été visitée au moins une fois, même si elles ne sont plus
             // toutes cochées simultanément à l'instant T.
+            mettreAJourSuiteN2();
+        }
+
+        // La suite du N2 s'ouvre quand la chaîne est explorée ET quand les
+        // ateliers déclarés obligatoires (n2.ateliers.exercices[].obligatoire)
+        // sont terminés. Sans atelier obligatoire, le comportement est celui
+        // d'avant : seule l'exploration de la chaîne compte.
+        function mettreAJourSuiteN2() {
             const boutonSuite = document.getElementById('bouton-suite-n2-intro');
-            if (boutonSuite) {
-                boutonSuite.disabled = elementsVisites.size < totalElements;
-            }
+            if (!boutonSuite) return;
+            const ateliersObligatoires = document.querySelectorAll(
+                '#contenu-n2-intro .atelier-carte[data-obligatoire="1"]');
+            let restants = 0;
+            ateliersObligatoires.forEach(function (carte) {
+                if (carte.getAttribute('data-termine') !== '1') restants += 1;
+            });
+            boutonSuite.disabled = elementsVisites.size < totalElements || restants > 0;
         }
 
         // ============================================
@@ -3279,29 +3997,59 @@ function animerRouteur(btn) {
         // ============================================
         // PROBLÈME OUVERT N4
         // ============================================
-        
+        //
+        // Deux formes de conception coexistent, et le moteur ne les distingue
+        // pas par un drapeau : il lit le DOM. Chaque zone de saisie exigée
+        // déclare `data-conception-texte` (avec son minimum de caractères), et
+        // chaque atelier qui doit être complété déclare `data-conception-modele`.
+        // La conception libre du gabarit (cinq textarea) et la conception
+        // guidée (contraintes par curseurs + comparateur de modèles) sont donc
+        // validées par le même code : ajouter une étape ne demande pas de
+        // modifier cette fonction.
+
         function finaliserConception() {
-            const champs = [
-                'besoin-identifie',
-                'contraintes-definies',
-                'solutions-imaginees',
-                'solution-choisie',
-                'schema-solution'
-            ];
+            const champs = document.querySelectorAll(
+                '#contenu-n4-probleme textarea[data-conception-texte]');
 
-            let tousRemplis = true;
-            champs.forEach(champId => {
-                const champ = document.getElementById(champId);
-                if (champ.value.trim().length < 10) {
-                    tousRemplis = false;
+            for (const champ of champs) {
+                const mini = parseInt(champ.getAttribute('data-min') || '10', 10);
+                if (champ.value.trim().length < mini) {
                     champ.style.borderColor = 'var(--couleur-alerte)';
-                } else {
-                    champ.style.borderColor = '#e2e8f0';
+                    champ.focus();
+                    const cadre = champ.closest('div');
+                    const titre = cadre ? cadre.querySelector('h4') : null;
+                    alert('Complète « ' + (titre ? titre.textContent.trim() : 'le champ vide') +
+                          ' » : il faut au moins ' + mini + ' caractères.');
+                    return;
                 }
-            });
+                champ.style.borderColor = '#e2e8f0';
+            }
 
-            if (!tousRemplis) {
-                alert('Veuillez remplir tous les champs avec au moins 10 caractères chacun.');
+            // Ateliers de conception dont le résultat se vérifie : choisir un
+            // modèle dans le comparateur, construire un câblage. Tant qu'ils ne
+            // sont pas complétés, la conception n'est pas finalisée.
+            const ateliers = document.querySelectorAll(
+                '#contenu-n4-probleme [data-conception-modele]');
+            for (const atelier of ateliers) {
+                if (atelier.querySelector('.modele-ost.choisi')) continue;
+                const consigne = atelier.getAttribute('data-conception-consigne') ||
+                    'Choisis un modèle dans le comparateur : clique sur celui que tu retiens.';
+                alert(consigne);
+                atelier.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // Une étape de CHOIX (n4.etapes[].type = "selection") se vérifie
+            // comme le comparateur : tant qu'elle n'est pas réussie, la
+            // conception n'est pas finalisée. Le résultat est porté par
+            // data-termine="1", posé par n4VerifierSelection().
+            const selections = document.querySelectorAll(
+                '#contenu-n4-probleme [data-conception-selection]');
+            for (const selection of selections) {
+                if (selection.getAttribute('data-termine') === '1') continue;
+                alert(selection.getAttribute('data-conception-consigne') ||
+                    'Termine l\'étape de choix : retiens les propositions, puis clique sur « Vérifier ».');
+                selection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
@@ -3320,6 +4068,328 @@ function animerRouteur(btn) {
             const confirmation = document.getElementById('confirmation-conception');
             confirmation.style.display = 'block';
             confirmation.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============================================
+        // ÉTAPE N4 À CHOIX MULTIPLE (optionnelle)
+        // ============================================
+        //
+        // Une étape peut demander de RETENIR N propositions parmi une liste
+        // (n4.etapes[].type = "selection") au lieu de rédiger. Le moteur ne
+        // connaît aucune réponse : il lit le marquage posé par
+        // personnaliser.py — `data-essentielle` sur chaque proposition et son
+        // `data-explication`.
+        //
+        // Comme pour les quiz, la vérification rend l'explication de CHAQUE
+        // proposition : celles qui sont retenues à tort, celles qui manquent,
+        // et celles qui ne décident pas du schéma. Un choix modifié après
+        // vérification annule la réussite : l'élève ne peut pas valider puis
+        // changer sa réponse en silence.
+
+        function n4SelectionRetenues(conteneur) {
+            return conteneur.querySelectorAll('.choix-contrainte[aria-pressed="true"]');
+        }
+
+        function n4CompterSelection(conteneur) {
+            const retenues = n4SelectionRetenues(conteneur).length;
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const compteur = conteneur.querySelector('.compteur-selection');
+            if (compteur) {
+                compteur.textContent = retenues + ' proposition' + (retenues > 1 ? 's' : '') +
+                    ' retenue' + (retenues > 1 ? 's' : '') + ' sur ' + maximum;
+            }
+            return retenues;
+        }
+
+        function n4RetourSelection(conteneur, message, type) {
+            const retour = conteneur.querySelector('.etape-selection-retour');
+            if (!retour) return;
+            retour.textContent = message;
+            retour.className = 'etape-selection-retour' + (type ? ' ' + type : '');
+        }
+
+        // Efface les marques et les explications d'une vérification précédente.
+        function n4EffacerVerdicts(conteneur) {
+            conteneur.querySelectorAll('.choix-item').forEach(function (item) {
+                item.removeAttribute('data-etat');
+                const explication = item.querySelector('.choix-explication');
+                if (!explication) return;
+                explication.textContent = '';
+                explication.classList.add('cache');
+            });
+            const globale = conteneur.querySelector('.etape-selection-explication');
+            if (globale) globale.classList.add('cache');
+        }
+
+        function n4BasculerContrainte(bouton) {
+            const conteneur = bouton.closest('[data-conception-selection]');
+            if (!conteneur) return;
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const dejaChoisi = bouton.getAttribute('aria-pressed') === 'true';
+
+            if (!dejaChoisi && maximum &&
+                n4SelectionRetenues(conteneur).length >= maximum) {
+                n4RetourSelection(conteneur, 'Tu ne peux retenir que ' + maximum +
+                    ' proposition' + (maximum > 1 ? 's' : '') +
+                    ' : retire-en une d\'abord.', 'echec');
+                return;
+            }
+            bouton.setAttribute('aria-pressed', dejaChoisi ? 'false' : 'true');
+            conteneur.removeAttribute('data-termine');
+            n4EffacerVerdicts(conteneur);
+            n4RetourSelection(conteneur, '', '');
+            n4CompterSelection(conteneur);
+        }
+
+        function n4VerifierSelection(bouton) {
+            const conteneur = bouton.closest('[data-conception-selection]');
+            if (!conteneur) return;
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const retenues = n4CompterSelection(conteneur);
+
+            if (!maximum || retenues !== maximum) {
+                n4RetourSelection(conteneur, 'Retiens d\'abord exactement ' + maximum +
+                    ' proposition' + (maximum > 1 ? 's' : '') +
+                    ' : tu en as ' + retenues + '.', 'echec');
+                return;
+            }
+
+            let aRetirer = 0;
+            let manquantes = 0;
+
+            conteneur.querySelectorAll('.choix-item').forEach(function (item) {
+                const choix = item.querySelector('.choix-contrainte');
+                if (!choix) return;
+                const essentielle = choix.getAttribute('data-essentielle') === '1';
+                const choisie = choix.getAttribute('aria-pressed') === 'true';
+
+                let etat = '';
+                let verdict = 'Non retenue. ';
+                if (choisie && essentielle) {
+                    etat = 'juste';
+                    verdict = 'Bonne réponse. ';
+                } else if (choisie && !essentielle) {
+                    etat = 'faux';
+                    verdict = 'À retirer. ';
+                    aRetirer += 1;
+                } else if (!choisie && essentielle) {
+                    etat = 'manquante';
+                    verdict = 'Oubliée. ';
+                    manquantes += 1;
+                }
+
+                if (etat) item.setAttribute('data-etat', etat);
+                else item.removeAttribute('data-etat');
+
+                const explication = item.querySelector('.choix-explication');
+                if (!explication) return;
+                explication.textContent = verdict + 'Explication : ' +
+                    (choix.getAttribute('data-explication') || '');
+                explication.classList.remove('cache');
+            });
+
+            const globale = conteneur.querySelector('.etape-selection-explication');
+            const reussi = aRetirer === 0 && manquantes === 0;
+
+            if (reussi) {
+                conteneur.setAttribute('data-termine', '1');
+                if (globale) globale.classList.remove('cache');
+                n4RetourSelection(conteneur, '✅ Les ' + maximum +
+                    ' propositions retenues sont bien les plus importantes : tu peux ' +
+                    'passer à la suite.', 'succes');
+                return;
+            }
+
+            conteneur.removeAttribute('data-termine');
+            if (globale) globale.classList.add('cache');
+            n4RetourSelection(conteneur, 'Il reste ' + (aRetirer + manquantes) +
+                ' point(s) à corriger : ' + aRetirer + ' proposition' +
+                (aRetirer > 1 ? 's' : '') + ' à retirer et ' + manquantes +
+                ' à retrouver. Lis l\'explication sous chaque proposition.', 'echec');
+        }
+
+        // ============================================
+        // CONCEPTION GUIDÉE N4 (optionnelle)
+        // ============================================
+        //
+        // Contraintes réglées par curseurs + comparateur de modèles. Ces
+        // fonctions ne font rien si la page n'a pas de conception guidée :
+        // elles sont donc sans effet sur les activités en conception libre.
+        //
+        // Le lien entre les deux étapes est ce qui donne son sens aux curseurs :
+        // chaque fiche de modèle est confrontée en direct aux contraintes
+        // réglées, et l'élève voit combien de modèles tiennent dans SON cahier
+        // des charges. Régler un curseur n'est jamais obligatoire — c'est un
+        // outil pour aller au bout de son idée, pas une saisie de plus.
+
+        function n4Nombre(valeur, decimales) {
+            const nombre = Math.round(valeur * 10) / 10;
+            let texte = (decimales ? nombre.toFixed(1) : String(Math.round(nombre)));
+            return texte.replace('.', ',');
+        }
+
+        function n4Formatage(curseur, valeur) {
+            const pas = parseFloat(curseur.getAttribute('step') || '1');
+            const decimales = pas < 1 || valeur % 1 !== 0;
+            const unite = curseur.getAttribute('data-unite') || '';
+            const texte = n4Nombre(parseFloat(valeur), decimales);
+            if (!unite) return texte;
+            return /^[€$%]$/.test(unite) ? texte + ' ' + unite : texte + ' ' + unite;
+        }
+
+        function n4ContraintesReglees() {
+            const regles = [];
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return regles;
+            zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
+                const curseur = bloc.querySelector('input[type="range"]');
+                if (!curseur) return;
+                regles.push({
+                    critere: bloc.getAttribute('data-critere') || '',
+                    sens: bloc.getAttribute('data-sens') || 'max',
+                    nom: bloc.getAttribute('data-nom') || '',
+                    valeur: parseFloat(curseur.value)
+                });
+            });
+            return regles;
+        }
+
+        function n4MettreAJourContraintes() {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+
+            const regles = n4ContraintesReglees();
+
+            zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
+                const curseur = bloc.querySelector('input[type="range"]');
+                const sortie = bloc.querySelector('.curseur-valeur');
+                if (curseur && sortie) sortie.textContent = n4Formatage(curseur, curseur.value);
+            });
+
+            const modeles = zone.querySelectorAll('.modele-ost');
+            let respectent = 0;
+            for (const modele of modeles) {
+                const manques = [];
+                for (const regle of regles) {
+                    if (!regle.critere) continue;
+                    const mesure = parseFloat(modele.getAttribute('data-' + regle.critere));
+                    if (isNaN(mesure)) continue;
+                    const horsLimite = regle.sens === 'min'
+                        ? mesure < regle.valeur
+                        : mesure > regle.valeur;
+                    if (horsLimite) manques.push(regle.nom);
+                }
+                const verdict = modele.querySelector('.modele-verdict');
+                if (verdict) {
+                    if (!manques.length) {
+                        verdict.textContent = '✔ respecte toutes tes contraintes';
+                        verdict.className = 'modele-verdict verdict-ok';
+                    } else {
+                        verdict.textContent = '✘ ne respecte pas : ' + manques.join(', ');
+                        verdict.className = 'modele-verdict verdict-non';
+                    }
+                }
+                if (!manques.length) respectent++;
+            }
+
+            const compte = document.getElementById('comparateur-compte');
+            if (compte) {
+                if (!modeles.length) {
+                    compte.textContent = '';
+                } else if (respectent === 0) {
+                    compte.textContent = 'Aucun modèle ne respecte ton cahier des charges : ' +
+                        'ouvre un curseur ou accepte un compromis.';
+                } else if (respectent === 1) {
+                    compte.textContent = '1 modèle respecte toutes tes contraintes.';
+                } else {
+                    compte.textContent = respectent + ' modèles respectent toutes tes contraintes.';
+                }
+            }
+        }
+
+        function n4TrierModeles() {
+            const choix = document.getElementById('tri-comparateur');
+            const grille = document.getElementById('comparateur-modeles');
+            if (!grille) return;
+            const cle = choix ? choix.value : '';
+            const cartes = Array.prototype.slice.call(grille.querySelectorAll('.modele-ost'));
+            if (!cartes.length) return;
+
+            if (cle && choix) {
+                const option = choix.options[choix.selectedIndex];
+                const sens = option ? (option.getAttribute('data-sens') || 'haut') : 'haut';
+                cartes.sort(function (a, b) {
+                    let va = parseFloat(a.getAttribute('data-' + cle));
+                    let vb = parseFloat(b.getAttribute('data-' + cle));
+                    if (isNaN(va)) va = 0;
+                    if (isNaN(vb)) vb = 0;
+                    return sens === 'bas' ? va - vb : vb - va;
+                });
+            } else {
+                // Sans tri, on revient à l'ordre du magasin : sans ce retour,
+                // l'élève ne pourrait pas défaire un tri qu'il regrette.
+                cartes.sort(function (a, b) {
+                    return (parseInt(a.getAttribute('data-rang'), 10) || 0) -
+                           (parseInt(b.getAttribute('data-rang'), 10) || 0);
+                });
+            }
+            for (const carte of cartes) grille.appendChild(carte);
+        }
+
+        function n4ChoisirModele(carte) {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone || !carte) return;
+            zone.querySelectorAll('.modele-ost').forEach(function (autre) {
+                autre.classList.remove('choisi');
+                autre.setAttribute('aria-checked', 'false');
+            });
+            carte.classList.add('choisi');
+            carte.setAttribute('aria-checked', 'true');
+            const nom = document.getElementById('modele-choisi-nom');
+            if (nom) nom.textContent = carte.getAttribute('data-nom') || 'ce modèle';
+        }
+
+        function n4ReinitialiserConception() {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+            zone.querySelectorAll('.modele-ost').forEach(function (carte) {
+                carte.classList.remove('choisi');
+                carte.setAttribute('aria-checked', 'false');
+            });
+            const nom = document.getElementById('modele-choisi-nom');
+            if (nom) nom.textContent = 'aucun pour l\'instant';
+            zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
+                const defaut = curseur.getAttribute('data-defaut');
+                if (defaut !== null) curseur.value = defaut;
+            });
+            const tri = document.getElementById('tri-comparateur');
+            if (tri) tri.value = '';
+            n4TrierModeles();
+            n4MettreAJourContraintes();
+        }
+
+        function initialiserConceptionGuidee() {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+
+            zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
+                curseur.addEventListener('input', n4MettreAJourContraintes);
+                curseur.addEventListener('change', n4MettreAJourContraintes);
+            });
+
+            zone.querySelectorAll('.modele-ost').forEach(function (carte) {
+                carte.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                        e.preventDefault();
+                        n4ChoisirModele(this);
+                    }
+                });
+            });
+
+            const tri = document.getElementById('tri-comparateur');
+            if (tri) tri.addEventListener('change', n4TrierModeles);
+
+            n4MettreAJourContraintes();
         }
 
         // ============================================
@@ -3384,6 +4454,13 @@ function animerRouteur(btn) {
                 if (document.getElementById('cablage-atelier')) {
                     cablageReinitialiser();
                 }
+                // Ateliers de découverte et animations N2 : balisage d'origine.
+                reinitialiserAteliers();
+
+                // Conception guidée : curseurs, tri et modèle retenu repartent
+                // aussi de zéro (ce sont des champs hors formulaire, donc
+                // form.reset() ne les voit pas).
+                n4ReinitialiserConception();
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
@@ -3453,6 +4530,9 @@ function animerRouteur(btn) {
 
             preparerDetailsChaine();
 
+            // Conception guidée du N4 (sans effet si la page n'en a pas).
+            initialiserConceptionGuidee();
+
             // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
             // Si activé, déverrouille tous les onglets et boutons pour
             // permettre de tester librement (jeux bonus, navigation, etc.)
@@ -3521,6 +4601,10 @@ function animerRouteur(btn) {
         function atelierAfficherExplication(carte) {
             const zone = carte.querySelector('[data-role="explication"]');
             if (zone) zone.classList.remove('cache');
+            // Point de réussite commun à tous les types : c'est ici que
+            // l'atelier obligatoire compte comme terminé.
+            carte.setAttribute('data-termine', '1');
+            if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
         }
 
         // Marque une hélice ou un jeton en erreur, puis retire la marque :
@@ -4121,11 +5205,13 @@ function animerRouteur(btn) {
         //  sans atelier de câblage reste strictement inchangée.
         //
         //  Chaque équipement porte son type (poste, imprimante, commutateur,
-        //  routeur) et sa famille (la salle à laquelle il appartient). La règle
-        //  vérifiée est celle du cours : les appareils d'une même famille
-        //  rejoignent UN commutateur, deux familles ne partagent jamais le même
-        //  commutateur (deux sous-réseaux distincts), et chaque commutateur est
-        //  relié au routeur.
+        //  routeur, internet) et sa famille (la salle à laquelle il appartient).
+        //  La règle vérifiée est celle du cours : les appareils d'une même
+        //  famille rejoignent UN commutateur, deux familles ne partagent jamais
+        //  le même commutateur (deux sous-réseaux distincts), et chaque
+        //  commutateur est relié au routeur. Un nuage « Internet », quand il est
+        //  déclaré, se relie au routeur et à rien d'autre : il reste en dehors
+        //  des deux sous-réseaux, et aucun appareil ne s'y branche directement.
         //
         //  Deux gestes, tous deux accessibles au clavier :
         //    • déplacer : glisser (souris ou doigt), ou flèches sur un
@@ -4608,6 +5694,7 @@ function animerRouteur(btn) {
             const commutateurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'commutateur'; });
             const routeurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'routeur'; });
             const terminaux = noeuds.filter(cablageEstTerminal);
+            const reseaux = noeuds.filter(function (noeud) { return cablageType(noeud) === 'internet'; });
 
             // 2. Un poste ou une imprimante se relie à UN commutateur.
             let avant = erreurs.length;
@@ -4629,19 +5716,63 @@ function animerRouteur(btn) {
                 justes.push('Chaque poste et chaque imprimante est relié à un seul commutateur.');
             }
 
-            // 3. Le routeur ne se relie qu'aux commutateurs.
+            // 3. Le routeur ne se relie qu'aux commutateurs, et à Internet :
+            //    c'est lui, et lui seul, qui fait la frontière avec le réseau
+            //    mondial.
             avant = erreurs.length;
             routeurs.forEach(function (routeur) {
                 const id = routeur.getAttribute('data-noeud');
                 (voisins[id] || []).forEach(function (idVoisin) {
-                    if (commutateurs.indexOf(parId[idVoisin]) === -1) {
-                        erreurs.push('Le routeur ne se relie qu\'aux commutateurs : ' +
-                            cablageNom(parId[idVoisin]) + ' est relié directement au routeur.');
+                    const voisin = parId[idVoisin];
+                    const typeVoisin = cablageType(voisin);
+                    if (commutateurs.indexOf(voisin) === -1 && typeVoisin !== 'internet') {
+                        erreurs.push('Le routeur ne se relie qu\'aux commutateurs et à ' +
+                            'Internet : ' + cablageNom(voisin) + ' est relié directement ' +
+                            'au routeur.');
                     }
                 });
             });
             if (erreurs.length === avant) {
-                justes.push('Le routeur ne reçoit que des commutateurs : c\'est lui qui ouvre vers Internet.');
+                justes.push('Le routeur ne reçoit que des commutateurs, et relie Internet : ' +
+                    'c\'est lui qui ouvre vers le monde.');
+            }
+
+            // 3b. Internet, quand il est posé sur le schéma, est le seul point
+            //     de sortie du collège : il se relie au routeur, et à rien
+            //     d'autre. Il reste EN DEHORS des deux sous-réseaux — aucun
+            //     poste, aucune imprimante, aucun commutateur ne s'y branche.
+            avant = erreurs.length;
+            reseaux.forEach(function (reseau) {
+                const id = reseau.getAttribute('data-noeud');
+                const liens = voisins[id] || [];
+                if (liens.length === 0) {
+                    erreurs.push(cablageNom(reseau) + ' n\'est relié à aucun fil : ' +
+                        'relie-le au routeur, seul passage entre le collège et le ' +
+                        'réseau mondial.');
+                    return;
+                }
+                if (liens.length > 1) {
+                    erreurs.push(cablageNom(reseau) + ' a ' + liens.length + ' fils : ' +
+                        'Internet ne se relie qu\'au routeur, par un seul fil.');
+                }
+                liens.forEach(function (idVoisin) {
+                    const voisin = parId[idVoisin];
+                    const typeVoisin = cablageType(voisin);
+                    if (typeVoisin === 'routeur') return;
+                    if (typeVoisin === 'commutateur') {
+                        erreurs.push('Internet ne se relie pas directement à ' +
+                            cablageNom(voisin) + ' : le routeur est le seul passage ' +
+                            'entre le réseau local et Internet.');
+                    } else {
+                        erreurs.push(cablageNom(voisin) + ' ne se relie pas directement à ' +
+                            'Internet : ses données passent par un commutateur, puis par ' +
+                            'le routeur.');
+                    }
+                });
+            });
+            if (erreurs.length === avant && reseaux.length) {
+                justes.push('Internet n\'est relié qu\'au routeur : il reste en dehors ' +
+                    'des deux sous-réseaux du collège.');
             }
 
             // 4. Chaque commutateur reçoit des appareils et rejoint le routeur.
@@ -4779,7 +5910,438 @@ function animerRouteur(btn) {
             cablageTracerFils();
         }
 
+
+        // ══════════════════════════════════════════════════════════════════
+        //  PUZZLE DE COMPLÉTION DU BONUS (bonus.puzzle)
+        //
+        //  Données : `bonus.puzzle` de la configuration JSON. Le balisage est
+        //  produit par personnaliser.py ; ce moteur ne connaît que le DOM :
+        //    .puzzle-piece[data-piece]                les pièces, dans la réserve
+        //    .puzzle-slot[data-slot][data-attendu]    les emplacements
+        //
+        //  Le placement se fait au CLIC : on choisit une pièce (elle prend
+        //  `aria-pressed="true"`), puis on clique son emplacement. Cliquer un
+        //  emplacement occupé renvoie sa pièce dans la réserve. Aucun
+        //  glisser-déposer n'est exigé : au doigt le geste fait défiler la
+        //  page, et au clavier il n'existe pas. Un emplacement n'accepte
+        //  qu'une pièce, et changer une pièce après vérification annule la
+        //  validation — sinon l'élève pourrait valider puis casser son puzzle
+        //  en silence.
+        //
+        //  Les pièces restantes ne sont pas une erreur : une configuration peut
+        //  en poser un peu plus que nécessaire (des intrus). C'est même ce qui
+        //  distingue un puzzle d'un simple recopiage.
+        // ══════════════════════════════════════════════════════════════════
+
+        const PUZZLE = {
+            selection: null,   // pièce choisie, en attente d'un emplacement
+            valide: false      // puzzle vérifié et accepté
+        };
+
+        function puzzleAtelier() { return document.getElementById('puzzle-bonus'); }
+        function puzzleReserve() { return document.getElementById('puzzle-reserve'); }
+
+        function puzzlePieces() {
+            const atelier = puzzleAtelier();
+            return atelier
+                ? Array.prototype.slice.call(atelier.querySelectorAll('.puzzle-piece'))
+                : [];
+        }
+
+        function puzzlePiecesReserve() {
+            const reserve = puzzleReserve();
+            return reserve
+                ? Array.prototype.slice.call(reserve.querySelectorAll('.puzzle-piece'))
+                : [];
+        }
+
+        function puzzleSlots() {
+            const plateau = document.getElementById('puzzle-plateau');
+            return plateau
+                ? Array.prototype.slice.call(plateau.querySelectorAll('.puzzle-slot'))
+                : [];
+        }
+
+        function puzzleTexte(element) {
+            return String(element && element.textContent ? element.textContent : '').trim();
+        }
+
+        /* Nom lisible d'un emplacement : son libellé (« 1 », « Alimenter »…),
+           sinon « emplacement n ». C'est ce que lit aussi un lecteur d'écran. */
+        function puzzleNom(slot) {
+            if (!slot) return 'emplacement';
+            const libelle = String(slot.getAttribute('data-libelle') || '').trim();
+            if (libelle) return libelle;
+            const index = puzzleSlots().indexOf(slot);
+            return 'emplacement ' + (index + 1);
+        }
+
+        function puzzleReserveVide() {
+            const reserve = puzzleReserve();
+            if (!reserve) return;
+            const vide = reserve.querySelectorAll('.puzzle-piece').length === 0;
+            reserve.classList.toggle('vide', vide);
+        }
+
+        function puzzleRetour(message, etat) {
+            const zone = document.getElementById('puzzle-retour');
+            if (!zone) return;
+            zone.textContent = message || '';
+            zone.className = 'puzzle-retour' + (etat ? ' ' + etat : '');
+        }
+
+        /* Changer une pièce annule la validation : l'élève qui a « réussi » puis
+           déplace une pièce ne doit pas garder un verdict vert trompeur. */
+        function puzzleEffacerMarques() {
+            puzzleSlots().forEach(function (slot) {
+                slot.classList.remove('juste', 'faux', 'cible');
+            });
+            const bilan = document.getElementById('puzzle-bilan');
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'puzzle-bilan cache';
+            }
+            const explication = document.getElementById('puzzle-explication');
+            if (explication) explication.classList.add('cache');
+            PUZZLE.valide = false;
+        }
+
+        function puzzleMajEtiquette(slot) {
+            if (!slot) return;
+            const piece = slot.querySelector('.puzzle-piece');
+            const nom = puzzleNom(slot);
+            slot.setAttribute('aria-label', piece
+                ? nom + ' : ' + puzzleTexte(piece) + '. Activer pour retirer la pièce.'
+                : nom + ' : vide. Activer pour poser la pièce choisie.');
+        }
+
+        function puzzleMajEtiquettes() {
+            puzzleSlots().forEach(puzzleMajEtiquette);
+            puzzlePieces().forEach(function (piece) {
+                piece.setAttribute('aria-label', puzzleTexte(piece) +
+                    (piece.classList.contains('placee') ? ' — posée. Activer pour la retirer.' : ''));
+            });
+        }
+
+        /* Choisir une pièce de la réserve, ou retirer une pièce déjà posée. */
+        function puzzleChoisir(piece) {
+            if (!piece) return;
+            if (piece.classList.contains('placee')) {
+                puzzleRemettreReserve(piece);
+                puzzleRetour('« ' + puzzleTexte(piece) + ' » est revenue dans la réserve.', '');
+                return;
+            }
+            if (PUZZLE.selection === piece) {
+                piece.setAttribute('aria-pressed', 'false');
+                PUZZLE.selection = null;
+                puzzleRetour('Pièce reposée. Choisis-en une autre, puis son emplacement.', '');
+                return;
+            }
+            puzzlePieces().forEach(function (autre) {
+                if (autre !== piece) autre.setAttribute('aria-pressed', 'false');
+            });
+            PUZZLE.selection = piece;
+            piece.setAttribute('aria-pressed', 'true');
+            puzzleRetour('« ' + puzzleTexte(piece) + ' » choisie : touche maintenant son emplacement.', '');
+        }
+
+        function puzzleRemettreReserve(piece) {
+            const reserve = puzzleReserve();
+            if (!reserve || !piece) return;
+            piece.classList.remove('placee');
+            piece.removeAttribute('tabindex');
+            piece.setAttribute('aria-pressed', 'false');
+            piece.style.position = '';
+            piece.style.left = '';
+            piece.style.top = '';
+            reserve.appendChild(piece);
+            if (PUZZLE.selection === piece) PUZZLE.selection = null;
+            puzzleReserveVide();
+            puzzleEffacerMarques();
+            puzzleMajEtiquettes();
+        }
+
+        /* Poser la pièce choisie dans un emplacement. */
+        function puzzlePoser(slot) {
+            if (!slot) return;
+            const occupant = slot.querySelector('.puzzle-piece');
+            const piece = PUZZLE.selection;
+
+            if (!piece) {
+                if (occupant) {
+                    puzzleRemettreReserve(occupant);
+                    puzzleRetour('« ' + puzzleTexte(occupant) + ' » est revenue dans la réserve.', '');
+                } else {
+                    puzzleRetour('Choisis d\'abord une pièce dans la réserve, puis son emplacement.', '');
+                }
+                return;
+            }
+
+            if (occupant && occupant !== piece) puzzleRemettreReserve(occupant);
+            slot.appendChild(piece);
+            piece.classList.add('placee');
+            piece.setAttribute('aria-pressed', 'false');
+            piece.setAttribute('tabindex', '-1');
+            PUZZLE.selection = null;
+
+            puzzleEffacerMarques();
+            puzzleReserveVide();
+            puzzleMajEtiquettes();
+            puzzleRetour('« ' + puzzleTexte(piece) + ' » posée dans ' + puzzleNom(slot) + '.', '');
+        }
+
+        function puzzleAjouterListe(parent, titre, messages) {
+            if (!messages || !messages.length) return;
+            const titreEl = document.createElement('p');
+            titreEl.textContent = titre;
+            parent.appendChild(titreEl);
+            const liste = document.createElement('ul');
+            messages.forEach(function (message) {
+                const item = document.createElement('li');
+                item.textContent = message;
+                liste.appendChild(item);
+            });
+            parent.appendChild(liste);
+        }
+
+        function puzzleVerifier() {
+            const atelier = puzzleAtelier();
+            if (!atelier) return 'echec';
+
+            const slots = puzzleSlots();
+            if (!slots.length) {
+                puzzleRetour('Aucun emplacement à compléter dans ce puzzle.', 'echec');
+                return 'echec';
+            }
+
+            const erreurs = [];
+            const justes = [];
+
+            slots.forEach(function (slot) {
+                const piece = slot.querySelector('.puzzle-piece');
+                const nom = puzzleNom(slot);
+                slot.classList.remove('juste', 'faux', 'cible');
+                if (!piece) {
+                    slot.classList.add('faux');
+                    erreurs.push(nom + ' : emplacement vide.');
+                    return;
+                }
+                if (piece.getAttribute('data-piece') === slot.getAttribute('data-attendu')) {
+                    slot.classList.add('juste');
+                    justes.push(nom);
+                } else {
+                    slot.classList.add('faux');
+                    const indice = String(slot.getAttribute('data-indice') || '').trim();
+                    erreurs.push(nom + ' : « ' + puzzleTexte(piece) + ' » n\'est pas la bonne pièce.' +
+                        (indice ? ' ' + indice : ''));
+                }
+            });
+
+            const reussi = erreurs.length === 0;
+            const bilan = document.getElementById('puzzle-bilan');
+            const explication = document.getElementById('puzzle-explication');
+
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'puzzle-bilan ' + (reussi ? 'succes' : 'echec');
+                const titre = document.createElement('p');
+                titre.textContent = reussi
+                    ? '✅ Puzzle terminé : toutes les pièces sont à leur place.'
+                    : 'Le puzzle n\'est pas encore juste : ' + erreurs.length +
+                      ' emplacement(s) à revoir.';
+                bilan.appendChild(titre);
+                if (reussi) {
+                    if (explication) {
+                        explication.classList.remove('cache');
+                        const rappel = document.createElement('div');
+                        rappel.className = 'puzzle-explication';
+                        const texte = document.createElement('p');
+                        texte.textContent = explication.textContent;
+                        rappel.appendChild(texte);
+                        bilan.appendChild(rappel);
+                    }
+                } else {
+                    puzzleAjouterListe(bilan, 'À revoir :', erreurs);
+                    puzzleAjouterListe(bilan, 'Déjà juste :', justes);
+                }
+            }
+
+            PUZZLE.valide = reussi;
+            puzzleMajEtiquettes();
+            puzzleRetour(reussi
+                ? '🎉 Puzzle terminé. Lis l\'explication ci-dessous : elle dit pourquoi cet ordre est le bon.'
+                : 'Reprends les emplacements marqués en rouge, puis touche de nouveau « Vérifier ».',
+                reussi ? 'succes' : 'echec');
+            return reussi ? 'succes' : 'echec';
+        }
+
+        function puzzleReinitialiser() {
+            const reserve = puzzleReserve();
+            if (!reserve) return;
+            puzzlePieces()
+                .sort(function (a, b) {
+                    const ordreA = Number(a.getAttribute('data-ordre') || 0);
+                    const ordreB = Number(b.getAttribute('data-ordre') || 0);
+                    return ordreA - ordreB;
+                })
+                .forEach(function (piece) {
+                    piece.classList.remove('placee');
+                    piece.removeAttribute('tabindex');
+                    piece.setAttribute('aria-pressed', 'false');
+                    reserve.appendChild(piece);
+                });
+            PUZZLE.selection = null;
+            puzzleEffacerMarques();
+            puzzleReserveVide();
+            puzzleMajEtiquettes();
+            puzzleRetour('Puzzle remis à zéro : toutes les pièces sont dans la réserve.', '');
+        }
+
+        function puzzleInitialiser() {
+            const atelier = puzzleAtelier();
+            if (!atelier) return;
+
+            puzzlePieces().forEach(function (piece) {
+                piece.addEventListener('click', function () { puzzleChoisir(piece); });
+            });
+
+            puzzleSlots().forEach(function (slot) {
+                slot.addEventListener('click', function () { puzzlePoser(slot); });
+                slot.addEventListener('keydown', function (evenement) {
+                    if (evenement.key === 'Enter' || evenement.key === ' ' ||
+                        evenement.key === 'Spacebar') {
+                        evenement.preventDefault();
+                        puzzlePoser(slot);
+                    }
+                });
+            });
+
+            puzzleReserveVide();
+            puzzleMajEtiquettes();
+        }
+
+        /* API de test : `verifier_parcours.py` joue le puzzle comme un élève,
+           par les mêmes fonctions que les clics. Une API plutôt qu'une lecture
+           du DOM permet de contrôler un puzzle qu'aucun bouton ne déclenche. */
+        window.JeuPuzzle = {
+            etat: function () {
+                const atelier = puzzleAtelier();
+                if (!atelier) return null;
+                const reserve = puzzleReserve();
+                return {
+                    type: atelier.getAttribute('data-type') || 'chaine',
+                    valide: PUZZLE.valide,
+                    selection: PUZZLE.selection
+                        ? PUZZLE.selection.getAttribute('data-piece')
+                        : null,
+                    pieces: puzzlePieces().map(function (piece) {
+                        return piece.getAttribute('data-piece');
+                    }),
+                    reserve: reserve
+                        ? reserve.querySelectorAll('.puzzle-piece').length
+                        : 0,
+                    slots: puzzleSlots().map(function (slot) {
+                        const piece = slot.querySelector('.puzzle-piece');
+                        return {
+                            cle: slot.getAttribute('data-slot'),
+                            attendu: slot.getAttribute('data-attendu'),
+                            piece: piece ? piece.getAttribute('data-piece') : null,
+                            juste: slot.classList.contains('juste'),
+                            faux: slot.classList.contains('faux')
+                        };
+                    })
+                };
+            },
+            choisir: function (clePiece) {
+                puzzleChoisir(puzzlePieces().filter(function (piece) {
+                    return piece.getAttribute('data-piece') === clePiece;
+                })[0]);
+            },
+            poser: function (cleSlot, clePiece) {
+                const slot = puzzleSlots().filter(function (candidat) {
+                    return candidat.getAttribute('data-slot') === cleSlot;
+                })[0];
+                if (!slot) return false;
+                if (clePiece === null || clePiece === undefined) {
+                    const occupant = slot.querySelector('.puzzle-piece');
+                    if (occupant) puzzleRemettreReserve(occupant);
+                    return true;
+                }
+                const piece = puzzlePieces().filter(function (candidat) {
+                    return candidat.getAttribute('data-piece') === clePiece;
+                })[0];
+                if (!piece) return false;
+                const occupant = slot.querySelector('.puzzle-piece');
+                if (occupant && occupant !== piece) puzzleRemettreReserve(occupant);
+                puzzlePieces().forEach(function (autre) {
+                    autre.setAttribute('aria-pressed', 'false');
+                });
+                PUZZLE.selection = null;
+                slot.appendChild(piece);
+                piece.classList.add('placee');
+                piece.setAttribute('tabindex', '-1');
+                puzzleEffacerMarques();
+                puzzleReserveVide();
+                puzzleMajEtiquettes();
+                return true;
+            },
+            verifier: function () { return puzzleVerifier(); },
+            reinitialiser: function () { puzzleReinitialiser(); }
+        };
+
+        // ══════════════════════════════════════════════════════════════════
+        //  RÉINITIALISATION DES ATELIERS ET ANIMATIONS N2
+        //
+        //  « Recommencer » doit remettre les exercices de découverte et les
+        //  animations dans leur état d'origine. On mémorise leur balisage au
+        //  chargement plutôt que de rejouer chaque état à la main : un nouveau
+        //  type d'atelier (ou une nouvelle animation) est ainsi réinitialisé
+        //  sans une ligne de code supplémentaire, et l'élève ne retrouve pas
+        //  un atelier à moitié rempli.
+        // ══════════════════════════════════════════════════════════════════
+
+        const ATELIERS_INITIAUX = [];
+
+        function memoriserAteliersInitiaux() {
+            document.querySelectorAll('.atelier-carte, .bloc-animation').forEach(function (bloc) {
+                ATELIERS_INITIAUX.push({ bloc: bloc, html: bloc.innerHTML });
+            });
+        }
+
+        function reinitialiserAteliers() {
+            ATELIERS_INITIAUX.forEach(function (entree) {
+                // Les états internes sont posés sur la carte : les oublier,
+                // sinon l'atelier restauré croirait avoir déjà ses réponses.
+                delete entree.bloc.__atelier;
+                delete entree.bloc.__reseau;
+                entree.bloc.innerHTML = entree.html;
+            });
+            if (window.__AROUTE) {
+                if (__AROUTE.minuteur) {
+                    clearInterval(__AROUTE.minuteur);
+                    __AROUTE.minuteur = null;
+                }
+                __AROUTE.scenario = null;
+                __AROUTE.index = 0;
+                __AROUTE.chemin = [];
+            }
+            if (typeof __interSel !== 'undefined') {
+                __interSel.interacteur = null;
+                __interSel.element = null;
+            }
+            // Le puzzle du bonus se remet à zéro en déplaçant ses nœuds, pas en
+            // restaurant du HTML : les écouteurs posés au chargement restent
+            // donc valides (une restauration par innerHTML les perdrait).
+            if (document.getElementById('puzzle-bonus')) {
+                puzzleReinitialiser();
+            }
+            mettreAJourSuiteN2();
+        }
+
         cablageInitialiser();
+        puzzleInitialiser();
+        memoriserAteliersInitiaux();
+        mettreAJourSuiteN2();
 
         // Support pour impression PDF
         window.addEventListener('beforeprint', function() {
