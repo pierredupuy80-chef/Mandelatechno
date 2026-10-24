@@ -420,7 +420,7 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
     <button data-tab="n1" class="actif">N1 · Connaissances</button>
     <button data-tab="n2">N2 · Compréhension</button>
     <button data-tab="n3">N3 · Application</button>
-    <button data-tab="n4">N4 · Analyse & Création</button>
+    <button data-tab="n4">Conception</button>
     <button data-tab="bilan">Bilan</button>
   </div>
 </header>
@@ -769,14 +769,14 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
   </div>
 </section>
 
-<!-- ======================== SECTION N4 — ANALYSE & CRÉATION ======================== -->
+<!-- ======================== SECTION CONCEPTION ======================== -->
 <section id="n4">
-  <h2>Niveau 4 — Analyser &amp; Créer : rédiger l'expression du besoin de la trottinette idéale</h2>
+  <h2>Conception : rédiger l'expression du besoin de la trottinette idéale</h2>
 
   <div class="carte objectif">
     <b>🎯 Objectif :</b> écrire le <b>cahier des charges de ton OST idéal</b> — la trottinette électrique
     (ou le VAE) qui te conviendrait le mieux.
-    <br><span class="tag">Bloom N4</span> <span class="tag">T4 Développement durable</span>
+    <br><span class="tag">Conception</span> <span class="tag">T4 Développement durable</span>
   </div>
 
   <div class="carte consigne">
@@ -2554,7 +2554,7 @@ function updateBilan(){
     {niveau:'N1 — Mémoriser', comp:'Identifier les critères de performance d\'un OST et ordonner les blocs de la chaîne d\'énergie', done:state.scores.n1>0},
     {niveau:'N2 — Comprendre', comp:'Expliquer le rôle des composants, comparer les caractéristiques, situer les étapes du cycle de vie', done:state.scores.n2>0},
     {niveau:'N3 — Appliquer', comp:'Hiérarchiser des critères, fixer des valeurs de cahier des charges, tenir compte des contraintes réglementaires', done:state.scores.n3>0},
-    {niveau:'N4 — Analyser/Créer', comp:'Rédiger une expression du besoin et choisir des solutions techniques justifiées', done:state.scores.n4>0}
+    {niveau:'Conception', comp:'Rédiger une expression du besoin et choisir des solutions techniques justifiées', done:state.scores.n4>0}
   ];
 
   document.getElementById('bilan-competences').innerHTML = competences.map(c=>
@@ -2562,7 +2562,7 @@ function updateBilan(){
   ).join('');
 
   document.getElementById('bilan-progress').innerHTML = Object.entries(state.scores).map(([k,v])=>{
-    const labels = {n1:'N1 Connaissances', n2:'N2 Compréhension', n3:'N3 Application', n4:'N4 Analyse'};
+    const labels = {n1:'N1 Connaissances', n2:'N2 Compréhension', n3:'N3 Application', n4:'Conception'};
     const pctS = Math.round(v/state.maxScores[k]*100);
     return `<div style="margin:4px 0;font-size:.85rem"><b>${labels[k]}</b> : ${v}/${state.maxScores[k]} (${pctS}%)
       <div class="barre"><i style="width:${pctS}%"></i></div></div>`;
