@@ -995,6 +995,262 @@
         }
 
         /* ============================================
+           PUZZLE DE COMPLÉTION DU BONUS (bonus.puzzle)
+           (bloc produit depuis bonus.puzzle ; marqueurs
+            PUZZLE-BONUS retirés si la configuration
+            n'en déclare pas)
+
+           Deux dispositions, un seul moteur :
+           - « chaine » : des emplacements successifs à remplir
+             (chaîne d'énergie, chaîne d'information, étapes) ;
+           - « schema » : des emplacements posés sur une
+             illustration technique (étiquettes).
+
+           Le placement se fait au CLIC : on choisit une pièce,
+           puis son emplacement. Le glisser-déposer seul est
+           inutilisable au doigt — le geste fait défiler la
+           page — et impossible au clavier. Toutes les cibles
+           font au moins 44 px (règle RGAA du dépôt).
+           ============================================ */
+
+        .puzzle-bonus {
+            margin: var(--espacement-lg) 0;
+            padding: var(--espacement-md);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: #f1f5f9;
+        }
+
+        .puzzle-bonus h3 {
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .puzzle-consigne {
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .puzzle-aide {
+            font-size: 0.9rem;
+            /* Gris foncé : 6:1 sur le fond du cadre (RGAA AA attend 4,5:1) */
+            color: #475569;
+            margin-bottom: var(--espacement-md);
+        }
+
+        .puzzle-reserve {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            min-height: 76px;
+            padding: var(--espacement-sm);
+            margin-bottom: var(--espacement-md);
+            border: 2px dashed #94a3b8;
+            border-radius: var(--rayon-bordure);
+            background-color: #e2e8f0;
+        }
+
+        .puzzle-reserve.vide::after {
+            content: "Toutes les pièces sont posées.";
+            align-self: center;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        /* Une pièce : cible tactile de 44 px, jamais réduite, qui reste lisible
+           quand elle est posée dans un emplacement étroit. */
+        .puzzle-piece {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: var(--hauteur-cible-min);
+            max-width: 100%;
+            padding: var(--espacement-sm) var(--espacement-md);
+            font: inherit;
+            font-size: 0.95rem;
+            line-height: 1.25;
+            text-align: center;
+            color: var(--couleur-texte);
+            background-color: #ffffff;
+            border: 2px solid #64748b;
+            border-radius: var(--rayon-bordure);
+            box-shadow: var(--ombre-legere);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .puzzle-piece:hover {
+            border-color: var(--couleur-primaire);
+        }
+
+        /* La pièce choisie est entourée : c'est le seul repère dont dispose
+           l'élève pour savoir ce qu'il va poser. */
+        .puzzle-piece[aria-pressed="true"] {
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
+
+        .puzzle-piece.placee {
+            box-shadow: none;
+        }
+
+        .puzzle-plateau {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: var(--espacement-sm);
+        }
+
+        .puzzle-slot {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--espacement-xs);
+            min-height: calc(var(--hauteur-cible-min) + 20px);
+            padding: var(--espacement-sm);
+            text-align: center;
+            background-color: #ffffff;
+            border: 2px dashed #64748b;
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .puzzle-slot-libelle {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            color: var(--couleur-primaire);
+        }
+
+        /* ── Disposition « chaîne » : des étapes côte à côte ── */
+        .puzzle-plateau[data-layout="chaine"] .puzzle-slot {
+            flex: 1 1 150px;
+        }
+
+        /* ── Disposition « schéma » : les emplacements sont posés sur l'image.
+           `left` et `top` viennent de la configuration, en pourcentage : le
+           schéma se replace donc tout seul quand la page change de largeur. ── */
+        .puzzle-plateau[data-layout="schema"] {
+            position: relative;
+            display: block;
+        }
+
+        .puzzle-plateau[data-layout="schema"] .puzzle-fond {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 2px solid #64748b;
+            border-radius: var(--rayon-bordure);
+            background-color: #ffffff;
+        }
+
+        .puzzle-plateau[data-layout="schema"] .puzzle-slot {
+            position: absolute;
+            min-width: 78px;
+            max-width: 40%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+        }
+
+        /* États d'un emplacement après vérification */
+        .puzzle-slot.juste {
+            border-style: solid;
+            border-color: var(--couleur-succes);
+            background-color: #ecfdf5;
+        }
+
+        .puzzle-slot.faux {
+            border-style: solid;
+            border-color: var(--couleur-alerte);
+            background-color: #fef2f2;
+        }
+
+        .puzzle-slot.cible {
+            border-style: solid;
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        .puzzle-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+            margin-top: var(--espacement-md);
+        }
+
+        .puzzle-actions .bouton-action {
+            margin: 0;
+        }
+
+        .puzzle-retour {
+            margin-top: var(--espacement-sm);
+            font-weight: 600;
+        }
+
+        .puzzle-retour.succes {
+            color: var(--couleur-succes);
+        }
+
+        .puzzle-retour.echec {
+            color: var(--couleur-alerte);
+        }
+
+        .puzzle-bilan {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-sm);
+            border: 2px solid;
+            border-radius: var(--rayon-bordure);
+        }
+
+        .puzzle-bilan.succes {
+            border-color: var(--couleur-succes);
+            background-color: #ecfdf5;
+        }
+
+        .puzzle-bilan.echec {
+            border-color: var(--couleur-alerte);
+            background-color: #fef2f2;
+        }
+
+        .puzzle-bilan ul {
+            margin: var(--espacement-xs) 0 0 var(--espacement-lg);
+        }
+
+        .puzzle-explication {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-sm);
+            border-left: 4px solid var(--couleur-info);
+            background-color: #ecfeff;
+        }
+
+        @media (max-width: 600px) {
+            .puzzle-plateau[data-layout="chaine"] .puzzle-slot {
+                flex-basis: 100%;
+            }
+
+            .puzzle-plateau[data-layout="schema"] .puzzle-slot {
+                /* 40 % au plus : deux étiquettes posées à 47 % l'une de
+                   l'autre ne peuvent plus se recouvrir sur un écran étroit.
+                   Le recouvrement reste possible si la configuration place
+                   deux emplacements trop près — c'est justement ce que
+                   `verifier_puzzle.py` signale. */
+                min-width: 68px;
+                max-width: 40%;
+                font-size: 0.85rem;
+            }
+
+            .puzzle-piece {
+                padding: var(--espacement-xs) var(--espacement-sm);
+            }
+        }
+
+        /* ============================================
            BARRE DE PROGRESSION
            ============================================ */
         
@@ -2181,6 +2437,340 @@ font-size: 0.78rem;
 .boutique .article:hover:not(:disabled) { border-color: var(--couleur-primaire); }
 .boutique .article:disabled { opacity: 0.45; cursor: not-allowed; }
 .boutique .article.epuise { border-color: #22c55e; }
+.vol-carte {
+margin-top: var(--espacement-lg);
+}
+.vol-banc {
+border: 2px solid #dce3ed;
+border-radius: 12px;
+padding: var(--espacement-md);
+margin: 0 0 var(--espacement-md);
+background: #fbfcfe;
+}
+.vol-banc > legend {
+font-weight: 700;
+padding: 0 .4rem;
+color: #1a3f5e;
+}
+.vol-bloc {
+border-top: 1px dashed #dce3ed;
+padding-top: .8rem;
+margin-top: .8rem;
+}
+.vol-bloc:first-of-type {
+border-top: 0;
+margin-top: 0;
+padding-top: 0;
+}
+.vol-bloc h4 {
+margin: 0 0 .25rem;
+font-size: .98rem;
+color: #3a6ea5;
+}
+.vol-bloc p {
+margin: .2rem 0 .55rem;
+font-size: .9rem;
+}
+.vol-rotors {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: .5rem;
+max-width: 320px;
+}
+.vol-rotor-case {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: .2rem;
+}
+.vol-rotor-nom {
+font-size: .76rem;
+color: #5a6b7d;
+text-align: center;
+}
+.vol-rotor {
+width: 84px;
+height: 84px;
+border-radius: 50%;
+border: 3px solid #b9c8d8;
+background: #fff;
+color: #1a3f5e;
+font-size: 2rem;
+line-height: 1;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.vol-rotor:hover {
+border-color: #2e74b5;
+}
+.vol-rotor:focus-visible,
+.vol-choix:focus-visible,
+.vol-pave button:focus-visible {
+outline: 3px solid #1a4f7a;
+outline-offset: 2px;
+}
+.vol-rotor.equilibre {
+border-color: #2e7d32;
+background: #e8f5e9;
+}
+.vol-rotor.desordre {
+border-color: #c62828;
+background: #fdecea;
+}
+.vol-rotor-symbole {
+display: inline-block;
+}
+.vol-rotor-symbole.tourne-droite { animation: volRotorDroite 2.6s linear infinite; }
+.vol-rotor-symbole.tourne-gauche { animation: volRotorGauche 2.6s linear infinite; }
+@keyframes volRotorDroite { to { transform: rotate(360deg); } }
+@keyframes volRotorGauche { to { transform: rotate(-360deg); } }
+.vol-choix-groupe {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+gap: .45rem;
+}
+.vol-choix {
+display: block;
+width: 100%;
+text-align: left;
+background: #fff;
+border: 2px solid #dce3ed;
+border-radius: 9px;
+padding: .5rem .6rem;
+font: inherit;
+font-size: .88rem;
+line-height: 1.3;
+color: inherit;
+cursor: pointer;
+min-height: 44px;
+}
+.vol-choix:hover {
+border-color: #2e74b5;
+}
+.vol-choix[aria-checked="true"],
+.vol-choix.choisi {
+border-color: #2e74b5;
+background: #eaf1f8;
+font-weight: 600;
+}
+.vol-choix small {
+display: block;
+font-weight: 400;
+color: #3a6ea5;
+font-size: .78rem;
+}
+.vol-interrupteur {
+display: flex;
+align-items: center;
+gap: .55rem;
+width: 100%;
+min-height: 48px;
+margin-top: .5rem;
+padding: .5rem .6rem;
+text-align: left;
+font: inherit;
+font-size: .9rem;
+color: inherit;
+background: #fff;
+border: 2px solid #dce3ed;
+border-radius: 9px;
+cursor: pointer;
+}
+.vol-interrupteur:hover {
+border-color: #2e74b5;
+}
+.vol-interrupteur:focus-visible {
+outline: 3px solid #1a4f7a;
+outline-offset: 2px;
+}
+.vol-interrupteur-pastille {
+flex: 0 0 auto;
+width: 42px;
+height: 24px;
+border-radius: 999px;
+background: #b9c8d8;
+position: relative;
+transition: background .2s;
+}
+.vol-interrupteur-pastille::after {
+content: "";
+position: absolute;
+top: 3px;
+left: 3px;
+width: 18px;
+height: 18px;
+border-radius: 50%;
+background: #fff;
+transition: transform .2s;
+}
+.vol-interrupteur[aria-checked="true"] {
+border-color: #2e74b5;
+background: #eaf1f8;
+}
+.vol-interrupteur[aria-checked="true"] .vol-interrupteur-pastille {
+background: #2e74b5;
+}
+.vol-interrupteur[aria-checked="true"] .vol-interrupteur-pastille::after {
+transform: translateX(18px);
+}
+.vol-reglage {
+min-height: 1.5rem;
+margin: .5rem 0 0;
+padding: .4rem .6rem;
+border-radius: 8px;
+font-size: .88rem;
+}
+.vol-reglage:empty {
+padding: 0;
+}
+.vol-reglage.ok { background: #e8f5e9; color: #1b5e20; }
+.vol-reglage.ko { background: #fdecea; color: #8e1b1b; }
+.vol-reglage.info { background: #eaf1f8; color: #1a3f5e; }
+.vol-recap {
+font-size: .88rem;
+font-weight: 600;
+color: #1a3f5e;
+background: #f1f5fa;
+border-radius: 8px;
+padding: .5rem .7rem;
+margin: .8rem 0;
+}
+.vol-hud {
+display: flex;
+flex-wrap: wrap;
+gap: .5rem 1rem;
+align-items: center;
+background: #0f2a44;
+color: #eaf1f8;
+border-radius: 10px;
+padding: .55rem .7rem;
+font-size: .84rem;
+}
+.vol-hud .vol-etiquette {
+display: block;
+font-size: .68rem;
+letter-spacing: .04em;
+text-transform: uppercase;
+color: #9db8d2;
+}
+.vol-hud .vol-valeur {
+font-weight: 700;
+font-variant-numeric: tabular-nums;
+}
+.vol-jauge {
+width: 120px;
+height: 12px;
+border-radius: 999px;
+background: #24405c;
+overflow: hidden;
+}
+.vol-jauge span {
+display: block;
+height: 100%;
+width: 100%;
+background: #4ade80;
+border-radius: 999px;
+transition: width .2s linear;
+}
+.vol-jauge.alerte span { background: #fbbf24; }
+.vol-jauge.critique span { background: #f87171; }
+.vol-ecran {
+position: relative;
+margin: .6rem 0;
+border-radius: 12px;
+overflow: hidden;
+background: #8ec5e8;
+}
+.vol-ecran canvas {
+display: block;
+width: 100%;
+height: auto;
+touch-action: none;
+}
+.vol-voile {
+position: absolute;
+inset: 0;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: .6rem;
+text-align: center;
+padding: 1rem;
+background: rgba(8, 32, 54, .88);
+color: #f1f5fa;
+}
+.vol-voile[hidden] {
+display: none;
+}
+.vol-voile h4 {
+margin: 0;
+color: #fff;
+font-size: 1.05rem;
+}
+.vol-voile p {
+margin: 0;
+max-width: 42ch;
+font-size: .9rem;
+line-height: 1.4;
+}
+.vol-barre-outils {
+display: flex;
+flex-wrap: wrap;
+gap: .5rem;
+margin: .5rem 0;
+}
+.vol-pave {
+display: grid;
+grid-template-columns: repeat(3, 64px);
+gap: .5rem;
+justify-content: center;
+margin: .6rem 0;
+}
+.vol-pave button {
+width: 64px;
+height: 64px;
+border-radius: 12px;
+border: 2px solid #b9c8d8;
+background: #fff;
+font-size: 1.5rem;
+line-height: 1;
+cursor: pointer;
+color: #1a3f5e;
+}
+.vol-pave button:active {
+background: #eaf1f8;
+border-color: #2e74b5;
+}
+.vol-aide {
+font-size: .84rem;
+color: #5a6b7d;
+line-height: 1.5;
+}
+.vol-annonce {
+min-height: 1.5rem;
+font-size: .88rem;
+font-weight: 600;
+color: #1a3f5e;
+}
+@media (max-width: 480px) {
+.vol-hud {
+font-size: .78rem;
+gap: .35rem .7rem;
+}
+.vol-jauge {
+width: 84px;
+}
+.vol-pave {
+grid-template-columns: repeat(3, 56px);
+}
+.vol-pave button {
+width: 56px;
+height: 56px;
+}
+}
     </style>
 </head>
 <body>
@@ -2459,7 +3049,7 @@ font-size: 0.78rem;
 
                     <div class="ateliers-n2" id="ateliers-n2">
                         <h3>🔧 Ateliers — comment fonctionne un drone ?</h3>
-                    <p class="texte-secondaire">Cinq ateliers pour démonter le drone dans votre tête : ses constituants et leurs fonctions, le trajet de l'énergie, les quatre commandes du pilote, l'équilibre des hélices et l'autonomie de la batterie. Chaque atelier se corrige lui-même et explique la réponse.</p>
+                    <p class="texte-secondaire">Trois ateliers pour comprendre un drone de l'intérieur : ses constituants et leurs fonctions, l'environnement qui le perturbe et les capteurs qui le mesurent, puis le trajet de l'énergie qui le fait voler. Chaque atelier se corrige lui-même et explique la réponse. Les réglages du vol (hélices, batterie, commandes) se manipulent dans le mini-jeu du bonus.</p>
 
                     <article class="atelier-carte" data-type="association" data-atelier="qui-fait-quoi" aria-labelledby="atelier-titre-qui-fait-quoi">
                         <h3 id="atelier-titre-qui-fait-quoi">🧩 Atelier 1 — Qui fait quoi dans le drone ?</h3>
@@ -2499,7 +3089,7 @@ font-size: 0.78rem;
                     </article>
 
                     <article class="atelier-carte" data-type="environnement" data-atelier="interacteurs-capteurs" aria-labelledby="atelier-titre-interacteurs-capteurs">
-                        <h3 id="atelier-titre-interacteurs-capteurs">🌍 Atelier 1 bis — Dans quel environnement vole le drone ?</h3>
+                        <h3 id="atelier-titre-interacteurs-capteurs">🌍 Atelier 2 — Dans quel environnement vole le drone ?</h3>
                         <p class="atelier-consigne">Le drone vole dans un milieu qui le perturbe : vent, pluie, brouillard, poussière, brouillage radio… Cliquez un interacteur extérieur pour lire son effet sur le drone, puis la note d'efficacité de chaque capteur pour le contrer. Terminez par les défis : un capteur par situation.</p>
                         <script type="application/json" class="env-donnees">{"capteurs":{"anemometre":{"icone":"🌬️","nom":"Anémomètre","mesure":"la vitesse du vent"},"imu":{"icone":"📐","nom":"Centrale inertielle (gyroscope + accéléromètre)","mesure":"les rotations et les accélérations du drone"},"magnetometre":{"icone":"🧲","nom":"Magnétomètre (boussole)","mesure":"le champ magnétique, pour s'orienter"},"barometre":{"icone":"📉","nom":"Baromètre","mesure":"la pression de l'air, donc l'altitude"},"gnss":{"icone":"🛰️","nom":"Récepteur GNSS (GPS)","mesure":"la position par satellites"},"ultrasons":{"icone":"🔊","nom":"Télémètre à ultrasons","mesure":"la distance aux obstacles proches, par écho sonore"},"lidar":{"icone":"🔦","nom":"LiDAR","mesure":"les distances par faisceau laser"},"radar":{"icone":"📶","nom":"Radar","mesure":"les distances et les vitesses par ondes radio"},"camera":{"icone":"📷","nom":"Caméra avec reconnaissance d'images","mesure":"des images, analysées par un programme"},"thermique":{"icone":"🔥","nom":"Caméra thermique","mesure":"la chaleur des objets et des êtres vivants"},"pluie":{"icone":"💧","nom":"Capteur de pluie et d'humidité","mesure":"les gouttes et le taux d'humidité"},"flux_optique":{"icone":"🔍","nom":"Capteur de flux optique","mesure":"le défilement du sol, pour estimer la vitesse et la dérive"},"temperature":{"icone":"🌡️","nom":"Capteur de température","mesure":"la température de l'air"}},"interacteurs":{"vent":{"icone":"💨","nom":"Vent et rafales","effet":"Le vent pousse le drone hors de sa trajectoire ; les rafales le font dévier et le déséquilibrent.","notes":{"anemometre":3,"imu":2,"gnss":2,"flux_optique":2,"camera":1}},"pluie":{"icone":"🌧️","nom":"Pluie et forte humidité","effet":"L'eau alourdit le drone, met l'électronique en danger et dégrade les images.","notes":{"pluie":3,"radar":2,"imu":2,"lidar":0,"camera":0}},"brouillard":{"icone":"🌫️","nom":"Brouillard et faible visibilité","effet":"Le drone ne distingue plus les obstacles : la caméra et le laser ne voient plus au-delà de quelques mètres.","notes":{"radar":3,"ultrasons":2,"gnss":1,"lidar":0,"camera":0}},"froid_chaleur":{"icone":"🌡️","nom":"Froid et forte chaleur","effet":"Le froid vide la batterie plus vite ; la chaleur fait dériver les mesures et peut bloquer les moteurs.","notes":{"temperature":3,"pluie":2,"barometre":2,"imu":1}},"soleil":{"icone":"☀️","nom":"Soleil et éblouissement","effet":"Le soleil rasant éblouit la caméra ; ses rayons chauffent la batterie et le boîtier.","notes":{"lidar":3,"camera":2,"thermique":2,"temperature":2}},"poussiere":{"icone":"🏜️","nom":"Poussière et sable","effet":"Les grains rayent les optiques et le souffle des hélices soulève un nuage qui masque le paysage.","notes":{"radar":3,"ultrasons":2,"lidar":1,"camera":1}},"oiseaux":{"icone":"🐦","nom":"Oiseaux","effet":"Un oiseau qui traverse la trajectoire peut heurter le drone ou déclencher une manœuvre d'évitement.","notes":{"camera":3,"radar":2,"ultrasons":2,"lidar":1}},"obstacles":{"icone":"🌳","nom":"Obstacles fixes (arbres, câbles, façades)","effet":"Le drone peut percuter un tronc, un câble électrique ou une façade.","notes":{"lidar":3,"radar":3,"ultrasons":2,"camera":2}},"brouillage":{"icone":"📡","nom":"Brouillage radio et perte de signal","effet":"Les ordres du pilote et le signal des satellites peuvent être perturbés ou perdus.","notes":{"imu":3,"flux_optique":3,"camera":2,"barometre":1}},"champs_magnetiques":{"icone":"🧲","nom":"Champs magnétiques (lignes électriques, ponts métalliques)","effet":"Près d'une ligne à haute tension ou d'un ouvrage métallique, la boussole indique un faux nord.","notes":{"magnetometre":0,"imu":3,"gnss":3,"flux_optique":2}},"altitude":{"icone":"⛰️","nom":"Altitude et pression atmosphérique","effet":"Le drone doit garder une hauteur stable et connaître son altitude au-dessus du sol.","notes":{"barometre":3,"gnss":3,"ultrasons":2,"lidar":2}},"personnes":{"icone":"👥","nom":"Personnes et animaux au sol","effet":"Le drone doit repérer les personnes pour ne pas les survoler de trop près, ou pour les secourir.","notes":{"thermique":3,"camera":2,"radar":2,"ultrasons":2}}}}</script>
                         <h4>Les capteurs du drone</h4>
@@ -2605,7 +3195,7 @@ font-size: 0.78rem;
                     </article>
 
                     <article class="atelier-carte" data-type="ordre" data-atelier="chaine-energie" aria-labelledby="atelier-titre-chaine-energie">
-                        <h3 id="atelier-titre-chaine-energie">🔗 Atelier 2 — Le trajet de l'énergie</h3>
+                        <h3 id="atelier-titre-chaine-energie">🔗 Atelier 3 — Le trajet de l'énergie</h3>
                         <p class="atelier-consigne">Cliquez les maillons dans l'ordre du trajet de l'énergie : du stockage dans la batterie jusqu'à l'air poussé vers le bas.</p>
                         <div class="atelier-slots" role="list" aria-label="Emplacements de la chaîne, du premier au dernier maillon">
                             <div class="atelier-slot" role="listitem" data-slot="0"><span class="atelier-marqueur">1</span></div>
@@ -2628,128 +3218,6 @@ font-size: 0.78rem;
                         </div>
                         <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
                         <p class="atelier-explication cache" data-role="explication">L'énergie part de la batterie (alimenter), traverse le variateur (distribuer), est convertie en rotation par le moteur (convertir), devient un mouvement d'air grâce à l'hélice (transmettre), et cette poussée d'air vers le bas crée la portance qui soulève le drone. La chaîne d'information (radiocommande → récepteur → carte de vol → variateurs) ne transporte que des ordres : c'est elle qui décide de la quantité d'énergie à distribuer.</p>
-                    </article>
-
-                    <article class="atelier-carte" data-type="commandes" data-atelier="quatre-commandes" aria-labelledby="atelier-titre-quatre-commandes">
-                        <h3 id="atelier-titre-quatre-commandes">🎮 Atelier 3 — Les quatre commandes du pilote</h3>
-                        <p class="atelier-consigne">Pour chaque mission, cliquez la commande que le pilote doit utiliser, puis vérifiez l'atelier. Le drone de l'illustration prend l'inclinaison de la commande choisie.</p>
-                        <div class="atelier-drone-cadre" aria-hidden="true">
-                            <svg class="atelier-drone" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><ellipse cx="80" cy="64" rx="26" ry="13" fill="#3a6ea5"></ellipse><rect x="44" y="60" width="72" height="6" rx="3" fill="#7a8b9c"></rect><line x1="54" y1="58" x2="30" y2="34" stroke="#7a8b9c" stroke-width="5" stroke-linecap="round"></line><line x1="106" y1="58" x2="130" y2="34" stroke="#7a8b9c" stroke-width="5" stroke-linecap="round"></line><ellipse cx="26" cy="31" rx="18" ry="4" fill="#2e74b5"></ellipse><ellipse cx="134" cy="31" rx="18" ry="4" fill="#2e74b5"></ellipse><circle cx="80" cy="54" r="6" fill="#f0b400"></circle></svg>
-                        </div>
-                        <h4>Les commandes du pilote</h4>
-                        <ul class="atelier-legende">
-                            <li><strong>⏫ Gaz</strong> : modifie la vitesse des quatre hélices en même temps : le drone monte ou descend.</li>
-                            <li><strong>↕️ Tangage</strong> : incline le drone vers l'avant ou vers l'arrière : il avance ou il recule.</li>
-                            <li><strong>↔️ Roulis</strong> : incline le drone sur le côté : il glisse vers la gauche ou vers la droite.</li>
-                            <li><strong>🔄 Lacet</strong> : fait pivoter le drone sur son axe vertical : il tourne sur lui-même.</li>
-                        </ul>
-                        <div class="atelier-missions">
-                            <div class="atelier-question" data-mission="1" data-bonne="gaz" data-explication="pour monter, le pilote augmente la vitesse des quatre hélices en même temps : la portance devient supérieure au poids du drone, et le drone s'élève.">
-                                <p class="atelier-enonce"><strong>Mission 1 :</strong> Le drone doit passer au-dessus d'une haie de 3 m de haut.</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 1">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
-                                </div>
-                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question" data-mission="2" data-bonne="tangage" data-explication="en inclinant le drone vers l'avant (tangage), une partie de la portance le pousse horizontalement : le drone avance, tout en restant à la même altitude.">
-                                <p class="atelier-enonce"><strong>Mission 2 :</strong> Le drone doit avancer vers la maison à photographier.</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 2">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
-                                </div>
-                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question" data-mission="3" data-bonne="roulis" data-explication="le roulis incline le drone sur le côté droit : la portance le fait glisser latéralement, sans changer son orientation.">
-                                <p class="atelier-enonce"><strong>Mission 3 :</strong> Le drone doit se décaler de 2 m vers la droite pour éviter un arbre.</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 3">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
-                                </div>
-                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question" data-mission="4" data-bonne="lacet" data-explication="le lacet fait pivoter le drone sur son axe vertical : il tourne sur lui-même sans se déplacer, comme une toupie sur place.">
-                                <p class="atelier-enonce"><strong>Mission 4 :</strong> Le drone fait face au portail et doit filmer la cour dans l'autre sens.</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 4">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
-                                </div>
-                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question" data-mission="5" data-bonne="gaz" data-explication="pour descendre, le pilote diminue progressivement la vitesse des quatre hélices : la portance devient légèrement inférieure au poids du drone, qui descend lentement jusqu'à la table.">
-                                <p class="atelier-enonce"><strong>Mission 5 :</strong> Le drone doit se poser en douceur sur la table de l'atelier.</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 5">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
-                                </div>
-                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                        </div>
-                        <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierChoix(this)">Vérifier l'atelier</button>
-                        </div>
-                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">Le drone se pilote en réglant la vitesse de ses quatre hélices. Le gaz change la poussée totale ; le tangage et le roulis inclinent le drone pour le déplacer ; le lacet le fait pivoter sur lui-même. La radiocommande n'envoie que quatre ordres, et c'est la carte de vol qui les traduit en vitesses différentes pour les quatre variateurs.</p>
-                    </article>
-
-                    <article class="atelier-carte" data-type="rotors" data-atelier="equilibre-helices" aria-labelledby="atelier-titre-equilibre-helices">
-                        <h3 id="atelier-titre-equilibre-helices">🌀 Atelier 4 — Équilibrer les hélices</h3>
-                        <p class="atelier-consigne">Cliquez sur une hélice pour inverser son sens de rotation (↻ ou ↺). Trouvez le réglage qui permet au drone de décoller sans tourner sur lui-même, puis vérifiez l'atelier.</p>
-                        <div class="rotors-cadre">
-                            <div class="rotors-grille" role="group" aria-label="Sens de rotation des quatre hélices">
-                                <p class="rotors-nez">▲ avant du drone</p>
-                            <div class="rotor-case">
-                                <span class="rotor-nom">Avant gauche</span>
-                                <button type="button" class="rotor-btn" data-pos="0" data-sens="droite" data-nom="Avant gauche" aria-label="Hélice Avant gauche : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
-                            </div>
-                            <div class="rotor-case">
-                                <span class="rotor-nom">Avant droit</span>
-                                <button type="button" class="rotor-btn" data-pos="1" data-sens="droite" data-nom="Avant droit" aria-label="Hélice Avant droit : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
-                            </div>
-                            <div class="rotor-case">
-                                <span class="rotor-nom">Arrière gauche</span>
-                                <button type="button" class="rotor-btn" data-pos="2" data-sens="droite" data-nom="Arrière gauche" aria-label="Hélice Arrière gauche : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
-                            </div>
-                            <div class="rotor-case">
-                                <span class="rotor-nom">Arrière droit</span>
-                                <button type="button" class="rotor-btn" data-pos="3" data-sens="droite" data-nom="Arrière droit" aria-label="Hélice Arrière droit : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
-                            </div>
-                            </div>
-                        </div>
-                        <p class="atelier-verdict" data-role="verdict" role="status" aria-live="polite"></p>
-                        <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierRotors(this)">Vérifier l'atelier</button>
-                        </div>
-                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">Chaque hélice qui tourne entraîne le drone dans le sens opposé à sa rotation. Avec deux hélices qui tournent dans un sens et deux dans l'autre, disposées en diagonale, les deux effets s'annulent : le drone reste stable et peut décoller droit. Pour le faire pivoter volontairement, la carte de vol accélère une paire d'hélices plus que l'autre : c'est la commande de lacet de l'atelier 3.</p>
-                    </article>
-
-                    <article class="atelier-carte" data-type="autonomie" data-atelier="autonomie-batterie" data-courant="11" data-duree-mission="10" data-bonne="1" aria-labelledby="atelier-titre-autonomie-batterie">
-                        <h3 id="atelier-titre-autonomie-batterie">🔋 Atelier 5 — Combien de temps peut-il voler ?</h3>
-                        <p class="atelier-consigne">Une mission d'inspection doit durer 10 minutes. Le drone consomme en moyenne 11 A. Choisissez la batterie la plus adaptée : elle doit couvrir la mission, sans être inutilement lourde.</p>
-                        <p class="atelier-formule">autonomie (min) = capacité (mAh) ÷ 1000 ÷ courant (A) × 60</p>
-                        <div class="atelier-options" role="radiogroup" aria-label="Batteries disponibles">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-batterie="0" data-capacite="1300" onclick="atelierChoisirBatterie(this)">Li-Po 3S 1300 mAh — 110 g<span class="atelier-mesure" data-role="mesure"></span></button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-batterie="1" data-capacite="2200" onclick="atelierChoisirBatterie(this)">Li-Po 3S 2200 mAh — 180 g<span class="atelier-mesure" data-role="mesure"></span></button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-batterie="2" data-capacite="5200" onclick="atelierChoisirBatterie(this)">Li-Po 3S 5200 mAh — 400 g<span class="atelier-mesure" data-role="mesure"></span></button>
-                        </div>
-                        <div class="atelier-jauge-cadre" aria-hidden="true"><div class="atelier-jauge"></div></div>
-                        <p class="atelier-compteur" data-role="bilan-jauge">Choisis une batterie pour voir son autonomie calculée.</p>
-                        <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierAutonomie(this)">Vérifier l'atelier</button>
-                        </div>
-                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">L'autonomie se calcule avec la capacité et le courant consommé. 1300 mAh : 1,3 Ah ÷ 11 A ≈ 0,12 h, soit environ 7 min — la mission de 10 min n'est pas couverte. 2200 mAh : 2,2 Ah ÷ 11 A = 0,2 h = 12 min — la mission est couverte avec 2 min de marge. 5200 mAh : environ 28 min, mais la batterie pèse 220 g de plus : les moteurs doivent soulever cette masse supplémentaire, donc consommer davantage, et le drone devient moins maniable. La batterie de 2200 mAh est donc le meilleur compromis entre autonomie et masse.</p>
                     </article>
                     </div>
 
@@ -3153,7 +3621,146 @@ font-size: 0.78rem;
             <section id="contenu-bonus" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-bonus">
                 <div class="activite-bonus deverrouille">
                     <h3>🎉 Activité Bonus Déverrouillée !</h3>
-                    <p>Félicitations ! Vous avez terminé tous les niveaux. Voici un jeu pour réinvestir le cours en pilotant un drone de livraison.</p>
+                    <p>Félicitations ! Vous avez terminé tous les niveaux. Deux jeux vous attendent pour réinvestir le cours : le <strong>banc d'essai</strong>, où l'on règle le drone avant de l'atterrir, puis le <strong>colis express</strong>, où l'on pilote le drone de livraison du prof.</p>
+                </div>
+
+                <div class="carte-contenu">
+                    <h2>🛫 Réglages et atterrissage : le banc d'essai du drone</h2>
+                    <p>Les trois réglages du drone, ceux que le constructeur doit choisir avant le premier vol : le <strong>sens des hélices</strong>, la <strong>batterie</strong> et la <strong>réactivité des commandes</strong>. Réglez-les, puis posez le drone sur la plateforme : c'est un jeu d'adresse, mais chaque réglage change vraiment la physique du vol.</p>
+
+                    <fieldset class="vol-banc" id="vol-banc">
+                        <legend>Les trois réglages</legend>
+
+                        <div class="vol-bloc">
+                            <h4>1. Le sens des hélices (vue de dessus — ▲ = avant du drone)</h4>
+                            <p>Cliquez une hélice pour inverser son sens. Le drone ne doit pas tourner sur lui-même au décollage.</p>
+                            <div class="vol-rotors" role="group" aria-label="Sens de rotation des quatre hélices">
+                                <div class="vol-rotor-case">
+                                    <span class="vol-rotor-nom">Avant gauche</span>
+                                    <button type="button" class="vol-rotor" data-rotor="0" data-sens="droite"
+                                            aria-pressed="false" aria-label="Hélice avant gauche : rotation horaire — cliquer pour inverser le sens"
+                                            onclick="volTournerRotor(this)"><span class="vol-rotor-symbole tourne-droite">↻</span></button>
+                                </div>
+                                <div class="vol-rotor-case">
+                                    <span class="vol-rotor-nom">Avant droit</span>
+                                    <button type="button" class="vol-rotor" data-rotor="1" data-sens="droite"
+                                            aria-pressed="false" aria-label="Hélice avant droit : rotation horaire — cliquer pour inverser le sens"
+                                            onclick="volTournerRotor(this)"><span class="vol-rotor-symbole tourne-droite">↻</span></button>
+                                </div>
+                                <div class="vol-rotor-case">
+                                    <span class="vol-rotor-nom">Arrière gauche</span>
+                                    <button type="button" class="vol-rotor" data-rotor="2" data-sens="droite"
+                                            aria-pressed="false" aria-label="Hélice arrière gauche : rotation horaire — cliquer pour inverser le sens"
+                                            onclick="volTournerRotor(this)"><span class="vol-rotor-symbole tourne-droite">↻</span></button>
+                                </div>
+                                <div class="vol-rotor-case">
+                                    <span class="vol-rotor-nom">Arrière droit</span>
+                                    <button type="button" class="vol-rotor" data-rotor="3" data-sens="droite"
+                                            aria-pressed="false" aria-label="Hélice arrière droit : rotation horaire — cliquer pour inverser le sens"
+                                            onclick="volTournerRotor(this)"><span class="vol-rotor-symbole tourne-droite">↻</span></button>
+                                </div>
+                            </div>
+                            <p class="vol-reglage" id="vol-reglage-helices" role="status" aria-live="polite"></p>
+                        </div>
+
+                        <div class="vol-bloc">
+                            <h4>2. La batterie</h4>
+                            <p>La mission d'inspection doit durer <strong>60 s</strong> : autonomie = capacité ÷ courant. Une batterie plus grosse vole plus longtemps, mais elle pèse plus lourd.</p>
+                            <div class="vol-choix-groupe" id="vol-batteries" role="radiogroup" aria-label="Batteries disponibles">
+                                <button type="button" class="vol-choix" role="radio" aria-checked="false" data-batterie="0"
+                                        onclick="volChoisirBatterie(this)">Li-Po 3S 1300 mAh
+                                    <small>110 g — 55 s de vol</small></button>
+                                <button type="button" class="vol-choix" role="radio" aria-checked="false" data-batterie="1"
+                                        onclick="volChoisirBatterie(this)">Li-Po 3S 2200 mAh
+                                    <small>180 g — 95 s de vol</small></button>
+                                <button type="button" class="vol-choix" role="radio" aria-checked="false" data-batterie="2"
+                                        onclick="volChoisirBatterie(this)">Li-Po 3S 5200 mAh
+                                    <small>400 g — 150 s de vol</small></button>
+                            </div>
+                            <p class="vol-reglage" id="vol-reglage-batterie" role="status" aria-live="polite"></p>
+                        </div>
+
+                        <div class="vol-bloc">
+                            <h4>3. Les commandes</h4>
+                            <p>Réglez la réactivité du pilotage, puis l'axe du roulis si vous préférez piloter en miroir.</p>
+                            <div class="vol-choix-groupe" id="vol-sensibilites" role="radiogroup" aria-label="Réactivité des commandes">
+                                <button type="button" class="vol-choix" role="radio" aria-checked="false" data-sensibilite="0"
+                                        onclick="volChoisirSensibilite(this)">Douces
+                                    <small>fines mais peu réactives</small></button>
+                                <button type="button" class="vol-choix choisi" role="radio" aria-checked="true" data-sensibilite="1"
+                                        onclick="volChoisirSensibilite(this)">Moyennes
+                                    <small>le réglage d'usine</small></button>
+                                <button type="button" class="vol-choix" role="radio" aria-checked="false" data-sensibilite="2"
+                                        onclick="volChoisirSensibilite(this)">Vives
+                                    <small>très maniables, batterie gourmande</small></button>
+                            </div>
+                            <button type="button" class="vol-interrupteur" id="vol-inverser"
+                                    role="switch" aria-checked="false" onclick="volBasculerInversion(this)">
+                                <span class="vol-interrupteur-pastille" aria-hidden="true"></span>
+                                Roulis inversé (◀ fait partir à droite) :
+                                <strong id="vol-etat-inversion">non</strong>
+                            </button>
+                            <p class="vol-reglage" id="vol-reglage-commandes" role="status" aria-live="polite"></p>
+                        </div>
+                    </fieldset>
+
+                    <p class="vol-recap" id="vol-recap" role="status" aria-live="polite"></p>
+                    <button type="button" class="bouton-action" id="vol-btn-decoller" onclick="volDecoller()" disabled>
+                        🛫 Aller au vol →
+                    </button>
+
+                    <div id="vol-salle" hidden>
+                        <div class="vol-hud">
+                            <div>
+                                <span class="vol-etiquette">Batterie</span>
+                                <div class="vol-jauge" id="vol-jauge-batterie" role="progressbar"
+                                     aria-label="Batterie restante" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+                                    <span id="vol-barre-batterie"></span>
+                                </div>
+                                <span class="vol-valeur" id="vol-batterie">100 %</span>
+                            </div>
+                            <div><span class="vol-etiquette">Site</span> <span class="vol-valeur" id="vol-site">1 / 3</span></div>
+                            <div><span class="vol-etiquette">Altitude</span> <span class="vol-valeur" id="vol-altitude">30,0 m</span></div>
+                            <div><span class="vol-etiquette">Vitesse verticale</span> <span class="vol-valeur" id="vol-vy">0,0 m/s</span></div>
+                            <div><span class="vol-etiquette">Dérive</span> <span class="vol-valeur" id="vol-vx">0,0 m/s</span></div>
+                            <div><span class="vol-etiquette">Inclinaison</span> <span class="vol-valeur" id="vol-inclinaison">0°</span></div>
+                            <div><span class="vol-etiquette">Vent</span> <span class="vol-valeur" id="vol-vent">0,15 m/s →</span></div>
+                        </div>
+                        <p class="vol-recap" id="vol-reglages-actifs"></p>
+
+                        <div class="vol-ecran">
+                            <canvas id="vol-canvas" width="480" height="320" role="application"
+                                    aria-label="Vue de côté du drone en vol au-dessus de la plateforme d'atterrissage"
+                                    aria-describedby="vol-aide"></canvas>
+                            <div class="vol-voile" id="vol-voile" hidden>
+                                <h4 id="vol-voile-titre">Prêt à décoller ?</h4>
+                                <p id="vol-voile-texte"></p>
+                                <button type="button" class="bouton-action succes" id="vol-btn-decoller-voile"
+                                        onclick="volDemarrerVol()">🛫 Décoller</button>
+                            </div>
+                        </div>
+
+                        <div class="vol-barre-outils">
+                            <button type="button" class="bouton-action secondaire" onclick="volPause()">⏸️ Pause</button>
+                            <button type="button" class="bouton-action secondaire" onclick="volRecommencer()">🔁 Recommencer</button>
+                            <button type="button" class="bouton-action secondaire" onclick="volDecrire()">🔊 Décrire ma situation</button>
+                            <button type="button" class="bouton-action secondaire" onclick="volRetourReglages()">⚙️ Revenir aux réglages</button>
+                        </div>
+
+                        <div class="vol-pave" aria-label="Commandes tactiles du drone">
+                            <button type="button" data-vol-touche="gauche" aria-label="Incliner à gauche">◀</button>
+                            <button type="button" data-vol-touche="poussee" aria-label="Augmenter la poussée">▲</button>
+                            <button type="button" data-vol-touche="droite" aria-label="Incliner à droite">▶</button>
+                        </div>
+
+                        <p class="vol-aide" id="vol-aide">
+                            <strong>Commandes :</strong> <strong>Espace</strong> ou <strong>↑</strong> (ou le bouton ▲) pour la poussée ;
+                            <strong>← →</strong> (ou Q / D) pour le roulis. Sur tablette, utilisez les trois boutons.
+                            <strong>But :</strong> toucher la plateforme « H » avec une descente et une dérive inférieures à 2 m/s,
+                            sans dépasser 12° d'inclinaison. La poussée consomme la batterie ; sans batterie, plus de poussée.
+                        </p>
+                        <p class="vol-annonce" id="vol-annonce" role="status" aria-live="polite"></p>
+                    </div>
                 </div>
 
                 <div class="carte-contenu">
@@ -3318,7 +3925,7 @@ font-size: 0.78rem;
         // Passer à true pour désactiver tous les blocages d'onglets
         // pendant le développement/test des jeux bonus.
         // Penser à remettre à false avant publication !
-        const MODE_DEVELOPPEMENT = true;
+        const MODE_DEVELOPPEMENT = false;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -3643,10 +4250,23 @@ font-size: 0.78rem;
             // Le bouton de suite ne s'active que lorsque chaque tuile a
             // été visitée au moins une fois, même si elles ne sont plus
             // toutes cochées simultanément à l'instant T.
+            mettreAJourSuiteN2();
+        }
+
+        // La suite du N2 s'ouvre quand la chaîne est explorée ET quand les
+        // ateliers déclarés obligatoires (n2.ateliers.exercices[].obligatoire)
+        // sont terminés. Sans atelier obligatoire, le comportement est celui
+        // d'avant : seule l'exploration de la chaîne compte.
+        function mettreAJourSuiteN2() {
             const boutonSuite = document.getElementById('bouton-suite-n2-intro');
-            if (boutonSuite) {
-                boutonSuite.disabled = elementsVisites.size < totalElements;
-            }
+            if (!boutonSuite) return;
+            const ateliersObligatoires = document.querySelectorAll(
+                '#contenu-n2-intro .atelier-carte[data-obligatoire="1"]');
+            let restants = 0;
+            ateliersObligatoires.forEach(function (carte) {
+                if (carte.getAttribute('data-termine') !== '1') restants += 1;
+            });
+            boutonSuite.disabled = elementsVisites.size < totalElements || restants > 0;
         }
 
         // ============================================
@@ -3810,6 +4430,8 @@ font-size: 0.78rem;
                 if (document.getElementById('cablage-atelier')) {
                     cablageReinitialiser();
                 }
+                // Ateliers de découverte et animations N2 : balisage d'origine.
+                reinitialiserAteliers();
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
@@ -3947,6 +4569,10 @@ font-size: 0.78rem;
         function atelierAfficherExplication(carte) {
             const zone = carte.querySelector('[data-role="explication"]');
             if (zone) zone.classList.remove('cache');
+            // Point de réussite commun à tous les types : c'est ici que
+            // l'atelier obligatoire compte comme terminé.
+            carte.setAttribute('data-termine', '1');
+            if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
         }
 
         // Marque une hélice ou un jeton en erreur, puis retire la marque :
@@ -5205,7 +5831,438 @@ font-size: 0.78rem;
             cablageTracerFils();
         }
 
+
+        // ══════════════════════════════════════════════════════════════════
+        //  PUZZLE DE COMPLÉTION DU BONUS (bonus.puzzle)
+        //
+        //  Données : `bonus.puzzle` de la configuration JSON. Le balisage est
+        //  produit par personnaliser.py ; ce moteur ne connaît que le DOM :
+        //    .puzzle-piece[data-piece]                les pièces, dans la réserve
+        //    .puzzle-slot[data-slot][data-attendu]    les emplacements
+        //
+        //  Le placement se fait au CLIC : on choisit une pièce (elle prend
+        //  `aria-pressed="true"`), puis on clique son emplacement. Cliquer un
+        //  emplacement occupé renvoie sa pièce dans la réserve. Aucun
+        //  glisser-déposer n'est exigé : au doigt le geste fait défiler la
+        //  page, et au clavier il n'existe pas. Un emplacement n'accepte
+        //  qu'une pièce, et changer une pièce après vérification annule la
+        //  validation — sinon l'élève pourrait valider puis casser son puzzle
+        //  en silence.
+        //
+        //  Les pièces restantes ne sont pas une erreur : une configuration peut
+        //  en poser un peu plus que nécessaire (des intrus). C'est même ce qui
+        //  distingue un puzzle d'un simple recopiage.
+        // ══════════════════════════════════════════════════════════════════
+
+        const PUZZLE = {
+            selection: null,   // pièce choisie, en attente d'un emplacement
+            valide: false      // puzzle vérifié et accepté
+        };
+
+        function puzzleAtelier() { return document.getElementById('puzzle-bonus'); }
+        function puzzleReserve() { return document.getElementById('puzzle-reserve'); }
+
+        function puzzlePieces() {
+            const atelier = puzzleAtelier();
+            return atelier
+                ? Array.prototype.slice.call(atelier.querySelectorAll('.puzzle-piece'))
+                : [];
+        }
+
+        function puzzlePiecesReserve() {
+            const reserve = puzzleReserve();
+            return reserve
+                ? Array.prototype.slice.call(reserve.querySelectorAll('.puzzle-piece'))
+                : [];
+        }
+
+        function puzzleSlots() {
+            const plateau = document.getElementById('puzzle-plateau');
+            return plateau
+                ? Array.prototype.slice.call(plateau.querySelectorAll('.puzzle-slot'))
+                : [];
+        }
+
+        function puzzleTexte(element) {
+            return String(element && element.textContent ? element.textContent : '').trim();
+        }
+
+        /* Nom lisible d'un emplacement : son libellé (« 1 », « Alimenter »…),
+           sinon « emplacement n ». C'est ce que lit aussi un lecteur d'écran. */
+        function puzzleNom(slot) {
+            if (!slot) return 'emplacement';
+            const libelle = String(slot.getAttribute('data-libelle') || '').trim();
+            if (libelle) return libelle;
+            const index = puzzleSlots().indexOf(slot);
+            return 'emplacement ' + (index + 1);
+        }
+
+        function puzzleReserveVide() {
+            const reserve = puzzleReserve();
+            if (!reserve) return;
+            const vide = reserve.querySelectorAll('.puzzle-piece').length === 0;
+            reserve.classList.toggle('vide', vide);
+        }
+
+        function puzzleRetour(message, etat) {
+            const zone = document.getElementById('puzzle-retour');
+            if (!zone) return;
+            zone.textContent = message || '';
+            zone.className = 'puzzle-retour' + (etat ? ' ' + etat : '');
+        }
+
+        /* Changer une pièce annule la validation : l'élève qui a « réussi » puis
+           déplace une pièce ne doit pas garder un verdict vert trompeur. */
+        function puzzleEffacerMarques() {
+            puzzleSlots().forEach(function (slot) {
+                slot.classList.remove('juste', 'faux', 'cible');
+            });
+            const bilan = document.getElementById('puzzle-bilan');
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'puzzle-bilan cache';
+            }
+            const explication = document.getElementById('puzzle-explication');
+            if (explication) explication.classList.add('cache');
+            PUZZLE.valide = false;
+        }
+
+        function puzzleMajEtiquette(slot) {
+            if (!slot) return;
+            const piece = slot.querySelector('.puzzle-piece');
+            const nom = puzzleNom(slot);
+            slot.setAttribute('aria-label', piece
+                ? nom + ' : ' + puzzleTexte(piece) + '. Activer pour retirer la pièce.'
+                : nom + ' : vide. Activer pour poser la pièce choisie.');
+        }
+
+        function puzzleMajEtiquettes() {
+            puzzleSlots().forEach(puzzleMajEtiquette);
+            puzzlePieces().forEach(function (piece) {
+                piece.setAttribute('aria-label', puzzleTexte(piece) +
+                    (piece.classList.contains('placee') ? ' — posée. Activer pour la retirer.' : ''));
+            });
+        }
+
+        /* Choisir une pièce de la réserve, ou retirer une pièce déjà posée. */
+        function puzzleChoisir(piece) {
+            if (!piece) return;
+            if (piece.classList.contains('placee')) {
+                puzzleRemettreReserve(piece);
+                puzzleRetour('« ' + puzzleTexte(piece) + ' » est revenue dans la réserve.', '');
+                return;
+            }
+            if (PUZZLE.selection === piece) {
+                piece.setAttribute('aria-pressed', 'false');
+                PUZZLE.selection = null;
+                puzzleRetour('Pièce reposée. Choisis-en une autre, puis son emplacement.', '');
+                return;
+            }
+            puzzlePieces().forEach(function (autre) {
+                if (autre !== piece) autre.setAttribute('aria-pressed', 'false');
+            });
+            PUZZLE.selection = piece;
+            piece.setAttribute('aria-pressed', 'true');
+            puzzleRetour('« ' + puzzleTexte(piece) + ' » choisie : touche maintenant son emplacement.', '');
+        }
+
+        function puzzleRemettreReserve(piece) {
+            const reserve = puzzleReserve();
+            if (!reserve || !piece) return;
+            piece.classList.remove('placee');
+            piece.removeAttribute('tabindex');
+            piece.setAttribute('aria-pressed', 'false');
+            piece.style.position = '';
+            piece.style.left = '';
+            piece.style.top = '';
+            reserve.appendChild(piece);
+            if (PUZZLE.selection === piece) PUZZLE.selection = null;
+            puzzleReserveVide();
+            puzzleEffacerMarques();
+            puzzleMajEtiquettes();
+        }
+
+        /* Poser la pièce choisie dans un emplacement. */
+        function puzzlePoser(slot) {
+            if (!slot) return;
+            const occupant = slot.querySelector('.puzzle-piece');
+            const piece = PUZZLE.selection;
+
+            if (!piece) {
+                if (occupant) {
+                    puzzleRemettreReserve(occupant);
+                    puzzleRetour('« ' + puzzleTexte(occupant) + ' » est revenue dans la réserve.', '');
+                } else {
+                    puzzleRetour('Choisis d\'abord une pièce dans la réserve, puis son emplacement.', '');
+                }
+                return;
+            }
+
+            if (occupant && occupant !== piece) puzzleRemettreReserve(occupant);
+            slot.appendChild(piece);
+            piece.classList.add('placee');
+            piece.setAttribute('aria-pressed', 'false');
+            piece.setAttribute('tabindex', '-1');
+            PUZZLE.selection = null;
+
+            puzzleEffacerMarques();
+            puzzleReserveVide();
+            puzzleMajEtiquettes();
+            puzzleRetour('« ' + puzzleTexte(piece) + ' » posée dans ' + puzzleNom(slot) + '.', '');
+        }
+
+        function puzzleAjouterListe(parent, titre, messages) {
+            if (!messages || !messages.length) return;
+            const titreEl = document.createElement('p');
+            titreEl.textContent = titre;
+            parent.appendChild(titreEl);
+            const liste = document.createElement('ul');
+            messages.forEach(function (message) {
+                const item = document.createElement('li');
+                item.textContent = message;
+                liste.appendChild(item);
+            });
+            parent.appendChild(liste);
+        }
+
+        function puzzleVerifier() {
+            const atelier = puzzleAtelier();
+            if (!atelier) return 'echec';
+
+            const slots = puzzleSlots();
+            if (!slots.length) {
+                puzzleRetour('Aucun emplacement à compléter dans ce puzzle.', 'echec');
+                return 'echec';
+            }
+
+            const erreurs = [];
+            const justes = [];
+
+            slots.forEach(function (slot) {
+                const piece = slot.querySelector('.puzzle-piece');
+                const nom = puzzleNom(slot);
+                slot.classList.remove('juste', 'faux', 'cible');
+                if (!piece) {
+                    slot.classList.add('faux');
+                    erreurs.push(nom + ' : emplacement vide.');
+                    return;
+                }
+                if (piece.getAttribute('data-piece') === slot.getAttribute('data-attendu')) {
+                    slot.classList.add('juste');
+                    justes.push(nom);
+                } else {
+                    slot.classList.add('faux');
+                    const indice = String(slot.getAttribute('data-indice') || '').trim();
+                    erreurs.push(nom + ' : « ' + puzzleTexte(piece) + ' » n\'est pas la bonne pièce.' +
+                        (indice ? ' ' + indice : ''));
+                }
+            });
+
+            const reussi = erreurs.length === 0;
+            const bilan = document.getElementById('puzzle-bilan');
+            const explication = document.getElementById('puzzle-explication');
+
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'puzzle-bilan ' + (reussi ? 'succes' : 'echec');
+                const titre = document.createElement('p');
+                titre.textContent = reussi
+                    ? '✅ Puzzle terminé : toutes les pièces sont à leur place.'
+                    : 'Le puzzle n\'est pas encore juste : ' + erreurs.length +
+                      ' emplacement(s) à revoir.';
+                bilan.appendChild(titre);
+                if (reussi) {
+                    if (explication) {
+                        explication.classList.remove('cache');
+                        const rappel = document.createElement('div');
+                        rappel.className = 'puzzle-explication';
+                        const texte = document.createElement('p');
+                        texte.textContent = explication.textContent;
+                        rappel.appendChild(texte);
+                        bilan.appendChild(rappel);
+                    }
+                } else {
+                    puzzleAjouterListe(bilan, 'À revoir :', erreurs);
+                    puzzleAjouterListe(bilan, 'Déjà juste :', justes);
+                }
+            }
+
+            PUZZLE.valide = reussi;
+            puzzleMajEtiquettes();
+            puzzleRetour(reussi
+                ? '🎉 Puzzle terminé. Lis l\'explication ci-dessous : elle dit pourquoi cet ordre est le bon.'
+                : 'Reprends les emplacements marqués en rouge, puis touche de nouveau « Vérifier ».',
+                reussi ? 'succes' : 'echec');
+            return reussi ? 'succes' : 'echec';
+        }
+
+        function puzzleReinitialiser() {
+            const reserve = puzzleReserve();
+            if (!reserve) return;
+            puzzlePieces()
+                .sort(function (a, b) {
+                    const ordreA = Number(a.getAttribute('data-ordre') || 0);
+                    const ordreB = Number(b.getAttribute('data-ordre') || 0);
+                    return ordreA - ordreB;
+                })
+                .forEach(function (piece) {
+                    piece.classList.remove('placee');
+                    piece.removeAttribute('tabindex');
+                    piece.setAttribute('aria-pressed', 'false');
+                    reserve.appendChild(piece);
+                });
+            PUZZLE.selection = null;
+            puzzleEffacerMarques();
+            puzzleReserveVide();
+            puzzleMajEtiquettes();
+            puzzleRetour('Puzzle remis à zéro : toutes les pièces sont dans la réserve.', '');
+        }
+
+        function puzzleInitialiser() {
+            const atelier = puzzleAtelier();
+            if (!atelier) return;
+
+            puzzlePieces().forEach(function (piece) {
+                piece.addEventListener('click', function () { puzzleChoisir(piece); });
+            });
+
+            puzzleSlots().forEach(function (slot) {
+                slot.addEventListener('click', function () { puzzlePoser(slot); });
+                slot.addEventListener('keydown', function (evenement) {
+                    if (evenement.key === 'Enter' || evenement.key === ' ' ||
+                        evenement.key === 'Spacebar') {
+                        evenement.preventDefault();
+                        puzzlePoser(slot);
+                    }
+                });
+            });
+
+            puzzleReserveVide();
+            puzzleMajEtiquettes();
+        }
+
+        /* API de test : `verifier_parcours.py` joue le puzzle comme un élève,
+           par les mêmes fonctions que les clics. Une API plutôt qu'une lecture
+           du DOM permet de contrôler un puzzle qu'aucun bouton ne déclenche. */
+        window.JeuPuzzle = {
+            etat: function () {
+                const atelier = puzzleAtelier();
+                if (!atelier) return null;
+                const reserve = puzzleReserve();
+                return {
+                    type: atelier.getAttribute('data-type') || 'chaine',
+                    valide: PUZZLE.valide,
+                    selection: PUZZLE.selection
+                        ? PUZZLE.selection.getAttribute('data-piece')
+                        : null,
+                    pieces: puzzlePieces().map(function (piece) {
+                        return piece.getAttribute('data-piece');
+                    }),
+                    reserve: reserve
+                        ? reserve.querySelectorAll('.puzzle-piece').length
+                        : 0,
+                    slots: puzzleSlots().map(function (slot) {
+                        const piece = slot.querySelector('.puzzle-piece');
+                        return {
+                            cle: slot.getAttribute('data-slot'),
+                            attendu: slot.getAttribute('data-attendu'),
+                            piece: piece ? piece.getAttribute('data-piece') : null,
+                            juste: slot.classList.contains('juste'),
+                            faux: slot.classList.contains('faux')
+                        };
+                    })
+                };
+            },
+            choisir: function (clePiece) {
+                puzzleChoisir(puzzlePieces().filter(function (piece) {
+                    return piece.getAttribute('data-piece') === clePiece;
+                })[0]);
+            },
+            poser: function (cleSlot, clePiece) {
+                const slot = puzzleSlots().filter(function (candidat) {
+                    return candidat.getAttribute('data-slot') === cleSlot;
+                })[0];
+                if (!slot) return false;
+                if (clePiece === null || clePiece === undefined) {
+                    const occupant = slot.querySelector('.puzzle-piece');
+                    if (occupant) puzzleRemettreReserve(occupant);
+                    return true;
+                }
+                const piece = puzzlePieces().filter(function (candidat) {
+                    return candidat.getAttribute('data-piece') === clePiece;
+                })[0];
+                if (!piece) return false;
+                const occupant = slot.querySelector('.puzzle-piece');
+                if (occupant && occupant !== piece) puzzleRemettreReserve(occupant);
+                puzzlePieces().forEach(function (autre) {
+                    autre.setAttribute('aria-pressed', 'false');
+                });
+                PUZZLE.selection = null;
+                slot.appendChild(piece);
+                piece.classList.add('placee');
+                piece.setAttribute('tabindex', '-1');
+                puzzleEffacerMarques();
+                puzzleReserveVide();
+                puzzleMajEtiquettes();
+                return true;
+            },
+            verifier: function () { return puzzleVerifier(); },
+            reinitialiser: function () { puzzleReinitialiser(); }
+        };
+
+        // ══════════════════════════════════════════════════════════════════
+        //  RÉINITIALISATION DES ATELIERS ET ANIMATIONS N2
+        //
+        //  « Recommencer » doit remettre les exercices de découverte et les
+        //  animations dans leur état d'origine. On mémorise leur balisage au
+        //  chargement plutôt que de rejouer chaque état à la main : un nouveau
+        //  type d'atelier (ou une nouvelle animation) est ainsi réinitialisé
+        //  sans une ligne de code supplémentaire, et l'élève ne retrouve pas
+        //  un atelier à moitié rempli.
+        // ══════════════════════════════════════════════════════════════════
+
+        const ATELIERS_INITIAUX = [];
+
+        function memoriserAteliersInitiaux() {
+            document.querySelectorAll('.atelier-carte, .bloc-animation').forEach(function (bloc) {
+                ATELIERS_INITIAUX.push({ bloc: bloc, html: bloc.innerHTML });
+            });
+        }
+
+        function reinitialiserAteliers() {
+            ATELIERS_INITIAUX.forEach(function (entree) {
+                // Les états internes sont posés sur la carte : les oublier,
+                // sinon l'atelier restauré croirait avoir déjà ses réponses.
+                delete entree.bloc.__atelier;
+                delete entree.bloc.__reseau;
+                entree.bloc.innerHTML = entree.html;
+            });
+            if (window.__AROUTE) {
+                if (__AROUTE.minuteur) {
+                    clearInterval(__AROUTE.minuteur);
+                    __AROUTE.minuteur = null;
+                }
+                __AROUTE.scenario = null;
+                __AROUTE.index = 0;
+                __AROUTE.chemin = [];
+            }
+            if (typeof __interSel !== 'undefined') {
+                __interSel.interacteur = null;
+                __interSel.element = null;
+            }
+            // Le puzzle du bonus se remet à zéro en déplaçant ses nœuds, pas en
+            // restaurant du HTML : les écouteurs posés au chargement restent
+            // donc valides (une restauration par innerHTML les perdrait).
+            if (document.getElementById('puzzle-bonus')) {
+                puzzleReinitialiser();
+            }
+            mettreAJourSuiteN2();
+        }
+
         cablageInitialiser();
+        puzzleInitialiser();
+        memoriserAteliersInitiaux();
+        mettreAJourSuiteN2();
 
         // Support pour impression PDF
         window.addEventListener('beforeprint', function() {
@@ -6796,6 +7853,644 @@ preparerSprites();
 niveau = 1;
 reinitialiserNiveau();
 dessiner();
+})();
+(function () {
+'use strict';
+var MONDE = { largeur: 60, hauteur: 40 };      // en mètres
+var GRAVITE = 4.6;                             // m/s²
+var POUSSEE_MAX = 9.2;                         // m/s², à pleine poussée
+var ROULIS_MAX = 2.4;                          // m/s² de déplacement latéral
+var INCLINAISON_MAX = 14;                      // degrés visuels
+var DEMI_LARGEUR = 1.6;                        // demi-largeur du drone (m)
+var VY_LIMITE = 2.0;                           // m/s à l'atterrissage
+var VX_LIMITE = 2.0;                           // m/s à l'atterrissage
+var TILT_LIMITE = 12;                          // degrés à l'atterrissage
+var MISSION_SECONDES = 60;                     // durée d'inspection annoncée
+var ROTORS = [
+{ nom: 'Avant gauche', sens: 'droite' },
+{ nom: 'Avant droit', sens: 'droite' },
+{ nom: 'Arrière gauche', sens: 'droite' },
+{ nom: 'Arrière droit', sens: 'droite' }
+];
+var BATTERIES = [
+{ cle: '1300', nom: 'Li-Po 3S 1300 mAh', capacite: 1300, masse: 110,
+endurance: 55, facteurMasse: 1.00,
+avis: '55 s de vol pour une mission de 60 s : trop juste.' },
+{ cle: '2200', nom: 'Li-Po 3S 2200 mAh', capacite: 2200, masse: 180,
+endurance: 95, facteurMasse: 1.06,
+avis: '95 s de vol, 70 g de plus que la 1300 : le bon compromis pour 60 s de mission.' },
+{ cle: '5200', nom: 'Li-Po 3S 5200 mAh', capacite: 5200, masse: 400,
+endurance: 150, facteurMasse: 1.22,
+avis: '150 s de vol, mais 400 g : le drone devient lourd, la poussée utile baisse.' }
+];
+var SENSIBILITES = [
+{ cle: 'douce', nom: 'Douces', gain: 0.6, conso: 0.9,
+avis: 'Corrections fines, consommation réduite — mais peu de réaction.' },
+{ cle: 'moyenne', nom: 'Moyennes', gain: 1.0, conso: 1.0,
+avis: 'Le réglage d\'usine : un bon équilibre entre réaction et autonomie.' },
+{ cle: 'vive', nom: 'Vives', gain: 1.5, conso: 1.25,
+avis: 'Très maniable, mais la batterie se vide 25 % plus vite.' }
+];
+var SITES = [
+{ nom: "Le toit de l'atelier", padX: 42, padW: 12, hauteur: 30, vent: 0.15, departX: 20 },
+{ nom: 'La cour du collège', padX: 16, padW: 10, hauteur: 34, vent: 0.45, departX: 42 },
+{ nom: 'La falaise', padX: 30, padW: 7, hauteur: 38, vent: 0.75, departX: 52 }
+];
+var ETAT = 'reglages';   // reglages | pret | vol | pause | fini
+var SITE = 0;
+var BATTERIE = null;     // indice choisi
+var SENSIBILITE = 1;     // indice choisi (moyenne par défaut)
+var INVERSION = false;
+var SCORE = 0;
+var DERNIER_RESULTAT = null;
+var rafId = null;
+var dernierTemps = 0;
+var vol = {
+x: 0, altitude: 0, vx: 0, vy: 0,
+inclinaison: 0, batterie: 100, temps: 0, ventCourant: 0,
+touches: { poussee: false, gauche: false, droite: false }
+};
+function el(id) { return document.getElementById(id); }
+function annoncer(message) {
+var zone = el('vol-annonce');
+if (zone) zone.textContent = message;
+}
+function reglage(id, message, type) {
+var zone = el(id);
+if (!zone) return;
+zone.textContent = message;
+zone.className = 'vol-reglage' + (type ? ' ' + type : '');
+}
+function rotorsEquilibres() {
+var s = ROTORS.map(function (r) { return r.sens; });
+return s[0] === s[3] && s[1] === s[2] && s[0] !== s[1];
+}
+function dessinerRotors() {
+var boutons = document.querySelectorAll('.vol-rotor');
+var equilibre = rotorsEquilibres();
+boutons.forEach(function (bouton, i) {
+var rotor = ROTORS[i];
+if (!rotor) return;
+bouton.setAttribute('data-sens', rotor.sens);
+bouton.setAttribute('aria-pressed', rotor.sens === 'droite' ? 'false' : 'true');
+bouton.setAttribute('aria-label', 'Hélice ' + rotor.nom + ' : rotation ' +
+(rotor.sens === 'droite' ? 'horaire' : 'anti-horaire') +
+' — cliquer pour inverser le sens');
+bouton.classList.toggle('equilibre', equilibre);
+bouton.classList.toggle('desordre', !equilibre);
+var symbole = bouton.querySelector('.vol-rotor-symbole');
+if (symbole) {
+symbole.textContent = rotor.sens === 'droite' ? '↻' : '↺';
+symbole.className = 'vol-rotor-symbole tourne-' + rotor.sens;
+}
+});
+}
+function volTournerRotor(bouton) {
+var i = parseInt(bouton.getAttribute('data-rotor'), 10);
+if (!(i >= 0 && i < ROTORS.length)) return;
+ROTORS[i].sens = ROTORS[i].sens === 'droite' ? 'gauche' : 'droite';
+dessinerRotors();
+if (rotorsEquilibres()) {
+reglage('vol-reglage-helices',
+'✅ Hélices équilibrées : les deux diagonales tournent en sens opposés, '
++ 'les couples s\'annulent et le drone ne tourne pas sur lui-même.', 'ok');
+} else {
+reglage('vol-reglage-helices',
+'⛔ Déséquilibre : deux hélices voisines tournent dans le même sens, ou une '
++ 'diagonale n\'est pas homogène — le drone tournoierait au décollage.', 'ko');
+}
+majReglages();
+}
+function volChoisirBatterie(bouton) {
+var i = parseInt(bouton.getAttribute('data-batterie'), 10);
+if (!(i >= 0 && i < BATTERIES.length)) return;
+BATTERIE = i;
+var b = BATTERIES[i];
+document.querySelectorAll('#vol-batteries .vol-choix').forEach(function (autre) {
+var choisi = autre === bouton;
+autre.classList.toggle('choisi', choisi);
+autre.setAttribute('aria-checked', choisi ? 'true' : 'false');
+});
+var verdict = b.endurance >= MISSION_SECONDES ? 'Elle couvre la mission.' : 'Elle ne couvre pas la mission.';
+reglage('vol-reglage-batterie', b.nom + ' : ' + b.endurance + ' s d\'autonomie pour '
++ MISSION_SECONDES + ' s de mission. ' + b.avis + ' ' + verdict, 'info');
+majReglages();
+}
+function volChoisirSensibilite(bouton) {
+var i = parseInt(bouton.getAttribute('data-sensibilite'), 10);
+if (!(i >= 0 && i < SENSIBILITES.length)) return;
+SENSIBILITE = i;
+document.querySelectorAll('#vol-sensibilites .vol-choix').forEach(function (autre) {
+var choisi = autre === bouton;
+autre.classList.toggle('choisi', choisi);
+autre.setAttribute('aria-checked', choisi ? 'true' : 'false');
+});
+reglage('vol-reglage-commandes', 'Commandes ' + SENSIBILITES[i].nom.toLowerCase()
++ ' : ' + SENSIBILITES[i].avis, 'info');
+majReglages();
+}
+function volBasculerInversion(bouton) {
+INVERSION = bouton.getAttribute('aria-checked') !== 'true';
+bouton.setAttribute('aria-checked', INVERSION ? 'true' : 'false');
+var etatInversion = el('vol-etat-inversion');
+if (etatInversion) etatInversion.textContent = INVERSION ? 'oui' : 'non';
+reglage('vol-reglage-commandes', INVERSION
+? '↔ Roulis inversé : ◀ fait maintenant partir vers la droite.'
+: '↔ Roulis normal : ◀ va vers la gauche.', 'info');
+majReglages();
+}
+function majReglages() {
+var pret = rotorsEquilibres() && BATTERIE !== null;
+var recap = el('vol-recap');
+if (recap) {
+var parties = [
+rotorsEquilibres() ? '✅ hélices équilibrées' : '⛔ hélices déséquilibrées',
+BATTERIE === null ? '⛔ batterie non choisie' : '✅ ' + BATTERIES[BATTERIE].nom,
+'✅ commandes ' + SENSIBILITES[SENSIBILITE].nom.toLowerCase(),
+INVERSION ? 'roulis inversé' : 'roulis normal'
+];
+recap.textContent = pret
+? 'Réglages complets — ' + parties.join(' · ') + '.'
+: 'Il reste à régler : ' + parties.join(' · ') + '.';
+}
+var bouton = el('vol-btn-decoller');
+if (bouton) bouton.disabled = !pret;
+}
+function afficherVoile(titre, texte, libelle, action) {
+var voile = el('vol-voile');
+var t = el('vol-voile-titre');
+var p = el('vol-voile-texte');
+var b = el('vol-btn-decoller-voile');
+if (t) t.textContent = titre;
+if (p) p.textContent = texte;
+if (b) {
+b.textContent = libelle;
+b.onclick = action;
+}
+if (voile) voile.hidden = false;
+}
+function cacherVoile() {
+var voile = el('vol-voile');
+if (voile) voile.hidden = true;
+}
+function volDecoller() {
+if (ETAT === 'vol' || ETAT === 'pause') return;
+if (!rotorsEquilibres() || BATTERIE === null) {
+annoncer('Réglez d\'abord les hélices et la batterie.');
+return;
+}
+var banc = el('vol-banc');
+if (banc) banc.disabled = true;
+var salle = el('vol-salle');
+if (salle) salle.hidden = false;
+ETAT = 'pret';
+preparerVol();
+afficherVoile('Prêt à décoller ?',
+'Site ' + (SITE + 1) + ' — ' + SITES[SITE].nom + '. Altitude de départ : '
++ SITES[SITE].hauteur + ' m, vent latéral ' + SITES[SITE].vent.toFixed(2) + ' m/s. '
++ 'Posez le drone sur la plateforme : descente et dérive sous '
++ VY_LIMITE.toFixed(0) + ' m/s, inclinaison sous ' + TILT_LIMITE + '°.',
+'🛫 Décoller', volDemarrerVol);
+annoncer('Réglages appliqués. Appuyez sur le bouton de décollage pour commencer le vol.');
+}
+function preparerVol() {
+var site = SITES[SITE];
+vol.x = site.departX;
+vol.altitude = site.hauteur;
+vol.vx = 0;
+vol.vy = 0;
+vol.inclinaison = 0;
+vol.batterie = 100;
+vol.temps = 0;
+vol.ventCourant = site.vent;
+vol.touches.poussee = vol.touches.gauche = vol.touches.droite = false;
+majHud();
+dessiner();
+}
+function volDemarrerVol() {
+if (ETAT !== 'pret' && ETAT !== 'pause') return;
+cacherVoile();
+ETAT = 'vol';
+annoncer('Décollage. Maintenez la poussée pour freiner la descente.');
+lancerBoucle();
+}
+function volPause() {
+if (ETAT === 'vol') {
+ETAT = 'pause';
+annoncer('Vol en pause.');
+afficherVoile('Vol en pause', 'Le drone est en vol stationnaire à '
++ vol.altitude.toFixed(1) + ' m.', '▶ Reprendre', volDemarrerVol);
+} else if (ETAT === 'pause') {
+volDemarrerVol();
+}
+}
+function volRecommencer() {
+if (ETAT === 'vol' || ETAT === 'pause' || ETAT === 'fini') {
+ETAT = 'pret';
+preparerVol();
+afficherVoile('Nouvel essai', 'Vous repartez du point de départ du site '
++ (SITE + 1) + ' : ' + SITES[SITE].nom + '.', '🛫 Décoller', volDemarrerVol);
+annoncer('Nouvel essai sur le site ' + (SITE + 1) + '.');
+}
+}
+function volRetourReglages() {
+ETAT = 'reglages';
+if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+var salle = el('vol-salle');
+if (salle) salle.hidden = true;
+var banc = el('vol-banc');
+if (banc) banc.disabled = false;
+SITE = 0;
+SCORE = 0;
+majReglages();
+annoncer('Retour aux réglages : les trois réglages peuvent être modifiés.');
+}
+function volSiteSuivant() {
+if (SITE + 1 >= SITES.length) {
+afficherVoile('Mission terminée', 'Vous avez posé le drone sur les '
++ SITES.length + ' sites. Score total : ' + SCORE + ' points.', '↩ Retour aux réglages',
+volRetourReglages);
+ETAT = 'fini';
+annoncer('Tous les sites sont réussis. Score total : ' + SCORE + ' points.');
+return;
+}
+SITE += 1;
+ETAT = 'pret';
+preparerVol();
+afficherVoile('Site ' + (SITE + 1) + ' — ' + SITES[SITE].nom,
+'Altitude ' + SITES[SITE].hauteur + ' m, vent latéral '
++ SITES[SITE].vent.toFixed(2) + ' m/s. Même règle d\'atterrissage.',
+'🛫 Décoller', volDemarrerVol);
+annoncer('Site ' + (SITE + 1) + ' : ' + SITES[SITE].nom + '.');
+}
+function lancerBoucle() {
+dernierTemps = 0;
+if (!rafId) rafId = requestAnimationFrame(boucle);
+}
+function boucle(horodatage) {
+if (ETAT !== 'vol') { rafId = null; return; }
+if (!dernierTemps) dernierTemps = horodatage;
+var dt = Math.min(0.05, (horodatage - dernierTemps) / 1000);
+dernierTemps = horodatage;
+mettreAJour(dt);
+dessiner();
+if (ETAT === 'vol') rafId = requestAnimationFrame(boucle);
+else rafId = null;
+}
+function mettreAJour(dt) {
+var b = BATTERIES[BATTERIE];
+var s = SENSIBILITES[SENSIBILITE];
+var endurance = b.endurance / s.conso;
+if (vol.touches.poussee && vol.batterie > 0) {
+vol.batterie -= (100 / endurance) * dt;
+} else {
+vol.batterie -= (100 / endurance) * 0.18 * dt;   // veille de l'électronique
+}
+if (vol.batterie < 0) vol.batterie = 0;
+var poussee = (vol.touches.poussee && vol.batterie > 0)
+? POUSSEE_MAX / b.facteurMasse
+: 0;
+var direction = (vol.touches.droite ? 1 : 0) - (vol.touches.gauche ? 1 : 0);
+if (INVERSION) direction = -direction;
+var inclinaisonVisee = direction * INCLINAISON_MAX;
+vol.inclinaison += (inclinaisonVisee - vol.inclinaison) * Math.min(1, 6 * dt);
+var site = SITES[SITE];
+vol.ventCourant = site.vent * (0.85 + 0.15 * Math.sin(vol.temps * 0.8));
+vol.vx += (ROULIS_MAX * s.gain * direction + vol.ventCourant) * dt;
+vol.vx *= (1 - 0.9 * dt);
+vol.vy += (GRAVITE - poussee) * dt;
+vol.vy *= (1 - 0.03 * dt);
+vol.x += vol.vx * dt;
+vol.altitude -= vol.vy * dt;
+vol.temps += dt;
+if (vol.altitude <= 0) {
+vol.altitude = 0;
+poser();
+} else if (vol.x < -2 || vol.x > MONDE.largeur + 2) {
+vol.x = Math.max(0, Math.min(MONDE.largeur, vol.x));
+terminerFaux('sortie de la zone de vol — le drone est hors du terrain.');
+} else if (vol.batterie <= 0 && vol.vy > 0 && vol.altitude < 1) {
+poser();
+}
+majHud();
+}
+function poser() {
+var site = SITES[SITE];
+var surPlateforme = Math.abs(vol.x - site.padX) <= site.padW / 2 + DEMI_LARGEUR * 0.4;
+if (!surPlateforme) {
+terminerFaux('atterrissage à ' + Math.abs(vol.x - site.padX).toFixed(1)
++ ' m du centre de la plateforme.');
+return;
+}
+if (Math.abs(vol.vy) > VY_LIMITE) {
+terminerFaux('descente trop rapide : ' + Math.abs(vol.vy).toFixed(1)
++ ' m/s (limite ' + VY_LIMITE + ' m/s).');
+return;
+}
+if (Math.abs(vol.vx) > VX_LIMITE) {
+terminerFaux('dérive horizontale trop forte : ' + Math.abs(vol.vx).toFixed(1)
++ ' m/s (limite ' + VX_LIMITE + ' m/s).');
+return;
+}
+if (Math.abs(vol.inclinaison) > TILT_LIMITE) {
+terminerFaux('drone trop incliné : ' + Math.abs(vol.inclinaison).toFixed(0)
++ '° (limite ' + TILT_LIMITE + '°).');
+return;
+}
+var points = Math.max(20, 100 - Math.round(
+Math.abs(vol.x - site.padX) * 4 + Math.abs(vol.vy) * 10 + Math.abs(vol.vx) * 8));
+SCORE += points;
+ETAT = 'fini';
+DERNIER_RESULTAT = { ok: true, points: points };
+afficherVoile('✅ Posé sur « ' + site.nom + ' »',
+'Descente ' + Math.abs(vol.vy).toFixed(1) + ' m/s, dérive '
++ Math.abs(vol.vx).toFixed(1) + ' m/s, inclinaison '
++ Math.abs(vol.inclinaison).toFixed(0) + '° : ' + points + ' points'
++ (SITE + 1 < SITES.length ? '. Site suivant ?' : '. Dernier site !'),
+SITE + 1 < SITES.length ? '➡ Site suivant' : '🏁 Terminer', volSiteSuivant);
+annoncer('Posé sur ' + site.nom + ', ' + points + ' points. Total : ' + SCORE + '.');
+}
+function terminerFaux(raison) {
+ETAT = 'fini';
+DERNIER_RESULTAT = { ok: false, raison: raison };
+afficherVoile('💥 Atterrissage manqué',
+'Cause : ' + raison + ' Réduisez la vitesse avec la poussée et redressez '
++ 'l\'inclinaison avant de toucher la plateforme.',
+'🔁 Réessayer', volRecommencer);
+annoncer('Atterrissage manqué : ' + raison);
+}
+function formatNombre(valeur, decimales) {
+return valeur.toFixed(decimales).replace('.', ',');
+}
+function majHud() {
+var batterie = el('vol-batterie');
+var jauge = el('vol-jauge-batterie');
+var barre = el('vol-barre-batterie');
+if (batterie) batterie.textContent = Math.round(vol.batterie) + ' %';
+if (barre) barre.style.width = Math.max(0, Math.min(100, vol.batterie)) + '%';
+if (jauge) {
+jauge.classList.toggle('alerte', vol.batterie <= 40 && vol.batterie > 15);
+jauge.classList.toggle('critique', vol.batterie <= 15);
+jauge.setAttribute('aria-valuenow', String(Math.round(vol.batterie)));
+}
+var site = el('vol-site');
+if (site) site.textContent = (SITE + 1) + ' / ' + SITES.length + ' — ' + SITES[SITE].nom;
+var altitude = el('vol-altitude');
+if (altitude) altitude.textContent = formatNombre(Math.max(0, vol.altitude), 1) + ' m';
+var vy = el('vol-vy');
+if (vy) vy.textContent = formatNombre(Math.abs(vol.vy), 1) + ' m/s';
+var vx = el('vol-vx');
+if (vx) vx.textContent = formatNombre(Math.abs(vol.vx), 1) + ' m/s';
+var vent = el('vol-vent');
+if (vent) vent.textContent = formatNombre(Math.abs(vol.ventCourant), 2) + ' m/s '
++ (vol.ventCourant >= 0 ? '→' : '←');
+var inclinaison = el('vol-inclinaison');
+if (inclinaison) inclinaison.textContent = formatNombre(Math.abs(vol.inclinaison), 0) + '°';
+var recap = el('vol-reglages-actifs');
+if (recap && BATTERIE !== null) {
+recap.textContent = 'Hélices équilibrées · ' + BATTERIES[BATTERIE].nom
++ ' · commandes ' + SENSIBILITES[SENSIBILITE].nom.toLowerCase()
++ (INVERSION ? ' (roulis inversé)' : '');
+}
+}
+function volDecrire() {
+if (ETAT === 'reglages') {
+annoncer('Banc d\'essai : hélices '
++ (rotorsEquilibres() ? 'équilibrées' : 'déséquilibrées') + ', '
++ (BATTERIE === null ? 'aucune batterie choisie' : BATTERIES[BATTERIE].nom)
++ ', commandes ' + SENSIBILITES[SENSIBILITE].nom.toLowerCase() + '.');
+return;
+}
+var texte = 'Site ' + (SITE + 1) + ', altitude ' + formatNombre(Math.max(0, vol.altitude), 1)
++ ' mètres, vitesse verticale ' + formatNombre(Math.abs(vol.vy), 1)
++ ' mètres par seconde, dérive ' + formatNombre(Math.abs(vol.vx), 1)
++ ', inclinaison ' + formatNombre(Math.abs(vol.inclinaison), 0)
++ ' degrés, batterie ' + Math.round(vol.batterie) + ' pour cent, vent '
++ formatNombre(Math.abs(vol.ventCourant), 2) + ' mètres par seconde.';
+if (ETAT === 'fini' && DERNIER_RESULTAT) {
+texte = (DERNIER_RESULTAT.ok ? 'Posé sur ' + SITES[SITE].nom + '. '
+: 'Atterrissage manqué : ' + DERNIER_RESULTAT.raison + ' ') + texte;
+}
+annoncer(texte);
+}
+function dessiner() {
+var canvas = el('vol-canvas');
+if (!canvas || !canvas.getContext) return;
+var ctx = canvas.getContext('2d');
+var L = canvas.width;
+var H = canvas.height;
+var site = SITES[SITE];
+var solH = 36;
+var ciel = ctx.createLinearGradient(0, 0, 0, H - solH);
+ciel.addColorStop(0, '#8ec5e8');
+ciel.addColorStop(1, '#dcecf7');
+ctx.fillStyle = ciel;
+ctx.fillRect(0, 0, L, H - solH);
+ctx.fillStyle = 'rgba(255, 236, 179, .9)';
+ctx.beginPath();
+ctx.arc(L - 54, 40, 18, 0, Math.PI * 2);
+ctx.fill();
+ctx.fillStyle = '#b7d3bd';
+ctx.beginPath();
+ctx.moveTo(0, H - solH);
+ctx.lineTo(L * 0.22, H - solH - 34);
+ctx.lineTo(L * 0.46, H - solH);
+ctx.closePath();
+ctx.fill();
+ctx.fillStyle = '#86ad63';
+ctx.fillRect(0, H - solH, L, solH);
+ctx.fillStyle = '#5f8746';
+ctx.fillRect(0, H - solH, L, 4);
+var px = (site.padX / MONDE.largeur) * L;
+var pw = (site.padW / MONDE.largeur) * L;
+var py = H - solH;
+ctx.fillStyle = '#2e74b5';
+ctx.fillRect(px - pw / 2, py - 7, pw, 7);
+ctx.fillStyle = '#eaf1f8';
+for (var i = 0; i < 5; i++) {
+ctx.fillRect(px - pw / 2 + 4 + i * (pw - 8) / 5, py - 5, (pw - 8) / 10, 3);
+}
+ctx.font = 'bold 11px system-ui, sans-serif';
+ctx.fillStyle = '#1a3f5e';
+ctx.textAlign = 'center';
+ctx.fillText('H', px, py - 12);
+ctx.textAlign = 'left';
+ctx.fillStyle = '#1a3f5e';
+ctx.font = '11px system-ui, sans-serif';
+ctx.fillText('vent ' + formatNombre(Math.abs(vol.ventCourant), 2) + ' m/s', 8, 18);
+ctx.beginPath();
+var sensVent = vol.ventCourant >= 0 ? 1 : -1;
+ctx.moveTo(84, 14);
+ctx.lineTo(84 + sensVent * 22, 14);
+ctx.lineTo(84 + sensVent * 16, 10);
+ctx.moveTo(84 + sensVent * 22, 14);
+ctx.lineTo(84 + sensVent * 16, 18);
+ctx.strokeStyle = '#1a3f5e';
+ctx.lineWidth = 2;
+ctx.stroke();
+var dx = (vol.x / MONDE.largeur) * L;
+var dy = (H - solH) - (Math.max(0, vol.altitude) / MONDE.hauteur) * (H - solH - 18);
+ctx.strokeStyle = 'rgba(26, 63, 94, .25)';
+ctx.lineWidth = 1;
+ctx.beginPath();
+ctx.moveTo(dx, dy + 8);
+ctx.lineTo(dx, H - solH);
+ctx.stroke();
+ctx.save();
+ctx.translate(dx, dy);
+ctx.rotate((vol.inclinaison * Math.PI) / 180);
+ctx.strokeStyle = '#3a6ea5';
+ctx.lineWidth = 4;
+ctx.beginPath();
+ctx.moveTo(-16, 4); ctx.lineTo(16, 4);
+ctx.stroke();
+ctx.fillStyle = '#1a3f5e';
+ctx.fillRect(-9, -1, 18, 9);
+ctx.fillStyle = '#f0b400';
+ctx.fillRect(-3, 1, 6, 5);
+ctx.strokeStyle = '#24405c';
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.moveTo(-26, -2); ctx.lineTo(-8, -2);
+ctx.moveTo(8, -2); ctx.lineTo(26, -2);
+ctx.stroke();
+if (vol.touches.poussee && vol.batterie > 0) {
+ctx.fillStyle = 'rgba(255, 170, 60, .85)';
+ctx.beginPath();
+ctx.moveTo(-6, 9);
+ctx.lineTo(0, 22);
+ctx.lineTo(6, 9);
+ctx.closePath();
+ctx.fill();
+}
+ctx.restore();
+ctx.fillStyle = 'rgba(26, 63, 94, .8)';
+ctx.font = '10px system-ui, sans-serif';
+ctx.textAlign = 'center';
+ctx.fillText('↓ ' + formatNombre(Math.abs(vol.vy), 1) + ' m/s', dx, dy - 16);
+}
+var TOUCHES = {
+' ': 'poussee', ArrowUp: 'poussee',
+z: 'poussee', Z: 'poussee', w: 'poussee', W: 'poussee',
+ArrowLeft: 'gauche', q: 'gauche', Q: 'gauche', a: 'gauche', A: 'gauche',
+ArrowRight: 'droite', d: 'droite', D: 'droite'
+};
+function sectionActive() {
+var section = el('contenu-bonus');
+return !!section && section.classList.contains('actif');
+}
+document.addEventListener('keydown', function (ev) {
+var cible = ev.target;
+if (cible && (cible.tagName === 'TEXTAREA' || cible.tagName === 'INPUT')) return;
+if (!sectionActive()) return;
+if (ETAT === 'pret' && (ev.key === ' ' || ev.key === 'ArrowUp')) {
+ev.preventDefault();
+ev.stopPropagation();
+volDemarrerVol();
+return;
+}
+if (ETAT !== 'vol') return;
+var touche = TOUCHES[ev.key];
+if (!touche) return;
+ev.preventDefault();
+ev.stopPropagation();
+vol.touches[touche] = true;
+}, true);
+document.addEventListener('keyup', function (ev) {
+var touche = TOUCHES[ev.key];
+if (!touche) return;
+if (ETAT === 'vol' || ETAT === 'pause') ev.stopPropagation();
+vol.touches[touche] = false;
+}, true);
+window.addEventListener('blur', function () {
+vol.touches.poussee = vol.touches.gauche = vol.touches.droite = false;
+});
+function brancherPave() {
+document.querySelectorAll('.vol-pave button').forEach(function (bouton) {
+var touche = bouton.getAttribute('data-vol-touche');
+if (!touche) return;
+var appuyer = function (ev) {
+ev.preventDefault();
+vol.touches[touche] = true;
+};
+var relacher = function (ev) {
+ev.preventDefault();
+vol.touches[touche] = false;
+};
+bouton.addEventListener('pointerdown', appuyer);
+bouton.addEventListener('pointerup', relacher);
+bouton.addEventListener('pointerleave', relacher);
+bouton.addEventListener('pointercancel', relacher);
+bouton.addEventListener('keydown', function (ev) {
+if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); appuyer(ev); }
+});
+bouton.addEventListener('keyup', function (ev) {
+if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); relacher(ev); }
+});
+});
+}
+function initialiser() {
+if (!el('vol-canvas')) return;      // bloc absent : activité sans ce jeu
+dessinerRotors();
+reglage('vol-reglage-helices',
+'Les quatre hélices tournent pour l\'instant dans le même sens : à vous de trouver le réglage équilibré.',
+'info');
+reglage('vol-reglage-batterie',
+'Choisissez la batterie : la mission dure ' + MISSION_SECONDES + ' s.', 'info');
+reglage('vol-reglage-commandes',
+'Choisissez la réactivité des commandes et, si besoin, l\'inversion du roulis.', 'info');
+majReglages();
+preparerVol();
+brancherPave();
+}
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+initialiser();
+}
+window.volTournerRotor = volTournerRotor;
+window.volChoisirBatterie = volChoisirBatterie;
+window.volChoisirSensibilite = volChoisirSensibilite;
+window.volBasculerInversion = volBasculerInversion;
+window.volDecoller = volDecoller;
+window.volDemarrerVol = volDemarrerVol;
+window.volPause = volPause;
+window.volRecommencer = volRecommencer;
+window.volRetourReglages = volRetourReglages;
+window.volSiteSuivant = volSiteSuivant;
+window.volDecrire = volDecrire;
+window.volLireEtat = function () {
+return {
+etat: ETAT,
+site: SITE + 1,
+sites: SITES.length,
+x: vol.x,
+padX: SITES[SITE].padX,
+padW: SITES[SITE].padW,
+vent: SITES[SITE].vent,
+altitude: vol.altitude,
+vy: vol.vy,
+vx: vol.vx,
+inclinaison: vol.inclinaison,
+batterie: vol.batterie,
+rotorsEquilibres: rotorsEquilibres(),
+batterieChoisie: BATTERIE,
+score: SCORE,
+resultat: DERNIER_RESULTAT
+};
+};
+window.volReglagesPret = function () {
+return rotorsEquilibres() && BATTERIE !== null;
+};
+window.volAvancer = function (dtSecondes) {
+var dt = Number(dtSecondes);
+if (!isFinite(dt) || dt <= 0) return false;
+dt = Math.min(0.1, dt);
+if (ETAT !== 'vol') return false;
+mettreAJour(dt);
+dessiner();
+return true;
+};
 })();
     </script>
 </body>
