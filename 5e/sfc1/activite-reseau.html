@@ -3259,81 +3259,9 @@ function animerRouteur(btn) {
                             <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 5</p>
                             <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : c'est elle qui impose deux commutateurs. Tous les appareils branchés sur un même commutateur forment un même sous-réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🔀</span>
-                                        <span class="choix-texte">Les deux salles doivent rester dans deux sous-réseaux séparés : un commutateur par salle.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : c'est la raison de la séparation. Une imprimante placée sur le commutateur de la salle des profs ne peut pas être atteinte par un poste de la salle 102." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🖨️</span>
-                                        <span class="choix-texte">Les imprimantes de la salle des profs ne doivent pas être accessibles depuis les postes élèves.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : les deux sous-réseaux doivent rejoindre le routeur, sinon les fichiers de la salle 102 n'atteindraient plus le serveur." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🗄️</span>
-                                        <span class="choix-texte">Toutes les salles doivent pouvoir utiliser le serveur du collège.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : le routeur est le seul passage entre le réseau local du collège et Internet. Chaque commutateur doit donc le rejoindre." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🌐</span>
-                                        <span class="choix-texte">Toutes les salles ont besoin d'Internet, et le routeur est le seul passage vers l'extérieur.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : un poste ou une imprimante se relie toujours à un seul commutateur, par un seul fil. C'est ce qui délimite le sous-réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🔌</span>
-                                        <span class="choix-texte">Chaque appareil se relie à un seul commutateur, avec une prise RJ45 par appareil.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Vraie pendant les travaux, mais elle ne change pas ton schéma : ton schéma montre qui est relié à qui, pas le chemin des câbles dans les murs." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🧰</span>
-                                        <span class="choix-texte">Les câbles doivent longer les murs dans les gaines déjà posées.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est la limite réelle d'un câble Ethernet, mais dans un collège un câble fait quelques dizaines de mètres : cette limite ne modifie pas le schéma." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">📏</span>
-                                        <span class="choix-texte">Aucun câble ne doit dépasser 100 mètres entre un appareil et son commutateur.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Une contrainte ne peut pas contredire le besoin : avec un seul commutateur, les deux salles partageraient le même sous-réseau, ce qui est interdit. Cette contrainte est donc incompatible avec le problème." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">💰</span>
-                                        <span class="choix-texte">Le collège ne peut acheter qu'un seul commutateur cette année.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
                                         <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Hors sujet ici : aucun appareil de la cour ne figure dans ton schéma. Le schéma ne concerne que la salle 102 et la salle des profs." aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">📶</span>
                                         <span class="choix-texte">Le Wi-Fi doit couvrir la cour de récréation.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Une question de matériel, pas de câblage : la marque d'un poste ne change ni son commutateur ni ses fils." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🏷️</span>
-                                        <span class="choix-texte">Tous les postes de travail doivent être de la même marque.</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
                                         <p class="choix-explication cache"></p>
@@ -3347,9 +3275,81 @@ function animerRouteur(btn) {
                                         <p class="choix-explication cache"></p>
                                     </li>
                                     <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : le routeur est le seul passage entre le réseau local du collège et Internet. Chaque commutateur doit donc le rejoindre." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🌐</span>
+                                        <span class="choix-texte">Toutes les salles ont besoin d'Internet, et le routeur est le seul passage vers l'extérieur.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Une question de matériel, pas de câblage : la marque d'un poste ne change ni son commutateur ni ses fils." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🏷️</span>
+                                        <span class="choix-texte">Tous les postes de travail doivent être de la même marque.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Une contrainte ne peut pas contredire le besoin : avec un seul commutateur, les deux salles partageraient le même sous-réseau, ce qui est interdit. Cette contrainte est donc incompatible avec le problème." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">💰</span>
+                                        <span class="choix-texte">Le collège ne peut acheter qu'un seul commutateur cette année.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : c'est elle qui impose deux commutateurs. Tous les appareils branchés sur un même commutateur forment un même sous-réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔀</span>
+                                        <span class="choix-texte">Les deux salles doivent rester dans deux sous-réseaux séparés : un commutateur par salle.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : les deux sous-réseaux doivent rejoindre le routeur, sinon les fichiers de la salle 102 n'atteindraient plus le serveur." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🗄️</span>
+                                        <span class="choix-texte">Toutes les salles doivent pouvoir utiliser le serveur du collège.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
                                         <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Cela concerne l'organisation de la classe. Le nombre d'élèves par poste ne change pas le nombre de fils du schéma." aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">🧑‍🤝‍🧑</span>
                                         <span class="choix-texte">Les élèves doivent travailler en binôme devant chaque poste.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est la limite réelle d'un câble Ethernet, mais dans un collège un câble fait quelques dizaines de mètres : cette limite ne modifie pas le schéma." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">📏</span>
+                                        <span class="choix-texte">Aucun câble ne doit dépasser 100 mètres entre un appareil et son commutateur.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : c'est la raison de la séparation. Une imprimante placée sur le commutateur de la salle des profs ne peut pas être atteinte par un poste de la salle 102." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🖨️</span>
+                                        <span class="choix-texte">Les imprimantes de la salle des profs ne doivent pas être accessibles depuis les postes élèves.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Vraie pendant les travaux, mais elle ne change pas ton schéma : ton schéma montre qui est relié à qui, pas le chemin des câbles dans les murs." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🧰</span>
+                                        <span class="choix-texte">Les câbles doivent longer les murs dans les gaines déjà posées.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Essentielle : un poste ou une imprimante se relie toujours à un seul commutateur, par un seul fil. C'est ce qui délimite le sous-réseau." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔌</span>
+                                        <span class="choix-texte">Chaque appareil se relie à un seul commutateur, avec une prise RJ45 par appareil.</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
                                         <p class="choix-explication cache"></p>
