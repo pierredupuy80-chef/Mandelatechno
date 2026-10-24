@@ -485,7 +485,10 @@
         }
 
         /* ============================================
-           ÉNIGMES - NIVEAU N3
+           PROBLÉMATIQUE - NIVEAU N3
+           (les noms de classes « enigme-* » sont historiques : ils sont
+           référencés par personnaliser.py et par les activités déjà publiées,
+           seul le texte affiché parle de problématique)
            ============================================ */
         
         .enigme-conteneur {
@@ -546,6 +549,45 @@
 
         .objet-explorable.explore .indice-decouvert {
             display: block;
+        }
+
+        /* Cadres de réponse N3 : deux zones distinctes, numérotées.
+           Le diagnostic (ce qui ne va pas) et la proposition de solution (ce
+           que l'élève propose) sont deux gestes mentaux différents : les
+           séparer évite que le constat et la remédiation se mélangent dans un
+           seul cadre. */
+
+        .cadre-reponse {
+            background-color: white;
+            border: 2px solid #d1d5db;
+            border-left: 6px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin-bottom: var(--espacement-lg);
+        }
+
+        .cadre-reponse h4 {
+            color: var(--couleur-primaire);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .cadre-reponse .consigne-cadre {
+            color: var(--couleur-texte-leger);
+            margin-bottom: var(--espacement-md);
+        }
+
+        .cadre-reponse .numero-cadre {
+            display: inline-block;
+            margin-right: var(--espacement-xs);
+            padding: 0 0.5em;
+            border-radius: 999px;
+            background-color: var(--couleur-primaire);
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .cadre-reponse textarea {
+            margin-top: 0;
         }
 
         /* ============================================
@@ -663,6 +705,23 @@
             color: white;
             margin-bottom: var(--espacement-md);
             font-size: 1.5rem;
+        }
+
+        /* L'asset de jeu du bonus (LoRA locaux) est embarqué dans la page en
+           base64 : il n'y a donc aucun appel réseau, l'activité reste ouvrable
+           hors ligne. `pixelated` est indispensable au pixel art — le lissage
+           du navigateur détruit la grille et le personnage devient flou. */
+        .illustration-jeu {
+            display: block;
+            max-width: min(100%, 320px);
+            height: auto;
+            margin: 0 auto var(--espacement-md);
+            image-rendering: pixelated;
+            border-radius: var(--rayon-bordure);
+        }
+
+        .carte-jeu {
+            text-align: center;
         }
 
         /* ============================================
@@ -931,7 +990,7 @@
                 N2 - Quiz
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n3-enigme" role="tab" aria-selected="false" aria-controls="contenu-n3-enigme" tabindex="-1" disabled>
-                N3 - Énigme
+                N3 - Problématique
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n4-probleme" role="tab" aria-selected="false" aria-controls="contenu-n4-probleme" tabindex="-1" disabled>
                 N4 - Problème
@@ -1422,15 +1481,21 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                 </div>
             </section>
 
-            <!-- N3 - Énigme interactive -->
+            <!-- N3 - Problématique interactive
+                 Les identifiants et les classes gardent le nom historique
+                 « enigme » (n3-enigme, contenu-n3-enigme, enigme-conteneur,
+                 solution-enigme, diagnostic-eleve, soumettreDiagnostic) :
+                 verifier_parcours.py, mode-developpement.py et les activités
+                 déjà publiées les référencent. Seul le texte affiché parle de
+                 problématique. -->
             <section id="contenu-n3-enigme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n3-enigme">
                 <div class="carte-contenu">
-                    <h2>Niveau 3 : Résoudre l'énigme</h2>
-                    <p>Explorez les objets ci-dessous pour trouver les indices qui vous permettront de résoudre l'énigme.</p>
+                    <h2>Niveau 3 : Répondre à la problématique</h2>
+                    <p>Explorez les objets ci-dessous pour trouver les indices qui vous permettront de répondre à la problématique.</p>
 
                     <div class="enigme-conteneur">
-                        <h3>🔍 L'énigme du système</h3>
-                        <p><strong>Mission :</strong> Un élève utilise chaque jour sa trottinette électrique pour se rendre au collège. Ce matin, sous une pluie importante, il remarque que l'autonomie diminue plus vite que d'habitude et son smartphone affiche une alerte « chaussée glissante ». Il se demande pourquoi sa trottinette ne fonctionne pas de la même façon selon les conditions. Explorez les quatre éléments ci-dessous, puis rédigez votre diagnostic : quel interacteur extérieur influence le fonctionnement de l'OST ?</p>
+                        <h3>❓ La problématique</h3>
+                        <p><strong>Problématique :</strong> Un élève utilise chaque jour sa trottinette électrique pour se rendre au collège. Ce matin, sous une pluie importante, il remarque que l'autonomie diminue plus vite que d'habitude et son smartphone affiche une alerte « chaussée glissante ». Il se demande pourquoi sa trottinette ne fonctionne pas de la même façon selon les conditions. Explorez les quatre éléments ci-dessous, puis répondez à la problématique : quel interacteur extérieur modifie le fonctionnement de la trottinette, et que faudrait-il faire pour que son usage reste sûr et économe par mauvais temps ?</p>
                     </div>
 
                     <h3>Zone d'exploration</h3>
@@ -1476,21 +1541,37 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                     </div>
 
                     <div class="solution-enigme marge-haut">
-                        <h3>Votre diagnostic</h3>
-                        <p>Après avoir exploré tous les composants, formulez votre diagnostic :</p>
-                        
-                        <textarea 
-                            id="diagnostic-eleve" 
-                            placeholder="Rédigez votre diagnostic : quel interacteur extérieur influence l'autonomie de la trottinette, et pourquoi ?"
-                            aria-label="Votre diagnostic du problème"></textarea>
-                        
+                        <h3>Vos réponses</h3>
+                        <p>Remplissez les deux cadres ci-dessous : le premier expose ce que vous avez constaté, le second ce que vous proposez de faire.</p>
+
+                        <div class="cadre-reponse">
+                            <h4><span class="numero-cadre" aria-hidden="true">1</span> Mon diagnostic</h4>
+                            <p class="consigne-cadre" id="consigne-diagnostic">Après avoir exploré les quatre éléments, formulez votre diagnostic : quel interacteur extérieur influence l'autonomie de la trottinette, et par quel mécanisme ?</p>
+                            <textarea 
+                                id="diagnostic-eleve" 
+                                placeholder="Nommez l'interacteur en cause, puis expliquez son effet sur la batterie et sur le moteur…"
+                                aria-label="Votre diagnostic du problème"></textarea>
+                        </div>
+
+                        <div class="cadre-reponse">
+                            <h4><span class="numero-cadre" aria-hidden="true">2</span> Ma proposition de solution</h4>
+                            <p class="consigne-cadre" id="consigne-solution">Proposez maintenant une solution : que faudrait-il changer, régler ou mettre en place pour garder une autonomie suffisante et rouler en sécurité par mauvais temps ?</p>
+                            <textarea 
+                                id="solution-eleve" 
+                                placeholder="Décrivez votre solution : ce que l'usager fait, ce qu'il règle, ce qu'il choisit…"
+                                aria-label="Votre proposition de solution"></textarea>
+                        </div>
+
                         <button class="bouton-action marge-haut" onclick="soumettreDiagnostic()">
-                            Soumettre mon diagnostic
+                            Soumettre mes réponses
                         </button>
 
                         <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
-                            <div class="info-block">
-                                <p><strong>Bien joué !</strong> L'interacteur extérieur en cause est l'environnement, c'est-à-dire la météo (pluie et froid). Le froid dégrade temporairement la performance de la batterie lithium-ion, et la chaussée humide augmente la résistance de roulement, donc la consommation du moteur. La trottinette fonctionne donc différemment selon les conditions météorologiques : c'est bien l'influence d'un interacteur extérieur (l'environnement) sur le fonctionnement de l'OST.</p>
+                            <div class="info-block" id="bloc-diagnostic-attendu">
+                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">L'interacteur extérieur en cause est l'environnement, c'est-à-dire la météo (pluie et froid). Le froid dégrade temporairement la performance de la batterie lithium-ion, et la chaussée humide augmente la résistance de roulement, donc la consommation du moteur. La trottinette ne fonctionne donc pas de la même façon selon les conditions météorologiques : c'est bien l'influence d'un interacteur extérieur (l'environnement) sur le fonctionnement de l'OST.</span></p>
+                            </div>
+                            <div class="info-block" id="bloc-solution-attendue">
+                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Trois leviers, à combiner. 1) Anticiper la météo : recharger avant de partir, se ménager une marge d'autonomie, réduire la vitesse et le niveau d'assistance pour consommer moins. 2) Entretenir : sécher et protéger les contacts électriques, nettoyer et graisser la transmission, vérifier les freins et la pression des pneus après un trajet sous la pluie. 3) Bien choisir et bien régler l'OST : préférer un modèle étanche (indice de protection IP), dont la batterie reste amovible et se stocke à température ambiante, et dont l'éclairage et le feu stop restent visibles par mauvais temps.</span></p>
                             </div>
                             <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
                                 Continuer vers N4 →
@@ -1732,23 +1813,18 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
     <!-- JavaScript de l'activité -->
     <script>
         // ============================================
+        // MODE DÉVELOPPEMENT
+        // ============================================
+        // Passer à true pour désactiver tous les blocages d'onglets
+        // pendant le développement/test des jeux bonus.
+        // Penser à remettre à false avant publication !
+        const MODE_DEVELOPPEMENT = false;
+
+        // ============================================
         // GESTION DES ONGLETS
         // ============================================
         
-                // ============================================
-        // MODE DÉVELOPPEMENT
-        // ============================================
-        // ============================================
-        // MODE DÉVELOPPEMENT
-        // ============================================
-        // true la plupart du temps : tous les onglets sont déverrouillés pour
-        // tester librement les jeux bonus et la navigation.
-        // Pour tester comme un élève (progression verrouillée), ouvrir la page
-        // avec le paramètre ?dev=0 :   activite-reseau.html?dev=0
-        // Penser à repasser la valeur à false avant une vraie séance élève.
-        const MODE_DEVELOPPEMENT = !/[?&]dev=0/.test(location.search);
-
-let niveauActuel = 'n1-intro';
+        let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
         const niveauxValides = new Set();
 
@@ -2074,7 +2150,7 @@ let niveauActuel = 'n1-intro';
         }
 
         // ============================================
-        // ÉNIGME N3
+        // PROBLÉMATIQUE N3 — diagnostic puis proposition de solution
         // ============================================
         
         let objetsExplores = 0;
@@ -2088,11 +2164,31 @@ let niveauActuel = 'n1-intro';
         }
 
         function soumettreDiagnostic() {
-            const diagnostic = document.getElementById('diagnostic-eleve').value.trim();
-            
-            if (diagnostic.length < 20) {
-                alert('Veuillez fournir un diagnostic plus détaillé (au moins 20 caractères).');
-                return;
+            // Deux cadres distincts : le diagnostic (ce qui ne va pas) puis la
+            // proposition de solution (ce que l'élève propose de faire). Les
+            // deux doivent être remplis — un diagnostic sans solution reste un
+            // constat, une solution sans diagnostic ne s'appuie sur rien.
+            const cadres = [
+                {
+                    id: 'diagnostic-eleve',
+                    message: 'Précisez votre diagnostic : décrivez la cause probable du problème (au moins 20 caractères).'
+                },
+                {
+                    id: 'solution-eleve',
+                    message: 'Proposez une solution : expliquez ce qu\'il faudrait changer, réparer ou mettre en place (au moins 20 caractères).'
+                }
+            ];
+
+            for (const cadre of cadres) {
+                const champ = document.getElementById(cadre.id);
+                if (!champ) continue;   // cadre absent : coquille antérieure
+                if (champ.value.trim().length < 20) {
+                    champ.style.borderColor = 'var(--couleur-alerte)';
+                    champ.focus();
+                    alert(cadre.message);
+                    return;
+                }
+                champ.style.borderColor = '#e2e8f0';
             }
 
             const feedback = document.getElementById('feedback-diagnostic');

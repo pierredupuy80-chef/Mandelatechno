@@ -485,7 +485,10 @@
         }
 
         /* ============================================
-           ÉNIGMES - NIVEAU N3
+           PROBLÉMATIQUE - NIVEAU N3
+           (les noms de classes « enigme-* » sont historiques : ils sont
+           référencés par personnaliser.py et par les activités déjà publiées,
+           seul le texte affiché parle de problématique)
            ============================================ */
         
         .enigme-conteneur {
@@ -548,6 +551,45 @@
             display: block;
         }
 
+        /* Cadres de réponse N3 : deux zones distinctes, numérotées.
+           Le diagnostic (ce qui ne va pas) et la proposition de solution (ce
+           que l'élève propose) sont deux gestes mentaux différents : les
+           séparer évite que le constat et la remédiation se mélangent dans un
+           seul cadre. */
+
+        .cadre-reponse {
+            background-color: white;
+            border: 2px solid #d1d5db;
+            border-left: 6px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin-bottom: var(--espacement-lg);
+        }
+
+        .cadre-reponse h4 {
+            color: var(--couleur-primaire);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .cadre-reponse .consigne-cadre {
+            color: var(--couleur-texte-leger);
+            margin-bottom: var(--espacement-md);
+        }
+
+        .cadre-reponse .numero-cadre {
+            display: inline-block;
+            margin-right: var(--espacement-xs);
+            padding: 0 0.5em;
+            border-radius: 999px;
+            background-color: var(--couleur-primaire);
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .cadre-reponse textarea {
+            margin-top: 0;
+        }
+
         /* ============================================
            PROBLÈME OUVERT - NIVEAU N4
            ============================================ */
@@ -601,6 +643,276 @@
             border-radius: var(--rayon-bordure);
             padding: var(--espacement-lg);
             margin-top: var(--espacement-lg);
+        }
+
+        /* ============================================
+           ATELIER DE CÂBLAGE - NIVEAU N4
+           (bloc produit depuis n4.cablage ; marqueurs
+            CABLAGE-N4 retirés si la configuration
+            n'en déclare pas)
+           ============================================ */
+
+        .cablage-n4 {
+            margin: var(--espacement-lg) 0;
+            padding: var(--espacement-md);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: #f1f5f9;
+        }
+
+        .cablage-n4 h3 {
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .cablage-consigne {
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .cablage-aide {
+            font-size: 0.9rem;
+            /* Gris foncé : 6:1 sur le fond du cadre (RGAA AA attend 4,5:1) */
+            color: #475569;
+            margin-bottom: var(--espacement-md);
+        }
+
+        .cablage-reserve {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            min-height: 76px;
+            padding: var(--espacement-sm);
+            margin-bottom: var(--espacement-sm);
+            border: 2px dashed #94a3b8;
+            border-radius: var(--rayon-bordure);
+            background-color: #e2e8f0;
+        }
+
+        .cablage-reserve.vide::after {
+            content: "Tous les équipements sont sur le fond blanc.";
+            align-self: center;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        /* Le fond blanc du schéma : les équipements y sont posés librement. */
+        .cablage-zone {
+            position: relative;
+            height: 480px;
+            background-color: #ffffff;
+            border: 2px solid #64748b;
+            border-radius: var(--rayon-bordure);
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .cablage-indication {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            /* Lisible sur le fond blanc (6:1) : c'est une consigne, pas un décor */
+            color: #475569;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .cablage-indication.cache {
+            display: none;
+        }
+
+        .cablage-fils {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .fil-reseau {
+            pointer-events: none;
+        }
+
+        .fil-reseau .fil-trait {
+            fill: none;
+            stroke: var(--couleur-primaire);
+            stroke-width: 4;
+            stroke-linecap: round;
+            pointer-events: none;
+        }
+
+        /* Cible large et transparente : on clique le fil au doigt sans viser. */
+        .fil-reseau .fil-cible {
+            fill: none;
+            stroke: transparent;
+            stroke-width: 20;
+            stroke-linecap: round;
+            pointer-events: stroke;
+            cursor: pointer;
+        }
+
+        .fil-reseau:focus {
+            outline: none;
+        }
+
+        .fil-reseau:focus .fil-trait {
+            stroke: #1a4f7a;
+            stroke-dasharray: 7 5;
+            stroke-width: 5;
+        }
+
+        .fil-reseau.juste .fil-trait {
+            stroke: var(--couleur-succes);
+        }
+
+        .fil-reseau.faux .fil-trait {
+            stroke: var(--couleur-alerte);
+            stroke-dasharray: 9 7;
+        }
+
+        .noeud-reseau {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            width: 92px;
+            min-height: 62px;
+            padding: 3px 2px;
+            border: 2px solid #64748b;
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: var(--couleur-texte);
+            font-family: inherit;
+            font-size: 0.72rem;
+            line-height: 1.15;
+            text-align: center;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .noeud-reseau:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .noeud-reseau .noeud-icone {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .noeud-reseau .noeud-nom {
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Repère visuel du type d'équipement : le rôle se lit d'un coup d'œil. */
+        .noeud-reseau[data-type="routeur"] {
+            border-color: var(--couleur-info);
+            background-color: #ecfeff;
+        }
+
+        .noeud-reseau[data-type="commutateur"] {
+            border-color: var(--couleur-secondaire);
+            background-color: #f5f3ff;
+        }
+
+        .noeud-reseau.sur-plateau {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 3;
+        }
+
+        .noeud-reseau.deplace {
+            z-index: 6;
+            cursor: grabbing;
+            box-shadow: var(--ombre-moyenne);
+        }
+
+        .noeud-reseau.selectionne {
+            border-color: var(--couleur-primaire);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35);
+        }
+
+        .cablage-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+            margin-top: var(--espacement-md);
+        }
+
+        .cablage-actions .bouton-action {
+            margin: 0;
+            padding: var(--espacement-sm) var(--espacement-lg);
+        }
+
+        .cablage-retour {
+            margin-top: var(--espacement-md);
+            min-height: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cablage-retour.info {
+            color: #475569;
+        }
+
+        .cablage-retour.succes {
+            color: var(--couleur-succes);
+        }
+
+        .cablage-retour.echec {
+            color: var(--couleur-alerte);
+        }
+
+        .cablage-bilan {
+            margin-top: var(--espacement-md);
+            padding: var(--espacement-md);
+            border-radius: var(--rayon-bordure);
+            border-left: 6px solid var(--couleur-primaire);
+            background-color: #ffffff;
+        }
+
+        .cablage-bilan.succes {
+            border-left-color: var(--couleur-succes);
+            background-color: #f0fdf4;
+        }
+
+        .cablage-bilan.echec {
+            border-left-color: var(--couleur-alerte);
+            background-color: #fef2f2;
+        }
+
+        .cablage-bilan ul {
+            margin: var(--espacement-sm) 0 0 var(--espacement-lg);
+        }
+
+        .cablage-bilan li {
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .cablage-explication {
+            margin-top: var(--espacement-md);
+            padding-top: var(--espacement-sm);
+            border-top: 1px solid #cbd5e1;
+        }
+
+        @media (max-width: 480px) {
+            .cablage-zone {
+                height: 540px;
+            }
+
+            .noeud-reseau {
+                width: 84px;
+                font-size: 0.68rem;
+            }
         }
 
         /* ============================================
@@ -663,6 +975,23 @@
             color: white;
             margin-bottom: var(--espacement-md);
             font-size: 1.5rem;
+        }
+
+        /* L'asset de jeu du bonus (LoRA locaux) est embarqué dans la page en
+           base64 : il n'y a donc aucun appel réseau, l'activité reste ouvrable
+           hors ligne. `pixelated` est indispensable au pixel art — le lissage
+           du navigateur détruit la grille et le personnage devient flou. */
+        .illustration-jeu {
+            display: block;
+            max-width: min(100%, 320px);
+            height: auto;
+            margin: 0 auto var(--espacement-md);
+            image-rendering: pixelated;
+            border-radius: var(--rayon-bordure);
+        }
+
+        .carte-jeu {
+            text-align: center;
         }
 
         /* ============================================
@@ -774,6 +1103,640 @@
         }
 
         /* ============================================
+           ATELIERS N2 — ateliers de découverte
+           (remplis depuis n2.ateliers ; le bloc entier
+            est retiré si la configuration n'en fournit pas)
+           ============================================ */
+
+        .ateliers-n2 {
+            margin-top: var(--espacement-lg);
+            padding-top: var(--espacement-lg);
+            border-top: 2px dashed #dce3ed;
+        }
+
+        .atelier-carte {
+            background: #fbfcfe;
+            border: 1px solid #dce3ed;
+            border-left: 5px solid #2e74b5;
+            border-radius: 12px;
+            padding: 1rem 1.1rem 1.2rem;
+            margin-top: 1.25rem;
+        }
+
+        .atelier-carte h3 {
+            margin: 0 0 .35rem;
+            font-size: 1.05rem;
+        }
+
+        .atelier-carte h4 {
+            margin: .8rem 0 .4rem;
+            font-size: .92rem;
+            color: #3a6ea5;
+        }
+
+        .atelier-consigne {
+            margin: .2rem 0 .8rem;
+        }
+
+        .atelier-colonnes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .9rem;
+        }
+
+        .atelier-liste {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+
+        .atelier-jeton,
+        .atelier-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            padding: .55rem .7rem;
+            font: inherit;
+            font-size: .9rem;
+            line-height: 1.35;
+            color: inherit;
+            cursor: pointer;
+            min-height: 44px;
+            transition: border-color .2s, background .2s;
+        }
+
+        .atelier-jeton:hover,
+        .atelier-option:hover {
+            border-color: #2e74b5;
+        }
+
+        .atelier-jeton:focus-visible,
+        .atelier-option:focus-visible,
+        .rotor-btn:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .atelier-jeton.choisi,
+        .atelier-option.choisi {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+            font-weight: 600;
+        }
+
+        .atelier-jeton.apparie {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            cursor: default;
+        }
+
+        .atelier-jeton.erreur,
+        .atelier-option.erreur {
+            border-color: #c62828;
+            background: #fdecea;
+            animation: atelierSecousse .3s;
+        }
+
+        .atelier-option.correcte {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .atelier-option.fausse {
+            border-color: #c62828;
+            background: #fdecea;
+        }
+
+        @keyframes atelierSecousse {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .atelier-compteur {
+            font-size: .85rem;
+            font-weight: 600;
+            color: #3a6ea5;
+            margin: .6rem 0 0;
+        }
+
+        .atelier-retour {
+            min-height: 1.6rem;
+            margin: .5rem 0 0;
+            padding: .45rem .7rem;
+            border-radius: 8px;
+            font-size: .9rem;
+        }
+
+        .atelier-retour:empty {
+            padding: 0;
+        }
+
+        .atelier-retour.succes {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .atelier-retour.echec {
+            background: #fdecea;
+            color: #8e1b1b;
+        }
+
+        .atelier-retour.info {
+            background: #eaf1f8;
+            color: #1a3f5e;
+        }
+
+        .atelier-explication {
+            background: #fff8e1;
+            border-left: 5px solid #f0b400;
+            border-radius: 8px;
+            padding: .7rem .9rem;
+            margin-top: .8rem;
+            font-size: .92rem;
+        }
+
+        .atelier-actions {
+            margin-top: .7rem;
+        }
+
+        /* ── Type « reseau » : reconstituer le câblage d'un réseau entier ──
+           L'élève clique deux appareils pour tendre un fil ; la liaison est
+           vérifiée à l'instant et s'inscrit dans « Ton réseau, fil par fil »
+           avec sa justification. */
+        .atelier-reseau {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+            margin: .4rem 0 .6rem;
+        }
+
+        .reseau-appareil {
+            position: relative;
+            flex: 1 1 122px;
+            min-width: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .1rem;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            padding: .5rem .4rem;
+            font: inherit;
+            font-size: .82rem;
+            line-height: 1.2;
+            text-align: center;
+            color: inherit;
+            cursor: pointer;
+            min-height: 44px;
+            transition: border-color .2s, background .2s;
+        }
+
+        .reseau-appareil:hover {
+            border-color: #2e74b5;
+        }
+
+        .reseau-appareil:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .reseau-appareil.choisi {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+            font-weight: 600;
+        }
+
+        .reseau-appareil.relie {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .reseau-appareil.erreur {
+            border-color: #c62828;
+            background: #fdecea;
+            animation: atelierSecousse .3s;
+        }
+
+        .reseau-icone {
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .reseau-nom {
+            font-weight: 600;
+        }
+
+        .reseau-role {
+            font-size: .72rem;
+            color: #4a5d70;
+        }
+
+        .reseau-compteur {
+            min-height: .95rem;
+            font-size: .7rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        .atelier-fils-cadre {
+            margin-top: .6rem;
+            padding: .6rem .7rem;
+            border: 1px solid #dce3ed;
+            border-radius: 9px;
+            background: #fbfcfe;
+        }
+
+        .atelier-fils-cadre h4 {
+            margin: 0 0 .35rem;
+        }
+
+        .atelier-fils {
+            margin: 0 0 0 1.1rem;
+            font-size: .88rem;
+        }
+
+        .atelier-fils li {
+            margin-bottom: .3rem;
+        }
+
+        .atelier-fils li strong {
+            color: #1b5e20;
+        }
+
+        .atelier-fils-vide {
+            font-style: italic;
+            color: #4a5d70;
+        }
+
+        .atelier-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+            margin: .5rem 0;
+        }
+
+        .atelier-slot {
+            flex: 1 1 140px;
+            min-height: 54px;
+            border: 2px dashed #b9c8d8;
+            border-radius: 9px;
+            padding: .45rem .55rem;
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            color: #7a8b9c;
+        }
+
+        .atelier-slot.rempli {
+            border-style: solid;
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            color: #1b3d1e;
+            font-weight: 600;
+        }
+
+        .atelier-marqueur {
+            font-size: .75rem;
+            font-weight: 700;
+            color: #2e74b5;
+            background: #eaf1f8;
+            border-radius: 5px;
+            padding: .05rem .35rem;
+            flex: 0 0 auto;
+        }
+
+        .atelier-jetons-melanges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+        }
+
+        .atelier-jetons-melanges .atelier-jeton {
+            flex: 1 1 160px;
+        }
+
+        .atelier-drone-cadre {
+            display: flex;
+            justify-content: center;
+            margin: .4rem 0 .6rem;
+            background: #f4f8fc;
+            border-radius: 10px;
+            padding: .5rem;
+        }
+
+        .atelier-drone {
+            width: 150px;
+            height: 94px;
+            transition: transform .5s ease;
+        }
+
+        .atelier-drone.attitude-gaz { transform: translateY(-12px); }
+        .atelier-drone.attitude-tangage { transform: rotate(-14deg); }
+        .atelier-drone.attitude-roulis { transform: skewX(-12deg); }
+        .atelier-drone.attitude-lacet { transform: rotate(26deg); }
+
+        .atelier-missions {
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+
+        .atelier-question {
+            background: #fff;
+            border: 1px solid #e3e9f1;
+            border-radius: 10px;
+            padding: .7rem .8rem;
+        }
+
+        .atelier-enonce {
+            margin: 0 0 .5rem;
+            font-size: .95rem;
+        }
+
+        .atelier-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .4rem;
+        }
+
+        .rotors-cadre {
+            display: flex;
+            justify-content: center;
+            margin: .4rem 0;
+        }
+
+        .rotors-grille {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .6rem;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .rotors-nez {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: .8rem;
+            font-weight: 700;
+            color: #3a6ea5;
+            letter-spacing: .04em;
+        }
+
+        .rotor-case {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .25rem;
+        }
+
+        .rotor-nom {
+            font-size: .78rem;
+            color: #5a6b7d;
+        }
+
+        .rotor-btn {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            border: 3px solid #b9c8d8;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            line-height: 1;
+            color: #1a3f5e;
+        }
+
+        .rotor-btn:hover {
+            border-color: #2e74b5;
+        }
+
+        .rotor-symbole {
+            display: inline-block;
+        }
+
+        .rotor-symbole.tourne-droite { animation: rotorDroite 2.4s linear infinite; }
+        .rotor-symbole.tourne-gauche { animation: rotorGauche 2.4s linear infinite; }
+
+        @keyframes rotorDroite { to { transform: rotate(360deg); } }
+        @keyframes rotorGauche { to { transform: rotate(-360deg); } }
+
+        .rotor-btn.anti-couple {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .rotor-btn.mauvais-sens {
+            border-color: #c62828;
+            background: #fdecea;
+        }
+
+        .atelier-jauge-cadre {
+            background: #e3e9f1;
+            border-radius: 999px;
+            height: 22px;
+            overflow: hidden;
+            max-width: 420px;
+            margin: .5rem 0 .25rem;
+        }
+
+        .atelier-jauge {
+            height: 100%;
+            width: 0;
+            background: #2e74b5;
+            border-radius: 999px;
+            transition: width .45s ease;
+        }
+
+        .atelier-jauge.jauge-ok {
+            background: #2e7d32;
+        }
+
+        .atelier-formule {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: .85rem;
+            background: #f1f5fa;
+            border-radius: 8px;
+            padding: .45rem .6rem;
+            margin: .4rem 0 .7rem;
+        }
+
+        .atelier-legende {
+            list-style: none;
+            padding: 0;
+            margin: .3rem 0 .9rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+        }
+
+        .atelier-legende li {
+            background: #eaf1f8;
+            border-radius: 8px;
+            padding: .35rem .6rem;
+            font-size: .85rem;
+            flex: 1 1 190px;
+        }
+
+        .atelier-verdict {
+            text-align: center;
+            font-size: .9rem;
+            font-weight: 600;
+            color: #1a3f5e;
+            margin: .2rem 0 0;
+        }
+
+        /* Atelier « environnement » : interacteurs extérieurs et capteurs */
+
+        .env-catalogue {
+            list-style: none;
+            padding: 0;
+            margin: .4rem 0 .9rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: .4rem;
+        }
+
+        .env-catalogue li {
+            background: #fff;
+            border: 1px solid #e3e9f1;
+            border-radius: 9px;
+            padding: .45rem .6rem;
+            font-size: .82rem;
+            line-height: 1.3;
+        }
+
+        .env-catalogue strong {
+            display: block;
+            font-size: .88rem;
+            margin-bottom: .1rem;
+        }
+
+        .env-catalogue .env-mesure {
+            color: #3a6ea5;
+        }
+
+        .env-interacteurs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: .4rem;
+            margin: .4rem 0 .8rem;
+        }
+
+        .env-interacteur {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            padding: .5rem .6rem;
+            font: inherit;
+            font-size: .88rem;
+            line-height: 1.3;
+            color: inherit;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .env-interacteur:hover {
+            border-color: #2e74b5;
+        }
+
+        .env-interacteur:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .env-interacteur.choisi {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+            font-weight: 600;
+        }
+
+        .env-effet {
+            background: #eaf1f8;
+            border-radius: 8px;
+            padding: .5rem .7rem;
+            font-size: .9rem;
+            margin: .3rem 0 .6rem;
+        }
+
+        .env-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+            table-layout: fixed;
+        }
+
+        .env-table caption {
+            text-align: left;
+            font-weight: 700;
+            color: #3a6ea5;
+            font-size: .9rem;
+            padding-bottom: .35rem;
+        }
+
+        .env-table th,
+        .env-table td {
+            text-align: left;
+            padding: .35rem .4rem;
+            border-bottom: 1px solid #e3e9f1;
+            vertical-align: top;
+            overflow-wrap: anywhere;
+        }
+
+        .env-table thead th {
+            background: #f1f5fa;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+        }
+
+        .env-table thead th:last-child,
+        .env-table tbody td:last-child {
+            width: 48%;
+        }
+
+        .env-jauge {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: .04em;
+        }
+
+        .env-note-3 .env-mot { color: #1b5e20; font-weight: 600; }
+        .env-note-2 .env-mot { color: #2e5f8a; font-weight: 600; }
+        .env-note-1 .env-mot { color: #7a5300; font-weight: 600; }
+        .env-note-0 .env-mot { color: #8e1b1b; font-weight: 600; }
+
+        .env-legende {
+            font-size: .8rem;
+            color: #5a6b7d;
+            margin: .2rem 0 .6rem;
+        }
+
+        .atelier-mesure {
+            display: block;
+            font-size: .82rem;
+            color: #1a3f5e;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .atelier-colonnes,
+            .atelier-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================
            UTILITAIRES
            ============================================ */
         
@@ -805,307 +1768,9 @@
                 transition-duration: 0.01ms !important;
             }
         }
-
-                /* ============================================
-           ANIMATION DU RÉSEAU (SFC1) — schéma SVG
-           Seuls les échanges d'information sont animés
-           (paquets sur les liaisons). VERT = réseau local
-           (LAN) ; ROUGE = trafic qui passe par Internet.
-           ============================================ */
-        .reseau-figure {
-            margin: var(--espacement-lg) 0;
-            padding: var(--espacement-md);
-            background: linear-gradient(135deg, #eef4ff 0%, #f2fbf5 100%);
-            border: 2px solid var(--couleur-primaire);
-            border-radius: 16px;
-            text-align: center;
-        }
-        .reseau-svg {
-            display: block;
-            width: 100%;
-            height: auto;
-            max-width: 820px;
-            margin: 0 auto;
-        }
-        .reseau-legende {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: var(--espacement-md);
-            font-size: 0.85rem;
-            color: var(--couleur-texte);
-            margin-top: var(--espacement-sm);
-        }
-        .reseau-leg-item { display: inline-flex; align-items: center; gap: 0.35rem; }
-        .reseau-dot { width: 0.9rem; height: 0.9rem; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
-        .reseau-dot.vert { background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.7); }
-        .reseau-dot.rouge { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.7); }
-        .reseau-paquet.vert { fill: #22c55e; filter: drop-shadow(0 0 5px rgba(34, 197, 94, 0.9)); }
-        .reseau-paquet.rouge { fill: #ef4444; filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.9)); }
-
-        /* === N2 — trajet d'un fichier (chaîne linéaire) ===
-           Composants statiques ; seule la circulation des
-           paquets (verts = internes) est animée. */
-        .anim-schema {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            margin: var(--espacement-lg) 0;
-            padding: var(--espacement-lg);
-            background: linear-gradient(135deg, #eef4ff 0%, #f2fbf5 100%);
-            border: 2px solid var(--couleur-primaire);
-            border-radius: 16px;
-        }
-        .anim-titre { width: 100%; text-align: center; font-weight: 700; color: var(--couleur-primaire); font-size: 1rem; }
-        .anim-ligne { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 0.3rem; overflow-x: auto; padding-bottom: 0.3rem; width: 100%; }
-        .anim-noeud {
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            padding: 0.5rem 0.55rem; background: #fff; border: 2.5px solid var(--couleur-primaire);
-            border-radius: 12px; min-width: 74px; text-align: center;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); flex: 0 0 auto;
-        }
-        .anim-noeud .anim-icone { font-size: 1.5rem; line-height: 1; }
-        .anim-noeud .anim-lib { font-size: 0.72rem; color: var(--couleur-texte-leger); font-weight: 700; }
-        .anim-noeud.anim-serveur { border-color: var(--couleur-succes); }
-        .anim-fil { position: relative; width: 40px; height: 6px; background: #bbf7d0; border-radius: 999px; flex: 0 0 auto; }
-        .anim-fil .paquet {
-            position: absolute; top: -5px; left: 0; width: 16px; height: 16px; border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #86efac, #22c55e);
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
-            animation: voyage 2.2s ease-in-out infinite;
-        }
-        .anim-fil-v { position: relative; width: 6px; height: 28px; background: #bbf7d0; border-radius: 999px; }
-        .anim-fil-v .paquet {
-            position: absolute; left: 50%; top: 0; transform: translateX(-50%);
-            width: 16px; height: 16px; border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #86efac, #22c55e);
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
-            animation: voyageV 2.2s ease-in-out infinite;
-        }
-        .anim-legende { width: 100%; text-align: center; font-size: 0.82rem; color: var(--couleur-texte-leger); line-height: 1.5; margin-top: 0.3rem; }
-        @keyframes voyage {
-            0% { left: -6px; opacity: 0; }
-            12% { opacity: 1; }
-            88% { opacity: 1; }
-            100% { left: 100%; opacity: 0; }
-        }
-        @keyframes voyageV {
-            0% { top: -6px; opacity: 0; }
-            12% { opacity: 1; }
-            88% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-    
-/* === Jeu « Relie les points » (bonus) — fond gris, cases visibles === */
-.jeu-relie {
-    background: #334155;
-    border: 2px solid #475569;
-    border-radius: 16px;
-    padding: var(--espacement-md);
-    margin: var(--espacement-md) 0;
-    color: #f1f5f9;
-}
-.jeu-entete {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--espacement-sm);
-    margin-bottom: var(--espacement-sm);
-}
-.jeu-titre { font-weight: 800; color: #e0f2fe; font-size: 1.1rem; }
-.jeu-niveau { font-weight: 700; color: #fed7aa; font-size: 0.95rem; }
-.jeu-cases { color: #cbd5e1; font-weight: 600; }
-.jeu-consigne { font-size: 0.9rem; color: #e2e8f0; margin: 0 0 var(--espacement-md) 0; }
-.jeu-grille {
-    display: grid;
-    gap: 4px;
-    max-width: 520px;
-    margin: 0 auto;
-    background: #0b1220;
-    padding: 8px;
-    border-radius: 14px;
-    border: 2px solid #1e293b;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-.jeu-cell {
-    aspect-ratio: 1 / 1;
-    min-width: 0;
-    padding: 0;
-    border: 2px solid #94a3b8;
-    border-radius: 6px;
-    background: #64748b;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.1s ease, transform 0.1s ease;
-}
-.jeu-cell:hover { border-color: #93c5fd; transform: scale(1.05); }
-.jeu-cell:focus-visible { outline: 3px solid #93c5fd; outline-offset: 2px; }
-.jeu-cell.point { background: #475569; border-color: #cbd5e1; }
-.jeu-cell .jeu-point {
-    width: 72%;
-    height: 72%;
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.4);
-}
-.jeu-cell.chemin { border-color: transparent; }
-.jeu-cell.actif { box-shadow: inset 0 0 0 3px #93c5fd; }
-.jeu-actions { display: flex; flex-wrap: wrap; gap: var(--espacement-sm); margin-top: var(--espacement-md); }
-.jeu-statut { font-weight: 700; color: #bbf7d0; min-height: 1.4em; margin-top: var(--espacement-sm); }
-@media (max-width: 480px) {
-    .jeu-grille { gap: 3px; padding: 5px; }
-}
-/* =====================================================================
-   ADAPTATION TELEPHONE (correctifs mobiles)
-   Voir Rapport-compatibilite-mobile-apps.md
-   - la barre du haut se replie au defilement : seuls les onglets restent
-   - onglets sur une seule ligne, defilement horizontal au doigt
-   - champs a 16 px : supprime le zoom automatique d'iOS
-   - cibles tactiles des QCM et des etiquettes portees a 44 px
-   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
-   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
-   ===================================================================== */
-@media screen and (max-width: 700px), screen and (max-height: 500px) {
-
-  /* --- En-tete plus compact --- */
-  header{padding:8px 10px 6px}
-  header h1{font-size:.95rem; line-height:1.15}
-  header h1 small{display:block; font-size:.68rem}
-  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
-  header .barre-progression{display:none}
-
-  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
-  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
-    flex-wrap:nowrap !important;
-    overflow-x:auto; overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-    gap:6px;
-  }
-  header .onglets button, header .tabs button, header .tabs-nav button,
-  nav.tabs button, header + nav button, body > nav button{
-    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
-  }
-
-  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
-  input, textarea, select{font-size:16px !important}
-
-  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
-  /* min-height est ignore sur un <label> reste en display:inline : on force
-     donc un affichage qui tient compte de la hauteur (inline-flex centre le
-     texte verticalement et laisse la ligne se poursuivre comme avant). */
-  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
-    display:inline-flex; align-items:center;
-    min-height:44px; min-width:44px; box-sizing:border-box}
-  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
-  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
-
-  /* --- Etiquettes a deplacer --- */
-  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
-  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
-  .etiquette-drop{display:flex; align-items:center}
-
-  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
-  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
-    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
-}
-</style>
+    </style>
 </head>
 <body>
-<!-- Correctifs telephone : barre repliable, onglets sur une ligne, retour en
-     haut au changement de niveau, compensation des sauts d'ancre.
-     Voir Rapport-compatibilite-mobile-apps.md
-     Ce script est place juste apres <body> : il attend que le DOM soit
-     construit avant de mesurer quoi que ce soit. -->
-<script>
-(function () {
-  // Conteneurs d'onglets possibles, selon la structure de l'app.
-  var SELECTEUR_ONGLETS =
-    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
-
-  function trouverOnglets() {
-    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
-    for (var i = 0; i < liste.length; i++) {
-      if (liste[i].querySelector('button')) return liste[i];
-    }
-    return null;
-  }
-
-  function ajuster() {
-    var entete = document.querySelector('header');
-    var onglets = trouverOnglets();
-    if (!entete || !onglets) return;
-    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
-
-    if (!petit) {
-      // Ordinateur : on rend la main au CSS d'origine.
-      entete.style.top = '0px';
-      onglets.style.position = '';
-      onglets.style.top = '';
-      document.documentElement.style.scrollPaddingTop =
-        (entete.offsetHeight + 8) + 'px';
-      return;
-    }
-
-    if (entete.contains(onglets)) {
-      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
-      // Le titre et les champs binome/classe sortent de l'ecran au
-      // defilement, les onglets restent sous les yeux.
-      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
-      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
-      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
-      entete.style.top = (-dessus) + 'px';
-    } else {
-      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
-      // defilement et la barre d'onglets se colle en haut de l'ecran.
-      entete.style.top = (-entete.offsetHeight) + 'px';
-      onglets.style.position = 'sticky';
-      onglets.style.top = '0px';
-      var fond = getComputedStyle(onglets).backgroundColor;
-      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
-        onglets.style.background = '#fff';
-      }
-      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
-    }
-
-    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
-    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
-    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
-  }
-
-  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
-  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
-  function retourEnHaut(e) {
-    var cible = e.target;
-    if (!cible || !cible.closest) return;
-    var bouton = cible.closest('button');
-    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
-
-  function demarrer() {
-    ajuster();
-    document.addEventListener('click', retourEnHaut, true);
-    window.addEventListener('resize', ajuster);
-    window.addEventListener('orientationchange', ajuster);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
-    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', demarrer);
-  } else {
-    demarrer();
-  }
-  window.addEventListener('load', demarrer);
-})();
-</script>
-
     <!-- Skip link pour accessibilité -->
     <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
@@ -1139,7 +1804,7 @@
                 N2 - Quiz
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n3-enigme" role="tab" aria-selected="false" aria-controls="contenu-n3-enigme" tabindex="-1" disabled>
-                N3 - Énigme
+                N3 - Problématique
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n4-probleme" role="tab" aria-selected="false" aria-controls="contenu-n4-probleme" tabindex="-1" disabled>
                 N4 - Problème
@@ -1159,148 +1824,8 @@
             <section id="contenu-n1-intro" class="contenu-onglet actif" role="tabpanel" aria-labelledby="onglet-n1-intro">
                 <div class="carte-contenu">
                     <h2>Niveau 1 : Comprendre les bases</h2>
-                    <p>Commencez par observer ce schéma animé, puis regardez les vidéos pour comprendre les concepts fondamentaux.</p>
-
-                    <figure class="reseau-figure">
-                        <svg class="reseau-svg" role="img" aria-label="Schéma animé du réseau du collège. Le routeur est au centre, entouré d'un anneau. Il est relié à Internet vers le haut et, à l'intérieur du réseau local, au serveur à droite, à l'imprimante à gauche et au commutateur vers le bas. Le commutateur distribue ensuite les données vers les postes clients. Des points lumineux circulent sur les liaisons : en vert quand le message reste à l'intérieur du réseau local, en rouge quand il passe par Internet." viewBox="0 0 1000 830" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-                          <defs>
-                            <!-- Routeur : boîtier avec antennes et voyants -->
-                            <symbol id="ico-routeur" viewBox="0 0 100 100">
-                              <line x1="30" y1="46" x2="20" y2="12" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
-                              <circle cx="20" cy="10" r="4" fill="#334155"/>
-                              <line x1="70" y1="46" x2="80" y2="12" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
-                              <circle cx="80" cy="10" r="4" fill="#334155"/>
-                              <rect x="10" y="46" width="80" height="44" rx="8" fill="#1e293b" stroke="#0f172a" stroke-width="2.5"/>
-                              <rect x="15" y="51" width="70" height="6" rx="3" fill="#334155"/>
-                              <circle cx="22" cy="80" r="3" fill="#22c55e"/>
-                              <circle cx="32" cy="80" r="3" fill="#22c55e"/>
-                              <circle cx="42" cy="80" r="3" fill="#f59e0b"/>
-                              <circle cx="52" cy="80" r="3" fill="#22c55e"/>
-                              <path d="M72 22 a12 12 0 0 1 12 12" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
-                              <path d="M67 27 a17 17 0 0 1 17 17" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
-                            </symbol>
-                            <!-- Commutateur : boîtier à ports et voyants -->
-                            <symbol id="ico-switch" viewBox="0 0 100 100">
-                              <rect x="8" y="36" width="84" height="34" rx="5" fill="#334155" stroke="#0f172a" stroke-width="2.5"/>
-                              <rect x="12" y="40" width="76" height="5" rx="2.5" fill="#475569"/>
-                              <rect x="15" y="52" width="10" height="13" rx="1.5" fill="#0f172a"/>
-                              <rect x="28" y="52" width="10" height="13" rx="1.5" fill="#0f172a"/>
-                              <rect x="41" y="52" width="10" height="13" rx="1.5" fill="#0f172a"/>
-                              <rect x="54" y="52" width="10" height="13" rx="1.5" fill="#0f172a"/>
-                              <rect x="67" y="52" width="10" height="13" rx="1.5" fill="#0f172a"/>
-                              <circle cx="20" cy="49" r="1.8" fill="#22c55e"/>
-                              <circle cx="33" cy="49" r="1.8" fill="#22c55e"/>
-                              <circle cx="46" cy="49" r="1.8" fill="#f59e0b"/>
-                              <circle cx="59" cy="49" r="1.8" fill="#22c55e"/>
-                              <circle cx="72" cy="49" r="1.8" fill="#22c55e"/>
-                            </symbol>
-                            <!-- Poste client : écran + clavier -->
-                            <symbol id="ico-client" viewBox="0 0 100 100">
-                              <rect x="18" y="18" width="64" height="44" rx="4" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
-                              <rect x="24" y="24" width="52" height="32" rx="2" fill="#38bdf8"/>
-                              <rect x="29" y="30" width="30" height="3" rx="1.5" fill="#e0f2fe"/>
-                              <rect x="29" y="37" width="40" height="3" rx="1.5" fill="#bae6fd"/>
-                              <rect x="29" y="44" width="24" height="3" rx="1.5" fill="#bae6fd"/>
-                              <rect x="45" y="62" width="10" height="10" fill="#475569"/>
-                              <rect x="32" y="72" width="36" height="6" rx="3" fill="#475569"/>
-                              <rect x="24" y="82" width="52" height="8" rx="2" fill="#64748b"/>
-                            </symbol>
-                            <!-- Serveur : tour avec baies et voyants -->
-                            <symbol id="ico-serveur" viewBox="0 0 100 100">
-                              <rect x="30" y="10" width="40" height="80" rx="4" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
-                              <rect x="35" y="18" width="30" height="7" rx="1.5" fill="#334155"/>
-                              <rect x="35" y="29" width="30" height="7" rx="1.5" fill="#334155"/>
-                              <rect x="35" y="40" width="30" height="7" rx="1.5" fill="#334155"/>
-                              <circle cx="58" cy="21.5" r="1.8" fill="#22c55e"/>
-                              <circle cx="58" cy="32.5" r="1.8" fill="#22c55e"/>
-                              <circle cx="58" cy="43.5" r="1.8" fill="#f59e0b"/>
-                              <rect x="35" y="54" width="30" height="28" rx="2" fill="#0f172a"/>
-                              <line x1="39" y1="60" x2="61" y2="60" stroke="#334155" stroke-width="2"/>
-                              <line x1="39" y1="66" x2="61" y2="66" stroke="#334155" stroke-width="2"/>
-                              <line x1="39" y1="72" x2="61" y2="72" stroke="#334155" stroke-width="2"/>
-                              <line x1="39" y1="78" x2="61" y2="78" stroke="#334155" stroke-width="2"/>
-                            </symbol>
-                            <!-- Imprimante : feuille + boîtier -->
-                            <symbol id="ico-imprimante" viewBox="0 0 100 100">
-                              <rect x="30" y="16" width="40" height="22" rx="2" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-                              <line x1="36" y1="24" x2="64" y2="24" stroke="#cbd5e1" stroke-width="2"/>
-                              <line x1="36" y1="30" x2="58" y2="30" stroke="#cbd5e1" stroke-width="2"/>
-                              <rect x="16" y="36" width="68" height="34" rx="4" fill="#e2e8f0" stroke="#475569" stroke-width="2.5"/>
-                              <rect x="24" y="62" width="52" height="6" rx="2" fill="#475569"/>
-                              <circle cx="76" cy="48" r="3.5" fill="#22c55e"/>
-                            </symbol>
-                            <!-- Internet : nuage -->
-                            <symbol id="ico-internet" viewBox="0 0 100 100">
-                              <g fill="#bfdbfe" stroke="#3b82f6" stroke-width="3">
-                                <circle cx="35" cy="46" r="16"/>
-                                <circle cx="58" cy="38" r="20"/>
-                                <circle cx="74" cy="50" r="14"/>
-                                <rect x="22" y="48" width="56" height="18" rx="9"/>
-                              </g>
-                              <text x="50" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" font-family="system-ui, sans-serif">WWW</text>
-                            </symbol>
-                          </defs>
-
-                          <!-- Halo central : le routeur est au centre du réseau -->
-                          <circle cx="500" cy="335" r="120" fill="#dbeafe" opacity="0.65"/>
-                          <circle cx="500" cy="335" r="120" fill="none" stroke="#93c5fd" stroke-width="2.5" stroke-dasharray="7 7"/>
-
-                          <!-- Liaisons (dessinées sous les composants) -->
-                          <g stroke-linecap="round">
-                            <line x1="500" y1="272" x2="500" y2="162" stroke="#fca5a5" stroke-width="7"/>
-                            <line x1="500" y1="400" x2="500" y2="492" stroke="#86efac" stroke-width="7"/>
-                            <line x1="566" y1="335" x2="754" y2="335" stroke="#86efac" stroke-width="7"/>
-                            <line x1="434" y1="335" x2="246" y2="335" stroke="#86efac" stroke-width="7"/>
-                            <line x1="500" y1="622" x2="300" y2="672" stroke="#86efac" stroke-width="7"/>
-                            <line x1="500" y1="622" x2="500" y2="672" stroke="#86efac" stroke-width="7"/>
-                            <line x1="500" y1="622" x2="700" y2="672" stroke="#86efac" stroke-width="7"/>
-                          </g>
-
-                          <!-- Paquets animés : vert = interne (LAN), rouge = Internet -->
-                          <g aria-hidden="true">
-                            <circle class="reseau-paquet rouge" r="9" cx="0" cy="0"><animateMotion dur="2.2s" begin="0s" repeatCount="indefinite" path="M500,272 L500,162"/></circle>
-                            <circle class="reseau-paquet rouge" r="9" cx="0" cy="0"><animateMotion dur="2.6s" begin="1.1s" repeatCount="indefinite" path="M500,162 L500,272"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite" path="M500,400 L500,492"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.8s" begin="1.2s" repeatCount="indefinite" path="M500,492 L500,400"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.4s" begin="0.3s" repeatCount="indefinite" path="M566,335 L754,335"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.8s" begin="1.5s" repeatCount="indefinite" path="M754,335 L566,335"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite" path="M434,335 L246,335"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite" path="M246,335 L434,335"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.2s" begin="0.2s" repeatCount="indefinite" path="M500,622 L300,672"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.2s" begin="0.5s" repeatCount="indefinite" path="M500,622 L500,672"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.2s" begin="0.8s" repeatCount="indefinite" path="M500,622 L700,672"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.6s" begin="1.4s" repeatCount="indefinite" path="M300,672 L500,622"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.6s" begin="1.7s" repeatCount="indefinite" path="M500,672 L500,622"/></circle>
-                            <circle class="reseau-paquet vert" r="9" cx="0" cy="0"><animateMotion dur="2.6s" begin="2.0s" repeatCount="indefinite" path="M700,672 L500,622"/></circle>
-                          </g>
-
-                          <!-- Composants physiques -->
-                          <use href="#ico-internet" x="445" y="50" width="110" height="110"/>
-                          <use href="#ico-routeur" x="435" y="270" width="130" height="130"/>
-                          <use href="#ico-serveur" x="755" y="280" width="110" height="110"/>
-                          <use href="#ico-imprimante" x="135" y="280" width="110" height="110"/>
-                          <use href="#ico-switch" x="435" y="490" width="130" height="130"/>
-                          <use href="#ico-client" x="250" y="670" width="100" height="100"/>
-                          <use href="#ico-client" x="450" y="670" width="100" height="100"/>
-                          <use href="#ico-client" x="650" y="670" width="100" height="100"/>
-
-                          <!-- Étiquettes (halo blanc pour rester lisibles sur les liaisons) -->
-                          <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="700" fill="#1e293b" stroke="#ffffff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">
-                            <text x="500" y="42" font-size="24" text-anchor="middle">Internet</text>
-                            <text x="810" y="262" font-size="24" text-anchor="middle">Serveur</text>
-                            <text x="190" y="262" font-size="24" text-anchor="middle">Imprimante</text>
-                            <text x="425" y="430" font-size="26" text-anchor="end">Routeur</text>
-                            <text x="425" y="458" font-size="15" text-anchor="end" fill="#1d4ed8" font-style="italic">élément central</text>
-                            <text x="575" y="572" font-size="26" text-anchor="start">Commutateur</text>
-                            <text x="500" y="802" font-size="24" text-anchor="middle">Postes clients</text>
-                          </g>
-                        </svg>
-                        <figcaption class="reseau-legende">
-                          <span class="reseau-leg-item"><span class="reseau-dot vert"></span>Messages internes au réseau local (LAN)</span>
-                          <span class="reseau-leg-item"><span class="reseau-dot rouge"></span>Messages qui passent par Internet</span>
-                        </figcaption>
-                    </figure>
-
+                    <p>Commencez par observer ces vidéos pour comprendre les concepts fondamentaux.</p>
+                    
                     <h3>Vidéos à regarder</h3>
                     <div class="ressources-video">
                         <article class="carte-video">
@@ -1518,20 +2043,351 @@
                     <div class="details-chaine" id="details-chaine"
                          aria-label="Descriptions des éléments explorés"></div>
 
-                    <div class="anim-schema" role="img" aria-label="Animation du trajet d'un fichier : il part du poste client, passe par la carte réseau, puis par le câble ou le Wi-Fi, arrive au commutateur qui l'aiguille, et finit au serveur qui l'enregistre.">
-                        <div class="anim-titre">📤 Le trajet d'un fichier sur le réseau</div>
-                        <div class="anim-ligne">
-                            <div class="anim-noeud"><span class="anim-icone">💻</span><span class="anim-lib">Poste client</span></div>
-                            <div class="anim-fil"><span class="paquet"></span></div>
-                            <div class="anim-noeud"><span class="anim-icone">🔌</span><span class="anim-lib">Carte réseau</span></div>
-                            <div class="anim-fil"><span class="paquet"></span></div>
-                            <div class="anim-noeud"><span class="anim-icone">📶</span><span class="anim-lib">Câble / Wi-Fi</span></div>
-                            <div class="anim-fil"><span class="paquet"></span></div>
-                            <div class="anim-noeud"><span class="anim-icone">🔀</span><span class="anim-lib">Commutateur</span></div>
-                            <div class="anim-fil fil-vert"><span class="paquet"></span></div>
-                            <div class="anim-noeud anim-serveur"><span class="anim-icone">🗄️</span><span class="anim-lib">Serveur</span></div>
+                    <style>
+.bloc-animation{background:#f7f9fc;border:1px solid #dce3ed;border-radius:12px;padding:1rem 1.1rem;margin-top:1.5rem}
+.bloc-animation h3{margin-top:0}
+.chaine-fonctionnement{display:flex;flex-wrap:wrap;align-items:stretch;gap:.35rem;margin:1rem 0}
+.cf-etape{flex:1 1 120px;min-width:108px;background:#fff;border:2px solid #dce3ed;border-radius:10px;padding:.7rem .5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.25rem;transition:transform .3s,box-shadow .3s,border-color .3s}
+.cf-etape .cf-icone{font-size:1.7rem;line-height:1}
+.cf-etape strong{font-size:.92rem}
+.cf-etape em{font-size:.74rem;color:#3a6ea5;font-style:normal;background:#eaf1f8;padding:.1rem .45rem;border-radius:6px}
+.cf-fleche{display:flex;align-items:center;font-size:1.4rem;color:#3a6ea5;font-weight:bold}
+.cf-etape.actif{border-color:#2e7d32;background:#e8f5e9;transform:translateY(-3px);box-shadow:0 4px 12px rgba(46,125,50,.25)}
+.cf-etape.actif .cf-icone{transform:scale(1.15)}
+.legende-animation{min-height:1.5rem;font-weight:600;color:#2e7d32;margin-top:.5rem}
+.interactions-widget{display:flex;flex-wrap:wrap;gap:1rem;align-items:stretch;margin:1rem 0}
+.inter-colonne{flex:1 1 190px;min-width:170px}
+.inter-colonne h4{margin:0 0 .5rem;font-size:.95rem;color:#3a6ea5}
+.inter-choix{display:flex;flex-direction:column;gap:.4rem}
+.inter-bouton{text-align:left;background:#fff;border:2px solid #dce3ed;border-radius:8px;padding:.5rem .7rem;cursor:pointer;font-size:.9rem;transition:border-color .2s,background .2s;min-height:44px}
+.inter-bouton:hover{border-color:#3a6ea5}
+.inter-bouton.selectionne{border-color:#2e74b5;background:#eaf1f8;font-weight:600}
+.inter-icone{font-size:1.1rem}
+.inter-fleche{display:flex;align-items:center;font-size:1.8rem;color:#3a6ea5}
+.interactions-resultat{min-height:2rem;padding:.6rem .8rem;border-radius:8px;background:#fff;border:1px solid #dce3ed;margin-top:.5rem}
+.interactions-resultat.info-block{background:#eaf1f8;border-color:#2e74b5}
+@media(max-width:480px){.cf-fleche{transform:rotate(90deg);font-size:1.1rem}}
+</style>
+
+                    <style>.aroute-scenarios{display:flex;flex-wrap:wrap;gap:.4rem;margin:.9rem 0}
+.aroute-scenario{text-align:left;background:#fff;border:2px solid #dce3ed;border-radius:8px;padding:.5rem .7rem;cursor:pointer;font:inherit;font-size:.88rem;line-height:1.3;transition:border-color .2s,background .2s;min-height:44px}
+.aroute-scenario:hover{border-color:#3a6ea5}
+.aroute-scenario.selectionne{border-color:#2e74b5;background:#eaf1f8;font-weight:600}
+.aroute-scenario:focus-visible,.aroute-noeud:focus-visible{outline:3px solid #1a4f7a;outline-offset:2px}
+.aroute-chaine{display:flex;flex-direction:column;gap:.3rem;margin:.6rem 0}
+.aroute-rangee{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.aroute-noeud{position:relative;flex:1 1 104px;min-width:0;max-width:200px;background:#fff;border:2px solid #dce3ed;border-radius:10px;padding:.65rem .45rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.15rem;transition:transform .25s,box-shadow .25s,border-color .25s,background .25s,opacity .25s}
+.aroute-noeud .aroute-icone{font-size:1.7rem;line-height:1}
+.aroute-noeud strong{font-size:.9rem}
+.aroute-noeud em{max-width:100%;font-size:.72rem;color:#3a6ea5;font-style:normal;background:#eaf1f8;padding:.05rem .4rem;border-radius:6px;overflow-wrap:anywhere}
+.aroute-noeud .aroute-paquet{position:absolute;top:-12px;right:-4px;font-size:1.25rem;line-height:1;opacity:0;transform:scale(.5);transition:opacity .25s,transform .25s}
+.aroute-noeud.actif{border-color:#2e7d32;background:#e8f5e9;transform:translateY(-3px);box-shadow:0 4px 12px rgba(46,125,50,.25)}
+.aroute-noeud.actif .aroute-paquet{opacity:1;transform:scale(1)}
+.aroute-noeud.devant{opacity:.42;border-style:dashed}
+.aroute-frontiere{margin:.2rem 0 .4rem;text-align:center;font-size:.8rem;font-weight:600;color:#8a4b00;background:#fff4e5;border:1px dashed #e0a04a;border-radius:8px;padding:.3rem .5rem}
+.aroute-fleche{text-align:center;font-size:1.2rem;color:#3a6ea5;font-weight:bold;line-height:1}
+.aroute-legende{min-height:2.6rem;font-weight:600;color:#2e7d32;margin:.5rem 0 0}
+@media(max-width:480px){.aroute-noeud{min-width:0;flex:1 1 44%}}</style>
+
+                                        <div class="bloc-animation marge-haut">
+                        <h3>📶 Comment plusieurs postes passent par un seul routeur</h3>
+                        <p class="texte-secondaire">Choisis un scénario, puis lance l'animation : le paquet de données monte d'appareil en appareil, et la légende dit à chaque étape ce que fait l'équipement traversé.</p>
+                        <div class="aroute-scenarios" id="aroute-scenarios" role="group" aria-label="Scénarios à animer">
+                            <button type="button" class="aroute-scenario selectionne" data-scenario="poste-internet" aria-pressed="true" onclick="choisirScenarioRouteur(this)">Le poste 102-1 envoie un fichier sur Internet</button>
+                            <button type="button" class="aroute-scenario" data-scenario="poste-2-internet" aria-pressed="false" onclick="choisirScenarioRouteur(this)">Le poste 102-2 envoie un fichier sur Internet</button>
+                            <button type="button" class="aroute-scenario" data-scenario="poste-imprimante" aria-pressed="false" onclick="choisirScenarioRouteur(this)">Le poste 102-2 imprime sur l'imprimante de la salle</button>
+                            <button type="button" class="aroute-scenario" data-scenario="poste-serveur" aria-pressed="false" onclick="choisirScenarioRouteur(this)">Le poste 102-1 enregistre un fichier sur le serveur</button>
                         </div>
-                        <div class="anim-legende">Le fichier part du <strong>poste client</strong> (celui qui demande), passe par la <strong>carte réseau</strong> (porte d'entrée), puis par la <strong>liaison</strong> (câble Ethernet ou Wi-Fi), arrive au <strong>commutateur</strong> qui l'aiguille, et finit au <strong>serveur</strong> qui l'enregistre.</div>
+                        <div class="aroute-chaine" id="aroute-chaine">
+                        <div class="aroute-rangee">
+                            <div class="aroute-noeud" data-noeud="poste-1" data-nom="Poste 102-1">
+                                <span class="aroute-icone" aria-hidden="true">💻</span>
+                                <strong>Poste 102-1</strong>
+                                <em>câble → commutateur</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                            <div class="aroute-noeud" data-noeud="poste-2" data-nom="Poste 102-2">
+                                <span class="aroute-icone" aria-hidden="true">💻</span>
+                                <strong>Poste 102-2</strong>
+                                <em>câble → commutateur</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                            <div class="aroute-noeud" data-noeud="imprimante" data-nom="Imprimante">
+                                <span class="aroute-icone" aria-hidden="true">🖨️</span>
+                                <strong>Imprimante</strong>
+                                <em>câble → commutateur</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                            <div class="aroute-noeud" data-noeud="serveur" data-nom="Serveur du collège">
+                                <span class="aroute-icone" aria-hidden="true">🗄️</span>
+                                <strong>Serveur du collège</strong>
+                                <em>câble → commutateur</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                        </div>
+                        <span class="aroute-fleche" aria-hidden="true">↓</span>
+                        <div class="aroute-rangee">
+                            <div class="aroute-noeud" data-noeud="commutateur" data-nom="Commutateur">
+                                <span class="aroute-icone" aria-hidden="true">🔀</span>
+                                <strong>Commutateur</strong>
+                                <em>aiguille les données</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                        </div>
+                        <span class="aroute-fleche" aria-hidden="true">↓</span>
+                        <div class="aroute-rangee">
+                            <div class="aroute-noeud aroute-frontiere-noeud" data-noeud="routeur" data-nom="Routeur">
+                                <span class="aroute-icone" aria-hidden="true">📶</span>
+                                <strong>Routeur</strong>
+                                <em>choisit la route</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                        </div>
+                        <p class="aroute-frontiere">Le routeur est la frontière du réseau local : tout ce qui sort du collège passe par lui, tout ce qui reste dans le collège ne le traverse pas.</p>
+                        <span class="aroute-fleche" aria-hidden="true">↓</span>
+                        <div class="aroute-rangee">
+                            <div class="aroute-noeud" data-noeud="internet" data-nom="Internet">
+                                <span class="aroute-icone" aria-hidden="true">🌐</span>
+                                <strong>Internet</strong>
+                                <em>réseau mondial</em>
+                                <span class="aroute-paquet" aria-hidden="true">📦</span>
+                            </div>
+                        </div>
+                        </div>
+                        <button type="button" class="bouton-action" onclick="animerRouteur(this)">▶ Animer le trajet</button>
+                        <p class="aroute-legende" id="aroute-legende" role="status" aria-live="polite">Choisis un scénario, puis clique « Animer le trajet ».</p>
+                    </div>
+
+                    <script>
+function demarrerChaineFonctionnement(btn){
+  var c=document.getElementById("chaine-fonctionnement");if(!c)return;
+  var etapes=c.querySelectorAll(".cf-etape");var legende=document.getElementById("legende-cf");
+  if(!etapes.length)return;
+  for(var i=0;i<etapes.length;i++)etapes[i].classList.remove("actif");
+  if(btn)btn.disabled=true;var k=0;
+  var t=setInterval(function(){
+    if(k>0)etapes[k-1].classList.remove("actif");
+    if(k>=etapes.length){clearInterval(t);if(legende)legende.textContent="\u2705 L'énergie électrique est convertie en mouvement : le vélo avance.";if(btn)btn.disabled=false;return;}
+    etapes[k].classList.add("actif");
+    if(legende){var s=etapes[k].querySelector("strong");var nom=s?s.textContent:"";var desc=etapes[k].getAttribute("data-desc")||"";legende.textContent=(k+1)+"/"+etapes.length+" \u2014 "+nom+" : "+desc;}
+    k++;
+  },1100);
+}
+var __interSel={interacteur:null,element:null};
+function choisirInteracteur(btn){
+  var l=btn.parentNode.querySelectorAll(".inter-bouton");for(var i=0;i<l.length;i++)l[i].classList.remove("selectionne");
+  btn.classList.add("selectionne");__interSel.interacteur=btn.getAttribute("data-interacteur");__afficherInteraction();
+}
+function choisirElement(btn){
+  var l=btn.parentNode.querySelectorAll(".inter-bouton");for(var i=0;i<l.length;i++)l[i].classList.remove("selectionne");
+  btn.classList.add("selectionne");__interSel.element=btn.getAttribute("data-element");__afficherInteraction();
+}
+function __afficherInteraction(){
+  if(!__interSel.interacteur||!__interSel.element)return;
+  var r=document.getElementById("inter-resultat");if(!r)return;
+  var cle=__interSel.interacteur+"|"+__interSel.element;
+  var effets=window.__EFFETS_INTERACTIONS__||{};var e=effets[cle];
+  if(e){r.innerHTML="<strong>"+__interSel.interacteur+" \u2192 "+__interSel.element+" :</strong> "+e;r.className="interactions-resultat info-block";}
+  else{r.innerHTML="<strong>"+__interSel.interacteur+" \u2194 "+__interSel.element+" :</strong> pas d'interaction directe majeure entre ces deux.";r.className="interactions-resultat info-block";}
+}
+window.__EFFETS_INTERACTIONS__={};
+</script>
+
+                    <script>
+window.__ANIMATION_ROUTEUR__ = {"scenarios": {"poste-internet": {"chemin": ["poste-1", "commutateur", "routeur", "internet"], "etapes": ["Le fichier part du poste 102-1 : sa carte réseau le découpe en paquets de données.", "Le commutateur reçoit les paquets. L'adresse de destination n'appartient à aucun appareil de la salle : il les envoie vers la sortie, le routeur.", "Le routeur reconnaît une adresse extérieure au collège : il choisit la route à prendre et transmet les paquets vers Internet.", "Les paquets ont quitté le réseau local du collège : ils circulent sur Internet jusqu'à leur destination."], "conclusion": "Le routeur est le seul passage entre le réseau local et Internet : c'est lui qui décide par où sortent les données du collège."}, "poste-2-internet": {"chemin": ["poste-2", "commutateur", "routeur", "internet"], "etapes": ["Cette fois c'est le poste 102-2 qui envoie : sa carte réseau le découpe en paquets de données.", "Le commutateur reçoit les paquets et les aiguille vers le routeur, comme pour l'autre poste.", "Le routeur choisit la route vers Internet : il traite les paquets du poste 102-2 exactement comme ceux du poste 102-1.", "Les paquets du poste 102-2 circulent sur Internet."], "conclusion": "Tous les ordinateurs du réseau local partagent le même routeur : c'est lui qui fait l'interconnexion entre les postes du collège et Internet."}, "poste-imprimante": {"chemin": ["poste-2", "commutateur", "imprimante"], "etapes": ["Le poste 102-2 envoie son document : sa carte réseau le découpe en paquets.", "Le commutateur lit l'adresse de l'imprimante, qui est un appareil de la salle : il aiguille les données vers elle.", "L'imprimante reçoit les données et imprime. Les paquets ne sont pas sortis du réseau local."], "conclusion": "Les deux appareils sont dans le même réseau local : le commutateur suffit. Le routeur n'est pas traversé, les données ne sortent pas du collège."}, "poste-serveur": {"chemin": ["poste-1", "commutateur", "serveur"], "etapes": ["Le poste 102-1 envoie son fichier : sa carte réseau le découpe en paquets.", "Le commutateur reconnaît l'adresse du serveur, un appareil du réseau local : il lui transmet les paquets.", "Le serveur reçoit les données et enregistre le fichier, puis répond que tout s'est bien passé."], "conclusion": "Le serveur est dans le réseau local : le commutateur l'atteint directement. Le routeur ne sert qu'à sortir du collège, pas à circuler à l'intérieur."}}};
+var __AROUTE = { scenario: null, index: 0, chemin: [], minuteur: null };
+
+function __arouteParCle(cle) {
+  var c = document.getElementById("aroute-chaine");
+  if (!c || !cle) return null;
+  return c.querySelector('.aroute-noeud[data-noeud="' + cle + '"]');
+}
+
+function __arouteNettoyer() {
+  var c = document.getElementById("aroute-chaine");
+  if (!c) return;
+  var noeuds = c.querySelectorAll(".aroute-noeud");
+  for (var i = 0; i < noeuds.length; i++) {
+    noeuds[i].classList.remove("actif", "devant");
+  }
+}
+
+function choisirScenarioRouteur(btn) {
+  var groupe = document.getElementById("aroute-scenarios");
+  if (!groupe || !btn) return;
+  var boutons = groupe.querySelectorAll(".aroute-scenario");
+  for (var i = 0; i < boutons.length; i++) {
+    boutons[i].classList.remove("selectionne");
+    boutons[i].setAttribute("aria-pressed", "false");
+  }
+  btn.classList.add("selectionne");
+  btn.setAttribute("aria-pressed", "true");
+  __AROUTE.scenario = btn.getAttribute("data-scenario");
+  __AROUTE.index = 0;
+  __AROUTE.chemin = [];
+  if (__AROUTE.minuteur) { clearInterval(__AROUTE.minuteur); __AROUTE.minuteur = null; }
+  __arouteNettoyer();
+  var legende = document.getElementById("aroute-legende");
+  if (legende) {
+    legende.textContent = "Scénario choisi. Clique « Animer le trajet » pour voir le paquet circuler.";
+  }
+}
+
+/* Rejoue un pas du trajet. Retourne true quand le trajet est terminé. */
+function arouteAvancer() {
+  var scenarios = (window.__ANIMATION_ROUTEUR__ || {}).scenarios || {};
+  var scenario = scenarios[__AROUTE.scenario];
+  var legende = document.getElementById("aroute-legende");
+  if (!scenario) return true;
+
+  if (__AROUTE.index === 0) {
+    __AROUTE.chemin = scenario.chemin || [];
+    // Le routeur qu'on ne traverse pas reste visible mais éteint : c'est la
+    // preuve visuelle que les données sont restées dans le réseau local.
+    var routeur = __arouteParCle("routeur");
+    if (routeur && __AROUTE.chemin.indexOf("routeur") === -1) {
+      routeur.classList.add("devant");
+    }
+  }
+
+  if (__AROUTE.index >= __AROUTE.chemin.length) {
+    if (legende) legende.textContent = scenario.conclusion || "";
+    return true;
+  }
+
+  var tous = document.getElementById("aroute-chaine").querySelectorAll(".aroute-noeud");
+  for (var k = 0; k < tous.length; k++) tous[k].classList.remove("actif");
+  var noeud = __arouteParCle(__AROUTE.chemin[__AROUTE.index]);
+  if (noeud) noeud.classList.add("actif");
+  if (legende) {
+    legende.textContent = (__AROUTE.index + 1) + "/" + __AROUTE.chemin.length + " — " +
+      ((scenario.etapes || [])[__AROUTE.index] || "");
+  }
+  __AROUTE.index += 1;
+  return __AROUTE.index >= __AROUTE.chemin.length;
+}
+
+function animerRouteur(btn) {
+  var groupe = document.getElementById("aroute-scenarios");
+  if (!groupe) return;
+  var selection = groupe.querySelector(".aroute-scenario.selectionne");
+  if (!selection) {
+    var premier = groupe.querySelector(".aroute-scenario");
+    if (!premier) return;
+    choisirScenarioRouteur(premier);
+    selection = premier;
+  }
+  if (!__AROUTE.scenario) __AROUTE.scenario = selection.getAttribute("data-scenario");
+  __AROUTE.index = 0;
+  __arouteNettoyer();
+  if (__AROUTE.minuteur) clearInterval(__AROUTE.minuteur);
+  if (btn) btn.disabled = true;
+  __AROUTE.minuteur = setInterval(function () {
+    if (arouteAvancer()) {
+      clearInterval(__AROUTE.minuteur);
+      __AROUTE.minuteur = null;
+      if (btn) btn.disabled = false;
+    }
+  }, 1100);
+}
+</script>
+
+
+                    <div class="ateliers-n2" id="ateliers-n2">
+                        <h3>🔧 Ateliers de découverte</h3>
+                    <p class="texte-secondaire">Reconstitue d'abord le câblage du réseau de la salle 102, puis associe chaque composant à son rôle.</p>
+
+                    <article class="atelier-carte" data-type="reseau" data-atelier="cablage-salle-102" data-liens="[{&quot;de&quot;: &quot;poste-1&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;un poste client se relie au commutateur par un câble Ethernet (prise RJ45).&quot;}, {&quot;de&quot;: &quot;poste-2&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;chaque poste client rejoint le même commutateur : c'est lui qui aiguille les données vers le bon appareil.&quot;}, {&quot;de&quot;: &quot;imprimante&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;l'imprimante est un matériel partagé : reliée au commutateur, elle sert tous les postes de la salle.&quot;}, {&quot;de&quot;: &quot;serveur&quot;, &quot;vers&quot;: &quot;commutateur&quot;, &quot;pourquoi&quot;: &quot;le serveur, qui stocke et partage les fichiers du collège, se relie lui aussi au commutateur.&quot;}, {&quot;de&quot;: &quot;commutateur&quot;, &quot;vers&quot;: &quot;routeur&quot;, &quot;pourquoi&quot;: &quot;pour sortir de la salle, les données passent du commutateur au routeur.&quot;}, {&quot;de&quot;: &quot;routeur&quot;, &quot;vers&quot;: &quot;internet&quot;, &quot;pourquoi&quot;: &quot;le routeur relie le réseau local à Internet : c'est le seul passage entre le collège et le monde.&quot;}]" aria-labelledby="atelier-titre-cablage-salle-102">
+                        <h3 id="atelier-titre-cablage-salle-102">🖧 Reconstitue le câblage du réseau de la salle 102</h3>
+                        <p class="atelier-consigne">Le réseau de la salle 102 a été débranché : tous les câbles sont à refaire. Clique un premier appareil, puis un second, pour tendre un fil entre eux. Chaque fil trouvé est vérifié et expliqué tout de suite.</p>
+                        <div class="atelier-reseau" role="group" aria-label="Appareils à relier">
+                            <button type="button" class="reseau-appareil" data-appareil="poste-1" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">💻</span>
+                                <span class="reseau-nom">Poste 102-1</span>
+                                <span class="reseau-role">poste client</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="poste-2" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">💻</span>
+                                <span class="reseau-nom">Poste 102-2</span>
+                                <span class="reseau-role">poste client</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="imprimante" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🖨️</span>
+                                <span class="reseau-nom">Imprimante</span>
+                                <span class="reseau-role">matériel partagé</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="serveur" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🗄️</span>
+                                <span class="reseau-nom">Serveur</span>
+                                <span class="reseau-role">stocke les fichiers</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="commutateur" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🔀</span>
+                                <span class="reseau-nom">Commutateur</span>
+                                <span class="reseau-role">aiguille les données</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="routeur" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">📶</span>
+                                <span class="reseau-nom">Routeur</span>
+                                <span class="reseau-role">relie à Internet</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="internet" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🌐</span>
+                                <span class="reseau-nom">Internet</span>
+                                <span class="reseau-role">réseau mondial</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucun fil</span>
+                            </button>
+                        </div>
+                        <p class="atelier-compteur" data-role="compteur">0 / 6 liaison(s) établie(s).</p>
+                        <div class="atelier-fils-cadre">
+                            <h4>Ton réseau, fil par fil</h4>
+                            <ol class="atelier-fils" data-role="fils"><li class="atelier-fils-vide">Aucun fil pour l'instant : clique deux appareils pour en tendre un.</li></ol>
+                        </div>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="reseauVerifier(this)">Vérifier le réseau</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">Tous les appareils de la salle rejoignent le commutateur : c'est lui qui aiguille les données vers le bon appareil, comme un standard téléphonique. Pour communiquer avec l'extérieur, le commutateur passe par le routeur, qui choisit la route vers Internet. Un poste ne se relie jamais directement à Internet ni directement à l'imprimante : il passe toujours par le commutateur.</p>
+                    </article>
+
+                    <article class="atelier-carte" data-type="association" data-atelier="composants-roles" aria-labelledby="atelier-titre-composants-roles">
+                        <h3 id="atelier-titre-composants-roles">🔎 Qui fait quoi dans le réseau ?</h3>
+                        <p class="atelier-consigne">Clique un composant, puis la fonction qui lui correspond.</p>
+                        <div class="atelier-colonnes">
+                            <div>
+                                <h4>Constituants du drone</h4>
+                                <div class="atelier-liste" role="group" aria-label="Constituants du drone">
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">🔀 Commutateur (switch)</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">📶 Routeur</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">💻 Poste client</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">🗄️ Serveur de données</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">🔌 Câble Ethernet</button>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>Fonctions techniques</h4>
+                                <div class="atelier-liste" role="group" aria-label="Fonctions techniques">
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">Liaison filaire, la plus rapide et la plus stable, avec prise RJ45</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">Relie les appareils d'un même réseau local et aiguille les données vers le bon appareil</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">Stocke et partage des fichiers pour tous les utilisateurs du réseau</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">Relie le réseau local à Internet et choisit la route des données</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">L'appareil utilisé par une personne, qui demande des informations au réseau</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="atelier-compteur" data-role="compteur">0 paire(s) trouvée(s) sur 5 — il en reste 5.</p>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierAssociation(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">Chaque composant a un rôle précis : le commutateur aiguille dans le réseau local, le routeur relie à Internet, le poste client demande, le serveur répond, et le câble Ethernet transporte les données de façon fiable.</p>
+                    </article>
                     </div>
 
                     <div class="info-block marge-haut">
@@ -1651,15 +2507,21 @@
                 </div>
             </section>
 
-            <!-- N3 - Énigme interactive -->
+            <!-- N3 - Problématique interactive
+                 Les identifiants et les classes gardent le nom historique
+                 « enigme » (n3-enigme, contenu-n3-enigme, enigme-conteneur,
+                 solution-enigme, diagnostic-eleve, soumettreDiagnostic) :
+                 verifier_parcours.py, mode-developpement.py et les activités
+                 déjà publiées les référencent. Seul le texte affiché parle de
+                 problématique. -->
             <section id="contenu-n3-enigme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n3-enigme">
                 <div class="carte-contenu">
-                    <h2>Niveau 3 : Résoudre l'énigme</h2>
-                    <p>Explorez les objets ci-dessous pour trouver les indices qui vous permettront de résoudre l'énigme.</p>
+                    <h2>Niveau 3 : Répondre à la problématique</h2>
+                    <p>Explorez les objets ci-dessous pour trouver les indices qui vous permettront de répondre à la problématique.</p>
 
                     <div class="enigme-conteneur">
-                        <h3>🔍 L'énigme du système</h3>
-                        <p><strong>Mission :</strong> Dans la salle de technologie, un élève enregistre son fichier sur le serveur depuis son poste client. Mais le fichier n'arrive jamais au serveur : rien ne s'affiche dans son dossier réseau. L'enseignant te demande de trouver la cause. Explore les quatre composants pour récolter des indices, puis formule ton diagnostic.</p>
+                        <h3>❓ La problématique</h3>
+                        <p><strong>Problématique :</strong> Dans la salle de technologie, un élève enregistre son fichier sur le serveur depuis son poste client. Mais le fichier n'arrive jamais au serveur : rien ne s'affiche dans son dossier réseau. Ton rôle : résoudre cette problématique. Explore les quatre composants pour récolter des indices, formule ton diagnostic, puis propose la solution à appliquer.</p>
                     </div>
 
                     <h3>Zone d'exploration</h3>
@@ -1705,21 +2567,37 @@
                     </div>
 
                     <div class="solution-enigme marge-haut">
-                        <h3>Votre diagnostic</h3>
-                        <p>Après avoir exploré tous les composants, formulez votre diagnostic :</p>
-                        
-                        <textarea 
-                            id="diagnostic-eleve" 
-                            placeholder="Indique quel composant est en panne et comment le réparer…"
-                            aria-label="Votre diagnostic du problème"></textarea>
-                        
+                        <h3>Vos réponses</h3>
+                        <p>Remplissez les deux cadres ci-dessous : le premier expose ce que vous avez constaté, le second ce que vous proposez de faire.</p>
+
+                        <div class="cadre-reponse">
+                            <h4><span class="numero-cadre" aria-hidden="true">1</span> Mon diagnostic</h4>
+                            <p class="consigne-cadre" id="consigne-diagnostic">Après avoir exploré les quatre composants, formule ton diagnostic : quel maillon du trajet des données empêche le fichier d'arriver au serveur, et comment le sais-tu ?</p>
+                            <textarea 
+                                id="diagnostic-eleve" 
+                                placeholder="Indique quel composant est en cause et l'indice qui le prouve…"
+                                aria-label="Votre diagnostic du problème"></textarea>
+                        </div>
+
+                        <div class="cadre-reponse">
+                            <h4><span class="numero-cadre" aria-hidden="true">2</span> Ma proposition de solution</h4>
+                            <p class="consigne-cadre" id="consigne-solution">Propose maintenant la solution à appliquer pour que le fichier arrive au serveur, et dis ce qu'il faudra vérifier ensuite.</p>
+                            <textarea 
+                                id="solution-eleve" 
+                                placeholder="Décris la réparation à faire et son effet attendu…"
+                                aria-label="Votre proposition de solution"></textarea>
+                        </div>
+
                         <button class="bouton-action marge-haut" onclick="soumettreDiagnostic()">
-                            Soumettre mon diagnostic
+                            Soumettre mes réponses
                         </button>
 
                         <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
-                            <div class="info-block">
-                                <p><strong>Bien joué !</strong> Le câble Ethernet reliant le poste client au commutateur est débranché : le fichier ne peut pas quitter l'ordinateur. Sans cette liaison filaire, les données n'atteignent jamais le commutateur, et donc jamais le serveur. Solution : rebrancher le câble Ethernet (prise RJ45) sur le poste client, puis réenregistrer le fichier.</p>
+                            <div class="info-block" id="bloc-diagnostic-attendu">
+                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">Le câble Ethernet reliant le poste client au commutateur est débranché : le fichier ne peut pas quitter l'ordinateur. Les autres indices écartent les autres causes (le poste fonctionne, le commutateur et le serveur répondent aux autres salles). Sans cette liaison filaire, les données n'atteignent jamais le commutateur, et donc jamais le serveur.</span></p>
+                            </div>
+                            <div class="info-block" id="bloc-solution-attendue">
+                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Rebrancher le câble Ethernet (prise RJ45) sur le poste client et dans la prise murale, vérifier que les voyants du commutateur s'allument sur ce port, puis réenregistrer le fichier et contrôler qu'il apparaît bien dans le dossier réseau.</span></p>
                             </div>
                             <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
                                 Continuer vers N4 →
@@ -1733,27 +2611,27 @@
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>Il n'y a pas de bonne ou mauvaise réponse. L'important est de réfléchir, d'exprimer vos besoins et de concevoir une solution qui vous est propre.</p>
+                    <p>Ta démarche de conception est libre : plusieurs câblages se défendent, et c'est ta réflexion qui compte. Le schéma, lui, se vérifie : quand tu auras répondu aux étapes ci-dessous, construis ton réseau dans l'atelier de câblage, puis vérifie-le.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
-                        <p><strong>Situation :</strong> Le collège ouvre une nouvelle salle, la salle 14, au bout du couloir. Elle doit recevoir un mini-réseau : 12 postes clients et une imprimante partagée. Ces postes doivent enregistrer leurs fichiers sur le serveur du collège et accéder à Internet. À toi de concevoir cette extension du réseau, en respectant les contraintes du collège : budget limité, câbles à tirer dans les murs, sécurité du réseau (mot de passe Wi-Fi) et nombre de prises du commutateur.</p>
+                        <p><strong>Situation :</strong> Le collège te confie le câblage de deux salles : la salle 102 (technologie) et la salle des profs. Ces deux salles doivent rester dans deux sous-réseaux séparés, car les imprimantes de la salle des profs ne doivent pas être accessibles depuis les postes élèves. Toutes les salles ont pourtant besoin du serveur du collège et d'Internet. À toi de placer les équipements sur le schéma et de les relier par des fils.</p>
                     </div>
 
                     <h3>Étapes de conception</h3>
                     
                     <div class="etape-conception">
-                        <h4>Étape 1 : Identifier le besoin de la salle 14</h4>
-                        <p>Quels services les 12 postes clients et l'imprimante doivent-ils rendre ? Pour qui (élèves, enseignant) ?</p>
+                        <h4>Étape 1 : Identifier le besoin des deux salles</h4>
+                        <p>Quels appareils doivent communiquer entre eux dans la salle 102 ? Dans la salle des profs ? De quels services ces deux salles ont-elles besoin (serveur, Internet, imprimantes) ?</p>
                         <textarea 
                             id="besoin-identifie" 
-                            placeholder="Décris ce que les postes doivent pouvoir faire…"
+                            placeholder="Décris qui doit communiquer avec qui dans chaque salle…"
                             aria-label="Description du besoin identifié"></textarea>
                     </div>
 
                     <div class="etape-conception">
                         <h4>Étape 2 : Exprimer les contraintes du collège</h4>
-                        <p>Quelles sont les limites à respecter ? Budget du collège, longueur de câbles à tirer dans les murs, sécurité (mot de passe Wi-Fi), nombre de prises du commutateur.</p>
+                        <p>Quelles limites dois-tu respecter ? Pense à la séparation des deux salles (les imprimantes des professeurs restent inaccessibles aux élèves), au nombre de prises des commutateurs et aux câbles à tirer dans les murs.</p>
                         <textarea 
                             id="contraintes-definies" 
                             placeholder="Liste tes contraintes principales…"
@@ -1761,31 +2639,92 @@
                     </div>
 
                     <div class="etape-conception">
-                        <h4>Étape 3 : Imaginer deux solutions de câblage</h4>
-                        <p>Propose au moins deux façons de relier la salle 14 : par exemple tout en câble Ethernet, ou en partie en Wi-Fi, ou en ajoutant un nouveau commutateur.</p>
+                        <h4>Étape 3 : Imaginer deux câblages possibles</h4>
+                        <p>Propose deux façons de câbler les deux salles : par exemple un seul commutateur pour tout le monde, ou un commutateur par salle relié au routeur.</p>
                         <textarea 
                             id="solutions-imaginees" 
-                            placeholder="Décris deux approches différentes…"
+                            placeholder="Décris deux câblages différents et leurs conséquences…"
                             aria-label="Solutions imaginées"></textarea>
                     </div>
 
                     <div class="etape-conception">
-                        <h4>Étape 4 : Choisir et justifier la solution</h4>
-                        <p>Quelle solution retiens-tu ? Donne ses avantages (rapidité, stabilité, coût) et ses inconvénients.</p>
+                        <h4>Étape 4 : Choisir et justifier ta solution</h4>
+                        <p>Quel câblage retiens-tu ? Explique pourquoi il respecte la contrainte des deux sous-réseaux séparés.</p>
                         <textarea 
                             id="solution-choisie" 
-                            placeholder="Indique la solution retenue et pourquoi…"
+                            placeholder="Indique le câblage retenu et justifie-le…"
                             aria-label="Solution choisie et justification"></textarea>
                     </div>
 
                     <div class="etape-conception">
-                        <h4>Étape 5 : Schématiser le réseau de la salle 14</h4>
-                        <p>Décris comment ton réseau fonctionne : où places-tu le commutateur ? quels postes en câble, quels en Wi-Fi ? comment l'imprimante est-elle partagée ?</p>
+                        <h4>Étape 5 : Schématiser ton réseau</h4>
+                        <p>Décris ton schéma avant de le câbler : quel appareil branches-tu sur quel commutateur ? Puis réalise-le dans l'atelier de câblage ci-dessous et vérifie-le.</p>
                         <textarea 
                             id="schema-solution" 
-                            placeholder="Dessine et décris ton réseau…"
+                            placeholder="Décris ton schéma : chaque appareil, son commutateur, et le routeur…"
                             aria-label="Description technique de la solution"></textarea>
                     </div>
+
+
+                    <article class="cablage-n4" id="cablage-atelier" aria-labelledby="cablage-titre">
+                        <h3 id="cablage-titre">🖧 Atelier : câbler le réseau du collège</h3>
+                        <p class="cablage-consigne">Deux salles, deux sous-réseaux : place le routeur, les deux commutateurs, les postes et les imprimantes sur le fond blanc, puis relie-les par des fils. Les postes de la salle 102 doivent rejoindre un commutateur, les postes et les imprimantes de la salle des profs un autre commutateur, et chaque commutateur doit rejoindre le routeur.</p>
+                        <p class="cablage-aide">Glisse un équipement de la réserve vers le fond blanc. Pour tendre un fil, clique un équipement puis un autre. Pour retirer un fil, clique dessus. Au clavier : Entrée choisit et relie, les flèches déplacent l'équipement sélectionné.</p>
+                        <div class="cablage-reserve" id="cablage-reserve" role="group" aria-label="Équipements à placer sur le fond blanc">
+                            <button type="button" class="noeud-reseau" data-noeud="routeur" data-type="routeur" data-nom="Routeur du collège" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">📶</span>
+                                <span class="noeud-nom">Routeur du collège</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="commutateur-techno" data-type="commutateur" data-nom="Commutateur A" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🔀</span>
+                                <span class="noeud-nom">Commutateur A</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="commutateur-profs" data-type="commutateur" data-nom="Commutateur B" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🔀</span>
+                                <span class="noeud-nom">Commutateur B</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="poste-102-1" data-type="poste" data-nom="Poste 102-1" data-famille="techno" data-famille-nom="Salle 102 (techno)" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💻</span>
+                                <span class="noeud-nom">Poste 102-1</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="poste-102-2" data-type="poste" data-nom="Poste 102-2" data-famille="techno" data-famille-nom="Salle 102 (techno)" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💻</span>
+                                <span class="noeud-nom">Poste 102-2</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="poste-102-3" data-type="poste" data-nom="Poste 102-3" data-famille="techno" data-famille-nom="Salle 102 (techno)" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💻</span>
+                                <span class="noeud-nom">Poste 102-3</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="poste-profs-1" data-type="poste" data-nom="Poste profs 1" data-famille="profs" data-famille-nom="Salle des profs" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💻</span>
+                                <span class="noeud-nom">Poste profs 1</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="poste-profs-2" data-type="poste" data-nom="Poste profs 2" data-famille="profs" data-famille-nom="Salle des profs" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💻</span>
+                                <span class="noeud-nom">Poste profs 2</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="imprimante-profs-1" data-type="imprimante" data-nom="Imprimante 1" data-famille="profs" data-famille-nom="Salle des profs" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🖨️</span>
+                                <span class="noeud-nom">Imprimante 1</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="imprimante-profs-2" data-type="imprimante" data-nom="Imprimante 2" data-famille="profs" data-famille-nom="Salle des profs" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🖨️</span>
+                                <span class="noeud-nom">Imprimante 2</span>
+                            </button>
+                        </div>
+                        <div class="cablage-zone" id="cablage-zone" role="group" aria-label="Fond blanc du schéma : dépose les équipements et relie-les">
+                            <svg class="cablage-fils" id="cablage-fils" role="group" aria-label="Fils du schéma" focusable="false"></svg>
+                            <p class="cablage-indication" id="cablage-indication">Glisse les équipements ici, puis clique-en deux pour les relier par un fil.</p>
+                        </div>
+                        <div class="cablage-actions">
+                            <button type="button" class="bouton-action" onclick="cablageVerifier()">Vérifier le câblage</button>
+                            <button type="button" class="bouton-action secondaire" onclick="cablageEffacerFils()">Effacer tous les fils</button>
+                            <button type="button" class="bouton-action secondaire" onclick="cablageToutRanger()">Tout remettre dans la réserve</button>
+                        </div>
+                        <p class="cablage-retour" id="cablage-retour" role="status" aria-live="polite"></p>
+                        <div class="cablage-bilan cache" id="cablage-bilan" aria-live="polite"></div>
+                        <p class="cablage-explication cache" id="cablage-explication">Chaque commutateur délimite un sous-réseau : les appareils branchés sur le même commutateur échangent directement entre eux. En plaçant les postes de la salle 102 sur un commutateur et les postes et imprimantes de la salle des profs sur l'autre, les élèves ne peuvent pas atteindre les imprimantes des professeurs. Les deux commutateurs rejoignent le routeur : c'est le seul passage entre les deux sous-réseaux, et c'est lui qui ouvre vers le serveur du collège et vers Internet.</p>
+                    </article>
 
                     <button class="bouton-action marge-haut" onclick="finaliserConception()">
                         Finaliser ma conception
@@ -1860,19 +2799,19 @@
                     </div>
 
                     <div class="fiche-synthese">
-                        <h3>📖 Concevoir une extension de réseau (N4 - Création)</h3>
+                        <h3>📖 Câbler deux sous-réseaux séparés (N4 - Création)</h3>
                         
                                         <div class="point-cle">
-                                            <strong>Choisir la bonne liaison :</strong>
-                                            <p>Câble Ethernet = rapide et stable mais l'appareil reste attaché ; Wi-Fi = pratique et mobile mais portée limitée et débit partagé. On choisit selon le besoin.</p>
+                                            <strong>Un sous-réseau par commutateur :</strong>
+                                            <p>Tous les appareils branchés sur le même commutateur forment un sous-réseau : ils échangent directement entre eux. Une salle = un commutateur, deux salles = deux commutateurs.</p>
                                         </div>
                                         <div class="point-cle">
-                                            <strong>Partager le matériel :</strong>
-                                            <p>Un réseau permet de partager fichiers ET matériel : une seule imprimante reliée au commutateur sert tous les postes clients.</p>
+                                            <strong>Le routeur, seul passage entre les sous-réseaux :</strong>
+                                            <p>Chaque commutateur rejoint le routeur, et c'est le routeur qui fait passer les données d'un sous-réseau à l'autre et vers Internet. Deux commutateurs ne se relient jamais directement entre eux.</p>
                                         </div>
                                         <div class="point-cle">
-                                            <strong>Sécuriser le réseau :</strong>
-                                            <p>Le Wi-Fi est protégé par un mot de passe ; on ne se connecte pas à un Wi-Fi inconnu et on donne le mot de passe du collège à personne.</p>
+                                            <strong>Partager le matériel sans le rendre accessible à tous :</strong>
+                                            <p>Les imprimantes de la salle des profs sont partagées entre les professeurs, mais placées sur leur propre commutateur : un poste élève de la salle 102 ne peut pas les atteindre.</p>
                                         </div>
                     </div>
 
@@ -1895,21 +2834,36 @@
 
                 <div class="carte-contenu">
                     <h2>🎮 Défi ludique</h2>
-                    <p>Relie les points de même couleur en évitant de croiser les chemins. 10 niveaux de difficulté croissante !</p>
+                    <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
 
-                                                            <div class="jeu-relie" id="jeu-relie">
-                        <div class="jeu-entete">
-                            <span class="jeu-titre">🧩 Relie les points</span>
-                            <span class="jeu-niveau">Niveau <strong id="jeu-num">1</strong> / 10 · <span class="jeu-cases">Cases <strong id="jeu-remplies">0</strong>/<strong id="jeu-total">0</strong></span></span>
-                        </div>
-                        <p class="jeu-consigne"><strong>Glisse</strong> le doigt (ou la souris) depuis un point de couleur jusqu'au point de la même couleur pour les relier. Remplis <strong>toute la grille</strong> sans que deux chemins se croisent. Pour modifier un chemin, glisse à nouveau depuis l'un de ses points.</p>
-                        <div class="jeu-grille" id="jeu-grille" role="grid" aria-label="Grille du jeu Relie les points"></div>
-                        <div class="jeu-actions">
-                            <button type="button" class="bouton-action secondaire" id="jeu-reset">🔄 Recommencer le niveau</button>
-                            <button type="button" class="bouton-action succes cache" id="jeu-suivant">Niveau suivant →</button>
-                        </div>
-                        <p class="jeu-statut" id="jeu-statut" role="status" aria-live="polite"></p>
-                        <p class="texte-secondaire marge-haut" style="color:#cbd5e1">Niveaux issus du jeu <em>Flow Free</em> (dépôt libre <a href="https://github.com/mzucker/flow_solver" target="_blank" rel="noopener noreferrer" style="color:#93c5fd">flow_solver</a>). <a class="bouton-action secondaire" href="https://play.google.com/store/apps/details?id=com.ai.link.connect.dots&amp;hl=fr" target="_blank" rel="noopener noreferrer">Voir l'application d'origine ↗</a></p>
+                    <div class="jeux-bonus">
+                        
+                    <article class="carte-jeu marge-haut">
+                        <h3>Packet Defender — Aiguille les paquets</h3>
+                        <p>Un jeu de défense : route les paquets de données vers la bonne adresse IP en lisant le nom de domaine et la table DNS. Créé pour des collégiens !</p>
+                        <a href="https://wfryer.github.io/packet-defender/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 10 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut">
+                        <h3>Scratch — Programme un mini-réseau</h3>
+                        <p>Code un lutin « poste client » qui envoie un message à un lutin « serveur », qui le renvoie avec une confirmation. Utilise les blocs « envoyer à tous » et « quand je reçois ».</p>
+                        <a href="https://scratch.mit.edu/projects/editor/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 15 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut">
+                        <h3>Carte des câbles sous-marins d'Internet</h3>
+                        <p>Explore la carte mondiale des câbles sous-marins en fibre optique qui relient les réseaux locaux entre eux : c'est l'épine dorsale du réseau mondial Internet.</p>
+                        <a href="https://www.submarinecablemap.com/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 10 minutes</p>
+                    </article>
                     </div>
 
                     <div class="info-block marge-haut">
@@ -1937,19 +2891,17 @@
     <!-- JavaScript de l'activité -->
     <script>
         // ============================================
+        // MODE DÉVELOPPEMENT
+        // ============================================
+        // Passer à true pour désactiver tous les blocages d'onglets
+        // pendant le développement/test des jeux bonus.
+        // Penser à remettre à false avant publication !
+        const MODE_DEVELOPPEMENT = false;
+
+        // ============================================
         // GESTION DES ONGLETS
         // ============================================
         
-        // ============================================
-        // MODE DÉVELOPPEMENT
-        // ============================================
-        // true la plupart du temps : tous les onglets sont déverrouillés pour
-        // tester librement les jeux bonus et la navigation.
-        // Pour tester comme un élève (progression verrouillée), ouvrir la page
-        // avec le paramètre ?dev=0 :   activite-reseau.html?dev=0
-        // Penser à repasser la valeur à false avant une vraie séance élève.
-        const MODE_DEVELOPPEMENT = !/[?&]dev=0/.test(location.search);
-
         let niveauActuel = 'n1-intro';
         const niveauxDebloques = ['n1-intro'];
         const niveauxValides = new Set();
@@ -2276,7 +3228,7 @@
         }
 
         // ============================================
-        // ÉNIGME N3
+        // PROBLÉMATIQUE N3 — diagnostic puis proposition de solution
         // ============================================
         
         let objetsExplores = 0;
@@ -2290,11 +3242,31 @@
         }
 
         function soumettreDiagnostic() {
-            const diagnostic = document.getElementById('diagnostic-eleve').value.trim();
-            
-            if (diagnostic.length < 20) {
-                alert('Veuillez fournir un diagnostic plus détaillé (au moins 20 caractères).');
-                return;
+            // Deux cadres distincts : le diagnostic (ce qui ne va pas) puis la
+            // proposition de solution (ce que l'élève propose de faire). Les
+            // deux doivent être remplis — un diagnostic sans solution reste un
+            // constat, une solution sans diagnostic ne s'appuie sur rien.
+            const cadres = [
+                {
+                    id: 'diagnostic-eleve',
+                    message: 'Précisez votre diagnostic : décrivez la cause probable du problème (au moins 20 caractères).'
+                },
+                {
+                    id: 'solution-eleve',
+                    message: 'Proposez une solution : expliquez ce qu\'il faudrait changer, réparer ou mettre en place (au moins 20 caractères).'
+                }
+            ];
+
+            for (const cadre of cadres) {
+                const champ = document.getElementById(cadre.id);
+                if (!champ) continue;   // cadre absent : coquille antérieure
+                if (champ.value.trim().length < 20) {
+                    champ.style.borderColor = 'var(--couleur-alerte)';
+                    champ.focus();
+                    alert(cadre.message);
+                    return;
+                }
+                champ.style.borderColor = '#e2e8f0';
             }
 
             const feedback = document.getElementById('feedback-diagnostic');
@@ -2330,6 +3302,18 @@
 
             if (!tousRemplis) {
                 alert('Veuillez remplir tous les champs avec au moins 10 caractères chacun.');
+                return;
+            }
+
+            // L'atelier de câblage, quand la configuration en déclare un, fait
+            // partie de la conception : un schéma faux ne peut pas être
+            // finalisé, sinon la règle pédagogique du niveau serait décorative.
+            const atelierCablage = cablageAtelier();
+            if (atelierCablage && !CABLAGE.valide) {
+                alert('Le câblage du réseau n\'est pas encore validé : place tous les ' +
+                      'équipements sur le fond blanc, relie-les, puis clique ' +
+                      '« Vérifier le câblage ».');
+                atelierCablage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
@@ -2395,6 +3379,11 @@
                 document.querySelectorAll('.objet-explorable').forEach(objet => {
                     objet.classList.remove('explore');
                 });
+
+                // L'atelier de câblage repart de zéro comme le reste.
+                if (document.getElementById('cablage-atelier')) {
+                    cablageReinitialiser();
+                }
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
@@ -2464,7 +3453,7 @@
 
             preparerDetailsChaine();
 
-// ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
+            // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
             // Si activé, déverrouille tous les onglets et boutons pour
             // permettre de tester librement (jeux bonus, navigation, etc.)
             if (MODE_DEVELOPPEMENT) {
@@ -2486,6 +3475,1312 @@
             }
         });
 
+        // ══════════════════════════════════════════════════════════════════
+        //  ATELIERS N2 — ateliers de découverte du fonctionnement
+        //  Données : n2.ateliers de la configuration JSON. Chaque atelier est
+        //  autonome : aucune de ces fonctions ne touche à la chaîne N2 ni au
+        //  quiz, et toutes sortent proprement si leur carte est absente — un
+        //  atelier ne doit jamais pouvoir bloquer le parcours de l'élève.
+        // ══════════════════════════════════════════════════════════════════
+
+        function atelierContexte(element) {
+            const carte = element && element.closest ? element.closest('.atelier-carte') : null;
+            if (!carte) return null;
+            if (!carte.__atelier) {
+                carte.__atelier = {
+                    attente: null,
+                    paires: 0,
+                    total: carte.querySelectorAll('.atelier-jeton[data-cote="constituant"]').length,
+                    rang: 0,
+                    verrouille: false
+                };
+            }
+            return { carte: carte, etat: carte.__atelier };
+        }
+
+        function atelierRetour(carte, message, type) {
+            const zone = carte.querySelector('[data-role="retour-atelier"]');
+            if (!zone) return;
+            zone.textContent = message;
+            zone.className = 'atelier-retour' + (type ? ' ' + type : '');
+        }
+
+        function atelierCompteur(carte) {
+            const zone = carte.querySelector('[data-role="compteur"]');
+            if (!zone) return;
+            const etat = carte.__atelier || { paires: 0, total: 0, rang: 0 };
+            if (carte.getAttribute('data-type') === 'ordre') {
+                const slots = carte.querySelectorAll('.atelier-slot').length;
+                zone.textContent = etat.rang + ' maillon(s) placé(s) sur ' + slots + '.';
+                return;
+            }
+            zone.textContent = etat.paires + ' paire(s) trouvée(s) sur ' + etat.total +
+                ' — il en reste ' + Math.max(0, etat.total - etat.paires) + '.';
+        }
+
+        function atelierAfficherExplication(carte) {
+            const zone = carte.querySelector('[data-role="explication"]');
+            if (zone) zone.classList.remove('cache');
+        }
+
+        // Marque une hélice ou un jeton en erreur, puis retire la marque :
+        // le signal visuel dure assez pour être vu, sans rester à l'écran.
+        function atelierSignaler(elements, classe) {
+            elements.forEach(function (element) {
+                if (!element) return;
+                element.classList.add(classe);
+                setTimeout(function () { element.classList.remove(classe); }, 1400);
+            });
+        }
+
+        // ── Type « association » : constituant ↔ fonction technique ──────
+        function atelierChoisirJeton(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            if (etat.verrouille || bouton.classList.contains('apparie')) return;
+
+            const cote = bouton.getAttribute('data-cote');
+            const attente = etat.attente;
+
+            if (attente && attente.getAttribute('data-cote') === cote) {
+                // Toujours du même côté : on déplace la sélection.
+                attente.classList.remove('choisi');
+                attente.setAttribute('aria-pressed', 'false');
+                etat.attente = null;
+                if (attente === bouton) return;
+            }
+
+            if (!etat.attente) {
+                bouton.classList.add('choisi');
+                bouton.setAttribute('aria-pressed', 'true');
+                etat.attente = bouton;
+                atelierRetour(carte,
+                    cote === 'constituant'
+                        ? 'Constituant choisi. Clique maintenant la fonction technique qui lui correspond.'
+                        : 'Fonction choisie. Clique maintenant le constituant qui la réalise.',
+                    'info');
+                return;
+            }
+
+            const precedente = etat.attente;
+            const juste = precedente.getAttribute('data-paire') === bouton.getAttribute('data-paire');
+            precedente.classList.remove('choisi');
+            precedente.setAttribute('aria-pressed', 'false');
+            etat.attente = null;
+
+            if (juste) {
+                [precedente, bouton].forEach(function (jeton) {
+                    jeton.classList.add('apparie');
+                    jeton.setAttribute('aria-pressed', 'true');
+                    jeton.disabled = true;
+                });
+                etat.paires += 1;
+                atelierCompteur(carte);
+                if (etat.paires >= etat.total) {
+                    atelierRetour(carte, '🎉 Toutes les paires sont trouvées : chaque constituant est relié à sa fonction technique.', 'succes');
+                    atelierAfficherExplication(carte);
+                } else {
+                    atelierRetour(carte, '✅ Association juste : ' + bouton.textContent.trim(), 'succes');
+                }
+            } else {
+                atelierSignaler([precedente, bouton], 'erreur');
+                atelierRetour(carte, '❌ Ces deux-là ne vont pas ensemble. Relis la définition de la fonction et réessaie.', 'echec');
+            }
+        }
+
+        function atelierVerifierAssociation(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            if (etat.paires >= etat.total) {
+                atelierRetour(carte, '🎉 Atelier terminé : les ' + etat.total + ' paires sont trouvées.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'Il reste ' + (etat.total - etat.paires) + ' paire(s) à trouver. Clique un constituant puis sa fonction, ou l\'inverse.', 'info');
+            }
+        }
+
+        // ── Type « ordre » : reconstituer la chaîne d'énergie ────────────
+        function atelierPlacerMaillon(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            if (etat.verrouille) return;
+
+            const slots = carte.querySelectorAll('.atelier-slot');
+            const rang = parseInt(bouton.getAttribute('data-rang'), 10);
+
+            if (rang !== etat.rang || etat.rang >= slots.length) {
+                atelierSignaler([bouton], 'erreur');
+                atelierRetour(carte, '❌ Pas à cette place. Reprends le trajet depuis le début : quel constituant fournit l\'énergie en premier ?', 'echec');
+                return;
+            }
+
+            const slot = slots[etat.rang];
+            const texte = document.createElement('span');
+            texte.textContent = bouton.textContent.trim();
+            slot.appendChild(texte);
+            slot.classList.add('rempli');
+            bouton.classList.add('cache');
+            etat.rang += 1;
+            atelierCompteur(carte);
+
+            if (etat.rang >= slots.length) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 La chaîne est reconstituée du premier au dernier maillon.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, '✅ Maillon ' + etat.rang + ' : ' + texte.textContent + '. Quel est le suivant ?', 'succes');
+            }
+        }
+
+        function atelierVerifierOrdre(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            const slots = carte.querySelectorAll('.atelier-slot');
+            if (etat.rang >= slots.length) {
+                atelierRetour(carte, '🎉 Atelier terminé : les ' + slots.length + ' maillons sont dans l\'ordre.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'La chaîne n\'est pas finie : ' + etat.rang + ' maillon(s) placé(s) sur ' + slots.length + '.', 'info');
+            }
+        }
+
+        // ── Types « commandes » et « environnement » : choix unique par question ──
+        function atelierChoisirOption(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const question = bouton.closest('.atelier-question');
+            if (!question) return;
+
+            question.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('choisi', 'correcte', 'fausse');
+                option.setAttribute('aria-checked', 'false');
+            });
+            bouton.classList.add('choisi');
+            bouton.setAttribute('aria-checked', 'true');
+
+            // Aperçu visuel (type « commandes ») : le drone prend l'attitude
+            // de la commande choisie. Les autres types n'ont pas de drone.
+            const drone = carte.querySelector('.atelier-drone');
+            if (drone) drone.className = 'atelier-drone attitude-' + bouton.getAttribute('data-valeur');
+
+            const retour = question.querySelector('[data-role="retour"]');
+            if (retour) {
+                retour.textContent = 'Proposition retenue : ' + bouton.textContent.trim() + '. Clique « Vérifier l\'atelier » pour connaître le résultat.';
+                retour.className = 'atelier-retour info';
+            }
+        }
+
+        function atelierVerifierChoix(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            let justes = 0;
+            let total = 0;
+
+            carte.querySelectorAll('.atelier-question').forEach(function (question) {
+                total += 1;
+                const bonne = question.getAttribute('data-bonne');
+                const choisie = question.querySelector('.atelier-option.choisi');
+                question.querySelectorAll('.atelier-option').forEach(function (option) {
+                    option.classList.remove('correcte', 'fausse');
+                    if (option.getAttribute('data-valeur') === bonne) option.classList.add('correcte');
+                });
+                if (choisie && choisie.getAttribute('data-valeur') === bonne) {
+                    justes += 1;
+                } else if (choisie) {
+                    choisie.classList.add('fausse');
+                }
+                const retour = question.querySelector('[data-role="retour"]');
+                if (retour) {
+                    retour.textContent = 'Explication : ' + (question.getAttribute('data-explication') || '');
+                    retour.className = 'atelier-retour info';
+                }
+            });
+
+            atelierRetour(carte,
+                'Résultat : ' + justes + ' / ' + total + ' réponse(s) juste(s).' +
+                (justes === total ? ' 🎉 Toutes les réponses sont bonnes.' : ' Relis l\'explication de chaque réponse.'),
+                justes === total ? 'succes' : 'echec');
+            atelierAfficherExplication(carte);
+        }
+
+        // ── Type « environnement » : interacteurs extérieurs ↔ capteurs ───
+        // L'élève clique un interacteur (le vent, la pluie…) et lit la note
+        // d'efficacité de chaque capteur pour le contrer. Les notes viennent
+        // du bloc JSON de la carte : le tableau est reconstruit à chaque clic.
+        const ATELIER_NOTES = {
+            3: { jauge: '●●●', mot: 'très efficace' },
+            2: { jauge: '●●○', mot: 'efficace en partie' },
+            1: { jauge: '●○○', mot: 'peu efficace' },
+            0: { jauge: '○○○', mot: 'inadapté ou perturbé' }
+        };
+
+        function atelierDonneesEnvironnement(carte) {
+            if (carte.__envDonnees !== undefined) return carte.__envDonnees;
+            const bloc = carte.querySelector('script.env-donnees');
+            let donnees = null;
+            if (bloc) {
+                try {
+                    donnees = JSON.parse(bloc.textContent || '{}');
+                } catch (erreur) {
+                    donnees = null;
+                }
+            }
+            carte.__envDonnees = donnees;
+            return donnees;
+        }
+
+        function atelierChoisirInteracteur(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const donnees = atelierDonneesEnvironnement(carte);
+            if (!donnees) return;
+
+            const fiche = (donnees.interacteurs || {})[bouton.getAttribute('data-interacteur')];
+            if (!fiche) return;
+
+            carte.querySelectorAll('.env-interacteur').forEach(function (autre) {
+                autre.classList.remove('choisi');
+                autre.setAttribute('aria-pressed', 'false');
+            });
+            bouton.classList.add('choisi');
+            bouton.setAttribute('aria-pressed', 'true');
+
+            const effet = carte.querySelector('[data-role="effet"]');
+            if (effet) effet.textContent = fiche.effet;
+
+            const legende = carte.querySelector('[data-role="legende-table"]');
+            if (legende) legende.textContent = 'Efficacité des capteurs contre : ' + fiche.nom;
+
+            const corps = carte.querySelector('[data-role="lignes"]');
+            if (!corps) return;
+            corps.innerHTML = '';
+
+            const notes = fiche.notes || {};
+            const lignes = Object.keys(notes).map(function (capteurCle) {
+                return { cle: capteurCle, note: Number(notes[capteurCle]) || 0 };
+            }).sort(function (a, b) {
+                if (b.note !== a.note) return b.note - a.note;
+                return String(a.cle).localeCompare(String(b.cle));
+            });
+
+            lignes.forEach(function (ligne) {
+                const capteur = (donnees.capteurs || {})[ligne.cle] || { icone: '', nom: ligne.cle };
+                const niveau = ATELIER_NOTES[ligne.note] || ATELIER_NOTES[0];
+
+                const ligneTableau = document.createElement('tr');
+                ligneTableau.className = 'env-note-' + ligne.note;
+
+                const celluleCapteur = document.createElement('th');
+                celluleCapteur.scope = 'row';
+                celluleCapteur.textContent = (capteur.icone ? capteur.icone + ' ' : '') + capteur.nom;
+                ligneTableau.appendChild(celluleCapteur);
+
+                const celluleNote = document.createElement('td');
+                const jauge = document.createElement('span');
+                jauge.className = 'env-jauge';
+                jauge.setAttribute('aria-hidden', 'true');
+                jauge.textContent = niveau.jauge;
+                const mot = document.createElement('span');
+                mot.className = 'env-mot';
+                mot.textContent = ' ' + niveau.mot + ' (' + ligne.note + '/3)';
+                celluleNote.appendChild(jauge);
+                celluleNote.appendChild(mot);
+                ligneTableau.appendChild(celluleNote);
+
+                corps.appendChild(ligneTableau);
+            });
+
+            atelierRetour(carte, fiche.nom + ' : ' + lignes.length +
+                ' capteur(s) comparé(s) — le plus efficace est en tête du tableau.', 'info');
+        }
+
+        // ── Type « rotors » : équilibrer les sens de rotation ────────────
+        const ATELIER_ROTOR_SYMBOLE = { droite: '↻', gauche: '↺' };
+
+        function atelierTournerRotor(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const sens = bouton.getAttribute('data-sens') === 'droite' ? 'gauche' : 'droite';
+            bouton.setAttribute('data-sens', sens);
+            bouton.classList.remove('anti-couple', 'mauvais-sens');
+
+            const symbole = bouton.querySelector('.rotor-symbole');
+            if (symbole) {
+                symbole.textContent = ATELIER_ROTOR_SYMBOLE[sens];
+                symbole.className = 'rotor-symbole tourne-' + sens;
+            }
+            bouton.setAttribute('aria-label',
+                'Hélice ' + (bouton.getAttribute('data-nom') || '') + ' : rotation ' +
+                (sens === 'droite' ? 'horaire' : 'anti-horaire') +
+                ' — cliquer pour inverser le sens');
+
+            atelierRetour(carte, 'Sens réglé sur « ' + (sens === 'droite' ? 'horaire ↻' : 'anti-horaire ↺') +
+                ' ». Règle les quatre hélices, puis clique « Vérifier l\'atelier ».', 'info');
+        }
+
+        function atelierVerifierRotors(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const rotors = Array.prototype.slice.call(carte.querySelectorAll('.rotor-btn'));
+            const sens = rotors.map(function (rotor) { return rotor.getAttribute('data-sens'); });
+            // Positions : 0 avant gauche, 1 avant droit, 2 arrière gauche, 3 arrière droit.
+            // Équilibre : chaque diagonale tourne dans un seul sens, et deux hélices
+            // voisines tournent en sens contraire → les deux couples s'annulent.
+            const voisins = [[0, 1], [1, 3], [3, 2], [2, 0]];
+            const diagonales = [[0, 3], [1, 2]];
+            const fautifs = {};
+            voisins.forEach(function (paire) {
+                if (sens[paire[0]] === sens[paire[1]]) {
+                    fautifs[paire[0]] = true;
+                    fautifs[paire[1]] = true;
+                }
+            });
+            diagonales.forEach(function (paire) {
+                if (sens[paire[0]] !== sens[paire[1]]) {
+                    fautifs[paire[0]] = true;
+                    fautifs[paire[1]] = true;
+                }
+            });
+            const ok = Object.keys(fautifs).length === 0;
+
+            rotors.forEach(function (rotor, index) {
+                rotor.classList.remove('anti-couple', 'mauvais-sens');
+                rotor.classList.add(fautifs[index] ? 'mauvais-sens' : 'anti-couple');
+            });
+
+            const verdict = carte.querySelector('[data-role="verdict"]');
+            if (ok) {
+                if (verdict) verdict.textContent = 'Drone équilibré : il décolle sans tourner sur lui-même.';
+                atelierRetour(carte, '🎉 Les deux couples s\'annulent : le drone monte droit.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                if (verdict) verdict.textContent = 'Drone déséquilibré : il tourne sur lui-même au décollage.';
+                atelierRetour(carte, '❌ Deux hélices voisines tournent dans le même sens, ou une diagonale n\'est pas homogène : les couples s\'additionnent et le drone pivote.', 'echec');
+            }
+        }
+
+        // ── Type « autonomie » : choisir une batterie pour une mission ───
+        function atelierChoisirBatterie(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+
+            carte.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('choisi', 'correcte', 'fausse');
+                option.setAttribute('aria-checked', 'false');
+                const mesure = option.querySelector('[data-role="mesure"]');
+                if (mesure) mesure.textContent = '';
+            });
+            bouton.classList.add('choisi');
+            bouton.setAttribute('aria-checked', 'true');
+
+            const capacite = parseFloat(bouton.getAttribute('data-capacite'));
+            const courant = parseFloat(carte.getAttribute('data-courant'));
+            const dureeMission = parseFloat(carte.getAttribute('data-duree-mission'));
+            if (!isFinite(capacite) || !isFinite(courant) || courant <= 0) return;
+
+            const minutes = capacite / 1000 / courant * 60;
+            const mesure = bouton.querySelector('[data-role="mesure"]');
+            if (mesure) {
+                mesure.textContent = 'Autonomie calculée : ' +
+                    minutes.toFixed(1).replace('.', ',') + ' min pour ' +
+                    dureeMission.toFixed(0) + ' min de mission.';
+            }
+
+            const jauge = carte.querySelector('.atelier-jauge');
+            if (jauge) {
+                // Repère visuel : la jauge pleine vaut le double de la mission.
+                jauge.style.width = Math.min(100, Math.round(minutes / (dureeMission * 2) * 100)) + '%';
+                jauge.className = 'atelier-jauge' + (minutes >= dureeMission ? ' jauge-ok' : '');
+            }
+
+            const bilan = carte.querySelector('[data-role="bilan-jauge"]');
+            if (bilan) {
+                bilan.textContent = 'Mission : ' + dureeMission.toFixed(0) + ' min — autonomie de cette batterie : ' +
+                    minutes.toFixed(1).replace('.', ',') + ' min. ' +
+                    (minutes >= dureeMission ? 'Elle couvre la mission.' : 'Elle ne couvre pas la mission.');
+            }
+
+            atelierRetour(carte, 'Batterie choisie. Vérifie le calcul, puis clique « Vérifier l\'atelier ».', 'info');
+        }
+
+        function atelierVerifierAutonomie(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const bonne = carte.getAttribute('data-bonne');
+            const choisie = carte.querySelector('.atelier-option.choisi');
+
+            carte.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('correcte', 'fausse');
+                if (option.getAttribute('data-batterie') === bonne) option.classList.add('correcte');
+            });
+            const ok = !!choisie && choisie.getAttribute('data-batterie') === bonne;
+            if (choisie && !ok) choisie.classList.add('fausse');
+
+            atelierRetour(carte,
+                ok ? '🎉 La batterie retenue couvre la mission sans être inutilement lourde.'
+                   : '❌ Cette batterie ne convient pas : compare son autonomie à la durée de la mission et sa masse.',
+                ok ? 'succes' : 'echec');
+            atelierAfficherExplication(carte);
+        }
+
+        // ── Type « reseau » : reconstituer le câblage d'un réseau entier ──
+        //    L'élève clique deux appareils : la liaison est vérifiée tout de
+        //    suite, et la réponse (« pourquoi ces deux-là sont reliés ») est
+        //    celle de la configuration. Le réseau se construit fil par fil,
+        //    puis la vérification finale rend l'explication d'ensemble.
+        function reseauEtat(carte) {
+            if (!carte.__reseau) {
+                let liens = [];
+                try {
+                    liens = JSON.parse(carte.getAttribute('data-liens') || '[]');
+                } catch (erreur) {
+                    liens = [];
+                }
+                carte.__reseau = {
+                    liens: liens,
+                    faits: {},
+                    paires: 0,
+                    attente: null,
+                    verrouille: false
+                };
+            }
+            return carte.__reseau;
+        }
+
+        function reseauBouton(carte, cle) {
+            return carte.querySelector('.reseau-appareil[data-appareil="' + cle + '"]');
+        }
+
+        function reseauNom(carte, cle) {
+            const bouton = reseauBouton(carte, cle);
+            const nom = bouton ? bouton.querySelector('.reseau-nom') : null;
+            return nom ? nom.textContent.trim() : cle;
+        }
+
+        function reseauFilsDe(etat, cle) {
+            let nombre = 0;
+            etat.liens.forEach(function (lien) {
+                const id = [lien.de, lien.vers].sort().join('|');
+                if (!etat.faits[id]) return;
+                if (lien.de === cle || lien.vers === cle) nombre += 1;
+            });
+            return nombre;
+        }
+
+        function reseauRafraichirAppareils(carte) {
+            const etat = carte.__reseau;
+            if (!etat) return;
+            carte.querySelectorAll('.reseau-appareil').forEach(function (bouton) {
+                const nombre = reseauFilsDe(etat, bouton.getAttribute('data-appareil'));
+                const marque = bouton.querySelector('[data-role="fils-appareil"]');
+                if (marque) {
+                    marque.textContent = nombre === 0
+                        ? 'aucun fil'
+                        : nombre + (nombre > 1 ? ' fils' : ' fil');
+                }
+                bouton.classList.toggle('relie', nombre > 0);
+            });
+        }
+
+        function reseauCompteur(carte) {
+            const etat = carte.__reseau;
+            if (!etat) return;
+            const zone = carte.querySelector('[data-role="compteur"]');
+            if (zone) {
+                zone.textContent = etat.paires + ' / ' + etat.liens.length +
+                    ' liaison(s) établie(s).' +
+                    (etat.paires >= etat.liens.length ? ' Le réseau est complet.' : '');
+            }
+            reseauRafraichirAppareils(carte);
+        }
+
+        function reseauChoisirAppareil(bouton) {
+            const carte = bouton && bouton.closest ? bouton.closest('.atelier-carte') : null;
+            if (!carte) return;
+            const etat = reseauEtat(carte);
+            if (etat.verrouille) {
+                atelierRetour(carte, 'Le réseau est déjà complet : clique « Vérifier le réseau ».', 'info');
+                return;
+            }
+            const cle = bouton.getAttribute('data-appareil');
+            const attente = etat.attente;
+
+            if (!attente) {
+                bouton.classList.add('choisi');
+                bouton.setAttribute('aria-pressed', 'true');
+                etat.attente = bouton;
+                atelierRetour(carte, 'Appareil choisi : ' + reseauNom(carte, cle) +
+                    '. Clique maintenant l\'appareil auquel il se relie.', 'info');
+                return;
+            }
+
+            if (attente === bouton) {
+                attente.classList.remove('choisi');
+                attente.setAttribute('aria-pressed', 'false');
+                etat.attente = null;
+                atelierRetour(carte, 'Sélection annulée.', 'info');
+                return;
+            }
+
+            const cleAttente = attente.getAttribute('data-appareil');
+            attente.classList.remove('choisi');
+            attente.setAttribute('aria-pressed', 'false');
+            etat.attente = null;
+
+            let lienTrouve = null;
+            etat.liens.forEach(function (lien) {
+                if (lienTrouve) return;
+                if ((lien.de === cleAttente && lien.vers === cle) ||
+                    (lien.de === cle && lien.vers === cleAttente)) {
+                    lienTrouve = lien;
+                }
+            });
+
+            if (!lienTrouve) {
+                atelierSignaler([bouton], 'erreur');
+                atelierRetour(carte, '❌ ' + reseauNom(carte, cleAttente) + ' et ' +
+                    reseauNom(carte, cle) + ' ne se relient pas directement. ' +
+                    'Repense au trajet des données : par quel appareil passent-elles ?',
+                    'echec');
+                return;
+            }
+
+            const id = [lienTrouve.de, lienTrouve.vers].sort().join('|');
+            if (etat.faits[id]) {
+                atelierRetour(carte, 'Ces deux appareils sont déjà reliés par un fil.', 'info');
+                return;
+            }
+
+            etat.faits[id] = true;
+            etat.paires += 1;
+
+            const liste = carte.querySelector('[data-role="fils"]');
+            if (liste) {
+                const vide = liste.querySelector('.atelier-fils-vide');
+                if (vide) liste.removeChild(vide);
+                const item = document.createElement('li');
+                const fort = document.createElement('strong');
+                fort.textContent = reseauNom(carte, lienTrouve.de) + ' → ' +
+                    reseauNom(carte, lienTrouve.vers);
+                item.appendChild(fort);
+                item.appendChild(document.createTextNode(' : ' + lienTrouve.pourquoi));
+                liste.appendChild(item);
+            }
+            reseauCompteur(carte);
+
+            if (etat.paires >= etat.liens.length) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 Le réseau est entièrement câblé : ' +
+                    etat.liens.length + ' liaisons établies.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, '✅ Fil établi : ' + reseauNom(carte, lienTrouve.de) +
+                    ' ↔ ' + reseauNom(carte, lienTrouve.vers) + '. Il reste ' +
+                    (etat.liens.length - etat.paires) + ' liaison(s) à trouver.', 'succes');
+            }
+        }
+
+        function reseauVerifier(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = reseauEtat(carte);
+            if (etat.paires >= etat.liens.length) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 Réseau complet : les ' + etat.liens.length +
+                    ' liaisons sont établies.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'Le réseau n\'est pas encore complet : ' + etat.paires +
+                    ' liaison(s) sur ' + etat.liens.length + '. Clique deux appareils ' +
+                    'pour tendre le fil suivant.', 'info');
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        //  ATELIER DE CÂBLAGE N4 — déplacer des équipements, tendre des fils
+        //
+        //  Données : n4.cablage de la configuration JSON. Le balisage est
+        //  produit par personnaliser.py (marqueurs CABLAGE-N4) ; sans ce bloc,
+        //  toutes les fonctions ci-dessous sortent proprement — une activité
+        //  sans atelier de câblage reste strictement inchangée.
+        //
+        //  Chaque équipement porte son type (poste, imprimante, commutateur,
+        //  routeur) et sa famille (la salle à laquelle il appartient). La règle
+        //  vérifiée est celle du cours : les appareils d'une même famille
+        //  rejoignent UN commutateur, deux familles ne partagent jamais le même
+        //  commutateur (deux sous-réseaux distincts), et chaque commutateur est
+        //  relié au routeur.
+        //
+        //  Deux gestes, tous deux accessibles au clavier :
+        //    • déplacer : glisser (souris ou doigt), ou flèches sur un
+        //      équipement posé sur le fond blanc ;
+        //    • relier : cliquer un équipement puis un autre (Entrée au clavier).
+        //  Un fil se retire en cliquant dessus (Entrée au clavier).
+        // ══════════════════════════════════════════════════════════════════
+
+        const CABLAGE_SVG_NS = 'http://www.w3.org/2000/svg';
+        const CABLAGE = {
+            fils: [],          // [{a, b, etat}] — etat : '' | 'juste'
+            selection: null,   // équipement choisi pour tendre un fil
+            glisse: null,      // glissement en cours
+            finGlissement: 0,  // horodatage : ignore le clic qui suit un glissement
+            valide: false      // câblage vérifié et accepté par l'élève
+        };
+
+        function cablageAtelier() { return document.getElementById('cablage-atelier'); }
+        function cablageZone() { return document.getElementById('cablage-zone'); }
+        function cablageReserve() { return document.getElementById('cablage-reserve'); }
+        function cablageSvg() { return document.getElementById('cablage-fils'); }
+        function cablageBilan() { return document.getElementById('cablage-bilan'); }
+
+        function cablageNoeuds() {
+            const atelier = cablageAtelier();
+            return atelier
+                ? Array.prototype.slice.call(atelier.querySelectorAll('.noeud-reseau'))
+                : [];
+        }
+
+        function cablageNoeudParId(id) {
+            const atelier = cablageAtelier();
+            return atelier
+                ? atelier.querySelector('.noeud-reseau[data-noeud="' + id + '"]')
+                : null;
+        }
+
+        function cablageNom(noeud) {
+            return noeud ? (noeud.getAttribute('data-nom') || 'cet équipement') : 'cet équipement';
+        }
+
+        function cablageType(noeud) {
+            return noeud ? (noeud.getAttribute('data-type') || '') : '';
+        }
+
+        function cablageFamille(noeud) {
+            return noeud ? (noeud.getAttribute('data-famille') || '') : '';
+        }
+
+        function cablageFamilleNom(noeud) {
+            return noeud
+                ? (noeud.getAttribute('data-famille-nom') || cablageFamille(noeud))
+                : '';
+        }
+
+        // Un terminal = un appareil qui rend un service à une personne :
+        // un poste de travail ou une imprimante. Il se relie à UN commutateur.
+        function cablageEstTerminal(noeud) {
+            const type = cablageType(noeud);
+            return type === 'poste' || type === 'imprimante';
+        }
+
+        function cablageSurPlateau(noeud) {
+            return !!noeud && noeud.parentElement === cablageZone();
+        }
+
+        function cablageRetour(message, type) {
+            const zone = document.getElementById('cablage-retour');
+            if (!zone) return;
+            zone.textContent = message;
+            zone.className = 'cablage-retour' + (type ? ' ' + type : '');
+        }
+
+        function cablageReserveVide() {
+            const reserve = cablageReserve();
+            if (!reserve) return;
+            reserve.classList.toggle('vide', reserve.querySelectorAll('.noeud-reseau').length === 0);
+        }
+
+        function cablageAfficherIndication() {
+            const indication = document.getElementById('cablage-indication');
+            if (!indication) return;
+            const pose = cablageNoeuds().some(cablageSurPlateau);
+            indication.classList.toggle('cache', pose);
+        }
+
+        function cablagePlacer(noeud, x, y) {
+            const zone = cablageZone();
+            if (!zone || !noeud) return;
+            const maxX = Math.max(4, zone.clientWidth - noeud.offsetWidth - 4);
+            const maxY = Math.max(4, zone.clientHeight - noeud.offsetHeight - 4);
+            noeud.style.left = Math.round(Math.max(4, Math.min(maxX, x))) + 'px';
+            noeud.style.top = Math.round(Math.max(4, Math.min(maxY, y))) + 'px';
+        }
+
+        // Première case libre d'une grille : poser un équipement au clic ou au
+        // clavier doit donner un schéma lisible, sans superposition.
+        function cablagePositionLibre() {
+            const zone = cablageZone();
+            if (!zone) return { x: 8, y: 8 };
+            const celluleLargeur = 100;
+            const celluleHauteur = 74;
+            const marge = 8;
+            const colonnes = Math.max(1, Math.floor((zone.clientWidth - marge) / celluleLargeur));
+            const occupees = {};
+            cablageNoeuds().forEach(function (noeud) {
+                if (!cablageSurPlateau(noeud)) return;
+                const x = parseInt(noeud.style.left, 10) || 0;
+                const y = parseInt(noeud.style.top, 10) || 0;
+                occupees[Math.round(x / celluleLargeur) + ':' + Math.round(y / celluleHauteur)] = true;
+            });
+            for (let ligne = 0; ligne < 30; ligne += 1) {
+                for (let colonne = 0; colonne < colonnes; colonne += 1) {
+                    if (occupees[colonne + ':' + ligne]) continue;
+                    return { x: marge + colonne * celluleLargeur, y: marge + ligne * celluleHauteur };
+                }
+            }
+            return { x: marge, y: marge };
+        }
+
+        function cablagePoserSurPlateau(noeud, x, y) {
+            const zone = cablageZone();
+            if (!zone || !noeud) return;
+            if (noeud.parentElement !== zone) zone.appendChild(noeud);
+            noeud.classList.add('sur-plateau');
+            cablagePlacer(noeud, x, y);
+            cablageInvalider();
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        function cablageRanger(noeud) {
+            const reserve = cablageReserve();
+            if (!reserve || !noeud) return;
+            cablageSupprimerFilsDe(noeud.getAttribute('data-noeud'));
+            noeud.classList.remove('sur-plateau', 'deplace', 'selectionne');
+            noeud.style.left = '';
+            noeud.style.top = '';
+            noeud.setAttribute('aria-pressed', 'false');
+            reserve.appendChild(noeud);
+            if (CABLAGE.selection === noeud) CABLAGE.selection = null;
+            cablageInvalider();
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        // Un seul gestionnaire pour le clic et pour la touche Entrée : ce sont
+        // de vrais <button>, donc le clavier passe par le même chemin.
+        function cablageChoisir(noeud) {
+            if (!noeud) return;
+            // Le clic qui suit un glissement ne doit pas sélectionner : l'élève
+            // vient de déplacer l'équipement, il ne veut pas le relier.
+            if (Date.now() - CABLAGE.finGlissement < 350) return;
+
+            if (!cablageSurPlateau(noeud)) {
+                const libre = cablagePositionLibre();
+                cablagePoserSurPlateau(noeud, libre.x, libre.y);
+                cablageRetour(cablageNom(noeud) + ' est posé sur le fond blanc. ' +
+                    'Clique-le, puis clique l\'équipement à relier avec un fil.', 'info');
+                return;
+            }
+
+            const selection = CABLAGE.selection;
+            if (selection === noeud) {
+                cablageDeselectionner();
+                cablageRetour('Équipement désélectionné.', 'info');
+                return;
+            }
+            if (!selection) {
+                CABLAGE.selection = noeud;
+                noeud.classList.add('selectionne');
+                noeud.setAttribute('aria-pressed', 'true');
+                cablageRetour(cablageNom(noeud) + ' est sélectionné. Clique maintenant ' +
+                    'l\'équipement à relier par un fil.', 'info');
+                return;
+            }
+            cablageRelier(selection, noeud);
+        }
+
+        function cablageDeselectionner() {
+            if (!CABLAGE.selection) return;
+            CABLAGE.selection.classList.remove('selectionne');
+            CABLAGE.selection.setAttribute('aria-pressed', 'false');
+            CABLAGE.selection = null;
+        }
+
+        function cablageRelier(noeudA, noeudB) {
+            const idA = noeudA ? noeudA.getAttribute('data-noeud') : null;
+            const idB = noeudB ? noeudB.getAttribute('data-noeud') : null;
+            cablageDeselectionner();
+            if (!idA || !idB || idA === idB) return;
+            const deja = CABLAGE.fils.some(function (fil) {
+                return (fil.a === idA && fil.b === idB) || (fil.a === idB && fil.b === idA);
+            });
+            if (deja) {
+                cablageRetour('Un fil relie déjà ' + cablageNom(noeudA) + ' et ' +
+                    cablageNom(noeudB) + '.', 'info');
+                return;
+            }
+            CABLAGE.fils.push({ a: idA, b: idB, etat: '' });
+            cablageInvalider();
+            cablageTracerFils();
+            cablageRetour('Fil tendu entre ' + cablageNom(noeudA) + ' et ' +
+                cablageNom(noeudB) + '.', 'info');
+        }
+
+        // Toute modification du schéma annule une validation précédente :
+        // l'élève ne peut pas valider puis casser le câblage sans le savoir.
+        function cablageInvalider() {
+            CABLAGE.valide = false;
+            CABLAGE.fils.forEach(function (fil) { fil.etat = ''; });
+            const bilan = cablageBilan();
+            if (bilan) {
+                bilan.className = 'cablage-bilan cache';
+                bilan.textContent = '';
+            }
+            const explication = document.getElementById('cablage-explication');
+            if (explication) explication.classList.add('cache');
+        }
+
+        function cablageSupprimerFil(index) {
+            const fil = CABLAGE.fils[index];
+            if (!fil) return;
+            CABLAGE.fils.splice(index, 1);
+            cablageInvalider();
+            cablageTracerFils();
+            cablageRetour('Fil supprimé.', 'info');
+        }
+
+        function cablageSupprimerFilsDe(id) {
+            const avant = CABLAGE.fils.length;
+            CABLAGE.fils = CABLAGE.fils.filter(function (fil) {
+                return fil.a !== id && fil.b !== id;
+            });
+            if (CABLAGE.fils.length !== avant) cablageInvalider();
+        }
+
+        function cablageCentre(noeud) {
+            return {
+                x: noeud.offsetLeft + noeud.offsetWidth / 2,
+                y: noeud.offsetTop + noeud.offsetHeight / 2
+            };
+        }
+
+        function cablageTracerFils() {
+            const svg = cablageSvg();
+            if (!svg) return;
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+            CABLAGE.fils.forEach(function (fil, index) {
+                const noeudA = cablageNoeudParId(fil.a);
+                const noeudB = cablageNoeudParId(fil.b);
+                if (!noeudA || !noeudB) return;
+                if (!cablageSurPlateau(noeudA) || !cablageSurPlateau(noeudB)) return;
+                const a = cablageCentre(noeudA);
+                const b = cablageCentre(noeudB);
+
+                const groupe = document.createElementNS(CABLAGE_SVG_NS, 'g');
+                groupe.setAttribute('class', 'fil-reseau' + (fil.etat ? ' ' + fil.etat : ''));
+                groupe.setAttribute('tabindex', '0');
+                groupe.setAttribute('role', 'button');
+                groupe.setAttribute('data-noeud-a', fil.a);
+                groupe.setAttribute('data-noeud-b', fil.b);
+                groupe.setAttribute('aria-label', 'Fil entre ' + cablageNom(noeudA) + ' et ' +
+                    cablageNom(noeudB) + ' : touche Entrée pour supprimer ce fil');
+
+                ['fil-cible', 'fil-trait'].forEach(function (classe) {
+                    const ligne = document.createElementNS(CABLAGE_SVG_NS, 'line');
+                    ligne.setAttribute('class', classe);
+                    ligne.setAttribute('x1', Math.round(a.x));
+                    ligne.setAttribute('y1', Math.round(a.y));
+                    ligne.setAttribute('x2', Math.round(b.x));
+                    ligne.setAttribute('y2', Math.round(b.y));
+                    groupe.appendChild(ligne);
+                });
+
+                groupe.addEventListener('click', function (evenement) {
+                    evenement.stopPropagation();
+                    cablageSupprimerFil(index);
+                });
+                groupe.addEventListener('keydown', function (evenement) {
+                    if (evenement.key === 'Enter' || evenement.key === ' ' || evenement.key === 'Spacebar') {
+                        evenement.preventDefault();
+                        evenement.stopPropagation();
+                        cablageSupprimerFil(index);
+                    }
+                });
+
+                svg.appendChild(groupe);
+            });
+        }
+
+        function cablageDansZone(clientX, clientY) {
+            const zone = cablageZone();
+            if (!zone || typeof clientX !== 'number' || typeof clientY !== 'number') return false;
+            const rect = zone.getBoundingClientRect();
+            return clientX >= rect.left && clientX <= rect.right &&
+                   clientY >= rect.top && clientY <= rect.bottom;
+        }
+
+        function cablageDebutGlissement(evenement) {
+            if (evenement.pointerType === 'mouse' && evenement.button !== 0) return;
+            const noeud = evenement.currentTarget;
+            const zone = cablageZone();
+            if (!noeud || !zone) return;
+            const rect = noeud.getBoundingClientRect();
+            CABLAGE.glisse = {
+                noeud: noeud,
+                pointerId: evenement.pointerId,
+                departX: evenement.clientX,
+                departY: evenement.clientY,
+                decalageX: evenement.clientX - rect.left,
+                decalageY: evenement.clientY - rect.top,
+                deplace: false
+            };
+            try {
+                noeud.setPointerCapture(evenement.pointerId);
+            } catch (erreur) {
+                // Sans capture, le glissement reste possible dans la zone.
+            }
+            noeud.addEventListener('pointermove', cablagePendantGlissement);
+            noeud.addEventListener('pointerup', cablageFinGlissement);
+            noeud.addEventListener('pointercancel', cablageFinGlissement);
+        }
+
+        function cablagePendantGlissement(evenement) {
+            const glisse = CABLAGE.glisse;
+            if (!glisse || evenement.pointerId !== glisse.pointerId) return;
+            const ecartX = evenement.clientX - glisse.departX;
+            const ecartY = evenement.clientY - glisse.departY;
+
+            if (!glisse.deplace) {
+                // Un vrai déplacement, pas un tremblement de doigt.
+                if (Math.abs(ecartX) + Math.abs(ecartY) < 8) return;
+                glisse.deplace = true;
+                if (!cablageSurPlateau(glisse.noeud)) {
+                    const zone = cablageZone();
+                    const rect = glisse.noeud.getBoundingClientRect();
+                    const rectZone = zone.getBoundingClientRect();
+                    zone.appendChild(glisse.noeud);
+                    glisse.noeud.classList.add('sur-plateau');
+                    glisse.noeud.style.left = Math.round(rect.left - rectZone.left) + 'px';
+                    glisse.noeud.style.top = Math.round(rect.top - rectZone.top) + 'px';
+                    cablageInvalider();
+                    cablageReserveVide();
+                    cablageAfficherIndication();
+                }
+                glisse.noeud.classList.add('deplace');
+                cablageDeselectionner();
+            }
+
+            const zone = cablageZone();
+            const rectZone = zone.getBoundingClientRect();
+            cablagePlacer(glisse.noeud,
+                evenement.clientX - glisse.decalageX - rectZone.left,
+                evenement.clientY - glisse.decalageY - rectZone.top);
+            cablageTracerFils();
+        }
+
+        function cablageFinGlissement(evenement) {
+            const glisse = CABLAGE.glisse;
+            if (!glisse) return;
+            const noeud = glisse.noeud;
+            noeud.removeEventListener('pointermove', cablagePendantGlissement);
+            noeud.removeEventListener('pointerup', cablageFinGlissement);
+            noeud.removeEventListener('pointercancel', cablageFinGlissement);
+            try {
+                noeud.releasePointerCapture(glisse.pointerId);
+            } catch (erreur) {
+                // Rien à libérer.
+            }
+            noeud.classList.remove('deplace');
+            CABLAGE.glisse = null;
+            if (!glisse.deplace) return;   // clic simple : cablageChoisir s'en charge
+            CABLAGE.finGlissement = Date.now();
+            // Déposé hors du fond blanc : l'équipement retourne dans la réserve.
+            if (!cablageDansZone(evenement.clientX, evenement.clientY)) cablageRanger(noeud);
+            cablageTracerFils();
+        }
+
+        // Déplacement au clavier : flèches (Maj = pas fin).
+        function cablageTouche(evenement) {
+            const noeud = evenement.currentTarget;
+            if (!cablageSurPlateau(noeud)) return;
+            const pas = evenement.shiftKey ? 1 : 12;
+            let x = parseInt(noeud.style.left, 10) || 0;
+            let y = parseInt(noeud.style.top, 10) || 0;
+            if (evenement.key === 'ArrowLeft') x -= pas;
+            else if (evenement.key === 'ArrowRight') x += pas;
+            else if (evenement.key === 'ArrowUp') y -= pas;
+            else if (evenement.key === 'ArrowDown') y += pas;
+            else return;
+            evenement.preventDefault();
+            cablagePlacer(noeud, x, y);
+            cablageTracerFils();
+        }
+
+        function cablageEffacerFils() {
+            CABLAGE.fils = [];
+            cablageDeselectionner();
+            cablageInvalider();
+            cablageTracerFils();
+            cablageRetour('Tous les fils ont été retirés. Clique un équipement, puis un ' +
+                'autre, pour en tendre un nouveau.', 'info');
+        }
+
+        function cablageToutRanger() {
+            const reserve = cablageReserve();
+            cablageNoeuds().forEach(function (noeud) {
+                noeud.classList.remove('sur-plateau', 'deplace', 'selectionne');
+                noeud.style.left = '';
+                noeud.style.top = '';
+                noeud.setAttribute('aria-pressed', 'false');
+                if (reserve) reserve.appendChild(noeud);
+            });
+            CABLAGE.fils = [];
+            CABLAGE.selection = null;
+            CABLAGE.glisse = null;
+            CABLAGE.finGlissement = 0;
+            cablageInvalider();
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        function cablageReinitialiser() {
+            cablageToutRanger();
+            cablageRetour('', '');
+        }
+
+        function cablageAjouterListe(conteneur, titre, lignes) {
+            if (!lignes.length) return;
+            const paragraphe = document.createElement('p');
+            const fort = document.createElement('strong');
+            fort.textContent = titre;
+            paragraphe.appendChild(fort);
+            conteneur.appendChild(paragraphe);
+            const liste = document.createElement('ul');
+            lignes.forEach(function (texte) {
+                const item = document.createElement('li');
+                item.textContent = texte;
+                liste.appendChild(item);
+            });
+            conteneur.appendChild(liste);
+        }
+
+        // Vérification du câblage : on construit le graphe des fils et on
+        // confronte chaque règle du cours, en expliquant chaque manquement.
+        function cablageVerifier() {
+            const atelier = cablageAtelier();
+            if (!atelier) return;
+            const noeuds = cablageNoeuds();
+            const parId = {};
+            noeuds.forEach(function (noeud) { parId[noeud.getAttribute('data-noeud')] = noeud; });
+
+            const erreurs = [];
+            const justes = [];
+
+            // 1. Tout le matériel est-il posé sur le fond blanc ?
+            const restants = noeuds.filter(function (noeud) { return !cablageSurPlateau(noeud); });
+            if (restants.length) {
+                erreurs.push('Il reste ' + restants.length + ' équipement(s) dans la réserve (' +
+                    restants.map(cablageNom).join(', ') + ') : glisse-les sur le fond blanc, ' +
+                    'ou clique-les pour les y poser.');
+            } else {
+                justes.push('Tous les équipements sont posés sur le schéma.');
+            }
+
+            // Voisinage : qui est relié à qui par un fil ?
+            const voisins = {};
+            noeuds.forEach(function (noeud) { voisins[noeud.getAttribute('data-noeud')] = []; });
+            CABLAGE.fils.forEach(function (fil) {
+                if (!parId[fil.a] || !parId[fil.b] || fil.a === fil.b) return;
+                voisins[fil.a].push(fil.b);
+                voisins[fil.b].push(fil.a);
+            });
+
+            const commutateurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'commutateur'; });
+            const routeurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'routeur'; });
+            const terminaux = noeuds.filter(cablageEstTerminal);
+
+            // 2. Un poste ou une imprimante se relie à UN commutateur.
+            let avant = erreurs.length;
+            terminaux.forEach(function (terminal) {
+                const id = terminal.getAttribute('data-noeud');
+                const liens = voisins[id] || [];
+                if (liens.length === 0) {
+                    erreurs.push(cablageNom(terminal) + ' n\'est relié à aucun fil : ' +
+                        'relie-le à un commutateur.');
+                } else if (liens.length > 1) {
+                    erreurs.push(cablageNom(terminal) + ' a ' + liens.length + ' fils : ' +
+                        'un appareil ne se relie qu\'à un seul commutateur.');
+                } else if (commutateurs.indexOf(parId[liens[0]]) === -1) {
+                    erreurs.push(cablageNom(terminal) + ' est relié à ' + cablageNom(parId[liens[0]]) +
+                        ' : un poste ou une imprimante se relie toujours à un commutateur.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Chaque poste et chaque imprimante est relié à un seul commutateur.');
+            }
+
+            // 3. Le routeur ne se relie qu'aux commutateurs.
+            avant = erreurs.length;
+            routeurs.forEach(function (routeur) {
+                const id = routeur.getAttribute('data-noeud');
+                (voisins[id] || []).forEach(function (idVoisin) {
+                    if (commutateurs.indexOf(parId[idVoisin]) === -1) {
+                        erreurs.push('Le routeur ne se relie qu\'aux commutateurs : ' +
+                            cablageNom(parId[idVoisin]) + ' est relié directement au routeur.');
+                    }
+                });
+            });
+            if (erreurs.length === avant) {
+                justes.push('Le routeur ne reçoit que des commutateurs : c\'est lui qui ouvre vers Internet.');
+            }
+
+            // 4. Chaque commutateur reçoit des appareils et rejoint le routeur.
+            avant = erreurs.length;
+            commutateurs.forEach(function (commutateur) {
+                const id = commutateur.getAttribute('data-noeud');
+                const liens = voisins[id] || [];
+                const versRouteur = liens.filter(function (v) { return cablageType(parId[v]) === 'routeur'; });
+                const versAppareils = liens.filter(function (v) { return cablageEstTerminal(parId[v]); });
+                const versCommutateur = liens.filter(function (v) { return cablageType(parId[v]) === 'commutateur'; });
+                if (versCommutateur.length) {
+                    erreurs.push('Deux commutateurs ne se relient pas entre eux (' +
+                        cablageNom(commutateur) + ' et ' + cablageNom(parId[versCommutateur[0]]) +
+                        ') : chacun rejoint directement le routeur.');
+                }
+                if (versAppareils.length === 0) {
+                    erreurs.push(cablageNom(commutateur) + ' n\'a aucun appareil relié : ' +
+                        'un commutateur relie les appareils de son sous-réseau.');
+                }
+                if (versRouteur.length === 0) {
+                    erreurs.push(cablageNom(commutateur) + ' n\'est pas relié au routeur : ' +
+                        'ses appareils ne peuvent pas communiquer avec le reste du collège.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Chaque commutateur est relié au routeur par un seul fil.');
+            }
+
+            // 5. Deux familles ne partagent pas le même commutateur : c'est la
+            //    règle des sous-réseaux séparés.
+            avant = erreurs.length;
+            commutateurs.forEach(function (commutateur) {
+                const id = commutateur.getAttribute('data-noeud');
+                const familles = {};
+                (voisins[id] || []).forEach(function (idVoisin) {
+                    const voisin = parId[idVoisin];
+                    if (!voisin || !cablageEstTerminal(voisin)) return;
+                    familles[cablageFamille(voisin)] = cablageFamilleNom(voisin);
+                });
+                const cles = Object.keys(familles);
+                if (cles.length > 1) {
+                    erreurs.push('« ' + familles[cles[0]] + ' » et « ' + familles[cles[1]] +
+                        ' » partagent ' + cablageNom(commutateur) + ' : ces deux salles doivent ' +
+                        'être dans deux sous-réseaux séparés, donc sur deux commutateurs différents.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Aucun commutateur ne mélange deux salles : les sous-réseaux sont séparés.');
+            }
+
+            // 6. Tous les appareils d'une même salle sont sur le même commutateur.
+            const famillesUtilisees = {};
+            terminaux.forEach(function (terminal) {
+                const liens = voisins[terminal.getAttribute('data-noeud')] || [];
+                const commutateur = liens.map(function (v) { return parId[v]; })
+                    .filter(function (v) { return v && cablageType(v) === 'commutateur'; })[0];
+                if (!commutateur) return;
+                const famille = cablageFamille(terminal);
+                if (!famillesUtilisees[famille]) {
+                    famillesUtilisees[famille] = { nom: cablageFamilleNom(terminal), commutateurs: {} };
+                }
+                famillesUtilisees[famille].commutateurs[commutateur.getAttribute('data-noeud')] = commutateur;
+            });
+            avant = erreurs.length;
+            Object.keys(famillesUtilisees).forEach(function (famille) {
+                const utilisations = famillesUtilisees[famille];
+                const ids = Object.keys(utilisations.commutateurs);
+                if (ids.length > 1) {
+                    erreurs.push('Les appareils de « ' + utilisations.nom + ' » sont répartis sur ' +
+                        ids.length + ' commutateurs (' + ids.map(function (id) {
+                            return cablageNom(utilisations.commutateurs[id]);
+                        }).join(', ') + ') : une salle = un seul commutateur.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Chaque salle regroupe tous ses appareils sur un seul commutateur.');
+            }
+
+            const vues = {};
+            const erreursUniques = erreurs.filter(function (message) {
+                if (vues[message]) return false;
+                vues[message] = true;
+                return true;
+            });
+
+            const bilan = cablageBilan();
+            const explication = document.getElementById('cablage-explication');
+            const reussi = erreursUniques.length === 0;
+
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'cablage-bilan ' + (reussi ? 'succes' : 'echec');
+                const titre = document.createElement('p');
+                titre.textContent = reussi
+                    ? '✅ Câblage validé : le réseau du collège est branché comme il faut.'
+                    : 'Le câblage n\'est pas encore bon : ' + erreursUniques.length +
+                      ' point(s) à corriger.';
+                bilan.appendChild(titre);
+                if (reussi) {
+                    if (explication) {
+                        explication.classList.remove('cache');
+                        const rappel = document.createElement('div');
+                        rappel.className = 'cablage-explication';
+                        const texte = document.createElement('p');
+                        texte.textContent = explication.textContent;
+                        rappel.appendChild(texte);
+                        bilan.appendChild(rappel);
+                    }
+                } else {
+                    cablageAjouterListe(bilan, 'À corriger :', erreursUniques);
+                    cablageAjouterListe(bilan, 'Déjà juste :', justes);
+                }
+            }
+
+            CABLAGE.valide = reussi;
+            CABLAGE.fils.forEach(function (fil) { fil.etat = reussi ? 'juste' : ''; });
+            cablageTracerFils();
+
+            cablageRetour(reussi
+                ? '🎉 Câblage validé : tu peux finaliser ta conception.'
+                : 'Reprends les points à corriger ci-dessous, puis clique de nouveau « Vérifier le câblage ».',
+                reussi ? 'succes' : 'echec');
+        }
+
+        function cablageInitialiser() {
+            const atelier = cablageAtelier();
+            if (!atelier) return;
+            cablageNoeuds().forEach(function (noeud) {
+                noeud.addEventListener('pointerdown', cablageDebutGlissement);
+                noeud.addEventListener('keydown', cablageTouche);
+            });
+            window.addEventListener('resize', cablageTracerFils);
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        cablageInitialiser();
+
         // Support pour impression PDF
         window.addEventListener('beforeprint', function() {
             // Développer tous les onglets pour l'impression
@@ -2502,315 +4797,5 @@
             changerOnglet(niveauActuel);
         });
     </script>
-
-<script>
-(function () {
-  'use strict';
-
-  var NIVEAUX = [{"size":5,"pairs":[{"color":"#ff4d6d","a":[0,0],"b":[4,1]},{"color":"#ff9f43","a":[0,2],"b":[3,1]},{"color":"#ffd166","a":[0,4],"b":[3,3]},{"color":"#8ac926","a":[1,2],"b":[4,2]},{"color":"#06d6a0","a":[1,4],"b":[4,3]}]},{"size":6,"pairs":[{"color":"#ff4d6d","a":[0,0],"b":[4,0]},{"color":"#ff9f43","a":[0,1],"b":[5,0]},{"color":"#ffd166","a":[0,2],"b":[2,2]},{"color":"#8ac926","a":[0,4],"b":[3,2]},{"color":"#06d6a0","a":[0,5],"b":[5,2]},{"color":"#00b4d8","a":[1,4],"b":[4,2]}]},{"size":7,"pairs":[{"color":"#ff4d6d","a":[0,6],"b":[6,5]},{"color":"#ff9f43","a":[1,5],"b":[2,1]},{"color":"#ffd166","a":[1,6],"b":[5,4]},{"color":"#8ac926","a":[3,3],"b":[4,2]},{"color":"#06d6a0","a":[3,4],"b":[6,6]},{"color":"#00b4d8","a":[4,4],"b":[5,5]}]},{"size":8,"pairs":[{"color":"#ff4d6d","a":[0,4],"b":[7,1]},{"color":"#ff9f43","a":[1,4],"b":[2,7]},{"color":"#ffd166","a":[1,6],"b":[2,4]},{"color":"#8ac926","a":[1,7],"b":[2,5]},{"color":"#06d6a0","a":[3,3],"b":[4,4]},{"color":"#00b4d8","a":[3,4],"b":[5,4]}]},{"size":9,"pairs":[{"color":"#ff4d6d","a":[1,1],"b":[4,4]},{"color":"#ff9f43","a":[1,2],"b":[2,3]},{"color":"#ffd166","a":[1,3],"b":[2,7]},{"color":"#8ac926","a":[2,4],"b":[2,6]},{"color":"#06d6a0","a":[3,7],"b":[5,1]},{"color":"#00b4d8","a":[4,1],"b":[4,3]},{"color":"#3a86ff","a":[5,0],"b":[6,2]},{"color":"#7b2cbf","a":[5,7],"b":[7,1]},{"color":"#f72585","a":[5,8],"b":[6,1]}]},{"size":8,"pairs":[{"color":"#ff4d6d","a":[1,1],"b":[5,7]},{"color":"#ff9f43","a":[3,5],"b":[5,1]},{"color":"#ffd166","a":[4,3],"b":[7,0]},{"color":"#8ac926","a":[4,7],"b":[6,7]},{"color":"#06d6a0","a":[5,4],"b":[7,7]}]},{"size":9,"pairs":[{"color":"#ff4d6d","a":[1,6],"b":[7,5]},{"color":"#ff9f43","a":[1,7],"b":[6,6]},{"color":"#ffd166","a":[4,4],"b":[7,6]},{"color":"#8ac926","a":[7,7],"b":[8,5]}]},{"size":10,"pairs":[{"color":"#ff4d6d","a":[3,6],"b":[6,3]},{"color":"#ff9f43","a":[3,7],"b":[7,4]},{"color":"#ffd166","a":[4,8],"b":[9,9]},{"color":"#8ac926","a":[5,5],"b":[6,9]},{"color":"#06d6a0","a":[7,9],"b":[9,8]}]},{"size":10,"pairs":[{"color":"#ff4d6d","a":[2,8],"b":[5,3]},{"color":"#ff9f43","a":[3,3],"b":[7,7]},{"color":"#ffd166","a":[3,4],"b":[6,8]},{"color":"#8ac926","a":[3,6],"b":[7,2]},{"color":"#06d6a0","a":[4,2],"b":[9,4]},{"color":"#00b4d8","a":[7,8],"b":[8,1]}]},{"size":11,"pairs":[{"color":"#ff4d6d","a":[1,2],"b":[9,3]},{"color":"#ff9f43","a":[1,3],"b":[3,8]},{"color":"#ffd166","a":[2,8],"b":[5,5]},{"color":"#8ac926","a":[4,5],"b":[8,8]},{"color":"#06d6a0","a":[4,8],"b":[8,2]},{"color":"#00b4d8","a":[4,9],"b":[9,4]},{"color":"#3a86ff","a":[6,5],"b":[9,5]}]}];
-  var NOMS = {
-    '#ff4d6d': 'rouge', '#ff9f43': 'orange', '#ffd166': 'jaune',
-    '#8ac926': 'vert', '#06d6a0': 'turquoise', '#00b4d8': 'cyan',
-    '#3a86ff': 'bleu', '#7b2cbf': 'violet', '#f72585': 'rose'
-  };
-
-  var gridEl = document.getElementById('jeu-grille');
-  var numEl = document.getElementById('jeu-num');
-  var statutEl = document.getElementById('jeu-statut');
-  var rempliesEl = document.getElementById('jeu-remplies');
-  var totalEl = document.getElementById('jeu-total');
-  var resetBtn = document.getElementById('jeu-reset');
-  var suivantBtn = document.getElementById('jeu-suivant');
-  if (!gridEl || !numEl || !statutEl || !rempliesEl || !totalEl || !resetBtn || !suivantBtn) return;
-
-  var levelIndex = 0;
-  var niveau = null;
-  var N = 0;
-  var cells = [];
-  var dotMap = {};
-  var pathMap = {};
-  var paths = {};
-  var connected = {};
-  var activeColor = null;
-  var termine = false;
-  var dragging = false;
-  var lastPt = null;
-  var lastCellKey = null;
-
-  function k(r, c) { return r + ',' + c; }
-  function parts(key) { var p = key.split(','); return [parseInt(p[0], 10), parseInt(p[1], 10)]; }
-  function adj(a, b) {
-    var A = parts(a), B = parts(b);
-    return Math.abs(A[0] - B[0]) + Math.abs(A[1] - B[1]) === 1;
-  }
-  function totalIntermediaires() { return N * N - 2 * niveau.pairs.length; }
-  function nbParcelles() { return Object.keys(pathMap).length; }
-
-  function charger(index) {
-    levelIndex = index;
-    niveau = NIVEAUX[index];
-    N = niveau.size;
-    dotMap = {};
-    pathMap = {};
-    paths = {};
-    connected = {};
-    activeColor = null;
-    termine = false;
-    dragging = false;
-    lastPt = null;
-    lastCellKey = null;
-    niveau.pairs.forEach(function (p) {
-      dotMap[k(p.a[0], p.a[1])] = { color: p.color };
-      dotMap[k(p.b[0], p.b[1])] = { color: p.color };
-      connected[p.color] = false;
-      paths[p.color] = [];
-    });
-    numEl.textContent = String(index + 1);
-    totalEl.textContent = String(N * N);
-    rempliesEl.textContent = '0';
-    suivantBtn.classList.add('cache');
-    statutEl.textContent = '';
-    construireGrille();
-    rendre();
-  }
-
-  function construireGrille() {
-    gridEl.innerHTML = '';
-    gridEl.style.gridTemplateColumns = 'repeat(' + N + ', 1fr)';
-    cells = [];
-    for (var r = 0; r < N; r++) {
-      cells[r] = [];
-      for (var c = 0; c < N; c++) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'jeu-cell';
-        b.dataset.r = String(r);
-        b.dataset.c = String(c);
-        b.setAttribute('aria-label', 'Case ' + (r + 1) + ',' + (c + 1));
-        cells[r][c] = b;
-        gridEl.appendChild(b);
-      }
-    }
-  }
-
-  function majRemplissage() {
-    rempliesEl.textContent = String(nbParcelles() + 2 * niveau.pairs.length);
-  }
-
-  function rendre() {
-    for (var r = 0; r < N; r++) {
-      for (var c = 0; c < N; c++) {
-        var b = cells[r][c];
-        var key = k(r, c);
-        var dot = dotMap[key];
-        var col = pathMap[key];
-        b.className = 'jeu-cell';
-        b.style.background = '';
-        b.innerHTML = '';
-        if (dot) {
-          b.classList.add('point');
-          var s = document.createElement('span');
-          s.className = 'jeu-point';
-          s.style.background = dot.color;
-          if (connected[dot.color]) {
-            s.style.boxShadow = '0 0 0 3px #f1f5f9, 0 0 12px rgba(255,255,255,0.5)';
-          }
-          b.appendChild(s);
-          b.setAttribute('aria-label', 'Point ' + (NOMS[dot.color] || 'coloré'));
-        } else if (col) {
-          b.classList.add('chemin');
-          b.style.background = col;
-          var p = paths[col] || [];
-          if (activeColor === col && p.length && p[p.length - 1] === key) {
-            b.classList.add('actif');
-          }
-          b.setAttribute('aria-label', 'Chemin ' + (NOMS[col] || ''));
-        } else {
-          b.setAttribute('aria-label', 'Case ' + (r + 1) + ',' + (c + 1) + ' vide');
-        }
-      }
-    }
-    majRemplissage();
-  }
-
-  function retirerCellules(color) {
-    var p = paths[color] || [];
-    for (var i = 0; i < p.length; i++) {
-      if (!dotMap[p[i]]) delete pathMap[p[i]];
-    }
-  }
-
-  // Appui sur un point : (re)démarre le tracé de cette couleur.
-  function demarrer(color, key) {
-    if (activeColor && activeColor !== color) {
-      retirerCellules(activeColor);
-      paths[activeColor] = [];
-    }
-    retirerCellules(color);
-    connected[color] = false;
-    paths[color] = [key];
-    activeColor = color;
-    rendre();
-  }
-
-  // Appui sur une case d'un chemin : on reprend le tracé à cet endroit.
-  function reprendre(color, key) {
-    if (activeColor && activeColor !== color) {
-      retirerCellules(activeColor);
-      paths[activeColor] = [];
-    }
-    var p = paths[color];
-    var idx = p.lastIndexOf(key);
-    if (idx === -1) return;
-    for (var i = idx + 1; i < p.length; i++) {
-      if (!dotMap[p[i]]) delete pathMap[p[i]];
-    }
-    p.length = idx + 1;
-    connected[color] = false;
-    activeColor = color;
-    rendre();
-  }
-
-  function trimmer(key) {
-    if (!activeColor) return;
-    var p = paths[activeColor];
-    var idx = p.lastIndexOf(key);
-    if (idx === -1) return;
-    for (var i = idx + 1; i < p.length; i++) {
-      if (!dotMap[p[i]]) delete pathMap[p[i]];
-    }
-    p.length = idx + 1;
-    rendre();
-  }
-
-  function etendre(key) {
-    if (!activeColor) return;
-    var p = paths[activeColor];
-    var last = p[p.length - 1];
-    if (adj(last, key) && !dotMap[key] && !pathMap[key]) {
-      p.push(key);
-      pathMap[key] = activeColor;
-      rendre();
-    }
-  }
-
-  function completer(color, targetKey) {
-    paths[color].push(targetKey);
-    connected[color] = true;
-    activeColor = null;
-    rendre();
-    verifier();
-  }
-
-  function verifier() {
-    var all = niveau.pairs.every(function (p) { return !!connected[p.color]; });
-    if (!all) return;
-    if (nbParcelles() !== totalIntermediaires()) {
-      statutEl.textContent = 'Toutes les paires sont reliées, mais la grille n\u2019est pas complète : glisse depuis un point pour ajuster un chemin.';
-      return;
-    }
-    termine = true;
-    statutEl.textContent = '\uD83C\uDF89 Bravo ! Grille parfaitement remplie !';
-    suivantBtn.classList.remove('cache');
-    suivantBtn.textContent = (levelIndex < NIVEAUX.length - 1)
-      ? 'Niveau suivant \u2192'
-      : '\uD83C\uDF89 Rejouer depuis le début';
-  }
-
-  function appliquer(r, c, isPress) {
-    if (termine) return;
-    var key = k(r, c);
-    var dot = dotMap[key];
-
-    if (dot) {
-      if (isPress) { demarrer(dot.color, key); return; }
-      if (activeColor === dot.color) {
-        var p = paths[dot.color];
-        if (key !== p[0] && p.length && adj(p[p.length - 1], key)) {
-          completer(dot.color, key);
-        }
-      }
-      return;
-    }
-
-    var col = pathMap[key];
-    if (col) {
-      if (isPress) { reprendre(col, key); return; }
-      if (col === activeColor) trimmer(key);
-      return;
-    }
-
-    if (activeColor) etendre(key);
-  }
-
-  function cellAt(px, py) {
-    var el = document.elementFromPoint(px, py);
-    var cell = el && el.closest ? el.closest('.jeu-cell') : null;
-    return (cell && gridEl.contains(cell)) ? cell : null;
-  }
-
-  gridEl.addEventListener('pointerdown', function (e) {
-    var cell = cellAt(e.clientX, e.clientY);
-    if (!cell && e.target && e.target.closest) cell = e.target.closest('.jeu-cell');
-    if (!cell || !gridEl.contains(cell)) return;
-    e.preventDefault();
-    dragging = true;
-    lastPt = { x: e.clientX, y: e.clientY };
-    lastCellKey = k(cell.dataset.r, cell.dataset.c);
-    appliquer(parseInt(cell.dataset.r, 10), parseInt(cell.dataset.c, 10), true);
-  });
-
-  document.addEventListener('pointermove', function (e) {
-    if (!dragging || !lastPt) return;
-    var dx = e.clientX - lastPt.x;
-    var dy = e.clientY - lastPt.y;
-    var steps = Math.max(1, Math.ceil(Math.sqrt(dx * dx + dy * dy) / 6));
-    for (var i = 1; i <= steps; i++) {
-      var t = i / steps;
-      var cell = cellAt(lastPt.x + dx * t, lastPt.y + dy * t);
-      if (!cell) continue;
-      var key = k(cell.dataset.r, cell.dataset.c);
-      if (key !== lastCellKey) {
-        lastCellKey = key;
-        appliquer(parseInt(cell.dataset.r, 10), parseInt(cell.dataset.c, 10), false);
-      }
-    }
-    lastPt = { x: e.clientX, y: e.clientY };
-  });
-
-  function finGlisser() { dragging = false; lastPt = null; lastCellKey = null; }
-  document.addEventListener('pointerup', finGlisser);
-  document.addEventListener('pointercancel', finGlisser);
-
-  gridEl.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-      var cell = e.target && e.target.closest ? e.target.closest('.jeu-cell') : null;
-      if (cell && gridEl.contains(cell)) {
-        e.preventDefault();
-        appliquer(parseInt(cell.dataset.r, 10), parseInt(cell.dataset.c, 10), true);
-      }
-    }
-  });
-
-  resetBtn.addEventListener('click', function () { charger(levelIndex); });
-  suivantBtn.addEventListener('click', function () {
-    charger((levelIndex + 1) % NIVEAUX.length);
-  });
-
-  window.__relie = {
-    presser: function (r, c) { appliquer(r, c, true); },
-    glisser: function (r, c) { appliquer(r, c, false); },
-    gagne: function () {
-      if (!niveau) return false;
-      var all = niveau.pairs.every(function (p) { return !!connected[p.color]; });
-      return all && (nbParcelles() === totalIntermediaires());
-    },
-    niveau: function () { return levelIndex; },
-    recommencer: function () { charger(levelIndex); }
-  };
-
-  charger(0);
-})();
-</script>
 </body>
 </html>
