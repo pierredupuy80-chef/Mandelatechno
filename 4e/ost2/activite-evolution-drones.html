@@ -485,7 +485,10 @@
         }
 
         /* ============================================
-           ÉNIGMES - NIVEAU N3
+           PROBLÉMATIQUE - NIVEAU N3
+           (les noms de classes « enigme-* » sont historiques : ils sont
+           référencés par personnaliser.py et par les activités déjà publiées,
+           seul le texte affiché parle de problématique)
            ============================================ */
         
         .enigme-conteneur {
@@ -548,6 +551,45 @@
             display: block;
         }
 
+        /* Cadres de réponse N3 : deux zones distinctes, numérotées.
+           Le diagnostic (ce qui ne va pas) et la proposition de solution (ce
+           que l'élève propose) sont deux gestes mentaux différents : les
+           séparer évite que le constat et la remédiation se mélangent dans un
+           seul cadre. */
+
+        .cadre-reponse {
+            background-color: white;
+            border: 2px solid #d1d5db;
+            border-left: 6px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-lg);
+            margin-bottom: var(--espacement-lg);
+        }
+
+        .cadre-reponse h4 {
+            color: var(--couleur-primaire);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .cadre-reponse .consigne-cadre {
+            color: var(--couleur-texte-leger);
+            margin-bottom: var(--espacement-md);
+        }
+
+        .cadre-reponse .numero-cadre {
+            display: inline-block;
+            margin-right: var(--espacement-xs);
+            padding: 0 0.5em;
+            border-radius: 999px;
+            background-color: var(--couleur-primaire);
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .cadre-reponse textarea {
+            margin-top: 0;
+        }
+
         /* ============================================
            PROBLÈME OUVERT - NIVEAU N4
            ============================================ */
@@ -601,6 +643,276 @@
             border-radius: var(--rayon-bordure);
             padding: var(--espacement-lg);
             margin-top: var(--espacement-lg);
+        }
+
+        /* ============================================
+           ATELIER DE CÂBLAGE - NIVEAU N4
+           (bloc produit depuis n4.cablage ; marqueurs
+            CABLAGE-N4 retirés si la configuration
+            n'en déclare pas)
+           ============================================ */
+
+        .cablage-n4 {
+            margin: var(--espacement-lg) 0;
+            padding: var(--espacement-md);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: #f1f5f9;
+        }
+
+        .cablage-n4 h3 {
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .cablage-consigne {
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .cablage-aide {
+            font-size: 0.9rem;
+            /* Gris foncé : 6:1 sur le fond du cadre (RGAA AA attend 4,5:1) */
+            color: #475569;
+            margin-bottom: var(--espacement-md);
+        }
+
+        .cablage-reserve {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            min-height: 76px;
+            padding: var(--espacement-sm);
+            margin-bottom: var(--espacement-sm);
+            border: 2px dashed #94a3b8;
+            border-radius: var(--rayon-bordure);
+            background-color: #e2e8f0;
+        }
+
+        .cablage-reserve.vide::after {
+            content: "Tous les équipements sont sur le fond blanc.";
+            align-self: center;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        /* Le fond blanc du schéma : les équipements y sont posés librement. */
+        .cablage-zone {
+            position: relative;
+            height: 480px;
+            background-color: #ffffff;
+            border: 2px solid #64748b;
+            border-radius: var(--rayon-bordure);
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .cablage-indication {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            /* Lisible sur le fond blanc (6:1) : c'est une consigne, pas un décor */
+            color: #475569;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .cablage-indication.cache {
+            display: none;
+        }
+
+        .cablage-fils {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .fil-reseau {
+            pointer-events: none;
+        }
+
+        .fil-reseau .fil-trait {
+            fill: none;
+            stroke: var(--couleur-primaire);
+            stroke-width: 4;
+            stroke-linecap: round;
+            pointer-events: none;
+        }
+
+        /* Cible large et transparente : on clique le fil au doigt sans viser. */
+        .fil-reseau .fil-cible {
+            fill: none;
+            stroke: transparent;
+            stroke-width: 20;
+            stroke-linecap: round;
+            pointer-events: stroke;
+            cursor: pointer;
+        }
+
+        .fil-reseau:focus {
+            outline: none;
+        }
+
+        .fil-reseau:focus .fil-trait {
+            stroke: #1a4f7a;
+            stroke-dasharray: 7 5;
+            stroke-width: 5;
+        }
+
+        .fil-reseau.juste .fil-trait {
+            stroke: var(--couleur-succes);
+        }
+
+        .fil-reseau.faux .fil-trait {
+            stroke: var(--couleur-alerte);
+            stroke-dasharray: 9 7;
+        }
+
+        .noeud-reseau {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            width: 92px;
+            min-height: 62px;
+            padding: 3px 2px;
+            border: 2px solid #64748b;
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: var(--couleur-texte);
+            font-family: inherit;
+            font-size: 0.72rem;
+            line-height: 1.15;
+            text-align: center;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .noeud-reseau:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .noeud-reseau .noeud-icone {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .noeud-reseau .noeud-nom {
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Repère visuel du type d'équipement : le rôle se lit d'un coup d'œil. */
+        .noeud-reseau[data-type="routeur"] {
+            border-color: var(--couleur-info);
+            background-color: #ecfeff;
+        }
+
+        .noeud-reseau[data-type="commutateur"] {
+            border-color: var(--couleur-secondaire);
+            background-color: #f5f3ff;
+        }
+
+        .noeud-reseau.sur-plateau {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 3;
+        }
+
+        .noeud-reseau.deplace {
+            z-index: 6;
+            cursor: grabbing;
+            box-shadow: var(--ombre-moyenne);
+        }
+
+        .noeud-reseau.selectionne {
+            border-color: var(--couleur-primaire);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.35);
+        }
+
+        .cablage-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+            margin-top: var(--espacement-md);
+        }
+
+        .cablage-actions .bouton-action {
+            margin: 0;
+            padding: var(--espacement-sm) var(--espacement-lg);
+        }
+
+        .cablage-retour {
+            margin-top: var(--espacement-md);
+            min-height: 1.5rem;
+            font-weight: 600;
+        }
+
+        .cablage-retour.info {
+            color: #475569;
+        }
+
+        .cablage-retour.succes {
+            color: var(--couleur-succes);
+        }
+
+        .cablage-retour.echec {
+            color: var(--couleur-alerte);
+        }
+
+        .cablage-bilan {
+            margin-top: var(--espacement-md);
+            padding: var(--espacement-md);
+            border-radius: var(--rayon-bordure);
+            border-left: 6px solid var(--couleur-primaire);
+            background-color: #ffffff;
+        }
+
+        .cablage-bilan.succes {
+            border-left-color: var(--couleur-succes);
+            background-color: #f0fdf4;
+        }
+
+        .cablage-bilan.echec {
+            border-left-color: var(--couleur-alerte);
+            background-color: #fef2f2;
+        }
+
+        .cablage-bilan ul {
+            margin: var(--espacement-sm) 0 0 var(--espacement-lg);
+        }
+
+        .cablage-bilan li {
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .cablage-explication {
+            margin-top: var(--espacement-md);
+            padding-top: var(--espacement-sm);
+            border-top: 1px solid #cbd5e1;
+        }
+
+        @media (max-width: 480px) {
+            .cablage-zone {
+                height: 540px;
+            }
+
+            .noeud-reseau {
+                width: 84px;
+                font-size: 0.68rem;
+            }
         }
 
         /* ============================================
@@ -787,6 +1099,640 @@
             .carte-contenu {
                 box-shadow: none;
                 border: 1px solid #ccc;
+            }
+        }
+
+        /* ============================================
+           ATELIERS N2 — ateliers de découverte
+           (remplis depuis n2.ateliers ; le bloc entier
+            est retiré si la configuration n'en fournit pas)
+           ============================================ */
+
+        .ateliers-n2 {
+            margin-top: var(--espacement-lg);
+            padding-top: var(--espacement-lg);
+            border-top: 2px dashed #dce3ed;
+        }
+
+        .atelier-carte {
+            background: #fbfcfe;
+            border: 1px solid #dce3ed;
+            border-left: 5px solid #2e74b5;
+            border-radius: 12px;
+            padding: 1rem 1.1rem 1.2rem;
+            margin-top: 1.25rem;
+        }
+
+        .atelier-carte h3 {
+            margin: 0 0 .35rem;
+            font-size: 1.05rem;
+        }
+
+        .atelier-carte h4 {
+            margin: .8rem 0 .4rem;
+            font-size: .92rem;
+            color: #3a6ea5;
+        }
+
+        .atelier-consigne {
+            margin: .2rem 0 .8rem;
+        }
+
+        .atelier-colonnes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .9rem;
+        }
+
+        .atelier-liste {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+
+        .atelier-jeton,
+        .atelier-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            padding: .55rem .7rem;
+            font: inherit;
+            font-size: .9rem;
+            line-height: 1.35;
+            color: inherit;
+            cursor: pointer;
+            min-height: 44px;
+            transition: border-color .2s, background .2s;
+        }
+
+        .atelier-jeton:hover,
+        .atelier-option:hover {
+            border-color: #2e74b5;
+        }
+
+        .atelier-jeton:focus-visible,
+        .atelier-option:focus-visible,
+        .rotor-btn:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .atelier-jeton.choisi,
+        .atelier-option.choisi {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+            font-weight: 600;
+        }
+
+        .atelier-jeton.apparie {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            cursor: default;
+        }
+
+        .atelier-jeton.erreur,
+        .atelier-option.erreur {
+            border-color: #c62828;
+            background: #fdecea;
+            animation: atelierSecousse .3s;
+        }
+
+        .atelier-option.correcte {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .atelier-option.fausse {
+            border-color: #c62828;
+            background: #fdecea;
+        }
+
+        @keyframes atelierSecousse {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .atelier-compteur {
+            font-size: .85rem;
+            font-weight: 600;
+            color: #3a6ea5;
+            margin: .6rem 0 0;
+        }
+
+        .atelier-retour {
+            min-height: 1.6rem;
+            margin: .5rem 0 0;
+            padding: .45rem .7rem;
+            border-radius: 8px;
+            font-size: .9rem;
+        }
+
+        .atelier-retour:empty {
+            padding: 0;
+        }
+
+        .atelier-retour.succes {
+            background: #e8f5e9;
+            color: #1b5e20;
+        }
+
+        .atelier-retour.echec {
+            background: #fdecea;
+            color: #8e1b1b;
+        }
+
+        .atelier-retour.info {
+            background: #eaf1f8;
+            color: #1a3f5e;
+        }
+
+        .atelier-explication {
+            background: #fff8e1;
+            border-left: 5px solid #f0b400;
+            border-radius: 8px;
+            padding: .7rem .9rem;
+            margin-top: .8rem;
+            font-size: .92rem;
+        }
+
+        .atelier-actions {
+            margin-top: .7rem;
+        }
+
+        /* ── Type « reseau » : reconstituer le câblage d'un réseau entier ──
+           L'élève clique deux appareils pour tendre un fil ; la liaison est
+           vérifiée à l'instant et s'inscrit dans « Ton réseau, fil par fil »
+           avec sa justification. */
+        .atelier-reseau {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+            margin: .4rem 0 .6rem;
+        }
+
+        .reseau-appareil {
+            position: relative;
+            flex: 1 1 122px;
+            min-width: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .1rem;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            padding: .5rem .4rem;
+            font: inherit;
+            font-size: .82rem;
+            line-height: 1.2;
+            text-align: center;
+            color: inherit;
+            cursor: pointer;
+            min-height: 44px;
+            transition: border-color .2s, background .2s;
+        }
+
+        .reseau-appareil:hover {
+            border-color: #2e74b5;
+        }
+
+        .reseau-appareil:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .reseau-appareil.choisi {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+            font-weight: 600;
+        }
+
+        .reseau-appareil.relie {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .reseau-appareil.erreur {
+            border-color: #c62828;
+            background: #fdecea;
+            animation: atelierSecousse .3s;
+        }
+
+        .reseau-icone {
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .reseau-nom {
+            font-weight: 600;
+        }
+
+        .reseau-role {
+            font-size: .72rem;
+            color: #4a5d70;
+        }
+
+        .reseau-compteur {
+            min-height: .95rem;
+            font-size: .7rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        .atelier-fils-cadre {
+            margin-top: .6rem;
+            padding: .6rem .7rem;
+            border: 1px solid #dce3ed;
+            border-radius: 9px;
+            background: #fbfcfe;
+        }
+
+        .atelier-fils-cadre h4 {
+            margin: 0 0 .35rem;
+        }
+
+        .atelier-fils {
+            margin: 0 0 0 1.1rem;
+            font-size: .88rem;
+        }
+
+        .atelier-fils li {
+            margin-bottom: .3rem;
+        }
+
+        .atelier-fils li strong {
+            color: #1b5e20;
+        }
+
+        .atelier-fils-vide {
+            font-style: italic;
+            color: #4a5d70;
+        }
+
+        .atelier-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+            margin: .5rem 0;
+        }
+
+        .atelier-slot {
+            flex: 1 1 140px;
+            min-height: 54px;
+            border: 2px dashed #b9c8d8;
+            border-radius: 9px;
+            padding: .45rem .55rem;
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            color: #7a8b9c;
+        }
+
+        .atelier-slot.rempli {
+            border-style: solid;
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            color: #1b3d1e;
+            font-weight: 600;
+        }
+
+        .atelier-marqueur {
+            font-size: .75rem;
+            font-weight: 700;
+            color: #2e74b5;
+            background: #eaf1f8;
+            border-radius: 5px;
+            padding: .05rem .35rem;
+            flex: 0 0 auto;
+        }
+
+        .atelier-jetons-melanges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+        }
+
+        .atelier-jetons-melanges .atelier-jeton {
+            flex: 1 1 160px;
+        }
+
+        .atelier-drone-cadre {
+            display: flex;
+            justify-content: center;
+            margin: .4rem 0 .6rem;
+            background: #f4f8fc;
+            border-radius: 10px;
+            padding: .5rem;
+        }
+
+        .atelier-drone {
+            width: 150px;
+            height: 94px;
+            transition: transform .5s ease;
+        }
+
+        .atelier-drone.attitude-gaz { transform: translateY(-12px); }
+        .atelier-drone.attitude-tangage { transform: rotate(-14deg); }
+        .atelier-drone.attitude-roulis { transform: skewX(-12deg); }
+        .atelier-drone.attitude-lacet { transform: rotate(26deg); }
+
+        .atelier-missions {
+            display: flex;
+            flex-direction: column;
+            gap: .9rem;
+        }
+
+        .atelier-question {
+            background: #fff;
+            border: 1px solid #e3e9f1;
+            border-radius: 10px;
+            padding: .7rem .8rem;
+        }
+
+        .atelier-enonce {
+            margin: 0 0 .5rem;
+            font-size: .95rem;
+        }
+
+        .atelier-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .4rem;
+        }
+
+        .rotors-cadre {
+            display: flex;
+            justify-content: center;
+            margin: .4rem 0;
+        }
+
+        .rotors-grille {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .6rem;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .rotors-nez {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: .8rem;
+            font-weight: 700;
+            color: #3a6ea5;
+            letter-spacing: .04em;
+        }
+
+        .rotor-case {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .25rem;
+        }
+
+        .rotor-nom {
+            font-size: .78rem;
+            color: #5a6b7d;
+        }
+
+        .rotor-btn {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            border: 3px solid #b9c8d8;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            line-height: 1;
+            color: #1a3f5e;
+        }
+
+        .rotor-btn:hover {
+            border-color: #2e74b5;
+        }
+
+        .rotor-symbole {
+            display: inline-block;
+        }
+
+        .rotor-symbole.tourne-droite { animation: rotorDroite 2.4s linear infinite; }
+        .rotor-symbole.tourne-gauche { animation: rotorGauche 2.4s linear infinite; }
+
+        @keyframes rotorDroite { to { transform: rotate(360deg); } }
+        @keyframes rotorGauche { to { transform: rotate(-360deg); } }
+
+        .rotor-btn.anti-couple {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .rotor-btn.mauvais-sens {
+            border-color: #c62828;
+            background: #fdecea;
+        }
+
+        .atelier-jauge-cadre {
+            background: #e3e9f1;
+            border-radius: 999px;
+            height: 22px;
+            overflow: hidden;
+            max-width: 420px;
+            margin: .5rem 0 .25rem;
+        }
+
+        .atelier-jauge {
+            height: 100%;
+            width: 0;
+            background: #2e74b5;
+            border-radius: 999px;
+            transition: width .45s ease;
+        }
+
+        .atelier-jauge.jauge-ok {
+            background: #2e7d32;
+        }
+
+        .atelier-formule {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: .85rem;
+            background: #f1f5fa;
+            border-radius: 8px;
+            padding: .45rem .6rem;
+            margin: .4rem 0 .7rem;
+        }
+
+        .atelier-legende {
+            list-style: none;
+            padding: 0;
+            margin: .3rem 0 .9rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+        }
+
+        .atelier-legende li {
+            background: #eaf1f8;
+            border-radius: 8px;
+            padding: .35rem .6rem;
+            font-size: .85rem;
+            flex: 1 1 190px;
+        }
+
+        .atelier-verdict {
+            text-align: center;
+            font-size: .9rem;
+            font-weight: 600;
+            color: #1a3f5e;
+            margin: .2rem 0 0;
+        }
+
+        /* Atelier « environnement » : interacteurs extérieurs et capteurs */
+
+        .env-catalogue {
+            list-style: none;
+            padding: 0;
+            margin: .4rem 0 .9rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: .4rem;
+        }
+
+        .env-catalogue li {
+            background: #fff;
+            border: 1px solid #e3e9f1;
+            border-radius: 9px;
+            padding: .45rem .6rem;
+            font-size: .82rem;
+            line-height: 1.3;
+        }
+
+        .env-catalogue strong {
+            display: block;
+            font-size: .88rem;
+            margin-bottom: .1rem;
+        }
+
+        .env-catalogue .env-mesure {
+            color: #3a6ea5;
+        }
+
+        .env-interacteurs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: .4rem;
+            margin: .4rem 0 .8rem;
+        }
+
+        .env-interacteur {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            padding: .5rem .6rem;
+            font: inherit;
+            font-size: .88rem;
+            line-height: 1.3;
+            color: inherit;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .env-interacteur:hover {
+            border-color: #2e74b5;
+        }
+
+        .env-interacteur:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .env-interacteur.choisi {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+            font-weight: 600;
+        }
+
+        .env-effet {
+            background: #eaf1f8;
+            border-radius: 8px;
+            padding: .5rem .7rem;
+            font-size: .9rem;
+            margin: .3rem 0 .6rem;
+        }
+
+        .env-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+            table-layout: fixed;
+        }
+
+        .env-table caption {
+            text-align: left;
+            font-weight: 700;
+            color: #3a6ea5;
+            font-size: .9rem;
+            padding-bottom: .35rem;
+        }
+
+        .env-table th,
+        .env-table td {
+            text-align: left;
+            padding: .35rem .4rem;
+            border-bottom: 1px solid #e3e9f1;
+            vertical-align: top;
+            overflow-wrap: anywhere;
+        }
+
+        .env-table thead th {
+            background: #f1f5fa;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .02em;
+        }
+
+        .env-table thead th:last-child,
+        .env-table tbody td:last-child {
+            width: 48%;
+        }
+
+        .env-jauge {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: .04em;
+        }
+
+        .env-note-3 .env-mot { color: #1b5e20; font-weight: 600; }
+        .env-note-2 .env-mot { color: #2e5f8a; font-weight: 600; }
+        .env-note-1 .env-mot { color: #7a5300; font-weight: 600; }
+        .env-note-0 .env-mot { color: #8e1b1b; font-weight: 600; }
+
+        .env-legende {
+            font-size: .8rem;
+            color: #5a6b7d;
+            margin: .2rem 0 .6rem;
+        }
+
+        .atelier-mesure {
+            display: block;
+            font-size: .82rem;
+            color: #1a3f5e;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .atelier-colonnes,
+            .atelier-options {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1271,7 +2217,7 @@ font-size: 0.78rem;
                 N2 - Quiz
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n3-enigme" role="tab" aria-selected="false" aria-controls="contenu-n3-enigme" tabindex="-1" disabled>
-                N3 - Énigme
+                N3 - Problématique
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n4-probleme" role="tab" aria-selected="false" aria-controls="contenu-n4-probleme" tabindex="-1" disabled>
                 N4 - Problème
@@ -1510,6 +2456,303 @@ font-size: 0.78rem;
                     <div class="details-chaine" id="details-chaine"
                          aria-label="Descriptions des éléments explorés"></div>
 
+
+                    <div class="ateliers-n2" id="ateliers-n2">
+                        <h3>🔧 Ateliers — comment fonctionne un drone ?</h3>
+                    <p class="texte-secondaire">Cinq ateliers pour démonter le drone dans votre tête : ses constituants et leurs fonctions, le trajet de l'énergie, les quatre commandes du pilote, l'équilibre des hélices et l'autonomie de la batterie. Chaque atelier se corrige lui-même et explique la réponse.</p>
+
+                    <article class="atelier-carte" data-type="association" data-atelier="qui-fait-quoi" aria-labelledby="atelier-titre-qui-fait-quoi">
+                        <h3 id="atelier-titre-qui-fait-quoi">🧩 Atelier 1 — Qui fait quoi dans le drone ?</h3>
+                        <p class="atelier-consigne">Un drone est un assemblage de constituants. Cliquez un constituant, puis la fonction technique qu'il assure : les paires justes restent affichées en vert.</p>
+                        <div class="atelier-colonnes">
+                            <div>
+                                <h4>Constituants du drone</h4>
+                                <div class="atelier-liste" role="group" aria-label="Constituants du drone">
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">🔋 Batterie Li-Po</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">🎚️ Variateur (ESC)</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">⚙️ Moteur brushless</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">🌀 Hélice</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">📐 Centrale inertielle (gyroscope + accéléromètre)</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="5" aria-pressed="false" onclick="atelierChoisirJeton(this)">🧠 Carte de vol</button>
+                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="6" aria-pressed="false" onclick="atelierChoisirJeton(this)">📡 Récepteur radio</button>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>Fonctions techniques</h4>
+                                <div class="atelier-liste" role="group" aria-label="Fonctions techniques">
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="6" aria-pressed="false" onclick="atelierChoisirJeton(this)">RECEVOIR : capter les ordres envoyés par la radiocommande du pilote.</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">DISTRIBUER : régler la vitesse de chaque moteur en modulant l'énergie qu'il reçoit.</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="5" aria-pressed="false" onclick="atelierChoisirJeton(this)">TRAITER : comparer la position mesurée à la consigne et calculer les ordres envoyés aux moteurs.</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">CONVERTIR : transformer l'énergie électrique en énergie mécanique de rotation.</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">ALIMENTER : stocker et fournir l'énergie électrique à tout le drone.</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">ACQUÉRIR : mesurer l'inclinaison et les rotations du drone.</button>
+                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">TRANSMETTRE : pousser l'air vers le bas pour créer la portance.</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="atelier-compteur" data-role="compteur">0 paire(s) trouvée(s) sur 7 — il en reste 7.</p>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierAssociation(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">Un drone réunit deux chaînes. La chaîne d'information ACQUIERT (centrale inertielle, récepteur radio), TRAITE (carte de vol) puis communique les ordres aux variateurs. La chaîne d'énergie ALIMENTE (batterie), DISTRIBUE (variateur), CONVERTIT (moteur) puis TRANSMET le mouvement à l'air (hélice) : c'est la portance qui soulève le drone.</p>
+                    </article>
+
+                    <article class="atelier-carte" data-type="environnement" data-atelier="interacteurs-capteurs" aria-labelledby="atelier-titre-interacteurs-capteurs">
+                        <h3 id="atelier-titre-interacteurs-capteurs">🌍 Atelier 1 bis — Dans quel environnement vole le drone ?</h3>
+                        <p class="atelier-consigne">Le drone vole dans un milieu qui le perturbe : vent, pluie, brouillard, poussière, brouillage radio… Cliquez un interacteur extérieur pour lire son effet sur le drone, puis la note d'efficacité de chaque capteur pour le contrer. Terminez par les défis : un capteur par situation.</p>
+                        <script type="application/json" class="env-donnees">{"capteurs":{"anemometre":{"icone":"🌬️","nom":"Anémomètre","mesure":"la vitesse du vent"},"imu":{"icone":"📐","nom":"Centrale inertielle (gyroscope + accéléromètre)","mesure":"les rotations et les accélérations du drone"},"magnetometre":{"icone":"🧲","nom":"Magnétomètre (boussole)","mesure":"le champ magnétique, pour s'orienter"},"barometre":{"icone":"📉","nom":"Baromètre","mesure":"la pression de l'air, donc l'altitude"},"gnss":{"icone":"🛰️","nom":"Récepteur GNSS (GPS)","mesure":"la position par satellites"},"ultrasons":{"icone":"🔊","nom":"Télémètre à ultrasons","mesure":"la distance aux obstacles proches, par écho sonore"},"lidar":{"icone":"🔦","nom":"LiDAR","mesure":"les distances par faisceau laser"},"radar":{"icone":"📶","nom":"Radar","mesure":"les distances et les vitesses par ondes radio"},"camera":{"icone":"📷","nom":"Caméra avec reconnaissance d'images","mesure":"des images, analysées par un programme"},"thermique":{"icone":"🔥","nom":"Caméra thermique","mesure":"la chaleur des objets et des êtres vivants"},"pluie":{"icone":"💧","nom":"Capteur de pluie et d'humidité","mesure":"les gouttes et le taux d'humidité"},"flux_optique":{"icone":"🔍","nom":"Capteur de flux optique","mesure":"le défilement du sol, pour estimer la vitesse et la dérive"},"temperature":{"icone":"🌡️","nom":"Capteur de température","mesure":"la température de l'air"}},"interacteurs":{"vent":{"icone":"💨","nom":"Vent et rafales","effet":"Le vent pousse le drone hors de sa trajectoire ; les rafales le font dévier et le déséquilibrent.","notes":{"anemometre":3,"imu":2,"gnss":2,"flux_optique":2,"camera":1}},"pluie":{"icone":"🌧️","nom":"Pluie et forte humidité","effet":"L'eau alourdit le drone, met l'électronique en danger et dégrade les images.","notes":{"pluie":3,"radar":2,"imu":2,"lidar":0,"camera":0}},"brouillard":{"icone":"🌫️","nom":"Brouillard et faible visibilité","effet":"Le drone ne distingue plus les obstacles : la caméra et le laser ne voient plus au-delà de quelques mètres.","notes":{"radar":3,"ultrasons":2,"gnss":1,"lidar":0,"camera":0}},"froid_chaleur":{"icone":"🌡️","nom":"Froid et forte chaleur","effet":"Le froid vide la batterie plus vite ; la chaleur fait dériver les mesures et peut bloquer les moteurs.","notes":{"temperature":3,"pluie":2,"barometre":2,"imu":1}},"soleil":{"icone":"☀️","nom":"Soleil et éblouissement","effet":"Le soleil rasant éblouit la caméra ; ses rayons chauffent la batterie et le boîtier.","notes":{"lidar":3,"camera":2,"thermique":2,"temperature":2}},"poussiere":{"icone":"🏜️","nom":"Poussière et sable","effet":"Les grains rayent les optiques et le souffle des hélices soulève un nuage qui masque le paysage.","notes":{"radar":3,"ultrasons":2,"lidar":1,"camera":1}},"oiseaux":{"icone":"🐦","nom":"Oiseaux","effet":"Un oiseau qui traverse la trajectoire peut heurter le drone ou déclencher une manœuvre d'évitement.","notes":{"camera":3,"radar":2,"ultrasons":2,"lidar":1}},"obstacles":{"icone":"🌳","nom":"Obstacles fixes (arbres, câbles, façades)","effet":"Le drone peut percuter un tronc, un câble électrique ou une façade.","notes":{"lidar":3,"radar":3,"ultrasons":2,"camera":2}},"brouillage":{"icone":"📡","nom":"Brouillage radio et perte de signal","effet":"Les ordres du pilote et le signal des satellites peuvent être perturbés ou perdus.","notes":{"imu":3,"flux_optique":3,"camera":2,"barometre":1}},"champs_magnetiques":{"icone":"🧲","nom":"Champs magnétiques (lignes électriques, ponts métalliques)","effet":"Près d'une ligne à haute tension ou d'un ouvrage métallique, la boussole indique un faux nord.","notes":{"magnetometre":0,"imu":3,"gnss":3,"flux_optique":2}},"altitude":{"icone":"⛰️","nom":"Altitude et pression atmosphérique","effet":"Le drone doit garder une hauteur stable et connaître son altitude au-dessus du sol.","notes":{"barometre":3,"gnss":3,"ultrasons":2,"lidar":2}},"personnes":{"icone":"👥","nom":"Personnes et animaux au sol","effet":"Le drone doit repérer les personnes pour ne pas les survoler de trop près, ou pour les secourir.","notes":{"thermique":3,"camera":2,"radar":2,"ultrasons":2}}}}</script>
+                        <h4>Les capteurs du drone</h4>
+                        <ul class="env-catalogue">
+                            <li><strong>🌬️ Anémomètre</strong><span class="env-mesure">la vitesse du vent</span></li>
+                            <li><strong>📐 Centrale inertielle (gyroscope + accéléromètre)</strong><span class="env-mesure">les rotations et les accélérations du drone</span></li>
+                            <li><strong>🧲 Magnétomètre (boussole)</strong><span class="env-mesure">le champ magnétique, pour s'orienter</span></li>
+                            <li><strong>📉 Baromètre</strong><span class="env-mesure">la pression de l'air, donc l'altitude</span></li>
+                            <li><strong>🛰️ Récepteur GNSS (GPS)</strong><span class="env-mesure">la position par satellites</span></li>
+                            <li><strong>🔊 Télémètre à ultrasons</strong><span class="env-mesure">la distance aux obstacles proches, par écho sonore</span></li>
+                            <li><strong>🔦 LiDAR</strong><span class="env-mesure">les distances par faisceau laser</span></li>
+                            <li><strong>📶 Radar</strong><span class="env-mesure">les distances et les vitesses par ondes radio</span></li>
+                            <li><strong>📷 Caméra avec reconnaissance d'images</strong><span class="env-mesure">des images, analysées par un programme</span></li>
+                            <li><strong>🔥 Caméra thermique</strong><span class="env-mesure">la chaleur des objets et des êtres vivants</span></li>
+                            <li><strong>💧 Capteur de pluie et d'humidité</strong><span class="env-mesure">les gouttes et le taux d'humidité</span></li>
+                            <li><strong>🔍 Capteur de flux optique</strong><span class="env-mesure">le défilement du sol, pour estimer la vitesse et la dérive</span></li>
+                            <li><strong>🌡️ Capteur de température</strong><span class="env-mesure">la température de l'air</span></li>
+                        </ul>
+                        <h4>Les interacteurs extérieurs</h4>
+                        <div class="env-interacteurs" role="group" aria-label="Interacteurs extérieurs">
+                            <button type="button" class="env-interacteur" data-interacteur="vent" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">💨 Vent et rafales</button>
+                            <button type="button" class="env-interacteur" data-interacteur="pluie" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🌧️ Pluie et forte humidité</button>
+                            <button type="button" class="env-interacteur" data-interacteur="brouillard" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🌫️ Brouillard et faible visibilité</button>
+                            <button type="button" class="env-interacteur" data-interacteur="froid_chaleur" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🌡️ Froid et forte chaleur</button>
+                            <button type="button" class="env-interacteur" data-interacteur="soleil" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">☀️ Soleil et éblouissement</button>
+                            <button type="button" class="env-interacteur" data-interacteur="poussiere" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🏜️ Poussière et sable</button>
+                            <button type="button" class="env-interacteur" data-interacteur="oiseaux" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🐦 Oiseaux</button>
+                            <button type="button" class="env-interacteur" data-interacteur="obstacles" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🌳 Obstacles fixes (arbres, câbles, façades)</button>
+                            <button type="button" class="env-interacteur" data-interacteur="brouillage" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">📡 Brouillage radio et perte de signal</button>
+                            <button type="button" class="env-interacteur" data-interacteur="champs_magnetiques" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">🧲 Champs magnétiques (lignes électriques, ponts métalliques)</button>
+                            <button type="button" class="env-interacteur" data-interacteur="altitude" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">⛰️ Altitude et pression atmosphérique</button>
+                            <button type="button" class="env-interacteur" data-interacteur="personnes" aria-pressed="false" onclick="atelierChoisirInteracteur(this)">👥 Personnes et animaux au sol</button>
+                        </div>
+                        <p class="env-effet" data-role="effet" role="status" aria-live="polite">Choisissez un interacteur : son effet sur le drone et la note d'efficacité des capteurs pour le contrer s'affichent ici.</p>
+                        <table class="env-table">
+                            <caption data-role="legende-table">Efficacité des capteurs</caption>
+                            <thead>
+                                <tr><th scope="col">Capteur</th><th scope="col">Efficacité</th></tr>
+                            </thead>
+                            <tbody data-role="lignes">
+                                <tr><td colspan="2">Sélectionnez un interacteur ci-dessus pour afficher les notes.</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="env-legende">Note d'efficacité : ●●● très efficace · ●●○ efficace en partie · ●○○ peu efficace · ○○○ inadapté ou perturbé (le capteur est aveuglé ou trompé par cet interacteur).</p>
+                        <h4>À vous de choisir le capteur</h4>
+                        <div class="atelier-missions">
+                            <div class="atelier-question" data-defi="1" data-bonne="anemometre" data-explication="L'anémomètre mesure la vitesse du vent, donc la dérive à compenser avant qu'elle ne s'installe. Le GNSS constate la dérive déjà produite, le magnétomètre ne renseigne que sur le cap, et la caméra ne mesure pas le vent.">
+                                <p class="atelier-enonce"><strong>Défi 1 :</strong> Le drone doit tenir sa trajectoire par grand vent : quel capteur mesure directement le vent pour que la carte de vol compense ?</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Capteurs possibles pour le défi 1">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="anemometre" onclick="atelierChoisirOption(this)">🌬️ Anémomètre</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gnss" onclick="atelierChoisirOption(this)">🛰️ Récepteur GNSS (GPS)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="magnetometre" onclick="atelierChoisirOption(this)">🧲 Magnétomètre (boussole)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="camera" onclick="atelierChoisirOption(this)">📷 Caméra avec reconnaissance d'images</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-defi="2" data-bonne="radar" data-explication="Les ondes radio du radar traversent la poussière. Le LiDAR et la caméra sont aveuglés par les grains en suspension, et les ultrasons ne portent que quelques mètres.">
+                                <p class="atelier-enonce"><strong>Défi 2 :</strong> Sur un chantier, le drone doit franchir un nuage de poussière sans heurter une grue.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Capteurs possibles pour le défi 2">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="radar" onclick="atelierChoisirOption(this)">📶 Radar</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lidar" onclick="atelierChoisirOption(this)">🔦 LiDAR</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="camera" onclick="atelierChoisirOption(this)">📷 Caméra avec reconnaissance d'images</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="ultrasons" onclick="atelierChoisirOption(this)">🔊 Télémètre à ultrasons</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-defi="3" data-bonne="imu" data-explication="Le gyroscope de la centrale inertielle mesure la rotation du drone sans aucun signal extérieur. La boussole peut être faussée près du métal, et le GNSS est justement indisponible ici.">
+                                <p class="atelier-enonce"><strong>Défi 3 :</strong> Dans un sous-bois, le signal des satellites est perdu : le drone doit savoir s'il tourne sur lui-même.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Capteurs possibles pour le défi 3">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="imu" onclick="atelierChoisirOption(this)">📐 Centrale inertielle (gyroscope + accéléromètre)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="magnetometre" onclick="atelierChoisirOption(this)">🧲 Magnétomètre (boussole)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gnss" onclick="atelierChoisirOption(this)">🛰️ Récepteur GNSS (GPS)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="camera" onclick="atelierChoisirOption(this)">📷 Caméra avec reconnaissance d'images</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-defi="4" data-bonne="imu" data-explication="La centrale inertielle intègre les rotations du drone : elle garde le cap sans boussole ni satellite. Le magnétomètre est justement trompé par le métal, le GNSS dépend d'un signal radio, et le flux optique mesure un déplacement par rapport au sol, pas un cap.">
+                                <p class="atelier-enonce"><strong>Défi 4 :</strong> Le drone survole un pont métallique : la boussole indique une direction fausse. Quel capteur permet de garder le cap sans dépendre d'un signal radio ni du champ magnétique ?</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Capteurs possibles pour le défi 4">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="imu" onclick="atelierChoisirOption(this)">📐 Centrale inertielle (gyroscope + accéléromètre)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="magnetometre" onclick="atelierChoisirOption(this)">🧲 Magnétomètre (boussole)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gnss" onclick="atelierChoisirOption(this)">🛰️ Récepteur GNSS (GPS)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="flux_optique" onclick="atelierChoisirOption(this)">🔍 Capteur de flux optique</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-defi="5" data-bonne="thermique" data-explication="La caméra thermique repère la chaleur d'un corps humain même dans l'obscurité. Une caméra classique ne voit presque rien la nuit, et les télémètres ne distinguent pas une personne d'un obstacle.">
+                                <p class="atelier-enonce"><strong>Défi 5 :</strong> Une personne est portée disparue dans un champ, de nuit. Quel capteur a le plus de chances de la repérer ?</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Capteurs possibles pour le défi 5">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="thermique" onclick="atelierChoisirOption(this)">🔥 Caméra thermique</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="camera" onclick="atelierChoisirOption(this)">📷 Caméra avec reconnaissance d'images</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="ultrasons" onclick="atelierChoisirOption(this)">🔊 Télémètre à ultrasons</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lidar" onclick="atelierChoisirOption(this)">🔦 LiDAR</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                        </div>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierChoix(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">Aucun capteur ne contre tous les interacteurs : chaque perturbation a son capteur le plus efficace, et un capteur excellent par beau temps peut être aveuglé (LiDAR dans le brouillard) ou trompé (boussole près du métal). C'est en croisant plusieurs mesures — centrale inertielle, GNSS, baromètre, caméra, radar — que la carte de vol détecte la perturbation et corrige la trajectoire : un capteur seul ne suffit jamais à piloter un drone.</p>
+                    </article>
+
+                    <article class="atelier-carte" data-type="ordre" data-atelier="chaine-energie" aria-labelledby="atelier-titre-chaine-energie">
+                        <h3 id="atelier-titre-chaine-energie">🔗 Atelier 2 — Le trajet de l'énergie</h3>
+                        <p class="atelier-consigne">Cliquez les maillons dans l'ordre du trajet de l'énergie : du stockage dans la batterie jusqu'à l'air poussé vers le bas.</p>
+                        <div class="atelier-slots" role="list" aria-label="Emplacements de la chaîne, du premier au dernier maillon">
+                            <div class="atelier-slot" role="listitem" data-slot="0"><span class="atelier-marqueur">1</span></div>
+                            <div class="atelier-slot" role="listitem" data-slot="1"><span class="atelier-marqueur">2</span></div>
+                            <div class="atelier-slot" role="listitem" data-slot="2"><span class="atelier-marqueur">3</span></div>
+                            <div class="atelier-slot" role="listitem" data-slot="3"><span class="atelier-marqueur">4</span></div>
+                            <div class="atelier-slot" role="listitem" data-slot="4"><span class="atelier-marqueur">5</span></div>
+                        </div>
+                        <h4>Maillons à replacer</h4>
+                        <div class="atelier-jetons-melanges" role="group" aria-label="Maillons mélangés">
+                            <button type="button" class="atelier-jeton" data-rang="4" onclick="atelierPlacerMaillon(this)">💨 Air poussé vers le bas — créer la portance</button>
+                            <button type="button" class="atelier-jeton" data-rang="0" onclick="atelierPlacerMaillon(this)">🔋 Batterie Li-Po — alimenter</button>
+                            <button type="button" class="atelier-jeton" data-rang="1" onclick="atelierPlacerMaillon(this)">🎚️ Variateur (ESC) — distribuer</button>
+                            <button type="button" class="atelier-jeton" data-rang="3" onclick="atelierPlacerMaillon(this)">🌀 Hélice — transmettre</button>
+                            <button type="button" class="atelier-jeton" data-rang="2" onclick="atelierPlacerMaillon(this)">⚙️ Moteur brushless — convertir</button>
+                        </div>
+                        <p class="atelier-compteur" data-role="compteur">0 maillon(s) placé(s) sur 5.</p>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierOrdre(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">L'énergie part de la batterie (alimenter), traverse le variateur (distribuer), est convertie en rotation par le moteur (convertir), devient un mouvement d'air grâce à l'hélice (transmettre), et cette poussée d'air vers le bas crée la portance qui soulève le drone. La chaîne d'information (radiocommande → récepteur → carte de vol → variateurs) ne transporte que des ordres : c'est elle qui décide de la quantité d'énergie à distribuer.</p>
+                    </article>
+
+                    <article class="atelier-carte" data-type="commandes" data-atelier="quatre-commandes" aria-labelledby="atelier-titre-quatre-commandes">
+                        <h3 id="atelier-titre-quatre-commandes">🎮 Atelier 3 — Les quatre commandes du pilote</h3>
+                        <p class="atelier-consigne">Pour chaque mission, cliquez la commande que le pilote doit utiliser, puis vérifiez l'atelier. Le drone de l'illustration prend l'inclinaison de la commande choisie.</p>
+                        <div class="atelier-drone-cadre" aria-hidden="true">
+                            <svg class="atelier-drone" viewBox="0 0 160 100" aria-hidden="true" focusable="false"><ellipse cx="80" cy="64" rx="26" ry="13" fill="#3a6ea5"></ellipse><rect x="44" y="60" width="72" height="6" rx="3" fill="#7a8b9c"></rect><line x1="54" y1="58" x2="30" y2="34" stroke="#7a8b9c" stroke-width="5" stroke-linecap="round"></line><line x1="106" y1="58" x2="130" y2="34" stroke="#7a8b9c" stroke-width="5" stroke-linecap="round"></line><ellipse cx="26" cy="31" rx="18" ry="4" fill="#2e74b5"></ellipse><ellipse cx="134" cy="31" rx="18" ry="4" fill="#2e74b5"></ellipse><circle cx="80" cy="54" r="6" fill="#f0b400"></circle></svg>
+                        </div>
+                        <h4>Les commandes du pilote</h4>
+                        <ul class="atelier-legende">
+                            <li><strong>⏫ Gaz</strong> : modifie la vitesse des quatre hélices en même temps : le drone monte ou descend.</li>
+                            <li><strong>↕️ Tangage</strong> : incline le drone vers l'avant ou vers l'arrière : il avance ou il recule.</li>
+                            <li><strong>↔️ Roulis</strong> : incline le drone sur le côté : il glisse vers la gauche ou vers la droite.</li>
+                            <li><strong>🔄 Lacet</strong> : fait pivoter le drone sur son axe vertical : il tourne sur lui-même.</li>
+                        </ul>
+                        <div class="atelier-missions">
+                            <div class="atelier-question" data-mission="1" data-bonne="gaz" data-explication="pour monter, le pilote augmente la vitesse des quatre hélices en même temps : la portance devient supérieure au poids du drone, et le drone s'élève.">
+                                <p class="atelier-enonce"><strong>Mission 1 :</strong> Le drone doit passer au-dessus d'une haie de 3 m de haut.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 1">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-mission="2" data-bonne="tangage" data-explication="en inclinant le drone vers l'avant (tangage), une partie de la portance le pousse horizontalement : le drone avance, tout en restant à la même altitude.">
+                                <p class="atelier-enonce"><strong>Mission 2 :</strong> Le drone doit avancer vers la maison à photographier.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 2">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-mission="3" data-bonne="roulis" data-explication="le roulis incline le drone sur le côté droit : la portance le fait glisser latéralement, sans changer son orientation.">
+                                <p class="atelier-enonce"><strong>Mission 3 :</strong> Le drone doit se décaler de 2 m vers la droite pour éviter un arbre.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 3">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-mission="4" data-bonne="lacet" data-explication="le lacet fait pivoter le drone sur son axe vertical : il tourne sur lui-même sans se déplacer, comme une toupie sur place.">
+                                <p class="atelier-enonce"><strong>Mission 4 :</strong> Le drone fait face au portail et doit filmer la cour dans l'autre sens.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 4">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="atelier-question" data-mission="5" data-bonne="gaz" data-explication="pour descendre, le pilote diminue progressivement la vitesse des quatre hélices : la portance devient légèrement inférieure au poids du drone, qui descend lentement jusqu'à la table.">
+                                <p class="atelier-enonce"><strong>Mission 5 :</strong> Le drone doit se poser en douceur sur la table de l'atelier.</p>
+                                <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 5">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gaz" onclick="atelierChoisirOption(this)">⏫ Gaz</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="tangage" onclick="atelierChoisirOption(this)">↕️ Tangage</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="roulis" onclick="atelierChoisirOption(this)">↔️ Roulis</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="lacet" onclick="atelierChoisirOption(this)">🔄 Lacet</button>
+                                </div>
+                                <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
+                            </div>
+                        </div>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierChoix(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">Le drone se pilote en réglant la vitesse de ses quatre hélices. Le gaz change la poussée totale ; le tangage et le roulis inclinent le drone pour le déplacer ; le lacet le fait pivoter sur lui-même. La radiocommande n'envoie que quatre ordres, et c'est la carte de vol qui les traduit en vitesses différentes pour les quatre variateurs.</p>
+                    </article>
+
+                    <article class="atelier-carte" data-type="rotors" data-atelier="equilibre-helices" aria-labelledby="atelier-titre-equilibre-helices">
+                        <h3 id="atelier-titre-equilibre-helices">🌀 Atelier 4 — Équilibrer les hélices</h3>
+                        <p class="atelier-consigne">Cliquez sur une hélice pour inverser son sens de rotation (↻ ou ↺). Trouvez le réglage qui permet au drone de décoller sans tourner sur lui-même, puis vérifiez l'atelier.</p>
+                        <div class="rotors-cadre">
+                            <div class="rotors-grille" role="group" aria-label="Sens de rotation des quatre hélices">
+                                <p class="rotors-nez">▲ avant du drone</p>
+                            <div class="rotor-case">
+                                <span class="rotor-nom">Avant gauche</span>
+                                <button type="button" class="rotor-btn" data-pos="0" data-sens="droite" data-nom="Avant gauche" aria-label="Hélice Avant gauche : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
+                            </div>
+                            <div class="rotor-case">
+                                <span class="rotor-nom">Avant droit</span>
+                                <button type="button" class="rotor-btn" data-pos="1" data-sens="droite" data-nom="Avant droit" aria-label="Hélice Avant droit : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
+                            </div>
+                            <div class="rotor-case">
+                                <span class="rotor-nom">Arrière gauche</span>
+                                <button type="button" class="rotor-btn" data-pos="2" data-sens="droite" data-nom="Arrière gauche" aria-label="Hélice Arrière gauche : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
+                            </div>
+                            <div class="rotor-case">
+                                <span class="rotor-nom">Arrière droit</span>
+                                <button type="button" class="rotor-btn" data-pos="3" data-sens="droite" data-nom="Arrière droit" aria-label="Hélice Arrière droit : rotation horaire — cliquer pour inverser le sens" onclick="atelierTournerRotor(this)"><span class="rotor-symbole tourne-droite">↻</span></button>
+                            </div>
+                            </div>
+                        </div>
+                        <p class="atelier-verdict" data-role="verdict" role="status" aria-live="polite"></p>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierRotors(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">Chaque hélice qui tourne entraîne le drone dans le sens opposé à sa rotation. Avec deux hélices qui tournent dans un sens et deux dans l'autre, disposées en diagonale, les deux effets s'annulent : le drone reste stable et peut décoller droit. Pour le faire pivoter volontairement, la carte de vol accélère une paire d'hélices plus que l'autre : c'est la commande de lacet de l'atelier 3.</p>
+                    </article>
+
+                    <article class="atelier-carte" data-type="autonomie" data-atelier="autonomie-batterie" data-courant="11" data-duree-mission="10" data-bonne="1" aria-labelledby="atelier-titre-autonomie-batterie">
+                        <h3 id="atelier-titre-autonomie-batterie">🔋 Atelier 5 — Combien de temps peut-il voler ?</h3>
+                        <p class="atelier-consigne">Une mission d'inspection doit durer 10 minutes. Le drone consomme en moyenne 11 A. Choisissez la batterie la plus adaptée : elle doit couvrir la mission, sans être inutilement lourde.</p>
+                        <p class="atelier-formule">autonomie (min) = capacité (mAh) ÷ 1000 ÷ courant (A) × 60</p>
+                        <div class="atelier-options" role="radiogroup" aria-label="Batteries disponibles">
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-batterie="0" data-capacite="1300" onclick="atelierChoisirBatterie(this)">Li-Po 3S 1300 mAh — 110 g<span class="atelier-mesure" data-role="mesure"></span></button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-batterie="1" data-capacite="2200" onclick="atelierChoisirBatterie(this)">Li-Po 3S 2200 mAh — 180 g<span class="atelier-mesure" data-role="mesure"></span></button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-batterie="2" data-capacite="5200" onclick="atelierChoisirBatterie(this)">Li-Po 3S 5200 mAh — 400 g<span class="atelier-mesure" data-role="mesure"></span></button>
+                        </div>
+                        <div class="atelier-jauge-cadre" aria-hidden="true"><div class="atelier-jauge"></div></div>
+                        <p class="atelier-compteur" data-role="bilan-jauge">Choisis une batterie pour voir son autonomie calculée.</p>
+                        <div class="atelier-actions">
+                            <button type="button" class="bouton-action" onclick="atelierVerifierAutonomie(this)">Vérifier l'atelier</button>
+                        </div>
+                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                        <p class="atelier-explication cache" data-role="explication">L'autonomie se calcule avec la capacité et le courant consommé. 1300 mAh : 1,3 Ah ÷ 11 A ≈ 0,12 h, soit environ 7 min — la mission de 10 min n'est pas couverte. 2200 mAh : 2,2 Ah ÷ 11 A = 0,2 h = 12 min — la mission est couverte avec 2 min de marge. 5200 mAh : environ 28 min, mais la batterie pèse 220 g de plus : les moteurs doivent soulever cette masse supplémentaire, donc consommer davantage, et le drone devient moins maniable. La batterie de 2200 mAh est donc le meilleur compromis entre autonomie et masse.</p>
+                    </article>
+                    </div>
+
                     <div class="info-block marge-haut">
                         <p><strong>Consigne :</strong> Explorez tous les éléments en cliquant dessus. Une fois que vous avez découvert toutes les informations, passez au quiz pour valider ce niveau.</p>
                     </div>
@@ -1627,19 +2870,25 @@ font-size: 0.78rem;
                 </div>
             </section>
 
-            <!-- N3 - Énigme interactive -->
-            <!-- N3 - Énigme interactive (sur mesure : exploration + QCM correctif) -->
+            <!-- N3 - Problématique interactive
+                 Les identifiants et les classes gardent le nom historique
+                 « enigme » (n3-enigme, contenu-n3-enigme, enigme-conteneur,
+                 solution-enigme, diagnostic-eleve, soumettreDiagnostic) :
+                 verifier_parcours.py, mode-developpement.py et les activités
+                 déjà publiées les référencent. Seul le texte affiché parle de
+                 problématique. -->
+<!-- N3 - Problématique interactive (sur mesure : exploration + QCM correctif) -->
             <section id="contenu-n3-enigme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n3-enigme">
                 <div class="carte-contenu">
-                    <h2>Niveau 3 : Résoudre l'énigme</h2>
-                    <p>Un drone de surveillance forestière déclenche de fausses alertes chaque soir. Explorez les composants, puis choisissez les actions correctives à mener.</p>
+                    <h2>Niveau 3 : Répondre à la problématique</h2>
+                    <p>Un drone de surveillance forestière déclenche de fausses alertes chaque soir. Explorez les composants, puis répondez à la problématique : quelle est la cause des alertes, et quelles actions correctives faut-il mener ?</p>
 
                     <div class="enigme-conteneur">
-                        <h3>🔍 L'énigme du drone qui siffle au loup</h3>
-                        <p><strong>Mission :</strong> Une commune a équipé son drone de surveillance forestière d'un capteur de mouvement pour détecter les départs de feu. Mais depuis cette modification, le drone déclenche de fausses alertes presque tous les soirs, alors qu'aucun incendie n'est déclaré. Le maire vous demande de trouver la cause, puis de sélectionner les bonnes actions correctives.</p>
+                        <h3>❓ La problématique : le drone qui siffle au loup</h3>
+                        <p><strong>Problématique :</strong> Une commune a équipé son drone de surveillance forestière d'un capteur de mouvement pour détecter les départs de feu. Mais depuis cette modification, le drone déclenche de fausses alertes presque tous les soirs, alors qu'aucun incendie n'est déclaré. Le maire vous demande de formuler un diagnostic, puis de choisir les actions correctives à mener.</p>
                     </div>
 
-                    <h3>Étape A — Zone d'exploration</h3>
+                    <h3>Zone d'exploration</h3>
                     <p>Cliquez sur chaque composant pour découvrir un indice :</p>
 
                     <div class="zone-exploration">
@@ -1681,32 +2930,41 @@ font-size: 0.78rem;
                         </div>
                     </div>
 
-                    <h3 class="marge-haut">Étape B — Votre diagnostic</h3>
-                    <p>En une ou deux phrases, indiquez quel composant est responsable des fausses alertes :</p>
+                    <h3 class="marge-haut">Vos réponses</h3>
+                    <p>Remplissez les deux cadres ci-dessous : le premier expose ce que vous avez constaté, le second ce que vous proposez de faire.</p>
 
-                    <textarea
-                        id="diagnostic-eleve"
-                        placeholder="Ex. : le capteur de mouvement est trop sensible et le logiciel ne filtre pas les signaux parasites…"
-                        aria-label="Votre diagnostic du problème"></textarea>
-
-                    <h3 class="marge-haut">Étape C — Plan d'action correctif</h3>
-                    <p>Parmi les 20 actions ci-dessous, sélectionnez les <strong>3 actions correctives efficaces</strong> pour supprimer les fausses alertes. Les autres sont inefficaces, inutiles ou aggravent le problème.</p>
-
-                    <div class="qcm-correctif" id="qcm-correctif" role="group" aria-label="Plan d'action correctif : 3 bonnes réponses à choisir parmi 20">
+                    <div class="cadre-reponse">
+                        <h4><span class="numero-cadre" aria-hidden="true">1</span> Mon diagnostic</h4>
+                        <p class="consigne-cadre" id="consigne-diagnostic">En une ou deux phrases, indiquez quel composant est responsable des fausses alertes, et l'indice qui le prouve :</p>
+                        <textarea
+                            id="diagnostic-eleve"
+                            placeholder="Ex. : le capteur de mouvement est trop sensible et le logiciel ne filtre pas les signaux parasites…"
+                            aria-label="Votre diagnostic du problème"></textarea>
                     </div>
 
-                    <div class="info-block marge-haut">
-                        <p id="compteur-selection">0 / 3 actions sélectionnées.</p>
+                    <div class="cadre-reponse">
+                        <h4><span class="numero-cadre" aria-hidden="true">2</span> Ma proposition de solution</h4>
+                        <p class="consigne-cadre" id="consigne-solution">Parmi les 20 actions ci-dessous, sélectionnez les <strong>3 actions correctives efficaces</strong> pour supprimer les fausses alertes. Les autres sont inefficaces, inutiles ou aggravent le problème.</p>
+
+                        <div class="qcm-correctif" id="qcm-correctif" role="group" aria-label="Plan d'action correctif : 3 bonnes réponses à choisir parmi 20">
+                        </div>
+
+                        <div class="info-block marge-haut">
+                            <p id="compteur-selection">0 / 3 actions sélectionnées.</p>
+                        </div>
                     </div>
 
                     <button class="bouton-action marge-haut" onclick="soumettreDiagnostic()">
-                        Valider mon plan d'action
+                        Soumettre mes réponses
                     </button>
 
                     <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
-                        <div class="info-block">
+                        <div class="info-block" id="bloc-diagnostic-attendu">
                             <p id="message-plan-action"></p>
-                            <p><strong>Bien joué !</strong> Le capteur de mouvement trop sensible déclenchait au moindre mouvement de branche, et le logiciel ne filtrait pas les signaux parasites. Les trois bonnes actions consistent à réduire la sensibilité du capteur, ajouter un filtre logiciel qui croise le mouvement avec la caméra thermique, et calibrer le capteur sur le terrain. Voir de la chaleur sans mouvement n'est pas un feu ; bouger sans chaleur non plus.</p>
+                            <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">le capteur de mouvement, réglé trop sensible, déclenche au moindre mouvement de branche ; et le logiciel ne filtre pas les signaux parasites, puisqu'il ne croise pas la détection du mouvement avec la caméra thermique.</span></p>
+                        </div>
+                        <div class="info-block" id="bloc-solution-attendue">
+                            <p><strong>Solution attendue :</strong> <span id="solution-attendue">réduire la sensibilité du capteur de mouvement, ajouter un filtre logiciel qui croise le mouvement avec la caméra thermique, et calibrer le capteur sur le terrain. Voir de la chaleur sans mouvement n'est pas un feu ; bouger sans chaleur non plus.</span></p>
                         </div>
                         <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
                             Continuer vers N4 →
@@ -2060,7 +3318,7 @@ font-size: 0.78rem;
         // Passer à true pour désactiver tous les blocages d'onglets
         // pendant le développement/test des jeux bonus.
         // Penser à remettre à false avant publication !
-        const MODE_DEVELOPPEMENT = true;
+        const MODE_DEVELOPPEMENT = false;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -2392,7 +3650,7 @@ font-size: 0.78rem;
         }
 
         // ============================================
-        // ÉNIGME N3
+        // PROBLÉMATIQUE N3 — diagnostic puis proposition de solution
         // ============================================
         
         let objetsExplores = 0;
@@ -2406,11 +3664,31 @@ font-size: 0.78rem;
         }
 
         function soumettreDiagnostic() {
-            const diagnostic = document.getElementById('diagnostic-eleve').value.trim();
-            
-            if (diagnostic.length < 20) {
-                alert('Veuillez fournir un diagnostic plus détaillé (au moins 20 caractères).');
-                return;
+            // Deux cadres distincts : le diagnostic (ce qui ne va pas) puis la
+            // proposition de solution (ce que l'élève propose de faire). Les
+            // deux doivent être remplis — un diagnostic sans solution reste un
+            // constat, une solution sans diagnostic ne s'appuie sur rien.
+            const cadres = [
+                {
+                    id: 'diagnostic-eleve',
+                    message: 'Précisez votre diagnostic : décrivez la cause probable du problème (au moins 20 caractères).'
+                },
+                {
+                    id: 'solution-eleve',
+                    message: 'Proposez une solution : expliquez ce qu\'il faudrait changer, réparer ou mettre en place (au moins 20 caractères).'
+                }
+            ];
+
+            for (const cadre of cadres) {
+                const champ = document.getElementById(cadre.id);
+                if (!champ) continue;   // cadre absent : coquille antérieure
+                if (champ.value.trim().length < 20) {
+                    champ.style.borderColor = 'var(--couleur-alerte)';
+                    champ.focus();
+                    alert(cadre.message);
+                    return;
+                }
+                champ.style.borderColor = '#e2e8f0';
             }
 
             // Marquer les bonnes / mauvaises actions du QCM correctif
@@ -2450,6 +3728,18 @@ font-size: 0.78rem;
 
             if (!tousRemplis) {
                 alert('Veuillez remplir tous les champs avec au moins 10 caractères chacun.');
+                return;
+            }
+
+            // L'atelier de câblage, quand la configuration en déclare un, fait
+            // partie de la conception : un schéma faux ne peut pas être
+            // finalisé, sinon la règle pédagogique du niveau serait décorative.
+            const atelierCablage = cablageAtelier();
+            if (atelierCablage && !CABLAGE.valide) {
+                alert('Le câblage du réseau n\'est pas encore validé : place tous les ' +
+                      'équipements sur le fond blanc, relie-les, puis clique ' +
+                      '« Vérifier le câblage ».');
+                atelierCablage.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
@@ -2515,6 +3805,11 @@ font-size: 0.78rem;
                 document.querySelectorAll('.objet-explorable').forEach(objet => {
                     objet.classList.remove('explore');
                 });
+
+                // L'atelier de câblage repart de zéro comme le reste.
+                if (document.getElementById('cablage-atelier')) {
+                    cablageReinitialiser();
+                }
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
@@ -2605,6 +3900,1312 @@ font-size: 0.78rem;
                 console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
             }
         });
+
+        // ══════════════════════════════════════════════════════════════════
+        //  ATELIERS N2 — ateliers de découverte du fonctionnement
+        //  Données : n2.ateliers de la configuration JSON. Chaque atelier est
+        //  autonome : aucune de ces fonctions ne touche à la chaîne N2 ni au
+        //  quiz, et toutes sortent proprement si leur carte est absente — un
+        //  atelier ne doit jamais pouvoir bloquer le parcours de l'élève.
+        // ══════════════════════════════════════════════════════════════════
+
+        function atelierContexte(element) {
+            const carte = element && element.closest ? element.closest('.atelier-carte') : null;
+            if (!carte) return null;
+            if (!carte.__atelier) {
+                carte.__atelier = {
+                    attente: null,
+                    paires: 0,
+                    total: carte.querySelectorAll('.atelier-jeton[data-cote="constituant"]').length,
+                    rang: 0,
+                    verrouille: false
+                };
+            }
+            return { carte: carte, etat: carte.__atelier };
+        }
+
+        function atelierRetour(carte, message, type) {
+            const zone = carte.querySelector('[data-role="retour-atelier"]');
+            if (!zone) return;
+            zone.textContent = message;
+            zone.className = 'atelier-retour' + (type ? ' ' + type : '');
+        }
+
+        function atelierCompteur(carte) {
+            const zone = carte.querySelector('[data-role="compteur"]');
+            if (!zone) return;
+            const etat = carte.__atelier || { paires: 0, total: 0, rang: 0 };
+            if (carte.getAttribute('data-type') === 'ordre') {
+                const slots = carte.querySelectorAll('.atelier-slot').length;
+                zone.textContent = etat.rang + ' maillon(s) placé(s) sur ' + slots + '.';
+                return;
+            }
+            zone.textContent = etat.paires + ' paire(s) trouvée(s) sur ' + etat.total +
+                ' — il en reste ' + Math.max(0, etat.total - etat.paires) + '.';
+        }
+
+        function atelierAfficherExplication(carte) {
+            const zone = carte.querySelector('[data-role="explication"]');
+            if (zone) zone.classList.remove('cache');
+        }
+
+        // Marque une hélice ou un jeton en erreur, puis retire la marque :
+        // le signal visuel dure assez pour être vu, sans rester à l'écran.
+        function atelierSignaler(elements, classe) {
+            elements.forEach(function (element) {
+                if (!element) return;
+                element.classList.add(classe);
+                setTimeout(function () { element.classList.remove(classe); }, 1400);
+            });
+        }
+
+        // ── Type « association » : constituant ↔ fonction technique ──────
+        function atelierChoisirJeton(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            if (etat.verrouille || bouton.classList.contains('apparie')) return;
+
+            const cote = bouton.getAttribute('data-cote');
+            const attente = etat.attente;
+
+            if (attente && attente.getAttribute('data-cote') === cote) {
+                // Toujours du même côté : on déplace la sélection.
+                attente.classList.remove('choisi');
+                attente.setAttribute('aria-pressed', 'false');
+                etat.attente = null;
+                if (attente === bouton) return;
+            }
+
+            if (!etat.attente) {
+                bouton.classList.add('choisi');
+                bouton.setAttribute('aria-pressed', 'true');
+                etat.attente = bouton;
+                atelierRetour(carte,
+                    cote === 'constituant'
+                        ? 'Constituant choisi. Clique maintenant la fonction technique qui lui correspond.'
+                        : 'Fonction choisie. Clique maintenant le constituant qui la réalise.',
+                    'info');
+                return;
+            }
+
+            const precedente = etat.attente;
+            const juste = precedente.getAttribute('data-paire') === bouton.getAttribute('data-paire');
+            precedente.classList.remove('choisi');
+            precedente.setAttribute('aria-pressed', 'false');
+            etat.attente = null;
+
+            if (juste) {
+                [precedente, bouton].forEach(function (jeton) {
+                    jeton.classList.add('apparie');
+                    jeton.setAttribute('aria-pressed', 'true');
+                    jeton.disabled = true;
+                });
+                etat.paires += 1;
+                atelierCompteur(carte);
+                if (etat.paires >= etat.total) {
+                    atelierRetour(carte, '🎉 Toutes les paires sont trouvées : chaque constituant est relié à sa fonction technique.', 'succes');
+                    atelierAfficherExplication(carte);
+                } else {
+                    atelierRetour(carte, '✅ Association juste : ' + bouton.textContent.trim(), 'succes');
+                }
+            } else {
+                atelierSignaler([precedente, bouton], 'erreur');
+                atelierRetour(carte, '❌ Ces deux-là ne vont pas ensemble. Relis la définition de la fonction et réessaie.', 'echec');
+            }
+        }
+
+        function atelierVerifierAssociation(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            if (etat.paires >= etat.total) {
+                atelierRetour(carte, '🎉 Atelier terminé : les ' + etat.total + ' paires sont trouvées.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'Il reste ' + (etat.total - etat.paires) + ' paire(s) à trouver. Clique un constituant puis sa fonction, ou l\'inverse.', 'info');
+            }
+        }
+
+        // ── Type « ordre » : reconstituer la chaîne d'énergie ────────────
+        function atelierPlacerMaillon(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            if (etat.verrouille) return;
+
+            const slots = carte.querySelectorAll('.atelier-slot');
+            const rang = parseInt(bouton.getAttribute('data-rang'), 10);
+
+            if (rang !== etat.rang || etat.rang >= slots.length) {
+                atelierSignaler([bouton], 'erreur');
+                atelierRetour(carte, '❌ Pas à cette place. Reprends le trajet depuis le début : quel constituant fournit l\'énergie en premier ?', 'echec');
+                return;
+            }
+
+            const slot = slots[etat.rang];
+            const texte = document.createElement('span');
+            texte.textContent = bouton.textContent.trim();
+            slot.appendChild(texte);
+            slot.classList.add('rempli');
+            bouton.classList.add('cache');
+            etat.rang += 1;
+            atelierCompteur(carte);
+
+            if (etat.rang >= slots.length) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 La chaîne est reconstituée du premier au dernier maillon.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, '✅ Maillon ' + etat.rang + ' : ' + texte.textContent + '. Quel est le suivant ?', 'succes');
+            }
+        }
+
+        function atelierVerifierOrdre(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            const slots = carte.querySelectorAll('.atelier-slot');
+            if (etat.rang >= slots.length) {
+                atelierRetour(carte, '🎉 Atelier terminé : les ' + slots.length + ' maillons sont dans l\'ordre.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'La chaîne n\'est pas finie : ' + etat.rang + ' maillon(s) placé(s) sur ' + slots.length + '.', 'info');
+            }
+        }
+
+        // ── Types « commandes » et « environnement » : choix unique par question ──
+        function atelierChoisirOption(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const question = bouton.closest('.atelier-question');
+            if (!question) return;
+
+            question.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('choisi', 'correcte', 'fausse');
+                option.setAttribute('aria-checked', 'false');
+            });
+            bouton.classList.add('choisi');
+            bouton.setAttribute('aria-checked', 'true');
+
+            // Aperçu visuel (type « commandes ») : le drone prend l'attitude
+            // de la commande choisie. Les autres types n'ont pas de drone.
+            const drone = carte.querySelector('.atelier-drone');
+            if (drone) drone.className = 'atelier-drone attitude-' + bouton.getAttribute('data-valeur');
+
+            const retour = question.querySelector('[data-role="retour"]');
+            if (retour) {
+                retour.textContent = 'Proposition retenue : ' + bouton.textContent.trim() + '. Clique « Vérifier l\'atelier » pour connaître le résultat.';
+                retour.className = 'atelier-retour info';
+            }
+        }
+
+        function atelierVerifierChoix(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            let justes = 0;
+            let total = 0;
+
+            carte.querySelectorAll('.atelier-question').forEach(function (question) {
+                total += 1;
+                const bonne = question.getAttribute('data-bonne');
+                const choisie = question.querySelector('.atelier-option.choisi');
+                question.querySelectorAll('.atelier-option').forEach(function (option) {
+                    option.classList.remove('correcte', 'fausse');
+                    if (option.getAttribute('data-valeur') === bonne) option.classList.add('correcte');
+                });
+                if (choisie && choisie.getAttribute('data-valeur') === bonne) {
+                    justes += 1;
+                } else if (choisie) {
+                    choisie.classList.add('fausse');
+                }
+                const retour = question.querySelector('[data-role="retour"]');
+                if (retour) {
+                    retour.textContent = 'Explication : ' + (question.getAttribute('data-explication') || '');
+                    retour.className = 'atelier-retour info';
+                }
+            });
+
+            atelierRetour(carte,
+                'Résultat : ' + justes + ' / ' + total + ' réponse(s) juste(s).' +
+                (justes === total ? ' 🎉 Toutes les réponses sont bonnes.' : ' Relis l\'explication de chaque réponse.'),
+                justes === total ? 'succes' : 'echec');
+            atelierAfficherExplication(carte);
+        }
+
+        // ── Type « environnement » : interacteurs extérieurs ↔ capteurs ───
+        // L'élève clique un interacteur (le vent, la pluie…) et lit la note
+        // d'efficacité de chaque capteur pour le contrer. Les notes viennent
+        // du bloc JSON de la carte : le tableau est reconstruit à chaque clic.
+        const ATELIER_NOTES = {
+            3: { jauge: '●●●', mot: 'très efficace' },
+            2: { jauge: '●●○', mot: 'efficace en partie' },
+            1: { jauge: '●○○', mot: 'peu efficace' },
+            0: { jauge: '○○○', mot: 'inadapté ou perturbé' }
+        };
+
+        function atelierDonneesEnvironnement(carte) {
+            if (carte.__envDonnees !== undefined) return carte.__envDonnees;
+            const bloc = carte.querySelector('script.env-donnees');
+            let donnees = null;
+            if (bloc) {
+                try {
+                    donnees = JSON.parse(bloc.textContent || '{}');
+                } catch (erreur) {
+                    donnees = null;
+                }
+            }
+            carte.__envDonnees = donnees;
+            return donnees;
+        }
+
+        function atelierChoisirInteracteur(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const donnees = atelierDonneesEnvironnement(carte);
+            if (!donnees) return;
+
+            const fiche = (donnees.interacteurs || {})[bouton.getAttribute('data-interacteur')];
+            if (!fiche) return;
+
+            carte.querySelectorAll('.env-interacteur').forEach(function (autre) {
+                autre.classList.remove('choisi');
+                autre.setAttribute('aria-pressed', 'false');
+            });
+            bouton.classList.add('choisi');
+            bouton.setAttribute('aria-pressed', 'true');
+
+            const effet = carte.querySelector('[data-role="effet"]');
+            if (effet) effet.textContent = fiche.effet;
+
+            const legende = carte.querySelector('[data-role="legende-table"]');
+            if (legende) legende.textContent = 'Efficacité des capteurs contre : ' + fiche.nom;
+
+            const corps = carte.querySelector('[data-role="lignes"]');
+            if (!corps) return;
+            corps.innerHTML = '';
+
+            const notes = fiche.notes || {};
+            const lignes = Object.keys(notes).map(function (capteurCle) {
+                return { cle: capteurCle, note: Number(notes[capteurCle]) || 0 };
+            }).sort(function (a, b) {
+                if (b.note !== a.note) return b.note - a.note;
+                return String(a.cle).localeCompare(String(b.cle));
+            });
+
+            lignes.forEach(function (ligne) {
+                const capteur = (donnees.capteurs || {})[ligne.cle] || { icone: '', nom: ligne.cle };
+                const niveau = ATELIER_NOTES[ligne.note] || ATELIER_NOTES[0];
+
+                const ligneTableau = document.createElement('tr');
+                ligneTableau.className = 'env-note-' + ligne.note;
+
+                const celluleCapteur = document.createElement('th');
+                celluleCapteur.scope = 'row';
+                celluleCapteur.textContent = (capteur.icone ? capteur.icone + ' ' : '') + capteur.nom;
+                ligneTableau.appendChild(celluleCapteur);
+
+                const celluleNote = document.createElement('td');
+                const jauge = document.createElement('span');
+                jauge.className = 'env-jauge';
+                jauge.setAttribute('aria-hidden', 'true');
+                jauge.textContent = niveau.jauge;
+                const mot = document.createElement('span');
+                mot.className = 'env-mot';
+                mot.textContent = ' ' + niveau.mot + ' (' + ligne.note + '/3)';
+                celluleNote.appendChild(jauge);
+                celluleNote.appendChild(mot);
+                ligneTableau.appendChild(celluleNote);
+
+                corps.appendChild(ligneTableau);
+            });
+
+            atelierRetour(carte, fiche.nom + ' : ' + lignes.length +
+                ' capteur(s) comparé(s) — le plus efficace est en tête du tableau.', 'info');
+        }
+
+        // ── Type « rotors » : équilibrer les sens de rotation ────────────
+        const ATELIER_ROTOR_SYMBOLE = { droite: '↻', gauche: '↺' };
+
+        function atelierTournerRotor(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const sens = bouton.getAttribute('data-sens') === 'droite' ? 'gauche' : 'droite';
+            bouton.setAttribute('data-sens', sens);
+            bouton.classList.remove('anti-couple', 'mauvais-sens');
+
+            const symbole = bouton.querySelector('.rotor-symbole');
+            if (symbole) {
+                symbole.textContent = ATELIER_ROTOR_SYMBOLE[sens];
+                symbole.className = 'rotor-symbole tourne-' + sens;
+            }
+            bouton.setAttribute('aria-label',
+                'Hélice ' + (bouton.getAttribute('data-nom') || '') + ' : rotation ' +
+                (sens === 'droite' ? 'horaire' : 'anti-horaire') +
+                ' — cliquer pour inverser le sens');
+
+            atelierRetour(carte, 'Sens réglé sur « ' + (sens === 'droite' ? 'horaire ↻' : 'anti-horaire ↺') +
+                ' ». Règle les quatre hélices, puis clique « Vérifier l\'atelier ».', 'info');
+        }
+
+        function atelierVerifierRotors(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const rotors = Array.prototype.slice.call(carte.querySelectorAll('.rotor-btn'));
+            const sens = rotors.map(function (rotor) { return rotor.getAttribute('data-sens'); });
+            // Positions : 0 avant gauche, 1 avant droit, 2 arrière gauche, 3 arrière droit.
+            // Équilibre : chaque diagonale tourne dans un seul sens, et deux hélices
+            // voisines tournent en sens contraire → les deux couples s'annulent.
+            const voisins = [[0, 1], [1, 3], [3, 2], [2, 0]];
+            const diagonales = [[0, 3], [1, 2]];
+            const fautifs = {};
+            voisins.forEach(function (paire) {
+                if (sens[paire[0]] === sens[paire[1]]) {
+                    fautifs[paire[0]] = true;
+                    fautifs[paire[1]] = true;
+                }
+            });
+            diagonales.forEach(function (paire) {
+                if (sens[paire[0]] !== sens[paire[1]]) {
+                    fautifs[paire[0]] = true;
+                    fautifs[paire[1]] = true;
+                }
+            });
+            const ok = Object.keys(fautifs).length === 0;
+
+            rotors.forEach(function (rotor, index) {
+                rotor.classList.remove('anti-couple', 'mauvais-sens');
+                rotor.classList.add(fautifs[index] ? 'mauvais-sens' : 'anti-couple');
+            });
+
+            const verdict = carte.querySelector('[data-role="verdict"]');
+            if (ok) {
+                if (verdict) verdict.textContent = 'Drone équilibré : il décolle sans tourner sur lui-même.';
+                atelierRetour(carte, '🎉 Les deux couples s\'annulent : le drone monte droit.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                if (verdict) verdict.textContent = 'Drone déséquilibré : il tourne sur lui-même au décollage.';
+                atelierRetour(carte, '❌ Deux hélices voisines tournent dans le même sens, ou une diagonale n\'est pas homogène : les couples s\'additionnent et le drone pivote.', 'echec');
+            }
+        }
+
+        // ── Type « autonomie » : choisir une batterie pour une mission ───
+        function atelierChoisirBatterie(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+
+            carte.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('choisi', 'correcte', 'fausse');
+                option.setAttribute('aria-checked', 'false');
+                const mesure = option.querySelector('[data-role="mesure"]');
+                if (mesure) mesure.textContent = '';
+            });
+            bouton.classList.add('choisi');
+            bouton.setAttribute('aria-checked', 'true');
+
+            const capacite = parseFloat(bouton.getAttribute('data-capacite'));
+            const courant = parseFloat(carte.getAttribute('data-courant'));
+            const dureeMission = parseFloat(carte.getAttribute('data-duree-mission'));
+            if (!isFinite(capacite) || !isFinite(courant) || courant <= 0) return;
+
+            const minutes = capacite / 1000 / courant * 60;
+            const mesure = bouton.querySelector('[data-role="mesure"]');
+            if (mesure) {
+                mesure.textContent = 'Autonomie calculée : ' +
+                    minutes.toFixed(1).replace('.', ',') + ' min pour ' +
+                    dureeMission.toFixed(0) + ' min de mission.';
+            }
+
+            const jauge = carte.querySelector('.atelier-jauge');
+            if (jauge) {
+                // Repère visuel : la jauge pleine vaut le double de la mission.
+                jauge.style.width = Math.min(100, Math.round(minutes / (dureeMission * 2) * 100)) + '%';
+                jauge.className = 'atelier-jauge' + (minutes >= dureeMission ? ' jauge-ok' : '');
+            }
+
+            const bilan = carte.querySelector('[data-role="bilan-jauge"]');
+            if (bilan) {
+                bilan.textContent = 'Mission : ' + dureeMission.toFixed(0) + ' min — autonomie de cette batterie : ' +
+                    minutes.toFixed(1).replace('.', ',') + ' min. ' +
+                    (minutes >= dureeMission ? 'Elle couvre la mission.' : 'Elle ne couvre pas la mission.');
+            }
+
+            atelierRetour(carte, 'Batterie choisie. Vérifie le calcul, puis clique « Vérifier l\'atelier ».', 'info');
+        }
+
+        function atelierVerifierAutonomie(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const bonne = carte.getAttribute('data-bonne');
+            const choisie = carte.querySelector('.atelier-option.choisi');
+
+            carte.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('correcte', 'fausse');
+                if (option.getAttribute('data-batterie') === bonne) option.classList.add('correcte');
+            });
+            const ok = !!choisie && choisie.getAttribute('data-batterie') === bonne;
+            if (choisie && !ok) choisie.classList.add('fausse');
+
+            atelierRetour(carte,
+                ok ? '🎉 La batterie retenue couvre la mission sans être inutilement lourde.'
+                   : '❌ Cette batterie ne convient pas : compare son autonomie à la durée de la mission et sa masse.',
+                ok ? 'succes' : 'echec');
+            atelierAfficherExplication(carte);
+        }
+
+        // ── Type « reseau » : reconstituer le câblage d'un réseau entier ──
+        //    L'élève clique deux appareils : la liaison est vérifiée tout de
+        //    suite, et la réponse (« pourquoi ces deux-là sont reliés ») est
+        //    celle de la configuration. Le réseau se construit fil par fil,
+        //    puis la vérification finale rend l'explication d'ensemble.
+        function reseauEtat(carte) {
+            if (!carte.__reseau) {
+                let liens = [];
+                try {
+                    liens = JSON.parse(carte.getAttribute('data-liens') || '[]');
+                } catch (erreur) {
+                    liens = [];
+                }
+                carte.__reseau = {
+                    liens: liens,
+                    faits: {},
+                    paires: 0,
+                    attente: null,
+                    verrouille: false
+                };
+            }
+            return carte.__reseau;
+        }
+
+        function reseauBouton(carte, cle) {
+            return carte.querySelector('.reseau-appareil[data-appareil="' + cle + '"]');
+        }
+
+        function reseauNom(carte, cle) {
+            const bouton = reseauBouton(carte, cle);
+            const nom = bouton ? bouton.querySelector('.reseau-nom') : null;
+            return nom ? nom.textContent.trim() : cle;
+        }
+
+        function reseauFilsDe(etat, cle) {
+            let nombre = 0;
+            etat.liens.forEach(function (lien) {
+                const id = [lien.de, lien.vers].sort().join('|');
+                if (!etat.faits[id]) return;
+                if (lien.de === cle || lien.vers === cle) nombre += 1;
+            });
+            return nombre;
+        }
+
+        function reseauRafraichirAppareils(carte) {
+            const etat = carte.__reseau;
+            if (!etat) return;
+            carte.querySelectorAll('.reseau-appareil').forEach(function (bouton) {
+                const nombre = reseauFilsDe(etat, bouton.getAttribute('data-appareil'));
+                const marque = bouton.querySelector('[data-role="fils-appareil"]');
+                if (marque) {
+                    marque.textContent = nombre === 0
+                        ? 'aucun fil'
+                        : nombre + (nombre > 1 ? ' fils' : ' fil');
+                }
+                bouton.classList.toggle('relie', nombre > 0);
+            });
+        }
+
+        function reseauCompteur(carte) {
+            const etat = carte.__reseau;
+            if (!etat) return;
+            const zone = carte.querySelector('[data-role="compteur"]');
+            if (zone) {
+                zone.textContent = etat.paires + ' / ' + etat.liens.length +
+                    ' liaison(s) établie(s).' +
+                    (etat.paires >= etat.liens.length ? ' Le réseau est complet.' : '');
+            }
+            reseauRafraichirAppareils(carte);
+        }
+
+        function reseauChoisirAppareil(bouton) {
+            const carte = bouton && bouton.closest ? bouton.closest('.atelier-carte') : null;
+            if (!carte) return;
+            const etat = reseauEtat(carte);
+            if (etat.verrouille) {
+                atelierRetour(carte, 'Le réseau est déjà complet : clique « Vérifier le réseau ».', 'info');
+                return;
+            }
+            const cle = bouton.getAttribute('data-appareil');
+            const attente = etat.attente;
+
+            if (!attente) {
+                bouton.classList.add('choisi');
+                bouton.setAttribute('aria-pressed', 'true');
+                etat.attente = bouton;
+                atelierRetour(carte, 'Appareil choisi : ' + reseauNom(carte, cle) +
+                    '. Clique maintenant l\'appareil auquel il se relie.', 'info');
+                return;
+            }
+
+            if (attente === bouton) {
+                attente.classList.remove('choisi');
+                attente.setAttribute('aria-pressed', 'false');
+                etat.attente = null;
+                atelierRetour(carte, 'Sélection annulée.', 'info');
+                return;
+            }
+
+            const cleAttente = attente.getAttribute('data-appareil');
+            attente.classList.remove('choisi');
+            attente.setAttribute('aria-pressed', 'false');
+            etat.attente = null;
+
+            let lienTrouve = null;
+            etat.liens.forEach(function (lien) {
+                if (lienTrouve) return;
+                if ((lien.de === cleAttente && lien.vers === cle) ||
+                    (lien.de === cle && lien.vers === cleAttente)) {
+                    lienTrouve = lien;
+                }
+            });
+
+            if (!lienTrouve) {
+                atelierSignaler([bouton], 'erreur');
+                atelierRetour(carte, '❌ ' + reseauNom(carte, cleAttente) + ' et ' +
+                    reseauNom(carte, cle) + ' ne se relient pas directement. ' +
+                    'Repense au trajet des données : par quel appareil passent-elles ?',
+                    'echec');
+                return;
+            }
+
+            const id = [lienTrouve.de, lienTrouve.vers].sort().join('|');
+            if (etat.faits[id]) {
+                atelierRetour(carte, 'Ces deux appareils sont déjà reliés par un fil.', 'info');
+                return;
+            }
+
+            etat.faits[id] = true;
+            etat.paires += 1;
+
+            const liste = carte.querySelector('[data-role="fils"]');
+            if (liste) {
+                const vide = liste.querySelector('.atelier-fils-vide');
+                if (vide) liste.removeChild(vide);
+                const item = document.createElement('li');
+                const fort = document.createElement('strong');
+                fort.textContent = reseauNom(carte, lienTrouve.de) + ' → ' +
+                    reseauNom(carte, lienTrouve.vers);
+                item.appendChild(fort);
+                item.appendChild(document.createTextNode(' : ' + lienTrouve.pourquoi));
+                liste.appendChild(item);
+            }
+            reseauCompteur(carte);
+
+            if (etat.paires >= etat.liens.length) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 Le réseau est entièrement câblé : ' +
+                    etat.liens.length + ' liaisons établies.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, '✅ Fil établi : ' + reseauNom(carte, lienTrouve.de) +
+                    ' ↔ ' + reseauNom(carte, lienTrouve.vers) + '. Il reste ' +
+                    (etat.liens.length - etat.paires) + ' liaison(s) à trouver.', 'succes');
+            }
+        }
+
+        function reseauVerifier(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = reseauEtat(carte);
+            if (etat.paires >= etat.liens.length) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 Réseau complet : les ' + etat.liens.length +
+                    ' liaisons sont établies.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'Le réseau n\'est pas encore complet : ' + etat.paires +
+                    ' liaison(s) sur ' + etat.liens.length + '. Clique deux appareils ' +
+                    'pour tendre le fil suivant.', 'info');
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════
+        //  ATELIER DE CÂBLAGE N4 — déplacer des équipements, tendre des fils
+        //
+        //  Données : n4.cablage de la configuration JSON. Le balisage est
+        //  produit par personnaliser.py (marqueurs CABLAGE-N4) ; sans ce bloc,
+        //  toutes les fonctions ci-dessous sortent proprement — une activité
+        //  sans atelier de câblage reste strictement inchangée.
+        //
+        //  Chaque équipement porte son type (poste, imprimante, commutateur,
+        //  routeur) et sa famille (la salle à laquelle il appartient). La règle
+        //  vérifiée est celle du cours : les appareils d'une même famille
+        //  rejoignent UN commutateur, deux familles ne partagent jamais le même
+        //  commutateur (deux sous-réseaux distincts), et chaque commutateur est
+        //  relié au routeur.
+        //
+        //  Deux gestes, tous deux accessibles au clavier :
+        //    • déplacer : glisser (souris ou doigt), ou flèches sur un
+        //      équipement posé sur le fond blanc ;
+        //    • relier : cliquer un équipement puis un autre (Entrée au clavier).
+        //  Un fil se retire en cliquant dessus (Entrée au clavier).
+        // ══════════════════════════════════════════════════════════════════
+
+        const CABLAGE_SVG_NS = 'http://www.w3.org/2000/svg';
+        const CABLAGE = {
+            fils: [],          // [{a, b, etat}] — etat : '' | 'juste'
+            selection: null,   // équipement choisi pour tendre un fil
+            glisse: null,      // glissement en cours
+            finGlissement: 0,  // horodatage : ignore le clic qui suit un glissement
+            valide: false      // câblage vérifié et accepté par l'élève
+        };
+
+        function cablageAtelier() { return document.getElementById('cablage-atelier'); }
+        function cablageZone() { return document.getElementById('cablage-zone'); }
+        function cablageReserve() { return document.getElementById('cablage-reserve'); }
+        function cablageSvg() { return document.getElementById('cablage-fils'); }
+        function cablageBilan() { return document.getElementById('cablage-bilan'); }
+
+        function cablageNoeuds() {
+            const atelier = cablageAtelier();
+            return atelier
+                ? Array.prototype.slice.call(atelier.querySelectorAll('.noeud-reseau'))
+                : [];
+        }
+
+        function cablageNoeudParId(id) {
+            const atelier = cablageAtelier();
+            return atelier
+                ? atelier.querySelector('.noeud-reseau[data-noeud="' + id + '"]')
+                : null;
+        }
+
+        function cablageNom(noeud) {
+            return noeud ? (noeud.getAttribute('data-nom') || 'cet équipement') : 'cet équipement';
+        }
+
+        function cablageType(noeud) {
+            return noeud ? (noeud.getAttribute('data-type') || '') : '';
+        }
+
+        function cablageFamille(noeud) {
+            return noeud ? (noeud.getAttribute('data-famille') || '') : '';
+        }
+
+        function cablageFamilleNom(noeud) {
+            return noeud
+                ? (noeud.getAttribute('data-famille-nom') || cablageFamille(noeud))
+                : '';
+        }
+
+        // Un terminal = un appareil qui rend un service à une personne :
+        // un poste de travail ou une imprimante. Il se relie à UN commutateur.
+        function cablageEstTerminal(noeud) {
+            const type = cablageType(noeud);
+            return type === 'poste' || type === 'imprimante';
+        }
+
+        function cablageSurPlateau(noeud) {
+            return !!noeud && noeud.parentElement === cablageZone();
+        }
+
+        function cablageRetour(message, type) {
+            const zone = document.getElementById('cablage-retour');
+            if (!zone) return;
+            zone.textContent = message;
+            zone.className = 'cablage-retour' + (type ? ' ' + type : '');
+        }
+
+        function cablageReserveVide() {
+            const reserve = cablageReserve();
+            if (!reserve) return;
+            reserve.classList.toggle('vide', reserve.querySelectorAll('.noeud-reseau').length === 0);
+        }
+
+        function cablageAfficherIndication() {
+            const indication = document.getElementById('cablage-indication');
+            if (!indication) return;
+            const pose = cablageNoeuds().some(cablageSurPlateau);
+            indication.classList.toggle('cache', pose);
+        }
+
+        function cablagePlacer(noeud, x, y) {
+            const zone = cablageZone();
+            if (!zone || !noeud) return;
+            const maxX = Math.max(4, zone.clientWidth - noeud.offsetWidth - 4);
+            const maxY = Math.max(4, zone.clientHeight - noeud.offsetHeight - 4);
+            noeud.style.left = Math.round(Math.max(4, Math.min(maxX, x))) + 'px';
+            noeud.style.top = Math.round(Math.max(4, Math.min(maxY, y))) + 'px';
+        }
+
+        // Première case libre d'une grille : poser un équipement au clic ou au
+        // clavier doit donner un schéma lisible, sans superposition.
+        function cablagePositionLibre() {
+            const zone = cablageZone();
+            if (!zone) return { x: 8, y: 8 };
+            const celluleLargeur = 100;
+            const celluleHauteur = 74;
+            const marge = 8;
+            const colonnes = Math.max(1, Math.floor((zone.clientWidth - marge) / celluleLargeur));
+            const occupees = {};
+            cablageNoeuds().forEach(function (noeud) {
+                if (!cablageSurPlateau(noeud)) return;
+                const x = parseInt(noeud.style.left, 10) || 0;
+                const y = parseInt(noeud.style.top, 10) || 0;
+                occupees[Math.round(x / celluleLargeur) + ':' + Math.round(y / celluleHauteur)] = true;
+            });
+            for (let ligne = 0; ligne < 30; ligne += 1) {
+                for (let colonne = 0; colonne < colonnes; colonne += 1) {
+                    if (occupees[colonne + ':' + ligne]) continue;
+                    return { x: marge + colonne * celluleLargeur, y: marge + ligne * celluleHauteur };
+                }
+            }
+            return { x: marge, y: marge };
+        }
+
+        function cablagePoserSurPlateau(noeud, x, y) {
+            const zone = cablageZone();
+            if (!zone || !noeud) return;
+            if (noeud.parentElement !== zone) zone.appendChild(noeud);
+            noeud.classList.add('sur-plateau');
+            cablagePlacer(noeud, x, y);
+            cablageInvalider();
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        function cablageRanger(noeud) {
+            const reserve = cablageReserve();
+            if (!reserve || !noeud) return;
+            cablageSupprimerFilsDe(noeud.getAttribute('data-noeud'));
+            noeud.classList.remove('sur-plateau', 'deplace', 'selectionne');
+            noeud.style.left = '';
+            noeud.style.top = '';
+            noeud.setAttribute('aria-pressed', 'false');
+            reserve.appendChild(noeud);
+            if (CABLAGE.selection === noeud) CABLAGE.selection = null;
+            cablageInvalider();
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        // Un seul gestionnaire pour le clic et pour la touche Entrée : ce sont
+        // de vrais <button>, donc le clavier passe par le même chemin.
+        function cablageChoisir(noeud) {
+            if (!noeud) return;
+            // Le clic qui suit un glissement ne doit pas sélectionner : l'élève
+            // vient de déplacer l'équipement, il ne veut pas le relier.
+            if (Date.now() - CABLAGE.finGlissement < 350) return;
+
+            if (!cablageSurPlateau(noeud)) {
+                const libre = cablagePositionLibre();
+                cablagePoserSurPlateau(noeud, libre.x, libre.y);
+                cablageRetour(cablageNom(noeud) + ' est posé sur le fond blanc. ' +
+                    'Clique-le, puis clique l\'équipement à relier avec un fil.', 'info');
+                return;
+            }
+
+            const selection = CABLAGE.selection;
+            if (selection === noeud) {
+                cablageDeselectionner();
+                cablageRetour('Équipement désélectionné.', 'info');
+                return;
+            }
+            if (!selection) {
+                CABLAGE.selection = noeud;
+                noeud.classList.add('selectionne');
+                noeud.setAttribute('aria-pressed', 'true');
+                cablageRetour(cablageNom(noeud) + ' est sélectionné. Clique maintenant ' +
+                    'l\'équipement à relier par un fil.', 'info');
+                return;
+            }
+            cablageRelier(selection, noeud);
+        }
+
+        function cablageDeselectionner() {
+            if (!CABLAGE.selection) return;
+            CABLAGE.selection.classList.remove('selectionne');
+            CABLAGE.selection.setAttribute('aria-pressed', 'false');
+            CABLAGE.selection = null;
+        }
+
+        function cablageRelier(noeudA, noeudB) {
+            const idA = noeudA ? noeudA.getAttribute('data-noeud') : null;
+            const idB = noeudB ? noeudB.getAttribute('data-noeud') : null;
+            cablageDeselectionner();
+            if (!idA || !idB || idA === idB) return;
+            const deja = CABLAGE.fils.some(function (fil) {
+                return (fil.a === idA && fil.b === idB) || (fil.a === idB && fil.b === idA);
+            });
+            if (deja) {
+                cablageRetour('Un fil relie déjà ' + cablageNom(noeudA) + ' et ' +
+                    cablageNom(noeudB) + '.', 'info');
+                return;
+            }
+            CABLAGE.fils.push({ a: idA, b: idB, etat: '' });
+            cablageInvalider();
+            cablageTracerFils();
+            cablageRetour('Fil tendu entre ' + cablageNom(noeudA) + ' et ' +
+                cablageNom(noeudB) + '.', 'info');
+        }
+
+        // Toute modification du schéma annule une validation précédente :
+        // l'élève ne peut pas valider puis casser le câblage sans le savoir.
+        function cablageInvalider() {
+            CABLAGE.valide = false;
+            CABLAGE.fils.forEach(function (fil) { fil.etat = ''; });
+            const bilan = cablageBilan();
+            if (bilan) {
+                bilan.className = 'cablage-bilan cache';
+                bilan.textContent = '';
+            }
+            const explication = document.getElementById('cablage-explication');
+            if (explication) explication.classList.add('cache');
+        }
+
+        function cablageSupprimerFil(index) {
+            const fil = CABLAGE.fils[index];
+            if (!fil) return;
+            CABLAGE.fils.splice(index, 1);
+            cablageInvalider();
+            cablageTracerFils();
+            cablageRetour('Fil supprimé.', 'info');
+        }
+
+        function cablageSupprimerFilsDe(id) {
+            const avant = CABLAGE.fils.length;
+            CABLAGE.fils = CABLAGE.fils.filter(function (fil) {
+                return fil.a !== id && fil.b !== id;
+            });
+            if (CABLAGE.fils.length !== avant) cablageInvalider();
+        }
+
+        function cablageCentre(noeud) {
+            return {
+                x: noeud.offsetLeft + noeud.offsetWidth / 2,
+                y: noeud.offsetTop + noeud.offsetHeight / 2
+            };
+        }
+
+        function cablageTracerFils() {
+            const svg = cablageSvg();
+            if (!svg) return;
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+            CABLAGE.fils.forEach(function (fil, index) {
+                const noeudA = cablageNoeudParId(fil.a);
+                const noeudB = cablageNoeudParId(fil.b);
+                if (!noeudA || !noeudB) return;
+                if (!cablageSurPlateau(noeudA) || !cablageSurPlateau(noeudB)) return;
+                const a = cablageCentre(noeudA);
+                const b = cablageCentre(noeudB);
+
+                const groupe = document.createElementNS(CABLAGE_SVG_NS, 'g');
+                groupe.setAttribute('class', 'fil-reseau' + (fil.etat ? ' ' + fil.etat : ''));
+                groupe.setAttribute('tabindex', '0');
+                groupe.setAttribute('role', 'button');
+                groupe.setAttribute('data-noeud-a', fil.a);
+                groupe.setAttribute('data-noeud-b', fil.b);
+                groupe.setAttribute('aria-label', 'Fil entre ' + cablageNom(noeudA) + ' et ' +
+                    cablageNom(noeudB) + ' : touche Entrée pour supprimer ce fil');
+
+                ['fil-cible', 'fil-trait'].forEach(function (classe) {
+                    const ligne = document.createElementNS(CABLAGE_SVG_NS, 'line');
+                    ligne.setAttribute('class', classe);
+                    ligne.setAttribute('x1', Math.round(a.x));
+                    ligne.setAttribute('y1', Math.round(a.y));
+                    ligne.setAttribute('x2', Math.round(b.x));
+                    ligne.setAttribute('y2', Math.round(b.y));
+                    groupe.appendChild(ligne);
+                });
+
+                groupe.addEventListener('click', function (evenement) {
+                    evenement.stopPropagation();
+                    cablageSupprimerFil(index);
+                });
+                groupe.addEventListener('keydown', function (evenement) {
+                    if (evenement.key === 'Enter' || evenement.key === ' ' || evenement.key === 'Spacebar') {
+                        evenement.preventDefault();
+                        evenement.stopPropagation();
+                        cablageSupprimerFil(index);
+                    }
+                });
+
+                svg.appendChild(groupe);
+            });
+        }
+
+        function cablageDansZone(clientX, clientY) {
+            const zone = cablageZone();
+            if (!zone || typeof clientX !== 'number' || typeof clientY !== 'number') return false;
+            const rect = zone.getBoundingClientRect();
+            return clientX >= rect.left && clientX <= rect.right &&
+                   clientY >= rect.top && clientY <= rect.bottom;
+        }
+
+        function cablageDebutGlissement(evenement) {
+            if (evenement.pointerType === 'mouse' && evenement.button !== 0) return;
+            const noeud = evenement.currentTarget;
+            const zone = cablageZone();
+            if (!noeud || !zone) return;
+            const rect = noeud.getBoundingClientRect();
+            CABLAGE.glisse = {
+                noeud: noeud,
+                pointerId: evenement.pointerId,
+                departX: evenement.clientX,
+                departY: evenement.clientY,
+                decalageX: evenement.clientX - rect.left,
+                decalageY: evenement.clientY - rect.top,
+                deplace: false
+            };
+            try {
+                noeud.setPointerCapture(evenement.pointerId);
+            } catch (erreur) {
+                // Sans capture, le glissement reste possible dans la zone.
+            }
+            noeud.addEventListener('pointermove', cablagePendantGlissement);
+            noeud.addEventListener('pointerup', cablageFinGlissement);
+            noeud.addEventListener('pointercancel', cablageFinGlissement);
+        }
+
+        function cablagePendantGlissement(evenement) {
+            const glisse = CABLAGE.glisse;
+            if (!glisse || evenement.pointerId !== glisse.pointerId) return;
+            const ecartX = evenement.clientX - glisse.departX;
+            const ecartY = evenement.clientY - glisse.departY;
+
+            if (!glisse.deplace) {
+                // Un vrai déplacement, pas un tremblement de doigt.
+                if (Math.abs(ecartX) + Math.abs(ecartY) < 8) return;
+                glisse.deplace = true;
+                if (!cablageSurPlateau(glisse.noeud)) {
+                    const zone = cablageZone();
+                    const rect = glisse.noeud.getBoundingClientRect();
+                    const rectZone = zone.getBoundingClientRect();
+                    zone.appendChild(glisse.noeud);
+                    glisse.noeud.classList.add('sur-plateau');
+                    glisse.noeud.style.left = Math.round(rect.left - rectZone.left) + 'px';
+                    glisse.noeud.style.top = Math.round(rect.top - rectZone.top) + 'px';
+                    cablageInvalider();
+                    cablageReserveVide();
+                    cablageAfficherIndication();
+                }
+                glisse.noeud.classList.add('deplace');
+                cablageDeselectionner();
+            }
+
+            const zone = cablageZone();
+            const rectZone = zone.getBoundingClientRect();
+            cablagePlacer(glisse.noeud,
+                evenement.clientX - glisse.decalageX - rectZone.left,
+                evenement.clientY - glisse.decalageY - rectZone.top);
+            cablageTracerFils();
+        }
+
+        function cablageFinGlissement(evenement) {
+            const glisse = CABLAGE.glisse;
+            if (!glisse) return;
+            const noeud = glisse.noeud;
+            noeud.removeEventListener('pointermove', cablagePendantGlissement);
+            noeud.removeEventListener('pointerup', cablageFinGlissement);
+            noeud.removeEventListener('pointercancel', cablageFinGlissement);
+            try {
+                noeud.releasePointerCapture(glisse.pointerId);
+            } catch (erreur) {
+                // Rien à libérer.
+            }
+            noeud.classList.remove('deplace');
+            CABLAGE.glisse = null;
+            if (!glisse.deplace) return;   // clic simple : cablageChoisir s'en charge
+            CABLAGE.finGlissement = Date.now();
+            // Déposé hors du fond blanc : l'équipement retourne dans la réserve.
+            if (!cablageDansZone(evenement.clientX, evenement.clientY)) cablageRanger(noeud);
+            cablageTracerFils();
+        }
+
+        // Déplacement au clavier : flèches (Maj = pas fin).
+        function cablageTouche(evenement) {
+            const noeud = evenement.currentTarget;
+            if (!cablageSurPlateau(noeud)) return;
+            const pas = evenement.shiftKey ? 1 : 12;
+            let x = parseInt(noeud.style.left, 10) || 0;
+            let y = parseInt(noeud.style.top, 10) || 0;
+            if (evenement.key === 'ArrowLeft') x -= pas;
+            else if (evenement.key === 'ArrowRight') x += pas;
+            else if (evenement.key === 'ArrowUp') y -= pas;
+            else if (evenement.key === 'ArrowDown') y += pas;
+            else return;
+            evenement.preventDefault();
+            cablagePlacer(noeud, x, y);
+            cablageTracerFils();
+        }
+
+        function cablageEffacerFils() {
+            CABLAGE.fils = [];
+            cablageDeselectionner();
+            cablageInvalider();
+            cablageTracerFils();
+            cablageRetour('Tous les fils ont été retirés. Clique un équipement, puis un ' +
+                'autre, pour en tendre un nouveau.', 'info');
+        }
+
+        function cablageToutRanger() {
+            const reserve = cablageReserve();
+            cablageNoeuds().forEach(function (noeud) {
+                noeud.classList.remove('sur-plateau', 'deplace', 'selectionne');
+                noeud.style.left = '';
+                noeud.style.top = '';
+                noeud.setAttribute('aria-pressed', 'false');
+                if (reserve) reserve.appendChild(noeud);
+            });
+            CABLAGE.fils = [];
+            CABLAGE.selection = null;
+            CABLAGE.glisse = null;
+            CABLAGE.finGlissement = 0;
+            cablageInvalider();
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        function cablageReinitialiser() {
+            cablageToutRanger();
+            cablageRetour('', '');
+        }
+
+        function cablageAjouterListe(conteneur, titre, lignes) {
+            if (!lignes.length) return;
+            const paragraphe = document.createElement('p');
+            const fort = document.createElement('strong');
+            fort.textContent = titre;
+            paragraphe.appendChild(fort);
+            conteneur.appendChild(paragraphe);
+            const liste = document.createElement('ul');
+            lignes.forEach(function (texte) {
+                const item = document.createElement('li');
+                item.textContent = texte;
+                liste.appendChild(item);
+            });
+            conteneur.appendChild(liste);
+        }
+
+        // Vérification du câblage : on construit le graphe des fils et on
+        // confronte chaque règle du cours, en expliquant chaque manquement.
+        function cablageVerifier() {
+            const atelier = cablageAtelier();
+            if (!atelier) return;
+            const noeuds = cablageNoeuds();
+            const parId = {};
+            noeuds.forEach(function (noeud) { parId[noeud.getAttribute('data-noeud')] = noeud; });
+
+            const erreurs = [];
+            const justes = [];
+
+            // 1. Tout le matériel est-il posé sur le fond blanc ?
+            const restants = noeuds.filter(function (noeud) { return !cablageSurPlateau(noeud); });
+            if (restants.length) {
+                erreurs.push('Il reste ' + restants.length + ' équipement(s) dans la réserve (' +
+                    restants.map(cablageNom).join(', ') + ') : glisse-les sur le fond blanc, ' +
+                    'ou clique-les pour les y poser.');
+            } else {
+                justes.push('Tous les équipements sont posés sur le schéma.');
+            }
+
+            // Voisinage : qui est relié à qui par un fil ?
+            const voisins = {};
+            noeuds.forEach(function (noeud) { voisins[noeud.getAttribute('data-noeud')] = []; });
+            CABLAGE.fils.forEach(function (fil) {
+                if (!parId[fil.a] || !parId[fil.b] || fil.a === fil.b) return;
+                voisins[fil.a].push(fil.b);
+                voisins[fil.b].push(fil.a);
+            });
+
+            const commutateurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'commutateur'; });
+            const routeurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'routeur'; });
+            const terminaux = noeuds.filter(cablageEstTerminal);
+
+            // 2. Un poste ou une imprimante se relie à UN commutateur.
+            let avant = erreurs.length;
+            terminaux.forEach(function (terminal) {
+                const id = terminal.getAttribute('data-noeud');
+                const liens = voisins[id] || [];
+                if (liens.length === 0) {
+                    erreurs.push(cablageNom(terminal) + ' n\'est relié à aucun fil : ' +
+                        'relie-le à un commutateur.');
+                } else if (liens.length > 1) {
+                    erreurs.push(cablageNom(terminal) + ' a ' + liens.length + ' fils : ' +
+                        'un appareil ne se relie qu\'à un seul commutateur.');
+                } else if (commutateurs.indexOf(parId[liens[0]]) === -1) {
+                    erreurs.push(cablageNom(terminal) + ' est relié à ' + cablageNom(parId[liens[0]]) +
+                        ' : un poste ou une imprimante se relie toujours à un commutateur.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Chaque poste et chaque imprimante est relié à un seul commutateur.');
+            }
+
+            // 3. Le routeur ne se relie qu'aux commutateurs.
+            avant = erreurs.length;
+            routeurs.forEach(function (routeur) {
+                const id = routeur.getAttribute('data-noeud');
+                (voisins[id] || []).forEach(function (idVoisin) {
+                    if (commutateurs.indexOf(parId[idVoisin]) === -1) {
+                        erreurs.push('Le routeur ne se relie qu\'aux commutateurs : ' +
+                            cablageNom(parId[idVoisin]) + ' est relié directement au routeur.');
+                    }
+                });
+            });
+            if (erreurs.length === avant) {
+                justes.push('Le routeur ne reçoit que des commutateurs : c\'est lui qui ouvre vers Internet.');
+            }
+
+            // 4. Chaque commutateur reçoit des appareils et rejoint le routeur.
+            avant = erreurs.length;
+            commutateurs.forEach(function (commutateur) {
+                const id = commutateur.getAttribute('data-noeud');
+                const liens = voisins[id] || [];
+                const versRouteur = liens.filter(function (v) { return cablageType(parId[v]) === 'routeur'; });
+                const versAppareils = liens.filter(function (v) { return cablageEstTerminal(parId[v]); });
+                const versCommutateur = liens.filter(function (v) { return cablageType(parId[v]) === 'commutateur'; });
+                if (versCommutateur.length) {
+                    erreurs.push('Deux commutateurs ne se relient pas entre eux (' +
+                        cablageNom(commutateur) + ' et ' + cablageNom(parId[versCommutateur[0]]) +
+                        ') : chacun rejoint directement le routeur.');
+                }
+                if (versAppareils.length === 0) {
+                    erreurs.push(cablageNom(commutateur) + ' n\'a aucun appareil relié : ' +
+                        'un commutateur relie les appareils de son sous-réseau.');
+                }
+                if (versRouteur.length === 0) {
+                    erreurs.push(cablageNom(commutateur) + ' n\'est pas relié au routeur : ' +
+                        'ses appareils ne peuvent pas communiquer avec le reste du collège.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Chaque commutateur est relié au routeur par un seul fil.');
+            }
+
+            // 5. Deux familles ne partagent pas le même commutateur : c'est la
+            //    règle des sous-réseaux séparés.
+            avant = erreurs.length;
+            commutateurs.forEach(function (commutateur) {
+                const id = commutateur.getAttribute('data-noeud');
+                const familles = {};
+                (voisins[id] || []).forEach(function (idVoisin) {
+                    const voisin = parId[idVoisin];
+                    if (!voisin || !cablageEstTerminal(voisin)) return;
+                    familles[cablageFamille(voisin)] = cablageFamilleNom(voisin);
+                });
+                const cles = Object.keys(familles);
+                if (cles.length > 1) {
+                    erreurs.push('« ' + familles[cles[0]] + ' » et « ' + familles[cles[1]] +
+                        ' » partagent ' + cablageNom(commutateur) + ' : ces deux salles doivent ' +
+                        'être dans deux sous-réseaux séparés, donc sur deux commutateurs différents.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Aucun commutateur ne mélange deux salles : les sous-réseaux sont séparés.');
+            }
+
+            // 6. Tous les appareils d'une même salle sont sur le même commutateur.
+            const famillesUtilisees = {};
+            terminaux.forEach(function (terminal) {
+                const liens = voisins[terminal.getAttribute('data-noeud')] || [];
+                const commutateur = liens.map(function (v) { return parId[v]; })
+                    .filter(function (v) { return v && cablageType(v) === 'commutateur'; })[0];
+                if (!commutateur) return;
+                const famille = cablageFamille(terminal);
+                if (!famillesUtilisees[famille]) {
+                    famillesUtilisees[famille] = { nom: cablageFamilleNom(terminal), commutateurs: {} };
+                }
+                famillesUtilisees[famille].commutateurs[commutateur.getAttribute('data-noeud')] = commutateur;
+            });
+            avant = erreurs.length;
+            Object.keys(famillesUtilisees).forEach(function (famille) {
+                const utilisations = famillesUtilisees[famille];
+                const ids = Object.keys(utilisations.commutateurs);
+                if (ids.length > 1) {
+                    erreurs.push('Les appareils de « ' + utilisations.nom + ' » sont répartis sur ' +
+                        ids.length + ' commutateurs (' + ids.map(function (id) {
+                            return cablageNom(utilisations.commutateurs[id]);
+                        }).join(', ') + ') : une salle = un seul commutateur.');
+                }
+            });
+            if (erreurs.length === avant) {
+                justes.push('Chaque salle regroupe tous ses appareils sur un seul commutateur.');
+            }
+
+            const vues = {};
+            const erreursUniques = erreurs.filter(function (message) {
+                if (vues[message]) return false;
+                vues[message] = true;
+                return true;
+            });
+
+            const bilan = cablageBilan();
+            const explication = document.getElementById('cablage-explication');
+            const reussi = erreursUniques.length === 0;
+
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'cablage-bilan ' + (reussi ? 'succes' : 'echec');
+                const titre = document.createElement('p');
+                titre.textContent = reussi
+                    ? '✅ Câblage validé : le réseau du collège est branché comme il faut.'
+                    : 'Le câblage n\'est pas encore bon : ' + erreursUniques.length +
+                      ' point(s) à corriger.';
+                bilan.appendChild(titre);
+                if (reussi) {
+                    if (explication) {
+                        explication.classList.remove('cache');
+                        const rappel = document.createElement('div');
+                        rappel.className = 'cablage-explication';
+                        const texte = document.createElement('p');
+                        texte.textContent = explication.textContent;
+                        rappel.appendChild(texte);
+                        bilan.appendChild(rappel);
+                    }
+                } else {
+                    cablageAjouterListe(bilan, 'À corriger :', erreursUniques);
+                    cablageAjouterListe(bilan, 'Déjà juste :', justes);
+                }
+            }
+
+            CABLAGE.valide = reussi;
+            CABLAGE.fils.forEach(function (fil) { fil.etat = reussi ? 'juste' : ''; });
+            cablageTracerFils();
+
+            cablageRetour(reussi
+                ? '🎉 Câblage validé : tu peux finaliser ta conception.'
+                : 'Reprends les points à corriger ci-dessous, puis clique de nouveau « Vérifier le câblage ».',
+                reussi ? 'succes' : 'echec');
+        }
+
+        function cablageInitialiser() {
+            const atelier = cablageAtelier();
+            if (!atelier) return;
+            cablageNoeuds().forEach(function (noeud) {
+                noeud.addEventListener('pointerdown', cablageDebutGlissement);
+                noeud.addEventListener('keydown', cablageTouche);
+            });
+            window.addEventListener('resize', cablageTracerFils);
+            cablageReserveVide();
+            cablageAfficherIndication();
+            cablageTracerFils();
+        }
+
+        cablageInitialiser();
 
         // Support pour impression PDF
         window.addEventListener('beforeprint', function() {
