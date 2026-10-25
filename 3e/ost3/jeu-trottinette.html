@@ -611,9 +611,10 @@
             gameState.distance += gameState.defilement * 0.058;
             gameState.roadOffset += gameState.defilement;
 
-            // Mise à jour obstacles
+            // Mise à jour obstacles — les voitures roulent plus vite que la route
+            // (rattrapé du correctif du 25/10 13:52, qui avait aussi ajouté le saut)
             gameState.obstacles.forEach(obs => {
-                obs.y += gameState.defilement;
+                obs.y += (obs.type === 'car') ? gameState.defilement * 1.6 : gameState.defilement;
                 obs.age = (obs.age || 0) + 1;
             });
 
