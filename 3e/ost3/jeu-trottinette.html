@@ -373,7 +373,7 @@
             running: false,
             selectedScooter: null,
             currentWeather: weatherConditions[0],
-            player: { x: 300, y: 600, width: 40, height: 60, vx: 0 },
+            player: { x: 300, y: 600, width: 40, height: 60, vx: 0, saut: false, vy: 0, solY: 600 },
             obstacles: [],
             decorations: [],
             distance: 0,
@@ -565,6 +565,23 @@
             gameState.player.x += gameState.player.vx;
             gameState.player.x = Math.max(50, Math.min(canvas.width - 50 - gameState.player.width, gameState.player.x));
 
+            // Saut : Espace ou flèche haut pour sauter par-dessus les barrières
+            if ((k[' '] || k['ArrowUp']) && !gameState.player.saut) {
+                gameState.player.saut = true;
+                gameState.player.vy = -14; // impulsion vers le haut
+            }
+            // Physique du saut
+            if (gameState.player.saut) {
+                gameState.player.y += gameState.player.vy;
+                gameState.player.vy += 0.9; // gravité
+                // Retour au sol
+                if (gameState.player.y >= gameState.player.solY) {
+                    gameState.player.y = gameState.player.solY;
+                    gameState.player.saut = false;
+                    gameState.player.vy = 0;
+                }
+            }
+
             // Poussière derrière la roue : au départ et à haute vitesse
             const cxJ = gameState.player.x + gameState.player.width / 2;
             const cyJ = gameState.player.y + gameState.player.height / 2;
@@ -581,14 +598,16 @@
             gameState.poussiere.forEach(p => { p.x += p.vx; p.y += p.vy; p.age++; });
             gameState.poussiere = gameState.poussiere.filter(p => p.age < 26);
 
-            // Défilement vertical : la route descend, les lignes jaunes aussi
-            gameState.scrollSpeed = gameState.speed / 2.1;
+            // Défilement vertical : la route descend, les lignes jaunes aussi (ralenti)
+            gameState.scrollSpeed = gameState.speed / 3.5;
             gameState.distance += gameState.scrollSpeed * 0.058;
             gameState.roadOffset += gameState.scrollSpeed;
 
             // Mise à jour obstacles
             gameState.obstacles.forEach(obs => {
-                obs.y += gameState.scrollSpeed;
+                // Les voitures avancent plus vite que le défilement
+                const vitesseObs = obs.type === 'car' ? gameState.scrollSpeed * 1.6 : gameState.scrollSpeed;
+                obs.y += vitesseObs;
                 obs.age = (obs.age || 0) + 1;
             });
 
@@ -612,7 +631,7 @@
 
             // Collision
             gameState.obstacles.forEach(obs => {
-                if (checkCollision(gameState.player, obs)) {
+                if (checkCollision(gameState.player, obs, obs.type)) {
                     endGame(false);
                 }
             });
@@ -640,7 +659,7 @@
         function afficherConsigne() {
             const c = document.getElementById('controls');
             if (c) {
-                c.textContent = '← → ou glisser le doigt pour se déplacer | ↑ accélérer | ↓ freiner';
+                c.textContent = '← → ou glisser le doigt pour se déplacer | ↑ accélérer | ↓ freiner | Espace pour sauter';
             }
         }
 
@@ -651,7 +670,8 @@
                 { type: 'pedestrian', width: 36, height: 50, color: '#9b59b6' },
                 { type: 'car', width: 104, height: 156, color: '#3498db' },
                 { type: 'puddle', width: 58, height: 30, color: '#5dade2' },
-                { type: 'leaves', width: 54, height: 28, color: '#d35400' }
+                { type: 'leaves', width: 54, height: 28, color: '#d35400' },
+                { type: 'barriere', width: 60, height: 40, color: '#e74c3c' }
             ];
             
             const template = types[Math.floor(Math.random() * types.length)];
@@ -685,8 +705,12 @@
             });
         }
         
-        function checkCollision(rect1, rect2) {
+        function checkCollision(rect1, rect2, obstacleType) {
             const padding = 5;
+            // Si le joueur saute et que l'obstacle est une barrière, pas de collision
+            if (gameState.player.saut && obstacleType === 'barriere') {
+                return false;
+            }
             return rect1.x + padding < rect2.x + rect2.width &&
                    rect1.x + rect1.width - padding > rect2.x &&
                    rect1.y + padding < rect2.y + rect2.height &&
@@ -929,6 +953,19 @@
                     break;
                 case 'leaves':
                     dessiner('feuilles', cx, cy, Math.sin((obs.age || 0) / 18) * 0.06);
+                    break;
+                case 'barriere':
+                    // Barrière rayée rouge et blanche
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                    ctx.fillStyle = '#ffffff';
+                    for (let i = 0; i < obs.width; i += 12) {
+                        ctx.fillRect(obs.x + i, obs.y, 6, obs.height);
+                    }
+                    // Poteaux de support
+                    ctx.fillStyle = '#7f8c8d';
+                    ctx.fillRect(obs.x - 4, obs.y + obs.height, 6, 10);
+                    ctx.fillRect(obs.x + obs.width - 2, obs.y + obs.height, 6, 10);
                     break;
                 default:
                     ctx.fillStyle = obs.color || '#34495e';
