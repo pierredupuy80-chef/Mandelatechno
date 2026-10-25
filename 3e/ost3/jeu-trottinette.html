@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le trajet du prof de techno</title>
+    <title>Le trajet ensoleillé du prof de techno</title>
     <style>
         * {
             margin: 0;
@@ -13,8 +13,8 @@
         
         body {
             font-family: 'Courier New', monospace;
-            background: #1a1a2e;
-            color: #eee;
+            background: linear-gradient(135deg, #87ceeb 0%, #98d8e8 100%);
+            color: #2c3e50;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -24,55 +24,62 @@
         }
         
         #game-container {
-            background: #0f3460;
-            border: 4px solid #e94560;
-            border-radius: 8px;
+            background: #fff;
+            border: 6px solid #f39c12;
+            border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
+            box-shadow: 0 8px 32px rgba(243, 156, 18, 0.3);
         }
         
         h1 {
             text-align: center;
-            color: #e94560;
+            color: #e67e22;
             margin-bottom: 10px;
-            font-size: 24px;
-            text-shadow: 2px 2px 0 #16213e;
+            font-size: 28px;
+            text-shadow: 2px 2px 0 #f9ca24;
         }
         
         #game-canvas {
-            border: 3px solid #16213e;
+            border: 4px solid #f39c12;
             background: #87ceeb;
             display: block;
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            border-radius: 8px;
         }
         
         #ui {
             margin-top: 15px;
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
+            justify-content: space-around;
+            gap: 15px;
             font-size: 14px;
         }
         
         .stat {
-            background: #16213e;
-            padding: 8px 15px;
-            border-radius: 4px;
-            border: 2px solid #e94560;
+            background: #fff9e6;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 3px solid #f39c12;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.2);
         }
         
         .stat-label {
-            color: #e94560;
+            color: #e67e22;
             font-weight: bold;
+            margin-right: 5px;
         }
         
         #controls {
             margin-top: 15px;
             text-align: center;
-            font-size: 12px;
-            color: #aaa;
+            font-size: 13px;
+            color: #7f8c8d;
+            background: #fff9e6;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px dashed #f39c12;
         }
         
         #menu, #game-over {
@@ -80,12 +87,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(15, 52, 96, 0.95);
-            padding: 30px;
-            border: 4px solid #e94560;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 35px;
+            border: 6px solid #f39c12;
+            border-radius: 12px;
             text-align: center;
             z-index: 100;
+            box-shadow: 0 8px 32px rgba(243, 156, 18, 0.4);
+            max-width: 600px;
         }
         
         .hidden {
@@ -93,51 +102,60 @@
         }
         
         button {
-            background: #e94560;
+            background: #f39c12;
             color: #fff;
             border: none;
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-family: 'Courier New', monospace;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 8px;
             margin: 10px 5px;
             transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
         }
         
         button:hover {
-            background: #ff6b6b;
-            transform: scale(1.05);
+            background: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(243, 156, 18, 0.4);
+        }
+        
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .scooter-option {
-            background: #16213e;
-            border: 2px solid #e94560;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 4px;
+            background: #fff9e6;
+            border: 3px solid #f39c12;
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 8px;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s;
         }
         
         .scooter-option:hover {
-            background: #1a1a2e;
-            border-color: #ff6b6b;
-            transform: translateX(5px);
+            background: #ffeaa7;
+            border-color: #e67e22;
+            transform: translateX(8px);
         }
         
         .scooter-option.selected {
-            background: #e94560;
-            border-color: #ff6b6b;
+            background: #f39c12;
+            border-color: #e67e22;
+            color: #fff;
         }
         
         .scooter-name {
             font-weight: bold;
-            color: #e94560;
-            font-size: 16px;
-            margin-bottom: 5px;
+            color: #e67e22;
+            font-size: 18px;
+            margin-bottom: 8px;
         }
         
         .scooter-option.selected .scooter-name {
@@ -145,9 +163,10 @@
         }
         
         .scooter-stats {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 5px;
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-top: 6px;
+            line-height: 1.6;
         }
         
         .scooter-option.selected .scooter-stats {
@@ -156,55 +175,58 @@
         
         #weather-indicator {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(22, 33, 62, 0.9);
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 2px solid #e94560;
-            font-size: 12px;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 3px solid #f39c12;
+            font-size: 14px;
+            font-weight: bold;
+            color: #e67e22;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
         }
     </style>
 </head>
 <body>
     <div id="game-container">
-        <h1>🛴 Le trajet du prof de techno</h1>
-        <canvas id="game-canvas" width="800" height="400"></canvas>
+        <h1>☀️ Le trajet ensoleillé du prof de techno</h1>
+        <canvas id="game-canvas" width="600" height="700"></canvas>
         <div id="ui">
             <div class="stat">
-                <span class="stat-label">Distance:</span>
+                <span class="stat-label">📏 Distance:</span>
                 <span id="distance">0</span> m
             </div>
             <div class="stat">
-                <span class="stat-label">Vitesse:</span>
+                <span class="stat-label">🚀 Vitesse:</span>
                 <span id="speed">0</span> km/h
             </div>
             <div class="stat">
-                <span class="stat-label">Batterie:</span>
+                <span class="stat-label">🔋 Batterie:</span>
                 <span id="battery">100</span>%
             </div>
             <div class="stat">
-                <span class="stat-label">Score:</span>
+                <span class="stat-label">⭐ Score:</span>
                 <span id="score">0</span>
             </div>
         </div>
         <div id="controls">
-            Flèches ↑↓ pour éviter les obstacles | Espace pour freiner
+            ← → pour se déplacer | ↑ pour accélérer | ↓ pour ralentir
         </div>
     </div>
     
     <div id="menu">
-        <h2 style="color: #e94560; margin-bottom: 20px;">Choisis ta trottinette</h2>
+        <h2 style="color: #e67e22; margin-bottom: 20px;">🛴 Choisis ta trottinette</h2>
         <div id="scooter-list"></div>
-        <button id="start-btn" disabled>Commencer le trajet</button>
+        <button id="start-btn" disabled>🌞 Commencer le trajet</button>
     </div>
     
     <div id="game-over" class="hidden">
-        <h2 style="color: #e94560; margin-bottom: 15px;">Trajet terminé !</h2>
-        <p id="final-score" style="font-size: 18px; margin-bottom: 10px;"></p>
-        <p id="final-distance" style="margin-bottom: 20px;"></p>
-        <button id="restart-btn">Rejouer</button>
-        <button id="menu-btn">Changer de trottinette</button>
+        <h2 style="color: #e67e22; margin-bottom: 15px;">🎯 Trajet terminé !</h2>
+        <p id="final-score" style="font-size: 20px; margin-bottom: 10px; font-weight: bold;"></p>
+        <p id="final-distance" style="margin-bottom: 20px; font-size: 16px;"></p>
+        <button id="restart-btn">🔄 Rejouer</button>
+        <button id="menu-btn">🛴 Changer de trottinette</button>
     </div>
     
     <div id="weather-indicator" class="hidden">
@@ -261,7 +283,7 @@
             { name: "Pluie", icon: "🌧️", grip: 0.7, batteryDrain: 1.2, visibility: 0.8 },
             { name: "Froid", icon: "🥶", grip: 0.9, batteryDrain: 1.5, visibility: 1.0 },
             { name: "Chaleur", icon: "🔥", grip: 0.95, batteryDrain: 1.3, visibility: 1.0 },
-            { name: "Brouillard", icon: "🌫️", grip: 0.9, batteryDrain: 1.0, visibility: 0.5 }
+            { name: "Vent", icon: "💨", grip: 0.85, batteryDrain: 1.1, visibility: 1.0 }
         ];
         
         // État du jeu
@@ -269,18 +291,19 @@
             running: false,
             selectedScooter: null,
             currentWeather: weatherConditions[0],
-            player: { x: 100, y: 200, vy: 0, width: 40, height: 60 },
+            player: { x: 300, y: 600, width: 40, height: 60, vx: 0 },
             obstacles: [],
-            particles: [],
+            decorations: [],
             distance: 0,
             speed: 0,
             battery: 100,
             score: 0,
             scrollSpeed: 3,
-            groundY: 300,
             keys: {},
             weatherTimer: 0,
-            obstacleTimer: 0
+            obstacleTimer: 0,
+            decorationTimer: 0,
+            roadOffset: 0
         };
         
         // Initialisation du menu
@@ -292,10 +315,10 @@
                 const div = document.createElement('div');
                 div.className = 'scooter-option';
                 div.innerHTML = `
-                    <div class="scooter-name">${scooter.name}</div>
+                    <div class="scooter-name">🛴 ${scooter.name}</div>
                     <div class="scooter-stats">
-                        Batterie: ${scooter.battery}% | Vitesse max: ${scooter.speed} km/h<br>
-                        Poids: ${scooter.weight}kg | Roues: ${scooter.wheels}" | Freinage: ${scooter.braking}/10<br>
+                        🔋 Batterie: ${scooter.battery}% | 🚀 Vitesse max: ${scooter.speed} km/h<br>
+                        ⚖️ Poids: ${scooter.weight}kg | 🛞 Roues: ${scooter.wheels}" | 🛑 Freinage: ${scooter.braking}/10<br>
                         <em>${scooter.description}</em>
                     </div>
                 `;
@@ -318,15 +341,17 @@
             
             gameState.running = true;
             gameState.distance = 0;
-            gameState.speed = gameState.selectedScooter.speed * 0.5;
+            gameState.speed = gameState.selectedScooter.speed * 0.7;
             gameState.battery = gameState.selectedScooter.battery;
             gameState.score = 0;
-            gameState.player.y = gameState.groundY - gameState.player.height;
+            gameState.player.x = canvas.width / 2 - gameState.player.width / 2;
             gameState.obstacles = [];
-            gameState.particles = [];
+            gameState.decorations = [];
             gameState.currentWeather = weatherConditions[0];
             gameState.weatherTimer = 0;
             gameState.obstacleTimer = 0;
+            gameState.decorationTimer = 0;
+            gameState.roadOffset = 0;
             
             updateWeatherDisplay();
             gameLoop();
@@ -343,8 +368,8 @@
         function update() {
             // Changement météo aléatoire
             gameState.weatherTimer++;
-            if (gameState.weatherTimer > 600) { // Toutes les ~10 secondes
-                if (Math.random() < 0.3) {
+            if (gameState.weatherTimer > 900) {
+                if (Math.random() < 0.25) {
                     gameState.currentWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
                     updateWeatherDisplay();
                 }
@@ -353,42 +378,67 @@
             
             // Génération d'obstacles
             gameState.obstacleTimer++;
-            const obstacleFrequency = 120 - (gameState.distance / 50); // Plus on avance, plus c'est fréquent
-            if (gameState.obstacleTimer > Math.max(60, obstacleFrequency)) {
-                if (Math.random() < 0.4) {
+            const obstacleFrequency = Math.max(40, 100 - (gameState.distance / 30));
+            if (gameState.obstacleTimer > obstacleFrequency) {
+                if (Math.random() < 0.6) {
                     spawnObstacle();
                 }
                 gameState.obstacleTimer = 0;
             }
             
+            // Génération de décorations
+            gameState.decorationTimer++;
+            if (gameState.decorationTimer > 60) {
+                if (Math.random() < 0.4) {
+                    spawnDecoration();
+                }
+                gameState.decorationTimer = 0;
+            }
+            
             // Contrôle joueur
+            const moveSpeed = 5 * gameState.currentWeather.grip;
+            if (gameState.keys['ArrowLeft'] && gameState.player.x > 50) {
+                gameState.player.vx = -moveSpeed;
+            } else if (gameState.keys['ArrowRight'] && gameState.player.x < canvas.width - 50 - gameState.player.width) {
+                gameState.player.vx = moveSpeed;
+            } else {
+                gameState.player.vx *= 0.85;
+            }
+            
+            // Accélération/freinage
             const maxSpeed = gameState.selectedScooter.speed * gameState.currentWeather.grip;
-            if (gameState.keys['ArrowUp'] && gameState.player.y > 50) {
-                gameState.player.vy = -5;
-            } else if (gameState.keys['ArrowDown'] && gameState.player.y < gameState.groundY - gameState.player.height) {
-                gameState.player.vy = 5;
+            if (gameState.keys['ArrowUp']) {
+                gameState.speed = Math.min(maxSpeed, gameState.speed + 0.3);
+            } else if (gameState.keys['ArrowDown']) {
+                gameState.speed = Math.max(5, gameState.speed - 0.4);
             } else {
-                gameState.player.vy *= 0.8;
+                const cruiseSpeed = maxSpeed * 0.6;
+                if (gameState.speed < cruiseSpeed) {
+                    gameState.speed = Math.min(cruiseSpeed, gameState.speed + 0.1);
+                } else {
+                    gameState.speed = Math.max(cruiseSpeed, gameState.speed - 0.1);
+                }
             }
             
-            if (gameState.keys[' ']) {
-                gameState.speed = Math.max(5, gameState.speed - 0.5);
-            } else {
-                gameState.speed = Math.min(maxSpeed, gameState.speed + 0.1);
-            }
+            gameState.player.x += gameState.player.vx;
+            gameState.player.x = Math.max(50, Math.min(canvas.width - 50 - gameState.player.width, gameState.player.x));
             
-            gameState.player.y += gameState.player.vy;
-            gameState.player.y = Math.max(50, Math.min(gameState.groundY - gameState.player.height, gameState.player.y));
-            
-            // Défilement
-            gameState.scrollSpeed = gameState.speed / 10;
+            // Défilement vertical
+            gameState.scrollSpeed = gameState.speed / 5;
             gameState.distance += gameState.scrollSpeed * 0.5;
+            gameState.roadOffset = (gameState.roadOffset + gameState.scrollSpeed) % 40;
             
             // Mise à jour obstacles
             gameState.obstacles.forEach(obs => {
-                obs.x -= gameState.scrollSpeed;
+                obs.y += gameState.scrollSpeed;
             });
-            gameState.obstacles = gameState.obstacles.filter(obs => obs.x > -100);
+            gameState.obstacles = gameState.obstacles.filter(obs => obs.y < canvas.height + 100);
+            
+            // Mise à jour décorations
+            gameState.decorations.forEach(dec => {
+                dec.y += gameState.scrollSpeed;
+            });
+            gameState.decorations = gameState.decorations.filter(dec => dec.y < canvas.height + 50);
             
             // Collision
             gameState.obstacles.forEach(obs => {
@@ -398,7 +448,7 @@
             });
             
             // Consommation batterie
-            const batteryDrain = 0.01 * gameState.currentWeather.batteryDrain * (gameState.speed / 20);
+            const batteryDrain = 0.008 * gameState.currentWeather.batteryDrain * (gameState.speed / 20);
             gameState.battery -= batteryDrain;
             
             if (gameState.battery <= 0) {
@@ -407,24 +457,6 @@
             
             // Score
             gameState.score = Math.floor(gameState.distance);
-            
-            // Particules météo
-            if (gameState.currentWeather.name === "Pluie") {
-                if (Math.random() < 0.5) {
-                    gameState.particles.push({
-                        x: Math.random() * canvas.width,
-                        y: -10,
-                        vy: 8,
-                        life: 100
-                    });
-                }
-            }
-            
-            gameState.particles.forEach(p => {
-                p.y += p.vy;
-                p.life--;
-            });
-            gameState.particles = gameState.particles.filter(p => p.life > 0 && p.y < canvas.height);
             
             // UI
             document.getElementById('distance').textContent = Math.floor(gameState.distance);
@@ -435,16 +467,22 @@
         
         function spawnObstacle() {
             const types = [
-                { type: 'pothole', width: 50, height: 20, y: gameState.groundY - 20, color: '#333' },
-                { type: 'cone', width: 30, height: 40, y: gameState.groundY - 40, color: '#ff6b35' },
-                { type: 'pedestrian', width: 30, height: 50, y: gameState.groundY - 50, color: '#8b4513' },
-                { type: 'car', width: 80, height: 50, y: gameState.groundY - 50, color: '#c41e3a' }
+                { type: 'pothole', width: 50, height: 30, color: '#34495e' },
+                { type: 'cone', width: 25, height: 35, color: '#e74c3c' },
+                { type: 'pedestrian', width: 30, height: 40, color: '#9b59b6' },
+                { type: 'car', width: 60, height: 80, color: '#3498db' },
+                { type: 'puddle', width: 60, height: 25, color: '#5dade2' },
+                { type: 'leaves', width: 45, height: 20, color: '#d35400' }
             ];
             
             const template = types[Math.floor(Math.random() * types.length)];
+            const laneWidth = (canvas.width - 100) / 3;
+            const lane = Math.floor(Math.random() * 3);
+            const x = 50 + lane * laneWidth + (laneWidth - template.width) / 2;
+            
             gameState.obstacles.push({
-                x: canvas.width,
-                y: template.y,
+                x: x,
+                y: -template.height,
                 width: template.width,
                 height: template.height,
                 type: template.type,
@@ -452,11 +490,24 @@
             });
         }
         
+        function spawnDecoration() {
+            const side = Math.random() < 0.5 ? 'left' : 'right';
+            const x = side === 'left' ? 10 + Math.random() * 30 : canvas.width - 40 + Math.random() * 30;
+            const type = Math.random() < 0.7 ? 'tree' : 'flower';
+            
+            gameState.decorations.push({
+                x: x,
+                y: -30,
+                type: type
+            });
+        }
+        
         function checkCollision(rect1, rect2) {
-            return rect1.x < rect2.x + rect2.width &&
-                   rect1.x + rect1.width > rect2.x &&
-                   rect1.y < rect2.y + rect2.height &&
-                   rect1.y + rect1.height > rect2.y;
+            const padding = 5;
+            return rect1.x + padding < rect2.x + rect2.width &&
+                   rect1.x + rect1.width - padding > rect2.x &&
+                   rect1.y + padding < rect2.y + rect2.height &&
+                   rect1.y + rect1.height - padding > rect2.y;
         }
         
         function render() {
@@ -464,93 +515,304 @@
             ctx.fillStyle = '#87ceeb';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Sol
-            ctx.fillStyle = '#654321';
-            ctx.fillRect(0, gameState.groundY, canvas.width, canvas.height - gameState.groundY);
+                        // Soleil pixelisé
+            ctx.fillStyle = '#f9ca24';
+            const sunX = canvas.width - 80;
+            const sunY = 80;
+            const sunPx = 8;
+            // Centre
+            ctx.fillRect(sunX - sunPx*2, sunY - sunPx*2, sunPx*4, sunPx*4);
+            // Rayons pixelisés
+            ctx.fillRect(sunX - sunPx*3, sunY - sunPx, sunPx, sunPx*2);
+            ctx.fillRect(sunX + sunPx*2, sunY - sunPx, sunPx, sunPx*2);
+            ctx.fillRect(sunX - sunPx, sunY - sunPx*3, sunPx*2, sunPx);
+            ctx.fillRect(sunX - sunPx, sunY + sunPx*2, sunPx*2, sunPx);
+            // Détails
+            ctx.fillStyle = '#f39c12';
+            ctx.fillRect(sunX - sunPx, sunY - sunPx, sunPx*2, sunPx*2);
             
-            // Route
-            ctx.fillStyle = '#555';
-            ctx.fillRect(0, gameState.groundY - 10, canvas.width, 10);
-            
-            // Lignes route
+            // Nuages
             ctx.fillStyle = '#fff';
-            for (let i = 0; i < canvas.width; i += 80) {
-                const offset = (gameState.distance * 10) % 80;
-                ctx.fillRect(i - offset, gameState.groundY - 5, 40, 3);
+            drawCloud(100, 60);
+            drawCloud(350, 100);
+            drawCloud(500, 50);
+            
+                        // Route (texture pixelisée)
+            ctx.fillStyle = '#7f8c8d';
+            ctx.fillRect(50, 0, canvas.width - 100, canvas.height);
+            
+            // Texture de la route (petits pixels pour l'effet pixel art)
+            ctx.fillStyle = '#6c7a89';
+            for (let i = 0; i < 30; i++) {
+                const rx = 50 + Math.random() * (canvas.width - 100);
+                const ry = Math.random() * canvas.height;
+                ctx.fillRect(rx, ry, 3, 3);
             }
             
-            // Bâtiments en arrière-plan
-            ctx.fillStyle = '#4a5568';
-            for (let i = 0; i < canvas.width; i += 150) {
-                const offset = (gameState.distance * 2) % 150;
-                ctx.fillRect(i - offset, 150, 80, 140);
-                ctx.fillStyle = '#ffd700';
-                for (let j = 0; j < 3; j++) {
-                    for (let k = 0; k < 4; k++) {
-                        ctx.fillRect(i - offset + 10 + j * 25, 170 + k * 30, 15, 20);
-                    }
+            // Lignes de route (pointillées pixelisées)
+            ctx.fillStyle = '#f1c40f';
+            const laneWidth = (canvas.width - 100) / 3;
+            for (let lane = 1; lane < 3; lane++) {
+                const x = 50 + lane * laneWidth - 4;
+                for (let y = -gameState.roadOffset; y < canvas.height; y += 40) {
+                    // Ligne pixelisée avec bords nets
+                    ctx.fillRect(x, y, 8, 24);
+                    // Ombre
+                    ctx.fillStyle = '#d4ac0d';
+                    ctx.fillRect(x + 8, y, 2, 24);
+                    ctx.fillStyle = '#f1c40f';
                 }
-                ctx.fillStyle = '#4a5568';
             }
             
-            // Obstacles
-            gameState.obstacles.forEach(obs => {
-                ctx.fillStyle = obs.color;
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                
-                // Détails selon type
-                if (obs.type === 'pedestrian') {
-                    ctx.fillStyle = '#ffd700';
-                    ctx.fillRect(obs.x + 10, obs.y + 5, 10, 10); // Tête
-                } else if (obs.type === 'car') {
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(obs.x + 10, obs.y + 35, 15, 15); // Roue avant
-                    ctx.fillRect(obs.x + 55, obs.y + 35, 15, 15); // Roue arrière
+            // Bordures de route (pixelisées)
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillRect(45, 0, 6, canvas.height);
+            ctx.fillRect(canvas.width - 51, 0, 6, canvas.height);
+            // Détails bordures
+            ctx.fillStyle = '#bdc3c7';
+            for (let y = 0; y < canvas.height; y += 20) {
+                ctx.fillRect(45, y, 6, 2);
+                ctx.fillRect(canvas.width - 51, y, 6, 2);
+            }
+            
+            // Décorations
+            gameState.decorations.forEach(dec => {
+                if (dec.type === 'tree') {
+                    drawTree(dec.x, dec.y);
+                } else {
+                    drawFlower(dec.x, dec.y);
                 }
             });
             
-            // Joueur (prof sur trottinette)
+            // Obstacles
+            gameState.obstacles.forEach(obs => {
+                drawObstacle(obs);
+            });
+            
+            // Joueur
             drawPlayer();
             
-            // Particules (pluie)
+            // Pluie
             if (gameState.currentWeather.name === "Pluie") {
-                ctx.strokeStyle = '#4a90e2';
+                ctx.strokeStyle = 'rgba(52, 152, 219, 0.6)';
                 ctx.lineWidth = 2;
-                gameState.particles.forEach(p => {
+                for (let i = 0; i < 30; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
                     ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p.x, p.y + 10);
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x - 2, y + 15);
                     ctx.stroke();
-                });
-            }
-            
-            // Effet brouillard
-            if (gameState.currentWeather.name === "Brouillard") {
-                ctx.fillStyle = 'rgba(200, 200, 200, 0.3)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
             }
         }
         
-        function drawPlayer() {
-            const x = gameState.player.x;
-            const y = gameState.player.y;
-            
-            // Trottinette
-            ctx.fillStyle = '#333';
-            ctx.fillRect(x + 5, y + 45, 30, 5); // Plateforme
-            ctx.fillRect(x + 10, y + 50, 3, 10); // Roue avant
-            ctx.fillRect(x + 27, y + 50, 3, 10); // Roue arrière
-            ctx.fillRect(x + 8, y + 20, 3, 25); // Guidon
-            
-            // Prof
+        function drawCloud(x, y) {
+    const px = 6;
+    ctx.fillStyle = '#fff';
+    // Forme de nuage pixelisée
+    ctx.fillRect(x, y + px, px*3, px*2);
+    ctx.fillRect(x + px*2, y, px*4, px*3);
+    ctx.fillRect(x + px*5, y + px, px*3, px*2);
+    // Ombre
+    ctx.fillStyle = '#ecf0f1';
+    ctx.fillRect(x + px, y + px*2, px*6, px);
+}
+        
+        function drawTree(x, y) {
+    const px = 4;
+    // Tronc
+    ctx.fillStyle = '#8b4513';
+    ctx.fillRect(x + px*2, y + px*5, px*2, px*4);
+    ctx.fillStyle = '#654321';
+    ctx.fillRect(x + px*2, y + px*6, px, px*2);
+    
+    // Feuillage (plusieurs couches)
+    ctx.fillStyle = '#27ae60';
+    ctx.fillRect(x, y + px*2, px*6, px*3);
+    ctx.fillRect(x + px, y, px*4, px*2);
+    ctx.fillRect(x + px, y + px*5, px*4, px);
+    
+    // Détails feuilles
+    ctx.fillStyle = '#2ecc71';
+    ctx.fillRect(x + px, y + px, px, px);
+    ctx.fillRect(x + px*4, y + px*2, px, px);
+    ctx.fillRect(x + px*2, y + px*4, px, px);
+}
+        
+        function drawFlower(x, y) {
+    const px = 3;
+    // Tige
+    ctx.fillStyle = '#27ae60';
+    ctx.fillRect(x + px*2, y + px*4, px, px*4);
+    
+    // Feuille
+    ctx.fillStyle = '#2ecc71';
+    ctx.fillRect(x + px*3, y + px*5, px*2, px);
+    
+    // Pétales (croix)
+    ctx.fillStyle = '#e74c3c';
+    ctx.fillRect(x + px*2, y, px, px*2); // haut
+    ctx.fillRect(x + px*2, y + px*3, px, px*2); // bas
+    ctx.fillRect(x, y + px*2, px*2, px); // gauche
+    ctx.fillRect(x + px*3, y + px*2, px*2, px); // droite
+    
+    // Centre
+    ctx.fillStyle = '#f39c12';
+    ctx.fillRect(x + px*2, y + px*2, px, px);
+}
+        
+        function drawObstacle(obs) {
+    const px = 5; // taille d'un pixel pour les obstacles
+    
+    if (obs.type === 'pothole') {
+        // Nid-de-poule pixelisé
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(obs.x + px, obs.y + px, obs.width - px*2, obs.height - px*2);
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(obs.x + px*2, obs.y + px*2, obs.width - px*4, obs.height - px*4);
+        // Détails
+        ctx.fillStyle = '#34495e';
+        ctx.fillRect(obs.x + px*3, obs.y + px*3, px, px);
+        ctx.fillRect(obs.x + obs.width - px*4, obs.y + obs.height - px*4, px, px);
+    } 
+    else if (obs.type === 'cone') {
+        // Cône de chantier pixelisé
+        ctx.fillStyle = '#e74c3c';
+        // Base
+        ctx.fillRect(obs.x + px, obs.y + obs.height - px*2, obs.width - px*2, px*2);
+        // Corps triangulaire
+        ctx.fillRect(obs.x + px*2, obs.y + obs.height - px*4, obs.width - px*4, px*2);
+        ctx.fillRect(obs.x + px*3, obs.y + obs.height - px*6, obs.width - px*6, px*2);
+        ctx.fillRect(obs.x + px*4, obs.y + obs.height - px*8, obs.width - px*8, px*2);
+        // Bandes blanches
+        ctx.fillStyle = '#ecf0f1';
+        ctx.fillRect(obs.x + px*2, obs.y + obs.height - px*5, obs.width - px*4, px);
+        ctx.fillRect(obs.x + px*3, obs.y + obs.height - px*7, obs.width - px*6, px);
+    } 
+    else if (obs.type === 'pedestrian') {
+        // Piéton pixelisé
+        const px2 = 4;
+        // Corps
+        ctx.fillStyle = '#9b59b6';
+        ctx.fillRect(obs.x + px2*2, obs.y + px2*4, px2*3, px2*5);
+        // Tête
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(obs.x + px2*2, obs.y, px2*3, px2*3);
+        // Cheveux
+        ctx.fillStyle = '#8b4513';
+        ctx.fillRect(obs.x + px2*2, obs.y, px2*3, px2);
+        // Yeux
+        ctx.fillStyle = '#000';
+        ctx.fillRect(obs.x + px2*3, obs.y + px2, px2, px2);
+        ctx.fillRect(obs.x + px2*4, obs.y + px2, px2, px2);
+        // Jambes
+        ctx.fillStyle = '#34495e';
+        ctx.fillRect(obs.x + px2*2, obs.y + px2*9, px2, px2*2);
+        ctx.fillRect(obs.x + px2*4, obs.y + px2*9, px2, px2*2);
+    } 
+    else if (obs.type === 'car') {
+        // Voiture pixelisée
+        const px2 = 4;
+        // Corps
+        ctx.fillStyle = '#3498db';
+        ctx.fillRect(obs.x + px2, obs.y + px2*3, obs.width - px2*2, obs.height - px2*6);
+        // Toit
+        ctx.fillStyle = '#2980b9';
+        ctx.fillRect(obs.x + px2*3, obs.y + px2*5, obs.width - px2*6, px2*4);
+        // Vitres
+        ctx.fillStyle = '#85c1e9';
+        ctx.fillRect(obs.x + px2*4, obs.y + px2*6, obs.width - px2*8, px2*2);
+        // Roues
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(obs.x + px2*2, obs.y + obs.height - px2*4, px2*2, px2*3);
+        ctx.fillRect(obs.x + obs.width - px2*4, obs.y + obs.height - px2*4, px2*2, px2*3);
+        // Phares
+        ctx.fillStyle = '#f1c40f';
+        ctx.fillRect(obs.x + px2*2, obs.y + px2*4, px2, px2);
+        ctx.fillRect(obs.x + obs.width - px2*3, obs.y + px2*4, px2, px2);
+    } 
+    else if (obs.type === 'puddle') {
+        // Flaque d'eau pixelisée
+        ctx.fillStyle = '#5dade2';
+        // Forme irrégulière
+        ctx.fillRect(obs.x + px, obs.y + px*2, obs.width - px*2, obs.height - px*4);
+        ctx.fillRect(obs.x + px*2, obs.y + px, obs.width - px*4, obs.height - px*2);
+        // Reflets
+        ctx.fillStyle = '#85c1e9';
+        ctx.fillRect(obs.x + px*3, obs.y + px*3, px*2, px);
+        ctx.fillRect(obs.x + obs.width - px*5, obs.y + obs.height - px*4, px*2, px);
+    } 
+    else if (obs.type === 'leaves') {
+        // Feuilles mortes pixelisées
+        const colors = ['#d35400', '#e67e22', '#f39c12'];
+        for (let i = 0; i < 6; i++) {
+            ctx.fillStyle = colors[i % 3];
+            const lx = obs.x + (i % 3) * px * 3;
+            const ly = obs.y + Math.floor(i / 3) * px * 3;
+            ctx.fillRect(lx, ly, px * 2, px * 2);
+            // Veines
             ctx.fillStyle = '#8b4513';
-            ctx.fillRect(x + 12, y + 25, 16, 20); // Corps
-            ctx.fillStyle = '#ffd700';
-            ctx.fillRect(x + 15, y + 10, 10, 12); // Tête
-            ctx.fillStyle = '#000';
-            ctx.fillRect(x + 17, y + 14, 2, 2); // Yeux
-            ctx.fillRect(x + 21, y + 14, 2, 2);
+            ctx.fillRect(lx + px, ly + px, px, px);
         }
+    }
+}
+        
+        function drawPlayer() {
+    const x = gameState.player.x;
+    const y = gameState.player.y;
+    const px = 4; // taille d'un pixel
+    
+    // Trottinette (vue de dessus pixelisée)
+    // Plateforme
+    ctx.fillStyle = '#2c3e50';
+    ctx.fillRect(x + 12, y + 44, 16, px);
+    ctx.fillRect(x + 12, y + 48, 16, px);
+    
+    // Guidon
+    ctx.fillStyle = '#34495e';
+    ctx.fillRect(x + 16, y + 16, px, px * 6);
+    ctx.fillRect(x + 20, y + 16, px, px * 6);
+    
+    // Roues
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x + 12, y + 52, px * 2, px * 2);
+    ctx.fillRect(x + 24, y + 52, px * 2, px * 2);
+    
+    // Jante
+    ctx.fillStyle = '#7f8c8d';
+    ctx.fillRect(x + 14, y + 54, px, px);
+    ctx.fillRect(x + 26, y + 54, px, px);
+    
+    // Prof (pixel art détaillé)
+    // Corps (chemise bleue)
+    ctx.fillStyle = '#3498db';
+    ctx.fillRect(x + 12, y + 24, px * 4, px * 5);
+    
+    // Bras
+    ctx.fillStyle = '#2980b9';
+    ctx.fillRect(x + 8, y + 28, px, px * 3);
+    ctx.fillRect(x + 28, y + 28, px, px * 3);
+    
+    // Tête (peau)
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(x + 14, y + 8, px * 3, px * 4);
+    
+    // Cheveux (blonds)
+    ctx.fillStyle = '#f39c12';
+    ctx.fillRect(x + 14, y + 4, px * 3, px * 2);
+    ctx.fillRect(x + 12, y + 6, px, px * 2);
+    ctx.fillRect(x + 24, y + 6, px, px * 2);
+    
+    // Yeux
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + 16, y + 12, px, px);
+    ctx.fillRect(x + 22, y + 12, px, px);
+    
+    // Sourire
+    ctx.fillStyle = '#e74c3c';
+    ctx.fillRect(x + 18, y + 16, px * 2, px);
+}
         
         function updateWeatherDisplay() {
             document.getElementById('weather-text').textContent = 
@@ -561,11 +823,11 @@
             gameState.running = false;
             document.getElementById('game-over').classList.remove('hidden');
             document.getElementById('final-score').textContent = 
-                `Score: ${gameState.score} points`;
+                `⭐ Score: ${gameState.score} points`;
             document.getElementById('final-distance').textContent = 
                 batteryEmpty ? 
-                "Plus de batterie ! Tu as parcouru " + Math.floor(gameState.distance) + " m" :
-                "Crash ! Tu as parcouru " + Math.floor(gameState.distance) + " m";
+                "🔋 Plus de batterie ! Tu as parcouru " + Math.floor(gameState.distance) + " m" :
+                "💥 Crash ! Tu as parcouru " + Math.floor(gameState.distance) + " m";
         }
         
         function resetGame() {
@@ -577,10 +839,11 @@
             document.getElementById('start-btn').disabled = true;
         }
         
-        // Event listeners
         document.addEventListener('keydown', (e) => {
             gameState.keys[e.key] = true;
-            if (e.key === ' ') e.preventDefault();
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+            }
         });
         
         document.addEventListener('keyup', (e) => {
@@ -594,7 +857,6 @@
         };
         document.getElementById('menu-btn').onclick = resetGame;
         
-        // Initialisation
         initMenu();
     </script>
 </body>
