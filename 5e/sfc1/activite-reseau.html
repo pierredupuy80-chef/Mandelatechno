@@ -4,576 +4,318 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Le réseau en panne — jeu de plateforme · 5e SFC1</title>
-<meta name="description" content="Jeu de plateforme en pixel art : le professeur de techno traverse le collège et répare le commutateur, le routeur, les postes clients et le serveur de données. Cinq niveaux, jouable au clavier et au doigt.">
-<style>
-    /* Jetons de couleur et d'espacement, reprise de l'activité d'origine :
-       jeu-plateforme.css les emploie partout (avec valeur de repli). */
-    :root {
-        --couleur-primaire: #2563eb;
-        --couleur-secondaire: #7c3aed;
-        --couleur-succes: #059669;
-        --couleur-alerte: #dc2626;
-        --couleur-info: #0891b2;
-        --couleur-fond: #f8fafc;
-        --couleur-texte: #1e293b;
-        --couleur-texte-leger: #64748b;
-        --espacement-xs: 0.25rem;
-        --espacement-sm: 0.5rem;
-        --espacement-md: 1rem;
-        --espacement-lg: 1.5rem;
-        --espacement-xl: 2rem;
-        --hauteur-cible-min: 44px;
-        --rayon-bordure: 8px;
-        --ombre-legere: 0 1px 3px rgba(0, 0, 0, 0.1);
-        --ombre-moyenne: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-        margin: 0;
-        background: #f1f5f9;
-        color: var(--couleur-texte);
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-    }
-
-    .page {
-        max-width: 1080px;
-        margin: 0 auto;
-        padding: var(--espacement-md, 1rem);
-    }
-
-    .entete {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--espacement-sm, 0.5rem);
-        align-items: baseline;
-        justify-content: space-between;
-        margin-bottom: var(--espacement-md, 1rem);
-    }
-
-    .entete h1 {
-        margin: 0;
-        font-size: 1.45rem;
-        line-height: 1.2;
-    }
-
-    .sous-titre {
-        margin: 0.25rem 0 0;
-        color: var(--couleur-texte-leger, #64748b);
-        font-size: 0.95rem;
-    }
-
-    .lien-site {
-        color: var(--couleur-primaine, #2563eb);
-        color: var(--couleur-primaire, #2563eb);
-        font-weight: 600;
-        text-decoration: none;
-        min-height: var(--hauteur-cible-min, 44px);
-        display: inline-flex;
-        align-items: center;
-    }
-
-    .lien-site:hover, .lien-site:focus-visible {
-        text-decoration: underline;
-    }
-
-    .pied {
-        margin-top: var(--espacement-lg, 1.5rem);
-        padding-top: var(--espacement-md, 1rem);
-        border-top: 1px solid #cbd5e1;
-        color: var(--couleur-texte-leger, #64748b);
-        font-size: 0.85rem;
-    }
-
-    .pied p { margin: 0.3rem 0; }
-
-    /* Le bloc de jeu compense d'ordinaire les 14 px de marge de la carte du
-       template. Ici il n'y a pas de carte : on annule la compensation, sinon
-       le contenu déborderait de la page sur téléphone. */
-    .page .plat-bloc {
-        margin-inline: 0;
-        margin-top: 0;
-    }
-
-    @media (max-width: 640px) {
-        .page { padding: var(--espacement-sm, 0.5rem); }
-        .entete h1 { font-size: 1.15rem; }
-        .sous-titre { font-size: 0.85rem; }
-    }
-</style>
+<meta name="description" content="Jeu de plateforme en pixel art : le professeur de techno traverse le collège et répare le commutateur, le routeur, les postes clients et le serveur de données. Cinq niveaux, au clavier et au doigt.">
 <style>
 /* ============================================================================
-   « Le réseau en panne » — styles du jeu de plateforme (préfixe `plat-`)
-   Aucun partage avec les styles du template : tout est préfixé, donc le jeu
-   ne peut pas perturber le reste de l'activité.
+   « Le réseau en panne » — styles du jeu de plateforme (préfixe `jeu-`)
+   Page autonome : aucun style du template d'activité n'est utilisé.
    ============================================================================ */
 
-.plat-bloc {
-    margin-top: var(--espacement-xl, 2rem);
-    padding: var(--espacement-lg, 1.5rem);
-    background: linear-gradient(160deg, #eef2ff 0%, #f8fafc 60%);
-    border: 2px solid #c7d2fe;
-    border-radius: var(--rayon-bordure, 8px);
+:root {
+    --jeu-fond: #101826;
+    --jeu-fond-2: #182236;
+    --jeu-bord: #2c3a52;
+    --jeu-texte: #e8eef8;
+    --jeu-texte-2: #9fb0c8;
+    --jeu-accent: #e0a72e;
+    --jeu-vert: #4f9d69;
+    --jeu-rouge: #c0392b;
+    --jeu-cible: 44px;
 }
 
-.plat-bloc h3 {
-    margin: 0 0 var(--espacement-sm, 0.5rem);
-    color: #1e293b;
-    font-size: 1.35rem;
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
 }
 
-.plat-intro {
-    margin: 0 0 var(--espacement-md, 1rem);
-    color: var(--couleur-texte-leger, #64748b);
-    max-width: 68ch;
+body {
+    background: #0b1220;
+    color: var(--jeu-texte);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
-/* ── Cadre du jeu ────────────────────────────────────────────────────────── */
-.plat-cadre {
-    background: #0f172a;
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: var(--ombre-moyenne, 0 4px 6px rgba(0, 0, 0, 0.1));
+.page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
-.plat-hud {
+.entete {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--espacement-md, 1rem);
-    align-items: center;
+    gap: 0.5rem;
+    align-items: baseline;
     justify-content: space-between;
-    color: #e2e8f0;
+    margin-bottom: 0.75rem;
+}
+
+.entete h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.sous-titre {
+    margin: 0.15rem 0 0;
+    color: var(--jeu-texte-2);
     font-size: 0.95rem;
+}
+
+.lien-site {
+    color: #7cb0ff;
     font-weight: 600;
-    padding: 4px 6px 10px;
-}
-
-.plat-hud-groupe {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--espacement-md, 1rem);
-    align-items: center;
-}
-
-.plat-hud-item {
+    text-decoration: none;
+    min-height: var(--jeu-cible);
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    white-space: nowrap;
 }
 
-.plat-hud-item output,
-.plat-hud-item .plat-valeur {
-    color: #fbbf24;
-    font-variant-numeric: tabular-nums;
+.lien-site:hover, .lien-site:focus-visible { text-decoration: underline; }
+
+/* ── Cadre ─────────────────────────────────────────────────────────────── */
+.jeu-cadre {
+    background: var(--jeu-fond);
+    border: 1px solid var(--jeu-bord);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
 }
 
-#plat-niveau-nom {
-    color: #93c5fd;
-    font-weight: 700;
+.jeu-barre {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 4px 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
 }
 
-/* ── Zone de jeu (canvas + surfaces superposées) ─────────────────────────── */
-.plat-zone {
+.jeu-barre-groupe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.jeu-item { display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+.jeu-valeur { color: var(--jeu-accent); font-variant-numeric: tabular-nums; }
+#jeu-niveau-nom { color: #8fb8ff; }
+
+.jeu-bouton {
+    min-height: var(--jeu-cible);
+    min-width: var(--jeu-cible);
+    padding: 0.5rem 0.85rem;
+    border: 2px solid #3f5478;
+    border-radius: 8px;
+    background: var(--jeu-fond-2);
+    color: var(--jeu-texte);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.jeu-bouton:hover:not(:disabled) { background: #24324a; transform: translateY(-1px); }
+.jeu-bouton:focus-visible { outline: 3px solid var(--jeu-accent); outline-offset: 2px; }
+.jeu-bouton:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+.jeu-bouton-principal { background: var(--jeu-vert); border-color: #6cc48a; color: #06210f; }
+.jeu-bouton-principal:hover:not(:disabled) { background: #5fb87b; }
+
+/* ── Scène : le canvas et ses panneaux superposés ──────────────────────── */
+.jeu-scene {
     position: relative;
     width: 100%;
-    aspect-ratio: 640 / 352;
     border-radius: 8px;
     overflow: hidden;
-    background: #dbeafe;
-    outline: none;
-    /* `manipulation` supprime le zoom par double-tap sur la zone de jeu sans
-       retirer le pincement à deux doigts, qui reste utile sur la page. */
+    background: #8ec5e8;
+}
+
+#jeu-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 960 / 512;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
     touch-action: manipulation;
 }
 
-.plat-zone:focus-visible {
-    box-shadow: 0 0 0 4px #fbbf24;
-}
+.jeu-scene:focus-within { outline: none; }
 
-#plat-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-}
-
-/* ── Surfaces superposées (menu, fiche, bilan) ───────────────────────────── */
-.plat-surface {
+.jeu-surface {
     position: absolute;
     inset: 0;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--espacement-md, 1rem);
-    padding: var(--espacement-lg, 1.5rem);
-    background: rgba(15, 23, 42, 0.88);
-    color: #f8fafc;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: rgba(11, 18, 32, 0.9);
     text-align: center;
     overflow-y: auto;
 }
 
-.plat-surface.plat-visible {
-    display: flex;
-}
-
-.plat-surface h4 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #fbbf24;
-}
-
-.plat-surface p {
-    margin: 0;
-    max-width: 52ch;
-    line-height: 1.5;
-}
-
-.plat-niveaux {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--espacement-sm, 0.5rem);
-    justify-content: center;
-    max-width: 100%;
-}
-
-.plat-bouton {
-    min-height: var(--hauteur-cible-min, 44px);
-    min-width: var(--hauteur-cible-min, 44px);
-    padding: 0.6rem 1rem;
-    border: 2px solid #60a5fa;
-    border-radius: 8px;
-    background: #1e3a8a;
-    color: #ffffff;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.plat-bouton:hover:not(:disabled) {
-    background: #2563eb;
-    transform: translateY(-1px);
-}
-
-.plat-bouton:focus-visible {
-    outline: 3px solid #fbbf24;
-    outline-offset: 2px;
-}
-
-.plat-bouton:disabled,
-.plat-bouton.plat-verrouille {
-    background: #334155;
-    border-color: #475569;
-    color: #94a3b8;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.plat-bouton-principal {
-    background: #059669;
-    border-color: #34d399;
-}
-
-.plat-bouton-principal:hover:not(:disabled) {
-    background: #10b981;
-}
-
-.plat-fiche-role {
-    background: rgba(255, 255, 255, 0.1);
-    border-left: 4px solid #fbbf24;
-    padding: var(--espacement-md, 1rem);
+.jeu-surface.visible { display: flex; }
+.jeu-surface h2 { margin: 0; font-size: 1.25rem; color: var(--jeu-accent); }
+.jeu-surface p { margin: 0; max-width: 54ch; }
+.jeu-niveaux { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.jeu-fiche-role {
+    background: rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--jeu-accent);
+    padding: 0.75rem 1rem;
     border-radius: 6px;
     text-align: left;
 }
 
-/* ── Indication sous le canvas ───────────────────────────────────────────── */
-.plat-indication {
-    min-height: 1.6em;
-    margin: var(--espacement-sm, 0.5rem) 0 0;
-    color: #cbd5e1;
-    font-size: 0.95rem;
+/* ── Textes sous le canvas ─────────────────────────────────────────────── */
+.jeu-indication {
+    min-height: 1.5em;
+    margin: 0.5rem 0 0;
+    color: var(--jeu-texte-2);
     font-weight: 600;
+    font-size: 0.95rem;
 }
 
-.plat-objectif {
-    margin: var(--espacement-xs, 0.25rem) 0 0;
-    color: #93c5fd;
-    font-size: 0.9rem;
-    font-style: italic;
+.jeu-annonce {
+    margin: 0.35rem 0 0;
+    min-height: 1.3em;
+    color: var(--jeu-texte-2);
+    font-size: 0.85rem;
 }
 
-/* Texte lu par les lecteurs d'écran seulement (jamais affiché) */
-.plat-lecteur-seul {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-/* ── Pavé tactile ────────────────────────────────────────────────────────── */
-.plat-tactile {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--espacement-sm, 0.5rem);
-    margin-top: var(--espacement-sm, 0.5rem);
-    justify-content: center;
-    /* `none` : un doigt posé sur le pavé ne fait pas défiler la page, sinon
-       on perd la manœuvre en pleine partie (le jeu sort de l'écran). */
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-}
-
-.plat-tactile .plat-bouton {
-    background: #334155;
-    border-color: #64748b;
-    min-width: 56px;
-    min-height: 52px;
-    font-size: 1.15rem;
+/* ── Pavé tactile ──────────────────────────────────────────────────────── */
+.jeu-tactile {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 0.6rem;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-.plat-tactile .plat-bouton:active {
-    background: #2563eb;
+.jeu-tactile .jeu-bouton {
+    min-height: 56px;
+    font-size: 1.3rem;
+    background: #1d2a40;
+    border-color: #3f5478;
+    touch-action: none;
 }
 
-/* ── Annonce (lecteurs d'écran) ──────────────────────────────────────────── */
-.plat-annonce {
-    margin: var(--espacement-sm, 0.5rem) 0 0;
-    min-height: 1.4em;
-    color: var(--couleur-texte-leger, #64748b);
-    font-size: 0.9rem;
-}
+.jeu-tactile .jeu-bouton:active { background: #2f6fbf; }
 
-/* ── Aide dépliable ──────────────────────────────────────────────────────── */
-.plat-aide {
-    margin-top: var(--espacement-md, 1rem);
-    border: 1px solid #cbd5e1;
+/* ── Aide ──────────────────────────────────────────────────────────────── */
+.jeu-aide {
+    margin-top: 1rem;
+    border: 1px solid var(--jeu-bord);
     border-radius: 8px;
-    background: #ffffff;
-    padding: var(--espacement-sm, 0.5rem) var(--espacement-md, 1rem);
+    background: var(--jeu-fond-2);
+    padding: 0.25rem 1rem;
 }
 
-.plat-aide summary {
+.jeu-aide summary {
     cursor: pointer;
     font-weight: 700;
-    color: var(--couleur-primaire, #2563eb);
-    min-height: var(--hauteur-cible-min, 44px);
+    color: #8fb8ff;
+    min-height: var(--jeu-cible);
     display: flex;
     align-items: center;
 }
 
-.plat-aide table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--espacement-sm, 0.5rem) 0;
-    font-size: 0.92rem;
+.jeu-aide table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.jeu-aide th, .jeu-aide td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--jeu-bord); }
+.jeu-aide th { color: var(--jeu-texte); width: 34%; }
+.jeu-aide kbd {
+    display: inline-block; min-width: 1.6em; padding: 0.05rem 0.35rem;
+    border: 1px solid #4a5f85; border-bottom-width: 2px; border-radius: 4px;
+    background: #0f172a; font-family: ui-monospace, monospace; font-size: 0.85em; text-align: center;
 }
 
-.plat-aide th,
-.plat-aide td {
-    text-align: left;
-    padding: 0.4rem 0.5rem;
-    border-bottom: 1px solid #e2e8f0;
-    vertical-align: top;
+.lecteur-seul {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-.plat-aide th {
-    color: var(--couleur-texte, #1e293b);
-    width: 30%;
+.pied {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--jeu-bord);
+    color: var(--jeu-texte-2);
+    font-size: 0.85rem;
 }
 
-.plat-aide kbd {
-    display: inline-block;
-    min-width: 1.6em;
-    padding: 0.1rem 0.35rem;
-    border: 1px solid #94a3b8;
-    border-bottom-width: 2px;
-    border-radius: 4px;
-    background: #f8fafc;
-    font-family: ui-monospace, monospace;
-    font-size: 0.85em;
-    text-align: center;
-}
-
-/* ── Téléphones et tablettes : le jeu doit rester jouable ──────────────────
-   Constat mesuré (diag_mobile.py) : à 320 px de large, la zone de jeu fait
-   242 × 133 px, alors que le menu de départ demande ~294 px de haut. Posé en
-   superposition dans la zone, le menu débordait sur TOUS les téléphones.
-
-   `position: fixed` a été essayé et ABANDONNÉ : l'onglet du template porte
-   `animation: fadeIn`, qui laisse `opacity < 1` et `transform` sur l'ancêtre —
-   or ces propriétés créent un bloc conteneur. Le panneau « fixe » se
-   dimensionnait alors sur la hauteur de l'onglet (2 625 px mesurés) au lieu de
-   l'écran. On préfère donc une solution sans position fixe : sur petit écran,
-   les panneaux sont DÉPLACÉS dans le flux, sous le canvas (voir
-   `placerPanneaux()` dans jeu-plateforme.js). Rien ne peut plus les rogner. */
-@media (max-width: 640px), (max-height: 500px) {
-    /* le bloc sort des marges de la carte du template : le canvas gagne
-       ~23 % de largeur sur un téléphone (242 -> 298 px à 320 px de large) */
-    .plat-bloc {
-        margin-inline: -14px;
-        padding: 4px;
-    }
-
-    .plat-cadre {
-        padding: 4px;
-    }
-
-    .plat-surface {
+/* ── Petits écrans : les panneaux passent SOUS le canvas ─────────────────
+   Superposés, ils ne disposent que de la hauteur du canvas (≈ 160 px sur un
+   téléphone de 320 px de large) alors que le menu en demande ≈ 350 : il
+   débordait, et « Commencer » se trouvait hors de vue. Dans le flux, chaque
+   panneau prend sa hauteur naturelle et la page défile normalement.       */
+@media (max-width: 760px), (max-height: 560px) {
+    .page { padding: 0.5rem; }
+    .jeu-cadre { padding: 4px; }
+    .entete h1 { font-size: 1.1rem; }
+    .sous-titre { font-size: 0.82rem; }
+    .jeu-barre { font-size: 0.78rem; gap: 0.4rem; justify-content: center; padding: 2px 2px 6px; }
+    .jeu-surface {
         position: static;
         inset: auto;
         width: 100%;
         margin-top: 6px;
-        padding: var(--espacement-md, 1rem) var(--espacement-sm, 0.5rem);
-        gap: var(--espacement-sm, 0.5rem);
-        border: 1px solid #334155;
+        padding: 0.75rem 0.5rem;
+        border: 1px solid var(--jeu-bord);
         border-radius: 8px;
-        background: #0f172a;
+        overflow: visible;
     }
-
-    .plat-surface > * {
-        width: 100%;
-        max-width: 34rem;
-    }
-
-    .plat-surface h4 {
-        font-size: 1.05rem;
-    }
-
-    .plat-surface p {
-        font-size: 0.92rem;
-        line-height: 1.45;
-    }
-
-    .plat-niveaux {
-        width: 100%;
-    }
-
-    .plat-niveaux .plat-bouton {
-        flex: 1 1 45%;
-    }
-
-    .plat-hud {
-        font-size: 0.8rem;
-        gap: var(--espacement-sm, 0.5rem);
-        justify-content: center;
-        padding: 2px 4px 8px;
-    }
-
-    .plat-bouton {
-        padding: 0.55rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .plat-indication,
-    .plat-objectif {
-        font-size: 0.85rem;
-    }
-
-    .plat-aide table {
-        font-size: 0.85rem;
-    }
+    .jeu-surface h2 { font-size: 1rem; }
+    .jeu-surface p { font-size: 0.9rem; }
+    .jeu-bouton { padding: 0.45rem 0.7rem; font-size: 0.85rem; }
+    .jeu-aide table { font-size: 0.82rem; }
 }
 
-/* ── Paysage sur téléphone : c'est la hauteur qui commande ────────────────
-   À 844 × 390 (téléphone couché), la largeur seule imposerait un canvas de
-   453 px de haut : le sol du niveau sortirait du champ, et le pavé tactile
-   aussi. On plafonne donc la hauteur du canvas pour que le terrain ET les
-   commandes tiennent ensemble à l'écran, sans défilement pendant le jeu. */
-@media (max-height: 500px) and (orientation: landscape) {
-    .plat-zone,
-    .plat-cadre:fullscreen .plat-zone {
+/* ── Paysage sur téléphone : c'est la hauteur qui commande ─────────────── */
+@media (max-height: 620px) and (orientation: landscape) {
+    #jeu-canvas {
         width: auto;
-        height: min(calc(100vh - 128px), calc(100vw / 1.8182));
+        height: min(calc(100vh - 150px), calc(100vw / 1.875));
         margin-inline: auto;
     }
-
-    .plat-hud {
-        padding: 0 4px 4px;
-    }
-
-    .plat-indication,
-    .plat-objectif {
-        margin-top: 2px;
-    }
+    .jeu-scene { background: #0b1220; }
+    .jeu-aide { display: none; }
 }
 
-@media (max-width: 480px) {
-    /* cinq commandes de même largeur sur une seule ligne, plutôt qu'un
-       bouton étiré sur toute la largeur quand les autres sont passés à la
-       ligne : c'est ce qui se produisait en flex-wrap. */
-    .plat-tactile {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 6px;
-    }
-
-    .plat-tactile .plat-bouton {
-        min-width: 0;
-        min-height: 52px;
-    }
-}
-
-/* ── Plein écran ───────────────────────────────────────────────────────────
-   Sur un téléphone tenu à l'horizontale, c'est le mode qui rend le jeu
-   réellement lisible : la barre d'URL disparaît et le canvas occupe la
-   hauteur de l'écran. Le bouton est dans la barre du haut.                */
-.plat-cadre:fullscreen,
-.plat-cadre:-webkit-full-screen {
+/* ── Plein écran ───────────────────────────────────────────────────────── */
+.jeu-cadre:fullscreen,
+.jeu-cadre:-webkit-full-screen {
     width: 100%;
     height: 100%;
     padding: 6px;
+    border: 0;
     border-radius: 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.plat-cadre:fullscreen .plat-zone,
-.plat-cadre:-webkit-full-screen .plat-zone {
-    /* le facteur 640 / 352 = 1,8182 conserve le cadre du jeu sans le déformer */
-    width: min(100%, calc((100vh - 118px) * 1.8182));
-    height: auto;
-    margin: 0 auto;
+.jeu-cadre:fullscreen #jeu-canvas,
+.jeu-cadre:-webkit-full-screen #jeu-canvas {
+    width: auto;
+    height: min(calc(100vh - 132px), calc(100vw / 1.875));
+    margin-inline: auto;
 }
 
-.plat-cadre:fullscreen .plat-tactile,
-.plat-cadre:-webkit-full-screen .plat-tactile {
-    margin-top: 2px;
-    flex-wrap: nowrap;
-}
+.jeu-cadre:fullscreen .jeu-aide,
+.jeu-cadre:-webkit-full-screen .jeu-aide { display: none; }
 
-.plat-cadre:fullscreen .plat-aide,
-.plat-cadre:-webkit-full-screen .plat-aide {
-    display: none;
-}
-
-/* ── Mouvement réduit ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-    .plat-bouton {
-        transition: none;
-    }
-
-    .plat-bouton:hover:not(:disabled) {
-        transform: none;
-    }
+    .jeu-bouton { transition: none; }
+    .jeu-bouton:hover:not(:disabled) { transform: none; }
 }
 </style>
 </head>
@@ -590,156 +332,114 @@
         <a class="lien-site" href="../../index.html">← Toutes les activités</a>
     </header>
 
-<div class="plat-bloc" id="plat-jeu">
-    <h3>🧑‍🏫 Le réseau en panne — le jeu de plateforme du prof de techno</h3>
-    <p class="plat-intro">
-        Le professeur de techno traverse le collège pour remettre en service les appareils du
-        réseau : commutateur, routeur, poste client et serveur de données. Des élèves se
-        baladent dans les couloirs, des chiens traversent la cour et des avions en papier
-        volent de partout. <strong>Cinq niveaux</strong>, du couloir jusqu'à la salle serveur.
-    </p>
-
-    <div class="plat-cadre" id="plat-cadre-jeu">
-        <div class="plat-hud">
-            <div class="plat-hud-groupe">
-                <span class="plat-hud-item">
-                    <span aria-hidden="true">❤</span>
-                    <span class="plat-valeur" id="plat-coeurs">❤❤❤</span>
-                    <span class="plat-lecteur-seul">cœurs</span>
-                </span>
-                <span class="plat-hud-item">
-                    <span aria-hidden="true">🔧</span>
-                    <span class="plat-valeur" id="plat-appareils">0 / 0</span>
-                    <span class="plat-lecteur-seul">appareils réparés</span>
-                </span>
-                <span class="plat-hud-item">
-                    <span aria-hidden="true">📦</span>
-                    <span class="plat-valeur" id="plat-paquets">0</span>
-                    <span class="plat-lecteur-seul">paquets de données</span>
-                </span>
-            </div>
-            <div class="plat-hud-groupe">
-                <span id="plat-niveau-nom">—</span>
-                <button type="button" class="plat-bouton" id="plat-plein-ecran"
-                        aria-pressed="false"
-                        aria-label="Afficher le jeu en plein écran">⛶ Plein écran</button>
-                <button type="button" class="plat-bouton" id="plat-pause">⏸ Pause</button>
-            </div>
+<div id="jeu">
+<div class="jeu-cadre" id="jeu-cadre">
+    <div class="jeu-barre">
+        <div class="jeu-barre-groupe">
+            <span class="jeu-item"><span aria-hidden="true">❤</span>
+                <span class="jeu-valeur" id="jeu-coeurs">❤❤❤</span>
+                <span class="lecteur-seul">cœurs</span></span>
+            <span class="jeu-item"><span aria-hidden="true">🔧</span>
+                <span class="jeu-valeur" id="jeu-appareils">0 / 0</span>
+                <span class="lecteur-seul">appareils réparés</span></span>
+            <span class="jeu-item"><span aria-hidden="true">📦</span>
+                <span class="jeu-valeur" id="jeu-paquets">0</span>
+                <span class="lecteur-seul">paquets de données</span></span>
         </div>
-
-        <div class="plat-zone" id="plat-zone" tabindex="0" role="application"
-             aria-label="Zone de jeu : utilise les flèches gauche et droite pour te déplacer, Espace pour sauter, E pour réparer un appareil et X pour lancer un écrou.">
-
-            <canvas id="plat-canvas" width="640" height="352" role="img"
-                    aria-label="Le professeur de techno dans un couloir du collège, en pixel art."></canvas>
-
-            <div class="plat-surface plat-visible" id="plat-menu" role="dialog"
-                 aria-labelledby="plat-menu-titre">
-                <h4 id="plat-menu-titre">Prêt à réparer le réseau du collège ?</h4>
-                <p>
-                    Répare tous les appareils en panne (halo rouge), ramasse les paquets de
-                    données, puis rejoins la porte verte. Les élèves, les chiens et les avions
-                    en papier te font perdre un cœur : saute par-dessus ou lance-leur un écrou
-                    avec <kbd>X</kbd>.
-                </p>
-                <button type="button" class="plat-bouton plat-bouton-principal" id="plat-demarrer">
-                    ▶ Commencer le niveau 1
-                </button>
-                <div class="plat-niveaux" id="plat-niveaux" role="group" aria-label="Choisir un niveau">
-                    <button type="button" class="plat-bouton" data-niveau="0"><span class="plat-numero">1. </span>Couloir</button>
-                    <button type="button" class="plat-bouton" data-niveau="1"><span class="plat-numero">2. </span>Salle 102</button>
-                    <button type="button" class="plat-bouton" data-niveau="2"><span class="plat-numero">3. </span>CDI</button>
-                    <button type="button" class="plat-bouton" data-niveau="3"><span class="plat-numero">4. </span>Local technique</button>
-                    <button type="button" class="plat-bouton" data-niveau="4"><span class="plat-numero">5. </span>Salle serveur</button>
-                </div>
-            </div>
-
-            <div class="plat-surface" id="plat-fiche" role="dialog" aria-hidden="true"
-                 aria-labelledby="plat-fiche-titre">
-                <h4 id="plat-fiche-titre">Appareil réparé</h4>
-                <p class="plat-fiche-role" id="plat-fiche-role"></p>
-                <button type="button" class="plat-bouton plat-bouton-principal" id="plat-fiche-fermer">
-                    J'ai compris, je continue
-                </button>
-            </div>
-
-            <div class="plat-surface" id="plat-bilan" role="dialog" aria-hidden="true"
-                 aria-labelledby="plat-bilan-titre">
-                <h4 id="plat-bilan-titre">Niveau terminé !</h4>
-                <p id="plat-bilan-texte"></p>
-                <div class="plat-niveaux">
-                    <button type="button" class="plat-bouton plat-bouton-principal" id="plat-bilan-suivant">
-                        Niveau suivant →
-                    </button>
-                    <button type="button" class="plat-bouton" id="plat-bilan-rejouer">↻ Rejouer ce niveau</button>
-                </div>
-            </div>
-        </div>
-
-        <p class="plat-indication" id="plat-indication">
-            Appuie sur « Commencer » pour entrer dans le couloir.
-        </p>
-        <p class="plat-objectif" id="plat-objectif"></p>
-
-        <div class="plat-tactile" role="group" aria-label="Commandes tactiles">
-            <button type="button" class="plat-bouton" data-commande="gauche" aria-label="Aller à gauche">◀</button>
-            <button type="button" class="plat-bouton" data-commande="saut" aria-label="Sauter">▲</button>
-            <button type="button" class="plat-bouton" data-commande="droite" aria-label="Aller à droite">▶</button>
-            <button type="button" class="plat-bouton" data-commande="reparer" aria-label="Réparer l'appareil">🔧</button>
-            <button type="button" class="plat-bouton" data-commande="lancer" aria-label="Lancer un écrou">◉</button>
+        <div class="jeu-barre-groupe">
+            <span id="jeu-niveau-nom">La cour du collège</span>
+            <button type="button" class="jeu-bouton" id="jeu-son" aria-pressed="true">🔊 Son</button>
+            <button type="button" class="jeu-bouton" id="jeu-plein-ecran" aria-pressed="false">⛶ Plein écran</button>
+            <button type="button" class="jeu-bouton" id="jeu-pause">⏸ Pause</button>
         </div>
     </div>
 
-    <p class="plat-annonce" id="plat-annonce" role="status" aria-live="polite"></p>
+    <div class="jeu-scene" id="jeu-zone" tabindex="0" role="application"
+         aria-label="Zone de jeu : flèches gauche et droite pour courir, Espace pour sauter, E pour réparer un appareil.">
+        <canvas id="jeu-canvas" width="960" height="512" role="img"
+                aria-label="Le professeur de techno dans la cour du collège, en pixel art."></canvas>
 
-    <details class="plat-aide">
-        <summary>Comment jouer — commandes, règles et accessibilité</summary>
+        <div class="jeu-surface visible" id="jeu-menu" role="dialog" aria-labelledby="jeu-menu-titre">
+            <h2 id="jeu-menu-titre">Le réseau en panne</h2>
+            <p>
+                Le professeur de techno traverse le collège pour réparer les appareils du
+                réseau. Des élèves se baladent, des chiens courent, des avions en papier
+                volent : saute par-dessus, ou attrape-les en hauteur.
+            </p>
+            <button type="button" class="jeu-bouton jeu-bouton-principal" id="jeu-demarrer">
+                ▶ Commencer le niveau 1
+            </button>
+            <div class="jeu-niveaux" id="jeu-niveaux" role="group" aria-label="Choisir un niveau">
+                <button type="button" class="jeu-bouton" data-niveau="0">1. La cour</button>
+                <button type="button" class="jeu-bouton" data-niveau="1">2. Le préau</button>
+                <button type="button" class="jeu-bouton" data-niveau="2">3. Le CDI</button>
+                <button type="button" class="jeu-bouton" data-niveau="3">4. Local technique</button>
+                <button type="button" class="jeu-bouton" data-niveau="4">5. Salle serveur</button>
+            </div>
+        </div>
+
+        <div class="jeu-surface" id="jeu-fiche" role="dialog" aria-hidden="true"
+             aria-labelledby="jeu-fiche-titre">
+            <h2 id="jeu-fiche-titre">Appareil réparé</h2>
+            <p class="jeu-fiche-role" id="jeu-fiche-role"></p>
+            <button type="button" class="jeu-bouton jeu-bouton-principal" id="jeu-fiche-fermer">
+                J'ai compris, je continue
+            </button>
+        </div>
+
+        <div class="jeu-surface" id="jeu-bilan" role="dialog" aria-hidden="true"
+             aria-labelledby="jeu-bilan-titre">
+            <h2 id="jeu-bilan-titre">Niveau terminé !</h2>
+            <p id="jeu-bilan-texte"></p>
+            <div class="jeu-niveaux">
+                <button type="button" class="jeu-bouton jeu-bouton-principal" id="jeu-bilan-suivant">
+                    Niveau suivant →
+                </button>
+                <button type="button" class="jeu-bouton" id="jeu-bilan-rejouer">↻ Rejouer</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="jeu-indication" id="jeu-indication">Appuie sur « Commencer » pour entrer dans la cour.</p>
+    <p class="jeu-objectif" id="jeu-objectif"></p>
+    <p class="jeu-annonce" id="jeu-annonce" role="status" aria-live="polite"></p>
+
+    <div class="jeu-tactile" role="group" aria-label="Commandes tactiles">
+        <button type="button" class="jeu-bouton" data-commande="gauche" aria-label="Aller à gauche">◀</button>
+        <button type="button" class="jeu-bouton" data-commande="saut" aria-label="Sauter">▲</button>
+        <button type="button" class="jeu-bouton" data-commande="droite" aria-label="Aller à droite">▶</button>
+        <button type="button" class="jeu-bouton" data-commande="reparer" aria-label="Réparer l'appareil">🔧</button>
+    </div>
+
+    <details class="jeu-aide">
+        <summary>Comment jouer — commandes, règles, téléphone</summary>
         <table>
-            <caption class="plat-lecteur-seul">Commandes du jeu</caption>
+            <caption class="lecteur-seul">Commandes du jeu</caption>
             <tbody>
-                <tr>
-                    <th scope="row">Se déplacer</th>
-                    <td><kbd>←</kbd> <kbd>→</kbd> ou <kbd>Q</kbd> <kbd>D</kbd></td>
-                </tr>
-                <tr>
-                    <th scope="row">Sauter</th>
-                    <td><kbd>Espace</kbd> ou <kbd>↑</kbd> ou <kbd>Z</kbd></td>
-                </tr>
-                <tr>
-                    <th scope="row">Réparer</th>
-                    <td>reste appuyé sur <kbd>E</kbd> devant un appareil en panne</td>
-                </tr>
-                <tr>
-                    <th scope="row">Lancer un écrou</th>
-                    <td><kbd>X</kbd> — étourdit un ennemi pendant 3 secondes</td>
-                </tr>
-                <tr>
-                    <th scope="row">Recommencer le niveau</th>
-                    <td><kbd>R</kbd></td>
-                </tr>
+                <tr><th scope="row">Courir</th>
+                    <td><kbd>←</kbd> <kbd>→</kbd> ou <kbd>Q</kbd> <kbd>D</kbd></td></tr>
+                <tr><th scope="row">Sauter</th>
+                    <td><kbd>Espace</kbd> ou <kbd>↑</kbd> — maintenir la touche fait sauter plus haut</td></tr>
+                <tr><th scope="row">Réparer</th>
+                    <td>rester appuyé sur <kbd>E</kbd> devant un appareil en panne</td></tr>
+                <tr><th scope="row">Recommencer</th>
+                    <td>bouton « Rejouer » du bilan, ou quitter puis relancer le niveau</td></tr>
             </tbody>
         </table>
         <p>
             <strong>Le but :</strong> réparer tous les appareils du niveau, puis franchir la
-            porte verte. Un appareil en panne est signalé par un halo rouge : approche-toi, et
+            sortie verte. Un appareil en panne est signalé par un halo rouge : approche-toi et
             maintiens <kbd>E</kbd> jusqu'au bout de la jauge. Chaque réparation affiche le rôle
             de l'appareil dans le réseau — c'est la leçon du niveau.
         </p>
         <p>
-            <strong>Sur téléphone :</strong> le pavé tactile sous le jeu commande le
-            professeur (◀ ▶ pour se déplacer, ▲ pour sauter, 🔧 pour réparer, ◉ pour
-            lancer un écrou) ; les touches restent enfoncées tant que le doigt est
-            posé. Baisse le téléphone à l'horizontale et appuie sur
-            <strong>⛶ Plein écran</strong> : c'est dans ce mode que le jeu est le
-            plus lisible.
-        </p>
-        <p>
-            <strong>Accessibilité :</strong> le jeu se joue entièrement au clavier, les boutons
-            tactiles font au moins 44 pixels de côté, et chaque événement important (appareil
-            réparé, cœur perdu, niveau terminé) est annoncé aux lecteurs d'écran. Si ton système
-            demande de réduire les animations, les secousses d'écran sont désactivées.
+            <strong>Sur téléphone :</strong> le pavé sous le jeu commande le professeur
+            (◀ ▶ courir, ▲ sauter, 🔧 réparer) ; les touches restent enfoncées tant que le doigt
+            est posé. Passe le téléphone à l'horizontale et appuie sur <strong>⛶ Plein
+            écran</strong> : c'est là que le jeu est le plus lisible.
         </p>
     </details>
+</div>
 </div>
 
     <footer class="pied">
@@ -748,265 +448,762 @@
             données — sont présentés avec les mots de la fiche de synthèse SFC1.
         </p>
         <p>
-            Professeur de techno : sprite pixel art produit par code
-            (<code>_outils/pixel-art/generer_pixel_art.py</code>, variante « sympa »).
-            Décors et objets : LoRA <code>pixel-art-xl</code> via ComfyUI.
+            Personnages : planches pixel art générées avec PixelLab.
+            Décor (tuiles et parallaxe) dessiné par code, raccords vérifiés.
+            Moteur inspiré de l'exemple MIT « HTML5 Platformer » de ZeroDayArcade.
         </p>
     </footer>
 </div>
 <script>
-/* Niveaux du jeu de plateforme — FICHIER GÉNÉRÉ par construire_assets.py.
-   Ne pas modifier à la main : les cartes sont composées à partir de
-   coordonnées, puis validées (faisabilité prouvée) avant écriture. */
-window.NIVEAUX_PLATEFORME = [
-  {
-    "cle": "couloir",
-    "titre": "Le couloir des casiers",
-    "objectif": "Répare le commutateur pour que les postes du couloir se remettent à communiquer.",
-    "carte": [
-      "                                                            ",
-      "                                                            ",
-      "                                                            ",
-      "                                                            ",
-      "                                                            ",
-      "                            o                               ",
-      "                o         =====           o                 ",
-      "              =====                     =====               ",
-      "                                                            ",
-      "  P   o             1   e                   e     c   o  X  ",
-      "############################################################"
-    ]
-  },
-  {
-    "cle": "salle-102",
-    "titre": "La salle 102",
-    "objectif": "Répare les deux postes clients et le commutateur qui les relie.",
-    "carte": [
-      "                                                                ",
-      "                                                                ",
-      "                                                                ",
-      "                                                                ",
-      "                                                                ",
-      "                        o                                       ",
-      "                    =======           3 o                       ",
-      "             3 o                    =======                     ",
-      "          =======                                               ",
-      "  P  o                e           c         e o b 1     o   X   ",
-      "##############################  ################################"
-    ]
-  },
-  {
-    "cle": "cdi",
-    "titre": "Le CDI",
-    "objectif": "Répare le serveur de données et le poste client : le trajet d'un fichier doit passer par le commutateur, puis le serveur.",
-    "carte": [
-      "                                                                    ",
-      "                                                                    ",
-      "                                            a                       ",
-      "              a                   a                                 ",
-      "                                      o                             ",
-      "                 o4                 =====                           ",
-      "                =====                                 3             ",
-      "          o                   o                     =====           ",
-      "        =====               =====                                   ",
-      "  P   e                       e            o    o               X   ",
-      "######################  ######################  ####################"
-    ]
-  },
-  {
-    "cle": "local-technique",
-    "titre": "Le local technique",
-    "objectif": "Répare le routeur, qui relie le réseau local à Internet, puis le commutateur.",
-    "carte": [
-      "                                                                        ",
-      "                                                                        ",
-      "                a                                                       ",
-      "                   o2                                                   ",
-      "                  ====                                                  ",
-      "              o         a   o                                           ",
-      "            ====          =====                                         ",
-      "        o                           o                                   ",
-      "      ====                        =====                                 ",
-      "  P                           c             c     1     o e     o    X  ",
-      "########################################################################"
-    ]
-  },
-  {
-    "cle": "salle-serveur",
-    "titre": "La salle serveur",
-    "objectif": "Remets en service les quatre appareils du réseau : commutateur, poste client, serveur et routeur.",
-    "carte": [
-      "                                                                            ",
-      "                                                                            ",
-      "                                          a                                 ",
-      "                    a               4o                                      ",
-      "                                  =====                 a                   ",
-      "                            3o             2o                               ",
-      "                    o     =====          =====                              ",
-      "            1o    =====                             o                       ",
-      "          =====                                   =====                     ",
-      "  P   o e       b       c               e                       c b   o  X  ",
-      "##################  ################################  ######################"
-    ]
-  }
-];
+/* Niveaux du jeu — FICHIER GÉNÉRÉ par construire_niveaux.py.
+   Ne pas modifier à la main : les cartes sont composées par
+   coordonnées, puis validées (appareils atteignables) avant écriture. */
+window.JEU_LEGENDE = {" ": 0, ".": 1, "#": 2, "w": 3, "b": 4, "L": 5, "f": 6, "p": 7, "=": 8, "h": 9, "c": 10, "|": 11, "t": 12, "o": 13};
 
-window.APPAREILS_PLATEFORME = {
-  "1": {
-    "cle": "commutateur",
+window.JEU_APPAREILS = {
+  "commutateur": {
     "nom": "Commutateur",
     "image": "commutateur",
     "role": "Il relie entre eux les appareils d'un même réseau local et aiguille les données vers le bon appareil, comme un standard téléphonique. Il ne relie pas à Internet."
   },
-  "2": {
-    "cle": "routeur",
+  "routeur": {
     "nom": "Routeur",
     "image": "routeur",
     "role": "Il relie le réseau local à Internet. Il choisit la route que prennent les données et émet souvent le Wi-Fi."
   },
-  "3": {
-    "cle": "ordinateur",
+  "ordinateur": {
     "nom": "Poste client",
     "image": "ordinateur",
     "role": "L'ordinateur utilisé par une personne : il demande des informations au réseau. Dans chaque appareil, la carte réseau est la porte d'entrée."
   },
-  "4": {
-    "cle": "serveur",
+  "serveur": {
     "nom": "Serveur de données",
     "image": "serveur",
     "role": "Un ordinateur qui stocke et partage des données pour tous les utilisateurs du réseau. Il répond aux demandes."
   }
 };
+
+window.JEU_NIVEAUX = [
+ {
+  "cle": "cour",
+  "titre": "La cour du collège",
+  "objectif": "Répare le commutateur : sans lui, les postes de la cour ne peuvent plus échanger de données.",
+  "largeur": 132,
+  "hauteur": 16,
+  "carte": [
+   "                                                                                                                                    ",
+   "                                                                                                                                    ",
+   "                                                                                                                                    ",
+   "                                                                                                                                    ",
+   "                                                                                                                                    ",
+   "                                                                                                                                    ",
+   "                                            BBBBBBBBBBBBBBB                                                                         ",
+   "                                            BBBBBBBBBBBBBBB                                                                         ",
+   "                                            BBBBBBBBBBBBBBB               =======                                                   ",
+   "                                            BBfffBBBBffffBB                                                                         ",
+   "                                            BBBBBBBBBBBBBBB                                                                         ",
+   "                    =======                 BBBBBBBBBBBBBBB     =======                         =======                             ",
+   "                                            BBBBBBppBBBBBBB                                                                         ",
+   "                                            BBBBBBppBBBBBBB                         hhh                                             ",
+   "....................................................................................................................................",
+   "####################################################################################################################################"
+  ],
+  "objets": [
+   {
+    "type": "depart",
+    "tx": 2,
+    "ty": 13
+   },
+   {
+    "type": "appareil",
+    "tx": 88,
+    "ty": 13,
+    "cle": "commutateur"
+   },
+   {
+    "type": "sortie",
+    "tx": 128,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 8,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 23,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 41,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 67,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 77,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 99,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 114,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 124,
+    "ty": 13
+   },
+   {
+    "type": "eleve",
+    "tx": 30,
+    "ty": 13,
+    "modele": 0
+   },
+   {
+    "type": "eleve",
+    "tx": 110,
+    "ty": 13,
+    "modele": 1
+   },
+   {
+    "type": "chien",
+    "tx": 104,
+    "ty": 13
+   }
+  ]
+ },
+ {
+  "cle": "preau",
+  "titre": "Le préau",
+  "objectif": "Répare les deux postes clients et le commutateur qui les relie.",
+  "largeur": 138,
+  "hauteur": 16,
+  "carte": [
+   "                                                                                                                                          ",
+   "                                                                                                                                          ",
+   "                                                                                                                                          ",
+   "                                                                                                                                          ",
+   "                                                                                                        BBBBBBBBBBBBBBBBB                 ",
+   "                WWWWWWWWWWWWWWW                                                                         BBBBBBBBBBBBBBBBB                 ",
+   "                WWWWWWWWWWWWWWW                                                                         BBBBBBBBBBBBBBBBB                 ",
+   "                WWWWWWWWWWWWWWW                                                                         BffffBBBBfffffffB                 ",
+   "                WffffWWWWfffffW             =======                          =======                    BBBBBBBBBBBBBBBBB                 ",
+   "                WWWWWWWWWWWWWWW                                                                         BBBBBBBBBBBBBBBBB                 ",
+   "                WWWWWWWWWWWWWWW                                                                         BBBBBBBBBBBBBBBBB                 ",
+   "                WWWWWWWWWWWWWWW   =======              =======    =======                               BBBBBBBBBBBBBBBBB     =======     ",
+   "                WWWWWWppWWWWWWW                                                                         BBBBBBppBBBBBBBBB                 ",
+   "                WWWWWWppWWWWWWW                     hhh                                                 BBBBBBppBBBBBBBBB                 ",
+   "..........................................................   ...................................   .......................................",
+   "##########################################################   ###################################   #######################################"
+  ],
+  "objets": [
+   {
+    "type": "depart",
+    "tx": 2,
+    "ty": 13
+   },
+   {
+    "type": "appareil",
+    "tx": 36,
+    "ty": 10,
+    "cle": "ordinateur"
+   },
+   {
+    "type": "appareil",
+    "tx": 68,
+    "ty": 10,
+    "cle": "ordinateur"
+   },
+   {
+    "type": "appareil",
+    "tx": 128,
+    "ty": 10,
+    "cle": "commutateur"
+   },
+   {
+    "type": "sortie",
+    "tx": 134,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 10,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 37,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 47,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 70,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 80,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 100,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 129,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 136,
+    "ty": 13
+   },
+   {
+    "type": "eleve",
+    "tx": 26,
+    "ty": 13,
+    "modele": 2
+   },
+   {
+    "type": "eleve",
+    "tx": 62,
+    "ty": 13,
+    "modele": 0
+   },
+   {
+    "type": "chien",
+    "tx": 90,
+    "ty": 13
+   },
+   {
+    "type": "ballon",
+    "tx": 112,
+    "ty": 13
+   }
+  ]
+ },
+ {
+  "cle": "cdi",
+  "titre": "Le CDI",
+  "objectif": "Répare le serveur de données et le poste client : le fichier doit suivre le trajet poste → commutateur → serveur.",
+  "largeur": 142,
+  "hauteur": 16,
+  "carte": [
+   "                                                                                                                                              ",
+   "                                                                                                                                              ",
+   "                                                                                                                                              ",
+   "                                                                                                                                              ",
+   "                                                                                                                                              ",
+   "                                                                                        WWWWWWWWWWWWW                                         ",
+   "        BBBBBBBBBBB                                                                     WWWWWWWWWWWWW                                         ",
+   "        BBBBBBBBBBB                                                                     WWWWWWWWWWWWW                                         ",
+   "        BBBBBBBBBBB             =======                 =======               =======   WttttWWWooooW              =======                    ",
+   "        BfffBBBfffB                                                                     WWWWWWWWWWWWW                                         ",
+   "        BBBBBBBBBBB                                                                     WWWWWWWWWWWWW                                         ",
+   "        BBBBBBBBBBB   =======                 =======             ======= ====          WWWWWWWWWWWWW   =======               =======         ",
+   "        BBBBppBBBBB                                                                     WWWWWppWWWWWW                                         ",
+   "        BBBBppBBBBB                                                   hhh               WWWWWppWWWWWW                                         ",
+   "........................................   ...............................    ..................................   ...........................",
+   "########################################   ###############################    ##################################   ###########################"
+  ],
+  "objets": [
+   {
+    "type": "depart",
+    "tx": 2,
+    "ty": 13
+   },
+   {
+    "type": "appareil",
+    "tx": 34,
+    "ty": 7,
+    "cle": "serveur"
+   },
+   {
+    "type": "appareil",
+    "tx": 118,
+    "ty": 7,
+    "cle": "ordinateur"
+   },
+   {
+    "type": "sortie",
+    "tx": 138,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 12,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 25,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 35,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 49,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 59,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 69,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 81,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 107,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 129,
+    "ty": 10
+   },
+   {
+    "type": "avion",
+    "tx": 36,
+    "ty": 3
+   },
+   {
+    "type": "avion",
+    "tx": 64,
+    "ty": 3
+   },
+   {
+    "type": "avion",
+    "tx": 96,
+    "ty": 4
+   },
+   {
+    "type": "avion",
+    "tx": 126,
+    "ty": 3
+   },
+   {
+    "type": "eleve",
+    "tx": 20,
+    "ty": 13,
+    "modele": 3
+   },
+   {
+    "type": "eleve",
+    "tx": 102,
+    "ty": 13,
+    "modele": 4
+   }
+  ]
+ },
+ {
+  "cle": "technique",
+  "titre": "Le local technique",
+  "objectif": "Répare le routeur, seul passage vers Internet, puis le commutateur et le poste client.",
+  "largeur": 136,
+  "hauteur": 16,
+  "carte": [
+   "                                                                                                                                        ",
+   "                                                                                                                                        ",
+   "                                                                                                                                        ",
+   "                                                                                                BBBBBBBBBBBBBBBBB                       ",
+   "                                                                                                BBBBBBBBBBBBBBBBB                       ",
+   "                              =======                                                           BBBBBBBBBBBBBBBBB                       ",
+   "                                                                                                BffffBBBBfffffffB                       ",
+   "                                                                                                BBBBBBBBBBBBBBBBB                       ",
+   "                    =======             =======                     =======                     BBBBBBBBBBBBBBBBB                       ",
+   "                                                                                                BBBBBBBBBBBBBBBBB                       ",
+   "                                                                                                BBBBBBBBBBBBBBBBB                       ",
+   "          =======                                         =======             =======           BBBBBBBBBBBBBBBBB       =======         ",
+   "                                                                                                BBBBBBppBBBBBBBBB                       ",
+   "                                                                                        hhh     BBBBBBppBBBBBBBBB                       ",
+   "....................................................    ................................................................................",
+   "####################################################    ################################################################################"
+  ],
+  "objets": [
+   {
+    "type": "depart",
+    "tx": 2,
+    "ty": 13
+   },
+   {
+    "type": "appareil",
+    "tx": 32,
+    "ty": 4,
+    "cle": "routeur"
+   },
+   {
+    "type": "appareil",
+    "tx": 70,
+    "ty": 7,
+    "cle": "commutateur"
+   },
+   {
+    "type": "appareil",
+    "tx": 122,
+    "ty": 10,
+    "cle": "ordinateur"
+   },
+   {
+    "type": "sortie",
+    "tx": 132,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 12,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 23,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 33,
+    "ty": 4
+   },
+   {
+    "type": "paquet",
+    "tx": 43,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 61,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 71,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 81,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 124,
+    "ty": 10
+   },
+   {
+    "type": "chien",
+    "tx": 48,
+    "ty": 13
+   },
+   {
+    "type": "chien",
+    "tx": 94,
+    "ty": 13
+   },
+   {
+    "type": "avion",
+    "tx": 28,
+    "ty": 2
+   },
+   {
+    "type": "avion",
+    "tx": 76,
+    "ty": 3
+   },
+   {
+    "type": "eleve",
+    "tx": 6,
+    "ty": 13,
+    "modele": 1
+   }
+  ]
+ },
+ {
+  "cle": "serveur",
+  "titre": "La salle serveur",
+  "objectif": "Remets en service les quatre appareils du réseau.",
+  "largeur": 146,
+  "hauteur": 16,
+  "carte": [
+   "                                                                                                                                                  ",
+   "                                                                                                                                                  ",
+   "bbb                                                                                                                                           bbbb",
+   "bbb                                                                                                                                           bbbb",
+   "bbb                                                     WWWWWWWWWWW                                                                           bbbb",
+   "bbb                                                     WWWWWWWWWWW                                                                           bbbb",
+   "bbb                                                     WWWWWWWWWWW                                                                           bbbb",
+   "bbb                                                     WfffWWffffW                                                                           bbbb",
+   "bbb                 =======                   =======   WWWWWWWWWWW                   =======                     =======                     bbbb",
+   "bbb                                                     WWWWWWWWWWW                                                                           bbbb",
+   "bbb                                                     WWWWWWWWWWW                                                                           bbbb",
+   "bbb       =======                   =======             WWWWWWWWWWW         =======             =======                      =======          bbbb",
+   "bbb                                                     WWWWppWWWWW                                                                           bbbb",
+   "bbb                                                     WWWWppWWWWhhh                                                                         bbbb",
+   "..............................    ....................................    ..................................    ..................................",
+   "##############################    ####################################    ##################################    ##################################"
+  ],
+  "objets": [
+   {
+    "type": "depart",
+    "tx": 5,
+    "ty": 13
+   },
+   {
+    "type": "appareil",
+    "tx": 22,
+    "ty": 7,
+    "cle": "commutateur"
+   },
+   {
+    "type": "appareil",
+    "tx": 48,
+    "ty": 7,
+    "cle": "ordinateur"
+   },
+   {
+    "type": "appareil",
+    "tx": 88,
+    "ty": 7,
+    "cle": "serveur"
+   },
+   {
+    "type": "appareil",
+    "tx": 128,
+    "ty": 10,
+    "cle": "routeur"
+   },
+   {
+    "type": "sortie",
+    "tx": 140,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 12,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 23,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 38,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 49,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 64,
+    "ty": 13
+   },
+   {
+    "type": "paquet",
+    "tx": 78,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 89,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 99,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 117,
+    "ty": 7
+   },
+   {
+    "type": "paquet",
+    "tx": 129,
+    "ty": 10
+   },
+   {
+    "type": "paquet",
+    "tx": 136,
+    "ty": 13
+   },
+   {
+    "type": "eleve",
+    "tx": 8,
+    "ty": 13,
+    "modele": 0
+   },
+   {
+    "type": "eleve",
+    "tx": 44,
+    "ty": 13,
+    "modele": 2
+   },
+   {
+    "type": "eleve",
+    "tx": 84,
+    "ty": 13,
+    "modele": 3
+   },
+   {
+    "type": "chien",
+    "tx": 26,
+    "ty": 13
+   },
+   {
+    "type": "chien",
+    "tx": 118,
+    "ty": 13
+   },
+   {
+    "type": "avion",
+    "tx": 34,
+    "ty": 3
+   },
+   {
+    "type": "avion",
+    "tx": 74,
+    "ty": 2
+   },
+   {
+    "type": "avion",
+    "tx": 104,
+    "ty": 4
+   },
+   {
+    "type": "ballon",
+    "tx": 60,
+    "ty": 13
+   },
+   {
+    "type": "ballon",
+    "tx": 134,
+    "ty": 13
+   }
+  ]
+ }
+];
 </script>
 <script>
 /* ============================================================================
-   « Le réseau en panne » — jeu de plateforme du professeur de techno
+   « Le réseau en panne » — jeu de plateforme 2D, 5 niveaux
    Activité : 5e SFC1 « Exploiter le réseau informatique pour travailler »
 
-   Le professeur de techno traverse le collège pour réparer les appareils du
-   réseau (commutateur, routeur, poste client, serveur). Les ennemis sont des
-   élèves qui se baladent, des chiens et des avions en papier.
+   Architecture calquée sur l'exemple MIT « HTML5_Platformer » de ZeroDayArcade
+   (https://github.com/ZeroDayArcade/HTML5_Platformer) :
+     - niveau = tableau de caractères, un caractère par tuile, tuiles de 32 px ;
+     - atlas de tuiles unique (tileset.png), dessin par indice ;
+     - tuile de sol, parallaxe à trois couches, écran de titre, audio ;
+     - collisions sprite ↔ tuiles par intersection de rectangles.
 
-   Ce fichier contient le MOTEUR et rien d'autre : les cartes des 5 niveaux
-   sont dans `niveaux.js`, généré et validé par `construire_assets.py` (les
-   appareils y sont prouvés atteignables depuis le départ).
+   Ce qui a été ajouté par rapport au modèle, parce qu'un jeu de plateforme se
+   juge au ressenti :
+     - accélération et freinage (et non vitesse instantanée) ;
+     - « coyote time » (on peut encore sauter 0,1 s après avoir quitté le bord) ;
+     - mémorisation de l'appui (un saut demandé 0,12 s avant l'atterrissage
+       part quand on touche le sol) ;
+     - saut à hauteur variable (relâcher la touche coupe la montée) ;
+     - caméra à zone morte et lissée, secousse à l'impact ;
+     - particules (poussière de course, étincelles de ramassage).
 
-   Repères techniques
-   ------------------
-   - canvas logique 640 × 352 px, tuiles de 32 px : tout est dessiné à
-     l'échelle 1:1, donc le pixel art reste net (aucun rééchantillonnage) ;
-   - physique à pas fixe de 1/120 s : deux exécutions donnent le même
-     résultat, ce qui rend le jeu testable sans navigateur humain ;
-   - aucune requête réseau : les images viennent de `assets-reseau-plateforme/`,
-     copiées à côté de l'activité.
+   Les personnages sont les planches PixelLab (640 × 64, 10 cases) : repos et
+   cycle de marche de 4 images dans chaque sens. Le saut tient une seule image —
+   c'est le choix de Mario 1, et il évite une animation inventée.
    ============================================================================ */
 (function () {
     "use strict";
 
-    // ── Constantes de jeu ───────────────────────────────────────────────────
+    // ── Constantes ──────────────────────────────────────────────────────────
     var TUILE = 32;
-    var VUE_L = 640;
-    var VUE_H = 352;
-    var GRAVITE = 1500;
-    var SAUT = 600;
-    var VITESSE = 210;
-    var PAS = 1 / 120;              // pas fixe de simulation
+    var ECRAN_L = 960;
+    var ECRAN_H = 512;
+    var GRAVITE = 1900;
+    var SAUT = 620;
+    var VITESSE_MAX = 260;
+    var ACCELERATION = 2000;
+    var FREINAGE = 2600;
+    var VITESSE_CHUTE_MAX = 1000;
+    var PAS = 1 / 120;
+    var COYOTE = 0.10;              // s de tolérance après avoir quitté le sol
+    var TAMPON_SAUT = 0.12;         // s de mémorisation de l'appui
+    var COUPE_SAUT = 0.42;          // multiplicateur de vitesse quand on relâche
+    var DUREE_REPARATION = 1.0;
+    var PORTEE_REPARATION = 78;
     var COEURS_MAX = 3;
-    var DUREE_REPARATION = 0.9;     // secondes de maintien sur « E »
-    var PORTEE_REPARATION = 66;     // px
-    var INVULNERABILITE = 1.2;
-    var DUREE_ETOURDI = 3.0;
+    var INVULNERABILITE = 1.4;
+    var ETROUDI = 3.0;
 
-    // Animations du sprite du professeur : ligne de la planche (8 colonnes)
-    // 0 repos · 1 marcher_droite · 2 marcher_gauche · 3 lancer · 4 rigoler · 5 rage
-    var ANIM = {
-        repos: { ligne: 0, images: 6, periode: 0.22, boucle: true },
-        marcheD: { ligne: 1, images: 6, periode: 0.11, boucle: true },
-        marcheG: { ligne: 2, images: 6, periode: 0.11, boucle: true },
-        lancer: { ligne: 3, images: 6, periode: 0.095, boucle: false },
-        rigoler: { ligne: 4, images: 6, periode: 0.12, boucle: false },
-        rage: { ligne: 5, images: 8, periode: 0.09, boucle: false }
+    // Cases de la planche de personnage (640 × 64) : 10 cases de 64 px
+    var CASE = { repos: 0, marche: [1, 2, 3, 4], reposG: 5, marcheG: [6, 7, 8, 9] };
+    var PIEDS_CASE = 62;            // ligne des pieds dans la case de 64 px
+
+    var IMAGES = {
+        personnages: ["prof-techno", "eleve-01-leo", "eleve-02-ines",
+                      "eleve-03-omar", "eleve-04-chloe", "eleve-05-yanis"],
+        objets: ["commutateur", "ordinateur", "routeur", "serveur",
+                 "avion", "ballon", "chien-a", "chien-b"],
+        monde: ["tileset", "ciel", "loin", "milieu"]
     };
+    var DOSSIER = "assets/";
 
-    var ASSETS = {
-        prof: "prof-spritesheet.png",
-        eleveA1: "eleve-a-1.png", eleveA2: "eleve-a-2.png",
-        eleveB1: "eleve-b-1.png", eleveB2: "eleve-b-2.png",
-        eleveC1: "eleve-c-1.png", eleveC2: "eleve-c-2.png",
-        chienA: "chien-a.png", chienB: "chien-b.png",
-        avion: "avion-papier.png", ballon: "ballon.png",
-        commutateur: "commutateur.png", ordinateur: "ordinateur.png",
-        routeur: "routeur.png", serveur: "serveur.png",
-        batiment1: "batiment-1.png", batiment2: "batiment-2.png",
-        batiment3: "batiment-3.png"
-    };
-
-    // ── Références DOM (toutes optionnelles : le jeu ne casse pas s'il en
-    //    manque une, il se contente de ne pas l'afficher) ──────────────────
-    var racine = document.getElementById("plat-jeu");
-    if (!racine) { return; }
-
-    var canvas = document.getElementById("plat-canvas");
+    // ── DOM ─────────────────────────────────────────────────────────────────
+    var racine = document.getElementById("jeu");
+    var canvas = document.getElementById("jeu-canvas");
     var ctx = canvas ? canvas.getContext("2d") : null;
-    var zone = document.getElementById("plat-zone");
-    var elHudCoeurs = document.getElementById("plat-coeurs");
-    var elHudAppareils = document.getElementById("plat-appareils");
-    var elHudPaquets = document.getElementById("plat-paquets");
-    var elHudNiveau = document.getElementById("plat-niveau-nom");
-    var elObjectif = document.getElementById("plat-objectif");
-    var elAnnonce = document.getElementById("plat-annonce");
-    var elFiche = document.getElementById("plat-fiche");
-    var elFicheTitre = document.getElementById("plat-fiche-titre");
-    var elFicheRole = document.getElementById("plat-fiche-role");
-    var elFicheBtn = document.getElementById("plat-fiche-fermer");
-    var elBilan = document.getElementById("plat-bilan");
-    var elBilanTitre = document.getElementById("plat-bilan-titre");
-    var elBilanTexte = document.getElementById("plat-bilan-texte");
-    var elBilanBtn = document.getElementById("plat-bilan-suivant");
-    var elBilanRejouer = document.getElementById("plat-bilan-rejouer");
-    var elMenu = document.getElementById("plat-menu");
-    var elBoutonJouer = document.getElementById("plat-demarrer");
-    var elIndication = document.getElementById("plat-indication");
-    var elListeNiveaux = document.getElementById("plat-niveaux");
-    var elBoutonPause = document.getElementById("plat-pause");
-    var elBoutonPleinEcran = document.getElementById("plat-plein-ecran");
+    var zone = document.getElementById("jeu-zone");
 
-    // ── Placement des panneaux (menu, fiche, bilan) ─────────────────────────
-    // Sur petit écran, ces panneaux ne tiennent pas superposés dans la zone de
-    // jeu (242 × 133 px à 320 px de large, pour un menu qui demande ~294 px de
-    // haut). On les déplace donc DANS LE FLUX, juste sous le canvas : ils sont
-    // alors à leur hauteur naturelle, pleine largeur, sans rien rogner.
-    // `position: fixed` a été écarté : l'animation `fadeIn` de l'onglet du
-    // template crée un bloc conteneur et le panneau prenait la hauteur de
-    // l'onglet (2 625 px mesurés) au lieu de celle de l'écran.
-    var MEDIA_PANNEAUX = "(max-width: 640px), (max-height: 500px)";
-    var mediaPanneaux = window.matchMedia ? window.matchMedia(MEDIA_PANNEAUX) : null;
-    var PANNEAUX = ["plat-menu", "plat-fiche", "plat-bilan"];
-    var cadreJeu = document.getElementById("plat-cadre-jeu");
+    function el(id) { return document.getElementById(id); }
 
-    function placerPanneaux() {
-        if (!zone) { return; }
-        var enFlux = mediaPanneaux ? mediaPanneaux.matches : false;
-        var i, el;
-        if (enFlux) {
-            if (!cadreJeu) { return; }
-            // insertion en ordre inverse devant le même point d'ancrage :
-            // le résultat est menu, fiche, bilan — dans cet ordre
-            for (i = PANNEAUX.length - 1; i >= 0; i -= 1) {
-                el = document.getElementById(PANNEAUX[i]);
-                if (el) { cadreJeu.insertBefore(el, zone.nextSibling); }
-            }
-        } else {
-            for (i = 0; i < PANNEAUX.length; i += 1) {
-                el = document.getElementById(PANNEAUX[i]);
-                if (el && el.parentElement !== zone) { zone.appendChild(el); }
-            }
-        }
-    }
-
-    if (mediaPanneaux && mediaPanneaux.addEventListener) {
-        mediaPanneaux.addEventListener("change", placerPanneaux);
-    }
+    var ui = {
+        coeurs: el("jeu-coeurs"), appareils: el("jeu-appareils"),
+        paquets: el("jeu-paquets"), niveau: el("jeu-niveau-nom"),
+        objectif: el("jeu-objectif"), indication: el("jeu-indication"),
+        annonce: el("jeu-annonce"), menu: el("jeu-menu"),
+        demarrer: el("jeu-demarrer"), niveaux: el("jeu-niveaux"),
+        fiche: el("jeu-fiche"), ficheTitre: el("jeu-fiche-titre"),
+        ficheRole: el("jeu-fiche-role"), ficheFermer: el("jeu-fiche-fermer"),
+        bilan: el("jeu-bilan"), bilanTitre: el("jeu-bilan-titre"),
+        bilanTexte: el("jeu-bilan-texte"), bilanSuivant: el("jeu-bilan-suivant"),
+        bilanRejouer: el("jeu-bilan-rejouer"), pause: el("jeu-pause"),
+        pleinEcran: el("jeu-plein-ecran"), son: el("jeu-son"),
+        cadre: el("jeu-cadre")
+    };
+    if (!racine || !ctx) { return; }
 
     var reduireMouvement = window.matchMedia
         ? window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -1014,107 +1211,151 @@ window.APPAREILS_PLATEFORME = {
 
     // ── État ────────────────────────────────────────────────────────────────
     var etat = {
-        demarre: false,
-        actif: false,           // la boucle tourne
-        mode: "accueil",        // accueil | jeu | carte | bilan | termine | perdu
+        mode: "accueil",        // accueil | jeu | fiche | bilan | pause | perdu
         niveau: 0,
-        debloques: 1,           // nombre de niveaux accessibles
+        debloques: 1,
         coeurs: COEURS_MAX,
         paquets: 0,
         paquetsNiveau: 0,
         temps: 0,
-        lignes: [],
-        largeurNiveau: 0,
+        carte: [],              // lignes de caractères
+        solides: [],
+        largeur: 0,
+        hauteur: 0,
         depart: { x: 0, y: 0 },
         sortie: null,
-        joueur: null,
-        entites: [],
         appareils: [],
-        paquetsAuSol: [],
-        projectiles: [],
+        paquetsSol: [],
+        entites: [],
+        particules: [],
+        joueur: null,
         cameraX: 0,
         secousse: 0,
         fini: false,
-        message: ""
+        actif: false,
+        son: true
     };
 
     var images = {};
-    var imagesChargees = 0;
-    var imagesAttendues = 0;
+    var chargees = 0;
+    var attendues = 0;
+    var commandes = { gauche: false, droite: false, saut: false, reparer: false };
 
     // ── Utilitaires ─────────────────────────────────────────────────────────
     function borne(v, mini, maxi) { return v < mini ? mini : (v > maxi ? maxi : v); }
-
-    function annoncer(texte) {
-        if (!elAnnonce) { return; }
-        elAnnonce.textContent = texte;
+    function annoncer(texte) { if (ui.annonce) { ui.annonce.textContent = texte; } }
+    function indiceTuile(caractere) {
+        var table = window.JEU_LEGENDE || {};
+        return table[caractere] === undefined ? 0 : table[caractere];
     }
-
     function estSolide(tx, ty) {
-        // murs latéraux : on ne sort pas du niveau par la gauche ou la droite
-        if (tx < 0 || tx >= etat.largeurNiveau) { return true; }
-        if (ty < 0 || ty >= etat.lignes.length) { return false; }
-        var c = etat.lignes[ty].charAt(tx);
-        return c === "#" || c === "=";
-    }
-
-    function charA(tx, ty) {
-        if (ty < 0 || ty >= etat.lignes.length) { return " "; }
-        if (tx < 0 || tx >= etat.largeurNiveau) { return " "; }
-        return etat.lignes[ty].charAt(tx);
-    }
-
-    function rectangleSeChevauchent(a, b) {
-        return a.x < b.x + b.w && a.x + a.w > b.x &&
-               a.y < b.y + b.h && a.y + a.h > b.y;
-    }
-
-    // ── Chargement des images ───────────────────────────────────────────────
-    function chargerImages(callback) {
-        var cles = Object.keys(ASSETS);
-        imagesAttendues = cles.length;
-        imagesChargees = 0;
-        var termine = false;
-
-        function finir() {
-            if (termine) { return; }
-            termine = true;
-            callback();
+        if (tx < 0 || tx >= etat.largeur) { return true; }   // murs du niveau
+        if (ty < 0 || ty >= etat.hauteur) { return false; }
+        var ligne = etat.solides[ty];
+        if (!ligne) {
+            // filet : ne jamais planter sur une carte incomplète, et garder la
+            // trace de ce qui s'est passé pour le diagnostic
+            window.__jeuDiag = { tx: tx, ty: ty, hauteur: etat.hauteur,
+                                 longueur: etat.solides.length,
+                                 joueur: etat.joueur && { x: etat.joueur.x, y: etat.joueur.y } };
+            return false;
         }
+        return ligne[tx] === true;
+    }
+    function chevauche(a, b) {
+        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
 
-        cles.forEach(function (cle) {
+    // ── Chargement ──────────────────────────────────────────────────────────
+    function chargerImages(suite) {
+        var liste = [];
+        IMAGES.personnages.forEach(function (n) { liste.push([DOSSIER + "personnages/" + n + ".png", n]); });
+        IMAGES.objets.forEach(function (n) { liste.push([DOSSIER + "objets/" + n + ".png", n]); });
+        IMAGES.monde.forEach(function (n) { liste.push([DOSSIER + n + ".png", n]); });
+        attendues = liste.length;
+        chargees = 0;
+        var termine = false;
+        function finir() { if (!termine) { termine = true; suite(); } }
+        liste.forEach(function (paire) {
             var img = new Image();
             img.onload = function () {
-                images[cle] = img;
-                imagesChargees += 1;
-                if (imagesChargees >= imagesAttendues) { finir(); }
+                images[paire[1]] = img;
+                chargees += 1;
+                if (chargees >= attendues) { finir(); }
             };
             img.onerror = function () {
-                // Un asset absent n'empêche pas de jouer : il est dessiné par
-                // code (voir dessinerAppareil / dessinerEntite).
-                images[cle] = null;
-                imagesChargees += 1;
-                if (imagesChargees >= imagesAttendues) { finir(); }
+                images[paire[1]] = null;      // repli dessiné par code
+                chargees += 1;
+                if (chargees >= attendues) { finir(); }
             };
-            img.src = "assets-reseau-plateforme/" + ASSETS[cle];
+            img.src = paire[0];
         });
-        // Filet de sécurité : ne jamais rester bloqué sur une image perdue.
-        window.setTimeout(finir, 4000);
+        window.setTimeout(finir, 5000);
     }
 
-    // ── Chargement d'un niveau ──────────────────────────────────────────────
+    // ── Audio (synthèse, aucun fichier) ─────────────────────────────────────
+    var audio = null;
+    function contexteAudio() {
+        if (!etat.son) { return null; }
+        if (!audio) {
+            var C = window.AudioContext || window.webkitAudioContext;
+            if (!C) { return null; }
+            audio = new C();
+        }
+        if (audio.state === "suspended") { audio.resume(); }
+        return audio;
+    }
+    function bip(frequence, duree, type, volume) {
+        var a = contexteAudio();
+        if (!a) { return; }
+        var o = a.createOscillator();
+        var g = a.createGain();
+        o.type = type || "square";
+        o.frequency.value = frequence;
+        g.gain.value = volume === undefined ? 0.06 : volume;
+        g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + duree);
+        o.connect(g); g.connect(a.destination);
+        o.start(); o.stop(a.currentTime + duree);
+    }
+    var sons = {
+        saut: function () { bip(520, 0.12, "square", 0.05); },
+        paquet: function () { bip(880, 0.09, "square", 0.05); setTimeout(function () { bip(1180, 0.09); }, 70); },
+        reparation: function () { bip(440, 0.1, "triangle", 0.06); setTimeout(function () { bip(660, 0.14, "triangle"); }, 110); },
+        degat: function () { bip(160, 0.22, "sawtooth", 0.07); },
+        niveau: function () {
+            [523, 659, 784, 1046].forEach(function (f, i) {
+                setTimeout(function () { bip(f, 0.16, "triangle", 0.06); }, i * 120);
+            });
+        }
+    };
+
+    // ── Niveau ──────────────────────────────────────────────────────────────
     function chargerNiveau(index) {
-        var niveaux = window.NIVEAUX_PLATEFORME || [];
+        var niveaux = window.JEU_NIVEAUX || [];
         var niveau = niveaux[index];
         if (!niveau) { return; }
-
         etat.niveau = index;
-        etat.lignes = niveau.carte.slice();
-        etat.largeurNiveau = etat.lignes[0].length;
+        etat.carte = niveau.carte.slice();
+        etat.hauteur = etat.carte.length;
+        etat.largeur = niveau.largeur;
+        // Carte de collision : mêmes caractères que le décor, mais seuls
+        // « sol, mur, brique, casier, plateforme, haie, plafond » arrêtent.
+        // Les façades (« W », « B »), fenêtres, portes et tableaux sont du
+        // décor traversable.
+        var SOLIDES = "#.wbL=hc";
+        etat.solides = [];
+        for (var y = 0; y < etat.hauteur; y += 1) {
+            var ligne = [];
+            for (var x = 0; x < etat.largeur; x += 1) {
+                ligne.push(SOLIDES.indexOf(etat.carte[y].charAt(x)) >= 0);
+            }
+            etat.solides.push(ligne);
+        }
+
         etat.entites = [];
         etat.appareils = [];
-        etat.paquetsAuSol = [];
-        etat.projectiles = [];
+        etat.paquetsSol = [];
+        etat.particules = [];
         etat.paquetsNiveau = 0;
         etat.coeurs = COEURS_MAX;
         etat.temps = 0;
@@ -1123,93 +1364,67 @@ window.APPAREILS_PLATEFORME = {
         etat.secousse = 0;
         etat.sortie = null;
 
-        for (var y = 0; y < etat.lignes.length; y += 1) {
-            for (var x = 0; x < etat.largeurNiveau; x += 1) {
-                var c = etat.lignes[y].charAt(x);
-                var px = x * TUILE;
-                var py = y * TUILE;
-                if (c === "P") {
-                    etat.depart = { x: px + 3, y: py + TUILE - 46 };
-                } else if (c === "X") {
-                    etat.sortie = { x: px + 4, y: py - 4, w: 24, h: 36 };
-                } else if (c === "o") {
-                    etat.paquetsAuSol.push({ x: px + 8, y: py + 8, w: 16, h: 16, pris: false, t: 0 });
-                } else if (c === "e" || c === "c" || c === "a" || c === "b") {
-                    ajouterEntite(c, px, py);
-                } else if (c === "1" || c === "2" || c === "3" || c === "4") {
-                    etat.appareils.push(creerAppareil(c, x, y));
-                }
+        var objets = niveau.objets || [];
+        objets.forEach(function (o) {
+            var px = o.tx * TUILE;
+            var py = o.ty * TUILE;
+            if (o.type === "depart") {
+                etat.depart = { x: px + 4, y: py + TUILE - 58 };
+            } else if (o.type === "sortie") {
+                etat.sortie = { x: px + 3, y: py + TUILE - 46, w: 26, h: 46 };
+            } else if (o.type === "paquet") {
+                etat.paquetsSol.push({ x: px + 8, y: py + 6, w: 16, h: 20, pris: false, t: Math.random() * 6 });
+            } else if (o.type === "appareil") {
+                var fiche = (window.JEU_APPAREILS || {})[o.cle] || {};
+                etat.appareils.push({
+                    cle: o.cle, fiche: fiche, tx: o.tx, ty: o.ty,
+                    x: px, y: py + TUILE,
+                    centreX: px + TUILE / 2, centreY: py + TUILE / 2,
+                    repare: false, progres: 0
+                });
+            } else if (o.type === "eleve") {
+                creerEntite("eleve", px, py, o.modele || 0);
+            } else if (o.type === "chien") {
+                creerEntite("chien", px, py);
+            } else if (o.type === "avion") {
+                creerEntite("avion", px, py);
+            } else if (o.type === "ballon") {
+                creerEntite("ballon", px, py);
             }
-        }
+        });
 
         etat.joueur = {
-            x: etat.depart.x, y: etat.depart.y, w: 26, h: 46,
-            vx: 0, vy: 0, auSol: false, face: 1,
-            anim: "repos", animT: 0, animFinie: false,
-            invulnerable: 0, reparation: 0, sautDemande: false,
-            tombe: false, reparationEnCours: false
+            x: etat.depart.x, y: etat.depart.y, w: 24, h: 58,
+            vx: 0, vy: 0, face: 1, auSol: false,
+            coyote: 0, tampon: 0, tempsAnim: 0,
+            invulnerable: 0, reparation: 0, reparationEnCours: false
         };
-        etat.cameraX = borne(etat.joueur.x - VUE_L / 2, 0,
-                             Math.max(0, etat.largeurNiveau * TUILE - VUE_L));
-
-        if (elObjectif) { elObjectif.textContent = niveau.objectif; }
-        if (elHudNiveau) { elHudNiveau.textContent = niveau.titre; }
+        majCamera(1);
         majHud();
+        majIndication();
         dessiner();
     }
 
-    function creerAppareil(symbole, tx, ty) {
-        var fiche = (window.APPAREILS_PLATEFORME || {})[symbole] || {};
-        var cote = TUILE;
-        return {
-            symbole: symbole,
-            fiche: fiche,
-            tx: tx, ty: ty,
-            x: tx * TUILE,
-            // l'image est posée au sol de sa case, centrée horizontalement
-            y: ty * TUILE + TUILE,
-            repare: false,
-            progres: 0,
-            centreX: tx * TUILE + cote / 2,
-            centreY: ty * TUILE + cote / 2
-        };
-    }
-
-    function ajouterEntite(symbole, px, py) {
-        var e = { type: symbole, t: Math.random() * 6.28, etourdi: 0, phase: 0 };
-        if (symbole === "e") {
-            var modeles = [["eleveA1", "eleveA2"], ["eleveB1", "eleveB2"], ["eleveC1", "eleveC2"]];
-            var modele = modeles[etat.entites.length % modeles.length];
-            e.images = modele;
-            e.w = 22; e.h = 52;
-            e.x = px + 5; e.y = py + TUILE - e.h;
-            e.vx = -55; e.vy = 0;
-            e.gravite = true;
-            e.vitesse = 55;
-        } else if (symbole === "c") {
-            e.images = ["chienA", "chienB"];
-            e.w = 24; e.h = 18;
-            e.x = px + 4; e.y = py + TUILE - e.h;
-            e.vx = -95; e.vy = 0;
-            e.gravite = true;
-            e.vitesse = 95;
-        } else if (symbole === "a") {
-            e.images = ["avion"];
+    function creerEntite(type, px, py, modele) {
+        var e = { type: type, t: Math.random() * 6.28, etourdi: 0, phase: 0 };
+        if (type === "eleve") {
+            e.perso = ["eleve-01-leo", "eleve-02-ines", "eleve-03-omar",
+                       "eleve-04-chloe", "eleve-05-yanis"][modele % 5];
+            e.w = 22; e.h = 58;
+            e.x = px + 5; e.y = py + TUILE - 58;
+            e.vx = -46; e.vitesse = 46; e.gravite = true;
+        } else if (type === "chien") {
+            e.w = 30; e.h = 20; e.echelle = 2;
+            e.x = px + 2; e.y = py + TUILE - 20;
+            e.vx = -110; e.vitesse = 110; e.gravite = true;
+        } else if (type === "avion") {
             e.w = 26; e.h = 14;
-            e.x = px + 3; e.y = py + 8;
-            e.vx = -80; e.vy = 0;
-            e.gravite = false;
-            e.vitesse = 80;
-            e.baseY = e.y;
-            e.vol = true;
+            e.x = px + 3; e.y = py + 6;
+            e.vx = -95; e.vitesse = 95; e.vol = true; e.baseY = e.y;
         } else {
-            e.images = ["ballon"];
             e.w = 22; e.h = 22;
-            e.x = px + 5; e.y = py + TUILE - e.h;
-            e.vx = -30; e.vy = 0;
-            e.gravite = true;
-            e.rebond = true;
-            e.vitesse = 30;
+            e.x = px + 5; e.y = py + TUILE - 22;
+            e.vx = -34; e.vitesse = 34; e.gravite = true; e.rebond = true;
         }
         etat.entites.push(e);
     }
@@ -1217,10 +1432,8 @@ window.APPAREILS_PLATEFORME = {
     // ── Physique ────────────────────────────────────────────────────────────
     function deplacerX(box, dx) {
         box.x += dx;
-        var ty0 = Math.floor(box.y / TUILE);
-        var ty1 = Math.floor((box.y + box.h - 1) / TUILE);
-        var tx0 = Math.floor(box.x / TUILE);
-        var tx1 = Math.floor((box.x + box.w - 1) / TUILE);
+        var ty0 = Math.floor(box.y / TUILE), ty1 = Math.floor((box.y + box.h - 1) / TUILE);
+        var tx0 = Math.floor(box.x / TUILE), tx1 = Math.floor((box.x + box.w - 1) / TUILE);
         for (var ty = ty0; ty <= ty1; ty += 1) {
             for (var tx = tx0; tx <= tx1; tx += 1) {
                 if (!estSolide(tx, ty)) { continue; }
@@ -1235,10 +1448,8 @@ window.APPAREILS_PLATEFORME = {
     function deplacerY(box, dy) {
         box.y += dy;
         var touche = false;
-        var ty0 = Math.floor(box.y / TUILE);
-        var ty1 = Math.floor((box.y + box.h - 1) / TUILE);
-        var tx0 = Math.floor(box.x / TUILE);
-        var tx1 = Math.floor((box.x + box.w - 1) / TUILE);
+        var ty0 = Math.floor(box.y / TUILE), ty1 = Math.floor((box.y + box.h - 1) / TUILE);
+        var tx0 = Math.floor(box.x / TUILE), tx1 = Math.floor((box.x + box.w - 1) / TUILE);
         for (var ty = ty0; ty <= ty1; ty += 1) {
             for (var tx = tx0; tx <= tx1; tx += 1) {
                 if (!estSolide(tx, ty)) { continue; }
@@ -1250,17 +1461,13 @@ window.APPAREILS_PLATEFORME = {
         return touche;
     }
 
-    /* Contact avec le sol — à ne pas confondre avec « collision pendant ce
-       pas ». Une collision n'arrive qu'au pas où le personnage retombe ; le
-       pas suivant, il repose exactement sur la dalle et AUCUNE collision n'a
-       lieu. Déduire « au sol » de la collision du pas courant rend donc le
-       saut inopérant un pas sur deux : le personnage n'arrive à sauter
-       qu'une fois sur deux, ce qui se ressent comme une commande cassée.
-       On teste donc la présence d'une tuile solide juste sous les pieds. */
+    /* Contact avec le sol : on teste la tuile sous les pieds, et non la
+       collision du pas courant. Un personnage posé sur une dalle ne
+       collisionne pas à chaque pas — déduire « au sol » de la collision
+       rendrait le saut inopérant un pas sur deux. */
     function contactSol(box) {
         var ty = Math.floor((box.y + box.h + 1) / TUILE);
-        var tx0 = Math.floor(box.x / TUILE);
-        var tx1 = Math.floor((box.x + box.w - 1) / TUILE);
+        var tx0 = Math.floor(box.x / TUILE), tx1 = Math.floor((box.x + box.w - 1) / TUILE);
         for (var tx = tx0; tx <= tx1; tx += 1) {
             if (estSolide(tx, ty)) { return true; }
         }
@@ -1271,228 +1478,169 @@ window.APPAREILS_PLATEFORME = {
         var j = etat.joueur;
         if (!j) { return; }
 
-        // ── déplacement horizontal
-        var direction = 0;
-        if (commandes.gauche) { direction -= 1; }
-        if (commandes.droite) { direction += 1; }
-        if (direction !== 0) { j.face = direction; }
-        j.vx = direction * VITESSE;
+        // ── horizontal : accélération et freinage
+        var direction = (commandes.droite ? 1 : 0) - (commandes.gauche ? 1 : 0);
+        if (direction !== 0) {
+            j.vx += direction * ACCELERATION * dt;
+            j.vx = borne(j.vx, -VITESSE_MAX, VITESSE_MAX);
+            j.face = direction;
+        } else {
+            var frein = FREINAGE * dt;
+            if (Math.abs(j.vx) <= frein) { j.vx = 0; }
+            else { j.vx -= Math.sign(j.vx) * frein; }
+        }
+
+        // ── coyote time et mémorisation de l'appui
+        j.coyote = j.auSol ? COYOTE : Math.max(0, j.coyote - dt);
+        j.tampon = commandes.saut ? TAMPON_SAUT : Math.max(0, j.tampon - dt);
 
         // ── saut
-        if (commandes.saut && j.auSol) {
+        if (j.tampon > 0 && j.coyote > 0) {
             j.vy = -SAUT;
+            j.coyote = 0;
+            j.tampon = 0;
             j.auSol = false;
-            commandes.sautConsomme = true;
+            ajouterPoussiere(j.x + j.w / 2, j.y + j.h, 6);
+            if (sons.saut) { sons.saut(); }
         }
-        if (!commandes.saut) { commandes.sautConsomme = false; }
+        // saut à hauteur variable : relâcher coupe la montée
+        if (!commandes.saut && j.vy < 0) { j.vy *= Math.pow(COUPE_SAUT, dt * 60); }
 
         // ── gravité
-        j.vy += GRAVITE * dt;
-        if (j.vy > 1000) { j.vy = 1000; }
+        j.vy = Math.min(j.vy + GRAVITE * dt, VITESSE_CHUTE_MAX);
 
         deplacerX(j, j.vx * dt);
-        var bloque = deplacerY(j, j.vy * dt);
-        if (bloque) { j.vy = 0; }
-        j.auSol = contactSol(j);
+        var etaitAuSol = j.auSol;
+        deplacerY(j, j.vy * dt);
+        var auSol = contactSol(j);
+        if (auSol && !etat.auSolPrecedent && j.vy > 300) {
+            ajouterPoussiere(j.x + j.w / 2, j.y + j.h, 4);
+        }
+        j.auSol = auSol;
+        if (auSol && j.vy > 0) { j.vy = 0; }
+        etat.auSolPrecedent = auSol;
 
-        // ── animation du professeur
-        if (j.invulnerable > 0 && j.invulnerable < 0.35) {
-            // rien : le clignotement est géré au rendu
-        }
-        var nouvelleAnim;
-        if (j.reparationEnCours) {
-            nouvelleAnim = "repos";
-        } else if (!j.auSol) {
-            nouvelleAnim = "repos";
-        } else if (j.vx !== 0) {
-            nouvelleAnim = j.face > 0 ? "marcheD" : "marcheG";
-        } else {
-            nouvelleAnim = "repos";
-        }
-        changerAnim(j, nouvelleAnim, dt);
-        j.animT += dt;
+        // ── animation
+        j.tempsAnim += dt;
         if (j.invulnerable > 0) { j.invulnerable -= dt; }
 
-        // ── chute hors du monde
-        if (j.y > etat.lignes.length * TUILE + 160) {
+        // ── chute hors du niveau : on perd un cœur, on repart au départ
+        if (j.y > etat.hauteur * TUILE + 120) {
             blesser(true);
-            j.x = etat.depart.x;
-            j.y = etat.depart.y;
-            j.vx = 0;
-            j.vy = 0;
+            j.x = etat.depart.x; j.y = etat.depart.y;
+            j.vx = 0; j.vy = 0;
         }
 
-        // ── réparation de l'appareil le plus proche
+        // ── réparation
         j.reparationEnCours = false;
         var proche = appareilProche();
-        if (proche && commandes.reparer && !proche.repare) {
+        if (proche && !proche.repare && commandes.reparer) {
             j.reparationEnCours = true;
             proche.progres += dt / DUREE_REPARATION;
-            if (proche.progres >= 1) {
-                proche.progres = 1;
-                reparerAppareil(proche);
-            }
+            if (proche.progres >= 1) { reparerAppareil(proche); }
         } else if (proche && !proche.repare) {
             proche.progres = Math.max(0, proche.progres - dt * 2);
         }
-        majIndication(proche);
 
-        // ── lancer d'écrou
-        if (commandes.lancer && j.lancerDispo) {
-            lancerEcrou();
-        }
-
-        majProjectiles(dt);
         majEntites(dt);
-        majPaquets();
-        verifierSortie();
+        majPaquets(dt);
+        majParticules(dt);
         majCamera(dt);
-    }
-
-    function changerAnim(j, nom, dt) {
-        if (j.anim === nom && !(ANIM[nom] && !ANIM[nom].boucle && j.animFinie)) { return; }
-        j.anim = nom;
-        j.animT = 0;
-        j.animFinie = false;
-    }
-
-    function animJouerUneFois(nom) {
-        var j = etat.joueur;
-        if (!j) { return; }
-        j.anim = nom;
-        j.animT = 0;
-        j.animFinie = false;
-        j.animPrioritaire = ANIM[nom].periode * ANIM[nom].images;
+        majIndication(proche);
+        verifierContacts();
+        verifierSortie();
     }
 
     function majEntites(dt) {
+        var j = etat.joueur;
         for (var i = 0; i < etat.entites.length; i += 1) {
             var e = etat.entites[i];
             e.phase += dt;
-            if (e.etourdi > 0) {
-                e.etourdi -= dt;
-                continue;
-            }
+            if (e.etourdi > 0) { e.etourdi -= dt; continue; }
             if (e.vol) {
                 e.x += e.vx * dt;
-                e.y = e.baseY + Math.sin(e.phase * 2.1) * 14;
-                // demi-tour aux bords du niveau
+                e.y = e.baseY + Math.sin(e.phase * 2.2) * 16;
                 if (e.x < 0) { e.x = 0; e.vx = Math.abs(e.vx); }
-                var limiteDroite = etat.largeurNiveau * TUILE - e.w;
-                if (e.x > limiteDroite) { e.x = limiteDroite; e.vx = -Math.abs(e.vx); }
+                var lim = etat.largeur * TUILE - e.w;
+                if (e.x > lim) { e.x = lim; e.vx = -Math.abs(e.vx); }
                 continue;
             }
-            e.vy += GRAVITE * dt;
-            var avantX = e.x;
-            if (deplacerX(e, e.vx * dt)) {
-                e.vx = -e.vx;
-            }
-            var avantY = e.y;
+            e.vy = Math.min((e.vy || 0) + GRAVITE * dt, VITESSE_CHUTE_MAX);
+            if (deplacerX(e, e.vx * dt)) { e.vx = -e.vx; }
             deplacerY(e, e.vy * dt);
-            // même raison que pour le professeur : on teste le contact, pas
-            // la collision du pas courant (sinon le ballon rate un rebond
-            // sur deux et s'enfonce dans la dalle)
             if (contactSol(e)) {
-                if (e.rebond) {
-                    e.vy = -420;
-                } else {
-                    e.vy = 0;
-                }
+                if (e.rebond) { e.vy = -430; } else { e.vy = 0; }
             }
-            // ne pas tomber dans un trou : demi-tour au bord
+            // demi-tour au bord : ne pas tomber dans un trou
             if (!e.rebond) {
-                var devantX = e.vx > 0 ? e.x + e.w + 2 : e.x - 2;
-                var tx = Math.floor(devantX / TUILE);
+                var devant = e.vx > 0 ? e.x + e.w + 2 : e.x - 2;
+                var tx = Math.floor(devant / TUILE);
                 var ty = Math.floor((e.y + e.h + 4) / TUILE);
-                if (!estSolide(tx, ty) && e.y + e.h >= (etat.lignes.length - 2) * TUILE) {
-                    e.vx = -e.vx;
-                    e.x = avantX;
-                }
-                if (Math.abs(e.x - avantX) < 0.01 && Math.abs(avantY - e.y) < 0.01) {
-                    // bloqué : on repart dans l'autre sens
+                if (!estSolide(tx, ty) && e.y + e.h >= (etat.hauteur - 3) * TUILE) {
                     e.vx = -e.vx;
                 }
             }
         }
     }
 
-    function majProjectiles(dt) {
-        for (var i = etat.projectiles.length - 1; i >= 0; i -= 1) {
-            var p = etat.projectiles[i];
-            p.vy += GRAVITE * 0.55 * dt;
-            p.x += p.vx * dt;
-            p.y += p.vy * dt;
-            p.vie -= dt;
-            var touche = false;
-            for (var k = 0; k < etat.entites.length; k += 1) {
-                var e = etat.entites[k];
-                if (e.etourdi > 0) { continue; }
-                if (rectangleSeChevauchent(p, e)) {
-                    e.etourdi = DUREE_ETOURDI;
-                    touche = true;
-                    break;
-                }
-            }
-            if (touche || p.vie <= 0 || estSolide(Math.floor(p.x / TUILE), Math.floor(p.y / TUILE))) {
-                etat.projectiles.splice(i, 1);
-            }
-        }
+    function majPaquets(dt) {
         var j = etat.joueur;
-        if (j && j.lancerDispo !== true && commandes.lancer !== true) {
-            j.lancerDispo = true;
-        }
-    }
-
-    function lancerEcrou() {
-        var j = etat.joueur;
-        j.lancerDispo = false;
-        animJouerUneFois("lancer");
-        etat.projectiles.push({
-            x: j.x + j.w / 2 + j.face * 18,
-            y: j.y + 16,
-            w: 10, h: 10,
-            vx: j.face * 380,
-            vy: -140,
-            vie: 1.3
-        });
-        // l'écrou ne peut repartir qu'après un court délai
-        window.setTimeout(function () {
-            if (etat.joueur) { etat.joueur.lancerDispo = true; }
-        }, 320);
-    }
-
-    function majPaquets() {
-        var j = etat.joueur;
-        for (var i = 0; i < etat.paquetsAuSol.length; i += 1) {
-            var p = etat.paquetsAuSol[i];
-            p.t += 0.05;
+        for (var i = 0; i < etat.paquetsSol.length; i += 1) {
+            var p = etat.paquetsSol[i];
+            p.t += dt * 3;
             if (p.pris) { continue; }
-            if (rectangleSeChevauchent(j, p)) {
+            if (chevauche(j, p)) {
                 p.pris = true;
                 etat.paquets += 1;
                 etat.paquetsNiveau += 1;
+                ajouterEtincelles(p.x + 8, p.y + 10);
+                if (sons.paquet) { sons.paquet(); }
                 majHud();
-                annoncer("Paquet de données récupéré. Total : " + etat.paquets +
-                         ", ce niveau : " + etat.paquetsNiveau);
             }
+        }
+    }
+
+    function ajouterPoussiere(x, y, nombre) {
+        if (reduireMouvement.matches) { return; }
+        for (var i = 0; i < nombre; i += 1) {
+            etat.particules.push({
+                x: x + (Math.random() - 0.5) * 14, y: y - 2,
+                vx: (Math.random() - 0.5) * 70, vy: -Math.random() * 60,
+                vie: 0.4 + Math.random() * 0.25, max: 0.65, couleur: "#d3dde4", taille: 2
+            });
+        }
+    }
+
+    function ajouterEtincelles(x, y) {
+        if (reduireMouvement.matches) { return; }
+        for (var i = 0; i < 8; i += 1) {
+            var a = (Math.PI * 2 * i) / 8;
+            etat.particules.push({
+                x: x, y: y, vx: Math.cos(a) * 90, vy: Math.sin(a) * 90 - 30,
+                vie: 0.45, max: 0.45, couleur: "#e0a72e", taille: 3
+            });
+        }
+    }
+
+    function majParticules(dt) {
+        for (var i = etat.particules.length - 1; i >= 0; i -= 1) {
+            var p = etat.particules[i];
+            p.vie -= dt;
+            if (p.vie <= 0) { etat.particules.splice(i, 1); continue; }
+            p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 420 * dt;
         }
     }
 
     function appareilProche() {
         var j = etat.joueur;
-        if (!j) { return null; }
-        var centreJx = j.x + j.w / 2;
-        var centreJy = j.y + j.h / 2;
-        var meilleur = null;
-        var meilleureDistance = PORTEE_REPARATION;
+        var cx = j.x + j.w / 2, cy = j.y + j.h / 2;
+        var meilleur = null, distance = PORTEE_REPARATION;
         for (var i = 0; i < etat.appareils.length; i += 1) {
             var a = etat.appareils[i];
-            var dx = Math.abs(a.centreX - centreJx);
-            var dy = Math.abs(a.centreY - centreJy);
-            var d = dx + dy * 0.6;
-            if (dx < PORTEE_REPARATION && dy < 90 && d < meilleureDistance) {
-                meilleureDistance = d;
-                meilleur = a;
+            var dx = Math.abs(a.centreX - cx), dy = Math.abs(a.centreY - cy);
+            var d = dx + dy * 0.5;
+            if (dx < PORTEE_REPARATION && dy < 110 && d < distance) {
+                distance = d; meilleur = a;
             }
         }
         return meilleur;
@@ -1501,19 +1649,31 @@ window.APPAREILS_PLATEFORME = {
     function reparerAppareil(appareil) {
         appareil.repare = true;
         appareil.progres = 1;
-        animJouerUneFois("rigoler");
         majHud();
+        if (sons.reparation) { sons.reparation(); }
+        ajouterEtincelles(appareil.centreX, appareil.centreY);
         annoncer(appareil.fiche.nom + " réparé. " + appareil.fiche.role);
         afficherFiche(appareil);
+    }
+
+    function verifierContacts() {
+        var j = etat.joueur;
+        if (!j || j.invulnerable > 0) { return; }
+        for (var i = 0; i < etat.entites.length; i += 1) {
+            var e = etat.entites[i];
+            if (e.etourdi > 0) { continue; }
+            if (chevauche(j, e)) {
+                blesser(false);
+                return;
+            }
+        }
     }
 
     function verifierSortie() {
         var j = etat.joueur;
         if (!j || etat.fini || !etat.sortie) { return; }
         if (appareilsRestants() > 0) { return; }
-        if (rectangleSeChevauchent(j, etat.sortie)) {
-            terminerNiveau();
-        }
+        if (chevauche(j, etat.sortie)) { terminerNiveau(); }
     }
 
     function appareilsRestants() {
@@ -1526,23 +1686,21 @@ window.APPAREILS_PLATEFORME = {
 
     function blesser(chute) {
         var j = etat.joueur;
-        if (!j) { return; }
         if (!chute && j.invulnerable > 0) { return; }
         etat.coeurs -= 1;
         j.invulnerable = INVULNERABILITE;
-        j.vy = -280;
-        j.vx = -j.face * 200;
-        if (!chute) { etat.secousse = 0.25; }
+        j.vy = -300;
+        j.vx = -j.face * 220;
+        if (!reduireMouvement.matches) { etat.secousse = 0.3; }
+        if (sons.degat) { sons.degat(); }
         majHud();
         if (etat.coeurs <= 0) {
-            animJouerUneFois("rage");
-            annoncer("Plus de cœurs. Le niveau recommence.");
             etat.mode = "perdu";
+            annoncer("Plus de cœurs : le niveau recommence.");
             window.setTimeout(function () {
                 if (etat.mode === "perdu") {
                     chargerNiveau(etat.niveau);
                     etat.mode = "jeu";
-                    annoncer("Niveau " + (etat.niveau + 1) + " recommencé.");
                 }
             }, 900);
         } else {
@@ -1552,417 +1710,353 @@ window.APPAREILS_PLATEFORME = {
 
     function majCamera(dt) {
         var j = etat.joueur;
-        var cible = borne(j.x + j.w / 2 - VUE_L / 2, 0,
-                          Math.max(0, etat.largeurNiveau * TUILE - VUE_L));
-        etat.cameraX += (cible - etat.cameraX) * Math.min(1, dt * 10);
+        if (!j) { return; }
+        var cible = j.x + j.w / 2 - ECRAN_L * 0.42;
+        cible = borne(cible, 0, Math.max(0, etat.largeur * TUILE - ECRAN_L));
+        etat.cameraX += (cible - etat.cameraX) * Math.min(1, dt * 8);
         if (etat.secousse > 0) { etat.secousse = Math.max(0, etat.secousse - dt); }
     }
 
     // ── Rendu ───────────────────────────────────────────────────────────────
     function dessiner() {
         if (!ctx) { return; }
-        var secousseX = 0;
-        var secousseY = 0;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.imageSmoothingEnabled = false;
+        ctx.clearRect(0, 0, ECRAN_L, ECRAN_H);
+
+        var sx = 0, sy = 0;
         if (etat.secousse > 0 && !reduireMouvement.matches) {
-            secousseX = (Math.random() - 0.5) * 6 * etat.secousse * 4;
-            secousseY = (Math.random() - 0.5) * 6 * etat.secousse * 4;
+            sx = (Math.random() - 0.5) * 10 * etat.secousse;
+            sy = (Math.random() - 0.5) * 10 * etat.secousse;
         }
 
+        dessinerParallaxe(sx, sy);
+
         ctx.save();
-        ctx.imageSmoothingEnabled = false;
-        ctx.clearRect(0, 0, VUE_L, VUE_H);
-
-        dessinerFond();
-
-        ctx.translate(-Math.round(etat.cameraX) + secousseX, secousseY);
-
-        dessinerBatiments();
+        ctx.translate(-Math.round(etat.cameraX) + sx, sy);
         dessinerTuiles();
         dessinerSortie();
         dessinerPaquets();
         dessinerAppareils();
-        dessinerProjectiles();
         dessinerEntites();
+        dessinerParticules();
         dessinerJoueur();
-
         ctx.restore();
     }
 
-    function dessinerFond() {
-        var degrade = ctx.createLinearGradient(0, 0, 0, VUE_H);
-        degrade.addColorStop(0, "#dbeafe");
-        degrade.addColorStop(0.55, "#eff6ff");
-        degrade.addColorStop(1, "#f8fafc");
-        ctx.fillStyle = degrade;
-        ctx.fillRect(0, 0, VUE_L, VUE_H);
-
-        // mur du collège : bande plus claire + plinthe
-        ctx.fillStyle = "#e2e8f0";
-        ctx.fillRect(0, VUE_H - 96, VUE_L, 96);
-        ctx.fillStyle = "#cbd5e1";
-        ctx.fillRect(0, VUE_H - 100, VUE_L, 4);
+    function bande(nom, facteur, y, sx, sy) {
+        var img = images[nom];
+        if (!img) { return; }
+        var largeur = img.width;
+        var decalage = -((etat.cameraX * facteur) % largeur);
+        for (var x = decalage - largeur; x < ECRAN_L + largeur; x += largeur) {
+            ctx.drawImage(img, Math.round(x + sx), Math.round(y + sy));
+        }
     }
 
-    function dessinerBatiments() {
-        // silhouette de bâtiments au loin, défilement lent (parallaxe)
-        var decalage = etat.cameraX * 0.35;
-        var cles = ["batiment1", "batiment2", "batiment3"];
-        for (var i = 0; i < 3; i += 1) {
-            var img = images[cles[i]];
-            var x = (i * 420) - (decalage % (3 * 420));
-            var y = VUE_H - 150 - (i % 2) * 18;
-            if (img) {
-                var largeur = 132;
-                var hauteur = Math.round(img.height * (largeur / img.width));
-                ctx.globalAlpha = 0.35;
-                ctx.drawImage(img, Math.round(x), y, largeur, hauteur);
-                ctx.globalAlpha = 1;
-            } else {
-                ctx.fillStyle = "#cbd5e1";
-                ctx.fillRect(Math.round(x) + 20, y + 20, 90, 130);
-            }
-        }
+    function dessinerParallaxe(sx, sy) {
+        ctx.fillStyle = "#8ec5e8";
+        ctx.fillRect(0, 0, ECRAN_L, ECRAN_H);
+        bande("ciel", 0.10, 0, sx, sy);
+        bande("loin", 0.28, ECRAN_H - 512 + 150, sx, sy);
+        bande("milieu", 0.55, ECRAN_H - 512 + 96, sx, sy);
     }
 
     function dessinerTuiles() {
-        var debut = Math.max(0, Math.floor(etat.cameraX / TUILE) - 1);
-        var fin = Math.min(etat.largeurNiveau - 1,
-                           Math.ceil((etat.cameraX + VUE_L) / TUILE) + 1);
-        for (var y = 0; y < etat.lignes.length; y += 1) {
-            for (var x = debut; x <= fin; x += 1) {
-                var c = etat.lignes[y].charAt(x);
-                if (c === "#") {
-                    dessinerSol(x * TUILE, y * TUILE);
-                } else if (c === "=") {
-                    dessinerPlateforme(x * TUILE, y * TUILE);
-                }
+        var img = images.tileset;
+        if (!img) { return; }
+        var colonneTuiles = Math.floor(img.width / TUILE);
+        var x0 = Math.max(0, Math.floor(etat.cameraX / TUILE) - 1);
+        var x1 = Math.min(etat.largeur - 1, Math.ceil((etat.cameraX + ECRAN_L) / TUILE) + 1);
+        for (var y = 0; y < etat.hauteur; y += 1) {
+            for (var x = x0; x <= x1; x += 1) {
+                var caractere = etat.carte[y].charAt(x);
+                var indice = indiceTuile(caractere);
+                if (!indice) { continue; }
+                var sx = (indice % colonneTuiles) * TUILE;
+                var sy = Math.floor(indice / colonneTuiles) * TUILE;
+                ctx.drawImage(img, sx, sy, TUILE, TUILE,
+                              x * TUILE, y * TUILE, TUILE, TUILE);
             }
         }
     }
 
-    function dessinerSol(x, y) {
-        ctx.fillStyle = "#94a3b8";
-        ctx.fillRect(x, y, TUILE, TUILE);
-        ctx.fillStyle = "#cbd5e1";
-        ctx.fillRect(x + 2, y + 2, TUILE - 4, TUILE - 4);
-        ctx.fillStyle = "#bfdbfe";
-        ctx.fillRect(x + 6, y + 8, 8, 6);
-        ctx.fillStyle = "#93c5fd";
-        ctx.fillRect(x + 18, y + 8, 8, 6);
-        ctx.fillStyle = "#bae6fd";
-        ctx.fillRect(x + 12, y + 20, 12, 5);
-        ctx.strokeStyle = "#64748b";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x + 1, y + 1, TUILE - 2, TUILE - 2);
-    }
-
-    function dessinerPlateforme(x, y) {
-        ctx.fillStyle = "#64748b";
-        ctx.fillRect(x, y, TUILE, 12);
-        ctx.fillStyle = "#f1f5f9";
-        ctx.fillRect(x + 2, y + 2, TUILE - 4, 8);
-        ctx.fillStyle = "#94a3b8";
-        for (var i = 4; i < TUILE - 4; i += 8) {
-            ctx.fillRect(x + i, y + 3, 2, 6);
-        }
-        ctx.strokeStyle = "#475569";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x + 1, y + 1, TUILE - 2, 10);
-    }
-
-    function dessinerSortie() {
-        var s = etat.sortie;
-        if (!s) { return; }
-        var ouvert = appareilsRestants() === 0;
-        ctx.fillStyle = ouvert ? "#059669" : "#94a3b8";
-        ctx.fillRect(s.x, s.y, s.w, s.h);
-        ctx.fillStyle = ouvert ? "#a7f3d0" : "#e2e8f0";
-        ctx.fillRect(s.x + 4, s.y + 4, s.w - 8, s.h - 10);
-        ctx.strokeStyle = "#1e293b";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(s.x + 1, s.y + 1, s.w - 2, s.h - 2);
-        ctx.fillStyle = "#1e293b";
-        ctx.font = "bold 14px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(ouvert ? "⇥" : "🔒", s.x + s.w / 2, s.y + s.h - 8);
-        ctx.textAlign = "left";
-    }
-
     function dessinerPaquets() {
-        for (var i = 0; i < etat.paquetsAuSol.length; i += 1) {
-            var p = etat.paquetsAuSol[i];
+        for (var i = 0; i < etat.paquetsSol.length; i += 1) {
+            var p = etat.paquetsSol[i];
             if (p.pris) { continue; }
-            var flottement = Math.sin(p.t) * 2;
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(p.x - 1, p.y - 1 + flottement, p.w + 2, p.h + 2);
-            ctx.fillStyle = "#f59e0b";
-            ctx.fillRect(p.x + 1, p.y + 1 + flottement, p.w - 2, p.h - 2);
-            ctx.fillStyle = "#fde68a";
-            ctx.fillRect(p.x + 4, p.y + 4 + flottement, 4, 4);
-            ctx.fillRect(p.x + 9, p.y + 8 + flottement, 4, 4);
+            var flottement = Math.sin(p.t) * 3;
+            var x = p.x, y = p.y + flottement;
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = "#e0a72e";
+            ctx.beginPath(); ctx.arc(x + 8, y + 10, 13, 0, Math.PI * 2); ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "#2b2230";
+            ctx.fillRect(x - 1, y - 1, 18, 22);
+            ctx.fillStyle = "#e0a72e";
+            ctx.fillRect(x + 1, y + 1, 14, 18);
+            ctx.fillStyle = "#f6d98a";
+            ctx.fillRect(x + 4, y + 4, 5, 5);
+            ctx.fillRect(x + 8, y + 11, 5, 5);
         }
     }
 
     function dessinerAppareils() {
         for (var i = 0; i < etat.appareils.length; i += 1) {
             var a = etat.appareils[i];
-            var img = images[a.fiche.image];
-            var largeur = img ? img.width : 40;
-            var hauteur = img ? img.height : 56;
+            var img = images[(a.fiche && a.fiche.image) || a.cle];
+            var largeur = img ? img.width : 44;
+            var hauteur = img ? img.height : 60;
             var dx = Math.round(a.centreX - largeur / 2);
             var dy = Math.round(a.y - hauteur);
 
-            // halo d'état : rouge clignotant = en panne, vert = réparé
             var battement = 0.5 + 0.5 * Math.sin(etat.temps * 4);
-            ctx.globalAlpha = a.repare ? 0.18 : 0.12 + 0.18 * battement;
-            ctx.fillStyle = a.repare ? "#22c55e" : "#ef4444";
+            ctx.globalAlpha = a.repare ? 0.18 : 0.10 + 0.20 * battement;
+            ctx.fillStyle = a.repare ? "#2e8b57" : "#c0392b";
             ctx.beginPath();
-            ctx.ellipse(a.centreX, a.y - 6, largeur / 2 + 6, 14, 0, 0, Math.PI * 2);
+            ctx.ellipse(a.centreX, a.y - 8, largeur / 2 + 8, 16, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.globalAlpha = 1;
 
             if (img) {
                 ctx.drawImage(img, dx, dy, largeur, hauteur);
             } else {
-                // repli dessiné par code (asset absent)
-                ctx.fillStyle = "#475569";
-                ctx.fillRect(dx, dy, largeur, hauteur);
-                ctx.fillStyle = "#e2e8f0";
-                ctx.fillRect(dx + 4, dy + 4, largeur - 8, hauteur - 8);
+                ctx.fillStyle = "#5c6a78"; ctx.fillRect(dx, dy, largeur, hauteur);
+                ctx.fillStyle = "#a3b2bf"; ctx.fillRect(dx + 4, dy + 4, largeur - 8, hauteur - 8);
             }
-
             if (a.repare) {
-                ctx.fillStyle = "#059669";
+                ctx.fillStyle = "#2e8b57";
+                ctx.beginPath(); ctx.arc(dx + largeur - 8, dy + 8, 11, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 4;
                 ctx.beginPath();
-                ctx.arc(dx + largeur - 6, dy + 6, 9, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = "#ffffff";
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(dx + largeur - 10, dy + 6);
-                ctx.lineTo(dx + largeur - 7, dy + 9);
+                ctx.moveTo(dx + largeur - 14, dy + 8);
+                ctx.lineTo(dx + largeur - 9, dy + 13);
                 ctx.lineTo(dx + largeur - 2, dy + 2);
                 ctx.stroke();
             }
-
-            // jauge de réparation
             if (!a.repare && a.progres > 0) {
-                var largeurJauge = 48;
-                ctx.fillStyle = "#1e293b";
-                ctx.fillRect(a.centreX - largeurJauge / 2 - 2, dy - 14, largeurJauge + 4, 10);
-                ctx.fillStyle = "#22c55e";
-                ctx.fillRect(a.centreX - largeurJauge / 2, dy - 12,
-                             largeurJauge * a.progres, 6);
+                var largeurJauge = 56;
+                ctx.fillStyle = "#2b2230";
+                ctx.fillRect(a.centreX - largeurJauge / 2 - 3, dy - 18, largeurJauge + 6, 12);
+                ctx.fillStyle = "#2e8b57";
+                ctx.fillRect(a.centreX - largeurJauge / 2, dy - 16, largeurJauge * a.progres, 8);
             }
-        }
-    }
-
-    function dessinerProjectiles() {
-        for (var i = 0; i < etat.projectiles.length; i += 1) {
-            var p = etat.projectiles[i];
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(p.x - 2, p.y - 2, p.w + 4, p.h + 4);
-            ctx.fillStyle = "#94a3b8";
-            ctx.fillRect(p.x, p.y, p.w, p.h);
-            ctx.fillStyle = "#e2e8f0";
-            ctx.fillRect(p.x + 3, p.y + 3, 4, 4);
         }
     }
 
     function dessinerEntites() {
         for (var i = 0; i < etat.entites.length; i += 1) {
             var e = etat.entites[i];
-            var cle = e.images[Math.floor(e.phase * (e.vol ? 8 : 6)) % e.images.length];
-            var img = images[cle];
+            var img = null, sx = 0, sw = 64, sh = 64;
+            var cadre = Math.floor(e.phase * 7) % 4;
+            var versDroite = e.vx > 0;
+
+            if (e.type === "eleve") {
+                img = images[e.perso];
+                sx = (versDroite ? CASE.marche[cadre] : CASE.marcheG[cadre]) * 64;
+            } else if (e.type === "chien") {
+                img = images[(Math.floor(e.phase * 8) % 2) ? "chien-b" : "chien-a"];
+                sw = img ? img.width : 20; sh = img ? img.height : 20;
+            } else if (e.type === "avion") {
+                img = images.avion; sw = 32; sh = 32;
+            } else {
+                img = images.ballon; sw = 32; sh = 32;
+            }
             if (!img) {
-                ctx.fillStyle = "#ef4444";
+                ctx.fillStyle = "#c0392b";
                 ctx.fillRect(e.x, e.y, e.w, e.h);
                 continue;
             }
-            var largeur = e.type === "c" ? img.width : img.width;
-            var hauteur = img.height;
+            var echelle = e.echelle || 1;
+            var largeur = sw * echelle, hauteur = sh * echelle;
             var dx = Math.round(e.x + e.w / 2 - largeur / 2);
             var dy = Math.round(e.y + e.h - hauteur);
-            if (e.vol) {
-                dy = Math.round(e.y + e.h / 2 - hauteur / 2);
-                // l'avion en papier vole vers la gauche ou la droite
-                if (e.vx > 0) {
-                    ctx.save();
-                    ctx.translate(dx + largeur, dy);
-                    ctx.scale(-1, 1);
-                    ctx.drawImage(img, 0, 0);
-                    ctx.restore();
-                } else {
-                    ctx.drawImage(img, dx, dy);
-                }
+
+            if (e.type === "eleve") {
+                // la case a des pieds à la ligne 62 : on aligne le sprite dessus
+                dy = Math.round(e.y + e.h - PIEDS_CASE);
+            }
+            // La planche PixelLab contient les deux sens (cases 1-4 vers l'est,
+            // 6-9 vers l'ouest) : aucun miroir n'est nécessaire pour les
+            // personnages, sinon ils se retrouvent retournés deux fois.
+            var retourne = (e.type === "avion" && versDroite);
+
+            if (retourne) {
+                ctx.save();
+                ctx.translate(dx + largeur, dy);
+                ctx.scale(-1, 1);
+                ctx.drawImage(img, sx, 0, sw, sh, 0, 0, largeur, hauteur);
+                ctx.restore();
             } else {
-                ctx.drawImage(img, dx, dy);
+                ctx.drawImage(img, sx, 0, sw, sh, dx, dy, largeur, hauteur);
             }
 
             if (e.etourdi > 0) {
-                ctx.fillStyle = "#fbbf24";
-                ctx.font = "bold 16px system-ui, sans-serif";
+                ctx.fillStyle = "#e0a72e";
+                ctx.font = "bold 18px system-ui, sans-serif";
                 ctx.textAlign = "center";
-                ctx.fillText("✦✦", e.x + e.w / 2, e.y - 6);
+                ctx.fillText("✦ ✦", e.x + e.w / 2, e.y - 8);
                 ctx.textAlign = "left";
             }
         }
     }
 
+    function dessinerParticules() {
+        for (var i = 0; i < etat.particules.length; i += 1) {
+            var p = etat.particules[i];
+            ctx.globalAlpha = Math.max(0, p.vie / p.max);
+            ctx.fillStyle = p.couleur;
+            ctx.fillRect(Math.round(p.x), Math.round(p.y), p.taille, p.taille);
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    function dessinerSortie() {
+        var s = etat.sortie;
+        if (!s) { return; }
+        var ouvert = appareilsRestants() === 0;
+        var pulsation = 0.5 + 0.5 * Math.sin(etat.temps * 4);
+        ctx.globalAlpha = ouvert ? 0.35 + 0.25 * pulsation : 0.15;
+        ctx.fillStyle = ouvert ? "#7aa858" : "#8e9ca8";
+        ctx.beginPath();
+        ctx.ellipse(s.x + s.w / 2, s.y + s.h / 2, 26, 34, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#2b2230";
+        ctx.fillRect(s.x - 2, s.y - 2, s.w + 4, s.h + 4);
+        ctx.fillStyle = ouvert ? "#cfe7c0" : "#cfc4b2";
+        ctx.fillRect(s.x, s.y, s.w, s.h);
+        ctx.fillStyle = ouvert ? "#4f7a35" : "#8a7d6b";
+        ctx.font = "bold 20px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(ouvert ? "→" : "🔒", s.x + s.w / 2, s.y + s.h - 12);
+        ctx.textAlign = "left";
+    }
+
     function dessinerJoueur() {
         var j = etat.joueur;
         if (!j) { return; }
-
-        // clignotement pendant l'invulnérabilité
-        if (j.invulnerable > 0 && Math.floor(j.invulnerable * 12) % 2 === 0) {
+        if (j.invulnerable > 0 && Math.floor(j.invulnerable * 14) % 2 === 0) { return; }
+        var img = images["prof-techno"];
+        if (!img) {
+            ctx.fillStyle = "#727245";
+            ctx.fillRect(j.x, j.y, j.w, j.h);
             return;
         }
-
-        var anim = ANIM[j.anim] || ANIM.repos;
-        var tempsAnim = j.animPrioritaire > 0 ? j.animT : j.animT;
-        var index = Math.floor(tempsAnim / anim.periode);
-        if (anim.boucle) {
-            index = index % anim.images;
+        var case_ = CASE.repos;
+        if (!j.auSol) {
+            case_ = j.face > 0 ? CASE.marche[0] : CASE.marcheG[0];
+        } else if (Math.abs(j.vx) > 12 || j.reparationEnCours) {
+            var suite = j.face > 0 ? CASE.marche : CASE.marcheG;
+            var vitesse = Math.abs(j.vx) > 12 ? Math.abs(j.vx) / 90 : 2.4;
+            case_ = suite[Math.floor(j.tempsAnim * vitesse) % suite.length];
         } else {
-            if (index >= anim.images) {
-                index = anim.images - 1;
-                j.animPrioritaire = 0;
-            }
+            case_ = j.face > 0 ? CASE.repos : CASE.reposG;
         }
-        var planche = images.prof;
         var dx = Math.round(j.x + j.w / 2 - 32);
-        var dy = Math.round(j.y + j.h - 58);
-
-        if (planche) {
-            ctx.drawImage(planche,
-                          index * 64, anim.ligne * 64, 64, 64,
-                          dx, dy, 64, 64);
-        } else {
-            ctx.fillStyle = "#4a7858";
-            ctx.fillRect(j.x, j.y, j.w, j.h);
-        }
+        var dy = Math.round(j.y + j.h - PIEDS_CASE);
+        ctx.drawImage(img, case_ * 64, 0, 64, 64, dx, dy, 64, 64);
     }
 
-    // ── Interface (HUD, fiches, bilans) ─────────────────────────────────────
+    // ── Interface ───────────────────────────────────────────────────────────
     function majHud() {
-        if (elHudCoeurs) {
-            elHudCoeurs.textContent = new Array(Math.max(0, etat.coeurs) + 1).join("❤") ||
-                                      "—";
+        if (ui.coeurs) {
+            ui.coeurs.textContent = etat.coeurs > 0
+                ? new Array(etat.coeurs + 1).join("❤")
+                : "—";
         }
-        if (elHudAppareils) {
+        if (ui.appareils) {
             var total = etat.appareils.length;
-            var faits = total - appareilsRestants();
-            elHudAppareils.textContent = faits + " / " + total;
+            ui.appareils.textContent = (total - appareilsRestants()) + " / " + total;
         }
-        if (elHudPaquets) {
-            elHudPaquets.textContent = String(etat.paquetsNiveau);
-        }
+        if (ui.paquets) { ui.paquets.textContent = String(etat.paquetsNiveau); }
         majMenu();
     }
 
     function majMenu() {
-        if (!elListeNiveaux) { return; }
-        var boutons = elListeNiveaux.querySelectorAll("button[data-niveau]");
+        if (!ui.niveaux) { return; }
+        var boutons = ui.niveaux.querySelectorAll("button[data-niveau]");
         for (var i = 0; i < boutons.length; i += 1) {
-            var bouton = boutons[i];
-            var numero = parseInt(bouton.getAttribute("data-niveau"), 10);
+            var numero = parseInt(boutons[i].getAttribute("data-niveau"), 10);
             var ouvert = numero < etat.debloques;
-            bouton.disabled = !ouvert;
-            bouton.classList.toggle("plat-verrouille", !ouvert);
-            bouton.setAttribute("aria-disabled", ouvert ? "false" : "true");
-            var texte = bouton.querySelector(".plat-numero");
-            if (texte) {
-                texte.textContent = (numero + 1) + ". ";
-            }
+            boutons[i].disabled = !ouvert;
+            boutons[i].setAttribute("aria-disabled", ouvert ? "false" : "true");
         }
     }
 
     function majIndication(proche) {
-        if (!elIndication) { return; }
+        if (!ui.indication) { return; }
         if (!proche) {
-            elIndication.textContent = appareilsRestants() > 0
+            ui.indication.textContent = appareilsRestants() > 0
                 ? "Trouve les appareils en panne (halo rouge) et approche-toi."
-                : "Tout est réparé ! Rejoins la porte verte.";
+                : "Tout est réparé ! Rejoins la sortie verte.";
             return;
         }
-        if (proche.repare) {
-            elIndication.textContent = proche.fiche.nom + " : réparé ✔";
-        } else {
-            elIndication.textContent = "Maintiens E pour réparer le " +
-                proche.fiche.nom.toLowerCase() + ".";
-        }
+        ui.indication.textContent = proche.repare
+            ? proche.fiche.nom + " : réparé ✔"
+            : "Maintiens E pour réparer le " + proche.fiche.nom.toLowerCase() + ".";
     }
 
     function afficherFiche(appareil) {
-        etat.mode = "carte";
-        if (!elFiche) { etat.mode = "jeu"; return; }
-        if (elFicheTitre) {
-            elFicheTitre.textContent = appareil.fiche.nom + " réparé !";
-        }
-        if (elFicheRole) {
-            elFicheRole.textContent = appareil.fiche.role;
-        }
-        elFiche.classList.add("plat-visible");
-        elFiche.setAttribute("aria-hidden", "false");
-        if (elFicheBtn) { elFicheBtn.focus(); }
+        etat.mode = "fiche";
+        if (!ui.fiche) { etat.mode = "jeu"; return; }
+        if (ui.ficheTitre) { ui.ficheTitre.textContent = appareil.fiche.nom + " réparé !"; }
+        if (ui.ficheRole) { ui.ficheRole.textContent = appareil.fiche.role; }
+        ui.fiche.classList.add("visible");
+        ui.fiche.setAttribute("aria-hidden", "false");
+        if (ui.ficheFermer) { ui.ficheFermer.focus(); }
     }
 
     function fermerFiche() {
-        if (elFiche) {
-            elFiche.classList.remove("plat-visible");
-            elFiche.setAttribute("aria-hidden", "true");
+        if (ui.fiche) {
+            ui.fiche.classList.remove("visible");
+            ui.fiche.setAttribute("aria-hidden", "true");
         }
-        if (etat.mode === "carte") { etat.mode = "jeu"; }
+        if (etat.mode === "fiche") { etat.mode = "jeu"; }
         if (zone) { zone.focus(); }
     }
 
     function terminerNiveau() {
         etat.fini = true;
         etat.mode = "bilan";
-        animJouerUneFois("rigoler");
-        var niveaux = window.NIVEAUX_PLATEFORME || [];
+        var niveaux = window.JEU_NIVEAUX || [];
         var dernier = etat.niveau >= niveaux.length - 1;
         if (etat.niveau + 1 >= etat.debloques) {
             etat.debloques = Math.min(niveaux.length, etat.niveau + 2);
         }
         majMenu();
-        annoncer("Niveau " + (etat.niveau + 1) + " terminé !");
-
-        if (elBilan) {
-            if (elBilanTitre) {
-                elBilanTitre.textContent = dernier
-                    ? "Le réseau du collège est réparé ! 🎉"
-                    : "Niveau terminé !";
-            }
-            if (elBilanTexte) {
-                elBilanTexte.textContent = dernier
-                    ? "Tu as remis en service le commutateur, le routeur, le poste client et le serveur. "
-                      + "Le trajet d'un fichier est de nouveau complet : poste client → carte réseau → "
-                      + "câble Ethernet ou Wi-Fi → commutateur → serveur, et le routeur pour sortir vers Internet. "
-                      + "Tu as ramassé " + etat.paquets + " paquets de données en tout."
-                    : "Appareils réparés : " + etat.appareils.length
-                      + " · Paquets ramassés : " + etat.paquetsNiveau
-                      + " · Prochaine étape disponible dans le menu.";
-            }
-            if (elBilanBtn) {
-                elBilanBtn.textContent = dernier ? "Revoir les niveaux" : "Niveau suivant →";
-                elBilanBtn.setAttribute("data-dernier", dernier ? "1" : "0");
-            }
-            elBilan.classList.add("plat-visible");
-            elBilan.setAttribute("aria-hidden", "false");
-            if (elBilanBtn) { elBilanBtn.focus(); }
+        if (sons.niveau) { sons.niveau(); }
+        annoncer("Niveau " + (etat.niveau + 1) + " terminé.");
+        if (!ui.bilan) { return; }
+        if (ui.bilanTitre) {
+            ui.bilanTitre.textContent = dernier ? "Le réseau du collège est réparé !"
+                                               : "Niveau terminé !";
         }
+        if (ui.bilanTexte) {
+            ui.bilanTexte.textContent = dernier
+                ? "Les quatre appareils sont en service. Le trajet d'un fichier est complet : "
+                  + "poste client → carte réseau → câble ou Wi-Fi → commutateur → serveur, "
+                  + "et le routeur pour sortir vers Internet. Paquets ramassés : "
+                  + etat.paquets + "."
+                : "Appareils réparés : " + etat.appareils.length
+                  + " · Paquets : " + etat.paquetsNiveau;
+        }
+        if (ui.bilanSuivant) {
+            ui.bilanSuivant.textContent = dernier ? "Revoir les niveaux" : "Niveau suivant →";
+            ui.bilanSuivant.setAttribute("data-dernier", dernier ? "1" : "0");
+        }
+        ui.bilan.classList.add("visible");
+        ui.bilan.setAttribute("aria-hidden", "false");
+        if (ui.bilanSuivant) { ui.bilanSuivant.focus(); }
     }
 
     function fermerBilan() {
-        if (elBilan) {
-            elBilan.classList.remove("plat-visible");
-            elBilan.setAttribute("aria-hidden", "true");
+        if (ui.bilan) {
+            ui.bilan.classList.remove("visible");
+            ui.bilan.setAttribute("aria-hidden", "true");
         }
-        var niveaux = window.NIVEAUX_PLATEFORME || [];
-        var dernier = etat.niveau >= niveaux.length - 1;
-        if (dernier) {
-            etat.mode = "accueil";
+        var niveaux = window.JEU_NIVEAUX || [];
+        if (etat.niveau >= niveaux.length - 1) {
             afficherMenu();
         } else {
             chargerNiveau(etat.niveau + 1);
@@ -1973,41 +2067,34 @@ window.APPAREILS_PLATEFORME = {
 
     function afficherMenu() {
         etat.mode = "accueil";
-        if (elMenu) { elMenu.classList.add("plat-visible"); }
-        if (elBoutonJouer) { elBoutonJouer.focus(); }
+        if (ui.menu) { ui.menu.classList.add("visible"); }
+        if (ui.demarrer) { ui.demarrer.focus(); }
     }
 
-    function cacherMenu() {
-        if (elMenu) { elMenu.classList.remove("plat-visible"); }
-    }
+    function cacherMenu() { if (ui.menu) { ui.menu.classList.remove("visible"); } }
 
     // ── Boucle ──────────────────────────────────────────────────────────────
     var accumulateur = 0;
-    var dernierTemps = 0;
+    var dernier = 0;
 
-    function boucle(temps) {
+    function boucle(horodatage) {
         if (!etat.actif) { return; }
-        if (!dernierTemps) { dernierTemps = temps; }
-        var delta = (temps - dernierTemps) / 1000;
-        dernierTemps = temps;
-        if (delta > 0.25) { delta = 0.25; }        // onglet revenu au premier plan
-
+        if (!dernier) { dernier = horodatage; }
+        var delta = (horodatage - dernier) / 1000;
+        dernier = horodatage;
+        if (delta > 0.25) { delta = 0.25; }
         if (etat.mode === "jeu") {
             accumulateur += delta;
-            while (accumulateur >= PAS) {
+            var garde = 0;
+            while (accumulateur >= PAS && garde < 8) {
                 etat.temps += PAS;
                 pasPhysique(PAS);
                 accumulateur -= PAS;
+                garde += 1;
                 if (etat.mode !== "jeu") { break; }
             }
         } else {
             etat.temps += delta;
-            if (etat.joueur) {
-                etat.joueur.animT += delta;
-                if (etat.joueur.animPrioritaire > 0) {
-                    etat.joueur.animPrioritaire -= delta;
-                }
-            }
         }
         dessiner();
         window.requestAnimationFrame(boucle);
@@ -2016,68 +2103,48 @@ window.APPAREILS_PLATEFORME = {
     function demarrerBoucle() {
         if (etat.actif) { return; }
         etat.actif = true;
-        dernierTemps = 0;
+        dernier = 0;
         accumulateur = 0;
         window.requestAnimationFrame(boucle);
     }
 
-    function arreterBoucle() {
-        etat.actif = false;
-    }
-
     // ── Commandes ───────────────────────────────────────────────────────────
-    var commandes = {
-        gauche: false, droite: false, saut: false, reparer: false, lancer: false
-    };
-
+    // Noms volontairement distincts des constantes de physique : `SAUT` vaut
+    // 620 (impulsion en px/s) et un tableau de touches du même nom écrasait la
+    // constante — `-SAUT` devenait NaN, et la position du personnage avec.
     var TOUCHES_GAUCHE = ["ArrowLeft", "q", "Q", "a", "A"];
     var TOUCHES_DROITE = ["ArrowRight", "d", "D"];
     var TOUCHES_SAUT = ["ArrowUp", " ", "Spacebar", "z", "Z", "w", "W"];
     var TOUCHES_REPARER = ["e", "E"];
-    var TOUCHES_LANCER = ["x", "X"];
-    var TOUCHES_REJOUER = ["r", "R"];
 
     function surTouche(appui, evenement) {
-        var code = evenement.key;
         if (etat.mode !== "jeu" && etat.mode !== "perdu") { return; }
-        if (TOUCHES_GAUCHE.indexOf(code) >= 0) { commandes.gauche = appui; }
-        else if (TOUCHES_DROITE.indexOf(code) >= 0) { commandes.droite = appui; }
-        else if (TOUCHES_SAUT.indexOf(code) >= 0) { commandes.saut = appui; }
-        else if (TOUCHES_REPARER.indexOf(code) >= 0) { commandes.reparer = appui; }
-        else if (TOUCHES_LANCER.indexOf(code) >= 0) { commandes.lancer = appui; }
-        else if (TOUCHES_REJOUER.indexOf(code) >= 0 && appui) {
-            chargerNiveau(etat.niveau);
-            annoncer("Niveau recommencé.");
-            return;
-        } else {
-            return;
-        }
+        var k = evenement.key;
+        if (TOUCHES_GAUCHE.indexOf(k) >= 0) { commandes.gauche = appui; }
+        else if (TOUCHES_DROITE.indexOf(k) >= 0) { commandes.droite = appui; }
+        else if (TOUCHES_SAUT.indexOf(k) >= 0) { commandes.saut = appui; }
+        else if (TOUCHES_REPARER.indexOf(k) >= 0) { commandes.reparer = appui; }
+        else { return; }
         evenement.preventDefault();
     }
 
-    function brancherCommandes() {
+    function brancherEntrees() {
         if (zone) {
             zone.addEventListener("keydown", function (e) { surTouche(true, e); });
             zone.addEventListener("keyup", function (e) { surTouche(false, e); });
             zone.addEventListener("blur", function () {
-                commandes.gauche = commandes.droite = commandes.saut = false;
-                commandes.reparer = commandes.lancer = false;
+                commandes.gauche = commandes.droite = false;
+                commandes.saut = commandes.reparer = false;
             });
         }
-
-        // pavé tactile : appui maintenu sur les boutons
-        var tactiles = racine.querySelectorAll("[data-commande]");
-        for (var i = 0; i < tactiles.length; i += 1) {
+        var boutons = racine.querySelectorAll("[data-commande]");
+        for (var i = 0; i < boutons.length; i += 1) {
             (function (bouton) {
                 var nom = bouton.getAttribute("data-commande");
-                var enfoncer = function (e) {
+                var appuyer = function (e) {
                     e.preventDefault();
-                    // Capture du pointeur : sans elle, glisser légèrement le
-                    // doigt hors du bouton en pleine partie le relâchait et
-                    // le professeur s'arrêtait net. Avec la capture, c'est
-                    // pointerup qui libère, où que soit le doigt.
                     if (e.pointerId !== undefined && bouton.setPointerCapture) {
-                        try { bouton.setPointerCapture(e.pointerId); } catch (x) { /* déjà capturé */ }
+                        try { bouton.setPointerCapture(e.pointerId); } catch (x) { /* déjà pris */ }
                     }
                     commandes[nom] = true;
                 };
@@ -2085,138 +2152,107 @@ window.APPAREILS_PLATEFORME = {
                     if (e) { e.preventDefault(); }
                     commandes[nom] = false;
                 };
-                bouton.addEventListener("pointerdown", enfoncer);
+                bouton.addEventListener("pointerdown", appuyer);
                 bouton.addEventListener("pointerup", relacher);
                 bouton.addEventListener("pointercancel", relacher);
-                bouton.addEventListener("keydown", function (e) {
-                    if (e.key === " " || e.key === "Enter") { enfoncer(e); }
-                });
-                bouton.addEventListener("keyup", function (e) {
-                    if (e.key === " " || e.key === "Enter") { relacher(e); }
-                });
-            }(tactiles[i]));
+            }(boutons[i]));
         }
 
-        if (elFicheBtn) { elFicheBtn.addEventListener("click", fermerFiche); }
-        if (elBilanBtn) { elBilanBtn.addEventListener("click", fermerBilan); }
-        if (elBilanRejouer) {
-            elBilanRejouer.addEventListener("click", function () {
-                if (elBilan) { elBilan.classList.remove("plat-visible"); }
+        if (ui.demarrer) {
+            ui.demarrer.addEventListener("click", function () {
+                cacherMenu();
+                chargerNiveau(0);
+                etat.mode = "jeu";
+                demarrerBoucle();
+                if (zone) { zone.focus(); }
+            });
+        }
+        if (ui.niveaux) {
+            ui.niveaux.addEventListener("click", function (e) {
+                var bouton = e.target.closest("button[data-niveau]");
+                if (!bouton || bouton.disabled) { return; }
+                cacherMenu();
+                chargerNiveau(parseInt(bouton.getAttribute("data-niveau"), 10));
+                etat.mode = "jeu";
+                demarrerBoucle();
+                if (zone) { zone.focus(); }
+            });
+        }
+        if (ui.ficheFermer) { ui.ficheFermer.addEventListener("click", fermerFiche); }
+        if (ui.bilanSuivant) { ui.bilanSuivant.addEventListener("click", fermerBilan); }
+        if (ui.bilanRejouer) {
+            ui.bilanRejouer.addEventListener("click", function () {
+                if (ui.bilan) { ui.bilan.classList.remove("visible"); }
                 chargerNiveau(etat.niveau);
                 etat.mode = "jeu";
                 if (zone) { zone.focus(); }
             });
         }
-        if (elBoutonJouer) {
-            elBoutonJouer.addEventListener("click", function () {
-                cacherMenu();
-                etat.demarre = true;
-                chargerNiveau(0);
-                etat.mode = "jeu";
-                demarrerBoucle();
-                if (zone) { zone.focus(); }
-                annoncer("Niveau 1 : " + (window.NIVEAUX_PLATEFORME[0] || {}).titre);
-            });
-        }
-        if (elListeNiveaux) {
-            elListeNiveaux.addEventListener("click", function (e) {
-                var bouton = e.target.closest("button[data-niveau]");
-                if (!bouton || bouton.disabled) { return; }
-                var numero = parseInt(bouton.getAttribute("data-niveau"), 10);
-                cacherMenu();
-                etat.demarre = true;
-                chargerNiveau(numero);
-                etat.mode = "jeu";
-                demarrerBoucle();
-                if (zone) { zone.focus(); }
-            });
-        }
-        if (elBoutonPleinEcran) {
-            elBoutonPleinEcran.addEventListener("click", function () {
-                var cadre = document.getElementById("plat-cadre-jeu");
-                if (!cadre) { return; }
-                var plein = document.fullscreenElement || document.webkitFullscreenElement;
-                if (plein) {
-                    if (document.exitFullscreen) { document.exitFullscreen(); }
-                    else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
-                    return;
-                }
-                if (cadre.requestFullscreen) { cadre.requestFullscreen(); }
-                else if (cadre.webkitRequestFullscreen) { cadre.webkitRequestFullscreen(); }
-                else {
-                    annoncer("Le plein écran n'est pas disponible dans ce navigateur : " +
-                             "tourne le téléphone à l'horizontale pour agrandir le jeu.");
-                }
-            });
-        }
-
-        if (elBoutonPause) {
-            elBoutonPause.addEventListener("click", function () {
+        if (ui.pause) {
+            ui.pause.addEventListener("click", function () {
                 if (etat.mode === "jeu") {
                     etat.mode = "pause";
-                    elBoutonPause.textContent = "▶ Reprendre";
-                    annoncer("Jeu en pause.");
+                    ui.pause.textContent = "▶ Reprendre";
                 } else if (etat.mode === "pause") {
                     etat.mode = "jeu";
-                    elBoutonPause.textContent = "⏸ Pause";
-                    annoncer("Jeu repris.");
+                    ui.pause.textContent = "⏸ Pause";
+                    demarrerBoucle();
                 }
             });
         }
-
-        // on met en pause quand l'onglet passe en arrière-plan
+        if (ui.son) {
+            ui.son.addEventListener("click", function () {
+                etat.son = !etat.son;
+                ui.son.setAttribute("aria-pressed", etat.son ? "true" : "false");
+                ui.son.textContent = etat.son ? "🔊 Son" : "🔇 Son";
+                if (etat.son) { bip(660, 0.08); }
+            });
+        }
+        if (ui.pleinEcran) {
+            ui.pleinEcran.addEventListener("click", function () {
+                if (!ui.cadre) { return; }
+                var plein = document.fullscreenElement || document.webkitFullscreenElement;
+                if (plein) {
+                    (document.exitFullscreen || document.webkitExitFullscreen || function () {}).call(document);
+                } else {
+                    (ui.cadre.requestFullscreen || ui.cadre.webkitRequestFullscreen || function () {}).call(ui.cadre);
+                }
+            });
+        }
         document.addEventListener("visibilitychange", function () {
             if (document.hidden && etat.mode === "jeu") {
                 etat.mode = "pause";
-                if (elBoutonPause) { elBoutonPause.textContent = "▶ Reprendre"; }
+                if (ui.pause) { ui.pause.textContent = "▶ Reprendre"; }
             }
         });
     }
 
-    function majLibellePleinEcran() {
-        if (!elBoutonPleinEcran) { return; }
-        var plein = !!(document.fullscreenElement || document.webkitFullscreenElement);
-        elBoutonPleinEcran.textContent = plein ? "⤢ Quitter" : "⛶ Plein écran";
-        elBoutonPleinEcran.setAttribute("aria-pressed", plein ? "true" : "false");
-    }
-
-    document.addEventListener("fullscreenchange", majLibellePleinEcran);
-    document.addEventListener("webkitfullscreenchange", majLibellePleinEcran);
-
-    // ── API de contrôle (utilisée par verifier_jeu.py) ──────────────────────
-    // Elle permet de rejouer un niveau au pas fixe, sans dépendre du temps
-    // réel : c'est ce qui rend le test reproductible.
-    window.plateformeDebug = {
-        pret: function () { return etat.demarre; },
-        // Les images arrivent en asynchrone : tant qu'elles ne sont pas là,
-        // le rendu utilise des rectangles de repli. Un contrôle de palette
-        // lancé trop tôt mesurerait donc le repli, pas le sprite.
-        imagesPretes: function () { return imagesChargees >= imagesAttendues; },
-        imagesChargees: function () { return imagesChargees + "/" + imagesAttendues; },
+    // ── API de contrôle (vérificateur automatique) ──────────────────────────
+    window.jeuDebug = {
+        pret: function () { return !!etat.joueur; },
+        imagesPretes: function () { return chargees >= attendues; },
         charger: function (n) {
             cacherMenu();
-            etat.demarre = true;
+            if (ui.bilan) { ui.bilan.classList.remove("visible"); }
             chargerNiveau(n);
             etat.mode = "jeu";
+            demarrerBoucle();
             return true;
         },
         etat: function () {
+            var j = etat.joueur;
             return {
-                mode: etat.mode,
-                niveau: etat.niveau,
-                coeurs: etat.coeurs,
-                paquets: etat.paquets,
+                mode: etat.mode, niveau: etat.niveau, coeurs: etat.coeurs,
+                paquets: etat.paquets, reste: appareilsRestants(),
                 appareils: etat.appareils.map(function (a) {
                     return { nom: a.fiche.nom, repare: a.repare, progres: a.progres };
                 }),
-                reste: appareilsRestants(),
-                joueur: etat.joueur && { x: etat.joueur.x, y: etat.joueur.y,
-                                         w: etat.joueur.w, h: etat.joueur.h,
-                                         auSol: etat.joueur.auSol,
-                                         anim: etat.joueur.anim },
-                camera: etat.cameraX,
-                debloques: etat.debloques,
-                niveaux: (window.NIVEAUX_PLATEFORME || []).length
+                joueur: j ? { x: j.x, y: j.y, w: j.w, h: j.h, auSol: j.auSol,
+                              vx: j.vx, vy: j.vy } : null,
+                camera: etat.cameraX, debloques: etat.debloques,
+                solides: etat.solides ? etat.solides.length : -1,
+                hauteur: etat.hauteur, largeur: etat.largeur,
+                niveaux: (window.JEU_NIVEAUX || []).length
             };
         },
         avancer: function (dt) {
@@ -2232,10 +2268,8 @@ window.APPAREILS_PLATEFORME = {
         toucher: function (nom, appui) { commandes[nom] = !!appui; },
         teleporter: function (x, y) {
             if (!etat.joueur) { return; }
-            etat.joueur.x = x;
-            etat.joueur.y = y;
-            etat.joueur.vx = 0;
-            etat.joueur.vy = 0;
+            etat.joueur.x = x; etat.joueur.y = y;
+            etat.joueur.vx = 0; etat.joueur.vy = 0;
         },
         appareils: function () {
             return etat.appareils.map(function (a) {
@@ -2248,29 +2282,22 @@ window.APPAREILS_PLATEFORME = {
         },
         fermerFiche: fermerFiche,
         dessiner: dessiner,
-        panneauxEnFlux: function () {
-            return !!mediaPanneaux && mediaPanneaux.matches;
-        },
         commandes: commandes
     };
 
     // ── Démarrage ───────────────────────────────────────────────────────────
     function initialiser() {
-        if (!window.NIVEAUX_PLATEFORME || !window.NIVEAUX_PLATEFORME.length) {
-            if (elObjectif) {
-                elObjectif.textContent =
-                    "Les niveaux n'ont pas pu être chargés (niveaux.js manquant).";
+        if (!window.JEU_NIVEAUX || !window.JEU_NIVEAUX.length) {
+            if (ui.objectif) {
+                ui.objectif.textContent = "Les niveaux n'ont pas pu être chargés.";
             }
             return;
         }
-        placerPanneaux();
-        brancherCommandes();
+        brancherEntrees();
         chargerImages(function () {
             chargerNiveau(0);
             afficherMenu();
             majMenu();
-            // rendu figé du niveau 1 derrière le menu : on voit le jeu avant
-            // de cliquer, et aucune image ne « saute » au démarrage
             dessiner();
         });
     }
