@@ -2660,6 +2660,9 @@ color: #9db8d2;
 font-weight: 700;
 font-variant-numeric: tabular-nums;
 }
+.vol-hud .vol-valeur.vol-vent-fort {
+color: #ffb27a;
+}
 .vol-jauge {
 width: 120px;
 height: 12px;
@@ -2795,14 +2798,14 @@ color: #1a3f5e;
 @media (max-width: 560px), (max-height: 480px) {
 .vol-hud {
 display: grid;
-grid-template-columns: repeat(4, minmax(0, 1fr));
-gap: .3rem .45rem;
-font-size: .74rem;
+grid-template-columns: repeat(5, minmax(0, 1fr));
+gap: .3rem .35rem;
+font-size: .72rem;
 padding: .45rem .5rem;
 }
 .vol-hud .vol-etiquette {
-font-size: .6rem;
-letter-spacing: .02em;
+font-size: .58rem;
+letter-spacing: 0;
 }
 .vol-hud .vol-valeur {
 font-size: .78rem;
@@ -2829,15 +2832,15 @@ min-height: 68px;
 }
 @media (max-width: 360px) {
 .vol-hud {
-gap: .25rem .3rem;
-padding: .4rem;
-font-size: .68rem;
+gap: .25rem .25rem;
+padding: .4rem .35rem;
+font-size: .66rem;
 }
 .vol-hud .vol-etiquette {
-font-size: .56rem;
+font-size: .54rem;
 }
 .vol-hud .vol-valeur {
-font-size: .72rem;
+font-size: .68rem;
 }
 .vol-pave button small {
 font-size: .6rem;
@@ -3804,6 +3807,8 @@ font-size: .6rem;
                             <div><span class="vol-etiquette">Descente</span> <span class="vol-valeur" id="vol-vy">0,0 m/s</span></div>
                             <div><span class="vol-etiquette">Dérive</span> <span class="vol-valeur" id="vol-vx">0,0 m/s</span></div>
                             <div><span class="vol-etiquette">Inclinaison</span> <span class="vol-valeur" id="vol-inclinaison">0°</span></div>
+                            <div><span class="vol-etiquette">Vent m/s²</span> <span class="vol-valeur" id="vol-vent">0,25 →</span></div>
+                            <div><span class="vol-etiquette">Poussée dispo</span> <span class="vol-valeur" id="vol-reserve">— s</span></div>
                         </div>
                         <p class="vol-recap" id="vol-reglages-actifs"></p>
 
@@ -3848,11 +3853,15 @@ font-size: .6rem;
                             <strong>Commandes :</strong> <strong>Espace</strong> ou <strong>↑</strong> (ou le bouton ▲) pour la poussée ;
                             <strong>← →</strong> (ou Q / D) pour incliner le drone : c'est l'inclinaison qui dirige la poussée.
                             Sur tablette, utilisez les trois boutons.
-                            <strong>But :</strong> poser le drone sur la plateforme balisée de la grande carte, avec une descente et une
-                            dérive inférieures à 2 m/s, sans dépasser 12° d'inclinaison. <strong>Attention :</strong> aucune résistance
-                            de l'air, la vitesse ne se dissipe jamais seule. La minimap en haut à droite montre la carte entière, la
-                            plateforme verte, le cadre blanc de la vue et votre drone en jaune ; la flèche verte en bord d'écran indique
-                            de quel côté se trouve la plateforme.
+                            <strong>But :</strong> poser le drone sur la plateforme balisée de la grande carte, avec une descente sous
+                            2,2 m/s et une dérive sous 2 m/s, sans dépasser 12° d'inclinaison.
+                            <strong>Attention :</strong> aucune résistance de l'air, la vitesse ne se dissipe jamais seule.
+                            <strong>Le vent</strong> (champ « Vent », manche à air et traînées à l'écran) pousse latéralement et
+                            fluctue : la dérive change toute seule, il faut la corriger en permanence.
+                            <strong>La batterie</strong> ne contient que la réserve de la mission : posé proprement, il reste une
+                            marge de quelques pour cent. Une correction inutile se paie en poussée, donc en batterie.
+                            La minimap en haut à droite montre la carte entière, la plateforme verte, le cadre blanc de la vue et
+                            votre drone en jaune ; la flèche verte en bord d'écran indique de quel côté se trouve la plateforme.
                         </p>
                         <p class="vol-annonce" id="vol-annonce" role="status" aria-live="polite"></p>
                     </div>
@@ -3860,7 +3869,7 @@ font-size: .6rem;
 
                 <div class="carte-contenu">
                     <h2>🎮 Le prof de techno : colis express</h2>
-                    <p>Le prof de techno s'est lancé un défi : livrer cinq colis dans le quartier avec son drone. À toi de piloter. Le drone n'a qu'une <strong>batterie</strong>, qui lui sert à la fois de réserve d'énergie et de vie : elle se vide toute seule en vol, et plus vite quand tu utilises le <strong>boost</strong> ou que tu cognes un obstacle. Ramasse les <strong>batteries</strong> pour la recharger, et les <strong>composants</strong> pour améliorer l'appareil. Attention aux enfants qui lancent des ballons, aux pylônes et aux maisons.</p>
+                    <p>Le prof de techno s'est lancé un défi : livrer cinq colis dans le quartier avec son drone. À toi de piloter. Le drone n'a qu'une <strong>batterie</strong>, qui lui sert à la fois de réserve d'énergie et de vie : elle se vide toute seule en vol, et plus vite quand tu utilises le <strong>boost</strong> ou que tu cognes un obstacle. Ramasse les <strong>batteries</strong> pour la recharger, et les <strong>composants</strong> pour améliorer l'appareil. Attention aux enfants qui lancent des ballons, aux arbres du trottoir et aux maisons.</p>
 
                     <div class="jeu" id="jeu">
                         <div class="jeu-hud">
@@ -3991,20 +4000,11 @@ font-size: .6rem;
     </div>
 
     <!-- JavaScript de l'activité -->    <script>
-        /* Assets de jeu (LoRA) — fichiers servis à côté de l'activité */
+        /* Assets de jeu — fichiers servis à côté de l'activité */
         window.ASSETS_JEU = {
             "maison1": "assets-jeu/maison-j1.png",
             "maison2": "assets-jeu/maison-j2.png",
             "maison3": "assets-jeu/maison-j3.png",
-            "enfantAcourse1": "assets-jeu/enfantA-course1.png",
-            "enfantAcourse2": "assets-jeu/enfantA-course2.png",
-            "enfantAlancer": "assets-jeu/enfantA-lancer.png",
-            "enfantBcourse1": "assets-jeu/enfantB-course1.png",
-            "enfantBcourse2": "assets-jeu/enfantB-course2.png",
-            "enfantBlancer": "assets-jeu/enfantB-lancer.png",
-            "enfantCcourse1": "assets-jeu/enfantC-course1.png",
-            "enfantCcourse2": "assets-jeu/enfantC-course2.png",
-            "enfantClancer": "assets-jeu/enfantC-lancer.png",
             "chienA": "assets-jeu/chien-a.png",
             "chienB": "assets-jeu/chien-b.png",
             "chatA": "assets-jeu/chat-a.png",
@@ -4020,14 +4020,51 @@ font-size: .6rem;
             "ballon": "assets-jeu/ballon.png",
             "avion": "assets-jeu/avion-papier.png",
             "bois": "assets-jeu/baton-bois.png",
-            "pylone": "assets-jeu/pylone.png",
             "plateforme": "assets-jeu/plateforme-h.png",
             "arbre": "assets-jeu/arbre.png",
             "fleur0": "assets-jeu/massif-fleurs-rouge.png",
             "fleur1": "assets-jeu/massif-fleurs-jaune.png",
             "fleur2": "assets-jeu/massif-fleurs-blanc.png",
-            "barriere": "assets-jeu/barriere.png"
+            "barriere": "assets-jeu/barriere.png",
+            "filleMarcheEst": "assets-jeu/enfant-fille-marche-est.png",
+            "filleMarcheSudEst": "assets-jeu/enfant-fille-marche-sud-est.png",
+            "filleMarcheSud": "assets-jeu/enfant-fille-marche-sud.png",
+            "filleMarcheSudOuest": "assets-jeu/enfant-fille-marche-sud-ouest.png",
+            "filleMarcheOuest": "assets-jeu/enfant-fille-marche-ouest.png",
+            "filleMarcheNordOuest": "assets-jeu/enfant-fille-marche-nord-ouest.png",
+            "filleMarcheNord": "assets-jeu/enfant-fille-marche-nord.png",
+            "filleMarcheNordEst": "assets-jeu/enfant-fille-marche-nord-est.png",
+            "filleLancerEst": "assets-jeu/enfant-fille-lancer-est.png",
+            "filleLancerSudEst": "assets-jeu/enfant-fille-lancer-sud-est.png",
+            "filleLancerSud": "assets-jeu/enfant-fille-lancer-sud.png",
+            "filleLancerSudOuest": "assets-jeu/enfant-fille-lancer-sud-ouest.png",
+            "filleLancerOuest": "assets-jeu/enfant-fille-lancer-ouest.png",
+            "filleLancerNord": "assets-jeu/enfant-fille-lancer-nord.png",
+            "filleLancerNordEst": "assets-jeu/enfant-fille-lancer-nord-est.png",
+            "garconLancerEst": "assets-jeu/enfant-garcon-lancer-est.png",
+            "garconLancerSudEst": "assets-jeu/enfant-garcon-lancer-sud-est.png",
+            "garconLancerSud": "assets-jeu/enfant-garcon-lancer-sud.png",
+            "garconLancerSudOuest": "assets-jeu/enfant-garcon-lancer-sud-ouest.png",
+            "garconLancerOuest": "assets-jeu/enfant-garcon-lancer-ouest.png",
+            "garconLancerNordOuest": "assets-jeu/enfant-garcon-lancer-nord-ouest.png",
+            "garconLancerNord": "assets-jeu/enfant-garcon-lancer-nord.png",
+            "garconLancerNordEst": "assets-jeu/enfant-garcon-lancer-nord-est.png",
+            "garconPoseEst": "assets-jeu/enfant-garcon-pose-est.png",
+            "garconPoseSudEst": "assets-jeu/enfant-garcon-pose-sud-est.png",
+            "garconPoseSud": "assets-jeu/enfant-garcon-pose-sud.png",
+            "garconPoseSudOuest": "assets-jeu/enfant-garcon-pose-sud-ouest.png",
+            "garconPoseOuest": "assets-jeu/enfant-garcon-pose-ouest.png",
+            "garconPoseNordOuest": "assets-jeu/enfant-garcon-pose-nord-ouest.png",
+            "garconPoseNord": "assets-jeu/enfant-garcon-pose-nord.png",
+            "garconPoseNordEst": "assets-jeu/enfant-garcon-pose-nord-est.png"
         };
+        /* Feuilles d'animation des enfants : modele -> anim -> direction */
+        window.ENFANTS_JEU = {"fille":{"marche":{"est":{"cle":"filleMarcheEst","n":9},"sud-est":{"cle":"filleMarcheSudEst","n":9},"sud":{"cle":"filleMarcheSud","n":9},"sud-ouest":{"cle":"filleMarcheSudOuest","n":9},"ouest":{"cle":"filleMarcheOuest","n":9},"nord-ouest":{"cle":"filleMarcheNordOuest","n":9},"nord":{"cle":"filleMarcheNord","n":9},"nord-est":{"cle":"filleMarcheNordEst","n":9}},"lancer":{"est":{"cle":"filleLancerEst","n":7},"sud-est":{"cle":"filleLancerSudEst","n":7},"sud":{"cle":"filleLancerSud","n":7},"sud-ouest":{"cle":"filleLancerSudOuest","n":7},"ouest":{"cle":"filleLancerOuest","n":7},"nord":{"cle":"filleLancerNord","n":7},"nord-est":{"cle":"filleLancerNordEst","n":7}}},"garcon":{"lancer":{"est":{"cle":"garconLancerEst","n":9},"sud-est":{"cle":"garconLancerSudEst","n":9},"sud":{"cle":"garconLancerSud","n":9},"sud-ouest":{"cle":"garconLancerSudOuest","n":9},"ouest":{"cle":"garconLancerOuest","n":9},"nord-ouest":{"cle":"garconLancerNordOuest","n":9},"nord":{"cle":"garconLancerNord","n":9},"nord-est":{"cle":"garconLancerNordEst","n":9}},"pose":{"est":{"cle":"garconPoseEst","n":1},"sud-est":{"cle":"garconPoseSudEst","n":1},"sud":{"cle":"garconPoseSud","n":1},"sud-ouest":{"cle":"garconPoseSudOuest","n":1},"ouest":{"cle":"garconPoseOuest","n":1},"nord-ouest":{"cle":"garconPoseNordOuest","n":1},"nord":{"cle":"garconPoseNord","n":1},"nord-est":{"cle":"garconPoseNordEst","n":1}}}};
+    </script>
+    <script>
+        /* Décors de la carte — sprites PixelLab convertis en pixels
+           (aucune image chargée : le canevas reste lisible). */
+        window.VOL_DECOR = {"maison-j1":{"l":36,"h":39,"p":["#171722","#98313c","#d34d5d","#4a1c1f","#5d1f28","#73272e","#2b1b1b","#7b8b9c","#f5cc9d"],"r":"h021h0|6051502223g0|6013341330111522132211e0|60532035131223121312d0|60113431151215161213222321b0|601113221615141512151312231223121311a0|601125262422151612132213121512131190|601116141514252214222312231613221180|6011321624131215161213161223122315121370|5011143216121522142223152312132213261150|402514321615141216141612131612132223151613152340|201124151432171215121614131223161322132213261312161120|101115241514231712252214122522134214161216131216131110|101115241514221522162215182318153216122322131612131110|101134172213161213221518432522131223121332161110|101125171326133217181513392328162223221316231110|10111422165215182315481523181512231213161213161110|10111512151325131225232947193325121322131612131110|1012151215161226182349151825393318161413161213161210|101715121422151823594749331815121314221410|1015161214122513691558592315182213161210|101522161823j9331816221610|1022151825m8251815121310|10173513n92325181710|10111011182968291513221314297819151130|301118191315171517152922142514221913151715171529151130|3011182918171817181923641529181718171829151130|30111829582913361426395829151130|301118291817181718291336142639181718171829151130|301118291817181718291316322539181718171829151130|301118295829133635395829151130|10111428192315171423191346141529231517141213191518141110|1114172819171613172617236629171613172617191518171411|142728a31642161983191518141718|243714132213321317181528151817142223423728|1418248724176847242715272428|241814181715172512172217681425161217121512141817181418|44275817281768174819181418273418|181427347815681728176814171428"},"maison-j2":{"l":36,"h":38,"p":["#171722","#64121e","#330e0d","#b0837b","#356283","#1b3257","#fceeca","#23661c","#82ce22"],"r":"m011121311a0|m0241512a0|m011141211a0|m02422a0|j0111534221690|i0141524121422161180|g011152422131422131680|e015342236224670|c011151224121326131613161316131670|a01114151422131613661526131660|901534121386251615361550|701534121356152625361536151140|501145141356151615161516153615361540|40143513141516135615262526252625161130|203513163417251316351635162526251326151120|2025134427151316253615361516151615132615161120|4011146755361526253625161140|40117735263516255615161250|4011246715163536151326151316132450|4011141624572513254625131612132450|401124171512474513262526121513122450|401114163217143725261516151624161215132450|4011141627121714121427351316222435132450|401114162712171413151412252623122425183450|401129141912171415141713171412232224151423221140|30111724132217141517151317141233122423221312281120|20111914122423171419271317141213322432231810281110|114918121423141911141913171452241213122816113813|11122910192823121413191312171452261312781110|201112491816222422171452261812581130|40124917161214122317145278131140|5011123924181223171413124422281370|70111249181724121312341213281180|901112391516121328144211a0|b0111219187913d0|d01249102913e0|e01112291311g0|g01113i0"},"maison-j3":{"l":36,"h":35,"p":["#7c3945","#ad4546","#a54648","#36244a","#2c214d","#733849","#171722","#fae7b6","#6b5a7e"],"r":"90111213o0|902415o0|901126o0|902113o0|6013241321161316121613161312131213121612231613161730|6014251322k41730|6012131643111311132113121112331213111311131730|6026142312261136215615661730|601211141311121311131113112312112311161513111211121730|603635161136213615214611261730|6013121311131113111311531621161226141316131730|608611161116212411261812161215261730|60221311131613111311131113111514121438111226131730|60113611361116113615241935142216111730|602213111316132116131113161516184914151211131730|602611161116111611161116113418491415361730|601312131113111211131113111336184914151311131730|40271211131613161316131613161311131468151316131730|201723181211131113111311131113113366211216131730|101714331211131612161316121612161311132113221113161216121730|1714331422131113161311131613113311233213111316131730|2423181311461416141114111416141634211416141114161730|14131433147855384425281750|171318241314182915142819453814291519152817101730|17141344182914192819153438241524192827181320|1714163415182914192819241114381429151914281524161710|2017111417101813221628191614121538161214121114281516231510|30111720184215181918221438622815133810|301130184214181936143862281523161413|30113089261214b9151614131417|301130153914393614b92417141710|201711372319231574a917201820|201719273317331569101817802730|70141710171110176910176027102730|d01769g0"},"maison-j1m":{"l":36,"h":39,"p":["#171722","#d34d5d","#98313c","#5d1f28","#4a1c1f","#73272e","#2b1b1b","#7b8b9c","#f5cc9d"],"r":"h021h0|g02223505160|e01123122314113012351260|d013121322131234205260|b021222312131614131431351160|a0111213221322131214131415141623121160|901112131413122312131614232526241160|801123121622132223152324151415161160|7012131422132213161213161413122516331160|5011261223121322142223152314131633151150|402214121614222312131612131615161315141633152440|201116131226122312231216221312151613141317331514251120|101112161312161316154312232413152324131722151425141110|101112131612232213163314182218142316231423151425141110|101116331213221312232442181423121316122317351110|101122161223222316282239121418173312261217241110|10111612131612132213141822144814221814531623151110|10111213161223121324321947292224131224121413141110|1013161213161215161832392418144922182613161413141310|101523151213141832494759221814231513141710|1013161223181422595814691224131513161410|101623161832j9221816231410|101213141824m82418142310|1017182422n912341710|30111419782915122312142968291811101110|301114291417141714121923152415232914171417141219181130|3011142918171817182914652219181718171829181130|30111429583926153612295829181130|301114291817181718392615361229181718171829181130|301114291817181718392433161229181718171829181130|301114295839343612295829181130|10111518141912131517142229141546121922151714221928151110|1115171814191726171216172966221726171216171928171511|1817151814198219164316a2282715|283743222315171814281418171233122312153725|2825271427254768172587251815|181518171815131413171316241568172317132417141718151825|18352718151819481768172817582745|281517156817281768147835271518"},"maison-j2m":{"l":36,"h":38,"p":["#171722","#330e0d","#64121e","#356283","#b0837b","#1b3257","#fceeca","#23661c","#82ce22"],"r":"a011121311m0|a0131425m0|a011131511m0|a02325m0|901623351411j0|801116231513251415i0|80161223151223251411g0|70462336233514e0|70161216121612161226121325131411c0|6016122614661216122315141511a0|501436141624861213351490|401114361436242614561213351470|401436143614161416141614561215441150|30111624262426242614561216141512341540|201114261224262416341634161224173516123420|2011161426121416141614361436241612142745122420|4011162436242614365467151140|50131614562416342634771140|5025121612142612143634161467251140|5025121316122446241224572516151140|502513121413262426124447131417251140|502512141316251614161426243715173316151140|5025123425231612342715131517132716151140|503518242513222624131514121517132716151140|401123221514252322131517121715141517131915291140|20112813122322251332131517121417141517231225171130|10112810182233253312131517122719151722251315191120|123811162813121325531517121915111915221513184911|10117813122653151713121912151322281910291311|301158131826531517232523161849131120|40111278531517221315131617491340|7012282345131215172213182539131150|80112812133513121325171849131170|a0114315281213161439131190|d0127918191311b0|e01229104913d0|g01112291311e0|i01211g0"},"arbre":{"l":20,"h":22,"p":["#171722","#3d8a4c","#2c6b3d","#215233","#7a5230"],"r":"70114280|5021522160|20119213421120|2092146220|20g21310|20622472141311|102214e21310|424432145234|5213528410|421472134234|i21411|11141392134233|112314821342131411|1012131422135423222320|20211233141314151133121420|501134251180|90251180|90251180|801125141170|601112151125141260|601214111522111260|7011421170"},"pylone":{"l":22,"h":36,"p":["#171722","#6b7484","#9aa3b2","#c3cad6","#b4543c"],"r":"4031803140|5021802150|50121180111250|50c150|50b21150|502281121150|502281121150|50223120312250|40115221521140|3041824130|10711231128110|31205120512031|50312221223150|501112312331121150|4021a22140|30111412a112131130|10412281224110|3120421120111211222031|21301311102122211011133021|501311106110111450|50143140311350|50142160211350|501311106110111350|4011121110211312211011121140|4011221321202113221140|401122214021221140|40311312112021133140|402110111261102140|402120212321202140|3071207130|3051605130|30111511a011151130|202115316031152120|20311413116011131411131120|2061606120|3041804130"},"nuage":{"l":64,"h":42,"p":["#171722","#f8f8f9","#b1d0dd","#a9cad8","#131b1d","#1d2828","#97a9bf","#9dafc3","#182223"],"r":"v081p0|s0318251k0|q021e22331h0|q021e22331h0|p011h2331411g0|n021j24311f0|m011n2131411f0|l01114o22411e0|l01114o22411e0|l011p22311e0|k011q2132421c0|k011q22314255170|g04116q2231625522150|g04116q2231625522150|f0114213q213161782131140|e0115213q214b2142120|c021[2a2142120|b01124j283i2341110|b01124j283i2341110|b01124h2238223g213241110|902115i213c213f2331110|4051l213d223c2431110|1031e2832227g213a233241110|1011f213821417q253142120|1011f213821417q253142120|11f213a213p227532120|11e213[24227241140|11d213[25224151150|11b223x21772231160|11b223x21772231160|1011337223x21772231160|20317327g213f214175223241160|5011454316d243b233166314132170|4011582539c23416142382131435531426273140|4011582539c23416142382131435531426273140|10316857162372231445931413163865171827383110|11e81746642647294334191617j811|1031c827286517782519252917k81110|4031[8g84120|4031[8g84120|7091w8a160|g0w1g0"}};
     </script>
 
     <script>
@@ -6665,7 +6702,6 @@ var CONSO_BASE = 1.1;
 var CONSO_BOOST = 3.0;
 var AMORTI_NORMAL = 5.2;       // amortissement « normal » (avant)
 var FACTEUR_INERTIE = 5;       // par défaut : 5x plus d'inertie
-var ENFANT_AFF = 60;           // taille d'affichage des enfants (px)
 var ELAN_ENFANT = 112;         // prise d'élan : 3,5 cases de 32 px
 var C = {
 contour: '#171722',
@@ -6724,21 +6760,6 @@ disque(g, 14, 11, 6, C.feuille2);
 px(g, 11, 10, 2, 2, C.feuille3);
 px(g, 20, 14, 2, 2, C.feuille3);
 px(g, 12, 8, 3, 2, C.feuille2);
-return o.canvas;
-}
-function fairePylone() {
-var o = nouvelCanvas(26, 26), g = o.g;
-px(g, 4, 22, 18, 3, 'rgba(12, 18, 12, 0.35)');
-px(g, 1, 1, 24, 22, C.contour);
-px(g, 2, 2, 22, 20, C.metal2);
-for (var i = 0; i < 5; i++) {
-px(g, 3 + i * 4, 3, 2, 18, C.metal1);
-px(g, 3, 3 + i * 4, 20, 2, C.metal1);
-}
-px(g, 11, 2, 4, 20, C.metal3);
-px(g, 2, 11, 22, 4, C.metal3);
-px(g, 6, 6, 3, 3, C.toit1);
-px(g, 17, 17, 3, 3, C.toit1);
 return o.canvas;
 }
 function faireDepot() {
@@ -6943,11 +6964,11 @@ var ZONES_CANDIDATES = [
 { x: 10 * TUILE, y: 37 * TUILE }, { x: 51 * TUILE, y: 36 * TUILE }
 ];
 var solides = [], maisons = [], enfants = [], objets = [], projectiles = [];
-var zones = [], arbres = [], pylones = [];
+var zones = [], arbres = [], arbresObstacle = [];
 var decorFleurs = [], decorBarrieres = [], animaux = [];
 var fond = null;
 var graineCarte = 1;           // graine de la carte courante (re-cuisson)
-var solArbre = null, solPylone = null, solDepot = null, solBarriere = null;
+var solArbre = null, solDepot = null, solBarriere = null;
 var solFleurs = [];
 var solDrone = [], solObjets = {}, solProjectiles = {};
 var imgProfPilote = null, imgPlancheProf = null;
@@ -6957,14 +6978,16 @@ if (ASSETS.profPilote) imgProfPilote = imgAsset('profPilote');
 'decorFleurs', 'chienA', 'chienB', 'chatA', 'chatB']
 .forEach(imgAsset);
 ['droneHelices', 'droneRotors', 'colis', 'batterie', 'lipo',
-'carbone', 'camera', 'ballon', 'avion', 'bois', 'pylone',
+'carbone', 'camera', 'ballon', 'avion', 'bois',
 'plateforme', 'arbre', 'fleur0', 'fleur1', 'fleur2', 'barriere']
 .forEach(imgAsset);
-MODELES_ENFANT.forEach(function (m) {
-['course1', 'course2', 'lancer'].forEach(function (f) {
-imgAsset('enfant' + m + f);
-});
-});
+if (ENFANTS) {
+for (var m in ENFANTS) {
+for (var a in ENFANTS[m]) {
+for (var d in ENFANTS[m][a]) imgAsset(ENFANTS[m][a][d].cle);
+}
+}
+}
 try {
 var v = getComputedStyle(document.documentElement).getPropertyValue('--sprite-prof');
 var m = v && v.match(/url\(["']?(data:image\/[^"')]+)["']?\)/);
@@ -7000,7 +7023,6 @@ function preparerSprites() {
 solArbre = faireArbre();
 solBarriere = faireBarriere();
 solFleurs = [faireFleur(0), faireFleur(1), faireFleur(2)];
-solPylone = fairePylone();
 solDepot = faireDepot();
 solDrone = [faireDrone(0), faireDrone(1)];
 ['batterie', 'colis', 'carbone', 'lipo', 'camera'].forEach(function (t) {
@@ -7058,7 +7080,7 @@ y + h > py0 && y < py0 + pad.h + 2 * marge;
 function genererCarte(graine) {
 var rnd = alea(graine);
 graineCarte = graine;
-solides = []; maisons = []; arbres = []; pylones = [];
+solides = []; maisons = []; arbres = []; arbresObstacle = [];
 for (var bi = 0; bi < COLS_ROUTES.length + 1; bi++) {
 var colDebut = bi === 0 ? 1 : COLS_ROUTES[bi - 1] + 2;
 var colFin = bi < COLS_ROUTES.length ? COLS_ROUTES[bi] - 1 : COLS - 2;
@@ -7090,18 +7112,18 @@ solides.push({ x: mx + 16, y: my + 32, l: 184, h: 176, type: 'maison' });
 }
 }
 }
+var couronne = encombrement('arbre', solArbre);
 for (var ci = 0; ci < COLS_ROUTES.length; ci++) {
 for (var rj = 0; rj < ROWS_ROUTES.length; rj++) {
 if (rnd() > 0.55) continue;
 var pxx = (COLS_ROUTES[ci] - 1) * TUILE, pyy = (ROWS_ROUTES[rj] - 1) * TUILE;
-if (collisionne(pxx, pyy, 26, 26)) continue;
-var pyl = encombrement('pylone', solPylone);
-var pxr = pxx + 13 - pyl.l / 2, pyr = pyy + 24 - pyl.h;
-if (pxr < 0 || pyr < 0 || pxr + pyl.l > MONDE_L) continue;
-if (empiète(pxr, pyr, pyl.l, pyl.h)) continue;
-if (chevauchePad(pxr, pyr, pyl.l, pyl.h, 0)) continue;
-pylones.push({ x: pxx, y: pyy });
-solides.push({ x: pxx + 2, y: pyy + 2, l: 22, h: 22, type: 'pylone' });
+if (pxx + couronne.l > MONDE_L || pyy + couronne.h > MONDE_H) continue;
+if (empiète(pxx, pyy, couronne.l, couronne.h)) continue;
+if (chevauchePad(pxx, pyy, couronne.l, couronne.h, 4)) continue;
+arbresObstacle.push({ x: pxx, y: pyy });
+solides.push({ x: pxx + Math.round(couronne.l / 2) - 13,
+y: pyy + couronne.h - 20, l: 26, h: 20,
+type: 'arbre' });
 }
 }
 var bois = encombrement('arbre', solArbre);
@@ -7140,6 +7162,7 @@ var ay2 = Math.floor(rnd() * (ROWS - 2)) * TUILE + Math.floor(rnd() * 20);
 if (surRoute(ax2, ay2) || empiète(ax2, ay2, 20, 16)) continue;
 animaux.push({ type: rnd() < 0.5 ? 'chien' : 'chat', x: ax2, y: ay2 });
 }
+var couronneObstacle = encombrement('arbre', solArbre);
 var o = nouvelCanvas(MONDE_L, MONDE_H), g = o.g;
 var rnd2 = alea(graine + 7);
 px(g, 0, 0, MONDE_L, MONDE_H, C.herbe1);
@@ -7211,8 +7234,12 @@ px(g, x3, y3, 14, 4, C.marquage);
 }
 });
 arbres.forEach(function (a) { poserCoin(g, 'arbre', solArbre, a.x, a.y); });
-pylones.forEach(function (p3) {
-poserSprite(g, 'pylone', solPylone, p3.x + 13, p3.y + 24, true);
+arbresObstacle.forEach(function (a) {
+var cx = Math.round(a.x + couronneObstacle.l / 2);
+var cy = Math.round(a.y + couronneObstacle.h - 10);
+px(g, cx - 17, cy - 3, 34, 8, 'rgba(10, 16, 10, 0.34)');
+px(g, cx - 13, cy + 3, 26, 4, 'rgba(10, 16, 10, 0.22)');
+poserCoin(g, 'arbre', solArbre, a.x, a.y);
 });
 poserSprite(g, 'plateforme', solDepot, DEPOT.x + 28, DEPOT.y + 28);
 var cloture = encombrement('barriere', solBarriere);
@@ -7299,6 +7326,8 @@ zones = melange.slice(0, 3);          // 3 zones, réutilisées en rotation
 var cands = positionsEnfants(alea(grainePartie + niveau * 37));
 enfants = cands.slice(0, nbEnfantsNiveau(niveau)).map(function (e, k) {
 return { x: e.x, y: e.y, baseX: e.x, baseY: e.y, c: e.c, i: e.i,
+modele: (e.i % 2 === 0) ? 'fille' : 'garcon',
+faceX: 0, faceY: 1,
 timer: 2 + (k % 4) * 0.6, preavis: 0,
 dx: 1, dy: 0, course: 0, dureeCourse: 2.1,
 departX: e.x, departY: e.y, cibleX: e.x, cibleY: e.y,
@@ -7509,7 +7538,7 @@ voile('🏆 Les 5 niveaux sont terminés !',
 'Score : ' + Math.round(score) + ' — argent : ' + argent + ' €', 'Rejouer');
 } else {
 etatProf('rage');
-dire('« Aïe ! Le drone est au tapis… Récupère les batteries et évite les pylônes. »');
+dire('« Aïe ! Le drone est au tapis… Récupère les batteries et évite les arbres. »');
 voile('💥 Drone hors service',
 'La réserve est tombée à zéro. Les batteries la rechargent, la coque carbone réduit les dégâts.',
 'Niveau ' + niveau + ' — score : ' + Math.round(score), 'Réessayer');
@@ -7592,6 +7621,11 @@ var enf = enfants[e];
 var dxE = drone.x - enf.x, dyE = drone.y - enf.y;
 var distE = Math.sqrt(dxE * dxE + dyE * dyE);
 if (enf.course > 0) {
+enf.faceX = enf.dx; enf.faceY = enf.dy;
+} else if (distE > 0.5) {
+enf.faceX = dxE / distE; enf.faceY = dyE / distE;
+}
+if (enf.course > 0) {
 enf.course += dt;
 var pCourse = Math.min(1, enf.course / enf.dureeCourse);
 enf.x = enf.departX + (enf.cibleX - enf.departX) * pCourse;
@@ -7612,7 +7646,17 @@ enf.timer = cadence + Math.random() * 0.8;
 }
 } else {
 enf.timer -= dt;
-if (distE < 330 && enf.timer <= 0 && projectiles.length < 70) {
+if (distE < 330 && enf.timer <= 0 && projectiles.length < 70 &&
+enf.modele === 'garcon') {
+var nxG = dxE / (distE || 1), nyG = dyE / (distE || 1);
+enf.dx = nxG; enf.dy = nyG;
+enf.departX = enf.baseX; enf.departY = enf.baseY;
+enf.cibleX = enf.baseX; enf.cibleY = enf.baseY;
+var typesG = ['ballon', 'avion', 'bois'];
+enf.typeTir = typesG[Math.floor(Math.random() * typesG.length)];
+enf.dureeCourse = 1.35 * (drone.cameraUp ? 1.05 : 0.7);
+enf.course = 0.0001;
+} else if (distE < 330 && enf.timer <= 0 && projectiles.length < 70) {
 var cxE = enf.baseX, cyE = enf.baseY;
 var ddx = 0, ddy = 0;
 for (var essai = 0; essai < 10; essai++) {
@@ -7715,25 +7759,66 @@ ctx.fillStyle = cible.couleur;
 ctx.fillText(txt, Math.round(x), Math.round(y) - 36);
 ctx.textAlign = 'start';
 }
-var MODELES_ENFANT = ['A', 'B', 'C'];
+var ENFANTS = (typeof window !== 'undefined' && window.ENFANTS_JEU) ? window.ENFANTS_JEU : null;
+var DIRECTIONS = ['est', 'sud-est', 'sud', 'sud-ouest',
+'ouest', 'nord-ouest', 'nord', 'nord-est'];
+var FENETRE_LANCER = 0.6;
+function modeleEnfant(enf) { return enf.modele || 'fille'; }
+var REPLI_DIRECTION = { 'nord-ouest': 'ouest', 'nord-est': 'est',
+'sud-est': 'est', 'sud-ouest': 'ouest' };
+function directionVecteur(dx, dy) {
+if (!dx && !dy) return 'sud';
+var octant = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
+return DIRECTIONS[((octant % 8) + 8) % 8];
+}
+function feuilleEnfant(modele, anim, dir) {
+if (!ENFANTS || !ENFANTS[modele] || !ENFANTS[modele][anim]) return null;
+var table = ENFANTS[modele][anim];
+var essais = [dir, REPLI_DIRECTION[dir], 'sud', 'est'];
+for (var i = 0; i < essais.length; i++) {
+if (essais[i] && table[essais[i]]) return table[essais[i]];
+}
+for (var k in table) if (table.hasOwnProperty(k)) return table[k];
+return null;
+}
 function dessinerEnfant(enf, ox, oy) {
-var modele = MODELES_ENFANT[enf.i % 3];
-var cle = 'enfant' + modele + 'course1';
+var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
+var dir = directionVecteur(enf.faceX, enf.faceY);
+var feuille = null, frame = 0;
 if (enf.course > 0) {
 var reste = enf.dureeCourse - enf.course;
-if (reste < 0.32) {
-cle = 'enfant' + modele + 'lancer';
+if (modeleEnfant(enf) === 'fille') {
+if (reste < FENETRE_LANCER) {
+feuille = feuilleEnfant('fille', 'lancer', dir);
+if (feuille) {
+frame = Math.min(feuille.n - 1,
+Math.floor((1 - reste / FENETRE_LANCER) * feuille.n));
+}
 } else {
-cle = 'enfant' + modele +
-(Math.floor(enf.course / 0.16) % 2 === 0 ? 'course1' : 'course2');
+feuille = feuilleEnfant('fille', 'marche', dir);
+if (feuille) {
+var nMarche = Math.max(1, feuille.n - 1);   // image 0 = repos
+frame = 1 + (Math.floor(enf.course / 0.13) % nMarche);
 }
 }
-var im = imgAsset(cle) || imgAsset('enfant' + modele + 'course1');
-var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
-if (assetPret(im)) {
-var hh = ENFANT_AFF;
-var ll = Math.round(im.naturalWidth * hh / im.naturalHeight);
-ctx.drawImage(im, x - Math.round(ll / 2), y - hh + 12, ll, hh);
+} else {
+feuille = feuilleEnfant('garcon', 'lancer', dir);
+if (feuille) {
+frame = Math.min(feuille.n - 1,
+Math.floor((1 - reste / enf.dureeCourse) * feuille.n));
+}
+}
+} else {
+feuille = feuilleEnfant(modeleEnfant(enf),
+modeleEnfant(enf) === 'fille' ? 'marche' : 'pose', dir);
+frame = 0;
+}
+var im = feuille ? imgAsset(feuille.cle) : null;
+if (feuille && assetPret(im)) {
+var fw = Math.round(im.naturalWidth / feuille.n);
+var fh = im.naturalHeight;
+ctx.drawImage(im, frame * fw, 0, fw, fh,
+x - Math.round(fw / 2), y + 12 - fh, fw, fh);
 } else {
 ctx.fillStyle = enf.c;
 ctx.fillRect(x - 6, y - 12, 12, 16);
@@ -7971,7 +8056,8 @@ h: assetPret(im) ? im.naturalHeight : 0 };
 return r;
 },
 plan: function () {
-return { arbres: arbres, pylones: pylones, fleurs: decorFleurs,
+return { arbres: arbres, arbresObstacle: arbresObstacle,
+fleurs: decorFleurs,
 barrieres: decorBarrieres, depot: DEPOT };
 },
 niveau: function () { return niveau; },
@@ -8108,14 +8194,16 @@ var ROTORS = [
 ];
 var BATTERIES = [
 { cle: '1300', nom: 'Li-Po 3S 1300 mAh', capacite: 1300, masse: 110,
-endurance: 55, facteurMasse: 1.00,
-avis: '55 s de poussée : légère, donc poussée maximale, mais la réserve fond vite.' },
+facteurReserve: 0.92, facteurMasse: 1.00,
+avis: 'Légère, donc poussée maximale — mais elle ne couvre que 92 % de la '
++ 'réserve de la mission : il faudra voler sans gaspillage.' },
 { cle: '2200', nom: 'Li-Po 3S 2200 mAh', capacite: 2200, masse: 180,
-endurance: 95, facteurMasse: 1.06,
-avis: '95 s de poussée, 70 g de plus : le bon compromis pour une carte de 250 m.' },
+facteurReserve: 1.00, facteurMasse: 1.06,
+avis: 'La réserve de la mission, 70 g de plus que la 1300 : le bon compromis.' },
 { cle: '5200', nom: 'Li-Po 3S 5200 mAh', capacite: 5200, masse: 400,
-endurance: 150, facteurMasse: 1.22,
-avis: '150 s de poussée, mais 400 g : le drone devient lourd, la poussée utile baisse de 18 %.' }
+facteurReserve: 1.55, facteurMasse: 1.22,
+avis: 'Une réserve de 55 % en plus, mais 400 g : la poussée utile baisse de 18 %, '
++ 'donc il faut pousser plus souvent.' }
 ];
 var SENSIBILITES = [
 { cle: 'douce', nom: 'Douces', gain: 0.6, conso: 0.9,
@@ -8125,25 +8213,34 @@ avis: 'Le réglage d\'usine : un bon équilibre entre réaction et autonomie.' }
 { cle: 'vive', nom: 'Vives', gain: 1.5, conso: 1.25,
 avis: 'Rotation très rapide, mais la batterie se vide 25 % plus vite.' }
 ];
+var PERIODE_HOULE = 14;
+var PERIODE_RAFALE = 4.1;
+function ventCourant(niveau, temps) {
+var base = niveau.vent;
+var phase = (niveau.graine % 360) * Math.PI / 180;
+var houle = Math.sin((2 * Math.PI * temps) / PERIODE_HOULE + phase);
+var rafale = Math.sin((2 * Math.PI * temps) / PERIODE_RAFALE + phase * 1.7);
+return base * (0.62 + 0.30 * houle + 0.18 * rafale);
+}
 var NIVEAUX = [
 { nom: "Le toit de l'atelier", largeur: 220, hauteur: 140,
-graine: 3171, amplitude: 30, padFrac: 0.74, padRel: 0.34, padW: 13,
+graine: 3171, amplitude: 30, vent: 0.25, reserve: 12, padFrac: 0.74, padRel: 0.34, padW: 13,
 depart: { x: 34, y: 15 },
 consigne: 'Le relief est doux, la plateforme large : de quoi prendre la mesure de l\'inertie.' },
 { nom: 'La carrière de calcaire', largeur: 260, hauteur: 150,
-graine: 5209, amplitude: 38, padFrac: 0.80, padRel: 0.58, padW: 11,
+graine: 5209, amplitude: 38, vent: 0.45, reserve: 18, padFrac: 0.80, padRel: 0.58, padW: 11,
 depart: { x: 30, y: 16 },
 consigne: 'Les gradins de la carrière sont hauts : la plateforme est posée sur un replat.' },
 { nom: 'La falaise', largeur: 300, hauteur: 170,
-graine: 8813, amplitude: 46, padFrac: 0.72, padRel: 0.26, padW: 9.5,
+graine: 8813, amplitude: 46, vent: 0.65, reserve: 14, padFrac: 0.72, padRel: 0.26, padW: 9.5,
 depart: { x: 32, y: 18 },
 consigne: 'La plateforme est au pied de la falaise : il faut plonger sans se laisser emporter.' },
 { nom: 'La crête enneigée', largeur: 340, hauteur: 195,
-graine: 6427, amplitude: 56, padFrac: 0.84, padRel: 0.72, padW: 8,
+graine: 6427, amplitude: 56, vent: 0.85, reserve: 25, padFrac: 0.84, padRel: 0.72, padW: 8,
 depart: { x: 30, y: 20 },
 consigne: 'La plateforme est sur la crête : on arrive par-dessus, puis on freine la dérive.' },
 { nom: 'La base polaire', largeur: 380, hauteur: 220,
-graine: 9151, amplitude: 64, padFrac: 0.78, padRel: 0.52, padW: 6.5,
+graine: 9151, amplitude: 64, vent: 1.05, reserve: 25.5, padFrac: 0.78, padRel: 0.52, padW: 6.5,
 depart: { x: 26, y: 22 },
 consigne: 'La carte la plus vaste, le pic le plus étroit : trois cents mètres à traverser.' }
 ];
@@ -8157,7 +8254,7 @@ var DERNIER_RESULTAT = null;
 var rafId = null;
 var dernierTemps = 0;
 var vol = {
-x: 0, y: 0, vx: 0, vy: 0, theta: 0, omega: 0,
+x: 0, y: 0, vx: 0, vy: 0, theta: 0, omega: 0, vent: 0,
 batterie: 100, temps: 0, poussee: false,
 touches: { poussee: false, gauche: false, droite: false }
 };
@@ -8279,6 +8376,120 @@ pad: { x: padX, y: padY, w: niveau.padW },
 neige: miniY + 0.42 * (maxiY - miniY)
 };
 }
+var ALPHABET_36 = '0123456789abcdefghijklmnopqrstuvwxyz';
+var DECORS = {};
+function preparerDecors() {
+var donnees = window.VOL_DECOR || {};
+for (var cle in donnees) {
+if (!Object.prototype.hasOwnProperty.call(donnees, cle)) continue;
+var sprite = donnees[cle];
+var canevas = document.createElement('canvas');
+canevas.width = sprite.l;
+canevas.height = sprite.h;
+var ctx = canevas.getContext('2d');
+var image = ctx.createImageData(sprite.l, sprite.h);
+var palette = sprite.p.map(function (hex) {
+return [parseInt(hex.substr(1, 2), 16),
+parseInt(hex.substr(3, 2), 16),
+parseInt(hex.substr(5, 2), 16)];
+});
+var lignes = sprite.r.split('|');
+for (var y = 0; y < sprite.h; y++) {
+var ligne = lignes[y] || '';
+var x = 0;
+for (var i = 0; i + 1 < ligne.length; i += 2) {
+var nombre = ligne.charAt(i) === '['
+? 35 : ALPHABET_36.indexOf(ligne.charAt(i));
+var indice = ALPHABET_36.indexOf(ligne.charAt(i + 1));
+if (indice > 0 && palette[indice - 1]) {
+var couleur = palette[indice - 1];
+for (var k = 0; k < nombre && x + k < sprite.l; k++) {
+var p = ((y * sprite.l) + x + k) * 4;
+image.data[p] = couleur[0];
+image.data[p + 1] = couleur[1];
+image.data[p + 2] = couleur[2];
+image.data[p + 3] = 255;
+}
+}
+x += nombre;
+}
+}
+ctx.putImageData(image, 0, 0);
+DECORS[cle] = { canevas: canevas, l: sprite.l, h: sprite.h };
+}
+}
+var MODELLES_DECOR = {
+'maison-j1': { metres: 7.5, poids: 7 },
+'maison-j2': { metres: 7.5, poids: 7 },
+'maison-j3': { metres: 6.5, poids: 6 },
+'maison-j1m': { metres: 7.5, poids: 4 },
+'maison-j2m': { metres: 7.5, poids: 4 },
+arbre: { metres: 4.5, poids: 12 },
+pylone: { metres: 6.5, poids: 3 }
+};
+var CLES_MAISON = ['maison-j1', 'maison-j2', 'maison-j3', 'maison-j1m', 'maison-j2m'];
+function calculerDecors(niveau, terrain) {
+var places = [];
+var i = 0;
+var x = 14;
+function plat(abscisse, demi, penteMax) {
+if (abscisse - demi < 2 || abscisse + demi > niveau.largeur - 2) return null;
+var gauche = hauteurA(terrain, abscisse - demi);
+var droite = hauteurA(terrain, abscisse + demi);
+if (Math.abs(droite - gauche) / (2 * demi) > penteMax) return null;
+return Math.min(gauche, droite) + 0.35;
+}
+while (x < niveau.largeur - 14 && places.length < 28) {
+i++;
+x += 4;
+if (Math.abs(x - terrain.pad.x) < terrain.pad.w / 2 + 20) continue;
+var tirage = melange(i * 5.3 + 3, niveau.graine);
+if (tirage < 0.45) {
+var nb = 2 + (melange(i * 2.1 + 9, niveau.graine) > 0.55 ? 1 : 0);
+var poses = 0;
+for (var m = 0; m < nb; m++) {
+var xm = x + m * (10 + melange(i + m * 3.3, niveau.graine) * 5);
+if (Math.abs(xm - terrain.pad.x) < terrain.pad.w / 2 + 14) continue;
+var ym = plat(xm, 4.5, 0.55);
+if (ym === null) continue;
+var cle = CLES_MAISON[Math.floor(melange(i * 7.7 + m * 2.3, niveau.graine)
+* CLES_MAISON.length) % CLES_MAISON.length];
+places.push({ cle: cle, x: xm, y: ym });
+poses++;
+}
+if (poses) {
+var yt = plat(x - 6, 2.5, 0.6);
+if (yt !== null) places.push({ cle: 'arbre', x: x - 6, y: yt });
+x += nb * 13 + 16;
+}
+} else if (tirage < 0.78) {
+var ya = plat(x, 2.5, 0.6);
+if (ya !== null) {
+places.push({ cle: 'arbre', x: x, y: ya });
+x += 10;
+}
+} else if (tirage < 0.87) {
+var yp = plat(x, 3, 0.42);
+if (yp !== null) {
+places.push({ cle: 'pylone', x: x, y: yp });
+x += 14;
+}
+}
+}
+places.sort(function (a, b) { return a.x - b.x; });
+return places;
+}
+function hauteurA(terrain, x) {
+var i = Math.round(x / terrain.pas);
+if (i < 0) i = 0;
+if (i > terrain.n - 1) i = terrain.n - 1;
+return terrain.hauteurs[i];
+}
+function decorsDuNiveau() {
+if (!TERRAIN) return [];
+if (!TERRAIN.decors) TERRAIN.decors = calculerDecors(NIVEAUX[NIVEAU], TERRAIN);
+return TERRAIN.decors;
+}
 function terrainDuNiveau(indice) {
 if (!TERRAINS[indice]) TERRAINS[indice] = construireTerrain(NIVEAUX[indice]);
 return TERRAINS[indice];
@@ -8344,10 +8555,7 @@ var choisi = autre === bouton;
 autre.classList.toggle('choisi', choisi);
 autre.setAttribute('aria-checked', choisi ? 'true' : 'false');
 });
-reglage('vol-reglage-batterie', b.nom + ' : ' + b.endurance
-+ ' s de poussée à pleine puissance. ' + b.avis
-+ ' Une carte entière demande 15 à 25 s de poussée à un pilote soigneux : '
-+ 'la réserve sert à corriger les erreurs.', 'info');
+reglage('vol-reglage-batterie', b.nom + ' : ' + b.avis, 'info');
 majReglages();
 }
 function volChoisirSensibilite(bouton) {
@@ -8419,7 +8627,13 @@ return 'Carte de ' + Math.round(niveau.largeur) + ' × ' + Math.round(niveau.hau
 + ' Posez-vous avec une descente sous ' + arrondi(VY_LIMITE, 1)
 + ' m/s, une dérive sous ' + arrondi(VX_LIMITE, 1)
 + ' m/s et moins de ' + TILT_LIMITE + '° d\'inclinaison. Aucune résistance '
-+ 'de l\'air : la vitesse ne se dissipe pas, il faut freiner.';
++ 'de l\'air : la vitesse ne se dissipe pas, il faut freiner. '
++ 'Vent latéral ' + arrondi(niveau.vent, 2) + ' m/s² en moyenne, avec des '
++ 'rafales : la dérive change toute seule, il faut la corriger. '
++ 'Réserve embarquée pour cette mission : '
++ arrondi((niveau.reserve * (BATTERIE === null ? 1 : BATTERIES[BATTERIE].facteurReserve))
+/ SENSIBILITES[SENSIBILITE].conso, 0)
++ ' s de poussée.';
 }
 function volDecoller() {
 if (ETAT === 'vol' || ETAT === 'pause') return;
@@ -8465,6 +8679,7 @@ vol.omega = 0;
 vol.batterie = 100;
 vol.temps = 0;
 vol.poussee = false;
+vol.vent = ventCourant(NIVEAUX[NIVEAU], 0);
 vol.touches.poussee = vol.touches.gauche = vol.touches.droite = false;
 DERNIER_RESULTAT = null;      // le résultat décrit UNE tentative, pas la précédente
 majCamera(0, true);
@@ -8547,10 +8762,15 @@ dessiner();
 if (ETAT === 'vol') rafId = requestAnimationFrame(boucle);
 else rafId = null;
 }
+function reserveUtile() {
+var b = BATTERIES[BATTERIE] || BATTERIES[1];
+var s = SENSIBILITES[SENSIBILITE];
+return (NIVEAUX[NIVEAU].reserve * b.facteurReserve) / s.conso;
+}
 function mettreAJour(dt) {
 var b = BATTERIES[BATTERIE];
 var s = SENSIBILITES[SENSIBILITE];
-var endurance = b.endurance / s.conso;
+var endurance = reserveUtile();
 if (vol.touches.poussee && vol.batterie > 0) {
 vol.batterie -= (100 / endurance) * dt;
 } else {
@@ -8565,7 +8785,8 @@ vol.theta += vol.omega * dt;
 if (vol.theta > INCLINAISON_MAX) { vol.theta = INCLINAISON_MAX; vol.omega = 0; }
 if (vol.theta < -INCLINAISON_MAX) { vol.theta = -INCLINAISON_MAX; vol.omega = 0; }
 vol.poussee = vol.touches.poussee && vol.batterie > 0;
-var ax = 0;
+vol.vent = ventCourant(NIVEAUX[NIVEAU], vol.temps);
+var ax = vol.vent;                 // le vent pousse latéralement
 var ay = GRAVITE;
 if (vol.poussee) {
 var p = POUSSEE_MAX / b.facteurMasse;
@@ -8656,7 +8877,8 @@ afficherVoile('✅ Posé sur la plateforme du niveau ' + (NIVEAU + 1),
 'Descente ' + arrondi(Math.abs(vol.vy), 1) + ' m/s, dérive '
 + arrondi(Math.abs(vol.vx), 1) + ' m/s, inclinaison '
 + arrondi(Math.abs(vol.theta), 0) + '° : ' + points + ' points. Batterie restante : '
-+ Math.round(vol.batterie) + ' %.'
++ Math.round(vol.batterie) + ' % — il en fallait '
++ Math.round(100 - vol.batterie) + ' % pour ce vol.'
 + (NIVEAU + 1 < NIVEAUX.length ? ' Niveau suivant ?' : ' C\'était le dernier niveau !'),
 NIVEAU + 1 < NIVEAUX.length ? '➡ Niveau suivant' : '🏁 Terminer', volSiteSuivant);
 annoncer('Posé au niveau ' + (NIVEAU + 1) + ', ' + points
@@ -8739,7 +8961,12 @@ jauge.classList.toggle('critique', vol.batterie <= 15);
 jauge.setAttribute('aria-valuenow', String(Math.round(vol.batterie)));
 }
 var site = el('vol-site');
-if (site) site.textContent = (NIVEAU + 1) + ' / ' + NIVEAUX.length + ' — ' + NIVEAUX[NIVEAU].nom;
+if (site) {
+site.textContent = (NIVEAU + 1) + ' / ' + NIVEAUX.length;
+site.title = NIVEAUX[NIVEAU].nom;
+site.setAttribute('aria-label', 'Niveau ' + (NIVEAU + 1) + ' sur '
++ NIVEAUX.length + ' : ' + NIVEAUX[NIVEAU].nom);
+}
 var altitudeZone = el('vol-altitude');
 if (altitudeZone) altitudeZone.textContent = arrondi(altitude(), 1) + ' m';
 var vy = el('vol-vy');
@@ -8754,9 +8981,21 @@ if (distance && TERRAIN) {
 distance.textContent = Math.round(Math.hypot(TERRAIN.pad.x - vol.x,
 TERRAIN.pad.y - vol.y)) + ' m';
 }
+var vent = el('vol-vent');
+if (vent) {
+var force = Math.abs(vol.vent);
+vent.textContent = arrondi(force, 2) + ' ' + (vol.vent >= 0 ? '→' : '←');
+vent.className = 'vol-valeur' + (force >= 0.8 ? ' vol-vent-fort' : '');
+}
+var reserve = el('vol-reserve');
+if (reserve && BATTERIE !== null) {
+var utile = reserveUtile();
+reserve.textContent = arrondi(utile, 0) + ' s';
+reserve.title = 'Secondes de poussée disponibles pour cette mission';
+}
 var carte = el('vol-carte');
 if (carte) {
-carte.textContent = Math.round(NIVEAUX[NIVEAU].largeur) + ' × '
+carte.textContent = Math.round(NIVEAUX[NIVEAU].largeur) + '×'
 + Math.round(NIVEAUX[NIVEAU].hauteur) + ' m';
 }
 var recap = el('vol-reglages-actifs');
@@ -8805,8 +9044,10 @@ var H = canvas.height;
 if (!TERRAIN) return;
 var E = ECHELLE;
 dessinerCiel(ctx, W, H);
+dessinerVent(ctx, W, H);
 dessinerLointains(ctx, W, H);
 dessinerRelief(ctx, W, H);
+dessinerDecors(ctx, W, H);
 dessinerPlateforme(ctx, W, H);
 dessinerDrone(ctx);
 dessinerFlecheCible(ctx, W, H);
@@ -8829,6 +9070,52 @@ if (sy < 0 || sy > H * 0.7) continue;
 var taille = melange(i * 5.3 + 9, graine) > 0.82 ? 2 : 1;
 ctx.fillRect(sx, sy, taille, taille);
 }
+}
+function dessinerVent(ctx, W, H) {
+var vent = vol.vent || 0;
+var force = Math.abs(vent);
+var sens = vent >= 0 ? 1 : -1;
+var nb = Math.round(4 + Math.min(10, force * 9));
+var vitesse = 20 + force * 90;              // px/s de défilement
+var temps = vol.temps || 0;
+ctx.save();
+ctx.strokeStyle = 'rgba(255, 255, 255, ' + (0.16 + Math.min(0.3, force * 0.22)) + ')';
+ctx.lineWidth = 1.4;
+ctx.beginPath();
+for (var i = 0; i < nb; i++) {
+var graine = melange(i * 4.7 + 1, NIVEAUX[NIVEAU].graine);
+var longueur = 12 + graine * 26 + force * 26;
+var x = ((graine * (W + 240) + sens * temps * vitesse) % (W + 240) + W + 240) % (W + 240) - 120;
+var y = 26 + melange(i * 9.1 + 5, NIVEAUX[NIVEAU].graine) * (H * 0.72);
+ctx.moveTo(x, y);
+ctx.lineTo(x + sens * longueur, y - longueur * 0.08);
+}
+ctx.stroke();
+ctx.restore();
+var cx = 26;
+var cy = 40;
+var angle = Math.max(-0.9, Math.min(0.9, vent * 0.55));
+ctx.save();
+ctx.translate(cx, cy);
+ctx.rotate(angle * (vent >= 0 ? 1 : 1));
+ctx.strokeStyle = 'rgba(230, 240, 250, .85)';
+ctx.lineWidth = 2;
+ctx.beginPath();
+ctx.moveTo(0, 0);
+ctx.lineTo(0, 22);
+ctx.stroke();
+ctx.fillStyle = force > 0.7 ? 'rgba(255, 150, 90, .92)' : 'rgba(120, 210, 160, .92)';
+ctx.beginPath();
+ctx.moveTo(0, 2);
+ctx.lineTo(sens * 26, 8);
+ctx.lineTo(sens * 22, 16);
+ctx.lineTo(0, 14);
+ctx.closePath();
+ctx.fill();
+ctx.strokeStyle = 'rgba(20, 50, 75, .5)';
+ctx.lineWidth = 1;
+ctx.stroke();
+ctx.restore();
 }
 function dessinerLointains(ctx, W, H) {
 var graine = NIVEAUX[NIVEAU].graine;
@@ -8890,6 +9177,62 @@ else ctx.lineTo(sx, sy);
 ctx.strokeStyle = 'rgba(157, 196, 128, .85)';
 ctx.lineWidth = Math.max(1.2, E * 0.35);
 ctx.stroke();
+}
+function dessinerDecors(ctx, W, H) {
+var E = ECHELLE;
+var places = decorsDuNiveau();
+ctx.save();
+ctx.imageSmoothingEnabled = false;
+for (var i = 0; i < places.length; i++) {
+var place = places[i];
+var sprite = DECORS[place.cle];
+var modele = MODELLES_DECOR[place.cle];
+if (!sprite) continue;
+var sx = (place.x - CAM.x) * E;
+if (sx < -160 || sx > W + 160) continue;         // hors de la vue
+var facteur = Math.max(1, Math.round((modele.metres * E) / sprite.l));
+var largeur = sprite.l * facteur;
+var hauteur = sprite.h * facteur;
+var sy = (place.y - CAM.y) * E - hauteur;
+ctx.fillStyle = 'rgba(10, 26, 40, .22)';
+ctx.beginPath();
+ctx.ellipse(sx, (place.y - CAM.y) * E, largeur * 0.45, Math.max(1.5, hauteur * 0.05),
+0, 0, Math.PI * 2);
+ctx.fill();
+if (place.cle.indexOf('maison') === 0 || place.cle === 'pylone') {
+var demiMetres = modele.metres / 2;
+var yg = hauteurA(TERRAIN, place.x - demiMetres);
+var yd = hauteurA(TERRAIN, place.x + demiMetres);
+ctx.beginPath();
+ctx.moveTo(Math.round(sx - largeur / 2), Math.round(sy + hauteur));
+ctx.lineTo(Math.round(sx - largeur / 2), Math.round((yg - CAM.y) * E));
+ctx.lineTo(Math.round(sx + largeur / 2), Math.round((yd - CAM.y) * E));
+ctx.lineTo(Math.round(sx + largeur / 2), Math.round(sy + hauteur));
+ctx.closePath();
+ctx.fillStyle = '#33443a';
+ctx.fill();
+}
+ctx.drawImage(sprite.canevas, Math.round(sx - largeur / 2), Math.round(sy),
+largeur, hauteur);
+}
+ctx.restore();
+var nuage = DECORS.nuage;
+if (nuage) {
+var graine = NIVEAUX[NIVEAU].graine;
+for (var c = 0; c < 4; c++) {
+var ancreX = melange(c * 13.3 + 2, graine) * (NIVEAUX[NIVEAU].largeur + 120) - 60;
+var y = 18 + melange(c * 7.1 + 6, graine) * (NIVEAUX[NIVEAU].hauteur * 0.45);
+var facteurN = Math.max(1, Math.round((16 * ECHELLE) / nuage.l));
+var nx = (ancreX - CAM.x * 0.55) * ECHELLE;
+var ny = (y - CAM.y * 0.55) * ECHELLE;
+if (nx < -nuage.l * 3 || nx > W + nuage.l * 3) continue;
+ctx.save();
+ctx.globalAlpha = 0.55;
+ctx.imageSmoothingEnabled = false;
+ctx.drawImage(nuage.canevas, nx, ny, nuage.l * facteurN, nuage.h * facteurN);
+ctx.restore();
+}
+}
 }
 function dessinerPlateforme(ctx, W, H) {
 var E = ECHELLE;
@@ -9167,6 +9510,7 @@ if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); relacher(ev); }
 }
 function initialiser() {
 if (!el('vol-canvas')) return;      // bloc absent : activité sans ce jeu
+preparerDecors();
 dessinerRotors();
 reglage('vol-reglage-helices',
 'Les quatre hélices tournent pour l\'instant dans le même sens : à vous de trouver le réglage équilibré.',
@@ -9213,6 +9557,8 @@ vx: vol.vx,
 vy: vol.vy,
 theta: vol.theta,
 batterie: vol.batterie,
+vent: vol.vent,
+reserve: BATTERIE === null ? 0 : reserveUtile(),
 temps: vol.temps,
 pad: { x: TERRAIN ? TERRAIN.pad.x : 0, y: TERRAIN ? TERRAIN.pad.y : 0,
 w: TERRAIN ? TERRAIN.pad.w : 0 },
@@ -9232,6 +9578,34 @@ resultat: DERNIER_RESULTAT
 };
 window.volReglagesPret = function () {
 return rotorsEquilibres() && BATTERIE !== null;
+};
+window.volDecors = function (numero) {
+var i = (typeof numero === 'number' ? numero - 1 : NIVEAU);
+if (!(i >= 0 && i < NIVEAUX.length)) i = NIVEAU;
+var ancien = NIVEAU;
+NIVEAU = i;
+var terrain = terrainDuNiveau(i);
+var places = terrain.decors || calculerDecors(NIVEAUX[i], terrain);
+terrain.decors = places;
+var cles = [];
+for (var cle in DECORS) {
+if (Object.prototype.hasOwnProperty.call(DECORS, cle)) cles.push(cle);
+}
+var resultat = {
+niveau: i + 1,
+sprites: cles,
+places: places.map(function (p) { return { cle: p.cle, x: p.x, y: p.y }; }),
+pad: { x: terrain.pad.x, w: terrain.pad.w }
+};
+NIVEAU = ancien;
+return resultat;
+};
+window.volVoirA = function (x, y) {
+vol.x = Number(x);
+vol.y = Number(y);
+majCamera(0, true);
+dessiner();
+return { x: vol.x, y: vol.y, cam: { x: CAM.x, y: CAM.y } };
 };
 window.volCadrages = function () { return CADRAGES; };
 window.volBoiteMinimap = function () { return DERNIERE_MINIMAP; };
