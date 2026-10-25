@@ -44,7 +44,7 @@
             background: #87ceeb;
             display: block;
             touch-action: none;
-            cursor: pointer;
+            cursor: default;
             width: 100%;
             max-width: 600px;
             height: auto;
@@ -428,6 +428,9 @@
             motifFin: '',
             ballon: { x: 118, y: 62, phase: 0 },
             avion: { x: -90, y: 34, v: 1.7 },
+            /* V7-CHUTE : état de la chute burlesque */
+            chute: null,
+            scooterEnvol: null,
             /* V5-BATTERIES : recharges posées sur la route */
             batteries: [],
             batterieTimer: 0,
@@ -1087,11 +1090,17 @@
             const cy = gameState.player.y + gameState.player.height / 2;
             const t = gameState.t;
 
-            // Chute : le prof bascule et glisse sur le côté
+            // Chute burlesque : la trottinette part seule en vrille,
+            // le prof tourne sur lui-même et rebondit.
             if (gameState.crash > 0) {
-                const p = Math.min(1, gameState.crash / 24);
-                ombreAuSol(cx + 8 + p * 18, cy + 30, 20 + p * 12, 9, 0.3);
-                dessiner('profTrottinette', cx + p * 18, cy + p * 12, (Math.PI / 2) * p);
+                const ch = gameState.chute || { x: cx, y: cy, angle: 0 };
+                const sc = gameState.scooterEnvol;
+                if (sc) {
+                    dessiner(gameState.selectedScooter ? gameState.selectedScooter.sprite : 'profTrottinette',
+                             sc.x, sc.y, sc.angle);
+                }
+                ombreAuSol(ch.x + 6, ch.y + 30, 20, 8, 0.3);
+                dessiner('profTrottinette', ch.x, ch.y, ch.angle);
                 return;
             }
 
@@ -1285,22 +1294,122 @@
             gameState.motifFin = batteryEmpty ? 'batterie' : 'crash';
             gameState.flash = batteryEmpty ? 12 : 22;
             gameState.shake = batteryEmpty ? 8 : 22;
+
+            const cxJ = gameState.player.x + gameState.player.width / 2;
+            const cyJ = gameState.player.y + gameState.player.height / 2;
+            const sens = Math.random() < 0.5 ? -1 : 1;
+
             if (!batteryEmpty) {
                 gameState.crash = 1;
+                // V7-CHUTE : le prof est projeté et tournoie, la trottinette part seule
+                gameState.chute = {
+                    x: cxJ, y: cyJ,
+                    vx: sens * (3 + Math.random() * 1.6),
+                    vy: -8.5,
+                    angle: 0,
+                    vAngle: sens * 0.24,
+                    rebonds: 0
+                };
+                gameState.scooterEnvol = {
+                    x: cxJ, y: cyJ + 12,
+                    vx: -sens * (5 + Math.random() * 2.5),
+                    vy: -11,
+                    angle: 0,
+                    vAngle: -sens * 0.32
+                };
+                gameState.plumes = [];
                 for (let i = 0; i < 8; i++) {
                     gameState.etoiles.push({ angle: (Math.PI * 2 / 8) * i, r: 24, age: 0 });
                 }
+                ajouterPopup(cxJ - 22, cyJ - 46, 'Aïe !', '#e74c3c');
+                for (let i = 0; i < 12; i++) {
+                    gameState.poussiere.push({
+                        x: cxJ + (Math.random() - 0.5) * 30,
+                        y: cyJ + 30,
+                        vx: (Math.random() - 0.5) * 3,
+                        vy: -1 - Math.random() * 2,
+                        r: 2 + Math.random() * 2.5,
+                        age: 0
+                    });
+                }
             }
-            // Petite scène de fin (≈ 1 s) avant le panneau de score
+
+            // Scène de fin (≈ 1,5 s) avant le panneau de score
             let trames = 0;
             (function sceneDeFin() {
-                if (!batteryEmpty) gameState.crash++;
+                if (!batteryEmpty) {
+                    gameState.crash++;
+                    animerChute();
+                }
                 gameState.etoiles.forEach(e => { e.age++; e.angle += 0.16; e.r += 0.9; });
                 gameState.etoiles = gameState.etoiles.filter(e => e.age < 50);
                 render();
-                if (trames++ < 55) requestAnimationFrame(sceneDeFin);
+                if (trames++ < 90) requestAnimationFrame(sceneDeFin);
                 else afficherFin(batteryEmpty);
             })();
+        }
+
+        // Physique de la chute : rebonds amortis sur l'asphalte
+        function animerChute() {
+            const ch = gameState.chute;
+            if (!ch) return;
+            const sol = gameState.player.y + gameState.player.height;
+            if (ch.immobile) {
+                // Le prof est au sol, il ne bouge plus que par petites saccades
+                ch.y = sol;
+                ch.angle += ch.vAngle * 0.25;
+                ch.vAngle *= 0.9;
+                const sc0 = gameState.scooterEnvol;
+                if (sc0) {
+                    sc0.vy += 0.55;
+                    sc0.x += sc0.vx;
+                    sc0.y += sc0.vy;
+                    sc0.angle += sc0.vAngle;
+                }
+                return;
+            }
+            ch.vy += 0.95;
+            ch.x += ch.vx;
+            ch.y += ch.vy;
+            ch.angle += ch.vAngle;
+
+            if (ch.y > sol) {
+                ch.y = sol;
+                ch.vy *= -0.42;
+                ch.vx *= 0.72;
+                ch.vAngle *= 0.55;
+                ch.rebonds++;
+                gameState.shake = 12;
+                if (ch.rebonds <= 2) {
+                    ajouterPopup(ch.x - 10, ch.y - 34, ch.rebonds === 1 ? 'Badaboum !' : 'Aïe…', '#f39c12');
+                    for (let i = 0; i < 6; i++) {
+                        gameState.poussiere.push({
+                            x: ch.x + (Math.random() - 0.5) * 24,
+                            y: ch.y + 6,
+                            vx: (Math.random() - 0.5) * 2.4,
+                            vy: -0.8 - Math.random() * 1.4,
+                            r: 1.5 + Math.random() * 2,
+                            age: 0
+                        });
+                    }
+                }
+                if (Math.abs(ch.vy) < 1.8) {
+                    ch.vy = 0;
+                    ch.vx *= 0.86;
+                    ch.immobile = true;   // fin des rebonds
+                    ch.y = sol;
+                }
+            }
+
+            const sc = gameState.scooterEnvol;
+            if (sc) {
+                sc.vy += 0.55;
+                sc.x += sc.vx;
+                sc.y += sc.vy;
+                sc.angle += sc.vAngle;
+            }
+            gameState.poussiere.forEach(p => { p.x += p.vx * 0.6; p.y += p.vy * 0.6; p.age++; });
+            gameState.poussiere = gameState.poussiere.filter(p => p.age < 40);
         }
 
         function afficherFin(batteryEmpty) {
@@ -1346,16 +1455,25 @@
                                                           y - gameState.player.height / 2));
             }
         }
+        // V7-CHUTE : seuls le doigt et le stylet pilotent. La souris est ignorée :
+        // un clic sur le canvas ne doit pas faire sauter le prof ailleurs.
+        function pointeurPilotable(e) {
+            return e.pointerType === 'touch' || e.pointerType === 'pen';
+        }
         canvas.addEventListener('pointerdown', (e) => {
+            if (!pointeurPilotable(e)) return;
             doigtActif = true;
-            if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+            try {
+                if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+            } catch (err) { /* pointeur déjà relâché : sans conséquence */ }
             if (gameState.running) deplacerVers(e.clientX, e.clientY);
         });
         canvas.addEventListener('pointermove', (e) => {
+            if (!pointeurPilotable(e)) return;
             if (doigtActif && gameState.running) deplacerVers(e.clientX, e.clientY);
         });
-        canvas.addEventListener('pointerup', () => { doigtActif = false; });
-        canvas.addEventListener('pointercancel', () => { doigtActif = false; });
+        canvas.addEventListener('pointerup', (e) => { if (pointeurPilotable(e)) doigtActif = false; });
+        canvas.addEventListener('pointercancel', (e) => { if (pointeurPilotable(e)) doigtActif = false; });
         
         document.addEventListener('keyup', (e) => {
             gameState.keys[e.key] = false;
