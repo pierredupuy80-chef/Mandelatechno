@@ -235,9 +235,13 @@
                 <img id="scooter-hud" alt="Trottinette choisie">
                 <span id="scooter-nom"></span>
             </div>
+            <div class="stat">
+                <span class="stat-label">🔋 Recharges:</span>
+                <span id="collectees">0</span>
+            </div>
         </div>
         <div id="controls">
-            ← → pour se déplacer | ↑ pour accélérer | ↓ pour ralentir
+            ← → pour se déplacer | ↑ pour avancer | ↓ pour reculer | ramasse les 🔋 pour recharger
         </div>
     </div>
     
@@ -278,6 +282,7 @@
             massif: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABYUlEQVR4nMVXWw7CMAxLEXfgGzgS5+RIiKOUn3ZKU+fVTczShDTa2nUehHK7PehMXHbur+05TQAX8ncB9ft+7haxKkCSL8MTUCkX57QLV+swfsv761OJqMj3e5ENQW1iIutC7iEHpg2dsN/cETA5xNybUEQjkrYTspsLCrixcaGXZgi8WCfIVVhJODggyaRTEmIfvD0SUFq80CFhZKoEOQBLzbsxh/hevb0mwEVPPv5pCOBVNYmRVYA2baRRcAHAuUGE2gfkRisJo2iODT1B7QPSWtmMOBbLsagCtANRrCOVAtZsDvAQDH0+W4KWcESMBAzEHvmC7bAcr2JBPYKUuWH2AKL5t6CAZzvUglIl7oCi9YGO6uRCQSRe7XOkBpJ+sHBjOjyTH+mh1ArF9/1MV09IgNKU+M0HFzIivBwgAlOSJORrFQHhecBEoLRKWxcez0MOSIIjEXHgcFKOo/6cLuMHCfzCDlDnHc4AAAAASUVORK5CYII=",
             ballon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAyklEQVR4nO2XOw6DQAxExxElPV0KzsXxOBlnSE8aFgFi0fizrIgyDeLnedjGC9J1PWrqVdUdQGO8b84clzsA5mn4nJ54j20Co0FE2QNZ8wMIDaHpAcpcKxZAZb5cm+sTE0AxFQNgs/C7GagOwL6KLIAsAcP1qBLQWdBMQu0oBq7XgjUuG8wCAASuhtYeEGAdNmlfbe4BCJO1BMC+DKanB3wZkMP2doAQ/QG8AALyy6cUgFuPBXClPQIgTNZfs23zuQaRFcBtnFS9BF8aZCcL409ZrgAAAABJRU5ErkJggg==",
             avion: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABeElEQVR4nO2Wu27CQBBFj6P0FBTu01EhWUJOm0jponwINa0rWtf+EESHBC3IkiVXfEOKFPmCTePd+LGerLEJCeJKlt9zj2dmd+35/gOX1N1F3W8AN4C/AHAv3FOlY+9cAGIG0jwjzbM6zO8BzKaBATkXhARQSXtHCCVszgBG7x+fAERx8lNwBagoTojipFxCs69LakIAVps9AMvF3AR10WwaQJzw9vJImmcmTl2esBipqAjQFRKovLfa7Fku5mAZTWIGwmACfJfgkB3NtUN2NM9p4/V2hz8eNeDazCUAVTYpAgCmDwiDiQGyGbuYg70Ear3dmRMbhAYJg4nVWEsPYwmgPgqU/hodWKfcJsm81HTiLFrPgNJdruv++vzU+nJbk7qkXqvRAxbjchCnicjVHFp6wGLc9kyjAYu6Oy9etpnQcwhQua+z1tW8DcBVgyzRg/yQ+OPRSV8/GMCp5iCvBS5yaVhRF/8nHAKgVzP2Beg9Eq6iBP8b4AsxL5si5PHsSwAAAABJRU5ErkJggg==",
+            batterie: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABL0lEQVR4nO2WPw6CMBjFH8ahN2AyMQbPoJuLJ2BjZmFsYoLhBEYSE0cXZzdP4OKmZ8CBxEuw4YASVNp+xT8E4xvpa/vL10f7GabZQ51q1br7HwBAu+K8VPDd+AZAujxtSwe4Zae6EI04gqdye7Ow1MjK/dKKGIp7IC83t2yZ706JO8Qq8LGIjziP51IIrQyIzv5R3LLhIcQq8MEVXlIGuGWTNwcyULY+kLy1h7BZAIv4+BZPZYBPqHkAshLrlh+o+BhV2UgkZQVE1y5FlLnNy8DPAZBD6M2yxwUQh3DSHeRe9m6A4sbRZl8+7uispgnA1gdECs8NjPoSkgD6zgjRdVGdhRN3SPIpOyIA6OymAMSlB5Dno/jvF4CFHZEKIId4QdKekJIB7V5fR7XfA3+AC+NvU14DOz5GAAAAAElFTkSuQmCC",
             pieton1: "data:image/png;base64,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",
             pieton2: "data:image/png;base64,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",
             pieton3: "data:image/png;base64,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",
@@ -373,7 +378,7 @@
             running: false,
             selectedScooter: null,
             currentWeather: weatherConditions[0],
-            player: { x: 300, y: 600, width: 40, height: 60, vx: 0, saut: false, vy: 0, solY: 600 },
+            player: { x: 300, y: 600, width: 40, height: 60, vx: 0, vy: 0 },
             obstacles: [],
             decorations: [],
             distance: 0,
@@ -402,6 +407,10 @@
             motifFin: '',
             ballon: { x: 118, y: 150, phase: 0 },
             avion: { x: -90, y: 96, v: 1.7 },
+            /* V5-BATTERIES : recharges posées sur la route */
+            batteries: [],
+            batterieTimer: 0,
+            collectees: 0,
             nuages: [ {x: 90, y: 74, v: 0.16, e: 0.9}, {x: 330, y: 128, v: 0.11, e: 0.7}, {x: 520, y: 54, v: 0.2, e: 1.05} ]
         };
         
@@ -485,6 +494,11 @@
             gameState.motifFin = '';
             gameState.ballon = { x: 118, y: 150, phase: 0 };
             gameState.avion = { x: -90, y: 96, v: 1.7 };
+            gameState.batteries = [];
+            gameState.batterieTimer = 0;
+            gameState.collectees = 0;
+            gameState.player.vy = 0;
+            gameState.player.y = canvas.height - 40 - gameState.player.height;
             gameState.player.x = canvas.width / 2 - gameState.player.width / 2;
 
             afficherConsigne();
@@ -547,39 +561,29 @@
                 gameState.player.vx *= 0.82;
             }
 
-            // Accélération/freinage (le vent et la pluie freinent : interacteurs)
-            const maxSpeed = gameState.selectedScooter.speed * gameState.currentWeather.grip * gameState.rampe;
+            // Avant / arrière : le prof se déplace SUR LA CARTE (plus d'accélérateur,
+            // plus de saut). Avancer rapproche les obstacles, reculer les éloigne.
+            const moveVertical = 4.8 * gameState.currentWeather.grip;
             if (k['ArrowUp'] || k['w'] || k['z']) {
-                gameState.speed = Math.min(maxSpeed, gameState.speed + 0.5);
+                gameState.player.vy = -moveVertical;
             } else if (k['ArrowDown'] || k['s']) {
-                gameState.speed = Math.max(6, gameState.speed - 0.7);
+                gameState.player.vy = moveVertical;
             } else {
-                const cruiseSpeed = maxSpeed * 0.78;
-                if (gameState.speed < cruiseSpeed) {
-                    gameState.speed = Math.min(cruiseSpeed, gameState.speed + 0.38);
-                } else {
-                    gameState.speed = Math.max(cruiseSpeed, gameState.speed - 0.22);
-                }
+                gameState.player.vy *= 0.72;
             }
 
             gameState.player.x += gameState.player.vx;
             gameState.player.x = Math.max(50, Math.min(canvas.width - 50 - gameState.player.width, gameState.player.x));
+            gameState.player.y += gameState.player.vy;
+            gameState.player.y = Math.max(90, Math.min(canvas.height - 40 - gameState.player.height, gameState.player.y));
 
-            // Saut : Espace ou flèche haut pour sauter par-dessus les barrières
-            if ((k[' '] || k['ArrowUp']) && !gameState.player.saut) {
-                gameState.player.saut = true;
-                gameState.player.vy = -14; // impulsion vers le haut
-            }
-            // Physique du saut
-            if (gameState.player.saut) {
-                gameState.player.y += gameState.player.vy;
-                gameState.player.vy += 0.9; // gravité
-                // Retour au sol
-                if (gameState.player.y >= gameState.player.solY) {
-                    gameState.player.y = gameState.player.solY;
-                    gameState.player.saut = false;
-                    gameState.player.vy = 0;
-                }
+            // Vitesse imposée par la trottinette, la météo et la distance parcourue
+            const maxSpeed = gameState.selectedScooter.speed * gameState.currentWeather.grip * gameState.rampe;
+            const cruiseSpeed = maxSpeed * 0.85;
+            if (gameState.speed < cruiseSpeed) {
+                gameState.speed = Math.min(cruiseSpeed, gameState.speed + 0.38);
+            } else {
+                gameState.speed = Math.max(cruiseSpeed, gameState.speed - 0.3);
             }
 
             // Poussière derrière la roue : au départ et à haute vitesse
@@ -598,18 +602,41 @@
             gameState.poussiere.forEach(p => { p.x += p.vx; p.y += p.vy; p.age++; });
             gameState.poussiere = gameState.poussiere.filter(p => p.age < 26);
 
-            // Défilement vertical : la route descend, les lignes jaunes aussi (ralenti)
-            gameState.scrollSpeed = gameState.speed / 3.5;
-            gameState.distance += gameState.scrollSpeed * 0.058;
-            gameState.roadOffset += gameState.scrollSpeed;
+            // Défilement vertical : la route descend, les lignes jaunes aussi.
+            // Le déplacement avant/arrière du prof modifie la vitesse RELATIVE.
+            gameState.scrollSpeed = gameState.speed / 2.1;
+            gameState.defilement = Math.max(gameState.scrollSpeed * 0.5,
+                                            Math.min(gameState.scrollSpeed * 2.2,
+                                                     gameState.scrollSpeed - gameState.player.vy * 1.2));
+            gameState.distance += gameState.defilement * 0.058;
+            gameState.roadOffset += gameState.defilement;
 
             // Mise à jour obstacles
             gameState.obstacles.forEach(obs => {
-                // Les voitures avancent plus vite que le défilement
-                const vitesseObs = obs.type === 'car' ? gameState.scrollSpeed * 1.6 : gameState.scrollSpeed;
-                obs.y += vitesseObs;
+                obs.y += gameState.defilement;
                 obs.age = (obs.age || 0) + 1;
             });
+
+            // Batteries de recharge posées sur la route
+            gameState.batterieTimer++;
+            if (gameState.batterieTimer > 280) {
+                if (Math.random() < 0.75) spawnBatterie();
+                gameState.batterieTimer = 0;
+            }
+            gameState.batteries.forEach(b => {
+                b.y += gameState.defilement;
+                b.age = (b.age || 0) + 1;
+            });
+            gameState.batteries.forEach(b => {
+                if (checkCollision(gameState.player, b)) {
+                    b.prise = true;
+                    gameState.battery = Math.min(100, gameState.battery + 15);
+                    gameState.bonus += 25;
+                    gameState.collectees++;
+                    ajouterPopup(b.x + b.width / 2, b.y, '+15 % 🔋', '#f1c40f');
+                }
+            });
+            gameState.batteries = gameState.batteries.filter(b => !b.prise && b.y < canvas.height + 70);
 
             // Un obstacle passé sans le toucher rapporte des points
             gameState.obstacles.forEach(obs => {
@@ -624,20 +651,20 @@
 
             // Mise à jour décorations
             gameState.decorations.forEach(dec => {
-                dec.y += gameState.scrollSpeed;
+                dec.y += gameState.defilement;
                 dec.age = (dec.age || 0) + 1;
             });
             gameState.decorations = gameState.decorations.filter(dec => dec.y < canvas.height + 80);
 
             // Collision
             gameState.obstacles.forEach(obs => {
-                if (checkCollision(gameState.player, obs, obs.type)) {
+                if (checkCollision(gameState.player, obs)) {
                     endGame(false);
                 }
             });
 
             // Consommation batterie
-            const batteryDrain = 0.011 * gameState.currentWeather.batteryDrain * (gameState.speed / 20);
+            const batteryDrain = 0.011 * gameState.currentWeather.batteryDrain * (gameState.speed / 20) * gameState.rampe;
             gameState.battery -= batteryDrain;
 
             if (gameState.battery <= 0) {
@@ -652,6 +679,7 @@
             elBat.textContent = Math.floor(gameState.battery);
             elBat.style.color = (gameState.battery < 20 && Math.floor(gameState.t / 12) % 2 === 0)
                 ? '#e74c3c' : '';
+            document.getElementById('collectees').textContent = gameState.collectees;
             gameState.score = Math.floor(gameState.distance) + gameState.bonus;
             document.getElementById('score').textContent = gameState.score;
         }
@@ -659,7 +687,7 @@
         function afficherConsigne() {
             const c = document.getElementById('controls');
             if (c) {
-                c.textContent = '← → ou glisser le doigt pour se déplacer | ↑ accélérer | ↓ freiner | Espace pour sauter';
+                c.textContent = '← → se déplacer | ↑ avancer | ↓ reculer (ou glisser le doigt) | ramasse les 🔋 pour recharger';
             }
         }
 
@@ -670,8 +698,7 @@
                 { type: 'pedestrian', width: 36, height: 50, color: '#9b59b6' },
                 { type: 'car', width: 104, height: 156, color: '#3498db' },
                 { type: 'puddle', width: 58, height: 30, color: '#5dade2' },
-                { type: 'leaves', width: 54, height: 28, color: '#d35400' },
-                { type: 'barriere', width: 60, height: 40, color: '#e74c3c' }
+                { type: 'leaves', width: 54, height: 28, color: '#d35400' }
             ];
             
             const template = types[Math.floor(Math.random() * types.length)];
@@ -689,6 +716,20 @@
             });
         }
         
+        const TAILLE_BATTERIE = 34;
+        function spawnBatterie() {
+            const laneWidth = (canvas.width - 100) / 3;
+            const lane = Math.floor(Math.random() * 3);
+            const x = 50 + lane * laneWidth + (laneWidth - TAILLE_BATTERIE) / 2;
+            gameState.batteries.push({
+                x: x,
+                y: -TAILLE_BATTERIE,
+                width: TAILLE_BATTERIE,
+                height: TAILLE_BATTERIE,
+                age: 0
+            });
+        }
+
         function spawnDecoration() {
             const side = Math.random() < 0.5 ? 'left' : 'right';
             const type = Math.random() < 0.6 ? 'tree' : 'flower';
@@ -705,12 +746,8 @@
             });
         }
         
-        function checkCollision(rect1, rect2, obstacleType) {
+        function checkCollision(rect1, rect2) {
             const padding = 5;
-            // Si le joueur saute et que l'obstacle est une barrière, pas de collision
-            if (gameState.player.saut && obstacleType === 'barriere') {
-                return false;
-            }
             return rect1.x + padding < rect2.x + rect2.width &&
                    rect1.x + rect1.width - padding > rect2.x &&
                    rect1.y + padding < rect2.y + rect2.height &&
@@ -814,6 +851,9 @@
             gameState.obstacles.forEach(obs => {
                 drawObstacle(obs);
             });
+
+            // Batteries de recharge
+            dessinerBatteries();
 
             // Poussière derrière la roue, puis le prof
             dessinerPoussiere();
@@ -954,19 +994,6 @@
                 case 'leaves':
                     dessiner('feuilles', cx, cy, Math.sin((obs.age || 0) / 18) * 0.06);
                     break;
-                case 'barriere':
-                    // Barrière rayée rouge et blanche
-                    ctx.fillStyle = '#e74c3c';
-                    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                    ctx.fillStyle = '#ffffff';
-                    for (let i = 0; i < obs.width; i += 12) {
-                        ctx.fillRect(obs.x + i, obs.y, 6, obs.height);
-                    }
-                    // Poteaux de support
-                    ctx.fillStyle = '#7f8c8d';
-                    ctx.fillRect(obs.x - 4, obs.y + obs.height, 6, 10);
-                    ctx.fillRect(obs.x + obs.width - 2, obs.y + obs.height, 6, 10);
-                    break;
                 default:
                     ctx.fillStyle = obs.color || '#34495e';
                     ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
@@ -1009,6 +1036,30 @@
                 ctx.fillStyle = '#27ae60';
                 ctx.fillRect(cx - 16, cy - 26, 32, 52);
             }
+        }
+
+        function dessinerBatteries() {
+            if (!gameState.batteries || !gameState.batteries.length) return;
+            gameState.batteries.forEach(b => {
+                const cx = b.x + b.width / 2;
+                const cy = b.y + b.height / 2 + Math.sin((b.age || 0) / 8) * 2;
+                // Halo qui respire
+                ctx.save();
+                ctx.globalAlpha = 0.16 + Math.sin((b.age || 0) / 9) * 0.08;
+                ctx.fillStyle = '#f1c40f';
+                ctx.beginPath();
+                ctx.arc(cx, cy, 22 + Math.sin((b.age || 0) / 8) * 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                if (!dessiner('batterie', cx, cy)) {
+                    ctx.fillStyle = '#f1c40f';
+                    ctx.fillRect(cx - 10, cy - 14, 20, 28);
+                }
+                // Étincelle qui tourne autour de la pile
+                const a = (b.age || 0) / 13;
+                ctx.fillStyle = '#fff8d6';
+                ctx.fillRect(Math.round(cx + Math.cos(a) * 19) - 1, Math.round(cy + Math.sin(a) * 19) - 1, 3, 3);
+            });
         }
 
         function dessinerPoussiere() {
@@ -1200,20 +1251,26 @@
 
         // Pilotage tactile / souris : on glisse sur la piste
         let doigtActif = false;
-        function deplacerVers(clientX) {
+        function deplacerVers(clientX, clientY) {
             const rect = canvas.getBoundingClientRect();
             const x = (clientX - rect.left) * (canvas.width / rect.width);
             gameState.player.vx = 0;
             gameState.player.x = Math.max(50, Math.min(canvas.width - 50 - gameState.player.width,
                                                       x - gameState.player.width / 2));
+            if (clientY !== undefined && clientY !== null) {
+                const y = (clientY - rect.top) * (canvas.height / rect.height);
+                gameState.player.vy = 0;
+                gameState.player.y = Math.max(90, Math.min(canvas.height - 40 - gameState.player.height,
+                                                          y - gameState.player.height / 2));
+            }
         }
         canvas.addEventListener('pointerdown', (e) => {
             doigtActif = true;
             if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
-            if (gameState.running) deplacerVers(e.clientX);
+            if (gameState.running) deplacerVers(e.clientX, e.clientY);
         });
         canvas.addEventListener('pointermove', (e) => {
-            if (doigtActif && gameState.running) deplacerVers(e.clientX);
+            if (doigtActif && gameState.running) deplacerVers(e.clientX, e.clientY);
         });
         canvas.addEventListener('pointerup', () => { doigtActif = false; });
         canvas.addEventListener('pointercancel', () => { doigtActif = false; });
