@@ -4206,7 +4206,9 @@ font-size: .6rem;
                         <div class="vol-barre-outils">
                             <button type="button" class="bouton-action secondaire" onclick="volPause()">⏸️ Pause</button>
                             <button type="button" class="bouton-action secondaire" onclick="volRecommencer()">🔁 Recommencer</button>
-                            <button type="button" class="bouton-action secondaire" onclick="volDecrire()">🔊 Décrire ma situation</button>
+                            <button type="button" class="bouton-action secondaire" onclick="volDecrire()">🗣️ Décrire ma situation</button>
+                            <button type="button" class="bouton-action secondaire" id="vol-btn-son"
+                                    aria-pressed="true" onclick="volBasculerSon()">🔊 Son activé</button>
                             <button type="button" class="bouton-action secondaire" onclick="volRetourReglages()">⚙️ Revenir aux réglages</button>
                         </div>
 
@@ -4225,6 +4227,8 @@ font-size: .6rem;
                             marge de quelques pour cent. Une correction inutile se paie en poussée, donc en batterie.
                             La minimap en haut à droite montre la carte entière, la plateforme verte, le cadre blanc de la vue et
                             votre drone en jaune ; la flèche verte en bord d'écran indique de quel côté se trouve la plateforme.
+                            <strong>Le son</strong> (poussée, vent, atterrissage) est synthétisé par le navigateur, sans aucun
+                            fichier : le bouton « Son » le coupe, et rien n'est indispensable à l'oreille — tout est aussi écrit.
                         </p>
                         <p class="vol-annonce" id="vol-annonce" role="status" aria-live="polite"></p>
                     </div>
@@ -9093,6 +9097,46 @@ avis: 'Le réglage d\'usine : un bon équilibre entre réaction et autonomie.' }
 { cle: 'vive', nom: 'Vives', gain: 1.5, conso: 1.25,
 avis: 'Rotation très rapide, mais la batterie se vide 25 % plus vite.' }
 ];
+var PALETTES = [
+{ nom: 'aube',
+ciel: ['#0b1f38', '#2d5d80', '#93b9cf'],
+lointain1: 'rgba(28, 56, 84, .78)', lointain2: 'rgba(38, 74, 96, .85)',
+roche: '#2b4433', rocheOmbre: '#20342a',
+crete: 'rgba(157, 196, 128, .85)', neige: '#e8f1f6',
+astre: 'rgba(255, 236, 179, .92)', halo: 'rgba(255, 226, 150, .22)',
+astreHaut: 0.90, etoiles: 0.35, aurore: false },
+{ nom: 'midi brumeux',
+ciel: ['#1d3a52', '#4a7a8f', '#cfd9d2'],
+lointain1: 'rgba(46, 72, 84, .72)', lointain2: 'rgba(62, 92, 96, .78)',
+roche: '#33472f', rocheOmbre: '#26361f',
+crete: 'rgba(168, 180, 106, .85)', neige: '#f0f4f2',
+astre: 'rgba(255, 255, 250, .85)', halo: 'rgba(255, 255, 240, .18)',
+astreHaut: 0.72, etoiles: 0.10, aurore: false },
+{ nom: 'crépuscule',
+ciel: ['#2a1533', '#7b3f5c', '#e08a5a'],
+lointain1: 'rgba(58, 34, 60, .80)', lointain2: 'rgba(84, 46, 62, .82)',
+roche: '#3a2f3f', rocheOmbre: '#2a2230',
+crete: 'rgba(201, 138, 90, .85)', neige: '#f7e6d8',
+astre: 'rgba(255, 170, 90, .95)', halo: 'rgba(255, 140, 70, .26)',
+astreHaut: 0.82, etoiles: 0.30, aurore: false },
+{ nom: 'nuit enneigée',
+ciel: ['#070d1f', '#16294a', '#3d5b86'],
+lointain1: 'rgba(18, 30, 52, .85)', lointain2: 'rgba(28, 44, 72, .88)',
+roche: '#22303f', rocheOmbre: '#18232f',
+crete: 'rgba(157, 182, 212, .85)', neige: '#f2f8ff',
+astre: 'rgba(228, 238, 255, .95)', halo: 'rgba(190, 215, 255, .20)',
+astreHaut: 0.62, etoiles: 1.00, aurore: false },
+{ nom: 'aurore polaire',
+ciel: ['#04101c', '#0d3346', '#1f6b6b'],
+lointain1: 'rgba(8, 28, 40, .85)', lointain2: 'rgba(14, 44, 56, .88)',
+roche: '#1c3a34', rocheOmbre: '#122820',
+crete: 'rgba(88, 201, 168, .85)', neige: '#e9fff6',
+astre: 'rgba(200, 255, 240, .9)', halo: 'rgba(120, 255, 210, .22)',
+astreHaut: 0.55, etoiles: 0.85, aurore: true }
+];
+function paletteCourante() {
+return PALETTES[NIVEAU % PALETTES.length];
+}
 var PERIODE_HOULE = 14;
 var PERIODE_RAFALE = 4.1;
 function ventCourant(niveau, temps) {
@@ -9311,7 +9355,7 @@ refuge: { metres: 9, bati: true },
 antenne: { metres: 2, bati: true },
 arbre: { metres: 4.5 },
 pylone: { metres: 6.5, bati: true },
-prof: { metres: 3.1, hauteurVisee: true }
+prof: { metres: 3.1, echelleEcran: 9 }
 };
 var CLES_BATIMENT = ['maison-j1', 'maison-j2', 'maison-j3', 'maison-j1m', 'maison-j2m',
 'maison-j1', 'maison-j2', 'chalet', 'refuge', 'immeuble'];
@@ -9596,6 +9640,8 @@ vol.poussee = false;
 vol.vent = ventCourant(NIVEAUX[NIVEAU], 0);
 vol.touches.poussee = vol.touches.gauche = vol.touches.droite = false;
 DERNIER_RESULTAT = null;      // le résultat décrit UNE tentative, pas la précédente
+PARTICULES.length = 0;
+SECOUSSE = 0;
 majCamera(0, true);
 adapterTaille();
 majHud();
@@ -9635,6 +9681,7 @@ annoncer('Nouvel essai au niveau ' + (NIVEAU + 1) + '.');
 }
 function volRetourReglages() {
 ETAT = 'reglages';
+majSons();
 if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
 var salle = el('vol-salle');
 if (salle) salle.hidden = true;
@@ -9717,6 +9764,12 @@ var niveau = NIVEAUX[NIVEAU];
 if (vol.x < 0.8) { vol.x = 0.8; if (vol.vx < 0) vol.vx = 0; }
 if (vol.x > niveau.largeur - 0.8) { vol.x = niveau.largeur - 0.8; if (vol.vx > 0) vol.vx = 0; }
 if (vol.y < 0.8) { vol.y = 0.8; if (vol.vy < 0) vol.vy = 0; }
+if (vol.poussee) {
+emettre('braise', 2);
+if (altitude() < 7) emettre('poussiere', 1);
+}
+avancerParticules(dt);
+majSons();
 majCamera(dt, false);
 verifierContact();
 majHud();
@@ -9782,6 +9835,9 @@ terminerFaux('drone trop incliné : ' + arrondi(Math.abs(vol.theta), 0)
 + '° (limite ' + TILT_LIMITE + '°). Redressez avant de toucher.');
 return;
 }
+SECOUSSE = 7;
+emettre('poussiere', 20);
+sonAtterrissage();
 var points = Math.max(20, 100 - Math.round(
 ecart * 4 + Math.abs(vol.vy) * 10 + Math.abs(vol.vx) * 8 + Math.abs(vol.theta)));
 SCORE += points;
@@ -9799,6 +9855,10 @@ annoncer('Posé au niveau ' + (NIVEAU + 1) + ', ' + points
 + ' points. Total : ' + SCORE + '.');
 }
 function terminerFaux(raison) {
+SECOUSSE = 14;
+emettre('poussiere', 26);
+emettre('braise', 10);
+sonEchec();
 ETAT = 'fini';
 DERNIER_RESULTAT = { ok: false, raison: raison, niveau: NIVEAU + 1 };
 afficherVoile('💥 Atterrissage manqué — niveau ' + (NIVEAU + 1),
@@ -9957,6 +10017,12 @@ var W = canvas.width;
 var H = canvas.height;
 if (!TERRAIN) return;
 var E = ECHELLE;
+ctx.save();
+if (SECOUSSE > 0.3) {
+var sx = (Math.random() - 0.5) * SECOUSSE;
+var sy = (Math.random() - 0.5) * SECOUSSE;
+ctx.translate(sx, sy);
+}
 dessinerCiel(ctx, W, H);
 dessinerVent(ctx, W, H);
 dessinerLointains(ctx, W, H);
@@ -9966,25 +10032,225 @@ dessinerPlateforme(ctx, W, H);
 dessinerProf(ctx, W);
 dessinerDrone(ctx);
 dessinerFlecheCible(ctx, W, H);
+dessinerParticules(ctx, W, H);
+ctx.restore();
+var vignette = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35,
+W / 2, H / 2, Math.max(W, H) * 0.72);
+vignette.addColorStop(0, 'rgba(0, 0, 0, 0)');
+vignette.addColorStop(1, 'rgba(4, 10, 18, .42)');
+ctx.fillStyle = vignette;
+ctx.fillRect(0, 0, W, H);
 dessinerMinimap(ctx, W, H);
 }
+var AUDIO = { ctx: null, pret: false, impossible: false, actif: true,
+maitre: null, bruit: null, souffle: null, vent: null };
+function preparerAudio() {
+if (AUDIO.pret || AUDIO.impossible) return;
+var Ctx = window.AudioContext || window.webkitAudioContext;
+if (!Ctx) { AUDIO.impossible = true; return; }
+try {
+var ctx = new Ctx();
+AUDIO.ctx = ctx;
+AUDIO.maitre = ctx.createGain();
+AUDIO.maitre.gain.value = AUDIO.actif ? 0.55 : 0;
+AUDIO.maitre.connect(ctx.destination);
+var tampon = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 2), ctx.sampleRate);
+var donnees = tampon.getChannelData(0);
+for (var i = 0; i < donnees.length; i++) donnees[i] = Math.random() * 2 - 1;
+AUDIO.bruit = tampon;
+AUDIO.souffle = sourceContinue(900);
+AUDIO.vent = sourceContinue(380);
+AUDIO.pret = true;
+} catch (err) {
+AUDIO.impossible = true;      // pas de son : le jeu reste jouable
+}
+}
+function sourceContinue(frequence) {
+var ctx = AUDIO.ctx;
+var source = ctx.createBufferSource();
+source.buffer = AUDIO.bruit;
+source.loop = true;
+var filtre = ctx.createBiquadFilter();
+filtre.type = 'lowpass';
+filtre.frequency.value = frequence;
+var gain = ctx.createGain();
+gain.gain.value = 0;
+source.connect(filtre);
+filtre.connect(gain);
+gain.connect(AUDIO.maitre);
+source.start();
+return { source: source, filtre: filtre, gain: gain };
+}
+function debloquerAudio() {
+preparerAudio();
+if (AUDIO.ctx && AUDIO.ctx.state === 'suspended') {
+try { AUDIO.ctx.resume(); } catch (err) { /* rien */ }
+}
+}
+function bip(frequence, duree, forme, volume, arrivee) {
+if (!AUDIO.pret || !AUDIO.actif) return;
+var ctx = AUDIO.ctx;
+var t = ctx.currentTime;
+var osc = ctx.createOscillator();
+var gain = ctx.createGain();
+osc.type = forme || 'square';
+osc.frequency.setValueAtTime(frequence, t);
+if (arrivee) osc.frequency.exponentialRampToValueAtTime(arrivee, t + duree);
+gain.gain.setValueAtTime(0.0001, t);
+gain.gain.exponentialRampToValueAtTime(volume || 0.14, t + 0.012);
+gain.gain.exponentialRampToValueAtTime(0.0001, t + duree);
+osc.connect(gain);
+gain.connect(AUDIO.maitre);
+osc.start(t);
+osc.stop(t + duree + 0.02);
+}
+function sonAtterrissage() {
+if (!AUDIO.pret || !AUDIO.actif) return;
+bip(523.25, 0.14, 'square', 0.10);                     // do
+setTimeout(function () { bip(659.25, 0.14, 'square', 0.10); }, 130);   // mi
+setTimeout(function () { bip(783.99, 0.28, 'square', 0.11); }, 260);   // sol
+}
+function sonEchec() {
+if (!AUDIO.pret || !AUDIO.actif) return;
+bip(160, 0.5, 'sawtooth', 0.16, 55);
+bip(90, 0.6, 'square', 0.10, 40);
+}
+function majSons() {
+if (!AUDIO.pret) return;
+var ctx = AUDIO.ctx;
+var t = ctx.currentTime;
+var enVol = (ETAT === 'vol' || ETAT === 'pause');
+var pousse = enVol && vol.poussee && vol.batterie > 0;
+AUDIO.souffle.gain.gain.setTargetAtTime(pousse ? 0.16 : 0.0, t, 0.03);
+AUDIO.souffle.filtre.frequency.setTargetAtTime(pousse ? 1100 : 700, t, 0.08);
+var force = Math.min(1, Math.abs(vol.vent || 0) / 1.2);
+AUDIO.vent.gain.gain.setTargetAtTime(enVol ? 0.035 + force * 0.075 : 0.0, t, 0.35);
+}
+function volBasculerSon() {
+AUDIO.actif = !AUDIO.actif;
+if (AUDIO.maitre) {
+AUDIO.maitre.gain.setTargetAtTime(AUDIO.actif ? 0.55 : 0, AUDIO.ctx.currentTime, 0.05);
+}
+var bouton = el('vol-btn-son');
+if (bouton) {
+bouton.textContent = AUDIO.actif ? '🔊 Son activé' : '🔇 Son coupé';
+bouton.setAttribute('aria-pressed', AUDIO.actif ? 'true' : 'false');
+}
+annoncer(AUDIO.actif ? 'Son activé.' : 'Son coupé.');
+return AUDIO.actif;
+}
+var PARTICULES = [];
+var SECOUSSE = 0;
+function emettre(genre, nombre) {
+var sol = solY(vol.x);
+for (var i = 0; i < nombre; i++) {
+if (PARTICULES.length > 140) break;
+if (genre === 'braise') {
+PARTICULES.push({
+genre: 'braise', vie: 0.45 + Math.random() * 0.35,
+x: vol.x + (Math.random() - 0.5) * 1.4,
+y: vol.y + DEMI_HAUTEUR + 0.4,
+vx: (Math.random() - 0.5) * 3 - Math.sin(vol.theta * Math.PI / 180) * 4,
+vy: 5 + Math.random() * 4
+});
+} else {
+var sens = Math.random() < 0.5 ? -1 : 1;
+PARTICULES.push({
+genre: 'poussiere', vie: 0.5 + Math.random() * 0.5,
+x: vol.x + sens * (0.5 + Math.random() * 1.2),
+y: sol - 0.2 - Math.random() * 0.4,
+vx: sens * (1.5 + Math.random() * 3),
+vy: -(0.3 + Math.random() * 1.2)
+});
+}
+}
+}
+function avancerParticules(dt) {
+for (var i = PARTICULES.length - 1; i >= 0; i--) {
+var p = PARTICULES[i];
+p.vie -= dt;
+if (p.vie <= 0) { PARTICULES.splice(i, 1); continue; }
+p.x += (p.vx + (vol.vent || 0)) * dt;
+p.y += p.vy * dt;
+p.vy += (p.genre === 'braise' ? 6 : -1.5) * dt;
+}
+if (SECOUSSE > 0) SECOUSSE = Math.max(0, SECOUSSE - dt * 26);
+}
+function dessinerParticules(ctx, W, H) {
+var E = ECHELLE;
+for (var i = 0; i < PARTICULES.length; i++) {
+var p = PARTICULES[i];
+var px = (p.x - CAM.x) * E;
+var py = (p.y - CAM.y) * E;
+if (px < -8 || px > W + 8 || py < -8 || py > H + 8) continue;
+var alpha = Math.max(0, Math.min(1, p.vie * 1.6));
+if (p.genre === 'braise') {
+ctx.fillStyle = 'rgba(255, ' + Math.round(150 + 80 * alpha) + ', 60, '
++ (alpha * 0.95).toFixed(2) + ')';
+var taille = Math.max(1.4, E * 0.5);
+ctx.fillRect(px - taille / 2, py - taille / 2, taille, taille);
+} else {
+ctx.fillStyle = 'rgba(214, 208, 196, ' + (alpha * 0.5).toFixed(2) + ')';
+var taille2 = Math.max(1.5, E * 0.7);
+ctx.fillRect(px - taille2 / 2, py - taille2 / 2, taille2, taille2);
+}
+}
+}
 function dessinerCiel(ctx, W, H) {
+var palette = paletteCourante();
 var ciel = ctx.createLinearGradient(0, 0, 0, H);
-ciel.addColorStop(0, '#0b1f38');
-ciel.addColorStop(0.55, '#2d5d80');
-ciel.addColorStop(1, '#93b9cf');
+ciel.addColorStop(0, palette.ciel[0]);
+ciel.addColorStop(0.55, palette.ciel[1]);
+ciel.addColorStop(1, palette.ciel[2]);
 ctx.fillStyle = ciel;
 ctx.fillRect(0, 0, W, H);
+var temps = vol.temps || 0;
 var graine = NIVEAUX[NIVEAU].graine;
-ctx.fillStyle = 'rgba(255, 255, 255, .75)';
-for (var i = 0; i < 46; i++) {
+if (palette.etoiles > 0.05) {
+for (var i = 0; i < 52; i++) {
 var sx = (melange(i * 3.1, graine) * (W + 200) - CAM.x * ECHELLE * 0.12) % (W + 200);
 if (sx < 0) sx += W + 200;
 var sy = melange(i * 7.7 + 2, graine) * H * 0.62 - CAM.y * 0.05 * ECHELLE;
 if (sy < 0 || sy > H * 0.7) continue;
-var taille = melange(i * 5.3 + 9, graine) > 0.82 ? 2 : 1;
+var scintille = 0.45 + 0.55 * Math.abs(Math.sin(temps * (0.7 + melange(i, graine)) + i));
+ctx.fillStyle = 'rgba(255, 255, 255, ' +
+(palette.etoiles * scintille * 0.9).toFixed(3) + ')';
+var taille = melange(i * 5.3 + 9, graine) > 0.85 ? 2 : 1;
 ctx.fillRect(sx, sy, taille, taille);
 }
+}
+if (palette.aurore) {
+for (var a = 0; a < 2; a++) {
+var couleur = a === 0 ? 'rgba(90, 255, 190, ' : 'rgba(170, 130, 255, ';
+ctx.beginPath();
+for (var px = -10; px <= W + 10; px += 8) {
+var onde = Math.sin((px / W) * 6.2 + temps * 0.6 + a * 2.1);
+var y = H * (0.14 + a * 0.06) + onde * H * 0.07;
+if (px < 0) ctx.moveTo(px, y);
+else ctx.lineTo(px, y);
+}
+for (var px2 = W + 10; px2 >= -10; px2 -= 8) {
+var onde2 = Math.sin((px2 / W) * 6.2 + temps * 0.6 + a * 2.1);
+ctx.lineTo(px2, H * (0.14 + a * 0.06) + onde2 * H * 0.07 + H * 0.05);
+}
+ctx.closePath();
+ctx.fillStyle = couleur + (0.10 - a * 0.03).toFixed(3) + ')';
+ctx.fill();
+}
+}
+var ax = W * 0.82;
+var ay = H * palette.astreHaut * 0.42;
+var halo = ctx.createRadialGradient(ax, ay, 2, ax, ay, Math.max(26, W * 0.09));
+halo.addColorStop(0, palette.halo);
+halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+ctx.fillStyle = halo;
+ctx.beginPath();
+ctx.arc(ax, ay, Math.max(26, W * 0.09), 0, Math.PI * 2);
+ctx.fill();
+ctx.fillStyle = palette.astre;
+ctx.beginPath();
+ctx.arc(ax, ay, Math.max(7, W * 0.022), 0, Math.PI * 2);
+ctx.fill();
 }
 function dessinerVent(ctx, W, H) {
 var vent = vol.vent || 0;
@@ -10034,9 +10300,10 @@ ctx.restore();
 }
 function dessinerLointains(ctx, W, H) {
 var graine = NIVEAUX[NIVEAU].graine;
+var palette = paletteCourante();
 var couches = [
-{ parallaxe: 0.25, base: 0.78, amp: 0.16, couleur: 'rgba(28, 56, 84, .78)', pas: 34 },
-{ parallaxe: 0.45, base: 0.86, amp: 0.13, couleur: 'rgba(38, 74, 96, .85)', pas: 22 }
+{ parallaxe: 0.25, base: 0.78, amp: 0.16, couleur: palette.lointain1, pas: 34 },
+{ parallaxe: 0.45, base: 0.86, amp: 0.13, couleur: palette.lointain2, pas: 22 }
 ];
 for (var c = 0; c < couches.length; c++) {
 var L = couches[c];
@@ -10068,9 +10335,26 @@ ctx.lineTo((i * t.pas - CAM.x) * E, (t.hauteurs[i] - CAM.y) * E);
 ctx.lineTo((i1 * t.pas - CAM.x) * E, H + 8);
 ctx.closePath();
 }
+var palette = paletteCourante();
 trace();
-ctx.fillStyle = '#2b4433';
+ctx.fillStyle = palette.roche;
 ctx.fill();
+ctx.save();
+trace();
+ctx.clip();
+for (var strate = 1; strate <= 3; strate++) {
+ctx.beginPath();
+for (var k = i0; k <= i1; k++) {
+var sxs = (k * t.pas - CAM.x) * E;
+var sys = (t.hauteurs[k] - CAM.y) * E + strate * Math.max(5, E * 1.6);
+if (k === i0) ctx.moveTo(sxs, sys);
+else ctx.lineTo(sxs, sys);
+}
+ctx.strokeStyle = 'rgba(12, 20, 24, ' + (0.16 - strate * 0.04).toFixed(3) + ')';
+ctx.lineWidth = Math.max(1, E * 0.5);
+ctx.stroke();
+}
+ctx.restore();
 var neigeY = (t.neige - CAM.y) * E;
 if (neigeY > 0) {
 ctx.save();
@@ -10078,7 +10362,7 @@ ctx.beginPath();
 ctx.rect(0, 0, W, Math.max(0, neigeY));
 ctx.clip();
 trace();
-ctx.fillStyle = '#e8f1f6';
+ctx.fillStyle = palette.neige;
 ctx.fill();
 ctx.restore();
 }
@@ -10089,7 +10373,7 @@ var sy = (t.hauteurs[j] - CAM.y) * E;
 if (j === i0) ctx.moveTo(sx, sy);
 else ctx.lineTo(sx, sy);
 }
-ctx.strokeStyle = 'rgba(157, 196, 128, .85)';
+ctx.strokeStyle = palette.crete;
 ctx.lineWidth = Math.max(1.2, E * 0.35);
 ctx.stroke();
 }
@@ -10102,8 +10386,7 @@ var E = ECHELLE;
 var sx = (prof.x - CAM.x) * E;
 var sy = (prof.y - CAM.y) * E;
 if (sx < -60 || sx > W + 60) return;
-var visee = (MODELLES_DECOR.prof.metres * E) / sprite.h;
-var facteur = Math.max(1, Math.round(visee));
+var facteur = Math.max(2, Math.round((E * 9) / sprite.h));
 var largeur = sprite.l * facteur;
 var hauteur = sprite.h * facteur;
 ctx.fillStyle = 'rgba(10, 26, 40, .28)';
@@ -10162,7 +10445,8 @@ for (var c = 0; c < 4; c++) {
 var ancreX = melange(c * 13.3 + 2, graine) * (NIVEAUX[NIVEAU].largeur + 120) - 60;
 var y = 18 + melange(c * 7.1 + 6, graine) * (NIVEAUX[NIVEAU].hauteur * 0.45);
 var facteurN = Math.max(1, Math.round((16 * ECHELLE) / nuage.l));
-var nx = (ancreX - CAM.x * 0.55) * ECHELLE;
+var derive = (vol.vent || 0) * (vol.temps || 0) * 7;
+var nx = (ancreX + derive - CAM.x * 0.55) * ECHELLE;
 var ny = (y - CAM.y * 0.55) * ECHELLE;
 if (nx < -nuage.l * 3 || nx > W + nuage.l * 3) continue;
 ctx.save();
@@ -10404,6 +10688,8 @@ bouton.classList.remove('actif');
 bouton.setAttribute('aria-pressed', 'false');
 });
 }
+document.addEventListener('pointerdown', debloquerAudio, true);
+document.addEventListener('keydown', debloquerAudio, true);
 window.addEventListener('blur', relacherTout);
 document.addEventListener('visibilitychange', function () {
 if (document.hidden) relacherTout();
@@ -10478,6 +10764,7 @@ window.volRecommencer = volRecommencer;
 window.volRetourReglages = volRetourReglages;
 window.volSiteSuivant = volSiteSuivant;
 window.volDecrire = volDecrire;
+window.volBasculerSon = volBasculerSon;
 window.volVersion = function () { return VOL_MOTEUR_VERSION; };
 window.volLireEtat = function () {
 return {
@@ -10511,6 +10798,8 @@ droite: vol.touches.droite
 },
 echelle: ECHELLE,
 dronePx: 34 * ECHELLE_DRONE,
+son: AUDIO.actif,
+sonDisponible: AUDIO.pret,
 score: SCORE,
 resultat: DERNIER_RESULTAT
 };
