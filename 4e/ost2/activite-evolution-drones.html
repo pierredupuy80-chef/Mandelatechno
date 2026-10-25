@@ -2437,6 +2437,7 @@ font-size: 0.78rem;
 .boutique .article:hover:not(:disabled) { border-color: var(--couleur-primaire); }
 .boutique .article:disabled { opacity: 0.45; cursor: not-allowed; }
 .boutique .article.epuise { border-color: #22c55e; }
+.vol-moteur-v2 { --vol-version: 2; }
 .vol-carte {
 margin-top: var(--espacement-lg);
 }
@@ -2681,7 +2682,7 @@ position: relative;
 margin: .6rem 0;
 border-radius: 12px;
 overflow: hidden;
-background: #8ec5e8;
+background: #0b1f38;
 }
 .vol-ecran canvas {
 display: block;
@@ -2722,27 +2723,63 @@ flex-wrap: wrap;
 gap: .5rem;
 margin: .5rem 0;
 }
+.vol-pave-legende {
+margin: .3rem 0 .35rem;
+font-size: .82rem;
+line-height: 1.45;
+color: #3a6ea5;
+}
 .vol-pave {
 display: grid;
-grid-template-columns: repeat(3, 64px);
+grid-template-columns: 1fr 1fr 1.45fr;
 gap: .5rem;
-justify-content: center;
-margin: .6rem 0;
+margin: .2rem 0 .5rem;
+max-width: 34rem;
+touch-action: none;
 }
 .vol-pave button {
-width: 64px;
-height: 64px;
-border-radius: 12px;
+min-height: 64px;
+padding: .2rem;
+border-radius: 14px;
 border: 2px solid #b9c8d8;
 background: #fff;
-font-size: 1.5rem;
+font: inherit;
+font-size: 1.45rem;
 line-height: 1;
 cursor: pointer;
 color: #1a3f5e;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: .15rem;
+-webkit-user-select: none;
+user-select: none;
+-webkit-touch-callout: none;
+-webkit-tap-highlight-color: transparent;
+touch-action: none;
 }
-.vol-pave button:active {
-background: #eaf1f8;
+.vol-pave button small {
+font-size: .66rem;
+font-weight: 700;
+letter-spacing: .03em;
+text-transform: uppercase;
+color: #5a6b7d;
+}
+.vol-pave button.vol-pave-poussee {
 border-color: #2e74b5;
+background: #eaf1f8;
+font-size: 1.6rem;
+}
+.vol-pave button:active,
+.vol-pave button.actif {
+background: #2e74b5;
+border-color: #1a4f7a;
+color: #fff;
+}
+.vol-pave button.actif small,
+.vol-pave button:active small {
+color: #eaf1f8;
 }
 .vol-aide {
 font-size: .84rem;
@@ -2755,20 +2792,55 @@ font-size: .88rem;
 font-weight: 600;
 color: #1a3f5e;
 }
-@media (max-width: 480px) {
+@media (max-width: 560px), (max-height: 480px) {
 .vol-hud {
+display: grid;
+grid-template-columns: repeat(4, minmax(0, 1fr));
+gap: .3rem .45rem;
+font-size: .74rem;
+padding: .45rem .5rem;
+}
+.vol-hud .vol-etiquette {
+font-size: .6rem;
+letter-spacing: .02em;
+}
+.vol-hud .vol-valeur {
 font-size: .78rem;
-gap: .35rem .7rem;
 }
 .vol-jauge {
-width: 84px;
+width: 100%;
+height: 9px;
 }
-.vol-pave {
-grid-template-columns: repeat(3, 56px);
+.vol-recap {
+font-size: .8rem;
+margin: .5rem 0;
+}
+.vol-barre-outils .bouton-action {
+flex: 1 1 46%;
+font-size: .82rem;
+padding: .45rem .5rem;
+}
+.vol-pave-legende {
+font-size: .78rem;
 }
 .vol-pave button {
-width: 56px;
-height: 56px;
+min-height: 68px;
+}
+}
+@media (max-width: 360px) {
+.vol-hud {
+gap: .25rem .3rem;
+padding: .4rem;
+font-size: .68rem;
+}
+.vol-hud .vol-etiquette {
+font-size: .56rem;
+}
+.vol-hud .vol-valeur {
+font-size: .72rem;
+}
+.vol-pave button small {
+font-size: .6rem;
 }
 }
     </style>
@@ -3455,12 +3527,15 @@ height: 56px;
 
                     <!-- Les 4 champs requis par le moteur (remplis automatiquement
                          par les interactions ci-dessous ; masqués visuellement
-                         car l'élève ne tape pas dedans). Ils restent présents et
-                         remplissables pour la sonde du vérificateur de parcours. -->
-                    <textarea id="besoin-identifie" class="cache" aria-hidden="true" aria-label="Besoin identifié (synthèse auto)"></textarea>
-                    <textarea id="contraintes-definies" class="cache" aria-hidden="true" aria-label="Contraintes (synthèse auto)"></textarea>
-                    <textarea id="solutions-imaginees" class="cache" aria-hidden="true" aria-label="Solutions (synthèse auto)"></textarea>
-                    <textarea id="solution-choisie" class="cache" aria-hidden="true" aria-label="Solution choisie (synthèse auto)"></textarea>
+                         car l'élève ne tape pas dedans). Ils portent
+                         `data-conception-texte` — le contrat que lit le moteur
+                         « conception » — et restent donc vérifiables : le
+                         contrôle du parcours les remplit comme le ferait
+                         l'atelier, et une conception inaboutie est refusée. -->
+                    <textarea id="besoin-identifie" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Besoin identifié (synthèse auto)"></textarea>
+                    <textarea id="contraintes-definies" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Contraintes (synthèse auto)"></textarea>
+                    <textarea id="solutions-imaginees" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Solutions (synthèse auto)"></textarea>
+                    <textarea id="solution-choisie" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Solution choisie (synthèse auto)"></textarea>
 
                     <h3 class="marge-haut">Étape 1 — Régler les paramètres de mission</h3>
                     <p>Déplacez les curseurs pour fixer la charge utile, l'altitude du refuge et la distance depuis la base de secours.</p>
@@ -3514,6 +3589,8 @@ height: 56px;
                     <p>En deux ou trois phrases, résumez votre dimensionnement : votre drone tient-il la mission ? Quels compromis avez-vous acceptés (masse, autonomie, coût, résistance au froid) ?</p>
                     <textarea
                         id="schema-solution"
+                        data-conception-texte
+                        data-min="40"
                         placeholder="Ex. : mon drone de 4 kg embarque une batterie Li-Po 6000 mAh et une caméra thermique ; il atteint le refuge à 2500 m et revient, mais le coût est élevé…"
                         aria-label="Conclusion du dimensionnement"></textarea>
 
@@ -3621,12 +3698,13 @@ height: 56px;
             <section id="contenu-bonus" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-bonus">
                 <div class="activite-bonus deverrouille">
                     <h3>🎉 Activité Bonus Déverrouillée !</h3>
-                    <p>Félicitations ! Vous avez terminé tous les niveaux. Deux jeux vous attendent pour réinvestir le cours : le <strong>banc d'essai</strong>, où l'on règle le drone avant de l'atterrir, puis le <strong>colis express</strong>, où l'on pilote le drone de livraison du prof.</p>
+                    <p>Félicitations ! Vous avez terminé tous les niveaux. Deux jeux vous attendent pour réinvestir le cours : le <strong>banc d'essai</strong>, où l'on règle le drone puis où on le pose sur cinq cartes accidentées de plus en plus grandes, puis le <strong>colis express</strong>, où l'on pilote le drone de livraison du prof.</p>
                 </div>
 
-                <div class="carte-contenu">
+                <div class="carte-contenu vol-moteur-v2">
                     <h2>🛫 Réglages et atterrissage : le banc d'essai du drone</h2>
-                    <p>Les trois réglages du drone, ceux que le constructeur doit choisir avant le premier vol : le <strong>sens des hélices</strong>, la <strong>batterie</strong> et la <strong>réactivité des commandes</strong>. Réglez-les, puis posez le drone sur la plateforme : c'est un jeu d'adresse, mais chaque réglage change vraiment la physique du vol.</p>
+                    <p>Les trois réglages du drone, ceux que le constructeur doit choisir avant le premier vol : le <strong>sens des hélices</strong>, la <strong>batterie</strong> et la <strong>réactivité des commandes</strong>. Réglez-les, puis posez le drone sur la plateforme : c'est un jeu d'adresse de type <em>moon lander</em>, avec <strong>cinq niveaux</strong> sur de grandes cartes qui défilent dans les deux sens.</p>
+                    <p><strong>Ce que vous allez ressentir :</strong> le drone vole comme dans le vide. <strong>Aucune résistance de l'air</strong> : quand il part vers la droite, il continue vers la droite. Pour l'arrêter, il faut incliner l'appareil de l'autre côté et pousser dans le sens opposé. C'est ce qui rend le pilotage si particulier — et c'est exactement comme cela que l'on pilote un module lunaire.</p>
 
                     <fieldset class="vol-banc" id="vol-banc">
                         <legend>Les trois réglages</legend>
@@ -3665,7 +3743,7 @@ height: 56px;
 
                         <div class="vol-bloc">
                             <h4>2. La batterie</h4>
-                            <p>La mission d'inspection doit durer <strong>60 s</strong> : autonomie = capacité ÷ courant. Une batterie plus grosse vole plus longtemps, mais elle pèse plus lourd.</p>
+                            <p>Une batterie plus grosse vole plus longtemps, mais elle pèse plus lourd : elle ne change donc pas seulement l'autonomie, elle change aussi la poussée disponible.</p>
                             <div class="vol-choix-groupe" id="vol-batteries" role="radiogroup" aria-label="Batteries disponibles">
                                 <button type="button" class="vol-choix" role="radio" aria-checked="false" data-batterie="0"
                                         onclick="volChoisirBatterie(this)">Li-Po 3S 1300 mAh
@@ -3719,18 +3797,19 @@ height: 56px;
                                 </div>
                                 <span class="vol-valeur" id="vol-batterie">100 %</span>
                             </div>
-                            <div><span class="vol-etiquette">Site</span> <span class="vol-valeur" id="vol-site">1 / 3</span></div>
-                            <div><span class="vol-etiquette">Altitude</span> <span class="vol-valeur" id="vol-altitude">30,0 m</span></div>
-                            <div><span class="vol-etiquette">Vitesse verticale</span> <span class="vol-valeur" id="vol-vy">0,0 m/s</span></div>
+                            <div><span class="vol-etiquette">Niveau</span> <span class="vol-valeur" id="vol-site">1 / 5</span></div>
+                            <div><span class="vol-etiquette">Carte</span> <span class="vol-valeur" id="vol-carte">220 × 140 m</span></div>
+                            <div><span class="vol-etiquette">Cible à</span> <span class="vol-valeur" id="vol-distance">— m</span></div>
+                            <div><span class="vol-etiquette">Altitude</span> <span class="vol-valeur" id="vol-altitude">15,0 m</span></div>
+                            <div><span class="vol-etiquette">Descente</span> <span class="vol-valeur" id="vol-vy">0,0 m/s</span></div>
                             <div><span class="vol-etiquette">Dérive</span> <span class="vol-valeur" id="vol-vx">0,0 m/s</span></div>
                             <div><span class="vol-etiquette">Inclinaison</span> <span class="vol-valeur" id="vol-inclinaison">0°</span></div>
-                            <div><span class="vol-etiquette">Vent</span> <span class="vol-valeur" id="vol-vent">0,15 m/s →</span></div>
                         </div>
                         <p class="vol-recap" id="vol-reglages-actifs"></p>
 
                         <div class="vol-ecran">
-                            <canvas id="vol-canvas" width="480" height="320" role="application"
-                                    aria-label="Vue de côté du drone en vol au-dessus de la plateforme d'atterrissage"
+                            <canvas id="vol-canvas" width="700" height="434" role="application"
+                                    aria-label="Vue de côté du drone en vol au-dessus d'un relief accidenté ; la carte défile et une minimap indique la plateforme d'atterrissage"
                                     aria-describedby="vol-aide"></canvas>
                             <div class="vol-voile" id="vol-voile" hidden>
                                 <h4 id="vol-voile-titre">Prêt à décoller ?</h4>
@@ -3740,6 +3819,22 @@ height: 56px;
                             </div>
                         </div>
 
+                        <p class="vol-pave-legende" id="vol-pave-legende">
+                            Au doigt : <strong>◀ ▶</strong> inclinent, <strong>▲</strong> pousse dans l'axe.
+                            Un pouce sur <strong>▲</strong>, l'autre sur <strong>◀</strong>, pour freiner en vous décalant.
+                        </p>
+                        <div class="vol-pave" role="group" aria-labelledby="vol-pave-legende">
+                            <button type="button" data-vol-touche="gauche" aria-label="Incliner vers la gauche" aria-pressed="false">
+                                <span aria-hidden="true">◀</span><small>gauche</small>
+                            </button>
+                            <button type="button" data-vol-touche="droite" aria-label="Incliner vers la droite" aria-pressed="false">
+                                <span aria-hidden="true">▶</span><small>droite</small>
+                            </button>
+                            <button type="button" class="vol-pave-poussee" data-vol-touche="poussee" aria-label="Pousser : freiner ou monter" aria-pressed="false">
+                                <span aria-hidden="true">▲</span><small>pousser</small>
+                            </button>
+                        </div>
+
                         <div class="vol-barre-outils">
                             <button type="button" class="bouton-action secondaire" onclick="volPause()">⏸️ Pause</button>
                             <button type="button" class="bouton-action secondaire" onclick="volRecommencer()">🔁 Recommencer</button>
@@ -3747,17 +3842,17 @@ height: 56px;
                             <button type="button" class="bouton-action secondaire" onclick="volRetourReglages()">⚙️ Revenir aux réglages</button>
                         </div>
 
-                        <div class="vol-pave" aria-label="Commandes tactiles du drone">
-                            <button type="button" data-vol-touche="gauche" aria-label="Incliner à gauche">◀</button>
-                            <button type="button" data-vol-touche="poussee" aria-label="Augmenter la poussée">▲</button>
-                            <button type="button" data-vol-touche="droite" aria-label="Incliner à droite">▶</button>
-                        </div>
+
 
                         <p class="vol-aide" id="vol-aide">
                             <strong>Commandes :</strong> <strong>Espace</strong> ou <strong>↑</strong> (ou le bouton ▲) pour la poussée ;
-                            <strong>← →</strong> (ou Q / D) pour le roulis. Sur tablette, utilisez les trois boutons.
-                            <strong>But :</strong> toucher la plateforme « H » avec une descente et une dérive inférieures à 2 m/s,
-                            sans dépasser 12° d'inclinaison. La poussée consomme la batterie ; sans batterie, plus de poussée.
+                            <strong>← →</strong> (ou Q / D) pour incliner le drone : c'est l'inclinaison qui dirige la poussée.
+                            Sur tablette, utilisez les trois boutons.
+                            <strong>But :</strong> poser le drone sur la plateforme balisée de la grande carte, avec une descente et une
+                            dérive inférieures à 2 m/s, sans dépasser 12° d'inclinaison. <strong>Attention :</strong> aucune résistance
+                            de l'air, la vitesse ne se dissipe jamais seule. La minimap en haut à droite montre la carte entière, la
+                            plateforme verte, le cadre blanc de la vue et votre drone en jaune ; la flèche verte en bord d'écran indique
+                            de quel côté se trouve la plateforme.
                         </p>
                         <p class="vol-annonce" id="vol-annonce" role="status" aria-live="polite"></p>
                     </div>
@@ -3914,7 +4009,24 @@ height: 56px;
             "chienB": "assets-jeu/chien-b.png",
             "chatA": "assets-jeu/chat-a.png",
             "chatB": "assets-jeu/chat-b.png",
-            "profPilote": "assets-jeu/prof-pilote.png"
+            "profPilote": "assets-jeu/prof-pilote.png",
+            "droneHelices": "assets-jeu/drone-helices-fines.png",
+            "droneRotors": "assets-jeu/drone-rotors-ronds.png",
+            "colis": "assets-jeu/colis.png",
+            "batterie": "assets-jeu/batterie.png",
+            "lipo": "assets-jeu/lipo.png",
+            "carbone": "assets-jeu/carbone.png",
+            "camera": "assets-jeu/camera-thermique.png",
+            "ballon": "assets-jeu/ballon.png",
+            "avion": "assets-jeu/avion-papier.png",
+            "bois": "assets-jeu/baton-bois.png",
+            "pylone": "assets-jeu/pylone.png",
+            "plateforme": "assets-jeu/plateforme-h.png",
+            "arbre": "assets-jeu/arbre.png",
+            "fleur0": "assets-jeu/massif-fleurs-rouge.png",
+            "fleur1": "assets-jeu/massif-fleurs-jaune.png",
+            "fleur2": "assets-jeu/massif-fleurs-blanc.png",
+            "barriere": "assets-jeu/barriere.png"
         };
     </script>
 
@@ -6778,6 +6890,9 @@ px(g, 9, 6, 3, 2, '#6d4525');
 return o.canvas;
 }
 var ASSETS = (typeof window !== 'undefined' && window.ASSETS_JEU) ? window.ASSETS_JEU : {};
+var CLE_OBJET = { batterie: 'batterie', colis: 'colis', carbone: 'carbone',
+lipo: 'lipo', camera: 'camera' };
+var CLE_PROJECTILE = { ballon: 'ballon', avion: 'avion', bois: 'bois' };
 var imagesAssets = {};
 function imgAsset(cle) {
 var src = ASSETS[cle];
@@ -6790,6 +6905,33 @@ imagesAssets[cle] = im;
 return imagesAssets[cle];
 }
 function assetPret(im) { return !!im && im.complete && im.naturalWidth > 0; }
+function poserSprite(g2, cle, repli, cx, cy, bas) {
+var im = cle ? imgAsset(cle) : null;
+if (assetPret(im)) {
+var l = im.naturalWidth, h = im.naturalHeight;
+g2.drawImage(im, Math.round(cx - l / 2),
+Math.round(bas ? cy - h : cy - h / 2), l, h);
+return true;
+}
+if (repli) {
+g2.drawImage(repli, Math.round(cx - repli.width / 2),
+Math.round(bas ? cy - repli.height : cy - repli.height / 2));
+return true;
+}
+return false;
+}
+function poserCoin(g2, cle, repli, x, y) {
+var im = cle ? imgAsset(cle) : null;
+if (assetPret(im)) { g2.drawImage(im, Math.round(x), Math.round(y)); return true; }
+if (repli) { g2.drawImage(repli, Math.round(x), Math.round(y)); return true; }
+return false;
+}
+function encombrement(cle, repli) {
+var im = cle ? imgAsset(cle) : null;
+if (assetPret(im)) return { l: im.naturalWidth, h: im.naturalHeight };
+if (repli) return { l: repli.width, h: repli.height };
+return { l: 0, h: 0 };
+}
 var COLS_ROUTES = [3, 16, 29, 42, 55];
 var ROWS_ROUTES = [5, 14, 23, 32, 41];
 var MAISON_AFF = 216;          // affichage : 4x la taille d'origine (56)
@@ -6804,6 +6946,7 @@ var solides = [], maisons = [], enfants = [], objets = [], projectiles = [];
 var zones = [], arbres = [], pylones = [];
 var decorFleurs = [], decorBarrieres = [], animaux = [];
 var fond = null;
+var graineCarte = 1;           // graine de la carte courante (re-cuisson)
 var solArbre = null, solPylone = null, solDepot = null, solBarriere = null;
 var solFleurs = [];
 var solDrone = [], solObjets = {}, solProjectiles = {};
@@ -6812,6 +6955,10 @@ function chargerAssets() {
 if (ASSETS.profPilote) imgProfPilote = imgAsset('profPilote');
 ['maison1', 'maison2', 'maison3',
 'decorFleurs', 'chienA', 'chienB', 'chatA', 'chatB']
+.forEach(imgAsset);
+['droneHelices', 'droneRotors', 'colis', 'batterie', 'lipo',
+'carbone', 'camera', 'ballon', 'avion', 'bois', 'pylone',
+'plateforme', 'arbre', 'fleur0', 'fleur1', 'fleur2', 'barriere']
 .forEach(imgAsset);
 MODELES_ENFANT.forEach(function (m) {
 ['course1', 'course2', 'lancer'].forEach(function (f) {
@@ -6823,6 +6970,31 @@ var v = getComputedStyle(document.documentElement).getPropertyValue('--sprite-pr
 var m = v && v.match(/url\(["']?(data:image\/[^"')]+)["']?\)/);
 if (m) { imgPlancheProf = new Image(); imgPlancheProf.src = m[1]; }
 } catch (e) { /* repli indisponible */ }
+}
+var assetsArrives = false;
+function apresChargementAssets() {
+if (assetsArrives) return;
+assetsArrives = true;
+preparerSprites();
+if (!fond) return;
+if (ETAT === 'pret') {
+reinitialiserNiveau();
+} else {
+genererCarte(graineCarte);
+}
+dessiner();
+}
+function quandAssetsPrets() {
+var cles = Object.keys(ASSETS);
+if (!cles.length) { apresChargementAssets(); return; }
+var restants = cles.length;
+var fini = function () { restants -= 1; if (restants <= 0) apresChargementAssets(); };
+cles.forEach(function (cle) {
+var im = imgAsset(cle);
+if (!im || assetPret(im)) { fini(); return; }
+im.addEventListener('load', fini, { once: true });
+im.addEventListener('error', fini, { once: true });
+});
 }
 function preparerSprites() {
 solArbre = faireArbre();
@@ -6864,8 +7036,28 @@ if (cy >= ROWS_ROUTES[j] - 0.6 && cy <= ROWS_ROUTES[j] + 2.6) return true;
 }
 return false;
 }
+function surRouteRect(x, y, l, h) {
+var marge = 6;
+for (var i = 0; i < COLS_ROUTES.length; i++) {
+var rx = COLS_ROUTES[i] * TUILE;
+if (x + l > rx - marge && x < rx + 2 * TUILE + marge) return true;
+}
+for (var j = 0; j < ROWS_ROUTES.length; j++) {
+var ry = ROWS_ROUTES[j] * TUILE;
+if (y + h > ry - marge && y < ry + 2 * TUILE + marge) return true;
+}
+return false;
+}
+function chevauchePad(x, y, l, h, marge) {
+var pad = encombrement('plateforme', solDepot);
+var px0 = DEPOT.x + 28 - pad.l / 2 - marge;
+var py0 = DEPOT.y + 28 - pad.h / 2 - marge;
+return x + l > px0 && x < px0 + pad.l + 2 * marge &&
+y + h > py0 && y < py0 + pad.h + 2 * marge;
+}
 function genererCarte(graine) {
 var rnd = alea(graine);
+graineCarte = graine;
 solides = []; maisons = []; arbres = []; pylones = [];
 for (var bi = 0; bi < COLS_ROUTES.length + 1; bi++) {
 var colDebut = bi === 0 ? 1 : COLS_ROUTES[bi - 1] + 2;
@@ -6903,25 +7095,40 @@ for (var rj = 0; rj < ROWS_ROUTES.length; rj++) {
 if (rnd() > 0.55) continue;
 var pxx = (COLS_ROUTES[ci] - 1) * TUILE, pyy = (ROWS_ROUTES[rj] - 1) * TUILE;
 if (collisionne(pxx, pyy, 26, 26)) continue;
+var pyl = encombrement('pylone', solPylone);
+var pxr = pxx + 13 - pyl.l / 2, pyr = pyy + 24 - pyl.h;
+if (pxr < 0 || pyr < 0 || pxr + pyl.l > MONDE_L) continue;
+if (empiète(pxr, pyr, pyl.l, pyl.h)) continue;
+if (chevauchePad(pxr, pyr, pyl.l, pyl.h, 0)) continue;
 pylones.push({ x: pxx, y: pyy });
 solides.push({ x: pxx + 2, y: pyy + 2, l: 22, h: 22, type: 'pylone' });
 }
 }
+var bois = encombrement('arbre', solArbre);
 var essais = 0;
 while (arbres.length < 70 && essais < 2500) {
 essais++;
 var ax = Math.floor(rnd() * (COLS - 2)) * TUILE;
 var ay = Math.floor(rnd() * (ROWS - 2)) * TUILE;
-if (surRoute(ax, ay) || collisionne(ax, ay, 34, 36)) continue;
+if (surRouteRect(ax, ay, bois.l, bois.h)) continue;
+if (collisionne(ax, ay, bois.l, bois.h)) continue;
+if (chevauchePad(ax, ay, bois.l, bois.h, 8)) continue;
 arbres.push({ x: ax, y: ay });
 }
 decorFleurs = []; decorBarrieres = []; animaux = [];
+var massif = { l: 16, h: 16 };
+['fleur0', 'fleur1', 'fleur2'].forEach(function (c) {
+var e = encombrement(c, null);
+massif.l = Math.max(massif.l, e.l);
+massif.h = Math.max(massif.h, e.h);
+});
 var essaisDeco = 0;
 while (decorFleurs.length < 90 && essaisDeco < 2000) {
 essaisDeco++;
 var fx = Math.floor(rnd() * (COLS - 1)) * TUILE + Math.floor(rnd() * 26);
 var fy = Math.floor(rnd() * (ROWS - 1)) * TUILE + Math.floor(rnd() * 26);
-if (surRoute(fx, fy) || empiète(fx, fy, 18, 18)) continue;
+if (surRouteRect(fx, fy, massif.l, massif.h)) continue;
+if (empiète(fx, fy, massif.l, massif.h)) continue;
 if (Math.abs(fx - DEPOT.x) < 90 && Math.abs(fy - DEPOT.y) < 90) continue;
 decorFleurs.push({ x: fx, y: fy, v: Math.floor(rnd() * 3) });
 }
@@ -7003,16 +7210,20 @@ if (dansCroisement(x3, y3, 14, 4)) continue;
 px(g, x3, y3, 14, 4, C.marquage);
 }
 });
-arbres.forEach(function (a) { g.drawImage(solArbre, a.x, a.y); });
-pylones.forEach(function (p3) { g.drawImage(solPylone, p3.x, p3.y); });
-g.drawImage(solDepot, DEPOT.x, DEPOT.y);
+arbres.forEach(function (a) { poserCoin(g, 'arbre', solArbre, a.x, a.y); });
+pylones.forEach(function (p3) {
+poserSprite(g, 'pylone', solPylone, p3.x + 13, p3.y + 24, true);
+});
+poserSprite(g, 'plateforme', solDepot, DEPOT.x + 28, DEPOT.y + 28);
+var cloture = encombrement('barriere', solBarriere);
 var essaisB = 0;
 while (decorBarrieres.length < 22 && essaisB < 1500) {
 essaisB++;
 var bx0 = Math.floor(rnd() * (COLS - 2)) * TUILE;
 var by0 = Math.floor(rnd() * (ROWS - 2)) * TUILE;
-if (surRoute(bx0 + 22, by0 + 10)) continue;
-if (empiète(bx0, by0, 44, 22)) continue;
+if (surRouteRect(bx0, by0, cloture.l, cloture.h)) continue;
+if (empiète(bx0, by0, cloture.l, cloture.h)) continue;
+if (chevauchePad(bx0, by0, cloture.l, cloture.h, 4)) continue;
 decorBarrieres.push({ x: bx0, y: by0 });
 }
 fond = o.canvas;
@@ -7536,7 +7747,6 @@ ctx.fillRect(x - 2, y - 24, 4, 8);
 }
 function dessinerProjectile(pr, ox, oy) {
 var x = Math.round(pr.x + ox), y = Math.round(pr.y + oy);
-var im = solProjectiles[pr.type] || solProjectiles.ballon;
 if (pr.arme > 0) {
 ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
 ctx.fillRect(x + 4, y - 6, 6, 6);
@@ -7544,7 +7754,9 @@ return;
 }
 ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
 ctx.fillRect(x - Math.round(pr.vx * 0.03) - 1, y - Math.round(pr.vy * 0.03) - 1, 3, 3);
-ctx.drawImage(im, x - 7, y - 6);
+poserSprite(ctx, CLE_PROJECTILE[pr.type],
+solProjectiles[pr.type] || solProjectiles.ballon,
+pr.x + ox, pr.y + oy);
 }
 function dessinerProfPilote(ox, oy, t) {
 var px7 = Math.round(PROF_JEU.x + ox), py7 = Math.round(PROF_JEU.y + oy);
@@ -7638,15 +7850,13 @@ for (var db = 0; db < decorBarrieres.length; db++) {
 var bi2 = decorBarrieres[db];
 var sxb = bi2.x + ox, syb = bi2.y + oy;
 if (sxb < -60 || syb < -60 || sxb > VUE_L + 60 || syb > VUE_H + 60) continue;
-if (solBarriere) ctx.drawImage(solBarriere, Math.round(sxb), Math.round(syb));
+poserCoin(ctx, 'barriere', solBarriere, sxb, syb);
 }
-if (solFleurs.length) {
 for (var df = 0; df < decorFleurs.length; df++) {
 var fi = decorFleurs[df];
 var sxf = fi.x + ox, syf = fi.y + oy;
-if (sxf < -30 || syf < -30 || sxf > VUE_L + 30 || syf > VUE_H + 30) continue;
-ctx.drawImage(solFleurs[fi.v % 3], Math.round(sxf), Math.round(syf));
-}
+if (sxf < -34 || syf < -34 || sxf > VUE_L + 34 || syf > VUE_H + 34) continue;
+poserCoin(ctx, 'fleur' + (fi.v % 3), solFleurs[fi.v % 3], sxf, syf);
 }
 for (var da = 0; da < animaux.length; da++) {
 var an = animaux[da];
@@ -7659,23 +7869,26 @@ if (assetPret(ima)) ctx.drawImage(ima, Math.round(sxa), Math.round(sya), 24, 20)
 if (ETAT !== 'perdu' && ETAT !== 'gagne') dessinerMarqueur(objectif(), ox, oy, temps);
 if (colis === 'depot') {
 var bob = Math.round(Math.sin(temps * 3) * 2);
-ctx.drawImage(solObjets.colis, Math.round(DEPOT.x + 20 + ox), Math.round(DEPOT.y + 20 + oy + bob));
+poserSprite(ctx, 'colis', solObjets.colis,
+DEPOT.x + 28 + ox, DEPOT.y + 28 + oy + bob);
 }
 for (var o3 = 0; o3 < objets.length; o3++) {
 if (objets[o3].pris) continue;
 var bob2 = Math.round(Math.sin(temps * 3 + objets[o3].x) * 2);
-ctx.drawImage(solObjets[objets[o3].type],
-Math.round(objets[o3].x - 8 + ox), Math.round(objets[o3].y - 8 + oy + bob2));
+poserSprite(ctx, CLE_OBJET[objets[o3].type], solObjets[objets[o3].type],
+objets[o3].x + ox, objets[o3].y + oy + bob2);
 }
 for (var e2 = 0; e2 < enfants.length; e2++) dessinerEnfant(enfants[e2], ox, oy);
 for (var p8 = 0; p8 < projectiles.length; p8++) dessinerProjectile(projectiles[p8], ox, oy);
 if (drone) {
-var img = solDrone[Math.floor(temps * 26) % 2];
-ctx.drawImage(img, Math.round(drone.x - 15 + ox), Math.round(drone.y - 15 + oy));
+var cleDrone = drone.boost ? 'droneRotors' : 'droneHelices';
 if (drone.boost) {
 ctx.fillStyle = 'rgba(56, 189, 248, 0.28)';
-ctx.fillRect(Math.round(drone.x - 18 + ox), Math.round(drone.y - 18 + oy), 36, 36);
+ctx.fillRect(Math.round(drone.x - 24 + ox), Math.round(drone.y - 24 + oy), 48, 48);
 }
+var bobDrone = Math.round(Math.sin(temps * 5));
+poserSprite(ctx, cleDrone, solDrone[drone.boost ? 1 : 0],
+drone.x + ox, drone.y + oy + bobDrone);
 if (ETAT === 'en_cours') {
 var cible = objectif();
 var ang2 = Math.atan2(cible.y - drone.y, cible.x - drone.x);
@@ -7746,6 +7959,21 @@ window.niveauSuivantJeu = niveauSuivant;
 window.JeuColis = {
 etat: function () { return ETAT; },
 drone: function () { return drone; },
+vue: function () { return { x: camera.x, y: camera.y, l: VUE_L, h: VUE_H }; },
+sprites: function () {
+var r = {};
+Object.keys(ASSETS).forEach(function (k) {
+var im = imagesAssets[k];
+r[k] = { charge: assetPret(im),
+l: assetPret(im) ? im.naturalWidth : 0,
+h: assetPret(im) ? im.naturalHeight : 0 };
+});
+return r;
+},
+plan: function () {
+return { arbres: arbres, pylones: pylones, fleurs: decorFleurs,
+barrieres: decorBarrieres, depot: DEPOT };
+},
 niveau: function () { return niveau; },
 livraisons: function () { return livraisons; },
 argent: function () { return argent; },
@@ -7853,19 +8081,25 @@ preparerSprites();
 niveau = 1;
 reinitialiserNiveau();
 dessiner();
+quandAssetsPrets();
 })();
 (function () {
 'use strict';
-var MONDE = { largeur: 60, hauteur: 40 };      // en mètres
-var GRAVITE = 4.6;                             // m/s²
-var POUSSEE_MAX = 9.2;                         // m/s², à pleine poussée
-var ROULIS_MAX = 2.4;                          // m/s² de déplacement latéral
-var INCLINAISON_MAX = 14;                      // degrés visuels
-var DEMI_LARGEUR = 1.6;                        // demi-largeur du drone (m)
-var VY_LIMITE = 2.0;                           // m/s à l'atterrissage
-var VX_LIMITE = 2.0;                           // m/s à l'atterrissage
-var TILT_LIMITE = 12;                          // degrés à l'atterrissage
-var MISSION_SECONDES = 60;                     // durée d'inspection annoncée
+var VOL_MOTEUR_VERSION = 2;   // marqueur-vol-debut : sert à réinjecter ce moteur dans un HTML déjà généré
+var GRAVITE = 2.0;                 // m/s²
+var POUSSEE_MAX = 6.4;             // m/s², à pleine poussée (3,2 × la gravité)
+var INCLINAISON_MAX = 68;          // butée de rotation, en degrés
+var OMEGA_MAX = 115;               // degrés par seconde à pleine commande
+var REACTIVITE_ROTATION = 9;       // lissage de la rotation (1/s)
+var DEMI_LARGEUR = 1.6;            // demi-largeur du drone (m) : 3,2 m d'envergure
+var DEMI_HAUTEUR = 0.85;           // demi-hauteur du drone (m)
+var VY_LIMITE = 2.2;               // m/s de descente à l'atterrissage
+var VX_LIMITE = 2.0;               // m/s de dérive à l'atterrissage
+var TILT_LIMITE = 12;              // degrés d'inclinaison à l'atterrissage
+var PAS_SOL = 0.5;                 // pas d'échantillonnage du relief (m)
+var RATIO_ECRAN = 0.62;            // hauteur / largeur du canevas
+var LARGEUR_VUE_LARGE = 135;       // mètres visibles sur grand écran
+var LARGEUR_VUE_MOBILE = 104;      // mètres visibles sur téléphone
 var ROTORS = [
 { nom: 'Avant gauche', sens: 'droite' },
 { nom: 'Avant droit', sens: 'droite' },
@@ -7875,29 +8109,46 @@ var ROTORS = [
 var BATTERIES = [
 { cle: '1300', nom: 'Li-Po 3S 1300 mAh', capacite: 1300, masse: 110,
 endurance: 55, facteurMasse: 1.00,
-avis: '55 s de vol pour une mission de 60 s : trop juste.' },
+avis: '55 s de poussée : légère, donc poussée maximale, mais la réserve fond vite.' },
 { cle: '2200', nom: 'Li-Po 3S 2200 mAh', capacite: 2200, masse: 180,
 endurance: 95, facteurMasse: 1.06,
-avis: '95 s de vol, 70 g de plus que la 1300 : le bon compromis pour 60 s de mission.' },
+avis: '95 s de poussée, 70 g de plus : le bon compromis pour une carte de 250 m.' },
 { cle: '5200', nom: 'Li-Po 3S 5200 mAh', capacite: 5200, masse: 400,
 endurance: 150, facteurMasse: 1.22,
-avis: '150 s de vol, mais 400 g : le drone devient lourd, la poussée utile baisse.' }
+avis: '150 s de poussée, mais 400 g : le drone devient lourd, la poussée utile baisse de 18 %.' }
 ];
 var SENSIBILITES = [
 { cle: 'douce', nom: 'Douces', gain: 0.6, conso: 0.9,
-avis: 'Corrections fines, consommation réduite — mais peu de réaction.' },
+avis: 'Rotation lente et corrections fines, consommation réduite — mais peu de réaction.' },
 { cle: 'moyenne', nom: 'Moyennes', gain: 1.0, conso: 1.0,
 avis: 'Le réglage d\'usine : un bon équilibre entre réaction et autonomie.' },
 { cle: 'vive', nom: 'Vives', gain: 1.5, conso: 1.25,
-avis: 'Très maniable, mais la batterie se vide 25 % plus vite.' }
+avis: 'Rotation très rapide, mais la batterie se vide 25 % plus vite.' }
 ];
-var SITES = [
-{ nom: "Le toit de l'atelier", padX: 42, padW: 12, hauteur: 30, vent: 0.15, departX: 20 },
-{ nom: 'La cour du collège', padX: 16, padW: 10, hauteur: 34, vent: 0.45, departX: 42 },
-{ nom: 'La falaise', padX: 30, padW: 7, hauteur: 38, vent: 0.75, departX: 52 }
+var NIVEAUX = [
+{ nom: "Le toit de l'atelier", largeur: 220, hauteur: 140,
+graine: 3171, amplitude: 30, padFrac: 0.74, padRel: 0.34, padW: 13,
+depart: { x: 34, y: 15 },
+consigne: 'Le relief est doux, la plateforme large : de quoi prendre la mesure de l\'inertie.' },
+{ nom: 'La carrière de calcaire', largeur: 260, hauteur: 150,
+graine: 5209, amplitude: 38, padFrac: 0.80, padRel: 0.58, padW: 11,
+depart: { x: 30, y: 16 },
+consigne: 'Les gradins de la carrière sont hauts : la plateforme est posée sur un replat.' },
+{ nom: 'La falaise', largeur: 300, hauteur: 170,
+graine: 8813, amplitude: 46, padFrac: 0.72, padRel: 0.26, padW: 9.5,
+depart: { x: 32, y: 18 },
+consigne: 'La plateforme est au pied de la falaise : il faut plonger sans se laisser emporter.' },
+{ nom: 'La crête enneigée', largeur: 340, hauteur: 195,
+graine: 6427, amplitude: 56, padFrac: 0.84, padRel: 0.72, padW: 8,
+depart: { x: 30, y: 20 },
+consigne: 'La plateforme est sur la crête : on arrive par-dessus, puis on freine la dérive.' },
+{ nom: 'La base polaire', largeur: 380, hauteur: 220,
+graine: 9151, amplitude: 64, padFrac: 0.78, padRel: 0.52, padW: 6.5,
+depart: { x: 26, y: 22 },
+consigne: 'La carte la plus vaste, le pic le plus étroit : trois cents mètres à traverser.' }
 ];
 var ETAT = 'reglages';   // reglages | pret | vol | pause | fini
-var SITE = 0;
+var NIVEAU = 0;
 var BATTERIE = null;     // indice choisi
 var SENSIBILITE = 1;     // indice choisi (moyenne par défaut)
 var INVERSION = false;
@@ -7906,10 +8157,19 @@ var DERNIER_RESULTAT = null;
 var rafId = null;
 var dernierTemps = 0;
 var vol = {
-x: 0, altitude: 0, vx: 0, vy: 0,
-inclinaison: 0, batterie: 100, temps: 0, ventCourant: 0,
+x: 0, y: 0, vx: 0, vy: 0, theta: 0, omega: 0,
+batterie: 100, temps: 0, poussee: false,
 touches: { poussee: false, gauche: false, droite: false }
 };
+var TERRAINS = [];       // cache : un terrain par niveau, calculé une fois
+var TERRAIN = null;
+var CAM = { x: 0, y: 0 };          // coin haut-gauche de la vue, en mètres
+var ECHELLE = 4.8;                 // pixels par mètre
+var VUE = { largeur: 135, hauteur: 84 };   // vue en mètres
+var ECHELLE_DRONE = 1;             // agrandissement du dessin du drone
+var DERNIERE_TAILLE = '';          // pour ne redimensionner le canevas qu'au besoin
+var DERNIERE_MINIMAP = null;       // cadre de la minimap, relu par les vérifications
+var CADRAGES = 0;                  // nombre de fois où le jeu s'est calé sous les yeux
 function el(id) { return document.getElementById(id); }
 function annoncer(message) {
 var zone = el('vol-annonce');
@@ -7921,6 +8181,118 @@ if (!zone) return;
 zone.textContent = message;
 zone.className = 'vol-reglage' + (type ? ' ' + type : '');
 }
+function arrondi(valeur, decimales) {
+return valeur.toFixed(decimales).replace('.', ',');
+}
+function melange(i, graine) {
+var t = Math.sin(i * 127.1 + graine * 0.0173) * 43758.5453123;
+return t - Math.floor(t);
+}
+function bruit(x, frequence, graine, decalage) {
+var t = x * frequence + decalage;
+var i = Math.floor(t);
+var f = t - i;
+var a = melange(i, graine);
+var b = melange(i + 1, graine);
+var u = f * f * (3 - 2 * f);
+return a + (b - a) * u;
+}
+function enCrete(valeur) {
+return 1 - Math.abs(2 * valeur - 1);
+}
+function profil(x, graine, largeur) {
+var v = 0.28 * bruit(x, 1.2 / largeur, graine, 0);
+v += 0.38 * enCrete(bruit(x, 3.6 / largeur, graine, 11.7));
+v += 0.24 * enCrete(bruit(x, 8.0 / largeur, graine, 43.1));
+v += 0.10 * bruit(x, 18 / largeur, graine, 91.3);
+return v;
+}
+function construireTerrain(niveau) {
+var n = Math.ceil(niveau.largeur / PAS_SOL) + 1;
+var hauteurs = new Float64Array(n);
+var brut = new Float64Array(n);
+var mini = Infinity;
+var maxi = -Infinity;
+var i;
+for (i = 0; i < n; i++) {
+brut[i] = profil(i * PAS_SOL, niveau.graine, niveau.largeur);
+if (brut[i] < mini) mini = brut[i];
+if (brut[i] > maxi) maxi = brut[i];
+}
+var etendue = maxi - mini || 1;
+var solBas = niveau.hauteur - 8;
+for (i = 0; i < n; i++) {
+hauteurs[i] = solBas - ((brut[i] - mini) / etendue) * niveau.amplitude;
+}
+var demi = niveau.padW / 2;
+var rayon = demi + 6;
+var cible = solBas - niveau.padRel * niveau.amplitude;
+var fenetre = niveau.largeur * 0.10;
+var centreIdeal = niveau.padFrac * niveau.largeur;
+var padX = centreIdeal;
+var padY = solBas - niveau.padRel * niveau.amplitude;
+var meilleurEcart = Infinity;
+var sommetLocal = function (x) {
+var haut = Infinity;
+for (var d = -rayon; d <= rayon; d += PAS_SOL) {
+var k = Math.round((x + d) / PAS_SOL);
+if (k < 0) k = 0;
+if (k > n - 1) k = n - 1;
+if (hauteurs[k] < haut) haut = hauteurs[k];
+}
+return haut;
+};
+var margeBord = rayon + 6;
+var debut = Math.max(margeBord, centreIdeal - fenetre);
+var fin = Math.min(niveau.largeur - margeBord, centreIdeal + fenetre);
+for (var cx = debut; cx <= fin; cx += 1) {
+var haut = sommetLocal(cx);
+var ecart = Math.abs(haut - cible) + Math.abs(cx - centreIdeal) * 0.05;
+if (ecart < meilleurEcart) {
+meilleurEcart = ecart;
+padX = cx;
+padY = haut;
+}
+}
+var rampe = 8;
+for (i = 0; i < n; i++) {
+var xx = i * PAS_SOL;
+var dd = Math.abs(xx - padX);
+if (dd <= demi) {
+hauteurs[i] = padY;
+} else if (dd <= demi + rampe) {
+var t = (dd - demi) / rampe;
+var lissage = t * t * (3 - 2 * t);
+hauteurs[i] = padY + (hauteurs[i] - padY) * lissage;
+}
+}
+var miniY = Infinity;
+var maxiY = -Infinity;
+for (i = 0; i < n; i++) {
+if (hauteurs[i] < miniY) miniY = hauteurs[i];
+if (hauteurs[i] > maxiY) maxiY = hauteurs[i];
+}
+return {
+n: n, pas: PAS_SOL, hauteurs: hauteurs,
+minY: miniY, maxY: maxiY,
+pad: { x: padX, y: padY, w: niveau.padW },
+neige: miniY + 0.42 * (maxiY - miniY)
+};
+}
+function terrainDuNiveau(indice) {
+if (!TERRAINS[indice]) TERRAINS[indice] = construireTerrain(NIVEAUX[indice]);
+return TERRAINS[indice];
+}
+function solY(x) {
+if (!TERRAIN) return 0;
+var i = Math.round(x / TERRAIN.pas);
+if (i < 0) i = 0;
+if (i > TERRAIN.n - 1) i = TERRAIN.n - 1;
+return TERRAIN.hauteurs[i];
+}
+function altitude() {
+return Math.max(0, solY(vol.x) - vol.y);
+}
 function rotorsEquilibres() {
 var s = ROTORS.map(function (r) { return r.sens; });
 return s[0] === s[3] && s[1] === s[2] && s[0] !== s[1];
@@ -7928,7 +8300,7 @@ return s[0] === s[3] && s[1] === s[2] && s[0] !== s[1];
 function dessinerRotors() {
 var boutons = document.querySelectorAll('.vol-rotor');
 var equilibre = rotorsEquilibres();
-boutons.forEach(function (bouton, i) {
+Array.prototype.forEach.call(boutons, function (bouton, i) {
 var rotor = ROTORS[i];
 if (!rotor) return;
 bouton.setAttribute('data-sens', rotor.sens);
@@ -7966,21 +8338,24 @@ var i = parseInt(bouton.getAttribute('data-batterie'), 10);
 if (!(i >= 0 && i < BATTERIES.length)) return;
 BATTERIE = i;
 var b = BATTERIES[i];
-document.querySelectorAll('#vol-batteries .vol-choix').forEach(function (autre) {
+var boutons = document.querySelectorAll('#vol-batteries .vol-choix');
+Array.prototype.forEach.call(boutons, function (autre) {
 var choisi = autre === bouton;
 autre.classList.toggle('choisi', choisi);
 autre.setAttribute('aria-checked', choisi ? 'true' : 'false');
 });
-var verdict = b.endurance >= MISSION_SECONDES ? 'Elle couvre la mission.' : 'Elle ne couvre pas la mission.';
-reglage('vol-reglage-batterie', b.nom + ' : ' + b.endurance + ' s d\'autonomie pour '
-+ MISSION_SECONDES + ' s de mission. ' + b.avis + ' ' + verdict, 'info');
+reglage('vol-reglage-batterie', b.nom + ' : ' + b.endurance
++ ' s de poussée à pleine puissance. ' + b.avis
++ ' Une carte entière demande 15 à 25 s de poussée à un pilote soigneux : '
++ 'la réserve sert à corriger les erreurs.', 'info');
 majReglages();
 }
 function volChoisirSensibilite(bouton) {
 var i = parseInt(bouton.getAttribute('data-sensibilite'), 10);
 if (!(i >= 0 && i < SENSIBILITES.length)) return;
 SENSIBILITE = i;
-document.querySelectorAll('#vol-sensibilites .vol-choix').forEach(function (autre) {
+var boutons = document.querySelectorAll('#vol-sensibilites .vol-choix');
+Array.prototype.forEach.call(boutons, function (autre) {
 var choisi = autre === bouton;
 autre.classList.toggle('choisi', choisi);
 autre.setAttribute('aria-checked', choisi ? 'true' : 'false');
@@ -7995,8 +8370,8 @@ bouton.setAttribute('aria-checked', INVERSION ? 'true' : 'false');
 var etatInversion = el('vol-etat-inversion');
 if (etatInversion) etatInversion.textContent = INVERSION ? 'oui' : 'non';
 reglage('vol-reglage-commandes', INVERSION
-? '↔ Roulis inversé : ◀ fait maintenant partir vers la droite.'
-: '↔ Roulis normal : ◀ va vers la gauche.', 'info');
+? '↔ Roulis inversé : ◀ fait maintenant incliner le drone vers la droite.'
+: '↔ Roulis normal : ◀ incline le drone vers la gauche.', 'info');
 majReglages();
 }
 function majReglages() {
@@ -8033,6 +8408,19 @@ function cacherVoile() {
 var voile = el('vol-voile');
 if (voile) voile.hidden = true;
 }
+function textePresentation() {
+var niveau = NIVEAUX[NIVEAU];
+var t = terrainDuNiveau(NIVEAU);
+var distance = Math.hypot(t.pad.x - niveau.depart.x, t.pad.y - niveau.depart.y);
+return 'Carte de ' + Math.round(niveau.largeur) + ' × ' + Math.round(niveau.hauteur)
++ ' m : elle défile dans les deux sens (repère : la minimap en haut à droite). '
++ 'Départ à ' + Math.round(distance) + ' m de la plateforme, qui mesure '
++ arrondi(niveau.padW, 1) + ' m de large. ' + niveau.consigne
++ ' Posez-vous avec une descente sous ' + arrondi(VY_LIMITE, 1)
++ ' m/s, une dérive sous ' + arrondi(VX_LIMITE, 1)
++ ' m/s et moins de ' + TILT_LIMITE + '° d\'inclinaison. Aucune résistance '
++ 'de l\'air : la vitesse ne se dissipe pas, il faut freiner.';
+}
 function volDecoller() {
 if (ETAT === 'vol' || ETAT === 'pause') return;
 if (!rotorsEquilibres() || BATTERIE === null) {
@@ -8045,25 +8433,42 @@ var salle = el('vol-salle');
 if (salle) salle.hidden = false;
 ETAT = 'pret';
 preparerVol();
-afficherVoile('Prêt à décoller ?',
-'Site ' + (SITE + 1) + ' — ' + SITES[SITE].nom + '. Altitude de départ : '
-+ SITES[SITE].hauteur + ' m, vent latéral ' + SITES[SITE].vent.toFixed(2) + ' m/s. '
-+ 'Posez le drone sur la plateforme : descente et dérive sous '
-+ VY_LIMITE.toFixed(0) + ' m/s, inclinaison sous ' + TILT_LIMITE + '°.',
-'🛫 Décoller', volDemarrerVol);
-annoncer('Réglages appliqués. Appuyez sur le bouton de décollage pour commencer le vol.');
+afficherVoile('Niveau ' + (NIVEAU + 1) + ' — ' + NIVEAUX[NIVEAU].nom,
+textePresentation(), '🛫 Décoller', volDemarrerVol);
+cadrerEcranDeJeu();
+annoncer('Réglages appliqués. Niveau ' + (NIVEAU + 1) + ' : '
++ NIVEAUX[NIVEAU].nom + '. Prêt à décoller.');
+}
+function cadrerEcranDeJeu() {
+var ecran = document.querySelector('.vol-ecran');
+if (!ecran || !ecran.getBoundingClientRect) return;
+var boite = ecran.getBoundingClientRect();
+var hauteur = window.innerHeight || 800;
+if (boite.top < 0 || boite.bottom > hauteur || boite.height > hauteur * 0.9) {
+CADRAGES++;
+try {
+ecran.scrollIntoView({ block: 'center' });
+} catch (err) {
+ecran.scrollIntoView(true);
+}
+}
 }
 function preparerVol() {
-var site = SITES[SITE];
-vol.x = site.departX;
-vol.altitude = site.hauteur;
+var niveau = NIVEAUX[NIVEAU];
+TERRAIN = terrainDuNiveau(NIVEAU);
+vol.x = niveau.depart.x;
+vol.y = niveau.depart.y;
 vol.vx = 0;
 vol.vy = 0;
-vol.inclinaison = 0;
+vol.theta = 0;
+vol.omega = 0;
 vol.batterie = 100;
 vol.temps = 0;
-vol.ventCourant = site.vent;
+vol.poussee = false;
 vol.touches.poussee = vol.touches.gauche = vol.touches.droite = false;
+DERNIER_RESULTAT = null;      // le résultat décrit UNE tentative, pas la précédente
+majCamera(0, true);
+adapterTaille();
 majHud();
 dessiner();
 }
@@ -8071,15 +8476,19 @@ function volDemarrerVol() {
 if (ETAT !== 'pret' && ETAT !== 'pause') return;
 cacherVoile();
 ETAT = 'vol';
-annoncer('Décollage. Maintenez la poussée pour freiner la descente.');
+dernierTemps = 0;
+cadrerEcranDeJeu();
+annoncer('Décollage : le drone tombe. Inclinez-le pour vous décaler, poussez pour freiner.');
 lancerBoucle();
 }
 function volPause() {
 if (ETAT === 'vol') {
 ETAT = 'pause';
 annoncer('Vol en pause.');
-afficherVoile('Vol en pause', 'Le drone est en vol stationnaire à '
-+ vol.altitude.toFixed(1) + ' m.', '▶ Reprendre', volDemarrerVol);
+afficherVoile('Vol en pause', 'Le drone est figé à '
++ arrondi(altitude(), 1) + ' m au-dessus du sol, à '
++ Math.round(Math.hypot(TERRAIN.pad.x - vol.x, TERRAIN.pad.y - vol.y))
++ ' m de la plateforme.', '▶ Reprendre', volDemarrerVol);
 } else if (ETAT === 'pause') {
 volDemarrerVol();
 }
@@ -8088,9 +8497,11 @@ function volRecommencer() {
 if (ETAT === 'vol' || ETAT === 'pause' || ETAT === 'fini') {
 ETAT = 'pret';
 preparerVol();
-afficherVoile('Nouvel essai', 'Vous repartez du point de départ du site '
-+ (SITE + 1) + ' : ' + SITES[SITE].nom + '.', '🛫 Décoller', volDemarrerVol);
-annoncer('Nouvel essai sur le site ' + (SITE + 1) + '.');
+afficherVoile('Nouvel essai — niveau ' + (NIVEAU + 1), 'Vous repartez du point de '
++ 'départ, à ' + Math.round(Math.hypot(TERRAIN.pad.x - NIVEAUX[NIVEAU].depart.x,
+TERRAIN.pad.y - NIVEAUX[NIVEAU].depart.y)) + ' m de la plateforme.',
+'🛫 Décoller', volDemarrerVol);
+annoncer('Nouvel essai au niveau ' + (NIVEAU + 1) + '.');
 }
 }
 function volRetourReglages() {
@@ -8100,28 +8511,27 @@ var salle = el('vol-salle');
 if (salle) salle.hidden = true;
 var banc = el('vol-banc');
 if (banc) banc.disabled = false;
-SITE = 0;
+NIVEAU = 0;
 SCORE = 0;
 majReglages();
 annoncer('Retour aux réglages : les trois réglages peuvent être modifiés.');
 }
 function volSiteSuivant() {
-if (SITE + 1 >= SITES.length) {
-afficherVoile('Mission terminée', 'Vous avez posé le drone sur les '
-+ SITES.length + ' sites. Score total : ' + SCORE + ' points.', '↩ Retour aux réglages',
-volRetourReglages);
+if (NIVEAU + 1 >= NIVEAUX.length) {
+afficherVoile('🏁 Mission terminée',
+'Vous avez posé le drone sur les ' + NIVEAUX.length
++ ' plateformes, du toit de l\'atelier à la base polaire. Score total : '
++ SCORE + ' points.', '↩ Retour aux réglages', volRetourReglages);
 ETAT = 'fini';
-annoncer('Tous les sites sont réussis. Score total : ' + SCORE + ' points.');
+annoncer('Tous les niveaux sont réussis. Score total : ' + SCORE + ' points.');
 return;
 }
-SITE += 1;
+NIVEAU += 1;
 ETAT = 'pret';
 preparerVol();
-afficherVoile('Site ' + (SITE + 1) + ' — ' + SITES[SITE].nom,
-'Altitude ' + SITES[SITE].hauteur + ' m, vent latéral '
-+ SITES[SITE].vent.toFixed(2) + ' m/s. Même règle d\'atterrissage.',
-'🛫 Décoller', volDemarrerVol);
-annoncer('Site ' + (SITE + 1) + ' : ' + SITES[SITE].nom + '.');
+afficherVoile('Niveau ' + (NIVEAU + 1) + ' — ' + NIVEAUX[NIVEAU].nom,
+textePresentation(), '🛫 Décoller', volDemarrerVol);
+annoncer('Niveau ' + (NIVEAU + 1) + ' : ' + NIVEAUX[NIVEAU].nom + '.');
 }
 function lancerBoucle() {
 dernierTemps = 0;
@@ -8144,83 +8554,178 @@ var endurance = b.endurance / s.conso;
 if (vol.touches.poussee && vol.batterie > 0) {
 vol.batterie -= (100 / endurance) * dt;
 } else {
-vol.batterie -= (100 / endurance) * 0.18 * dt;   // veille de l'électronique
+vol.batterie -= (100 / endurance) * 0.18 * dt;
 }
 if (vol.batterie < 0) vol.batterie = 0;
-var poussee = (vol.touches.poussee && vol.batterie > 0)
-? POUSSEE_MAX / b.facteurMasse
-: 0;
-var direction = (vol.touches.droite ? 1 : 0) - (vol.touches.gauche ? 1 : 0);
-if (INVERSION) direction = -direction;
-var inclinaisonVisee = direction * INCLINAISON_MAX;
-vol.inclinaison += (inclinaisonVisee - vol.inclinaison) * Math.min(1, 6 * dt);
-var site = SITES[SITE];
-vol.ventCourant = site.vent * (0.85 + 0.15 * Math.sin(vol.temps * 0.8));
-vol.vx += (ROULIS_MAX * s.gain * direction + vol.ventCourant) * dt;
-vol.vx *= (1 - 0.9 * dt);
-vol.vy += (GRAVITE - poussee) * dt;
-vol.vy *= (1 - 0.03 * dt);
-vol.x += vol.vx * dt;
-vol.altitude -= vol.vy * dt;
-vol.temps += dt;
-if (vol.altitude <= 0) {
-vol.altitude = 0;
-poser();
-} else if (vol.x < -2 || vol.x > MONDE.largeur + 2) {
-vol.x = Math.max(0, Math.min(MONDE.largeur, vol.x));
-terminerFaux('sortie de la zone de vol — le drone est hors du terrain.');
-} else if (vol.batterie <= 0 && vol.vy > 0 && vol.altitude < 1) {
-poser();
+var sens = (vol.touches.droite ? 1 : 0) - (vol.touches.gauche ? 1 : 0);
+if (INVERSION) sens = -sens;
+var omegaVise = sens * OMEGA_MAX * s.gain;
+vol.omega += (omegaVise - vol.omega) * Math.min(1, REACTIVITE_ROTATION * dt);
+vol.theta += vol.omega * dt;
+if (vol.theta > INCLINAISON_MAX) { vol.theta = INCLINAISON_MAX; vol.omega = 0; }
+if (vol.theta < -INCLINAISON_MAX) { vol.theta = -INCLINAISON_MAX; vol.omega = 0; }
+vol.poussee = vol.touches.poussee && vol.batterie > 0;
+var ax = 0;
+var ay = GRAVITE;
+if (vol.poussee) {
+var p = POUSSEE_MAX / b.facteurMasse;
+var rad = vol.theta * Math.PI / 180;
+ax += p * Math.sin(rad);
+ay -= p * Math.cos(rad);
 }
+vol.vx += ax * dt;
+vol.vy += ay * dt;
+vol.x += vol.vx * dt;
+vol.y += vol.vy * dt;
+vol.temps += dt;
+var niveau = NIVEAUX[NIVEAU];
+if (vol.x < 0.8) { vol.x = 0.8; if (vol.vx < 0) vol.vx = 0; }
+if (vol.x > niveau.largeur - 0.8) { vol.x = niveau.largeur - 0.8; if (vol.vx > 0) vol.vx = 0; }
+if (vol.y < 0.8) { vol.y = 0.8; if (vol.vy < 0) vol.vy = 0; }
+majCamera(dt, false);
+verifierContact();
 majHud();
 }
-function poser() {
-var site = SITES[SITE];
-var surPlateforme = Math.abs(vol.x - site.padX) <= site.padW / 2 + DEMI_LARGEUR * 0.4;
-if (!surPlateforme) {
-terminerFaux('atterrissage à ' + Math.abs(vol.x - site.padX).toFixed(1)
-+ ' m du centre de la plateforme.');
+function coins() {
+var rad = vol.theta * Math.PI / 180;
+var c = Math.cos(rad);
+var s = Math.sin(rad);
+var coinsLocaux = [
+[-DEMI_LARGEUR, -DEMI_HAUTEUR],
+[DEMI_LARGEUR, -DEMI_HAUTEUR],
+[DEMI_LARGEUR, DEMI_HAUTEUR],
+[-DEMI_LARGEUR, DEMI_HAUTEUR]
+];
+return coinsLocaux.map(function (p) {
+return {
+x: vol.x + p[0] * c - p[1] * s,
+y: vol.y + p[0] * s + p[1] * c
+};
+});
+}
+function verifierContact() {
+var pts = coins();
+var touche = false;
+var toucheHaut = false;
+for (var i = 0; i < pts.length; i++) {
+if (pts[i].y >= solY(pts[i].x)) {
+touche = true;
+if (i < 2) toucheHaut = true;      // les deux coins du dessus
+}
+}
+if (!touche) return;
+poser(toucheHaut);
+}
+function poser(toucheHaut) {
+var pad = TERRAIN.pad;
+var ecart = Math.abs(vol.x - pad.x);
+if (toucheHaut) {
+terminerFaux('le drone a touché le sol retourné : le corps a heurté avant les '
++ 'trains d\'atterrissage.');
+return;
+}
+if (ecart > pad.w / 2 + DEMI_LARGEUR * 0.4) {
+terminerFaux('atterrissage à ' + arrondi(Math.max(0, ecart - pad.w / 2), 1)
++ ' m du bord de la plateforme (elle mesure ' + arrondi(pad.w, 1) + ' m) : '
++ 'le drone est tombé sur le relief.');
 return;
 }
 if (Math.abs(vol.vy) > VY_LIMITE) {
-terminerFaux('descente trop rapide : ' + Math.abs(vol.vy).toFixed(1)
-+ ' m/s (limite ' + VY_LIMITE + ' m/s).');
+terminerFaux('descente trop rapide : ' + arrondi(Math.abs(vol.vy), 1)
++ ' m/s (limite ' + arrondi(VY_LIMITE, 1) + ' m/s). Sans résistance de l\'air, '
++ 'il faut freiner plus tôt.');
 return;
 }
 if (Math.abs(vol.vx) > VX_LIMITE) {
-terminerFaux('dérive horizontale trop forte : ' + Math.abs(vol.vx).toFixed(1)
-+ ' m/s (limite ' + VX_LIMITE + ' m/s).');
+terminerFaux('dérive horizontale trop forte : ' + arrondi(Math.abs(vol.vx), 1)
++ ' m/s (limite ' + arrondi(VX_LIMITE, 1) + ' m/s). Inclinez le drone dans '
++ 'l\'autre sens pour annuler la dérive.');
 return;
 }
-if (Math.abs(vol.inclinaison) > TILT_LIMITE) {
-terminerFaux('drone trop incliné : ' + Math.abs(vol.inclinaison).toFixed(0)
-+ '° (limite ' + TILT_LIMITE + '°).');
+if (Math.abs(vol.theta) > TILT_LIMITE) {
+terminerFaux('drone trop incliné : ' + arrondi(Math.abs(vol.theta), 0)
++ '° (limite ' + TILT_LIMITE + '°). Redressez avant de toucher.');
 return;
 }
 var points = Math.max(20, 100 - Math.round(
-Math.abs(vol.x - site.padX) * 4 + Math.abs(vol.vy) * 10 + Math.abs(vol.vx) * 8));
+ecart * 4 + Math.abs(vol.vy) * 10 + Math.abs(vol.vx) * 8 + Math.abs(vol.theta)));
 SCORE += points;
 ETAT = 'fini';
-DERNIER_RESULTAT = { ok: true, points: points };
-afficherVoile('✅ Posé sur « ' + site.nom + ' »',
-'Descente ' + Math.abs(vol.vy).toFixed(1) + ' m/s, dérive '
-+ Math.abs(vol.vx).toFixed(1) + ' m/s, inclinaison '
-+ Math.abs(vol.inclinaison).toFixed(0) + '° : ' + points + ' points'
-+ (SITE + 1 < SITES.length ? '. Site suivant ?' : '. Dernier site !'),
-SITE + 1 < SITES.length ? '➡ Site suivant' : '🏁 Terminer', volSiteSuivant);
-annoncer('Posé sur ' + site.nom + ', ' + points + ' points. Total : ' + SCORE + '.');
+DERNIER_RESULTAT = { ok: true, points: points, niveau: NIVEAU + 1 };
+afficherVoile('✅ Posé sur la plateforme du niveau ' + (NIVEAU + 1),
+'Descente ' + arrondi(Math.abs(vol.vy), 1) + ' m/s, dérive '
++ arrondi(Math.abs(vol.vx), 1) + ' m/s, inclinaison '
++ arrondi(Math.abs(vol.theta), 0) + '° : ' + points + ' points. Batterie restante : '
++ Math.round(vol.batterie) + ' %.'
++ (NIVEAU + 1 < NIVEAUX.length ? ' Niveau suivant ?' : ' C\'était le dernier niveau !'),
+NIVEAU + 1 < NIVEAUX.length ? '➡ Niveau suivant' : '🏁 Terminer', volSiteSuivant);
+annoncer('Posé au niveau ' + (NIVEAU + 1) + ', ' + points
++ ' points. Total : ' + SCORE + '.');
 }
 function terminerFaux(raison) {
 ETAT = 'fini';
-DERNIER_RESULTAT = { ok: false, raison: raison };
-afficherVoile('💥 Atterrissage manqué',
-'Cause : ' + raison + ' Réduisez la vitesse avec la poussée et redressez '
-+ 'l\'inclinaison avant de toucher la plateforme.',
+DERNIER_RESULTAT = { ok: false, raison: raison, niveau: NIVEAU + 1 };
+afficherVoile('💥 Atterrissage manqué — niveau ' + (NIVEAU + 1),
+'Cause : ' + raison + ' Rappel : sans résistance de l\'air, la vitesse ne '
++ 's\'annule qu\'en poussant dans le sens opposé.',
 '🔁 Réessayer', volRecommencer);
 annoncer('Atterrissage manqué : ' + raison);
 }
-function formatNombre(valeur, decimales) {
-return valeur.toFixed(decimales).replace('.', ',');
+function majCamera(dt, immediat) {
+if (!TERRAIN) return;
+var niveau = NIVEAUX[NIVEAU];
+var cibleX = vol.x - VUE.largeur / 2;
+var cibleY = vol.y - VUE.hauteur / 2;
+var maxX = Math.max(0, niveau.largeur - VUE.largeur);
+var maxY = Math.max(0, niveau.hauteur - VUE.hauteur);
+cibleX = Math.max(0, Math.min(maxX, cibleX));
+cibleY = Math.max(0, Math.min(maxY, cibleY));
+if (immediat || !(dt > 0)) {
+CAM.x = cibleX;
+CAM.y = cibleY;
+return;
+}
+var k = Math.min(1, 9 * dt);
+CAM.x += (cibleX - CAM.x) * k;
+CAM.y += (cibleY - CAM.y) * k;
+}
+function largeurDisponible(canvas) {
+var css = canvas.clientWidth || 0;
+if (css < 120) {
+var parent = canvas.parentNode;
+css = (parent && parent.clientWidth) || 0;
+}
+if (css < 120) css = 600;               // salon encore masqué : taille de repli
+var hauteurFenetre = window.innerHeight || 0;
+var largeurFenetre = window.innerWidth || 0;
+if (hauteurFenetre > 200 && largeurFenetre < 900) {
+var cssMax = Math.max((hauteurFenetre * 0.44) / RATIO_ECRAN, 240);
+if (css > cssMax) css = cssMax;
+}
+return Math.round(css);
+}
+function adapterTaille() {
+var canvas = el('vol-canvas');
+if (!canvas) return;
+var css = largeurDisponible(canvas);
+var dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+var signature = css + 'x' + dpr;
+if (signature === DERNIERE_TAILLE) return;
+DERNIERE_TAILLE = signature;
+canvas.style.width = css + 'px';
+canvas.style.maxWidth = '100%';
+canvas.width = Math.round(css * dpr);
+canvas.height = Math.round(css * dpr * RATIO_ECRAN);
+var largeurVue = css < 560 ? LARGEUR_VUE_MOBILE : LARGEUR_VUE_LARGE;
+ECHELLE = canvas.width / largeurVue;
+VUE.largeur = canvas.width / ECHELLE;
+VUE.hauteur = canvas.height / ECHELLE;
+ECHELLE_DRONE = echelleDessinDrone();
+}
+function echelleDessinDrone() {
+var reelle = (2 * DEMI_LARGEUR * ECHELLE) / 34;      // 34 unités de dessin
+var plancher = 14 / 34;
+return Math.max(reelle, plancher);
 }
 function majHud() {
 var batterie = el('vol-batterie');
@@ -8234,23 +8739,32 @@ jauge.classList.toggle('critique', vol.batterie <= 15);
 jauge.setAttribute('aria-valuenow', String(Math.round(vol.batterie)));
 }
 var site = el('vol-site');
-if (site) site.textContent = (SITE + 1) + ' / ' + SITES.length + ' — ' + SITES[SITE].nom;
-var altitude = el('vol-altitude');
-if (altitude) altitude.textContent = formatNombre(Math.max(0, vol.altitude), 1) + ' m';
+if (site) site.textContent = (NIVEAU + 1) + ' / ' + NIVEAUX.length + ' — ' + NIVEAUX[NIVEAU].nom;
+var altitudeZone = el('vol-altitude');
+if (altitudeZone) altitudeZone.textContent = arrondi(altitude(), 1) + ' m';
 var vy = el('vol-vy');
-if (vy) vy.textContent = formatNombre(Math.abs(vol.vy), 1) + ' m/s';
+if (vy) vy.textContent = arrondi(Math.abs(vol.vy), 1) + ' m/s ' + (vol.vy >= 0 ? '↓' : '↑');
 var vx = el('vol-vx');
-if (vx) vx.textContent = formatNombre(Math.abs(vol.vx), 1) + ' m/s';
-var vent = el('vol-vent');
-if (vent) vent.textContent = formatNombre(Math.abs(vol.ventCourant), 2) + ' m/s '
-+ (vol.ventCourant >= 0 ? '→' : '←');
+if (vx) vx.textContent = arrondi(Math.abs(vol.vx), 1) + ' m/s ' + (vol.vx >= 0 ? '→' : '←');
 var inclinaison = el('vol-inclinaison');
-if (inclinaison) inclinaison.textContent = formatNombre(Math.abs(vol.inclinaison), 0) + '°';
+if (inclinaison) inclinaison.textContent = arrondi(Math.abs(vol.theta), 0) + '° '
++ (vol.theta > 0.5 ? '→' : (vol.theta < -0.5 ? '←' : ''));
+var distance = el('vol-distance');
+if (distance && TERRAIN) {
+distance.textContent = Math.round(Math.hypot(TERRAIN.pad.x - vol.x,
+TERRAIN.pad.y - vol.y)) + ' m';
+}
+var carte = el('vol-carte');
+if (carte) {
+carte.textContent = Math.round(NIVEAUX[NIVEAU].largeur) + ' × '
++ Math.round(NIVEAUX[NIVEAU].hauteur) + ' m';
+}
 var recap = el('vol-reglages-actifs');
 if (recap && BATTERIE !== null) {
 recap.textContent = 'Hélices équilibrées · ' + BATTERIES[BATTERIE].nom
 + ' · commandes ' + SENSIBILITES[SENSIBILITE].nom.toLowerCase()
-+ (INVERSION ? ' (roulis inversé)' : '');
++ (INVERSION ? ' (roulis inversé)' : '')
++ ' · vue de ' + Math.round(VUE.largeur) + ' m de large';
 }
 }
 function volDecrire() {
@@ -8261,14 +8775,22 @@ annoncer('Banc d\'essai : hélices '
 + ', commandes ' + SENSIBILITES[SENSIBILITE].nom.toLowerCase() + '.');
 return;
 }
-var texte = 'Site ' + (SITE + 1) + ', altitude ' + formatNombre(Math.max(0, vol.altitude), 1)
-+ ' mètres, vitesse verticale ' + formatNombre(Math.abs(vol.vy), 1)
-+ ' mètres par seconde, dérive ' + formatNombre(Math.abs(vol.vx), 1)
-+ ', inclinaison ' + formatNombre(Math.abs(vol.inclinaison), 0)
-+ ' degrés, batterie ' + Math.round(vol.batterie) + ' pour cent, vent '
-+ formatNombre(Math.abs(vol.ventCourant), 2) + ' mètres par seconde.';
+var texte = 'Niveau ' + (NIVEAU + 1) + ' sur ' + NIVEAUX.length + ', '
++ NIVEAUX[NIVEAU].nom + '. Altitude ' + arrondi(altitude(), 1)
++ ' mètres, vitesse verticale ' + arrondi(Math.abs(vol.vy), 1)
++ ' mètres par seconde vers le ' + (vol.vy >= 0 ? 'bas' : 'haut')
++ ', dérive ' + arrondi(Math.abs(vol.vx), 1)
++ ' mètres par seconde vers la ' + (vol.vx >= 0 ? 'droite' : 'gauche')
++ ', inclinaison ' + arrondi(Math.abs(vol.theta), 0)
++ ' degrés vers la ' + (vol.theta >= 0 ? 'droite' : 'gauche')
++ ', batterie ' + Math.round(vol.batterie) + ' pour cent. ';
+if (TERRAIN) {
+texte += 'Plateforme à ' + Math.round(Math.hypot(TERRAIN.pad.x - vol.x,
+TERRAIN.pad.y - vol.y)) + ' mètres, '
++ (vol.x < TERRAIN.pad.x ? 'vers la droite' : 'vers la gauche') + '. ';
+}
 if (ETAT === 'fini' && DERNIER_RESULTAT) {
-texte = (DERNIER_RESULTAT.ok ? 'Posé sur ' + SITES[SITE].nom + '. '
+texte = (DERNIER_RESULTAT.ok ? 'Posé sur la plateforme du niveau ' + (NIVEAU + 1) + '. '
 : 'Atterrissage manqué : ' + DERNIER_RESULTAT.raison + ' ') + texte;
 }
 annoncer(texte);
@@ -8276,98 +8798,288 @@ annoncer(texte);
 function dessiner() {
 var canvas = el('vol-canvas');
 if (!canvas || !canvas.getContext) return;
+adapterTaille();
 var ctx = canvas.getContext('2d');
-var L = canvas.width;
+var W = canvas.width;
 var H = canvas.height;
-var site = SITES[SITE];
-var solH = 36;
-var ciel = ctx.createLinearGradient(0, 0, 0, H - solH);
-ciel.addColorStop(0, '#8ec5e8');
-ciel.addColorStop(1, '#dcecf7');
+if (!TERRAIN) return;
+var E = ECHELLE;
+dessinerCiel(ctx, W, H);
+dessinerLointains(ctx, W, H);
+dessinerRelief(ctx, W, H);
+dessinerPlateforme(ctx, W, H);
+dessinerDrone(ctx);
+dessinerFlecheCible(ctx, W, H);
+dessinerMinimap(ctx, W, H);
+}
+function dessinerCiel(ctx, W, H) {
+var ciel = ctx.createLinearGradient(0, 0, 0, H);
+ciel.addColorStop(0, '#0b1f38');
+ciel.addColorStop(0.55, '#2d5d80');
+ciel.addColorStop(1, '#93b9cf');
 ctx.fillStyle = ciel;
-ctx.fillRect(0, 0, L, H - solH);
-ctx.fillStyle = 'rgba(255, 236, 179, .9)';
+ctx.fillRect(0, 0, W, H);
+var graine = NIVEAUX[NIVEAU].graine;
+ctx.fillStyle = 'rgba(255, 255, 255, .75)';
+for (var i = 0; i < 46; i++) {
+var sx = (melange(i * 3.1, graine) * (W + 200) - CAM.x * ECHELLE * 0.12) % (W + 200);
+if (sx < 0) sx += W + 200;
+var sy = melange(i * 7.7 + 2, graine) * H * 0.62 - CAM.y * 0.05 * ECHELLE;
+if (sy < 0 || sy > H * 0.7) continue;
+var taille = melange(i * 5.3 + 9, graine) > 0.82 ? 2 : 1;
+ctx.fillRect(sx, sy, taille, taille);
+}
+}
+function dessinerLointains(ctx, W, H) {
+var graine = NIVEAUX[NIVEAU].graine;
+var couches = [
+{ parallaxe: 0.25, base: 0.78, amp: 0.16, couleur: 'rgba(28, 56, 84, .78)', pas: 34 },
+{ parallaxe: 0.45, base: 0.86, amp: 0.13, couleur: 'rgba(38, 74, 96, .85)', pas: 22 }
+];
+for (var c = 0; c < couches.length; c++) {
+var L = couches[c];
 ctx.beginPath();
-ctx.arc(L - 54, 40, 18, 0, Math.PI * 2);
+ctx.moveTo(-4, H);
+for (var px = -4; px <= W + 4; px += 8) {
+var wx = (CAM.x * L.parallaxe) + px / ECHELLE;
+var crete = 1 - Math.abs(2 * bruit(wx, 1 / L.pas, graine + c * 13, 17 * c) - 1);
+var y = H * L.base - crete * H * L.amp - CAM.y * L.parallaxe * ECHELLE * 0.35;
+ctx.lineTo(px, y);
+}
+ctx.lineTo(W + 4, H);
+ctx.closePath();
+ctx.fillStyle = L.couleur;
 ctx.fill();
-ctx.fillStyle = '#b7d3bd';
+}
+}
+function dessinerRelief(ctx, W, H) {
+var E = ECHELLE;
+var t = TERRAIN;
+var i0 = Math.max(0, Math.floor(CAM.x / t.pas) - 2);
+var i1 = Math.min(t.n - 1, Math.ceil((CAM.x + VUE.largeur) / t.pas) + 2);
+function trace() {
 ctx.beginPath();
-ctx.moveTo(0, H - solH);
-ctx.lineTo(L * 0.22, H - solH - 34);
-ctx.lineTo(L * 0.46, H - solH);
+ctx.moveTo((i0 * t.pas - CAM.x) * E, H + 8);
+for (var i = i0; i <= i1; i++) {
+ctx.lineTo((i * t.pas - CAM.x) * E, (t.hauteurs[i] - CAM.y) * E);
+}
+ctx.lineTo((i1 * t.pas - CAM.x) * E, H + 8);
+ctx.closePath();
+}
+trace();
+ctx.fillStyle = '#2b4433';
+ctx.fill();
+var neigeY = (t.neige - CAM.y) * E;
+if (neigeY > 0) {
+ctx.save();
+ctx.beginPath();
+ctx.rect(0, 0, W, Math.max(0, neigeY));
+ctx.clip();
+trace();
+ctx.fillStyle = '#e8f1f6';
+ctx.fill();
+ctx.restore();
+}
+ctx.beginPath();
+for (var j = i0; j <= i1; j++) {
+var sx = (j * t.pas - CAM.x) * E;
+var sy = (t.hauteurs[j] - CAM.y) * E;
+if (j === i0) ctx.moveTo(sx, sy);
+else ctx.lineTo(sx, sy);
+}
+ctx.strokeStyle = 'rgba(157, 196, 128, .85)';
+ctx.lineWidth = Math.max(1.2, E * 0.35);
+ctx.stroke();
+}
+function dessinerPlateforme(ctx, W, H) {
+var E = ECHELLE;
+var t = TERRAIN;
+var px = (t.pad.x - CAM.x) * E;
+var py = (t.pad.y - CAM.y) * E;
+var pw = Math.max(8, t.pad.w * E);
+if (px < -pw || px > W + pw) return;
+ctx.fillStyle = '#d7e3ee';
+ctx.fillRect(px - pw / 2, py - Math.max(3, E * 0.9), pw, Math.max(3, E * 0.9));
+ctx.fillStyle = '#2e74b5';
+var bandes = 5;
+for (var i = 0; i < bandes; i++) {
+if (i % 2) continue;
+ctx.fillRect(px - pw / 2 + (i * pw) / bandes, py - Math.max(3, E * 0.9),
+pw / bandes, Math.max(2, E * 0.5));
+}
+var clignote = Math.sin(Date.now() / 320) > 0;
+ctx.fillStyle = clignote ? '#7ef0a8' : '#2d7a4f';
+ctx.fillRect(px - pw / 2 - 2, py - Math.max(5, E * 1.4), 3, Math.max(4, E * 1.2));
+ctx.fillRect(px + pw / 2 - 1, py - Math.max(5, E * 1.4), 3, Math.max(4, E * 1.2));
+if (pw > 14) {
+ctx.fillStyle = 'rgba(126, 240, 168, .55)';
+ctx.beginPath();
+ctx.moveTo(px, py - Math.max(8, E * 2.6));
+ctx.lineTo(px - 4, py - Math.max(14, E * 4));
+ctx.lineTo(px + 4, py - Math.max(14, E * 4));
 ctx.closePath();
 ctx.fill();
-ctx.fillStyle = '#86ad63';
-ctx.fillRect(0, H - solH, L, solH);
-ctx.fillStyle = '#5f8746';
-ctx.fillRect(0, H - solH, L, 4);
-var px = (site.padX / MONDE.largeur) * L;
-var pw = (site.padW / MONDE.largeur) * L;
-var py = H - solH;
-ctx.fillStyle = '#2e74b5';
-ctx.fillRect(px - pw / 2, py - 7, pw, 7);
-ctx.fillStyle = '#eaf1f8';
-for (var i = 0; i < 5; i++) {
-ctx.fillRect(px - pw / 2 + 4 + i * (pw - 8) / 5, py - 5, (pw - 8) / 10, 3);
 }
-ctx.font = 'bold 11px system-ui, sans-serif';
-ctx.fillStyle = '#1a3f5e';
-ctx.textAlign = 'center';
-ctx.fillText('H', px, py - 12);
-ctx.textAlign = 'left';
-ctx.fillStyle = '#1a3f5e';
-ctx.font = '11px system-ui, sans-serif';
-ctx.fillText('vent ' + formatNombre(Math.abs(vol.ventCourant), 2) + ' m/s', 8, 18);
+}
+function dessinerDrone(ctx) {
+var E = ECHELLE;
+var dx = (vol.x - CAM.x) * E;
+var dy = (vol.y - CAM.y) * E;
+var k = ECHELLE_DRONE;
+var rad = vol.theta * Math.PI / 180;
+var sol = solY(vol.x);
+var ombreY = (sol - CAM.y) * E;
+var ecart = Math.max(0, sol - vol.y);
+ctx.fillStyle = 'rgba(8, 24, 40, ' + Math.max(0.06, 0.26 - ecart / 400) + ')';
 ctx.beginPath();
-var sensVent = vol.ventCourant >= 0 ? 1 : -1;
-ctx.moveTo(84, 14);
-ctx.lineTo(84 + sensVent * 22, 14);
-ctx.lineTo(84 + sensVent * 16, 10);
-ctx.moveTo(84 + sensVent * 22, 14);
-ctx.lineTo(84 + sensVent * 16, 18);
-ctx.strokeStyle = '#1a3f5e';
-ctx.lineWidth = 2;
-ctx.stroke();
-var dx = (vol.x / MONDE.largeur) * L;
-var dy = (H - solH) - (Math.max(0, vol.altitude) / MONDE.hauteur) * (H - solH - 18);
-ctx.strokeStyle = 'rgba(26, 63, 94, .25)';
-ctx.lineWidth = 1;
-ctx.beginPath();
-ctx.moveTo(dx, dy + 8);
-ctx.lineTo(dx, H - solH);
-ctx.stroke();
+ctx.ellipse(dx, ombreY, 7 * k, 2.4 * k, 0, 0, Math.PI * 2);
+ctx.fill();
 ctx.save();
 ctx.translate(dx, dy);
-ctx.rotate((vol.inclinaison * Math.PI) / 180);
-ctx.strokeStyle = '#3a6ea5';
-ctx.lineWidth = 4;
+ctx.rotate(rad);
+ctx.scale(k, k);
+ctx.strokeStyle = '#c7d5e2';
+ctx.lineWidth = 1.6;
 ctx.beginPath();
-ctx.moveTo(-16, 4); ctx.lineTo(16, 4);
+ctx.moveTo(-9, 1); ctx.lineTo(-11, 9);
+ctx.moveTo(9, 1); ctx.lineTo(11, 9);
+ctx.moveTo(-13, 9); ctx.lineTo(-9, 9);
+ctx.moveTo(13, 9); ctx.lineTo(9, 9);
+ctx.stroke();
+ctx.strokeStyle = '#b9c9d8';
+ctx.lineWidth = 1.8;
+ctx.beginPath();
+ctx.moveTo(-11, -1); ctx.lineTo(11, -1);
+ctx.stroke();
+ctx.strokeStyle = 'rgba(233, 241, 248, .85)';
+ctx.lineWidth = 1.4;
+var battement = Math.sin(Date.now() / 42) * 1.6;
+ctx.beginPath();
+ctx.moveTo(-17, -3 - battement); ctx.lineTo(-6, -3 - battement);
+ctx.moveTo(6, -3 - battement); ctx.lineTo(17, -3 - battement);
 ctx.stroke();
 ctx.fillStyle = '#1a3f5e';
-ctx.fillRect(-9, -1, 18, 9);
+ctx.fillRect(-7, -4, 14, 8);
 ctx.fillStyle = '#f0b400';
-ctx.fillRect(-3, 1, 6, 5);
-ctx.strokeStyle = '#24405c';
-ctx.lineWidth = 3;
+ctx.fillRect(-3, -1.5, 6, 4);
+if (vol.poussee) {
+var longueur = 9 + Math.random() * 6;
+ctx.fillStyle = 'rgba(255, 170, 60, .9)';
 ctx.beginPath();
-ctx.moveTo(-26, -2); ctx.lineTo(-8, -2);
-ctx.moveTo(8, -2); ctx.lineTo(26, -2);
-ctx.stroke();
-if (vol.touches.poussee && vol.batterie > 0) {
-ctx.fillStyle = 'rgba(255, 170, 60, .85)';
+ctx.moveTo(-4, 5);
+ctx.lineTo(0, 5 + longueur);
+ctx.lineTo(4, 5);
+ctx.closePath();
+ctx.fill();
+ctx.fillStyle = 'rgba(255, 236, 150, .95)';
 ctx.beginPath();
-ctx.moveTo(-6, 9);
-ctx.lineTo(0, 22);
-ctx.lineTo(6, 9);
+ctx.moveTo(-2, 5);
+ctx.lineTo(0, 5 + longueur * 0.6);
+ctx.lineTo(2, 5);
 ctx.closePath();
 ctx.fill();
 }
 ctx.restore();
-ctx.fillStyle = 'rgba(26, 63, 94, .8)';
-ctx.font = '10px system-ui, sans-serif';
+}
+function dessinerFlecheCible(ctx, W, H) {
+var E = ECHELLE;
+var sx = (TERRAIN.pad.x - CAM.x) * E;
+var sy = (TERRAIN.pad.y - CAM.y) * E;
+var marge = 26;
+if (sx > marge && sx < W - marge && sy > marge && sy < H - marge) return;
+var cx = Math.max(marge, Math.min(W - marge, sx));
+var cy = Math.max(marge, Math.min(H - marge, sy));
+var angle = Math.atan2(sy - cy, sx - cx);
+ctx.save();
+ctx.translate(cx, cy);
+ctx.rotate(angle);
+ctx.fillStyle = 'rgba(126, 240, 168, .92)';
+ctx.beginPath();
+ctx.moveTo(13, 0);
+ctx.lineTo(-7, -8);
+ctx.lineTo(-7, 8);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+var distance = Math.round(Math.hypot(TERRAIN.pad.x - vol.x, TERRAIN.pad.y - vol.y));
+ctx.fillStyle = 'rgba(8, 26, 44, .72)';
+ctx.fillRect(cx - 17, cy + 10, 34, 13);
+ctx.fillStyle = '#d9f7e6';
+ctx.font = 'bold 10px system-ui, sans-serif';
 ctx.textAlign = 'center';
-ctx.fillText('↓ ' + formatNombre(Math.abs(vol.vy), 1) + ' m/s', dx, dy - 16);
+ctx.fillText(distance + ' m', cx, cy + 20);
+ctx.textAlign = 'left';
+}
+function geometrieMinimap(W, H) {
+var niveau = NIVEAUX[NIVEAU];
+var marge = Math.round(Math.max(6, Math.min(12, W * 0.018)));
+var maxL = Math.min(190, W * 0.31);
+var maxH = Math.min(132, H * 0.38);
+var k = Math.min(maxL / niveau.largeur, maxH / niveau.hauteur);
+var mw = niveau.largeur * k;
+var mh = niveau.hauteur * k;
+return {
+k: k,
+largeur: mw,
+hauteur: mh,
+x: W - mw - marge,
+y: marge,
+canevas: { largeur: W, hauteur: H }
+};
+}
+function dessinerMinimap(ctx, W, H) {
+var niveau = NIVEAUX[NIVEAU];
+var t = TERRAIN;
+var boite = geometrieMinimap(W, H);
+boite.drone = {
+x: boite.x + (vol.x / niveau.largeur) * boite.largeur,
+y: boite.y + (vol.y / niveau.hauteur) * boite.hauteur
+};
+boite.plateforme = {
+x: boite.x + (t.pad.x / niveau.largeur) * boite.largeur,
+y: boite.y + (t.pad.y / niveau.hauteur) * boite.hauteur
+};
+DERNIERE_MINIMAP = boite;
+var mw = boite.largeur;
+var mh = boite.hauteur;
+var mx = boite.x;
+var my = boite.y;
+ctx.save();
+ctx.fillStyle = 'rgba(8, 26, 44, .78)';
+ctx.fillRect(mx - 5, my - 5, mw + 10, mh + 10);
+ctx.strokeStyle = 'rgba(180, 210, 235, .85)';
+ctx.lineWidth = 1;
+ctx.strokeRect(mx - 4.5, my - 4.5, mw + 9, mh + 9);
+ctx.beginPath();
+ctx.moveTo(mx, my + mh);
+for (var i = 0; i < t.n; i += 2) {
+var xx = mx + (i * t.pas / niveau.largeur) * mw;
+var yy = my + (t.hauteurs[i] / niveau.hauteur) * mh;
+ctx.lineTo(xx, yy);
+}
+ctx.lineTo(mx + mw, my + mh);
+ctx.closePath();
+ctx.fillStyle = '#3d6b4c';
+ctx.fill();
+ctx.strokeStyle = 'rgba(255, 255, 255, .6)';
+ctx.strokeRect(mx + (CAM.x / niveau.largeur) * mw, my + (CAM.y / niveau.hauteur) * mh,
+(VUE.largeur / niveau.largeur) * mw, (VUE.hauteur / niveau.hauteur) * mh);
+ctx.fillStyle = '#7ef0a8';
+ctx.fillRect(boite.plateforme.x - 3, boite.plateforme.y - 4, 6, 5);
+var dpx = boite.drone.x;
+var dpy = boite.drone.y;
+ctx.fillStyle = '#ffd166';
+ctx.beginPath();
+ctx.arc(dpx, dpy, Math.max(2, Math.min(3.4, mw / 60)), 0, Math.PI * 2);
+ctx.fill();
+ctx.strokeStyle = 'rgba(255, 209, 102, .9)';
+ctx.lineWidth = 1;
+ctx.beginPath();
+ctx.moveTo(dpx, dpy);
+ctx.lineTo(dpx + Math.sin(vol.theta * Math.PI / 180) * 6,
+dpy - Math.cos(vol.theta * Math.PI / 180) * 6);
+ctx.stroke();
+ctx.restore();
 }
 var TOUCHES = {
 ' ': 'poussee', ArrowUp: 'poussee',
@@ -8402,25 +9114,49 @@ if (!touche) return;
 if (ETAT === 'vol' || ETAT === 'pause') ev.stopPropagation();
 vol.touches[touche] = false;
 }, true);
-window.addEventListener('blur', function () {
+function relacherTout() {
 vol.touches.poussee = vol.touches.gauche = vol.touches.droite = false;
+var actifs = document.querySelectorAll('.vol-pave button.actif');
+Array.prototype.forEach.call(actifs, function (bouton) {
+bouton.classList.remove('actif');
+bouton.setAttribute('aria-pressed', 'false');
+});
+}
+window.addEventListener('blur', relacherTout);
+document.addEventListener('visibilitychange', function () {
+if (document.hidden) relacherTout();
+});
+window.addEventListener('resize', function () {
+DERNIERE_TAILLE = '';
+adapterTaille();
+dessiner();
 });
 function brancherPave() {
-document.querySelectorAll('.vol-pave button').forEach(function (bouton) {
+var boutons = document.querySelectorAll('.vol-pave button');
+Array.prototype.forEach.call(boutons, function (bouton) {
 var touche = bouton.getAttribute('data-vol-touche');
 if (!touche) return;
 var appuyer = function (ev) {
-ev.preventDefault();
+if (ev && ev.preventDefault) ev.preventDefault();
+if (ev && ev.pointerId !== undefined && bouton.setPointerCapture) {
+try { bouton.setPointerCapture(ev.pointerId); } catch (err) { /* déjà capturé */ }
+}
 vol.touches[touche] = true;
+bouton.classList.add('actif');
+bouton.setAttribute('aria-pressed', 'true');
 };
 var relacher = function (ev) {
-ev.preventDefault();
+if (ev && ev.preventDefault) ev.preventDefault();
 vol.touches[touche] = false;
+bouton.classList.remove('actif');
+bouton.setAttribute('aria-pressed', 'false');
 };
+bouton.setAttribute('aria-pressed', 'false');
 bouton.addEventListener('pointerdown', appuyer);
 bouton.addEventListener('pointerup', relacher);
-bouton.addEventListener('pointerleave', relacher);
 bouton.addEventListener('pointercancel', relacher);
+bouton.addEventListener('lostpointercapture', relacher);
+bouton.addEventListener('contextmenu', function (ev) { ev.preventDefault(); });
 bouton.addEventListener('keydown', function (ev) {
 if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); appuyer(ev); }
 });
@@ -8436,7 +9172,7 @@ reglage('vol-reglage-helices',
 'Les quatre hélices tournent pour l\'instant dans le même sens : à vous de trouver le réglage équilibré.',
 'info');
 reglage('vol-reglage-batterie',
-'Choisissez la batterie : la mission dure ' + MISSION_SECONDES + ' s.', 'info');
+'Choisissez la batterie : la poussée est ce qui coûte le plus cher.', 'info');
 reglage('vol-reglage-commandes',
 'Choisissez la réactivité des commandes et, si besoin, l\'inversion du roulis.', 'info');
 majReglages();
@@ -8459,22 +9195,37 @@ window.volRecommencer = volRecommencer;
 window.volRetourReglages = volRetourReglages;
 window.volSiteSuivant = volSiteSuivant;
 window.volDecrire = volDecrire;
+window.volVersion = function () { return VOL_MOTEUR_VERSION; };
 window.volLireEtat = function () {
 return {
 etat: ETAT,
-site: SITE + 1,
-sites: SITES.length,
+moteur: VOL_MOTEUR_VERSION,
+niveau: NIVEAU + 1,
+niveaux: NIVEAUX.length,
+nomNiveau: NIVEAUX[NIVEAU].nom,
+carte: { largeur: NIVEAUX[NIVEAU].largeur, hauteur: NIVEAUX[NIVEAU].hauteur },
+vue: { largeur: VUE.largeur, hauteur: VUE.hauteur },
+cam: { x: CAM.x, y: CAM.y },
 x: vol.x,
-padX: SITES[SITE].padX,
-padW: SITES[SITE].padW,
-vent: SITES[SITE].vent,
-altitude: vol.altitude,
-vy: vol.vy,
+y: vol.y,
+altitude: altitude(),
 vx: vol.vx,
-inclinaison: vol.inclinaison,
+vy: vol.vy,
+theta: vol.theta,
 batterie: vol.batterie,
+temps: vol.temps,
+pad: { x: TERRAIN ? TERRAIN.pad.x : 0, y: TERRAIN ? TERRAIN.pad.y : 0,
+w: TERRAIN ? TERRAIN.pad.w : 0 },
+solSousDrone: TERRAIN ? solY(vol.x) : 0,
 rotorsEquilibres: rotorsEquilibres(),
 batterieChoisie: BATTERIE,
+commandes: {
+poussee: vol.touches.poussee,
+gauche: vol.touches.gauche,
+droite: vol.touches.droite
+},
+echelle: ECHELLE,
+dronePx: 34 * ECHELLE_DRONE,
 score: SCORE,
 resultat: DERNIER_RESULTAT
 };
@@ -8482,14 +9233,71 @@ resultat: DERNIER_RESULTAT
 window.volReglagesPret = function () {
 return rotorsEquilibres() && BATTERIE !== null;
 };
-window.volAvancer = function (dtSecondes) {
+window.volCadrages = function () { return CADRAGES; };
+window.volBoiteMinimap = function () { return DERNIERE_MINIMAP; };
+window.volTerrain = function (numero) {
+var i = (typeof numero === 'number' ? numero - 1 : NIVEAU);
+if (!(i >= 0 && i < NIVEAUX.length)) i = NIVEAU;
+var t = terrainDuNiveau(i);
+var echantillons = [];
+for (var j = 0; j < t.n; j += Math.round(2 / t.pas)) {
+echantillons.push(Math.round(t.hauteurs[j] * 100) / 100);
+}
+return {
+niveau: i + 1,
+largeur: NIVEAUX[i].largeur,
+hauteur: NIVEAUX[i].hauteur,
+pas: t.pas * Math.round(2 / t.pas),
+minY: t.minY,
+maxY: t.maxY,
+neige: t.neige,
+pad: { x: t.pad.x, y: t.pad.y, w: t.pad.w },
+depart: NIVEAUX[i].depart,
+hauteurs: echantillons
+};
+};
+window.volAllerNiveau = function (numero) {
+var i = Number(numero) - 1;
+if (!(i >= 0 && i < NIVEAUX.length)) return false;
+if (ETAT === 'vol' || ETAT === 'pause') {
+if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+}
+NIVEAU = i;
+SCORE = 0;
+ETAT = 'pret';
+var banc = el('vol-banc');
+if (banc) banc.disabled = true;
+var salle = el('vol-salle');
+if (salle) salle.hidden = false;
+preparerVol();
+afficherVoile('Niveau ' + (NIVEAU + 1) + ' — ' + NIVEAUX[NIVEAU].nom,
+textePresentation(), '🛫 Décoller', volDemarrerVol);
+return true;
+};
+window.volAvancer = function (dtSecondes, sansDessin) {
 var dt = Number(dtSecondes);
 if (!isFinite(dt) || dt <= 0) return false;
 dt = Math.min(0.1, dt);
 if (ETAT !== 'vol') return false;
 mettreAJour(dt);
-dessiner();
+if (!sansDessin) dessiner();
 return true;
+};
+window.volRedessiner = function () { dessiner(); };
+window.volConstantes = function () {
+return {
+gravite: GRAVITE, pousseeMax: POUSSEE_MAX,
+inclinaisonMax: INCLINAISON_MAX, omegaMax: OMEGA_MAX,
+vyLimite: VY_LIMITE, vxLimite: VX_LIMITE, tiltLimite: TILT_LIMITE,
+demiLargeur: DEMI_LARGEUR, demiHauteur: DEMI_HAUTEUR,
+largeurVueLarge: LARGEUR_VUE_LARGE, largeurVueMobile: LARGEUR_VUE_MOBILE
+};
+};
+window.volCommander = function (commandes) {
+if (!commandes) return;
+if ('poussee' in commandes) vol.touches.poussee = !!commandes.poussee;
+if ('gauche' in commandes) vol.touches.gauche = !!commandes.gauche;
+if ('droite' in commandes) vol.touches.droite = !!commandes.droite;
 };
 })();
     </script>
