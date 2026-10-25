@@ -620,6 +620,355 @@
             margin-bottom: var(--espacement-sm);
         }
 
+        /* ============================================
+           ÉTAPE N4 À CHOIX MULTIPLE
+           (n4.etapes[].type = "selection" : retenir N propositions
+            parmi une liste ; le moteur marque chaque proposition après
+            vérification, et l'étape validée porte data-termine="1")
+           ============================================ */
+
+        .etape-selection {
+            margin-top: var(--espacement-md);
+        }
+
+        .compteur-selection {
+            margin-bottom: var(--espacement-sm);
+            font-weight: 700;
+            color: #1a4f7a;
+        }
+
+        .choix-contraintes {
+            list-style: none;
+            margin: 0 0 var(--espacement-md) 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--espacement-sm);
+        }
+
+        .choix-contrainte {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            width: 100%;
+            min-height: 44px;
+            padding: var(--espacement-sm) var(--espacement-md);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: #ffffff;
+            color: var(--couleur-texte);
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.35;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .choix-contrainte:hover {
+            border-color: var(--couleur-primaire);
+        }
+
+        .choix-contrainte:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .choix-icone {
+            flex: 0 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.2;
+        }
+
+        .choix-texte {
+            flex: 1 1 auto;
+        }
+
+        .choix-marque {
+            flex: 0 0 auto;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .choix-contrainte[aria-pressed="true"] {
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        /* États posés par n4VerifierSelection() : la couleur ne porte JAMAIS
+           seule l'information — la marque et l'explication textuelle disent
+           la même chose (RGAA). */
+        .choix-item[data-etat="juste"] .choix-contrainte {
+            border-color: var(--couleur-succes);
+            background-color: #f0fdf4;
+        }
+
+        .choix-item[data-etat="juste"] .choix-marque::after {
+            content: "✔";
+            color: var(--couleur-succes);
+        }
+
+        .choix-item[data-etat="faux"] .choix-contrainte {
+            border-color: var(--couleur-alerte);
+            border-style: dashed;
+            background-color: #fef2f2;
+        }
+
+        .choix-item[data-etat="faux"] .choix-marque::after {
+            content: "✘";
+            color: var(--couleur-alerte);
+        }
+
+        .choix-item[data-etat="manquante"] .choix-contrainte {
+            border-color: #b45309;
+            border-style: dashed;
+            background-color: #fffbeb;
+        }
+
+        .choix-item[data-etat="manquante"] .choix-marque::after {
+            content: "à retenir";
+            color: #b45309;
+            font-size: 0.72rem;
+        }
+
+        .choix-explication {
+            margin: var(--espacement-xs) 0 0 0;
+            padding-left: var(--espacement-md);
+            border-left: 3px solid #cbd5e1;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .etape-selection-retour {
+            margin-top: var(--espacement-sm);
+            font-weight: 600;
+        }
+
+        .etape-selection-retour.succes {
+            color: var(--couleur-succes);
+        }
+
+        .etape-selection-retour.echec {
+            color: var(--couleur-alerte);
+        }
+
+        .etape-selection-explication {
+            margin-top: var(--espacement-sm);
+            padding: var(--espacement-md);
+            border-left: 4px solid var(--couleur-succes);
+            background-color: #f0fdf4;
+            border-radius: var(--rayon-bordure);
+        }
+
+        /* ============================================
+           CONCEPTION GUIDÉE - NIVEAU N4
+           (bloc produit depuis n4.contraintes et n4.comparateur ;
+            marqueurs CONCEPTION-GUIDEE-N4 retirés si la
+            configuration n'en déclare pas)
+           ============================================ */
+
+        .note-liberte {
+            background-color: #f5f3ff;
+            border-left: 4px solid var(--couleur-secondaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            margin-bottom: var(--espacement-md);
+            color: var(--couleur-texte);
+        }
+
+        .reglages-contraintes {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--espacement-md);
+        }
+
+        .curseur-contrainte {
+            background-color: var(--couleur-fond);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-sm) var(--espacement-md) var(--espacement-md);
+        }
+
+        .curseur-entete {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: var(--espacement-xs);
+        }
+
+        .curseur-entete label {
+            font-weight: 600;
+            color: var(--couleur-texte);
+        }
+
+        .curseur-valeur {
+            font-weight: 700;
+            color: var(--couleur-primaire);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .curseur-contrainte input[type="range"] {
+            width: 100%;
+            min-height: var(--hauteur-cible-min);
+            margin: var(--espacement-xs) 0;
+            accent-color: var(--couleur-primaire);
+            cursor: pointer;
+        }
+
+        .curseur-bornes {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--espacement-sm);
+            font-size: 0.8125rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .curseur-aide {
+            margin-top: var(--espacement-xs);
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .comparateur-outils {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--espacement-sm);
+            margin-bottom: var(--espacement-md);
+        }
+
+        .comparateur-outils label {
+            font-weight: 600;
+        }
+
+        .comparateur-outils select {
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-xs) var(--espacement-sm);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: white;
+            max-width: 100%;
+        }
+
+        .comparateur-compte {
+            width: 100%;
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .comparateur-modeles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--espacement-md);
+        }
+
+        .modele-ost {
+            background-color: white;
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            cursor: pointer;
+            min-height: var(--hauteur-cible-min);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .modele-ost:hover {
+            border-color: var(--couleur-primaire);
+        }
+
+        .modele-ost:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        .modele-ost.choisi {
+            border-color: var(--couleur-succes);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.25);
+        }
+
+        .modele-entete {
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .modele-entete h4 {
+            color: var(--couleur-secondaire);
+            margin: 0;
+            font-size: 1.0625rem;
+        }
+
+        .modele-icone {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .modele-description {
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .modele-valeurs {
+            list-style: none;
+            margin: 0 0 var(--espacement-sm);
+            padding: 0;
+            font-size: 0.9375rem;
+        }
+
+        .modele-valeurs li {
+            display: flex;
+            justify-content: space-between;
+            gap: var(--espacement-sm);
+            padding: 0.15rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .modele-valeurs li:last-child {
+            border-bottom: none;
+        }
+
+        .modele-critere {
+            color: var(--couleur-texte-leger);
+        }
+
+        .modele-verdict {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .verdict-ok {
+            color: var(--couleur-succes);
+        }
+
+        .verdict-non {
+            color: var(--couleur-alerte);
+        }
+
+        .modele-alerte {
+            display: inline-block;
+            margin-top: var(--espacement-xs);
+            padding: 0.1rem 0.5rem;
+            border-radius: 999px;
+            background-color: #fef2f2;
+            color: #b91c1c;
+            font-size: 0.8125rem;
+            font-weight: 700;
+        }
+
+        .comparateur-choix {
+            margin-top: var(--espacement-md);
+            padding: var(--espacement-sm) var(--espacement-md);
+            border-radius: var(--rayon-bordure);
+            background-color: #ecfdf5;
+            border: 2px solid #a7f3d0;
+            color: var(--couleur-texte);
+        }
+
         textarea {
             width: 100%;
             min-height: 120px;
@@ -822,6 +1171,22 @@
         .noeud-reseau[data-type="commutateur"] {
             border-color: var(--couleur-secondaire);
             background-color: #f5f3ff;
+        }
+
+        /* Internet n'est pas un appareil du collège : c'est le réseau mondial,
+           dessiné comme un nuage, en dehors des deux sous-réseaux. Il ne se
+           relie qu'au routeur — le moteur refuse tout autre fil. */
+        .noeud-reseau[data-type="internet"] {
+            min-height: 68px;
+            border-style: dashed;
+            border-color: var(--couleur-info);
+            border-radius: 50% 50% 42% 42% / 62% 62% 38% 38%;
+            background-color: #ecfeff;
+            background-image: radial-gradient(circle at 50% 32%, #ffffff 0%, #ecfeff 72%);
+        }
+
+        .noeud-reseau[data-type="internet"] .noeud-icone {
+            font-size: 1.5rem;
         }
 
         .noeud-reseau.sur-plateau {
@@ -2846,7 +3211,7 @@ font-size: .68rem;
 font-size: .6rem;
 }
 }
-</style>
+    </style>
 </head>
 <body>
     <!-- Skip link pour accessibilité -->
@@ -4000,11 +4365,9 @@ font-size: .6rem;
     <!-- JavaScript de l'activité -->    <script>
         /* Assets de jeu — fichiers servis à côté de l'activité */
         window.ASSETS_JEU = {
-            "maison1": "assets-jeu/maison-j1.png",
-            "maison2": "assets-jeu/maison-j2.png",
-            "maison3": "assets-jeu/maison-j3.png",
-            "chienA": "assets-jeu/chien-a.png",
-            "chienB": "assets-jeu/chien-b.png",
+            "maison1": "assets-jeu/maison-v2-1.png",
+            "maison2": "assets-jeu/maison-v2-2.png",
+            "maison3": "assets-jeu/maison-v2-3.png",
             "chatA": "assets-jeu/chat-a.png",
             "chatB": "assets-jeu/chat-b.png",
             "profPilote": "assets-jeu/prof-pilote.png",
@@ -4015,15 +4378,19 @@ font-size: .6rem;
             "lipo": "assets-jeu/lipo.png",
             "carbone": "assets-jeu/carbone.png",
             "camera": "assets-jeu/camera-thermique.png",
-            "ballon": "assets-jeu/ballon.png",
+            "ballon": "assets-jeu/ballon-basket.png",
             "avion": "assets-jeu/avion-papier.png",
-            "bois": "assets-jeu/baton-bois.png",
+            "bois": "assets-jeu/baton-bois-v2.png",
             "plateforme": "assets-jeu/plateforme-h.png",
             "arbre": "assets-jeu/arbre.png",
             "fleur0": "assets-jeu/massif-fleurs-rouge.png",
             "fleur1": "assets-jeu/massif-fleurs-jaune.png",
             "fleur2": "assets-jeu/massif-fleurs-blanc.png",
             "barriere": "assets-jeu/barriere.png",
+            "chien": "assets-jeu/chien-course.png",
+            "ballon": "assets-jeu/ballon-basket.png",
+            "bois": "assets-jeu/baton-bois-v2.png",
+            "chien": "assets-jeu/chien-course.png",
             "filleMarcheEst": "assets-jeu/enfant-fille-marche-est.png",
             "filleMarcheSudEst": "assets-jeu/enfant-fille-marche-sud-est.png",
             "filleMarcheSud": "assets-jeu/enfant-fille-marche-sud.png",
@@ -4057,6 +4424,8 @@ font-size: .6rem;
             "garconPoseNordEst": "assets-jeu/enfant-garcon-pose-nord-est.png"
         };
         /* Feuilles d'animation des enfants : modele -> anim -> direction */
+        /* Bandes animées : nombre d'images et taille d'une case */
+        window.ANIM_JEU = {"ballon":{"n":2,"l":22,"h":22},"bois":{"n":2,"l":28,"h":20},"chien":{"n":4,"l":43,"h":34}};
         window.ENFANTS_JEU = {"fille":{"marche":{"est":{"cle":"filleMarcheEst","n":9},"sud-est":{"cle":"filleMarcheSudEst","n":9},"sud":{"cle":"filleMarcheSud","n":9},"sud-ouest":{"cle":"filleMarcheSudOuest","n":9},"ouest":{"cle":"filleMarcheOuest","n":9},"nord-ouest":{"cle":"filleMarcheNordOuest","n":9},"nord":{"cle":"filleMarcheNord","n":9},"nord-est":{"cle":"filleMarcheNordEst","n":9}},"lancer":{"est":{"cle":"filleLancerEst","n":7},"sud-est":{"cle":"filleLancerSudEst","n":7},"sud":{"cle":"filleLancerSud","n":7},"sud-ouest":{"cle":"filleLancerSudOuest","n":7},"ouest":{"cle":"filleLancerOuest","n":7},"nord":{"cle":"filleLancerNord","n":7},"nord-est":{"cle":"filleLancerNordEst","n":7}}},"garcon":{"lancer":{"est":{"cle":"garconLancerEst","n":9},"sud-est":{"cle":"garconLancerSudEst","n":9},"sud":{"cle":"garconLancerSud","n":9},"sud-ouest":{"cle":"garconLancerSudOuest","n":9},"ouest":{"cle":"garconLancerOuest","n":9},"nord-ouest":{"cle":"garconLancerNordOuest","n":9},"nord":{"cle":"garconLancerNord","n":9},"nord-est":{"cle":"garconLancerNordEst","n":9}},"pose":{"est":{"cle":"garconPoseEst","n":1},"sud-est":{"cle":"garconPoseSudEst","n":1},"sud":{"cle":"garconPoseSud","n":1},"sud-ouest":{"cle":"garconPoseSudOuest","n":1},"ouest":{"cle":"garconPoseOuest","n":1},"nord-ouest":{"cle":"garconPoseNordOuest","n":1},"nord":{"cle":"garconPoseNord","n":1},"nord-est":{"cle":"garconPoseNordEst","n":1}}}};
     </script>
     <script>
@@ -4472,29 +4841,59 @@ font-size: .6rem;
         // ============================================
         // PROBLÈME OUVERT N4
         // ============================================
-        
+        //
+        // Deux formes de conception coexistent, et le moteur ne les distingue
+        // pas par un drapeau : il lit le DOM. Chaque zone de saisie exigée
+        // déclare `data-conception-texte` (avec son minimum de caractères), et
+        // chaque atelier qui doit être complété déclare `data-conception-modele`.
+        // La conception libre du gabarit (cinq textarea) et la conception
+        // guidée (contraintes par curseurs + comparateur de modèles) sont donc
+        // validées par le même code : ajouter une étape ne demande pas de
+        // modifier cette fonction.
+
         function finaliserConception() {
-            const champs = [
-                'besoin-identifie',
-                'contraintes-definies',
-                'solutions-imaginees',
-                'solution-choisie',
-                'schema-solution'
-            ];
+            const champs = document.querySelectorAll(
+                '#contenu-n4-probleme textarea[data-conception-texte]');
 
-            let tousRemplis = true;
-            champs.forEach(champId => {
-                const champ = document.getElementById(champId);
-                if (champ.value.trim().length < 10) {
-                    tousRemplis = false;
+            for (const champ of champs) {
+                const mini = parseInt(champ.getAttribute('data-min') || '10', 10);
+                if (champ.value.trim().length < mini) {
                     champ.style.borderColor = 'var(--couleur-alerte)';
-                } else {
-                    champ.style.borderColor = '#e2e8f0';
+                    champ.focus();
+                    const cadre = champ.closest('div');
+                    const titre = cadre ? cadre.querySelector('h4') : null;
+                    alert('Complète « ' + (titre ? titre.textContent.trim() : 'le champ vide') +
+                          ' » : il faut au moins ' + mini + ' caractères.');
+                    return;
                 }
-            });
+                champ.style.borderColor = '#e2e8f0';
+            }
 
-            if (!tousRemplis) {
-                alert('Veuillez remplir tous les champs avec au moins 10 caractères chacun.');
+            // Ateliers de conception dont le résultat se vérifie : choisir un
+            // modèle dans le comparateur, construire un câblage. Tant qu'ils ne
+            // sont pas complétés, la conception n'est pas finalisée.
+            const ateliers = document.querySelectorAll(
+                '#contenu-n4-probleme [data-conception-modele]');
+            for (const atelier of ateliers) {
+                if (atelier.querySelector('.modele-ost.choisi')) continue;
+                const consigne = atelier.getAttribute('data-conception-consigne') ||
+                    'Choisis un modèle dans le comparateur : clique sur celui que tu retiens.';
+                alert(consigne);
+                atelier.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // Une étape de CHOIX (n4.etapes[].type = "selection") se vérifie
+            // comme le comparateur : tant qu'elle n'est pas réussie, la
+            // conception n'est pas finalisée. Le résultat est porté par
+            // data-termine="1", posé par n4VerifierSelection().
+            const selections = document.querySelectorAll(
+                '#contenu-n4-probleme [data-conception-selection]');
+            for (const selection of selections) {
+                if (selection.getAttribute('data-termine') === '1') continue;
+                alert(selection.getAttribute('data-conception-consigne') ||
+                    'Termine l\'étape de choix : retiens les propositions, puis clique sur « Vérifier ».');
+                selection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
@@ -4513,6 +4912,358 @@ font-size: .6rem;
             const confirmation = document.getElementById('confirmation-conception');
             confirmation.style.display = 'block';
             confirmation.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============================================
+        // ÉTAPE N4 À CHOIX MULTIPLE (optionnelle)
+        // ============================================
+        //
+        // Une étape peut demander de RETENIR N propositions parmi une liste
+        // (n4.etapes[].type = "selection") au lieu de rédiger. Le moteur ne
+        // connaît aucune réponse : il lit le marquage posé par
+        // personnaliser.py — `data-essentielle` sur chaque proposition et son
+        // `data-explication`.
+        //
+        // Comme pour les quiz, la vérification rend l'explication de CHAQUE
+        // proposition : celles qui sont retenues à tort, celles qui manquent,
+        // et celles qui ne décident pas du schéma. Un choix modifié après
+        // vérification annule la réussite : l'élève ne peut pas valider puis
+        // changer sa réponse en silence.
+
+        function n4SelectionRetenues(conteneur) {
+            return conteneur.querySelectorAll('.choix-contrainte[aria-pressed="true"]');
+        }
+
+        function n4CompterSelection(conteneur) {
+            const retenues = n4SelectionRetenues(conteneur).length;
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const compteur = conteneur.querySelector('.compteur-selection');
+            if (compteur) {
+                compteur.textContent = retenues + ' proposition' + (retenues > 1 ? 's' : '') +
+                    ' retenue' + (retenues > 1 ? 's' : '') + ' sur ' + maximum;
+            }
+            return retenues;
+        }
+
+        function n4RetourSelection(conteneur, message, type) {
+            const retour = conteneur.querySelector('.etape-selection-retour');
+            if (!retour) return;
+            retour.textContent = message;
+            retour.className = 'etape-selection-retour' + (type ? ' ' + type : '');
+        }
+
+        // « Recommencer » efface la sélection et ses marques : l'élève ne doit
+        // pas retrouver une étape déjà validée après avoir demandé à repartir
+        // de zéro.
+        function n4ReinitialiserSelections() {
+            document.querySelectorAll('#contenu-n4-probleme [data-conception-selection]')
+                .forEach(function (conteneur) {
+                    conteneur.removeAttribute('data-termine');
+                    conteneur.querySelectorAll('.choix-contrainte').forEach(function (choix) {
+                        choix.setAttribute('aria-pressed', 'false');
+                    });
+                    n4EffacerVerdicts(conteneur);
+                    n4RetourSelection(conteneur, '', '');
+                    n4CompterSelection(conteneur);
+                });
+        }
+
+        // Efface les marques et les explications d'une vérification précédente.
+        function n4EffacerVerdicts(conteneur) {
+            conteneur.querySelectorAll('.choix-item').forEach(function (item) {
+                item.removeAttribute('data-etat');
+                const explication = item.querySelector('.choix-explication');
+                if (!explication) return;
+                explication.textContent = '';
+                explication.classList.add('cache');
+            });
+            const globale = conteneur.querySelector('.etape-selection-explication');
+            if (globale) globale.classList.add('cache');
+        }
+
+        function n4BasculerContrainte(bouton) {
+            const conteneur = bouton.closest('[data-conception-selection]');
+            if (!conteneur) return;
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const dejaChoisi = bouton.getAttribute('aria-pressed') === 'true';
+
+            if (!dejaChoisi && maximum &&
+                n4SelectionRetenues(conteneur).length >= maximum) {
+                n4RetourSelection(conteneur, 'Tu ne peux retenir que ' + maximum +
+                    ' proposition' + (maximum > 1 ? 's' : '') +
+                    ' : retire-en une d\'abord.', 'echec');
+                return;
+            }
+            bouton.setAttribute('aria-pressed', dejaChoisi ? 'false' : 'true');
+            conteneur.removeAttribute('data-termine');
+            n4EffacerVerdicts(conteneur);
+            n4RetourSelection(conteneur, '', '');
+            n4CompterSelection(conteneur);
+        }
+
+        function n4VerifierSelection(bouton) {
+            const conteneur = bouton.closest('[data-conception-selection]');
+            if (!conteneur) return;
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const retenues = n4CompterSelection(conteneur);
+
+            if (!maximum || retenues !== maximum) {
+                n4RetourSelection(conteneur, 'Retiens d\'abord exactement ' + maximum +
+                    ' proposition' + (maximum > 1 ? 's' : '') +
+                    ' : tu en as ' + retenues + '.', 'echec');
+                return;
+            }
+
+            let aRetirer = 0;
+            let manquantes = 0;
+
+            conteneur.querySelectorAll('.choix-item').forEach(function (item) {
+                const choix = item.querySelector('.choix-contrainte');
+                if (!choix) return;
+                const essentielle = choix.getAttribute('data-essentielle') === '1';
+                const choisie = choix.getAttribute('aria-pressed') === 'true';
+
+                let etat = '';
+                let verdict = 'Non retenue. ';
+                if (choisie && essentielle) {
+                    etat = 'juste';
+                    verdict = 'Bonne réponse. ';
+                } else if (choisie && !essentielle) {
+                    etat = 'faux';
+                    verdict = 'À retirer. ';
+                    aRetirer += 1;
+                } else if (!choisie && essentielle) {
+                    etat = 'manquante';
+                    verdict = 'Oubliée. ';
+                    manquantes += 1;
+                }
+
+                if (etat) item.setAttribute('data-etat', etat);
+                else item.removeAttribute('data-etat');
+
+                const explication = item.querySelector('.choix-explication');
+                if (!explication) return;
+                explication.textContent = verdict + 'Explication : ' +
+                    (choix.getAttribute('data-explication') || '');
+                explication.classList.remove('cache');
+            });
+
+            const globale = conteneur.querySelector('.etape-selection-explication');
+            const reussi = aRetirer === 0 && manquantes === 0;
+
+            if (reussi) {
+                conteneur.setAttribute('data-termine', '1');
+                if (globale) globale.classList.remove('cache');
+                n4RetourSelection(conteneur, '✅ Les ' + maximum +
+                    ' propositions retenues sont bien les plus importantes : tu peux ' +
+                    'passer à la suite.', 'succes');
+                return;
+            }
+
+            conteneur.removeAttribute('data-termine');
+            if (globale) globale.classList.add('cache');
+            n4RetourSelection(conteneur, 'Il reste ' + (aRetirer + manquantes) +
+                ' point(s) à corriger : ' + aRetirer + ' proposition' +
+                (aRetirer > 1 ? 's' : '') + ' à retirer et ' + manquantes +
+                ' à retrouver. Lis l\'explication sous chaque proposition.', 'echec');
+        }
+
+        // ============================================
+        // CONCEPTION GUIDÉE N4 (optionnelle)
+        // ============================================
+        //
+        // Contraintes réglées par curseurs + comparateur de modèles. Ces
+        // fonctions ne font rien si la page n'a pas de conception guidée :
+        // elles sont donc sans effet sur les activités en conception libre.
+        //
+        // Le lien entre les deux étapes est ce qui donne son sens aux curseurs :
+        // chaque fiche de modèle est confrontée en direct aux contraintes
+        // réglées, et l'élève voit combien de modèles tiennent dans SON cahier
+        // des charges. Régler un curseur n'est jamais obligatoire — c'est un
+        // outil pour aller au bout de son idée, pas une saisie de plus.
+
+        function n4GrouperMilliers(chiffres) {
+            let sortie = '';
+            while (chiffres.length > 3) {
+                sortie = '\u00a0' + chiffres.slice(-3) + sortie;
+                chiffres = chiffres.slice(0, -3);
+            }
+            return chiffres + sortie;
+        }
+
+        function n4Nombre(valeur, decimales) {
+            const arrondi = Math.round(valeur * 10) / 10;
+            const signe = arrondi < 0 ? '-' : '';
+            const absolu = Math.abs(arrondi);
+            const entier = Math.floor(absolu);
+            let texte = signe + n4GrouperMilliers(String(entier));
+            const dixiemes = Math.round((absolu - entier) * 10);
+            if (dixiemes) texte += ',' + dixiemes;
+            return texte;
+        }
+
+        function n4Formatage(curseur, valeur) {
+            const pas = parseFloat(curseur.getAttribute('step') || '1');
+            const decimales = pas < 1 || valeur % 1 !== 0;
+            const unite = curseur.getAttribute('data-unite') || '';
+            const texte = n4Nombre(parseFloat(valeur), decimales);
+            // Espace insécable : « 1 500 € » ne se coupe pas en fin de ligne.
+            return unite ? texte + '\u00a0' + unite : texte;
+        }
+
+        function n4ContraintesReglees() {
+            const regles = [];
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return regles;
+            zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
+                const curseur = bloc.querySelector('input[type="range"]');
+                if (!curseur) return;
+                regles.push({
+                    critere: bloc.getAttribute('data-critere') || '',
+                    sens: bloc.getAttribute('data-sens') || 'max',
+                    nom: bloc.getAttribute('data-nom') || '',
+                    valeur: parseFloat(curseur.value)
+                });
+            });
+            return regles;
+        }
+
+        function n4MettreAJourContraintes() {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+
+            const regles = n4ContraintesReglees();
+
+            zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
+                const curseur = bloc.querySelector('input[type="range"]');
+                const sortie = bloc.querySelector('.curseur-valeur');
+                if (curseur && sortie) sortie.textContent = n4Formatage(curseur, curseur.value);
+            });
+
+            const modeles = zone.querySelectorAll('.modele-ost');
+            let respectent = 0;
+            for (const modele of modeles) {
+                const manques = [];
+                for (const regle of regles) {
+                    if (!regle.critere) continue;
+                    const mesure = parseFloat(modele.getAttribute('data-' + regle.critere));
+                    if (isNaN(mesure)) continue;
+                    const horsLimite = regle.sens === 'min'
+                        ? mesure < regle.valeur
+                        : mesure > regle.valeur;
+                    if (horsLimite) manques.push(regle.nom);
+                }
+                const verdict = modele.querySelector('.modele-verdict');
+                if (verdict) {
+                    if (!manques.length) {
+                        verdict.textContent = '✔ respecte toutes tes contraintes';
+                        verdict.className = 'modele-verdict verdict-ok';
+                    } else {
+                        verdict.textContent = '✘ ne respecte pas : ' + manques.join(', ');
+                        verdict.className = 'modele-verdict verdict-non';
+                    }
+                }
+                if (!manques.length) respectent++;
+            }
+
+            const compte = document.getElementById('comparateur-compte');
+            if (compte) {
+                if (!modeles.length) {
+                    compte.textContent = '';
+                } else if (respectent === 0) {
+                    compte.textContent = 'Aucun modèle ne respecte ton cahier des charges : ' +
+                        'ouvre un curseur ou accepte un compromis.';
+                } else if (respectent === 1) {
+                    compte.textContent = '1 modèle respecte toutes tes contraintes.';
+                } else {
+                    compte.textContent = respectent + ' modèles respectent toutes tes contraintes.';
+                }
+            }
+        }
+
+        function n4TrierModeles() {
+            const choix = document.getElementById('tri-comparateur');
+            const grille = document.getElementById('comparateur-modeles');
+            if (!grille) return;
+            const cle = choix ? choix.value : '';
+            const cartes = Array.prototype.slice.call(grille.querySelectorAll('.modele-ost'));
+            if (!cartes.length) return;
+
+            if (cle && choix) {
+                const option = choix.options[choix.selectedIndex];
+                const sens = option ? (option.getAttribute('data-sens') || 'haut') : 'haut';
+                cartes.sort(function (a, b) {
+                    let va = parseFloat(a.getAttribute('data-' + cle));
+                    let vb = parseFloat(b.getAttribute('data-' + cle));
+                    if (isNaN(va)) va = 0;
+                    if (isNaN(vb)) vb = 0;
+                    return sens === 'bas' ? va - vb : vb - va;
+                });
+            } else {
+                // Sans tri, on revient à l'ordre du magasin : sans ce retour,
+                // l'élève ne pourrait pas défaire un tri qu'il regrette.
+                cartes.sort(function (a, b) {
+                    return (parseInt(a.getAttribute('data-rang'), 10) || 0) -
+                           (parseInt(b.getAttribute('data-rang'), 10) || 0);
+                });
+            }
+            for (const carte of cartes) grille.appendChild(carte);
+        }
+
+        function n4ChoisirModele(carte) {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone || !carte) return;
+            zone.querySelectorAll('.modele-ost').forEach(function (autre) {
+                autre.classList.remove('choisi');
+                autre.setAttribute('aria-checked', 'false');
+            });
+            carte.classList.add('choisi');
+            carte.setAttribute('aria-checked', 'true');
+            const nom = document.getElementById('modele-choisi-nom');
+            if (nom) nom.textContent = carte.getAttribute('data-nom') || 'ce modèle';
+        }
+
+        function n4ReinitialiserConception() {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+            zone.querySelectorAll('.modele-ost').forEach(function (carte) {
+                carte.classList.remove('choisi');
+                carte.setAttribute('aria-checked', 'false');
+            });
+            const nom = document.getElementById('modele-choisi-nom');
+            if (nom) nom.textContent = 'aucun pour l\'instant';
+            zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
+                const defaut = curseur.getAttribute('data-defaut');
+                if (defaut !== null) curseur.value = defaut;
+            });
+            const tri = document.getElementById('tri-comparateur');
+            if (tri) tri.value = '';
+            n4TrierModeles();
+            n4MettreAJourContraintes();
+        }
+
+        function initialiserConceptionGuidee() {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+
+            zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
+                curseur.addEventListener('input', n4MettreAJourContraintes);
+                curseur.addEventListener('change', n4MettreAJourContraintes);
+            });
+
+            zone.querySelectorAll('.modele-ost').forEach(function (carte) {
+                carte.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                        e.preventDefault();
+                        n4ChoisirModele(this);
+                    }
+                });
+            });
+
+            const tri = document.getElementById('tri-comparateur');
+            if (tri) tri.addEventListener('change', n4TrierModeles);
+
+            n4MettreAJourContraintes();
         }
 
         // ============================================
@@ -4579,6 +5330,16 @@ font-size: .6rem;
                 }
                 // Ateliers de découverte et animations N2 : balisage d'origine.
                 reinitialiserAteliers();
+
+                // Conception guidée : curseurs, tri et modèle retenu repartent
+                // aussi de zéro (ce sont des champs hors formulaire, donc
+                // form.reset() ne les voit pas).
+                n4ReinitialiserConception();
+
+                // Étapes à choix multiple : aucune proposition retenue, aucune
+                // marque de vérification. Sans cela, l'élève relancerait
+                // l'activité avec sa sélection précédente déjà validée.
+                n4ReinitialiserSelections();
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
@@ -4647,6 +5408,9 @@ font-size: .6rem;
             });
 
             preparerDetailsChaine();
+
+            // Conception guidée du N4 (sans effet si la page n'en a pas).
+            initialiserConceptionGuidee();
 
             // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
             // Si activé, déverrouille tous les onglets et boutons pour
@@ -5320,11 +6084,13 @@ font-size: .6rem;
         //  sans atelier de câblage reste strictement inchangée.
         //
         //  Chaque équipement porte son type (poste, imprimante, commutateur,
-        //  routeur) et sa famille (la salle à laquelle il appartient). La règle
-        //  vérifiée est celle du cours : les appareils d'une même famille
-        //  rejoignent UN commutateur, deux familles ne partagent jamais le même
-        //  commutateur (deux sous-réseaux distincts), et chaque commutateur est
-        //  relié au routeur.
+        //  routeur, internet) et sa famille (la salle à laquelle il appartient).
+        //  La règle vérifiée est celle du cours : les appareils d'une même
+        //  famille rejoignent UN commutateur, deux familles ne partagent jamais
+        //  le même commutateur (deux sous-réseaux distincts), et chaque
+        //  commutateur est relié au routeur. Un nuage « Internet », quand il est
+        //  déclaré, se relie au routeur et à rien d'autre : il reste en dehors
+        //  des deux sous-réseaux, et aucun appareil ne s'y branche directement.
         //
         //  Deux gestes, tous deux accessibles au clavier :
         //    • déplacer : glisser (souris ou doigt), ou flèches sur un
@@ -5807,6 +6573,7 @@ font-size: .6rem;
             const commutateurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'commutateur'; });
             const routeurs = noeuds.filter(function (noeud) { return cablageType(noeud) === 'routeur'; });
             const terminaux = noeuds.filter(cablageEstTerminal);
+            const reseaux = noeuds.filter(function (noeud) { return cablageType(noeud) === 'internet'; });
 
             // 2. Un poste ou une imprimante se relie à UN commutateur.
             let avant = erreurs.length;
@@ -5828,19 +6595,63 @@ font-size: .6rem;
                 justes.push('Chaque poste et chaque imprimante est relié à un seul commutateur.');
             }
 
-            // 3. Le routeur ne se relie qu'aux commutateurs.
+            // 3. Le routeur ne se relie qu'aux commutateurs, et à Internet :
+            //    c'est lui, et lui seul, qui fait la frontière avec le réseau
+            //    mondial.
             avant = erreurs.length;
             routeurs.forEach(function (routeur) {
                 const id = routeur.getAttribute('data-noeud');
                 (voisins[id] || []).forEach(function (idVoisin) {
-                    if (commutateurs.indexOf(parId[idVoisin]) === -1) {
-                        erreurs.push('Le routeur ne se relie qu\'aux commutateurs : ' +
-                            cablageNom(parId[idVoisin]) + ' est relié directement au routeur.');
+                    const voisin = parId[idVoisin];
+                    const typeVoisin = cablageType(voisin);
+                    if (commutateurs.indexOf(voisin) === -1 && typeVoisin !== 'internet') {
+                        erreurs.push('Le routeur ne se relie qu\'aux commutateurs et à ' +
+                            'Internet : ' + cablageNom(voisin) + ' est relié directement ' +
+                            'au routeur.');
                     }
                 });
             });
             if (erreurs.length === avant) {
-                justes.push('Le routeur ne reçoit que des commutateurs : c\'est lui qui ouvre vers Internet.');
+                justes.push('Le routeur ne reçoit que des commutateurs, et relie Internet : ' +
+                    'c\'est lui qui ouvre vers le monde.');
+            }
+
+            // 3b. Internet, quand il est posé sur le schéma, est le seul point
+            //     de sortie du collège : il se relie au routeur, et à rien
+            //     d'autre. Il reste EN DEHORS des deux sous-réseaux — aucun
+            //     poste, aucune imprimante, aucun commutateur ne s'y branche.
+            avant = erreurs.length;
+            reseaux.forEach(function (reseau) {
+                const id = reseau.getAttribute('data-noeud');
+                const liens = voisins[id] || [];
+                if (liens.length === 0) {
+                    erreurs.push(cablageNom(reseau) + ' n\'est relié à aucun fil : ' +
+                        'relie-le au routeur, seul passage entre le collège et le ' +
+                        'réseau mondial.');
+                    return;
+                }
+                if (liens.length > 1) {
+                    erreurs.push(cablageNom(reseau) + ' a ' + liens.length + ' fils : ' +
+                        'Internet ne se relie qu\'au routeur, par un seul fil.');
+                }
+                liens.forEach(function (idVoisin) {
+                    const voisin = parId[idVoisin];
+                    const typeVoisin = cablageType(voisin);
+                    if (typeVoisin === 'routeur') return;
+                    if (typeVoisin === 'commutateur') {
+                        erreurs.push('Internet ne se relie pas directement à ' +
+                            cablageNom(voisin) + ' : le routeur est le seul passage ' +
+                            'entre le réseau local et Internet.');
+                    } else {
+                        erreurs.push(cablageNom(voisin) + ' ne se relie pas directement à ' +
+                            'Internet : ses données passent par un commutateur, puis par ' +
+                            'le routeur.');
+                    }
+                });
+            });
+            if (erreurs.length === avant && reseaux.length) {
+                justes.push('Internet n\'est relié qu\'au routeur : il reste en dehors ' +
+                    'des deux sous-réseaux du collège.');
             }
 
             // 4. Chaque commutateur reçoit des appareils et rejoint le routeur.
@@ -6912,6 +7723,10 @@ var ASSETS = (typeof window !== 'undefined' && window.ASSETS_JEU) ? window.ASSET
 var CLE_OBJET = { batterie: 'batterie', colis: 'colis', carbone: 'carbone',
 lipo: 'lipo', camera: 'camera' };
 var CLE_PROJECTILE = { ballon: 'ballon', avion: 'avion', bois: 'bois' };
+var ANIM = (typeof window !== 'undefined' && window.ANIM_JEU) ? window.ANIM_JEU : {};
+function nbImages(cle) {
+return (ANIM[cle] && ANIM[cle].n) ? ANIM[cle].n : 1;
+}
 var imagesAssets = {};
 function imgAsset(cle) {
 var src = ASSETS[cle];
@@ -6935,6 +7750,24 @@ return true;
 if (repli) {
 g2.drawImage(repli, Math.round(cx - repli.width / 2),
 Math.round(bas ? cy - repli.height : cy - repli.height / 2));
+return true;
+}
+return false;
+}
+function poserSpriteAnime(g2, cle, repli, cx, cy, image) {
+var im = cle ? imgAsset(cle) : null;
+if (assetPret(im)) {
+var n = nbImages(cle);
+var l = Math.round(im.naturalWidth / n);
+var h = im.naturalHeight;
+var k = ((image | 0) % n + n) % n;
+g2.drawImage(im, k * l, 0, l, h,
+Math.round(cx - l / 2), Math.round(cy - h / 2), l, h);
+return true;
+}
+if (repli) {
+g2.drawImage(repli, Math.round(cx - repli.width / 2),
+Math.round(cy - repli.height / 2));
 return true;
 }
 return false;
@@ -6973,7 +7806,7 @@ var imgProfPilote = null, imgPlancheProf = null;
 function chargerAssets() {
 if (ASSETS.profPilote) imgProfPilote = imgAsset('profPilote');
 ['maison1', 'maison2', 'maison3',
-'decorFleurs', 'chienA', 'chienB', 'chatA', 'chatB']
+'decorFleurs', 'chatA', 'chatB', 'chien']
 .forEach(imgAsset);
 ['droneHelices', 'droneRotors', 'colis', 'batterie', 'lipo',
 'carbone', 'camera', 'ballon', 'avion', 'bois',
@@ -7158,7 +7991,7 @@ essaisDeco++;
 var ax2 = Math.floor(rnd() * (COLS - 2)) * TUILE + Math.floor(rnd() * 20);
 var ay2 = Math.floor(rnd() * (ROWS - 2)) * TUILE + Math.floor(rnd() * 20);
 if (surRoute(ax2, ay2) || empiète(ax2, ay2, 20, 16)) continue;
-animaux.push({ type: rnd() < 0.5 ? 'chien' : 'chat', x: ax2, y: ay2 });
+animaux.push({ type: 'chat', x: ax2, y: ay2 });
 }
 var couronneObstacle = encombrement('arbre', solArbre);
 var o = nouvelCanvas(MONDE_L, MONDE_H), g = o.g;
@@ -7255,6 +8088,8 @@ fond = o.canvas;
 }
 var ETAT = 'pret';
 var drone = null;
+var chien = null;
+var ROTATION_CHIEN = -Math.PI / 2;
 var niveau = 1, livraisons = 0, argent = 0, score = 0;
 var grainePartie = 1;
 var upgrades = { batterie: 0, moteur: 0, coque: 0, camera: 0, stabilite: 0 };
@@ -7311,6 +8146,8 @@ return { x: p4.x, y: p4.y, c: couleurs[k % couleurs.length], i: k };
 function reinitialiserNiveau() {
 var rnd = alea(niveau * 977 + 13);
 drone = creerDrone();
+chien = { x: drone.x - 52, y: drone.y + 34, a: 2.3,
+cap: Math.PI / 2, galop: 0 };
 temps = 0; tempsRestant = dureeNiveau();
 colis = 'depot'; livraisons = 0;
 projectiles = [];
@@ -7613,6 +8450,32 @@ dire('« ' + (solides[s].type === 'pylone' ? 'Pylône !' : 'Maison !') + ' Garde
 }
 }
 }
+if (chien && drone) {
+var vitesseDrone = Math.sqrt(drone.vx * drone.vx + drone.vy * drone.vy);
+if (vitesseDrone > 30) {
+var vise = Math.atan2(-drone.vy, -drone.vx);
+var ecart = Math.atan2(Math.sin(vise - chien.a), Math.cos(vise - chien.a));
+chien.a += ecart * Math.min(1, dt * 2.2);
+} else {
+chien.a += dt * 0.8;
+}
+var portee = 54;
+var cibleChienX = drone.x + Math.cos(chien.a) * portee;
+var cibleChienY = drone.y + Math.sin(chien.a) * portee;
+var dxc = cibleChienX - chien.x, dyc = cibleChienY - chien.y;
+var dc = Math.sqrt(dxc * dxc + dyc * dyc) || 1;
+var vitesseChien = Math.min(330, 55 + dc * 2.6);
+if (dc > 3) {
+var pas = vitesseChien * dt;
+chien.x += (dxc / dc) * pas;
+chien.y += (dyc / dc) * pas;
+chien.cap = Math.atan2(dyc, dxc);
+chien.galop += pas;          // avance le cycle de course
+if (chien.galop > 1e6) chien.galop = 0;
+}
+chien.x = Math.max(14, Math.min(MONDE_L - 14, chien.x));
+chien.y = Math.max(14, Math.min(MONDE_H - 14, chien.y));
+}
 var cadence = Math.max(1.2, 3.2 - (niveau - 1) * 0.28);
 for (var e = 0; e < enfants.length; e++) {
 var enf = enfants[e];
@@ -7779,6 +8642,22 @@ if (essais[i] && table[essais[i]]) return table[essais[i]];
 for (var k in table) if (table.hasOwnProperty(k)) return table[k];
 return null;
 }
+function dessinerChien(ox, oy) {
+var im = imgAsset('chien');
+if (!assetPret(im)) return;
+var n = nbImages('chien');
+var l = Math.round(im.naturalWidth / n), h = im.naturalHeight;
+var k = Math.floor(chien.galop / 9) % n;
+var sx = Math.round(chien.x + ox), sy = Math.round(chien.y + oy);
+ctx.fillStyle = 'rgba(12, 18, 12, 0.22)';
+ctx.fillRect(sx - 13, sy + 7, 26, 8);
+ctx.save();
+ctx.translate(sx, sy);
+ctx.rotate(chien.cap + ROTATION_CHIEN);
+ctx.drawImage(im, k * l, 0, l, h,
+-Math.round(l / 2), -Math.round(h / 2), l, h);
+ctx.restore();
+}
 function dessinerEnfant(enf, ox, oy) {
 var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
 var dir = directionVecteur(enf.faceX, enf.faceY);
@@ -7837,9 +8716,10 @@ return;
 }
 ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
 ctx.fillRect(x - Math.round(pr.vx * 0.03) - 1, y - Math.round(pr.vy * 0.03) - 1, 3, 3);
-poserSprite(ctx, CLE_PROJECTILE[pr.type],
-solProjectiles[pr.type] || solProjectiles.ballon,
-pr.x + ox, pr.y + oy);
+var cle = CLE_PROJECTILE[pr.type];
+var image = nbImages(cle) > 1 ? Math.floor(temps * 10) : 0;
+poserSpriteAnime(ctx, cle, solProjectiles[pr.type] || solProjectiles.ballon,
+pr.x + ox, pr.y + oy, image);
 }
 function dessinerProfPilote(ox, oy, t) {
 var px7 = Math.round(PROF_JEU.x + ox), py7 = Math.round(PROF_JEU.y + oy);
@@ -7961,6 +8841,7 @@ var bob2 = Math.round(Math.sin(temps * 3 + objets[o3].x) * 2);
 poserSprite(ctx, CLE_OBJET[objets[o3].type], solObjets[objets[o3].type],
 objets[o3].x + ox, objets[o3].y + oy + bob2);
 }
+if (chien) dessinerChien(ox, oy);
 for (var e2 = 0; e2 < enfants.length; e2++) dessinerEnfant(enfants[e2], ox, oy);
 for (var p8 = 0; p8 < projectiles.length; p8++) dessinerProjectile(projectiles[p8], ox, oy);
 if (drone) {
@@ -8073,6 +8954,7 @@ animaux: animaux.length };
 },
 objets: function () { return objets; },
 enfants: function () { return enfants; },
+chien: function () { return chien; },
 projectiles: function () { return projectiles; },
 solides: function () { return solides; },
 maisonCount: function () { return maisons.length; },
@@ -9701,6 +10583,6 @@ if ('gauche' in commandes) vol.touches.gauche = !!commandes.gauche;
 if ('droite' in commandes) vol.touches.droite = !!commandes.droite;
 };
 })();
-</script>
+    </script>
 </body>
 </html>
