@@ -815,6 +815,25 @@
             cursor: pointer;
         }
 
+        /* Liste de choix (`n4.contraintes.curseurs[].type: "liste"`) : même
+           place et même cible tactile que le curseur, mais des MOTS seulement —
+           aucune borne, aucune mesure, aucun chiffre affiché. L'élève dit
+           l'importance qu'il accorde au critère et se fait son idée. */
+        .curseur-contrainte select {
+            width: 100%;
+            max-width: 100%;
+            min-height: var(--hauteur-cible-min);
+            margin: var(--espacement-xs) 0;
+            padding: var(--espacement-xs) var(--espacement-sm);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--couleur-texte);
+            background-color: white;
+            cursor: pointer;
+        }
+
         .curseur-bornes {
             display: flex;
             justify-content: space-between;
@@ -836,7 +855,8 @@
             border-color: var(--couleur-primaire);
         }
 
-        .reglages-contraintes[data-fige="1"] .curseur-contrainte input[type="range"] {
+        .reglages-contraintes[data-fige="1"] .curseur-contrainte input[type="range"],
+        .reglages-contraintes[data-fige="1"] .curseur-contrainte select {
             cursor: not-allowed;
             opacity: 0.6;
         }
@@ -3664,116 +3684,110 @@ window.__EFFETS_INTERACTIONS__={};
                                 aria-label="Description du besoin du service de libre-service"></textarea>
                         </div>
                         <div class="etape-conception">
-                            <h4>Étape 2 : Étape 2 — Régler mes contraintes</h4>
-                            <p>Chaque curseur a cinq crans, et chaque cran porte un mot. Choisissez le mot qui correspond à VOTRE exigence : il n'y a pas de bon réglage, il n'y a que votre cahier des charges. La valeur chiffrée reste affichée en petit sous le curseur. Quand vos contraintes vous conviennent, cliquez sur « Figer vos contraintes ».</p>
-                            <p class="note-liberte">Un cran, un mot : « très serré » ou « très large », « très sobre » ou « très gourmande ». Serrez les crans pour un service exigeant, ouvrez-les si vous acceptez des compromis. Les mots s'affinent, mais la mesure chiffrée reste là, en gris, pour que vous sachiez exactement ce que vous demandez.</p>
+                            <h4>Étape 2 : Hiérarchiser mes contraintes</h4>
+                            <p>Pour chaque critère, choisissez dans la liste l'importance qu'il a à VOS yeux : « non considéré », « importance modeste », « assez important » ou « très important ». Aucun critère n'est important par défaut : c'est à vous de dire lequel compte, et à quel point. Quand vos choix vous conviennent, cliquez sur « Figer vos contraintes ».</p>
+                            <p class="note-liberte">Quatre mots, aucun chiffre : la page ne vous impose aucune valeur, c'est à vous de vous faire votre idée. Un critère « non considéré » ne pèsera pas dans votre choix ; un critère « très important » en sera la condition.</p>
                             <div class="reglages-contraintes" data-figer="1">
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-budget" data-critere="prix" data-sens="max" data-nom="Budget maximal par véhicule">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-budget"
+                                     data-nom="Budget d'achat par véhicule">
                                     <div class="curseur-entete">
-                                        <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget maximal par véhicule</label>
-                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">moyen</output>
+                                        <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget d'achat par véhicule</label>
+                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">non considéré</output>
                                     </div>
-                                    <input type="range" id="curseur-budget"
-                                           min="500"
-                                           max="2500"
-                                           step="500"
-                                           value="1500"
-                                           data-defaut="1500"
-                                           data-unite="€"
-                                           data-niveaux="très serré|serré|moyen|large|très large"
-                                           aria-valuetext="moyen (1 500 €)"
-                                           aria-describedby="aide-budget">
-                                    <p class="curseur-bornes"><span>500 €</span><span class="curseur-mesure" id="mesure-budget">1 500 €</span><span>2 500 €</span></p>
+                                    <select id="curseur-budget"
+                                            data-defaut="0"
+                                            data-niveaux="non considéré|importance modeste|assez important|très important"
+                                            aria-describedby="aide-budget">
+                                               <option value="0" selected>non considéré</option>
+                                               <option value="1">importance modeste</option>
+                                               <option value="2">assez important</option>
+                                               <option value="3">très important</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-budget">Prix d'achat d'un véhicule, batterie comprise, pour une flotte de 60.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-autonomie" data-critere="autonomie" data-sens="min" data-nom="Autonomie minimale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-autonomie"
+                                     data-nom="Autonomie">
                                     <div class="curseur-entete">
-                                        <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie minimale</label>
-                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">moyenne</output>
+                                        <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie</label>
+                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">non considéré</output>
                                     </div>
-                                    <input type="range" id="curseur-autonomie"
-                                           min="30"
-                                           max="110"
-                                           step="20"
-                                           value="70"
-                                           data-defaut="70"
-                                           data-unite="km"
-                                           data-niveaux="très courte|courte|moyenne|longue|très longue"
-                                           aria-valuetext="moyenne (70 km)"
-                                           aria-describedby="aide-autonomie">
-                                    <p class="curseur-bornes"><span>30 km</span><span class="curseur-mesure" id="mesure-autonomie">70 km</span><span>110 km</span></p>
+                                    <select id="curseur-autonomie"
+                                            data-defaut="0"
+                                            data-niveaux="non considéré|importance modeste|assez important|très important"
+                                            aria-describedby="aide-autonomie">
+                                               <option value="0" selected>non considéré</option>
+                                               <option value="1">importance modeste</option>
+                                               <option value="2">assez important</option>
+                                               <option value="3">très important</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-autonomie">Distance à parcourir avec une seule charge : il faut couvrir plusieurs trajets avant de recharger.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-masse" data-critere="masse" data-sens="max" data-nom="Masse maximale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-masse"
+                                     data-nom="Masse du véhicule">
                                     <div class="curseur-entete">
-                                        <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse maximale</label>
-                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">moyen</output>
+                                        <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse du véhicule</label>
+                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">non considéré</output>
                                     </div>
-                                    <input type="range" id="curseur-masse"
-                                           min="16"
-                                           max="32"
-                                           step="4"
-                                           value="24"
-                                           data-defaut="24"
-                                           data-unite="kg"
-                                           data-niveaux="ultraléger|léger|moyen|lourd|très lourd"
-                                           aria-valuetext="moyen (24 kg)"
-                                           aria-describedby="aide-masse">
-                                    <p class="curseur-bornes"><span>16 kg</span><span class="curseur-mesure" id="mesure-masse">24 kg</span><span>32 kg</span></p>
+                                    <select id="curseur-masse"
+                                            data-defaut="0"
+                                            data-niveaux="non considéré|importance modeste|assez important|très important"
+                                            aria-describedby="aide-masse">
+                                               <option value="0" selected>non considéré</option>
+                                               <option value="1">importance modeste</option>
+                                               <option value="2">assez important</option>
+                                               <option value="3">très important</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-masse">Un véhicule lourd se manipule mal en station et se répare moins facilement sur le trottoir.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-reparabilite" data-critere="reparabilite" data-sens="min" data-nom="Indice de réparabilité minimal">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-reparabilite"
+                                     data-nom="Indice de réparabilité">
                                     <div class="curseur-entete">
-                                        <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité minimal</label>
-                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">moyenne</output>
+                                        <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité</label>
+                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">non considéré</output>
                                     </div>
-                                    <input type="range" id="curseur-reparabilite"
-                                           min="4"
-                                           max="8"
-                                           step="1"
-                                           value="6"
-                                           data-defaut="6"
-                                           data-unite="/10"
-                                           data-niveaux="très basse|basse|moyenne|haute|très haute"
-                                           aria-valuetext="moyenne (6 /10)"
-                                           aria-describedby="aide-reparabilite">
-                                    <p class="curseur-bornes"><span>4 /10</span><span class="curseur-mesure" id="mesure-reparabilite">6 /10</span><span>8 /10</span></p>
+                                    <select id="curseur-reparabilite"
+                                            data-defaut="0"
+                                            data-niveaux="non considéré|importance modeste|assez important|très important"
+                                            aria-describedby="aide-reparabilite">
+                                               <option value="0" selected>non considéré</option>
+                                               <option value="1">importance modeste</option>
+                                               <option value="2">assez important</option>
+                                               <option value="3">très important</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-reparabilite">Note officielle sur 10 : plus elle est haute, plus le véhicule se répare et dure longtemps.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-empreinte" data-critere="empreinte" data-sens="max" data-nom="Empreinte carbone maximale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-empreinte"
+                                     data-nom="Empreinte carbone">
                                     <div class="curseur-entete">
-                                        <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone maximale</label>
-                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">moyenne</output>
+                                        <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone</label>
+                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">non considéré</output>
                                     </div>
-                                    <input type="range" id="curseur-empreinte"
-                                           min="100"
-                                           max="500"
-                                           step="100"
-                                           value="300"
-                                           data-defaut="300"
-                                           data-unite="kg CO₂e"
-                                           data-niveaux="très faible|faible|moyenne|élevée|très élevée"
-                                           aria-valuetext="moyenne (300 kg CO₂e)"
-                                           aria-describedby="aide-empreinte">
-                                    <p class="curseur-bornes"><span>100 kg CO₂e</span><span class="curseur-mesure" id="mesure-empreinte">300 kg CO₂e</span><span>500 kg CO₂e</span></p>
+                                    <select id="curseur-empreinte"
+                                            data-defaut="0"
+                                            data-niveaux="non considéré|importance modeste|assez important|très important"
+                                            aria-describedby="aide-empreinte">
+                                               <option value="0" selected>non considéré</option>
+                                               <option value="1">importance modeste</option>
+                                               <option value="2">assez important</option>
+                                               <option value="3">très important</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-empreinte">Gaz à effet de serre émis pour fabriquer le véhicule et sa batterie.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-consommation" data-critere="consommation" data-sens="max" data-nom="Consommation maximale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-consommation"
+                                     data-nom="Consommation d'énergie">
                                     <div class="curseur-entete">
-                                        <label for="curseur-consommation"><span aria-hidden="true">⚡</span> Consommation maximale</label>
-                                        <output class="curseur-valeur" id="valeur-consommation" for="curseur-consommation">moyenne</output>
+                                        <label for="curseur-consommation"><span aria-hidden="true">⚡</span> Consommation d'énergie</label>
+                                        <output class="curseur-valeur" id="valeur-consommation" for="curseur-consommation">non considéré</output>
                                     </div>
-                                    <input type="range" id="curseur-consommation"
-                                           min="6"
-                                           max="14"
-                                           step="2"
-                                           value="10"
-                                           data-defaut="10"
-                                           data-unite="Wh/km"
-                                           data-niveaux="très sobre|sobre|moyenne|gourmande|très gourmande"
-                                           aria-valuetext="moyenne (10 Wh/km)"
-                                           aria-describedby="aide-consommation">
-                                    <p class="curseur-bornes"><span>6 Wh/km</span><span class="curseur-mesure" id="mesure-consommation">10 Wh/km</span><span>14 Wh/km</span></p>
+                                    <select id="curseur-consommation"
+                                            data-defaut="0"
+                                            data-niveaux="non considéré|importance modeste|assez important|très important"
+                                            aria-describedby="aide-consommation">
+                                               <option value="0" selected>non considéré</option>
+                                               <option value="1">importance modeste</option>
+                                               <option value="2">assez important</option>
+                                               <option value="3">très important</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-consommation">Énergie consommée par kilomètre : c'est l'efficacité énergétique du véhicule.</p>
                                 </div>
                             </div>
@@ -3786,7 +3800,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <div class="contraintes-recap" id="contraintes-recap" hidden>
                                 <h5>Mes contraintes figées</h5>
                                 <ul id="contraintes-recap-liste"></ul>
-                                <p class="contraintes-recap-note">Les curseurs sont maintenant verrouillés : c'est le cahier des charges que vous imposez aux cinq véhicules. Si vous vous êtes trompé, cliquez sur « Modifier mes contraintes ».</p>
+                                <p class="contraintes-recap-note">Les listes sont maintenant verrouillées : c'est le cahier des charges que vous imposez aux cinq véhicules. Si vous vous êtes trompé, cliquez sur « Modifier mes contraintes ».</p>
                             </div>
                         </div>
                         <div class="etape-conception">
@@ -5534,6 +5548,13 @@ window.__EFFETS_INTERACTIONS__={};
         function n4Niveau(curseur) {
             const mots = n4Niveaux(curseur);
             if (!mots) return null;
+            // Liste de choix : le rang est l'option sélectionnée, il n'y a
+            // aucune mesure à convertir.
+            if (curseur.tagName === 'SELECT') {
+                const rangListe = curseur.selectedIndex;
+                if (rangListe < 0 || rangListe >= mots.length) return null;
+                return { libelle: mots[rangListe], rang: rangListe, nombre: mots.length };
+            }
             const mini = parseFloat(curseur.getAttribute('min') || '0');
             const pas = parseFloat(curseur.getAttribute('step') || '1');
             if (!pas) return null;
@@ -5545,7 +5566,21 @@ window.__EFFETS_INTERACTIONS__={};
         // Libellé d'un réglage : le mot du cran s'il y en a, sinon la mesure.
         function n4Libelle(curseur) {
             const niveau = n4Niveau(curseur);
-            return niveau ? niveau.libelle : n4Formatage(curseur, curseur.value);
+            if (niveau) return niveau.libelle;
+            // Une liste qui n'aurait pas de `data-niveaux` afficherait « NaN » :
+            // on lit alors directement le mot choisi dans le menu.
+            if (curseur.tagName === 'SELECT') {
+                const option = curseur.options[curseur.selectedIndex];
+                return option ? String(option.textContent || '').trim() : '';
+            }
+            return n4Formatage(curseur, curseur.value);
+        }
+
+        // Le contrôle d'un réglage : un curseur (input type=range) ou une liste
+        // de choix (select). Toute la mécanique des contraintes passe par ici,
+        // pour que les deux formes se comportent pareil.
+        function n4ControleContrainte(bloc) {
+            return bloc.querySelector('input[type="range"], select');
         }
 
         function n4ContraintesReglees() {
@@ -5572,14 +5607,18 @@ window.__EFFETS_INTERACTIONS__={};
             const regles = n4ContraintesReglees();
 
             zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
-                const curseur = bloc.querySelector('input[type="range"]');
+                const curseur = n4ControleContrainte(bloc);
                 const sortie = bloc.querySelector('.curseur-valeur');
                 const mesure = bloc.querySelector('.curseur-mesure');
                 if (!curseur) return;
                 const niveau = n4Niveau(curseur);
                 if (sortie) sortie.textContent = n4Libelle(curseur);
-                if (mesure) mesure.textContent = n4Formatage(curseur, curseur.value);
-                if (niveau) {
+                // Une liste de choix n'affiche aucune mesure : la page ne dit
+                // jamais « 1 500 € », seulement le mot choisi.
+                if (mesure && curseur.tagName !== 'SELECT') {
+                    mesure.textContent = n4Formatage(curseur, curseur.value);
+                }
+                if (niveau && curseur.tagName !== 'SELECT') {
                     curseur.setAttribute('aria-valuetext',
                         niveau.libelle + ' (' + n4Formatage(curseur, curseur.value) + ')');
                 }
@@ -5657,8 +5696,8 @@ window.__EFFETS_INTERACTIONS__={};
             const fige = reglages.getAttribute('data-fige') === '1';
             if (fige) {
                 reglages.removeAttribute('data-fige');
-                reglages.querySelectorAll('input[type="range"]').forEach(function (curseur) {
-                    curseur.disabled = false;
+                reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
+                    controle.disabled = false;
                 });
                 if (liste) liste.innerHTML = '';
                 if (recap) recap.hidden = true;
@@ -5669,22 +5708,27 @@ window.__EFFETS_INTERACTIONS__={};
                 }
             } else {
                 reglages.setAttribute('data-fige', '1');
-                reglages.querySelectorAll('input[type="range"]').forEach(function (curseur) {
-                    curseur.disabled = true;
+                reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
+                    controle.disabled = true;
                 });
                 if (liste) {
                     liste.innerHTML = '';
                     reglages.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
-                        const curseur = bloc.querySelector('input[type="range"]');
+                        const curseur = n4ControleContrainte(bloc);
                         if (!curseur) return;
                         const item = document.createElement('li');
                         const nom = document.createElement('strong');
                         nom.textContent = (bloc.getAttribute('data-nom') || 'Contrainte') + ' : ';
                         item.appendChild(nom);
                         const mot = n4Libelle(curseur);
-                        const chiffre = n4Formatage(curseur, curseur.value);
-                        item.appendChild(document.createTextNode(
-                            n4Niveau(curseur) ? mot + ' (' + chiffre + ')' : chiffre));
+                        // Liste de choix : le mot seul, sans parenthèse chiffrée.
+                        if (curseur.tagName === 'SELECT') {
+                            item.appendChild(document.createTextNode(mot));
+                        } else {
+                            const chiffre = n4Formatage(curseur, curseur.value);
+                            item.appendChild(document.createTextNode(
+                                n4Niveau(curseur) ? mot + ' (' + chiffre + ')' : chiffre));
+                        }
                         liste.appendChild(item);
                     });
                 }
@@ -5724,12 +5768,17 @@ window.__EFFETS_INTERACTIONS__={};
             lignes.push('2. MES CONTRAINTES');
             if (zone) {
                 zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
-                    const curseur = bloc.querySelector('input[type="range"]');
+                    const curseur = n4ControleContrainte(bloc);
                     if (!curseur) return;
                     const mot = n4Libelle(curseur);
-                    const chiffre = n4Formatage(curseur, curseur.value);
-                    lignes.push('- ' + (bloc.getAttribute('data-nom') || 'Contrainte') + ' : ' +
-                        (n4Niveau(curseur) ? mot + ' (' + chiffre + ')' : chiffre));
+                    // Une liste de choix se recopie en mots : le bilan ne doit
+                    // pas réintroduire un chiffre que la page n'affiche pas.
+                    const valeur = curseur.tagName === 'SELECT'
+                        ? mot
+                        : (n4Niveau(curseur)
+                            ? mot + ' (' + n4Formatage(curseur, curseur.value) + ')'
+                            : n4Formatage(curseur, curseur.value));
+                    lignes.push('- ' + (bloc.getAttribute('data-nom') || 'Contrainte') + ' : ' + valeur);
                 });
             }
             lignes.push(n4EstFige()
@@ -5869,10 +5918,10 @@ window.__EFFETS_INTERACTIONS__={};
             if (bilanResultat) bilanResultat.hidden = true;
             if (bilanTexte) bilanTexte.value = '';
             if (bilanEtat) bilanEtat.textContent = '';
-            zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
-                const defaut = curseur.getAttribute('data-defaut');
-                if (defaut !== null) curseur.value = defaut;
-                curseur.disabled = false;
+            zone.querySelectorAll('.curseur-contrainte input[type="range"], .curseur-contrainte select').forEach(function (controle) {
+                const defaut = controle.getAttribute('data-defaut');
+                if (defaut !== null) controle.value = defaut;
+                controle.disabled = false;
             });
             const tri = document.getElementById('tri-comparateur');
             if (tri) tri.value = '';
@@ -5884,9 +5933,9 @@ window.__EFFETS_INTERACTIONS__={};
             const zone = document.getElementById('conception-guidee');
             if (!zone) return;
 
-            zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
-                curseur.addEventListener('input', n4MettreAJourContraintes);
-                curseur.addEventListener('change', n4MettreAJourContraintes);
+            zone.querySelectorAll('.curseur-contrainte input[type="range"], .curseur-contrainte select').forEach(function (controle) {
+                controle.addEventListener('input', n4MettreAJourContraintes);
+                controle.addEventListener('change', n4MettreAJourContraintes);
             });
 
             zone.querySelectorAll('.modele-ost').forEach(function (carte) {
