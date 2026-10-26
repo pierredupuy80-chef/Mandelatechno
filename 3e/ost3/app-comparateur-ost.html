@@ -7930,8 +7930,9 @@ window.__EFFETS_INTERACTIONS__={};
             "ajout d'options"
         ];
         var OPTIONS_PRECO = [
-            "régénérer l'exercice en entier",
+            "corriger simplement",
             "reformuler la question/l'énoncé",
+            "régénérer l'exercice en entier",
             "changer le type d'exercice"
         ];
         // Chaque série de réglages commence par « ne rien changer » : le prompt
@@ -8405,6 +8406,9 @@ window.__EFFETS_INTERACTIONS__={};
                 'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
                 "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
             },
+            preconisation: {
+                'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+            },
             difficulte: {
                 'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
                 'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
@@ -8459,6 +8463,11 @@ window.__EFFETS_INTERACTIONS__={};
             if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
 
             var consignes = [];
+            // La préconisation choisie ouvre la consigne : c'est l'action
+            // demandée, les réglages de fond viennent après.
+            if (CONSIGNES.preconisation[preco]) {
+                consignes.push(CONSIGNES.preconisation[preco]);
+            }
             if (CONSIGNES.type_erreur[type]) {
                 consignes.push(CONSIGNES.type_erreur[type]);
             }
