@@ -8024,29 +8024,54 @@ window.__EFFETS_INTERACTIONS__={};
             bouton.type = 'button';
             bouton.textContent = '🛠 Corriger';
             bouton.addEventListener('click', function () {
-                arme = !arme;
-                document.body.classList.toggle('ost-correction-arme', arme);
-                bouton.classList.toggle('ost-arme', arme);
-                bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
-                if (!arme) fermerPanneau();
+                basculerCorrection(!arme);
             });
             document.body.appendChild(bouton);
 
             // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
-            // Un clic dans le panneau n'est jamais une sélection : sans ce garde-fou,
-            // régler une option pouvait re-désigner un bloc de la page.
+            // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+            // page : une fois armé, un clic sur le bouton « Corriger » était capté
+            // comme une sélection, donc le bouton ne répondait plus et le mode ne
+            // pouvait plus être quitté (il fallait recharger la page). Même chose
+            // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+            // restent utilisables pendant la relecture.
+            var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+                '.navigation-onglets, .retour-accueil, .skip-link';
+
             document.body.addEventListener('click', function (e) {
                 if (!arme) return;
-                if (panneau && panneau.contains(e.target)) return;
                 if (e.target === document.body || e.target === document.documentElement) return;
+                if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
                 e.preventDefault();
                 e.stopPropagation();
                 ouvrirPanneau(e.target);
             }, true);
 
+            // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+            // quitter le mode correction. Sortie de secours clavier, pour qu'un
+            // mode qui ne se désarme pas ne puisse plus arriver.
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') fermerPanneau();
+                if (e.key !== 'Escape') return;
+                if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+                    fermerPanneau();
+                    return;
+                }
+                if (arme) basculerCorrection(false);
             });
+        }
+
+        // Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+        // tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+        function basculerCorrection(actif) {
+            arme = !!actif;
+            document.body.classList.toggle('ost-correction-arme', arme);
+            var bouton = document.getElementById('ost-bouton-corriger');
+            if (bouton) {
+                bouton.classList.toggle('ost-arme', arme);
+                bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+                bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+            }
+            if (!arme) fermerPanneau();
         }
 
         function ouvrirPanneau(depuis) {
