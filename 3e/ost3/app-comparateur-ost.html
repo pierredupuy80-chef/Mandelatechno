@@ -2842,6 +2842,14 @@
         .ost-bouton:disabled{opacity:.55;cursor:default}
         #ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
         .ost-notice{margin-top:10px;font-size:11px;color:#64748b}
+        /* Portée du correctif : élément / exercice / onglet */
+        .ost-portees{display:flex;gap:6px;margin:6px 0 0}
+        .ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+        .ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+        .ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+        .ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+        .ost-champ .ost-aide{margin:4px 0 0;font-size:10.5px;color:#64748b;font-style:italic}
+        body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
     </style>
 </head>
 <body>
@@ -3213,7 +3221,7 @@ window.__EFFETS_INTERACTIONS__={};
                         <h3>🔧 Ateliers — les particularités des composants d'un VAE</h3>
                     <p class="texte-secondaire">Deux ateliers pour aller plus loin que la chaîne : reconnaître le rôle technique de chaque constituant, puis replacer les étapes du cycle de vie d'un VAE dans l'ordre. Chaque atelier se corrige lui-même et explique la réponse.</p>
 
-                    <article class="atelier-carte" data-type="association" data-atelier="qui-fait-quoi-vae" aria-labelledby="atelier-titre-qui-fait-quoi-vae">
+                    <article class="atelier-carte" data-ost-bloc="n2-atelier-qui-fait-quoi-vae" data-type="association" data-atelier="qui-fait-quoi-vae" aria-labelledby="atelier-titre-qui-fait-quoi-vae">
                         <h3 id="atelier-titre-qui-fait-quoi-vae">🧩 Atelier 1 — Qui fait quoi dans un VAE ?</h3>
                         <p class="atelier-consigne">Cliquez un constituant, puis la fonction technique qu'il assure : les paires justes restent affichées en vert.</p>
                         <div class="atelier-colonnes">
@@ -3248,7 +3256,7 @@ window.__EFFETS_INTERACTIONS__={};
                         <p class="atelier-explication cache" data-role="explication">La chaîne d'énergie d'un VAE suit le même ordre que celle de la trottinette : alimenter, distribuer, convertir, transmettre, agir. Ce qui change, c'est le capteur de pédalage : il ajoute une information au contrôleur, qui n'assiste que si le cycliste pédale. C'est cette information qui distingue un VAE d'un deux-roues à accélérateur.</p>
                     </article>
 
-                    <article class="atelier-carte" data-type="ordre" data-atelier="cycle-de-vie-vae" aria-labelledby="atelier-titre-cycle-de-vie-vae">
+                    <article class="atelier-carte" data-ost-bloc="n2-atelier-cycle-de-vie-vae" data-type="ordre" data-atelier="cycle-de-vie-vae" aria-labelledby="atelier-titre-cycle-de-vie-vae">
                         <h3 id="atelier-titre-cycle-de-vie-vae">♻️ Atelier 2 — Le cycle de vie d'un VAE</h3>
                         <p class="atelier-consigne">Cliquez les étapes dans l'ordre du cycle de vie : de l'extraction des matières premières jusqu'au recyclage.</p>
                         <div class="atelier-slots" role="list" aria-label="Emplacements de la chaîne, du premier au dernier maillon">
@@ -3488,7 +3496,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <p class="consigne-cadre" id="consigne-solution">Retenez les 3 actions efficaces. Les autres sont inutiles ou aggravent le problème. Chaque action rend son explication après vérification, que vous l'ayez retenue ou non.</p>
                             <p class="texte-secondaire">Un plan de réparation commence par la cause, se poursuit par le réglage, et se termine par un essai qui prouve que la réparation tient.</p>
                             <div class="qcm-correctif" id="qcm-correctif" data-maximum="3" role="group" aria-label="Plan d'action : 3 actions à retenir parmi 9">
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-1">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a01" data-correcte="1" data-explication="Le choc a fait tourner le support : l'aimant passe à 18 mm, hors de portée du capteur à effet Hall. Le réaligner rétablit l'impulsion, donc le signal de pédalage.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Réaligner et refixer le support du capteur à 5 mm de l'aimant
@@ -3500,7 +3508,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>Le choc a fait tourner le support : l'aimant passe à 18 mm, hors de portée du capteur à effet Hall. Le réaligner rétablit l'impulsion, donc le signal de pédalage.</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-2">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a02" data-correcte="1" data-explication="Un réglage ne vaut que s'il est contrôlé : l'écran de diagnostic, ou un test du contrôleur, dit si le signal est revenu avant de rendre le vélo au service.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Régler la distance capteur-aimant, puis vérifier que l'impulsion est de nouveau détectée
@@ -3512,7 +3520,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>Un réglage ne vaut que s'il est contrôlé : l'écran de diagnostic, ou un test du contrôleur, dit si le signal est revenu avant de rendre le vélo au service.</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-3">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a03" data-correcte="1" data-explication="L'essai en conditions réelles est la preuve que la réparation tient : il vérifie la cause (le signal) et pas seulement le symptôme (l'absence d'assistance).">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Essayer le vélo dans la côte qui posait problème, assistance au niveau 1 puis au niveau 5
@@ -3524,7 +3532,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>L'essai en conditions réelles est la preuve que la réparation tient : il vérifie la cause (le signal) et pas seulement le symptôme (l'absence d'assistance).</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-4">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a04" data-correcte="0" data-explication="La batterie est chargée (41,2 V) et ne présente aucun défaut : la changer ne rétablit aucun signal de pédalage. C'est une dépense inutile.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Remplacer la batterie par une batterie neuve
@@ -3536,7 +3544,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>La batterie est chargée (41,2 V) et ne présente aucun défaut : la changer ne rétablit aucun signal de pédalage. C'est une dépense inutile.</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-5">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a05" data-correcte="0" data-explication="Le moteur tourne normalement quand on l'alimente directement : il n'est pas en cause. C'est la pièce la plus chère du vélo.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Remplacer le moteur de la roue arrière
@@ -3548,7 +3556,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>Le moteur tourne normalement quand on l'alimente directement : il n'est pas en cause. C'est la pièce la plus chère du vélo.</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-6">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a06" data-correcte="0" data-explication="Une transmission usée fait du bruit ou patine, elle ne coupe pas l'assistance : ce n'est pas la chaîne d'énergie ici, mais la chaîne d'information qui est interrompue.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Graisser la chaîne et retendre le dérailleur
@@ -3560,7 +3568,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>Une transmission usée fait du bruit ou patine, elle ne coupe pas l'assistance : ce n'est pas la chaîne d'énergie ici, mais la chaîne d'information qui est interrompue.</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-7">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a07" data-correcte="0" data-explication="Cela aggrave : on perd l'outil qui permet justement de contrôler le retour du signal de pédalage. L'écran n'est pas en cause.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Débrancher l'écran pour faire disparaître l'affichage
@@ -3572,7 +3580,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>Cela aggrave : on perd l'outil qui permet justement de contrôler le retour du signal de pédalage. L'écran n'est pas en cause.</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-8">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a08" data-correcte="0" data-explication="L'assistance ne dépend pas de la vitesse mais du pédalage : rouler plus vite ne crée pas le signal manquant. C'est confondre l'effet (aller vite) et la cause (le capteur).">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Rouler plus vite pour que l'assistance finisse par s'enclencher
@@ -3584,7 +3592,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p>L'assistance ne dépend pas de la vitesse mais du pédalage : rouler plus vite ne crée pas le signal manquant. C'est confondre l'effet (aller vite) et la cause (le capteur).</p>
                                 </details>
                             </div>
-                            <div class="action-corrective-ligne">
+                            <div class="action-corrective-ligne" data-ost-bloc="n3-action-9">
                                 <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a09" data-correcte="0" data-explication="Cela ne répare rien. La question posée est technique : il s'agit de rétablir le signal de pédalage, pas de désigner un responsable.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Facturer la réparation à l'usager qui a heurté le trottoir
@@ -3652,7 +3660,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <p>Chaque curseur a cinq crans, et chaque cran porte un mot. Choisissez le mot qui correspond à VOTRE exigence : il n'y a pas de bon réglage, il n'y a que votre cahier des charges. La valeur chiffrée reste affichée en petit sous le curseur. Quand vos contraintes vous conviennent, cliquez sur « Figer vos contraintes ».</p>
                             <p class="note-liberte">Un cran, un mot : « très serré » ou « très large », « très sobre » ou « très gourmande ». Serrez les crans pour un service exigeant, ouvrez-les si vous acceptez des compromis. Les mots s'affinent, mais la mesure chiffrée reste là, en gris, pour que vous sachiez exactement ce que vous demandez.</p>
                             <div class="reglages-contraintes" data-figer="1">
-                                <div class="curseur-contrainte" data-critere="prix" data-sens="max" data-nom="Budget maximal par véhicule">
+                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-budget" data-critere="prix" data-sens="max" data-nom="Budget maximal par véhicule">
                                     <div class="curseur-entete">
                                         <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget maximal par véhicule</label>
                                         <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">moyen</output>
@@ -3670,7 +3678,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p class="curseur-bornes"><span>500 €</span><span class="curseur-mesure" id="mesure-budget">1 500 €</span><span>2 500 €</span></p>
                                 <p class="curseur-aide" id="aide-budget">Prix d'achat d'un véhicule, batterie comprise, pour une flotte de 60.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-critere="autonomie" data-sens="min" data-nom="Autonomie minimale">
+                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-autonomie" data-critere="autonomie" data-sens="min" data-nom="Autonomie minimale">
                                     <div class="curseur-entete">
                                         <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie minimale</label>
                                         <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">moyenne</output>
@@ -3688,7 +3696,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p class="curseur-bornes"><span>30 km</span><span class="curseur-mesure" id="mesure-autonomie">70 km</span><span>110 km</span></p>
                                 <p class="curseur-aide" id="aide-autonomie">Distance à parcourir avec une seule charge : il faut couvrir plusieurs trajets avant de recharger.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-critere="masse" data-sens="max" data-nom="Masse maximale">
+                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-masse" data-critere="masse" data-sens="max" data-nom="Masse maximale">
                                     <div class="curseur-entete">
                                         <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse maximale</label>
                                         <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">moyen</output>
@@ -3706,7 +3714,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p class="curseur-bornes"><span>16 kg</span><span class="curseur-mesure" id="mesure-masse">24 kg</span><span>32 kg</span></p>
                                 <p class="curseur-aide" id="aide-masse">Un véhicule lourd se manipule mal en station et se répare moins facilement sur le trottoir.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-critere="reparabilite" data-sens="min" data-nom="Indice de réparabilité minimal">
+                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-reparabilite" data-critere="reparabilite" data-sens="min" data-nom="Indice de réparabilité minimal">
                                     <div class="curseur-entete">
                                         <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité minimal</label>
                                         <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">moyenne</output>
@@ -3724,7 +3732,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p class="curseur-bornes"><span>4 /10</span><span class="curseur-mesure" id="mesure-reparabilite">6 /10</span><span>8 /10</span></p>
                                 <p class="curseur-aide" id="aide-reparabilite">Note officielle sur 10 : plus elle est haute, plus le véhicule se répare et dure longtemps.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-critere="empreinte" data-sens="max" data-nom="Empreinte carbone maximale">
+                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-empreinte" data-critere="empreinte" data-sens="max" data-nom="Empreinte carbone maximale">
                                     <div class="curseur-entete">
                                         <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone maximale</label>
                                         <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">moyenne</output>
@@ -3742,7 +3750,7 @@ window.__EFFETS_INTERACTIONS__={};
                                     <p class="curseur-bornes"><span>100 kg CO₂e</span><span class="curseur-mesure" id="mesure-empreinte">300 kg CO₂e</span><span>500 kg CO₂e</span></p>
                                 <p class="curseur-aide" id="aide-empreinte">Gaz à effet de serre émis pour fabriquer le véhicule et sa batterie.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-critere="consommation" data-sens="max" data-nom="Consommation maximale">
+                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-consommation" data-critere="consommation" data-sens="max" data-nom="Consommation maximale">
                                     <div class="curseur-entete">
                                         <label for="curseur-consommation"><span aria-hidden="true">⚡</span> Consommation maximale</label>
                                         <output class="curseur-valeur" id="valeur-consommation" for="curseur-consommation">moyenne</output>
@@ -3795,6 +3803,7 @@ window.__EFFETS_INTERACTIONS__={};
                                      role="radiogroup"
                                      aria-label="Cinq véhicules en libre-service à comparer">
                                     <article class="modele-ost" id="modele-ost-1"
+                                             data-ost-bloc="n4-modele-1"
                                              data-rang="1"
                                              data-nom="Modèle A — Le Corso"
                                          data-prix="1090"
@@ -3821,6 +3830,7 @@ window.__EFFETS_INTERACTIONS__={};
                                         </ul>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-2"
+                                             data-ost-bloc="n4-modele-2"
                                              data-rang="2"
                                              data-nom="Modèle B — Le Replié"
                                          data-prix="1390"
@@ -3847,6 +3857,7 @@ window.__EFFETS_INTERACTIONS__={};
                                         </ul>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-3"
+                                             data-ost-bloc="n4-modele-3"
                                              data-rang="3"
                                              data-nom="Modèle C — Le Central"
                                          data-prix="2150"
@@ -3873,6 +3884,7 @@ window.__EFFETS_INTERACTIONS__={};
                                         </ul>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-4"
+                                             data-ost-bloc="n4-modele-4"
                                              data-rang="4"
                                              data-nom="Modèle D — Le Longtail"
                                          data-prix="2690"
@@ -3899,6 +3911,7 @@ window.__EFFETS_INTERACTIONS__={};
                                         </ul>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-5"
+                                             data-ost-bloc="n4-modele-5"
                                              data-rang="5"
                                              data-nom="Modèle E — La Plume"
                                          data-prix="590"
@@ -7875,10 +7888,54 @@ window.__EFFETS_INTERACTIONS__={};
             'solution-choisie', 'confirmation-conception'
         ];
 
+        // ── Portée du correctif ──────────────────────────────────────────────
+        // Un clic désigne d'abord l'élément identifié le plus proche (comportement
+        // historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+        // entier — carte de question, atelier, curseur, modèle de comparateur…) et
+        // « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+        // portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+        // pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+        var SELECTEUR_BLOC = [
+            '[data-ost-bloc]',
+            '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+            '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+            '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+            '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+            '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+            '.zone-exploration', '.ressources-video', '.comparateur-ost'
+        ].join(',');
+
+        var PORTEES = ['element', 'exercice', 'onglet'];
+        var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+        // ── Options du panneau ───────────────────────────────────────────────
+        // Chaque série commence par « ne rien changer » : le panneau ne demande
+        // donc que ce que le professeur veut changer, et le prompt reste court.
+        var OPTIONS_DIFFICULTE = [
+            ['inchangee', 'ne rien changer'],
+            ['augmenter', 'augmenter la difficulté du quiz'],
+            ['reduire', 'réduire la difficulté du quiz']
+        ];
+        var OPTIONS_VISUELS = [
+            ['inchanges', 'ne rien changer'],
+            ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+            ['pixellab', 'PixelLab (API)'],
+            ['icone-standard', 'icône standard (aucune génération)']
+        ];
+        var OPTIONS_CHAMP = [
+            ['inchange', 'ne rien changer'],
+            ['saisie-libre', 'saisie libre (champ texte)'],
+            ['liste-de-choix', 'liste de choix (une réponse parmi N)'],
+            ['jeu-relier', 'jeu pour relier (association)'],
+            ['jeu-graphe', 'jeu de graphe (câbler un réseau)']
+        ];
+
         var arme = false;
-        var elementCourant = null;
+        var origine = null;        // élément réellement cliqué
+        var portee = 'element';    // 'element' | 'exercice' | 'onglet'
         var panneau = null;
         var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier;
+        var zoneChemin, boutonsPortee = [];
 
         function identifiantDe(el) {
             if (!el || !el.getAttribute) return null;
@@ -7897,6 +7954,70 @@ window.__EFFETS_INTERACTIONS__={};
             return null;
         }
 
+        // Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+        // (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+        // dit pas à l'agent quoi corriger.
+        function identifiantBloc(el) {
+            if (!el || !el.getAttribute) return null;
+            var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+            if (pose) return pose;
+            var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+                return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+            });
+            var base = classes[0] || el.tagName.toLowerCase();
+            var onglet = ongletDe(el);
+            var freres = el.parentElement
+                ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+                    return s.classList && s.classList.contains(base);
+                })
+                : [];
+            var rang = freres.indexOf(el) + 1;
+            return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+                   (freres.length > 1 ? '#' + rang : '');
+        }
+
+        function ongletDe(el) {
+            return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+        }
+
+        function libelleOnglet(onglet) {
+            if (!onglet) return '';
+            var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+            var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+            return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+        }
+
+        // L'élément visé, recalculé depuis le clic d'origine selon la portée.
+        function cible() {
+            if (!origine) return null;
+            if (portee === 'onglet') return ongletDe(origine) || origine;
+            if (portee === 'exercice') {
+                var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+                return bloc || origine;
+            }
+            return elementIdentifiable(origine) || origine;
+        }
+
+        function identifiantCourant() {
+            var el = cible();
+            if (!el) return '';
+            if (portee === 'onglet') return el.id || identifiantBloc(el) || '';
+            if (portee === 'exercice') return identifiantBloc(el) || '';
+            return identifiantDe(el) || identifiantBloc(el) || '';
+        }
+
+        function cheminCourant() {
+            if (!origine) return '';
+            var onglet = ongletDe(origine);
+            var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+            var el = elementIdentifiable(origine);
+            var parts = [];
+            if (onglet) parts.push(libelleOnglet(onglet));
+            if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+            if (el && el !== bloc) parts.push(identifiantDe(el));
+            return parts.join(' › ');
+        }
+
         function initialiser() {
             var bouton = document.createElement('button');
             bouton.id = 'ost-bouton-corriger';
@@ -7912,13 +8033,15 @@ window.__EFFETS_INTERACTIONS__={};
             document.body.appendChild(bouton);
 
             // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+            // Un clic dans le panneau n'est jamais une sélection : sans ce garde-fou,
+            // régler une option pouvait re-désigner un bloc de la page.
             document.body.addEventListener('click', function (e) {
                 if (!arme) return;
-                var cible = elementIdentifiable(e.target);
-                if (!cible) return;
+                if (panneau && panneau.contains(e.target)) return;
+                if (e.target === document.body || e.target === document.documentElement) return;
                 e.preventDefault();
                 e.stopPropagation();
-                ouvrirPanneau(cible);
+                ouvrirPanneau(e.target);
             }, true);
 
             document.addEventListener('keydown', function (e) {
@@ -7926,19 +8049,45 @@ window.__EFFETS_INTERACTIONS__={};
             });
         }
 
-        function ouvrirPanneau(el) {
-            elementCourant = el;
+        function ouvrirPanneau(depuis) {
+            origine = depuis;
             var p = construirePanneau();
-            zoneIdentifiant.textContent = identifiantDe(el) || '(sans identifiant)';
-            var texte = String(el.textContent || el.getAttribute('placeholder') || '').trim().replace(/\s+/g, ' ');
-            zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+            majCible();
             p.classList.add('ost-ouvert');
+        }
+
+        // Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+        function majCible() {
+            var el = cible();
+            if (!el) return;
+            if (portee === 'onglet') {
+                var onglet = ongletDe(el) || el;
+                zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+                zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+            } else {
+                zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+                var texte = String(
+                    el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+                ).trim().replace(/\s+/g, ' ');
+                zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+            }
+            if (zoneChemin) zoneChemin.textContent = cheminCourant();
+            boutonsPortee.forEach(function (b) {
+                b.setAttribute('aria-pressed',
+                    b.getAttribute('data-portee') === portee ? 'true' : 'false');
+            });
             majPrompt();
+        }
+
+        function changerPortee(cle) {
+            if (PORTEES.indexOf(cle) === -1) return;
+            portee = cle;
+            majCible();
         }
 
         function fermerPanneau() {
             if (panneau) panneau.classList.remove('ost-ouvert');
-            elementCourant = null;
+            origine = null;
         }
 
         function construirePanneau() {
@@ -7969,6 +8118,36 @@ window.__EFFETS_INTERACTIONS__={};
             panneau.appendChild(zoneIdentifiant);
             panneau.appendChild(zoneApercu);
 
+            // Portée : le réglage le plus important, en tête du panneau. Un clic
+            // désigne d'abord un élément ; ces trois boutons disent s'il faut
+            // corriger ce point précis, tout l'exercice, ou tout le niveau.
+            var blocPortee = document.createElement('div');
+            blocPortee.className = 'ost-champ';
+            var libPortee = document.createElement('span');
+            libPortee.className = 'ost-libelle';
+            libPortee.textContent = 'Portée du correctif';
+            blocPortee.appendChild(libPortee);
+            var rangee = document.createElement('div');
+            rangee.className = 'ost-portees';
+            rangee.setAttribute('role', 'group');
+            rangee.setAttribute('aria-label', 'Portée du correctif');
+            PORTEES.forEach(function (cle) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'ost-portee';
+                b.setAttribute('data-portee', cle);
+                b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+                b.textContent = LIBELLE_PORTEE[cle];
+                b.addEventListener('click', function () { changerPortee(cle); });
+                rangee.appendChild(b);
+                boutonsPortee.push(b);
+            });
+            blocPortee.appendChild(rangee);
+            zoneChemin = document.createElement('p');
+            zoneChemin.className = 'ost-chemin';
+            blocPortee.appendChild(zoneChemin);
+            panneau.appendChild(blocPortee);
+
             panneau.appendChild(champRadio("Type d'erreur", 'ost-type', [
                 'label à changer', 'inconsistance de la réponse'
             ]));
@@ -7977,6 +8156,19 @@ window.__EFFETS_INTERACTIONS__={};
                 "reformuler la question/l'énoncé",
                 "changer le type d'exercice"
             ]));
+
+            // Les trois demandes de fond : niveau, images, forme de l'exercice.
+            // Chacune commence par « ne rien changer » : le prompt ne réclame
+            // que ce que le professeur a réellement choisi.
+            panneau.appendChild(champRadio('Difficulté du quiz', 'ost-difficulte',
+                OPTIONS_DIFFICULTE, 'inchangee',
+                'Agit sur le quiz visé : mêmes notions, mêmes questions, mais des distracteurs plus ou moins exigeants.'));
+            panneau.appendChild(champRadio('Visuels', 'ost-visuels',
+                OPTIONS_VISUELS, 'inchanges',
+                'ComfyUI exige le serveur lancé sur VOTRE machine ; sans lui, l\'agent doit le dire plutôt qu\'inventer une image.'));
+            panneau.appendChild(champRadio("Type de champ ou d'exercice", 'ost-champ',
+                OPTIONS_CHAMP, 'inchange',
+                'Transforme l\'exercice visé dans une forme que le template sait déjà produire.'));
 
             var blocCom = document.createElement('div');
             blocCom.className = 'ost-champ';
@@ -8009,52 +8201,110 @@ window.__EFFETS_INTERACTIONS__={};
 
             var notice = document.createElement('p');
             notice.className = 'ost-notice';
-            notice.textContent = "Collez ce prompt dans l'onglet « Dépôt » du panneau DSH : la tâche se met à la suite (correctif → vérification → publication automatique).";
+            notice.textContent = "Collez ce prompt dans l'onglet « Dépôt » du panneau DSH : la tâche se met à la suite (correctif → vérification → publication automatique). Les réglages de difficulté, de visuels et de type de champ demandent une modification réelle, pas une simple relecture.";
             panneau.appendChild(notice);
 
             document.body.appendChild(panneau);
             return panneau;
         }
 
-        function champRadio(legende, nom, valeurs) {
+        function champRadio(legende, nom, valeurs, defaut, aide) {
             var fieldset = document.createElement('fieldset');
             fieldset.className = 'ost-champ';
             var legend = document.createElement('legend');
             legend.textContent = legende;
             fieldset.appendChild(legend);
             valeurs.forEach(function (valeur) {
+                // Une option s'écrit « code » ou [code, libellé] : le code part dans
+                // le prompt (lisible par script), le libellé s'affiche.
+                var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+                var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
                 var label = document.createElement('label');
                 label.className = 'ost-option';
                 var input = document.createElement('input');
                 input.type = 'radio';
                 input.name = nom;
-                input.value = valeur;
+                input.value = cle;
+                input.checked = (cle === defaut);
                 input.addEventListener('change', majPrompt);
                 label.appendChild(input);
-                label.appendChild(document.createTextNode(valeur));
+                label.appendChild(document.createTextNode(libelle));
                 fieldset.appendChild(label);
             });
+            if (aide) {
+                var p = document.createElement('p');
+                p.className = 'ost-aide';
+                p.textContent = aide;
+                fieldset.appendChild(p);
+            }
             return fieldset;
         }
 
-        function valeurRadio(nom) {
+        function valeurRadio(nom, defaut) {
             var el = document.querySelector('input[name="' + nom + '"]:checked');
-            return el ? el.value : '';
+            return el ? el.value : (defaut || '');
         }
 
+        // Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+        // QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+        // relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+        var CONSIGNES = {
+            difficulte: {
+                'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+                'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+            },
+            visuels: {
+                'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+                'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+                'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+            },
+            champ: {
+                'saisie-libre': "type de champ : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+                'liste-de-choix': "type de champ : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+                'jeu-relier': "type de champ : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+                'jeu-graphe': "type de champ : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+            }
+        };
+
         function genererPrompt() {
-            if (!elementCourant) return '';
+            if (!origine) return '';
             var type = valeurRadio('ost-type');
             var preco = valeurRadio('ost-preco');
             if (!type || !preco) return '';
-            var id = identifiantDe(elementCourant) || '';
+            var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+            var visuels = valeurRadio('ost-visuels', 'inchanges');
+            var champ = valeurRadio('ost-champ', 'inchange');
+            var id = identifiantCourant();
+            var onglet = ongletDe(origine);
             var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
             var lignes = ["## Correctif d'activité"];
             if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+            lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
             if (id) lignes.push('- identifiant: ' + id);
+            if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+            if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
             lignes.push('- type_erreur: ' + type);
             lignes.push('- preconisation: ' + preco);
+            if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+            if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+            if (champ !== 'inchange') lignes.push('- type_champ_demande: ' + champ);
             if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+            var consignes = [];
+            if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+                consignes.push(CONSIGNES.difficulte[difficulte]);
+            }
+            if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+                consignes.push(CONSIGNES.visuels[visuels]);
+            }
+            if (champ !== 'inchange' && CONSIGNES.champ[champ]) {
+                consignes.push(CONSIGNES.champ[champ]);
+            }
+            consignes.push("ensuite : modifier la configuration JSON de l'activité, la régénérer, puis relancer verifier_quiz.py, verifier_parcours.py et verifier_panneau_dev.py — publier seulement si les trois passent.");
+            lignes.push('');
+            lignes.push("## Consigne pour l'agent");
+            consignes.forEach(function (c) { lignes.push('- ' + c); });
             return lignes.join('\n');
         }
 
