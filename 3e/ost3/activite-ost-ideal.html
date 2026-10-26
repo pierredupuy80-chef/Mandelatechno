@@ -823,6 +823,102 @@
             color: var(--couleur-texte-leger);
         }
 
+        /* Mesure chiffrée d'un cran littéral : elle reste discrète, en gris,
+           sous le curseur — le mot choisi est la valeur affichée à droite. */
+        .curseur-mesure {
+            color: var(--couleur-texte-leger);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Contraintes figées : le réglage est verrouillé et visible comme tel. */
+        .reglages-contraintes[data-fige="1"] .curseur-contrainte {
+            border-style: dashed;
+            border-color: var(--couleur-primaire);
+        }
+
+        .reglages-contraintes[data-fige="1"] .curseur-contrainte input[type="range"] {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .contraintes-actions {
+            margin-top: var(--espacement-md);
+        }
+
+        .contraintes-recap {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            margin-top: var(--espacement-md);
+        }
+
+        .contraintes-recap h5 {
+            margin: 0 0 var(--espacement-xs);
+            color: var(--couleur-primaire);
+            font-size: 1rem;
+        }
+
+        .contraintes-recap ul {
+            margin: 0 0 var(--espacement-xs);
+            padding-left: 1.15rem;
+        }
+
+        .contraintes-recap li {
+            margin: 0.15rem 0;
+        }
+
+        .contraintes-recap-note {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .bilan-n4 {
+            background-color: var(--couleur-fond);
+            border: 2px solid #e2e8f0;
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+            margin-top: var(--espacement-md);
+        }
+
+        .bilan-n4 h4 {
+            margin-top: 0;
+            color: var(--couleur-secondaire);
+        }
+
+        .bilan-n4-consigne {
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .bilan-n4-resultat textarea,
+        .bilan-n4-resultat textarea:focus {
+            width: 100%;
+            min-height: 220px;
+            padding: var(--espacement-sm);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            font-family: inherit;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            resize: vertical;
+            background-color: white;
+        }
+
+        .bilan-n4-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+            margin: var(--espacement-sm) 0 0;
+        }
+
+        .bilan-n4-etat {
+            margin: var(--espacement-xs) 0 0;
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+        }
+
         .curseur-aide {
             margin-top: var(--espacement-xs);
             font-size: 0.875rem;
@@ -886,6 +982,14 @@
         .modele-ost.choisi {
             border-color: var(--couleur-succes);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.25);
+        }
+
+        /* Sans verdicts automatiques (comparateur.verdicts = false), la fiche
+           retenue se marque en bleu : un liseré vert laisserait croire que
+           l'élève a « trouvé la bonne réponse ». */
+        .comparateur-ost[data-verdicts="0"] .modele-ost.choisi {
+            border-color: var(--couleur-primaire);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
         }
 
         .modele-entete {
@@ -2988,7 +3092,7 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>Ta démarche de conception est libre : plusieurs modèles peuvent se défendre, et c'est ta justification qui compte. Fixe tes contraintes avec les curseurs, compare les six modèles proposés, puis explique ton choix avec tes mots.</p>
+                    <p>Ta démarche de conception est libre : plusieurs modèles peuvent se défendre, et c'est ta justification qui compte. Exprime le besoin, fixe tes contraintes puis fige-les, compare les six modèles, explique ton choix avec tes mots — et remets ton bilan au professeur.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
@@ -3001,7 +3105,7 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
 
                     <div class="conception-guidee" id="conception-guidee">
                         <div class="etape-conception">
-                            <h4>Étape 1 : Identifier le besoin</h4>
+                            <h4>Étape 1 : Exprimer le besoin</h4>
                             <p>Décris le besoin de ton cousin avec tes mots : qui utilise la trottinette, pour quels trajets, avec quelles difficultés (distance, côte, rangement, transport en commun) ?</p>
                             <textarea
                                 id="besoin-identifie"
@@ -3012,112 +3116,136 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                         </div>
                         <div class="etape-conception">
                             <h4>Étape 2 : Régler mes contraintes</h4>
-                            <p>Déplace les curseurs pour fixer TES contraintes. Il n'y a pas de bon réglage : chaque curseur est une exigence que tu imposes aux six modèles.</p>
-                            <p class="note-liberte">Les curseurs laissent libre cours à ton imagination : serre-les pour un projet exigeant, ouvre-les si tu acceptes des compromis. Les fiches des modèles se mettent à jour en direct : tu vois tout de suite lesquels tiennent dans le cahier des charges que tu viens d'imaginer.</p>
-                            <div class="reglages-contraintes">
+                            <p>Chaque curseur a cinq crans, et chaque cran porte un mot. Choisis le mot qui correspond à TON exigence : il n'y a pas de bon réglage. La valeur chiffrée reste affichée en petit sous le curseur. Quand tes contraintes te conviennent, clique sur « Figer vos contraintes ».</p>
+                            <p class="note-liberte">Un cran, un mot : « ultraléger » ou « très lourd », « très serré » ou « très large ». Serre les crans pour un projet exigeant, ouvre-les si tu acceptes des compromis. Les mots s'affinent, mais la mesure chiffrée reste là, en gris, pour que tu saches exactement ce que tu demandes.</p>
+                            <div class="reglages-contraintes" data-figer="1">
                                 <div class="curseur-contrainte" data-critere="prix" data-sens="max" data-nom="Budget maximal">
                                     <div class="curseur-entete">
                                         <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget maximal</label>
-                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">700 €</output>
+                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">moyen</output>
                                     </div>
                                     <input type="range" id="curseur-budget"
                                            min="200"
-                                           max="1500"
-                                           step="25"
-                                           value="700"
-                                           data-defaut="700"
+                                           max="1400"
+                                           step="300"
+                                           value="800"
+                                           data-defaut="800"
                                            data-unite="€"
+                                           data-niveaux="très serré|serré|moyen|large|très large"
+                                           aria-valuetext="moyen (800 €)"
                                            aria-describedby="aide-budget">
-                                    <p class="curseur-bornes"><span>200 € — serré</span><span>large — 1 500 €</span></p>
+                                    <p class="curseur-bornes"><span>200 €</span><span class="curseur-mesure" id="mesure-budget">800 €</span><span>1 400 €</span></p>
                                 <p class="curseur-aide" id="aide-budget">Prix d'achat de la trottinette, batterie comprise.</p>
                                 </div>
                                 <div class="curseur-contrainte" data-critere="autonomie" data-sens="min" data-nom="Autonomie minimale">
                                     <div class="curseur-entete">
                                         <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie minimale</label>
-                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">20 km</output>
+                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">courte</output>
                                     </div>
                                     <input type="range" id="curseur-autonomie"
                                            min="8"
-                                           max="60"
-                                           step="1"
-                                           value="20"
-                                           data-defaut="20"
+                                           max="48"
+                                           step="10"
+                                           value="18"
+                                           data-defaut="18"
                                            data-unite="km"
+                                           data-niveaux="très courte|courte|moyenne|longue|très longue"
+                                           aria-valuetext="courte (18 km)"
                                            aria-describedby="aide-autonomie">
-                                    <p class="curseur-bornes"><span>8 km — trajets courts</span><span>longues distances — 60 km</span></p>
+                                    <p class="curseur-bornes"><span>8 km</span><span class="curseur-mesure" id="mesure-autonomie">18 km</span><span>48 km</span></p>
                                 <p class="curseur-aide" id="aide-autonomie">Distance que tu veux pouvoir parcourir avec une seule charge, par temps doux.</p>
                                 </div>
                                 <div class="curseur-contrainte" data-critere="masse" data-sens="max" data-nom="Masse maximale">
                                     <div class="curseur-entete">
                                         <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse maximale</label>
-                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">15 kg</output>
+                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">moyen</output>
                                     </div>
                                     <input type="range" id="curseur-masse"
                                            min="6"
                                            max="26"
-                                           step="0.5"
-                                           value="15"
-                                           data-defaut="15"
+                                           step="5"
+                                           value="16"
+                                           data-defaut="16"
                                            data-unite="kg"
+                                           data-niveaux="ultraléger|léger|moyen|lourd|très lourd"
+                                           aria-valuetext="moyen (16 kg)"
                                            aria-describedby="aide-masse">
-                                    <p class="curseur-bornes"><span>6 kg — très légère</span><span>très lourde — 26 kg</span></p>
+                                    <p class="curseur-bornes"><span>6 kg</span><span class="curseur-mesure" id="mesure-masse">16 kg</span><span>26 kg</span></p>
                                 <p class="curseur-aide" id="aide-masse">Une trottinette légère se porte dans les escaliers et se range plus facilement.</p>
                                 </div>
                                 <div class="curseur-contrainte" data-critere="recharge" data-sens="max" data-nom="Temps de recharge maximal">
                                     <div class="curseur-entete">
                                         <label for="curseur-recharge"><span aria-hidden="true">⏱️</span> Temps de recharge maximal</label>
-                                        <output class="curseur-valeur" id="valeur-recharge" for="curseur-recharge">5 h</output>
+                                        <output class="curseur-valeur" id="valeur-recharge" for="curseur-recharge">moyen</output>
                                     </div>
                                     <input type="range" id="curseur-recharge"
                                            min="2"
-                                           max="8"
-                                           step="0.5"
-                                           value="5"
-                                           data-defaut="5"
+                                           max="10"
+                                           step="2"
+                                           value="6"
+                                           data-defaut="6"
                                            data-unite="h"
+                                           data-niveaux="très rapide|rapide|moyen|lent|très lent"
+                                           aria-valuetext="moyen (6 h)"
                                            aria-describedby="aide-recharge">
-                                    <p class="curseur-bornes"><span>2 h — recharge rapide</span><span>recharge lente — 8 h</span></p>
+                                    <p class="curseur-bornes"><span>2 h</span><span class="curseur-mesure" id="mesure-recharge">6 h</span><span>10 h</span></p>
                                 <p class="curseur-aide" id="aide-recharge">Durée nécessaire pour recharger complètement la batterie.</p>
                                 </div>
                                 <div class="curseur-contrainte" data-critere="reparabilite" data-sens="min" data-nom="Indice de réparabilité minimal">
                                     <div class="curseur-entete">
                                         <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité minimal</label>
-                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">6 /10</output>
+                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">moyenne</output>
                                     </div>
                                     <input type="range" id="curseur-reparabilite"
                                            min="3"
-                                           max="10"
-                                           step="0.5"
+                                           max="9"
+                                           step="1.5"
                                            value="6"
                                            data-defaut="6"
                                            data-unite="/10"
+                                           data-niveaux="très basse|basse|moyenne|haute|très haute"
+                                           aria-valuetext="moyenne (6 /10)"
                                            aria-describedby="aide-reparabilite">
-                                    <p class="curseur-bornes"><span>3 /10 — difficile à réparer</span><span>facile à réparer — 10 /10</span></p>
+                                    <p class="curseur-bornes"><span>3 /10</span><span class="curseur-mesure" id="mesure-reparabilite">6 /10</span><span>9 /10</span></p>
                                 <p class="curseur-aide" id="aide-reparabilite">Note officielle sur 10 : plus elle est haute, plus la trottinette est facile à réparer.</p>
                                 </div>
                                 <div class="curseur-contrainte" data-critere="empreinte" data-sens="max" data-nom="Empreinte carbone maximale">
                                     <div class="curseur-entete">
                                         <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone maximale</label>
-                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">300 kg CO₂e</output>
+                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">moyenne</output>
                                     </div>
                                     <input type="range" id="curseur-empreinte"
                                            min="100"
-                                           max="450"
-                                           step="10"
+                                           max="500"
+                                           step="100"
                                            value="300"
                                            data-defaut="300"
                                            data-unite="kg CO₂e"
+                                           data-niveaux="très faible|faible|moyenne|élevée|très élevée"
+                                           aria-valuetext="moyenne (300 kg CO₂e)"
                                            aria-describedby="aide-empreinte">
-                                    <p class="curseur-bornes"><span>100 kg CO₂e — très faible</span><span>très élevée — 450 kg CO₂e</span></p>
+                                    <p class="curseur-bornes"><span>100 kg CO₂e</span><span class="curseur-mesure" id="mesure-empreinte">300 kg CO₂e</span><span>500 kg CO₂e</span></p>
                                 <p class="curseur-aide" id="aide-empreinte">Masse de gaz à effet de serre émise pour fabriquer et utiliser la trottinette.</p>
                                 </div>
+                            </div>
+                            <p class="contraintes-actions"><button type="button" class="bouton-action"
+                                    id="bouton-figer-contraintes"
+                                    data-libelle-figer="Figer vos contraintes"
+                                    data-libelle-modifier="Modifier mes contraintes"
+                                    aria-pressed="false"
+                                    onclick="n4FigerContraintes(this)">Figer vos contraintes</button></p>
+                            <div class="contraintes-recap" id="contraintes-recap" hidden>
+                                <h5>Mes contraintes figées</h5>
+                                <ul id="contraintes-recap-liste"></ul>
+                                <p class="contraintes-recap-note">Les curseurs sont maintenant verrouillés : c'est le cahier des charges que tu imposes aux six modèles. Si tu t'es trompé, clique sur « Modifier mes contraintes ».</p>
                             </div>
                         </div>
                         <div class="etape-conception">
                             <h4>Étape 3 : Comparer les six modèles</h4>
-                            <p>Ces six modèles n'existent pas : ils servent à apprendre à comparer. Trie-les avec le menu, lis leurs caractéristiques, puis clique sur la trottinette que tu retiens. Chaque fiche indique aussi si le modèle respecte les contraintes que tu as réglées à l'étape 2.</p>
+                            <p>Ces six modèles n'existent pas : ils servent à apprendre à comparer. Trie-les avec le menu, lis leurs caractéristiques, compare-les à tes contraintes figées, puis clique sur la trottinette que tu retiens. Aucun voyant vert ni rouge ne te dira si tu as « bon » : c'est ton analyse, et elle seule, qui décide.</p>
                             <div class="comparateur-ost" data-conception-modele
-                                 data-conception-consigne="Choisis un modèle : clique sur la fiche de la trottinette que tu retiens.">
+                                 data-verdicts="0"
+                                 data-conception-consigne="Choisis un modèle : clique sur la fiche de la trottinette que tu retiens, puis justifie ton choix à l'étape 4.">
                                 <div class="comparateur-outils">
                                     <label for="tri-comparateur">Trier les modèles</label>
                                     <select id="tri-comparateur">
@@ -3129,7 +3257,6 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         <option value="empreinte" data-sens="bas">Empreinte carbone : du plus bas au plus haut</option>
                                         <option value="">Ordre du magasin</option>
                                     </select>
-                                    <p class="comparateur-compte" id="comparateur-compte" aria-live="polite"></p>
                                 </div>
                                 <div class="comparateur-modeles" id="comparateur-modeles"
                                      role="radiogroup"
@@ -3153,22 +3280,14 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         </div>
                                     <p class="modele-description">Ultra-légère : on la porte d'une main dans les escaliers.</p>
                                         <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span>'
-                f' <strong>349 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span>'
-                f' <strong>15 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span>'
-                f' <strong>8,5 kg</strong></li>
-                                        <li><span class="modele-critere">Temps de recharge</span>'
-                f' <strong>3,5 h</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span>'
-                f' <strong>8,5 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span>'
-                f' <strong>170 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Vitesse maximale</span>'
-                f' <strong>25 km/h</strong></li>
+                                        <li><span class="modele-critere">Prix d'achat</span> <strong>349 €</strong></li>
+                                        <li><span class="modele-critere">Autonomie</span> <strong>15 km</strong></li>
+                                        <li><span class="modele-critere">Masse</span> <strong>8,5 kg</strong></li>
+                                        <li><span class="modele-critere">Temps de recharge</span> <strong>3,5 h</strong></li>
+                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>8,5 /10</strong></li>
+                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>170 kg CO₂e</strong></li>
+                                        <li><span class="modele-critere">Vitesse maximale</span> <strong>25 km/h</strong></li>
                                         </ul>
-                                        <p class="modele-verdict"></p>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-2"
                                              data-rang="2"
@@ -3189,22 +3308,14 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         </div>
                                     <p class="modele-description">La plus rapide du magasin : elle grimpe les côtes sans effort, mais dépasse la vitesse autorisée.</p>
                                         <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span>'
-                f' <strong>690 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span>'
-                f' <strong>35 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span>'
-                f' <strong>17 kg</strong></li>
-                                        <li><span class="modele-critere">Temps de recharge</span>'
-                f' <strong>4,5 h</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span>'
-                f' <strong>4 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span>'
-                f' <strong>430 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Vitesse maximale</span>'
-                f' <strong>45 km/h</strong></li>
+                                        <li><span class="modele-critere">Prix d'achat</span> <strong>690 €</strong></li>
+                                        <li><span class="modele-critere">Autonomie</span> <strong>35 km</strong></li>
+                                        <li><span class="modele-critere">Masse</span> <strong>17 kg</strong></li>
+                                        <li><span class="modele-critere">Temps de recharge</span> <strong>4,5 h</strong></li>
+                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>4 /10</strong></li>
+                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>430 kg CO₂e</strong></li>
+                                        <li><span class="modele-critere">Vitesse maximale</span> <strong>45 km/h</strong></li>
                                         </ul>
-                                        <p class="modele-verdict"></p>
                                     <p><span class="modele-alerte">⚠ 45 km/h : au-dessus de la limite légale de 25 km/h</span></p>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-3"
@@ -3226,22 +3337,14 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         </div>
                                     <p class="modele-description">Faite pour les longs trajets : lourde et chère, mais infatigable.</p>
                                         <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span>'
-                f' <strong>899 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span>'
-                f' <strong>45 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span>'
-                f' <strong>24 kg</strong></li>
-                                        <li><span class="modele-critere">Temps de recharge</span>'
-                f' <strong>7 h</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span>'
-                f' <strong>7 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span>'
-                f' <strong>390 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Vitesse maximale</span>'
-                f' <strong>25 km/h</strong></li>
+                                        <li><span class="modele-critere">Prix d'achat</span> <strong>899 €</strong></li>
+                                        <li><span class="modele-critere">Autonomie</span> <strong>45 km</strong></li>
+                                        <li><span class="modele-critere">Masse</span> <strong>24 kg</strong></li>
+                                        <li><span class="modele-critere">Temps de recharge</span> <strong>7 h</strong></li>
+                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>7 /10</strong></li>
+                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>390 kg CO₂e</strong></li>
+                                        <li><span class="modele-critere">Vitesse maximale</span> <strong>25 km/h</strong></li>
                                         </ul>
-                                        <p class="modele-verdict"></p>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-4"
                                              data-rang="4"
@@ -3262,22 +3365,14 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         </div>
                                     <p class="modele-description">Conçue pour durer : pièces remplaçables et faible empreinte carbone.</p>
                                         <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span>'
-                f' <strong>529 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span>'
-                f' <strong>22 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span>'
-                f' <strong>12 kg</strong></li>
-                                        <li><span class="modele-critere">Temps de recharge</span>'
-                f' <strong>4 h</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span>'
-                f' <strong>9,5 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span>'
-                f' <strong>110 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Vitesse maximale</span>'
-                f' <strong>25 km/h</strong></li>
+                                        <li><span class="modele-critere">Prix d'achat</span> <strong>529 €</strong></li>
+                                        <li><span class="modele-critere">Autonomie</span> <strong>22 km</strong></li>
+                                        <li><span class="modele-critere">Masse</span> <strong>12 kg</strong></li>
+                                        <li><span class="modele-critere">Temps de recharge</span> <strong>4 h</strong></li>
+                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>9,5 /10</strong></li>
+                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>110 kg CO₂e</strong></li>
+                                        <li><span class="modele-critere">Vitesse maximale</span> <strong>25 km/h</strong></li>
                                         </ul>
-                                        <p class="modele-verdict"></p>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-5"
                                              data-rang="5"
@@ -3298,22 +3393,14 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         </div>
                                     <p class="modele-description">La moins chère : batterie limitée et réparations difficiles.</p>
                                         <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span>'
-                f' <strong>229 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span>'
-                f' <strong>10 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span>'
-                f' <strong>11,5 kg</strong></li>
-                                        <li><span class="modele-critere">Temps de recharge</span>'
-                f' <strong>3 h</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span>'
-                f' <strong>3 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span>'
-                f' <strong>340 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Vitesse maximale</span>'
-                f' <strong>20 km/h</strong></li>
+                                        <li><span class="modele-critere">Prix d'achat</span> <strong>229 €</strong></li>
+                                        <li><span class="modele-critere">Autonomie</span> <strong>10 km</strong></li>
+                                        <li><span class="modele-critere">Masse</span> <strong>11,5 kg</strong></li>
+                                        <li><span class="modele-critere">Temps de recharge</span> <strong>3 h</strong></li>
+                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>3 /10</strong></li>
+                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>340 kg CO₂e</strong></li>
+                                        <li><span class="modele-critere">Vitesse maximale</span> <strong>20 km/h</strong></li>
                                         </ul>
-                                        <p class="modele-verdict"></p>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-6"
                                              data-rang="6"
@@ -3334,22 +3421,14 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                         </div>
                                     <p class="modele-description">Une autonomie record pour les longs trajets, au prix du poids et du budget.</p>
                                         <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span>'
-                f' <strong>1 240 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span>'
-                f' <strong>70 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span>'
-                f' <strong>22 kg</strong></li>
-                                        <li><span class="modele-critere">Temps de recharge</span>'
-                f' <strong>6 h</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span>'
-                f' <strong>6 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span>'
-                f' <strong>350 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Vitesse maximale</span>'
-                f' <strong>25 km/h</strong></li>
+                                        <li><span class="modele-critere">Prix d'achat</span> <strong>1 240 €</strong></li>
+                                        <li><span class="modele-critere">Autonomie</span> <strong>70 km</strong></li>
+                                        <li><span class="modele-critere">Masse</span> <strong>22 kg</strong></li>
+                                        <li><span class="modele-critere">Temps de recharge</span> <strong>6 h</strong></li>
+                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>6 /10</strong></li>
+                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>350 kg CO₂e</strong></li>
+                                        <li><span class="modele-critere">Vitesse maximale</span> <strong>25 km/h</strong></li>
                                         </ul>
-                                        <p class="modele-verdict"></p>
                                     </article>
                                 </div>
                                 <p class="comparateur-choix" aria-live="polite">Modèle que tu retiens :
@@ -3365,6 +3444,21 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                                 data-min="40"
                                 placeholder="Ex. : je retiens La Fourmi Verte parce que son autonomie de 22 km couvre l'aller-retour et que son indice de réparabilité de 9,5/10 permet de la garder longtemps..."
                                 aria-label="Justification du modèle retenu"></textarea>
+                        </div>
+                        <div class="bilan-n4" id="bilan-n4">
+                            <h4 id="bilan-n4-titre">Mon bilan à transmettre au professeur</h4>
+                            <p class="bilan-n4-consigne">Ce bilan n'est envoyé nulle part : il rassemble ton besoin, tes contraintes figées, le modèle que tu retiens et ta justification. Copie-le dans ton espace de travail, ou imprime-le, pour le remettre à ton professeur.</p>
+                            <p class="contraintes-actions"><button type="button" class="bouton-action"
+                                    id="bouton-bilan" onclick="n4GenererBilan()">Générer mon bilan</button></p>
+                            <div class="bilan-n4-resultat" id="bilan-n4-resultat" hidden>
+                                <textarea id="bilan-n4-texte" rows="16" readonly
+                                          aria-labelledby="bilan-n4-titre"></textarea>
+                                <p class="bilan-n4-actions">
+                                    <button type="button" class="bouton-action" onclick="n4CopierBilan()">Copier le bilan</button>
+                                    <button type="button" class="bouton-action" onclick="n4ImprimerBilan()">Imprimer le bilan</button>
+                                </p>
+                                <p class="bilan-n4-etat" id="bilan-n4-etat" role="status" aria-live="polite"></p>
+                            </div>
                         </div>
                     </div>
 
@@ -4016,9 +4110,31 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                 return;
             }
 
+            // Les contraintes figées sont un engagement de l'élève : sans le
+            // gel, il pourrait régler ses curseurs après avoir choisi son
+            // modèle, et le choix ne voudrait plus rien dire. Le gel reste
+            // réversible tant que la conception n'est pas finalisée.
+            const reglagesFiger = document.querySelector(
+                '#contenu-n4-probleme .reglages-contraintes[data-figer="1"]');
+            if (reglagesFiger && !n4EstFige()) {
+                const boutonFiger = document.getElementById('bouton-figer-contraintes');
+                const libelle = boutonFiger
+                    ? String(boutonFiger.textContent || '').trim()
+                    : 'Figer vos contraintes';
+                alert('Fige d\'abord tes contraintes : à l\'étape 2, clique sur « ' +
+                      libelle + ' ».');
+                reglagesFiger.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
             const confirmation = document.getElementById('confirmation-conception');
             confirmation.style.display = 'block';
             confirmation.scrollIntoView({ behavior: 'smooth' });
+
+            // La conception finalisée produit le bilan transmissible, quand la
+            // configuration en déclare un : la démarche se termine par une
+            // trace écrite remise au professeur, pas par un simple « bravo ».
+            if (document.getElementById('bouton-bilan')) n4GenererBilan();
         }
 
         // ============================================
@@ -4057,6 +4173,22 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
             if (!retour) return;
             retour.textContent = message;
             retour.className = 'etape-selection-retour' + (type ? ' ' + type : '');
+        }
+
+        // « Recommencer » efface la sélection et ses marques : l'élève ne doit
+        // pas retrouver une étape déjà validée après avoir demandé à repartir
+        // de zéro.
+        function n4ReinitialiserSelections() {
+            document.querySelectorAll('#contenu-n4-probleme [data-conception-selection]')
+                .forEach(function (conteneur) {
+                    conteneur.removeAttribute('data-termine');
+                    conteneur.querySelectorAll('.choix-contrainte').forEach(function (choix) {
+                        choix.setAttribute('aria-pressed', 'false');
+                    });
+                    n4EffacerVerdicts(conteneur);
+                    n4RetourSelection(conteneur, '', '');
+                    n4CompterSelection(conteneur);
+                });
         }
 
         // Efface les marques et les explications d'une vérification précédente.
@@ -4202,6 +4334,34 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
             return unite ? texte + '\u00a0' + unite : texte;
         }
 
+        // Crans littéraux : un curseur peut déclarer `data-niveaux` — un mot
+        // par cran, séparés par des barres verticales. L'élève choisit alors
+        // un mot (« léger »), pas un nombre ; la mesure chiffrée reste
+        // affichée en gris sous le curseur. Sans cet attribut, le curseur
+        // reste purement chiffré.
+        function n4Niveaux(curseur) {
+            const brut = curseur.getAttribute('data-niveaux') || '';
+            const mots = brut ? brut.split('|') : [];
+            return mots.length >= 2 ? mots : null;
+        }
+
+        function n4Niveau(curseur) {
+            const mots = n4Niveaux(curseur);
+            if (!mots) return null;
+            const mini = parseFloat(curseur.getAttribute('min') || '0');
+            const pas = parseFloat(curseur.getAttribute('step') || '1');
+            if (!pas) return null;
+            const rang = Math.round((parseFloat(curseur.value) - mini) / pas);
+            if (isNaN(rang) || rang < 0 || rang >= mots.length) return null;
+            return { libelle: mots[rang], rang: rang, nombre: mots.length };
+        }
+
+        // Libellé d'un réglage : le mot du cran s'il y en a, sinon la mesure.
+        function n4Libelle(curseur) {
+            const niveau = n4Niveau(curseur);
+            return niveau ? niveau.libelle : n4Formatage(curseur, curseur.value);
+        }
+
         function n4ContraintesReglees() {
             const regles = [];
             const zone = document.getElementById('conception-guidee');
@@ -4228,8 +4388,21 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
             zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
                 const curseur = bloc.querySelector('input[type="range"]');
                 const sortie = bloc.querySelector('.curseur-valeur');
-                if (curseur && sortie) sortie.textContent = n4Formatage(curseur, curseur.value);
+                const mesure = bloc.querySelector('.curseur-mesure');
+                if (!curseur) return;
+                const niveau = n4Niveau(curseur);
+                if (sortie) sortie.textContent = n4Libelle(curseur);
+                if (mesure) mesure.textContent = n4Formatage(curseur, curseur.value);
+                if (niveau) {
+                    curseur.setAttribute('aria-valuetext',
+                        niveau.libelle + ' (' + n4Formatage(curseur, curseur.value) + ')');
+                }
             });
+
+            // Le verdict automatique n'existe que si la configuration le
+            // demande : sans les éléments produits par le générateur, régler
+            // un curseur n'affiche aucun ✔ / ✘. L'élève juge lui-même.
+            if (!zone.querySelector('.comparateur-ost[data-verdicts="1"]')) return;
 
             const modeles = zone.querySelectorAll('.modele-ost');
             let respectent = 0;
@@ -4270,6 +4443,183 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                     compte.textContent = respectent + ' modèles respectent toutes tes contraintes.';
                 }
             }
+        }
+
+        // ============================================
+        // N4 — FIGER LES CONTRAINTES
+        // ============================================
+        //
+        // Figer est l'instant où l'élève s'engage sur son cahier des charges :
+        // les curseurs se verrouillent et le récapitulatif fige les mots
+        // choisis. C'est réversible, pour qu'une erreur de manipulation ne
+        // condamne pas la démarche ; la finalisation, elle, exige le gel.
+
+        function n4EstFige() {
+            const reglages = document.querySelector(
+                '#conception-guidee .reglages-contraintes[data-figer="1"]');
+            return !!reglages && reglages.getAttribute('data-fige') === '1';
+        }
+
+        function n4FigerContraintes(bouton) {
+            const zone = document.getElementById('conception-guidee');
+            if (!zone) return;
+            const reglages = zone.querySelector('.reglages-contraintes[data-figer="1"]');
+            const recap = document.getElementById('contraintes-recap');
+            const liste = document.getElementById('contraintes-recap-liste');
+            if (!reglages) return;
+
+            const fige = reglages.getAttribute('data-fige') === '1';
+            if (fige) {
+                reglages.removeAttribute('data-fige');
+                reglages.querySelectorAll('input[type="range"]').forEach(function (curseur) {
+                    curseur.disabled = false;
+                });
+                if (liste) liste.innerHTML = '';
+                if (recap) recap.hidden = true;
+                if (bouton) {
+                    bouton.textContent = bouton.getAttribute('data-libelle-figer') ||
+                        'Figer vos contraintes';
+                    bouton.setAttribute('aria-pressed', 'false');
+                }
+            } else {
+                reglages.setAttribute('data-fige', '1');
+                reglages.querySelectorAll('input[type="range"]').forEach(function (curseur) {
+                    curseur.disabled = true;
+                });
+                if (liste) {
+                    liste.innerHTML = '';
+                    reglages.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
+                        const curseur = bloc.querySelector('input[type="range"]');
+                        if (!curseur) return;
+                        const item = document.createElement('li');
+                        const nom = document.createElement('strong');
+                        nom.textContent = (bloc.getAttribute('data-nom') || 'Contrainte') + ' : ';
+                        item.appendChild(nom);
+                        const mot = n4Libelle(curseur);
+                        const chiffre = n4Formatage(curseur, curseur.value);
+                        item.appendChild(document.createTextNode(
+                            n4Niveau(curseur) ? mot + ' (' + chiffre + ')' : chiffre));
+                        liste.appendChild(item);
+                    });
+                }
+                if (recap) recap.hidden = false;
+                if (bouton) {
+                    bouton.textContent = bouton.getAttribute('data-libelle-modifier') ||
+                        'Modifier mes contraintes';
+                    bouton.setAttribute('aria-pressed', 'true');
+                }
+            }
+            n4MettreAJourContraintes();
+        }
+
+        // ============================================
+        // N4 — BILAN TRANSMIS AU PROFESSEUR
+        // ============================================
+        //
+        // Aucune donnée ne quitte la page : le bilan est un texte que l'élève
+        // copie ou imprime. Il rassemble besoin, contraintes figées, modèle
+        // retenu et justification — la trace complète de sa démarche.
+
+        function n4BilanTexte() {
+            const zone = document.getElementById('conception-guidee');
+            const titre = document.getElementById('titre-activite');
+            const lignes = [];
+
+            lignes.push('BILAN DE MA DÉMARCHE DE CONCEPTION');
+            if (titre) lignes.push('Activité : ' + String(titre.textContent || '').trim());
+            lignes.push('');
+
+            lignes.push('1. LE BESOIN EXPRIMÉ');
+            const besoin = document.getElementById('besoin-identifie');
+            lignes.push(besoin && besoin.value.trim()
+                ? besoin.value.trim() : '(non renseigné)');
+            lignes.push('');
+
+            lignes.push('2. MES CONTRAINTES');
+            if (zone) {
+                zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
+                    const curseur = bloc.querySelector('input[type="range"]');
+                    if (!curseur) return;
+                    const mot = n4Libelle(curseur);
+                    const chiffre = n4Formatage(curseur, curseur.value);
+                    lignes.push('- ' + (bloc.getAttribute('data-nom') || 'Contrainte') + ' : ' +
+                        (n4Niveau(curseur) ? mot + ' (' + chiffre + ')' : chiffre));
+                });
+            }
+            lignes.push(n4EstFige()
+                ? 'Contraintes figées : oui.'
+                : 'Contraintes figées : NON (l\'élève ne les a pas figées).');
+            lignes.push('');
+
+            lignes.push('3. LE MODÈLE QUE JE RETIENS');
+            const choisi = zone ? zone.querySelector('.modele-ost.choisi') : null;
+            if (choisi) {
+                lignes.push(String(choisi.getAttribute('data-nom') || '').trim());
+                const valeurs = choisi.querySelectorAll('.modele-valeurs li');
+                for (const ligne of valeurs) {
+                    lignes.push('- ' + String(ligne.textContent || '').replace(/\s+/g, ' ').trim());
+                }
+                const alerte = choisi.querySelector('.modele-alerte');
+                if (alerte) lignes.push('Point de vigilance : ' +
+                    String(alerte.textContent || '').replace(/\s+/g, ' ').trim());
+            } else {
+                lignes.push('(aucun modèle retenu)');
+            }
+            lignes.push('');
+
+            lignes.push('4. POURQUOI JE LE RETIENS');
+            const justification = document.getElementById('solution-choisie');
+            lignes.push(justification && justification.value.trim()
+                ? justification.value.trim() : '(non renseigné)');
+            lignes.push('');
+
+            lignes.push('Rien n\'a été envoyé sur Internet : ce bilan est à remettre au professeur.');
+            return lignes.join('\n');
+        }
+
+        function n4GenererBilan() {
+            const resultat = document.getElementById('bilan-n4-resultat');
+            const champ = document.getElementById('bilan-n4-texte');
+            const etat = document.getElementById('bilan-n4-etat');
+            if (!champ) return;
+            champ.value = n4BilanTexte();
+            if (resultat) resultat.hidden = false;
+            if (etat) {
+                etat.textContent = 'Bilan prêt : copie-le ou imprime-le pour le remettre au professeur.';
+            }
+            if (resultat) resultat.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return champ.value;
+        }
+
+        function n4CopierBilan() {
+            const champ = document.getElementById('bilan-n4-texte');
+            const etat = document.getElementById('bilan-n4-etat');
+            if (!champ) return;
+            if (!champ.value) n4GenererBilan();
+            const annoncer = function (message) {
+                if (etat) etat.textContent = message;
+            };
+            // Le presse-papiers n'est pas toujours disponible (contexte non
+            // sécurisé, navigateur ancien) : dans ce cas on sélectionne le
+            // texte pour que l'élève puisse faire Ctrl+C lui-même.
+            const selectionner = function () {
+                champ.focus();
+                champ.select();
+                annoncer('Le bilan est sélectionné : appuie sur Ctrl+C pour le copier.');
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(champ.value).then(function () {
+                    annoncer('Bilan copié : colle-le dans ton espace de travail ou ton message au professeur.');
+                }, selectionner);
+            } else {
+                selectionner();
+            }
+        }
+
+        function n4ImprimerBilan() {
+            const champ = document.getElementById('bilan-n4-texte');
+            if (champ && !champ.value) n4GenererBilan();
+            window.print();
         }
 
         function n4TrierModeles() {
@@ -4323,9 +4673,20 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
             });
             const nom = document.getElementById('modele-choisi-nom');
             if (nom) nom.textContent = 'aucun pour l\'instant';
+            // « Recommencer » défait aussi le gel des contraintes et efface le
+            // bilan : sinon l'élève resterait bloqué sur des curseurs figés.
+            const boutonFiger = document.getElementById('bouton-figer-contraintes');
+            if (boutonFiger && n4EstFige()) n4FigerContraintes(boutonFiger);
+            const bilanResultat = document.getElementById('bilan-n4-resultat');
+            const bilanTexte = document.getElementById('bilan-n4-texte');
+            const bilanEtat = document.getElementById('bilan-n4-etat');
+            if (bilanResultat) bilanResultat.hidden = true;
+            if (bilanTexte) bilanTexte.value = '';
+            if (bilanEtat) bilanEtat.textContent = '';
             zone.querySelectorAll('.curseur-contrainte input[type="range"]').forEach(function (curseur) {
                 const defaut = curseur.getAttribute('data-defaut');
                 if (defaut !== null) curseur.value = defaut;
+                curseur.disabled = false;
             });
             const tri = document.getElementById('tri-comparateur');
             if (tri) tri.value = '';
@@ -4426,6 +4787,11 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                 // aussi de zéro (ce sont des champs hors formulaire, donc
                 // form.reset() ne les voit pas).
                 n4ReinitialiserConception();
+
+                // Étapes à choix multiple : aucune proposition retenue, aucune
+                // marque de vérification. Sans cela, l'élève relancerait
+                // l'activité avec sa sélection précédente déjà validée.
+                n4ReinitialiserSelections();
                 
                 // Réinitialiser les boutons
                 document.querySelectorAll('.bouton-onglet').forEach((bouton, index) => {
