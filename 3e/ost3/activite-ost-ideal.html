@@ -4638,7 +4638,7 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
         // sortie (et refuse de produire si elle est introuvable). Pour
         // reverrouiller une activité déjà générée avant la classe :
         //     python3 mode-developpement.py desactiver ACTIVITE.html
-        const MODE_DEVELOPPEMENT = false;
+        const MODE_DEVELOPPEMENT = true;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -8441,7 +8441,7 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
     // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
     // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
     // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
-    const ACTIVITE_PUBLICATION = "activite-ost-ideal.html";
+    const ACTIVITE_PUBLICATION = "3e/ost3/activite-ost-ideal.html";
 
     (function () {
         if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
@@ -9060,7 +9060,7 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
             if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
                 consignes.push(CONSIGNES.champ[typeChamp]);
             }
-            consignes.push("ensuite : modifier la configuration JSON de l'activité, la régénérer, puis relancer verifier_quiz.py, verifier_parcours.py et verifier_panneau_dev.py — publier seulement si les trois passent.");
+            consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
             lignes.push('');
             lignes.push("## Consigne pour l'agent");
             consignes.forEach(function (c) { lignes.push('- ' + c); });

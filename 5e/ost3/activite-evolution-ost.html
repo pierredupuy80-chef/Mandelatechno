@@ -379,6 +379,65 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
   } catch (e) {}
 })();
 </script>
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer{background:#16202e}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -485,13 +544,13 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
 <header>
     <div class="header-title">
         <h1>L'Évolution des Objets Techniques</h1>
-<button type="button" id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
+<button type="button"  id="bouton-theme" data-ost-id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
 <span class="piste-theme" aria-hidden="true"><span class="curseur-theme"></span></span>
 <span class="libelle-theme">Mode sombre</span>
 </button>
         <span>Séquence 3 • OST1 • Niveau 5ème</span>
     </div>
-    <div class="timer-box" id="chrono">00:00</div>
+    <div class="timer-box"  id="chrono" data-ost-id="chrono">00:00</div>
 </header>
 
 <nav>
@@ -504,7 +563,7 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
 
 <main>
     <!-- ONGLET N1 : MÉMORISER -->
-    <section id="n1" class="tab-content active">
+    <section  id="n1" data-ost-id="n1" class="tab-content active">
         <div class="card objectif">
             <h3>Objectif</h3>
             <p>Mémoriser les grandes époques, les inventeurs clés et les objets techniques qui ont marqué l'histoire de l'écriture et de la communication.</p>
@@ -514,8 +573,8 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
             <p>Réponds aux 10 questions du QCM ci-dessous. Clique sur la réponse qui te semble correcte. Tu auras un retour immédiat et une explication.</p>
         </div>
 
-        <div class="score-display">Score : <span id="quiz-score">0</span> / 10</div>
-        <div class="quiz-container" id="quiz-container">
+        <div class="score-display">Score : <span  id="quiz-score" data-ost-id="quiz-score">0</span> / 10</div>
+        <div class="quiz-container"  id="quiz-container" data-ost-id="quiz-container">
             <!-- Généré par JS -->
         </div>
     
@@ -545,7 +604,7 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
 </section>
 
     <!-- ONGLET N2 : COMPRENDRE -->
-    <section id="n2" class="tab-content">
+    <section  id="n2" data-ost-id="n2" class="tab-content">
         <div class="card objectif">
             <h3>Objectif</h3>
             <p>Comprendre la chronologie des inventions et situer les objets techniques dans leur siècle d'apparition.</p>
@@ -557,16 +616,16 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
                3. Place toutes les inventions correctement !</p>
         </div>
 
-        <div class="score-display">Placements corrects : <span id="timeline-score">0</span> / 8</div>
+        <div class="score-display">Placements corrects : <span  id="timeline-score" data-ost-id="timeline-score">0</span> / 8</div>
         
         <div class="timeline-game">
-            <div class="inventions-pool" id="inventions-pool"></div>
-            <div class="timeline-axis" id="timeline-axis"></div>
+            <div class="inventions-pool"  id="inventions-pool" data-ost-id="inventions-pool"></div>
+            <div class="timeline-axis"  id="timeline-axis" data-ost-id="timeline-axis"></div>
         </div>
     </section>
 
     <!-- ONGLET N3 : APPLIQUER -->
-    <section id="n3" class="tab-content">
+    <section  id="n3" data-ost-id="n3" class="tab-content">
         <div class="card objectif">
             <h3>Objectif</h3>
             <p>Appliquer la notion de famille technique en classant des objets selon leur principe de fonctionnement commun.</p>
@@ -576,16 +635,16 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
             <p>Classe les outils ci-dessous dans leur bonne famille technique. Clique sur un outil puis sur la case de la famille correspondante.</p>
         </div>
 
-        <div class="score-display">Outils bien classés : <span id="classif-score">0</span> / 8</div>
+        <div class="score-display">Outils bien classés : <span  id="classif-score" data-ost-id="classif-score">0</span> / 8</div>
 
         <div class="classification-area">
-            <div class="objects-shelf" id="objects-shelf"></div>
-            <div class="families-grid" id="families-grid"></div>
+            <div class="objects-shelf"  id="objects-shelf" data-ost-id="objects-shelf"></div>
+            <div class="families-grid"  id="families-grid" data-ost-id="families-grid"></div>
         </div>
     </section>
 
     <!-- ONGLET N4 : ANALYSER -->
-    <section id="n4" class="tab-content">
+    <section  id="n4" data-ost-id="n4" class="tab-content">
         <div class="card objectif">
             <h3>Objectif</h3>
             <p>Analyser et comparer différentes solutions techniques qui répondent à une même fonction technique.</p>
@@ -604,16 +663,16 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
             </div>
         </div>
 
-        <div id="comparison-content">
+        <div  id="comparison-content" data-ost-id="comparison-content">
             <table class="comparison-table">
                 <thead>
-                    <tr id="comp-header"></tr>
+                    <tr  id="comp-header" data-ost-id="comp-header"></tr>
                 </thead>
-                <tbody id="comp-body"></tbody>
+                <tbody  id="comp-body" data-ost-id="comp-body"></tbody>
             </table>
 
             <div class="chart-container">
-                <canvas id="radarChart" width="400" height="400"></canvas>
+                <canvas  id="radarChart" data-ost-id="radarChart" width="400" height="400"></canvas>
             </div>
 
             <div class="analysis-question">
@@ -624,7 +683,7 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
     </section>
 
     <!-- ONGLET BILAN -->
-    <section id="bilan" class="tab-content">
+    <section  id="bilan" data-ost-id="bilan" class="tab-content">
         <div class="card bilan">
             <h3>Bilan de la séquence</h3>
             <p>Voici le récapitulatif de ton travail sur l'évolution des objets et systèmes techniques.</p>
@@ -633,15 +692,15 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
         <div class="summary-grid">
             <div class="summary-card">
                 <div>N1 Mémoriser</div>
-                <div class="summary-score" id="final-n1">-/10</div>
+                <div class="summary-score"  id="final-n1" data-ost-id="final-n1">-/10</div>
             </div>
             <div class="summary-card">
                 <div>N2 Comprendre</div>
-                <div class="summary-score" id="final-n2">-/8</div>
+                <div class="summary-score"  id="final-n2" data-ost-id="final-n2">-/8</div>
             </div>
             <div class="summary-card">
                 <div>N3 Appliquer</div>
-                <div class="summary-score" id="final-n3">-/8</div>
+                <div class="summary-score"  id="final-n3" data-ost-id="final-n3">-/8</div>
             </div>
         </div>
 
@@ -1274,5 +1333,694 @@ html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .curseur-theme{back
   :where(html[data-theme="sombre"]) [style*="border:2px solid #fff"],:where(html[data-theme="sombre"]) [style*="border: 2px solid #fff"]{border:2px solid #3a4a63 !important}
 </style>
 <!-- @@MODE-SOMBRE-PAGE-FIN@@ -->
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const ACTIVITE_PUBLICATION = "5e/ost3/activite-evolution-ost.html";
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
 </body>
 </html>

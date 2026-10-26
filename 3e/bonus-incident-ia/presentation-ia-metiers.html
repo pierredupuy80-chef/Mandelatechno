@@ -267,37 +267,96 @@
             }
         }
     </style>
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer{background:#16202e}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🤖 L'Intelligence Artificielle transforme les métiers de demain</h1>
-            <p class="subtitle">Comprendre l'impact de l'IA sur le monde du travail</p>
-            <p style="margin-top: 15px; font-size: 0.95em; color: #888;">Niveau 3ème • Technologie • Cycle 4</p>
+            <h1 data-ost-id="txt-1">🤖 L'Intelligence Artificielle transforme les métiers de demain</h1>
+            <p class="subtitle" data-ost-id="txt-2">Comprendre l'impact de l'IA sur le monde du travail</p>
+            <p style="margin-top: 15px; font-size: 0.95em; color: #888;" data-ost-id="txt-3">Niveau 3ème • Technologie • Cycle 4</p>
         </header>
 
         <!-- Slide 1: Introduction -->
         <div class="slide">
-            <h2>📊 Qu'est-ce que l'IA générative ?</h2>
-            <p>L'<strong>intelligence artificielle générative</strong> est une technologie capable de créer du contenu nouveau : textes, images, code informatique, musique... Elle apprend à partir d'énormes quantités de données.</p>
+            <h2 data-ost-id="txt-4">📊 Qu'est-ce que l'IA générative ?</h2>
+            <p data-ost-id="txt-5">L'<strong>intelligence artificielle générative</strong> est une technologie capable de créer du contenu nouveau : textes, images, code informatique, musique... Elle apprend à partir d'énormes quantités de données.</p>
             
             <div class="highlight">
                 <strong>Exemples concrets :</strong> ChatGPT rédige des textes, Midjourney crée des images, GitHub Copilot aide à programmer.
             </div>
 
-            <p>Cette technologie bouleverse déjà le monde du travail. Découvrons comment !</p>
+            <p data-ost-id="txt-6">Cette technologie bouleverse déjà le monde du travail. Découvrons comment !</p>
         </div>
 
         <!-- Slide 2: Impact chiffré - Sources fiables -->
         <div class="slide">
-            <h2>⚠️ Un impact mesurable sur l'emploi</h2>
+            <h2 data-ost-id="txt-7">⚠️ Un impact mesurable sur l'emploi</h2>
             
             <div class="stat-box">
                 <span class="stat-number">30%</span>
                 <span class="stat-label">Baisse du taux d'embauche en CDI pour les jeunes dans les métiers exposés à l'IA</span>
             </div>
 
-            <p>Selon une étude de la <strong>Banque de France</strong>, l'arrivée de l'IA générative a fait chuter de <strong>30% le taux d'embauche des jeunes en CDI</strong> dans les métiers les plus exposés à cette technologie.</p>
+            <p data-ost-id="txt-8">Selon une étude de la <strong>Banque de France</strong>, l'arrivée de l'IA générative a fait chuter de <strong>30% le taux d'embauche des jeunes en CDI</strong> dans les métiers les plus exposés à cette technologie.</p>
 
             <div class="highlight">
                 <strong>Source institutionnelle :</strong> Cette donnée provient de la Banque de France, organisme officiel qui analyse les tendances économiques françaises.
@@ -306,51 +365,51 @@
             <div class="grid-2">
                 <div class="card">
                     <div class="icon">📉</div>
-                    <h4>Métiers les plus touchés</h4>
+                    <h4 data-ost-id="txt-9">Métiers les plus touchés</h4>
                     <ul>
-                        <li>Rédaction et traduction</li>
-                        <li>Service client</li>
-                        <li>Comptabilité basique</li>
-                        <li>Programmation simple</li>
+                        <li data-ost-id="txt-10">Rédaction et traduction</li>
+                        <li data-ost-id="txt-11">Service client</li>
+                        <li data-ost-id="txt-12">Comptabilité basique</li>
+                        <li data-ost-id="txt-13">Programmation simple</li>
                     </ul>
                 </div>
                 <div class="card">
                     <div class="icon">📈</div>
-                    <h4>Nouveaux métiers créés</h4>
+                    <h4 data-ost-id="txt-14">Nouveaux métiers créés</h4>
                     <ul>
-                        <li>Prompt engineer (spécialiste IA)</li>
-                        <li>Éthicien de l'IA</li>
-                        <li>Formateur en IA</li>
-                        <li>Superviseur de systèmes IA</li>
+                        <li data-ost-id="txt-15">Prompt engineer (spécialiste IA)</li>
+                        <li data-ost-id="txt-16">Éthicien de l'IA</li>
+                        <li data-ost-id="txt-17">Formateur en IA</li>
+                        <li data-ost-id="txt-18">Superviseur de systèmes IA</li>
                     </ul>
                 </div>
             </div>
 
-            <p><small>Source : <a href="https://www.banque-france.fr/fr/publications-et-statistiques/publications/ia-generative-les-premiers-changements-du-marche-du-travail-sur-les-jeunes" target="_blank">Banque de France — IA générative et marché du travail</a></small></p>
+            <p data-ost-id="txt-19"><small>Source : <a href="https://www.banque-france.fr/fr/publications-et-statistiques/publications/ia-generative-les-premiers-changements-du-marche-du-travail-sur-les-jeunes" target="_blank">Banque de France — IA générative et marché du travail</a></small></p>
         </div>
 
         <!-- Slide 3: Métiers transformés -->
         <div class="slide">
-            <h2>🔄 Les métiers se transforment, ils ne disparaissent pas tous</h2>
+            <h2 data-ost-id="txt-20">🔄 Les métiers se transforment, ils ne disparaissent pas tous</h2>
             
-            <p>L'IA ne supprime pas forcément les emplois, mais elle change la façon de travailler. Voici quelques exemples :</p>
+            <p data-ost-id="txt-21">L'IA ne supprime pas forcément les emplois, mais elle change la façon de travailler. Voici quelques exemples :</p>
 
             <div class="timeline">
                 <div class="timeline-item">
                     <span class="year">Médecin</span>
-                    <p>L'IA aide au diagnostic en analysant des radios et scanners. Le médecin garde la décision finale et le contact humain avec le patient.</p>
+                    <p data-ost-id="txt-22">L'IA aide au diagnostic en analysant des radios et scanners. Le médecin garde la décision finale et le contact humain avec le patient.</p>
                 </div>
                 <div class="timeline-item">
                     <span class="year">Journaliste</span>
-                    <p>L'IA peut rédiger des articles simples (résultats sportifs, météo). Le journaliste se concentre sur les enquêtes approfondies et les interviews.</p>
+                    <p data-ost-id="txt-23">L'IA peut rédiger des articles simples (résultats sportifs, météo). Le journaliste se concentre sur les enquêtes approfondies et les interviews.</p>
                 </div>
                 <div class="timeline-item">
                     <span class="year">Designer</span>
-                    <p>L'IA génère rapidement des propositions visuelles. Le designer choisit, affine et apporte sa créativité unique.</p>
+                    <p data-ost-id="txt-24">L'IA génère rapidement des propositions visuelles. Le designer choisit, affine et apporte sa créativité unique.</p>
                 </div>
                 <div class="timeline-item">
                     <span class="year">Programmeur</span>
-                    <p>L'IA écrit du code basique. Le développeur conçoit l'architecture globale et résout les problèmes complexes.</p>
+                    <p data-ost-id="txt-25">L'IA écrit du code basique. Le développeur conçoit l'architecture globale et résout les problèmes complexes.</p>
                 </div>
             </div>
 
@@ -361,12 +420,12 @@
 
         <!-- Slide 4: Questions ouvertes - Réflexion -->
         <div class="slide">
-            <h2>💭 Réfléchissons ensemble : Comment l'IA impacte-t-elle ces métiers ?</h2>
+            <h2 data-ost-id="txt-26">💭 Réfléchissons ensemble : Comment l'IA impacte-t-elle ces métiers ?</h2>
             
-            <p>Par îlot (4-5 élèves), choisissez UN métier ci-dessous et discutez pendant 5 minutes :</p>
+            <p data-ost-id="txt-27">Par îlot (4-5 élèves), choisissez UN métier ci-dessous et discutez pendant 5 minutes :</p>
 
             <div class="question-box">
-                <h3>Questions de réflexion</h3>
+                <h3 data-ost-id="txt-28">Questions de réflexion</h3>
                 
                 <div class="question-item">
                     <strong>1. Professeur :</strong> Comment l'IA pourrait-elle aider un enseignant dans son travail quotidien ? Quelles tâches resteront humaines ?
@@ -400,30 +459,30 @@
 
         <!-- Slide 5: Compétences importantes -->
         <div class="slide">
-            <h2>🎯 Les compétences essentielles pour demain</h2>
+            <h2 data-ost-id="txt-29">🎯 Les compétences essentielles pour demain</h2>
             
-            <p>Dans un monde où l'IA fait certaines tâches automatiquement, quelles compétences deviennent précieuses ?</p>
+            <p data-ost-id="txt-30">Dans un monde où l'IA fait certaines tâches automatiquement, quelles compétences deviennent précieuses ?</p>
 
             <div class="grid-2">
                 <div class="card">
                     <div class="icon">🧠</div>
-                    <h4>Pensée critique</h4>
-                    <p>Savoir vérifier l'information, détecter les erreurs de l'IA, prendre des décisions éclairées.</p>
+                    <h4 data-ost-id="txt-31">Pensée critique</h4>
+                    <p data-ost-id="txt-32">Savoir vérifier l'information, détecter les erreurs de l'IA, prendre des décisions éclairées.</p>
                 </div>
                 <div class="card">
                     <div class="icon">💡</div>
-                    <h4>Créativité</h4>
-                    <p>Innover, imaginer des solutions originales, penser "hors des sentiers battus".</p>
+                    <h4 data-ost-id="txt-33">Créativité</h4>
+                    <p data-ost-id="txt-34">Innover, imaginer des solutions originales, penser "hors des sentiers battus".</p>
                 </div>
                 <div class="card">
                     <div class="icon">🤝</div>
-                    <h4>Collaboration</h4>
-                    <p>Travailler en équipe, communiquer efficacement, comprendre les autres.</p>
+                    <h4 data-ost-id="txt-35">Collaboration</h4>
+                    <p data-ost-id="txt-36">Travailler en équipe, communiquer efficacement, comprendre les autres.</p>
                 </div>
                 <div class="card">
                     <div class="icon">📚</div>
-                    <h4>Apprentissage continu</h4>
-                    <p>S'adapter aux nouvelles technologies, apprendre tout au long de sa vie.</p>
+                    <h4 data-ost-id="txt-37">Apprentissage continu</h4>
+                    <p data-ost-id="txt-38">S'adapter aux nouvelles technologies, apprendre tout au long de sa vie.</p>
                 </div>
             </div>
 
@@ -434,36 +493,36 @@
 
         <!-- Slide 6: Ressources complémentaires -->
         <div class="slide">
-            <h2>📚 Pour aller plus loin</h2>
+            <h2 data-ost-id="txt-39">📚 Pour aller plus loin</h2>
             
-            <p>Voici des ressources gratuites et fiables pour approfondir le sujet :</p>
+            <p data-ost-id="txt-40">Voici des ressources gratuites et fiables pour approfondir le sujet :</p>
 
             <div class="grid-2">
                 <div class="card">
-                    <h4>🎥 Vidéos</h4>
+                    <h4 data-ost-id="txt-41">🎥 Vidéos</h4>
                     <ul>
-                        <li><a href="https://pixees.fr/ma-vie-avec-lia-une-serie-video/" target="_blank">Pixees — « Ma vie avec l'IA »</a> (série vidéo, Inria)</li>
-                        <li><a href="https://enseignants.lumni.fr/parcours/1628/une-histoire-de-l-intelligence-artificielle.html" target="_blank">Lumni — Histoire de l'IA</a> (France Télévisions)</li>
+                        <li data-ost-id="txt-42"><a href="https://pixees.fr/ma-vie-avec-lia-une-serie-video/" target="_blank">Pixees — « Ma vie avec l'IA »</a> (série vidéo, Inria)</li>
+                        <li data-ost-id="txt-43"><a href="https://enseignants.lumni.fr/parcours/1628/une-histoire-de-l-intelligence-artificielle.html" target="_blank">Lumni — Histoire de l'IA</a> (France Télévisions)</li>
                     </ul>
                 </div>
                 <div class="card">
-                    <h4>📊 Infographies interactives</h4>
+                    <h4 data-ost-id="txt-44">📊 Infographies interactives</h4>
                     <ul>
-                        <li><a href="https://monjobendanger.fr/classements" target="_blank">Mon Job en Danger</a> (simulateur de risques métiers)</li>
-                        <li><a href="https://www.strategie-plan.gouv.fr/datavisualisation-les-metiers-en-2030" target="_blank">France Stratégie — Métiers 2030</a></li>
+                        <li data-ost-id="txt-45"><a href="https://monjobendanger.fr/classements" target="_blank">Mon Job en Danger</a> (simulateur de risques métiers)</li>
+                        <li data-ost-id="txt-46"><a href="https://www.strategie-plan.gouv.fr/datavisualisation-les-metiers-en-2030" target="_blank">France Stratégie — Métiers 2030</a></li>
                     </ul>
                 </div>
                 <div class="card">
-                    <h4>📝 Fiches pédagogiques</h4>
+                    <h4 data-ost-id="txt-47">📝 Fiches pédagogiques</h4>
                     <ul>
-                        <li><a href="https://www.1jour1actu.com/wp-content/uploads/2023/09/1J1A_405_fiche-peda_poster_intelligence-artificielle-1.pdf" target="_blank">1jour1actu — Fiche IA</a> (PDF, cycle 4)</li>
-                        <li><a href="https://pixees.fr/encadre-scientifique-quest-ce-que-lintelligence-artificielle/" target="_blank">Pixees — Qu'est-ce que l'IA ?</a></li>
+                        <li data-ost-id="txt-48"><a href="https://www.1jour1actu.com/wp-content/uploads/2023/09/1J1A_405_fiche-peda_poster_intelligence-artificielle-1.pdf" target="_blank">1jour1actu — Fiche IA</a> (PDF, cycle 4)</li>
+                        <li data-ost-id="txt-49"><a href="https://pixees.fr/encadre-scientifique-quest-ce-que-lintelligence-artificielle/" target="_blank">Pixees — Qu'est-ce que l'IA ?</a></li>
                     </ul>
                 </div>
                 <div class="card">
-                    <h4>💼 Orientation</h4>
+                    <h4 data-ost-id="txt-50">💼 Orientation</h4>
                     <ul>
-                        <li><a href="https://www.francetravail.fr/actualites/le-dossier/les-metiers-de-demain/ia-les-metiers-qui-recrutent-le.html" target="_blank">France Travail — Métiers IA qui recrutent</a></li>
+                        <li data-ost-id="txt-51"><a href="https://www.francetravail.fr/actualites/le-dossier/les-metiers-de-demain/ia-les-metiers-qui-recrutent-le.html" target="_blank">France Travail — Métiers IA qui recrutent</a></li>
                     </ul>
                 </div>
             </div>
@@ -475,15 +534,15 @@
 
         <!-- Slide 7: Conclusion -->
         <div class="slide">
-            <h2>🚀 Et toi, comment te préparer ?</h2>
+            <h2 data-ost-id="txt-52">🚀 Et toi, comment te préparer ?</h2>
             
-            <h3>Conseils pratiques :</h3>
+            <h3 data-ost-id="txt-53">Conseils pratiques :</h3>
             <ul>
-                <li><strong>Explore l'IA dès maintenant :</strong> Essaie des outils comme ChatGPT (avec supervision adulte) pour comprendre comment ça fonctionne</li>
-                <li><strong>Développe ta créativité :</strong> Arts, musique, écriture, projets personnels...</li>
-                <li><strong>Apprends à coder :</strong> La programmation reste une compétence très demandée</li>
-                <li><strong>Reste curieux :</strong> Pose-toi des questions, cherche des réponses, sois actif dans ton apprentissage</li>
-                <li><strong>Travaille en équipe :</strong> Les projets collaboratifs te préparent au monde professionnel</li>
+                <li data-ost-id="txt-54"><strong>Explore l'IA dès maintenant :</strong> Essaie des outils comme ChatGPT (avec supervision adulte) pour comprendre comment ça fonctionne</li>
+                <li data-ost-id="txt-55"><strong>Développe ta créativité :</strong> Arts, musique, écriture, projets personnels...</li>
+                <li data-ost-id="txt-56"><strong>Apprends à coder :</strong> La programmation reste une compétence très demandée</li>
+                <li data-ost-id="txt-57"><strong>Reste curieux :</strong> Pose-toi des questions, cherche des réponses, sois actif dans ton apprentissage</li>
+                <li data-ost-id="txt-58"><strong>Travaille en équipe :</strong> Les projets collaboratifs te préparent au monde professionnel</li>
             </ul>
 
             <div class="stat-box">
@@ -497,12 +556,701 @@
         </div>
 
         <footer>
-            <p>Présentation créée pour le cours de Technologie - Niveau 3ème</p>
-            <p>Programme officiel BO n°9 du 29 février 2024 - Cycle 4</p>
-            <p class="mention-rgpd">🔒 Aucune donnée personnelle n'est collectée sur cette page</p>
+            <p data-ost-id="txt-59">Présentation créée pour le cours de Technologie - Niveau 3ème</p>
+            <p data-ost-id="txt-60">Programme officiel BO n°9 du 29 février 2024 - Cycle 4</p>
+            <p class="mention-rgpd" data-ost-id="txt-61">🔒 Aucune donnée personnelle n'est collectée sur cette page</p>
         </footer>
     </div>
 
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const ACTIVITE_PUBLICATION = "3e/bonus-incident-ia/presentation-ia-metiers.html";
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
 </body>
 </html>

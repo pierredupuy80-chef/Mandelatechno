@@ -4863,7 +4863,7 @@ window.__EFFETS_INTERACTIONS__={};
         // sortie (et refuse de produire si elle est introuvable). Pour
         // reverrouiller une activité déjà générée avant la classe :
         //     python3 mode-developpement.py desactiver ACTIVITE.html
-        const MODE_DEVELOPPEMENT = false;
+        const MODE_DEVELOPPEMENT = true;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -9286,7 +9286,7 @@ window.__EFFETS_INTERACTIONS__={};
             if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
                 consignes.push(CONSIGNES.champ[typeChamp]);
             }
-            consignes.push("ensuite : modifier la configuration JSON de l'activité, la régénérer, puis relancer verifier_quiz.py, verifier_parcours.py et verifier_panneau_dev.py — publier seulement si les trois passent.");
+            consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
             lignes.push('');
             lignes.push("## Consigne pour l'agent");
             consignes.forEach(function (c) { lignes.push('- ' + c); });

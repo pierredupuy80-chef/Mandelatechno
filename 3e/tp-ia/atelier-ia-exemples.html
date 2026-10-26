@@ -227,6 +227,65 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
   } catch (e) {}
 })();
 </script>
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer{background:#16202e}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
 </head>
 <body>
 
@@ -321,7 +380,7 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
 
 
 <header>
-  <div class="onglets" id="onglets">
+  <div class="onglets"  id="onglets" data-ost-id="onglets">
     <button data-onglet="chiffres" class="actif">1. Supervisé&nbsp;: les chiffres</button>
     <button data-onglet="sons">2. Auto-supervisé&nbsp;: les sons</button>
     <button data-onglet="echecs">3. Renforcement&nbsp;: les échecs</button>
@@ -330,17 +389,17 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     <button data-onglet="poesie">6. Bonus&nbsp;: le défi poésie</button>
   </div>
 </header>
-<button type="button" id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
+<button type="button"  id="bouton-theme" data-ost-id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
 <span class="piste-theme" aria-hidden="true"><span class="curseur-theme"></span></span>
 <span class="libelle-theme">Mode sombre</span>
 </button>
 
 <main>
 <!-- ===================== ATELIER (les 3 onglets « supervisé » ont la même page) ===================== -->
-<section id="atelier" class="actif">
+<section  id="atelier" data-ost-id="atelier" class="actif">
 
-  <h2 id="titre-atelier">Apprentissage supervisé — les chiffres</h2>
-  <p class="consigne" id="sous-titre-atelier">Est-ce un 3 ou un 8 ?</p>
+  <h2  id="titre-atelier" data-ost-id="titre-atelier">Apprentissage supervisé — les chiffres</h2>
+  <p class="consigne"  id="sous-titre-atelier" data-ost-id="sous-titre-atelier">Est-ce un 3 ou un 8 ?</p>
 
   <!-- ============ 1. ENTRAÎNEMENT ============ -->
   <div class="carte">
@@ -353,26 +412,26 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       elle cherche parmi ses exemples celle qui lui ressemble le plus, et donne la même réponse.
       Voici les <b>10 exemples étiquetés</b> (« ceci est un 3 », « ceci est un 8 ») qui vont lui
       servir de référence.</p>
-    <div id="zone-exemples"></div>
-    <p class="consigne" id="etat-entrainement">L'IA n'a pas encore été entraînée.</p>
-    <canvas class="reseau" id="reseau-entrainement" width="880" height="210"></canvas>
+    <div  id="zone-exemples" data-ost-id="zone-exemples"></div>
+    <p class="consigne"  id="etat-entrainement" data-ost-id="etat-entrainement">L'IA n'a pas encore été entraînée.</p>
+    <canvas class="reseau"  id="reseau-entrainement" data-ost-id="reseau-entrainement" width="880" height="210"></canvas>
     <div class="boutons">
-      <button class="act vert" id="btn-entrainer">▶ Lancer l'entraînement</button>
-      <button class="act sec" id="btn-oublier">Tout oublier et recommencer</button>
+      <button class="act vert"  id="btn-entrainer" data-ost-id="btn-entrainer">▶ Lancer l'entraînement</button>
+      <button class="act sec"  id="btn-oublier" data-ost-id="btn-oublier">Tout oublier et recommencer</button>
     </div>
-    <div id="score-entrainement"></div>
-    <div id="erreurs-entrainement"></div>
+    <div  id="score-entrainement" data-ost-id="score-entrainement"></div>
+    <div  id="erreurs-entrainement" data-ost-id="erreurs-entrainement"></div>
 
     <div class="encadre orange">
       <p class="consigne" style="margin-top:0"><b>Deux options</b> pour changer les données
         d'entraînement. Clique pour activer ou désactiver, puis relance l'entraînement.</p>
       <div class="boutons">
-        <button class="act sec opt-toggle" id="opt-ratees" disabled>
-          Corriger ses erreurs (<span id="nb-ratees">0</span> images ratées)</button>
-        <button class="act sec opt-toggle" id="opt-biais">
+        <button class="act sec opt-toggle"  id="opt-ratees" data-ost-id="opt-ratees" disabled>
+          Corriger ses erreurs (<span  id="nb-ratees" data-ost-id="nb-ratees">0</span> images ratées)</button>
+        <button class="act sec opt-toggle"  id="opt-biais" data-ost-id="opt-biais">
           Ajouter une donnée mal étiquetée</button>
       </div>
-      <p class="note" id="note-options">Sans option : 10 exemples, tous justes.</p>
+      <p class="note"  id="note-options" data-ost-id="note-options">Sans option : 10 exemples, tous justes.</p>
     </div>
   </div>
 
@@ -387,24 +446,24 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       ne les a jamais vues. Clique sur <b>« Reconnaître les 10 chiffres »</b> : chaque image traverse
       le réseau de neurones, et l'IA répond en la comparant à ses exemples. <b>Elle n'apprend rien
       de plus ici</b> : elle utilise seulement ce qu'elle a mémorisé pendant l'entraînement.</p>
-    <canvas class="reseau" id="reseau-detection" width="880" height="210"></canvas>
+    <canvas class="reseau"  id="reseau-detection" data-ost-id="reseau-detection" width="880" height="210"></canvas>
     <div class="boutons">
-      <button class="act" id="btn-reconnaitre">▶ Reconnaître les 10 <span class="mot-objets">chiffres</span></button>
+      <button class="act"  id="btn-reconnaitre" data-ost-id="btn-reconnaitre">▶ Reconnaître les 10 <span class="mot-objets">chiffres</span></button>
     </div>
     <div class="encadre">
-      <span class="score" id="score-test">0 bonne réponse sur 0</span>
-      <div class="cases" id="cases-test"></div>
-      <p class="note" id="note-test">L'IA n'a pas encore répondu.</p>
+      <span class="score"  id="score-test" data-ost-id="score-test">0 bonne réponse sur 0</span>
+      <div class="cases"  id="cases-test" data-ost-id="cases-test"></div>
+      <p class="note"  id="note-test" data-ost-id="note-test">L'IA n'a pas encore répondu.</p>
     </div>
-    <div class="encadre orange" id="explication-erreurs" style="display:none">
+    <div class="encadre orange"  id="explication-erreurs" data-ost-id="explication-erreurs" style="display:none">
       <p class="consigne"><b>Pourquoi l'IA se trompe-t-elle ?</b> En mode utilisation, l'IA ne peut
         pas corriger ses erreurs : elle compare simplement chaque image à ses exemples d'entraînement
         et donne la réponse du plus ressemblant. Si aucune image d'entraînement ne ressemble assez,
         elle se trompe. C'est normal — et c'est exactement pour cela qu'il faut <b>beaucoup d'exemples
         variés</b> pendant l'entraînement.</p>
     </div>
-    <div id="zone-recap"></div>
-    <div id="zone-lecon"></div>
+    <div  id="zone-recap" data-ost-id="zone-recap"></div>
+    <div  id="zone-lecon" data-ost-id="zone-lecon"></div>
   </div>
 
   <!-- ============ 3. À RETENIR ============ -->
@@ -438,7 +497,7 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
   </div>
 </section>
 <!-- ===================== 2. APPRENTISSAGE AUTO-SUPERVISÉ : LES SONS ===================== -->
-<section id="sons">
+<section  id="sons" data-ost-id="sons">
   <h2>Apprentissage auto-supervisé — les sons</h2>
   <p class="consigne">Un son, pour un ordinateur, c'est une suite de nombres : on le dessine
     en <b>18 colonnes de temps</b> sur <b>8 bandes de fréquences</b> (en bas les sons graves,
@@ -454,7 +513,7 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     </div>
     <p class="consigne">Voici les <b>5 sons</b> que l'IA a dans sa mémoire. Clique sur un dessin
       pour l'entendre. Personne ne leur a donné de nom : elle connaît seulement leur forme.</p>
-    <div id="sons-exemples"></div>
+    <div  id="sons-exemples" data-ost-id="sons-exemples"></div>
   </div>
 
   <!-- ============ ÉTAPE 2 : utilisation ============ -->
@@ -470,33 +529,33 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       elle ne sera pas identique.</b></p>
     <p class="encadre orange" style="margin-top:6px"><b>Attention :</b> l'IA <b>n'apprend pas</b>
       ici. Elle utilise les sons de l'étape 1.</p>
-    <p class="question" id="sons-question">—</p>
+    <p class="question"  id="sons-question" data-ost-id="sons-question">—</p>
 
     <div class="rangee">
       <div>
         <p class="note">Ce que l'IA entend (le morceau caché est gris)&nbsp;:</p>
-        <div id="sons-masque"></div>
+        <div  id="sons-masque" data-ost-id="sons-masque"></div>
       </div>
-      <div id="sons-reponse"></div>
+      <div  id="sons-reponse" data-ost-id="sons-reponse"></div>
     </div>
 
-    <div class="reseau-wrap" id="reseau-wrap-sons">
-      <canvas class="reseau" id="reseau-sons" width="880" height="170"></canvas>
-      <p class="legende-reseau utilisation" id="legende-reseau-sons">Le son traverse le réseau de neurones.</p>
+    <div class="reseau-wrap"  id="reseau-wrap-sons" data-ost-id="reseau-wrap-sons">
+      <canvas class="reseau"  id="reseau-sons" data-ost-id="reseau-sons" width="880" height="170"></canvas>
+      <p class="legende-reseau utilisation"  id="legende-reseau-sons" data-ost-id="legende-reseau-sons">Le son traverse le réseau de neurones.</p>
     </div>
 
     <div class="boutons">
-      <button class="act" id="btn-sons-deviner">Générer le son manquant</button>
-      <button class="act sec" id="btn-sons-suivant">Son suivant</button>
-      <button class="act sec" id="btn-sons-auto" style="display:none">Deviner les derniers automatiquement</button>
+      <button class="act"  id="btn-sons-deviner" data-ost-id="btn-sons-deviner">Générer le son manquant</button>
+      <button class="act sec"  id="btn-sons-suivant" data-ost-id="btn-sons-suivant">Son suivant</button>
+      <button class="act sec"  id="btn-sons-auto" data-ost-id="btn-sons-auto" style="display:none">Deviner les derniers automatiquement</button>
     </div>
 
-    <div id="sons-pourquoi"></div>
+    <div  id="sons-pourquoi" data-ost-id="sons-pourquoi"></div>
 
     <div class="encadre">
-      <span class="score" id="sons-score">0 barre retrouvée</span>
-      <div class="cases" id="sons-cases"></div>
-      <p class="note" id="sons-note">L'IA n'a pas encore deviné.</p>
+      <span class="score"  id="sons-score" data-ost-id="sons-score">0 barre retrouvée</span>
+      <div class="cases"  id="sons-cases" data-ost-id="sons-cases"></div>
+      <p class="note"  id="sons-note" data-ost-id="sons-note">L'IA n'a pas encore deviné.</p>
     </div>
   </div>
 
@@ -555,12 +614,12 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       la médiathèque libre de Wikipédia. Ils ont été <b>raccourcis en extraits d'une à deux secondes</b>, convertis en WAV
       mono 16 bits / 22 kHz et normalisés. Les crédits complets sont aussi dans le fichier
       <code>CREDITS-SONS.md</code> livré avec l'atelier.</p>
-    <div id="sons-credits"></div>
+    <div  id="sons-credits" data-ost-id="sons-credits"></div>
   </details>
 </section>
 
 <!-- ===================== 3. APPRENTISSAGE PAR RENFORCEMENT : LA VOITURE ===================== -->
-<section id="echecs">
+<section  id="echecs" data-ost-id="echecs">
   <h2>Apprentissage par renforcement — la voiture de course</h2>
   <p class="consigne"><b>Personne ne montre le chemin</b> à l'IA. Elle essaie des trajets sur un circuit,
     et reçoit une <b>récompense</b> basée sur son temps au tour : plus le trajet est direct, plus le
@@ -576,12 +635,12 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     <p class="consigne">Clique sur <b>« Lancer 1000 courses »</b>. L'IA va jouer <b>1000 parties</b>
       en environ 30 secondes. Regarde les traces : au début elles sont tortueuses (mauvais temps),
       puis elles se redressent (meilleur temps). Le <b>meilleur tour</b> est affiché en vert.</p>
-    <canvas class="reseau" id="circuit" width="880" height="400"></canvas>
+    <canvas class="reseau"  id="circuit" data-ost-id="circuit" width="880" height="400"></canvas>
     <div class="boutons">
-      <button class="act" id="btn-course">▶ Lancer 1000 courses</button>
-      <button class="act sec" id="btn-course-reset">Tout oublier et recommencer</button>
+      <button class="act"  id="btn-course" data-ost-id="btn-course">▶ Lancer 1000 courses</button>
+      <button class="act sec"  id="btn-course-reset" data-ost-id="btn-course-reset">Tout oublier et recommencer</button>
     </div>
-    <div id="course-resultat"></div>
+    <div  id="course-resultat" data-ost-id="course-resultat"></div>
   </div>
 
   <div class="carte">
@@ -595,12 +654,12 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       En jouant des centaines de parties, elle découvre les stratégies qui fonctionnent.</p>
     <p class="consigne">Clique sur <b>« Lancer l'auto-apprentissage »</b> : tu vas voir <b>12 parties
       se jouer en même temps</b> à toute vitesse. Chaque partie est un mini-échiquier.</p>
-    <canvas id="selfplay-canvas" width="880" height="420"></canvas>
+    <canvas  id="selfplay-canvas" data-ost-id="selfplay-canvas" width="880" height="420"></canvas>
     <div class="boutons">
-      <button class="act" id="btn-selfplay">▶ Lancer l'auto-apprentissage (500 parties)</button>
-      <button class="act sec" id="btn-selfplay-reset">Tout oublier</button>
+      <button class="act"  id="btn-selfplay" data-ost-id="btn-selfplay">▶ Lancer l'auto-apprentissage (500 parties)</button>
+      <button class="act sec"  id="btn-selfplay-reset" data-ost-id="btn-selfplay-reset">Tout oublier</button>
     </div>
-    <div id="selfplay-resultat"></div>
+    <div  id="selfplay-resultat" data-ost-id="selfplay-resultat"></div>
   </div>
 
   <div class="carte">
@@ -612,11 +671,11 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     <p class="consigne">Après l'entraînement, regarde l'IA <b>entraînée</b> (blancs) jouer contre une
       version <b>débutante</b> (noirs) qui joue presque au hasard. L'IA entraînée gagne
       systématiquement : elle a appris des centaines de parties contre elle-même.</p>
-    <canvas id="match-canvas" width="400" height="400" style="margin:0 auto;display:block"></canvas>
+    <canvas  id="match-canvas" data-ost-id="match-canvas" width="400" height="400" style="margin:0 auto;display:block"></canvas>
     <div class="boutons">
-      <button class="act" id="btn-match">▶ Voir le match</button>
+      <button class="act"  id="btn-match" data-ost-id="btn-match">▶ Voir le match</button>
     </div>
-    <div id="match-resultat"></div>
+    <div  id="match-resultat" data-ost-id="match-resultat"></div>
   </div>
 
   <div class="carte">
@@ -650,7 +709,7 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
   </div>
 </section>
 <!-- ===================== 4. APPRENTISSAGE NON SUPERVISÉ : LES PAQUETS ===================== -->
-<section id="paquets">
+<section  id="paquets" data-ost-id="paquets">
   <h2>Apprentissage non supervisé — les paquets</h2>
   <p class="consigne">Cette fois, on ne donne à l'IA <b>aucune réponse</b> et <b>aucun exemple
     étiqueté</b>. Elle doit ranger les images toute seule, en faisant des paquets avec celles
@@ -663,7 +722,7 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     </div>
     <p class="consigne">12 images de chiffres écrits à la main. <b>Personne ne dit à l'IA ce que
       c'est.</b> Il n'y a aucune réponse dans les données.</p>
-    <div id="demo-nonsupervise"></div>
+    <div  id="demo-nonsupervise" data-ost-id="demo-nonsupervise"></div>
   </div>
 
   <div class="carte">
@@ -673,11 +732,11 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     </div>
     <p class="consigne">Clique sur le bouton : l'IA met ensemble les images qui se ressemblent.</p>
     <div class="boutons">
-      <button class="act" id="btn-regrouper">Regrouper les images</button>
-      <button class="act sec" id="btn-regrouper-reset">Remettre en désordre</button>
+      <button class="act"  id="btn-regrouper" data-ost-id="btn-regrouper">Regrouper les images</button>
+      <button class="act sec"  id="btn-regrouper-reset" data-ost-id="btn-regrouper-reset">Remettre en désordre</button>
     </div>
-    <div id="demo-paquets"></div>
-    <p class="consigne" id="lecon-nonsupervise"></p>
+    <div  id="demo-paquets" data-ost-id="demo-paquets"></div>
+    <p class="consigne"  id="lecon-nonsupervise" data-ost-id="lecon-nonsupervise"></p>
   </div>
 
   <div class="carte">
@@ -689,15 +748,15 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       ne lui a écrit les noms : il compare seulement ce qui se ressemble. <b>C'est encore de
       l'apprentissage non supervisé.</b></p>
     <p class="consigne">12 photos, 3 personnes. Voici ce que l'IA mesure sur chaque photo :</p>
-    <div id="visages-mesures"></div>
-    <div id="demo-visages"></div>
+    <div  id="visages-mesures" data-ost-id="visages-mesures"></div>
+    <div  id="demo-visages" data-ost-id="demo-visages"></div>
     <div class="boutons">
-      <button class="act" id="btn-visages-regrouper">Regrouper les photos</button>
-      <button class="act sec" id="btn-visages-verite">Qui est qui&nbsp;?</button>
-      <button class="act sec" id="btn-visages-reset">Remettre en désordre</button>
+      <button class="act"  id="btn-visages-regrouper" data-ost-id="btn-visages-regrouper">Regrouper les photos</button>
+      <button class="act sec"  id="btn-visages-verite" data-ost-id="btn-visages-verite">Qui est qui&nbsp;?</button>
+      <button class="act sec"  id="btn-visages-reset" data-ost-id="btn-visages-reset">Remettre en désordre</button>
     </div>
-    <div id="visages-paquets"></div>
-    <p class="consigne" id="lecon-visages"></p>
+    <div  id="visages-paquets" data-ost-id="visages-paquets"></div>
+    <p class="consigne"  id="lecon-visages" data-ost-id="lecon-visages"></p>
     <p class="note">C'est pour cela que ton téléphone demande ton accord avant d'analyser tes photos :
       il ne connaît pas les personnes, il compare seulement des mesures.</p>
   </div>
@@ -733,7 +792,7 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
   </div>
 </section>
 <!-- ===================== 5. BILAN ===================== -->
-<section id="bilan">
+<section  id="bilan" data-ost-id="bilan">
   <h2>Ce que j'ai compris</h2>
 
   <div class="carte">
@@ -823,9 +882,9 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
 </section>
 </main>
 
-<div class="note-bas" id="note-bas"></div>
+<div class="note-bas"  id="note-bas" data-ost-id="note-bas"></div>
 <!-- ===================== 6. BONUS : LE DÉFI POÉSIE ===================== -->
-<section id="poesie">
+<section  id="poesie" data-ost-id="poesie">
   <h2>Bonus — le défi poésie</h2>
   <p class="consigne">Tu as fini avant les autres&nbsp;? Ce défi est pour toi. Tu vas écrire un
     <b>petit poème</b>, puis une <b>IA de synthèse vocale</b> le lira à voix haute.</p>
@@ -839,8 +898,8 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     </div>
     <p class="consigne">Clique sur un sujet : tu recevras une <b>banque de mots</b> à utiliser dans
       ton poème.</p>
-    <div class="boutons" id="poesie-sujets"></div>
-    <div id="poesie-banque"></div>
+    <div class="boutons"  id="poesie-sujets" data-ost-id="poesie-sujets"></div>
+    <div  id="poesie-banque" data-ost-id="poesie-banque"></div>
   </div>
 
   <div class="carte">
@@ -850,8 +909,8 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     </div>
     <p class="consigne">Écris <b>4 vers</b>. Le compteur de syllabes s'affiche à droite : vise
       <b>entre 6 et 12 syllabes</b> par vers. Les <b>vers 2 et 4 doivent rimer</b>.</p>
-    <div id="poesie-vers"></div>
-    <p class="note" id="poesie-aide"></p>
+    <div  id="poesie-vers" data-ost-id="poesie-vers"></div>
+    <p class="note"  id="poesie-aide" data-ost-id="poesie-aide"></p>
 
     <div class="sous-carte">
       <div class="sous-etape-titre">
@@ -861,18 +920,18 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       <p class="consigne">Tu peux <b>commander</b> le poème à une IA au lieu de l'écrire toi-même.
         La page prépare la commande (on dit aussi <b>un prompt</b>) : <b>copie-la</b>, colle-la dans
         l'IA que tu as sous la main, puis <b>colle ici</b> le poème qu'elle te donne.</p>
-      <textarea id="poesie-commande" rows="8" readonly></textarea>
+      <textarea  id="poesie-commande" data-ost-id="poesie-commande" rows="8" readonly></textarea>
       <div class="boutons">
-        <button class="act" id="btn-poesie-copier-commande">Copier la commande</button>
+        <button class="act"  id="btn-poesie-copier-commande" data-ost-id="btn-poesie-copier-commande">Copier la commande</button>
       </div>
       <p class="note">Si la copie ne marche pas : clique dans le cadre ci-dessus, puis <b>Ctrl+C</b>.</p>
       <p class="consigne">Colle ici la réponse de l'IA :</p>
-      <textarea id="poesie-colle" rows="4" placeholder="colle le poème ici"></textarea>
+      <textarea  id="poesie-colle" data-ost-id="poesie-colle" rows="4" placeholder="colle le poème ici"></textarea>
       <div class="boutons">
-        <button class="act" id="btn-poesie-repartir">Mettre dans mes 4 vers</button>
-        <button class="act sec" id="btn-poesie-moule">Sans IA&nbsp;: la machine à poèmes</button>
+        <button class="act"  id="btn-poesie-repartir" data-ost-id="btn-poesie-repartir">Mettre dans mes 4 vers</button>
+        <button class="act sec"  id="btn-poesie-moule" data-ost-id="btn-poesie-moule">Sans IA&nbsp;: la machine à poèmes</button>
       </div>
-      <p class="note" id="poesie-origine"></p>
+      <p class="note"  id="poesie-origine" data-ost-id="poesie-origine"></p>
       <p class="note">⚠️ Une IA écrit vite, mais elle <b>se trompe très souvent sur le nombre de
         syllabes</b> et parfois sur les rimes : <b>compte les syllabes</b> (le compteur est à droite de
         chaque vers) et corrige son poème — c'est exactement ce qu'on fait dans un vrai travail avec
@@ -892,8 +951,8 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
       <b>Qwen3-TTS</b>, c'est une <b>démo gratuite sur Internet</b> : tu choisis la voix, elle lit ton
       poème — et tu peux même lui faire <b>imiter une voix</b>.</p>
     <div class="boutons">
-      <button class="act sec" id="btn-poesie-copier-poeme">1. Copier mon poème</button>
-      <a class="act" id="lien-voix-ia" href="https://huggingface.co/spaces/Qwen/Qwen3-TTS"
+      <button class="act sec"  id="btn-poesie-copier-poeme" data-ost-id="btn-poesie-copier-poeme">1. Copier mon poème</button>
+      <a class="act"  id="lien-voix-ia" data-ost-id="lien-voix-ia" href="https://huggingface.co/spaces/Qwen/Qwen3-TTS"
          target="_blank" rel="noopener">2. 🎭 Ouvrir la démo Qwen3-TTS (Hugging Face)</a>
     </div>
     <p class="note">Dans la démo : <b>colle ton poème</b> dans la case « texte », choisis une voix,
@@ -4272,5 +4331,694 @@ html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .curseur-theme{back
 </style>
 <!-- @@MODE-SOMBRE-PAGE-FIN@@ -->
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const ACTIVITE_PUBLICATION = "3e/tp-ia/atelier-ia-exemples.html";
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
 </body>
 </html>
