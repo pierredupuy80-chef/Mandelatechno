@@ -3448,7 +3448,7 @@ window.__EFFETS_INTERACTIONS__={};
                     <div class="zone-exploration">
 
                         <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-1" onclick="explorerObjet(this)" 
-                             aria-label="Batterie : Cliquer pour explorer">
+                             aria-expanded="false" aria-label="Batterie : Cliquer pour explorer (un second clic replie l'indice)">
                             <span>🔋</span>
                             <strong>Batterie</strong>
                             <div class="indice-decouvert">
@@ -3457,7 +3457,7 @@ window.__EFFETS_INTERACTIONS__={};
                         </div>
 
                         <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-2" onclick="explorerObjet(this)" 
-                             aria-label="Écran et contrôleur : Cliquer pour explorer">
+                             aria-expanded="false" aria-label="Écran et contrôleur : Cliquer pour explorer (un second clic replie l'indice)">
                             <span>🧠</span>
                             <strong>Écran et contrôleur</strong>
                             <div class="indice-decouvert">
@@ -3466,7 +3466,7 @@ window.__EFFETS_INTERACTIONS__={};
                         </div>
 
                         <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-3" onclick="explorerObjet(this)" 
-                             aria-label="Capteur de pédalage : Cliquer pour explorer">
+                             aria-expanded="false" aria-label="Capteur de pédalage : Cliquer pour explorer (un second clic replie l'indice)">
                             <span>🦶</span>
                             <strong>Capteur de pédalage</strong>
                             <div class="indice-decouvert">
@@ -3475,7 +3475,7 @@ window.__EFFETS_INTERACTIONS__={};
                         </div>
 
                         <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-4" onclick="explorerObjet(this)" 
-                             aria-label="Moteur et roue : Cliquer pour explorer">
+                             aria-expanded="false" aria-label="Moteur et roue : Cliquer pour explorer (un second clic replie l'indice)">
                             <span>⚙️</span>
                             <strong>Moteur et roue</strong>
                             <div class="indice-decouvert">
@@ -4524,8 +4524,24 @@ window.__EFFETS_INTERACTIONS__={};
         const totalObjets = 4;
 
         function explorerObjet(objet) {
-            if (!objet.classList.contains('explore')) {
-                objet.classList.add('explore');
+            // Bascule : un second clic (ou Entrée / Espace) replie l'indice.
+            // Avant, la classe n'était jamais retirée : une tuile ouverte
+            // restait ouverte, et l'élève ne pouvait plus revenir à l'état
+            // replié — signalé par le professeur sur l'énigme N3.
+            //
+            // Le compteur, lui, ne redescend jamais : une tuile déjà ouverte a
+            // été vue, même si l'élève la referme. Sinon le déblocage du
+            // diagnostic dépendrait de l'état d'affichage au lieu du travail
+            // réellement fait. `data-objets-vus` retient la visite.
+            if (objet.classList.contains('explore')) {
+                objet.classList.remove('explore');
+                objet.setAttribute('aria-expanded', 'false');
+                return;
+            }
+            objet.classList.add('explore');
+            objet.setAttribute('aria-expanded', 'true');
+            if (!objet.hasAttribute('data-objets-vus')) {
+                objet.setAttribute('data-objets-vus', 'oui');
                 objetsExplores++;
             }
         }
@@ -5916,6 +5932,13 @@ window.__EFFETS_INTERACTIONS__={};
                 niveauxValides.clear();
                 elementsVisites.clear();
                 objetsExplores = 0;
+                // Une tuile refermée puis rouverte doit compter de nouveau :
+                // la mémoire de visite appartient au document, pas au compteur.
+                document.querySelectorAll('.objet-explorable[data-objets-vus]').forEach(function (o) {
+                    o.removeAttribute('data-objets-vus');
+                    o.classList.remove('explore');
+                    o.setAttribute('aria-expanded', 'false');
+                });
                 
                 // Réinitialiser les formulaires
                 document.querySelectorAll('form').forEach(form => form.reset());
@@ -7993,10 +8016,17 @@ window.__EFFETS_INTERACTIONS__={};
         // Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
         // (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
         // dit pas à l'agent quoi corriger.
+        // Vrai quand le dernier identifiant produit a été *inventé* faute
+        // d'attribut dans la page. Le prompt le dit alors explicitement : un
+        // chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+        // aucun remplacement de texte ne peut l'atteindre.
+        var identifiantInvente = false;
+
         function identifiantBloc(el) {
-            if (!el || !el.getAttribute) return null;
+            if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
             var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
-            if (pose) return pose;
+            if (pose) { identifiantInvente = false; return pose; }
+            identifiantInvente = true;
             var classes = String(el.className || '').split(/\s+/).filter(function (c) {
                 return c && c.indexOf('marge-') !== 0 && c !== 'cache';
             });
@@ -8036,10 +8066,16 @@ window.__EFFETS_INTERACTIONS__={};
 
         function identifiantCourant() {
             var el = cible();
+            identifiantInvente = false;
             if (!el) return '';
-            if (portee === 'onglet') return el.id || identifiantBloc(el) || '';
+            if (portee === 'onglet') {
+                if (el.id) return el.id;
+                return identifiantBloc(el) || '';
+            }
             if (portee === 'exercice') return identifiantBloc(el) || '';
-            return identifiantDe(el) || identifiantBloc(el) || '';
+            var reel = identifiantDe(el);
+            if (reel) { identifiantInvente = false; return reel; }
+            return identifiantBloc(el) || '';
         }
 
         function cheminCourant() {
@@ -8445,6 +8481,8 @@ window.__EFFETS_INTERACTIONS__={};
             var typeChamp = sectionVisible('champ')
                 ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
             var id = identifiantCourant();
+            // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+            var idInvente = identifiantInvente;
             var onglet = ongletDe(origine);
             var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
 
@@ -8452,6 +8490,7 @@ window.__EFFETS_INTERACTIONS__={};
             if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
             lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
             if (id) lignes.push('- identifiant: ' + id);
+            if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
             if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
             if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
             lignes.push('- type_erreur: ' + type);
