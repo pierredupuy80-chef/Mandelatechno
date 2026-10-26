@@ -3172,6 +3172,13 @@
             color: #402a05;
         }
 
+        /* La pastille numérotée des ateliers de découverte : bleu moyen sur
+           bleu pâle, 4,31:1 à 12 px. Un bleu d'un demi-ton plus dense passe
+           à 5,8:1 sans changer la teinte. */
+        .atelier-marqueur {
+            color: #33608f;
+        }
+
         /* L'indice découvert (#64748b) atteint 4,2:1 sur la teinte d'information
            #eff6ff : sous le seuil de 4,5. Un gris d'un ton plus dense suffit. */
         .indice-decouvert {
@@ -3217,97 +3224,107 @@
         }
 
         /* @@MODE-SOMBRE-DEBUT@@ bloc généré par mode_sombre.py — ne pas éditer à la main : lancer « python3 mode_sombre.py --ecrire » */
-        html[data-theme="sombre"] .skip-link{background:var(--couleur-primaire-fond)}
-        html[data-theme="sombre"] .navigation-onglets{border-bottom:2px solid #2b3a52}
-        html[data-theme="sombre"] .bouton-onglet,html[data-theme="sombre"] .bouton-action.secondaire,html[data-theme="sombre"] .barre-progression{background-color:#27334a}
-        html[data-theme="sombre"] .bouton-onglet:hover,html[data-theme="sombre"] .bouton-action.secondaire:hover{background-color:#38465c}
-        html[data-theme="sombre"] .bouton-onglet.actif,html[data-theme="sombre"] .bouton-action,html[data-theme="sombre"] .element-chaine:hover,html[data-theme="sombre"] .cadre-reponse .numero-cadre{background-color:var(--couleur-primaire-fond)}
-        html[data-theme="sombre"] .bouton-onglet.valide,html[data-theme="sombre"] .bouton-action.succes{background-color:var(--couleur-succes-fond)}
-        html[data-theme="sombre"] .carte-contenu,html[data-theme="sombre"] .atelier-question,html[data-theme="sombre"] .env-catalogue li,html[data-theme="sombre"] .interactions-resultat{background:#1c2534;border:1px solid #2b3a52}
-        html[data-theme="sombre"] .bouton-action:disabled{background-color:#4a5872}
-        html[data-theme="sombre"] .question-quiz{background-color:#16202e}
-        html[data-theme="sombre"] .option-reponse{background-color:#1c2534;border:2px solid #2b3a52}
-        html[data-theme="sombre"] .option-reponse:hover,html[data-theme="sombre"] .objet-explorable:hover,html[data-theme="sombre"] .choix-contrainte[aria-pressed="true"],html[data-theme="sombre"] .contraintes-recap,html[data-theme="sombre"] .puzzle-piece[aria-pressed="true"],html[data-theme="sombre"] .puzzle-slot.cible{background-color:#1a2740}
-        html[data-theme="sombre"] .option-reponse.selectionnee,html[data-theme="sombre"] .modele-valeurs tbody tr:nth-child(6n + 1){background-color:#1c2c4a}
-        html[data-theme="sombre"] .option-reponse.correcte,html[data-theme="sombre"] .feedback-reponse.correct,html[data-theme="sombre"] .objet-explorable.explore,html[data-theme="sombre"] .modele-valeurs tbody tr:nth-child(6n + 2){background-color:#17452f}
-        html[data-theme="sombre"] .option-reponse.incorrecte,html[data-theme="sombre"] .feedback-reponse.incorrect{background-color:#3a1e20}
-        html[data-theme="sombre"] .chaine-interactive{background-color:#111a27}
-        html[data-theme="sombre"] .element-chaine,html[data-theme="sombre"] .info-element,html[data-theme="sombre"] .etape-conception,html[data-theme="sombre"] .cablage-bilan,html[data-theme="sombre"] .point-cle{background-color:#1c2534}
-        html[data-theme="sombre"] .element-chaine.revele{background-color:var(--couleur-secondaire-fond)}
-        html[data-theme="sombre"] .enigme-conteneur,html[data-theme="sombre"] .modele-valeurs tbody tr:nth-child(6n + 6){background-color:#332a13}
-        html[data-theme="sombre"] .enigme-conteneur h3,html[data-theme="sombre"] .choix-item[data-etat="manquante"] .choix-marque::after,html[data-theme="sombre"] .env-note-1 .env-mot,html[data-theme="sombre"] .qcm-correctif .action-corrective.oubliee .case-action::after,html[data-theme="sombre"] .qcm-correctif .action-corrective.oubliee .statut-action{color:#fcd34d}
-        html[data-theme="sombre"] .objet-explorable{background-color:#1c2534;border:2px dashed #3a4a63}
-        html[data-theme="sombre"] .cadre-reponse,html[data-theme="sombre"] .modele-ost{background-color:#1c2534;border:2px solid #3a4a63}
-        html[data-theme="sombre"] .probleme-ouvert,html[data-theme="sombre"] .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
-        html[data-theme="sombre"] .compteur-selection,html[data-theme="sombre"] .atelier-carte h4,html[data-theme="sombre"] .atelier-compteur,html[data-theme="sombre"] .rotors-nez,html[data-theme="sombre"] .atelier-verdict,html[data-theme="sombre"] .env-catalogue .env-mesure,html[data-theme="sombre"] .env-table caption,html[data-theme="sombre"] .env-note-2 .env-mot,html[data-theme="sombre"] .atelier-mesure,html[data-theme="sombre"] .cf-fleche,html[data-theme="sombre"] .inter-colonne h4,html[data-theme="sombre"] .inter-fleche,html[data-theme="sombre"] .aroute-fleche{color:#9ecbfd}
-        html[data-theme="sombre"] .choix-contrainte,html[data-theme="sombre"] .curseur-contrainte select,html[data-theme="sombre"] .bilan-n4-resultat textarea,html[data-theme="sombre"] .bilan-n4-resultat textarea:focus,html[data-theme="sombre"] .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
-        html[data-theme="sombre"] .choix-contrainte:focus-visible,html[data-theme="sombre"] .noeud-reseau:focus-visible,html[data-theme="sombre"] .atelier-jeton:focus-visible,html[data-theme="sombre"] .atelier-option:focus-visible,html[data-theme="sombre"] .rotor-btn:focus-visible,html[data-theme="sombre"] .reseau-appareil:focus-visible,html[data-theme="sombre"] .env-interacteur:focus-visible,html[data-theme="sombre"] .aroute-scenario:focus-visible,html[data-theme="sombre"] .aroute-noeud:focus-visible{outline:3px solid #5f9bd8}
-        html[data-theme="sombre"] .choix-item[data-etat="juste"] .choix-contrainte,html[data-theme="sombre"] .etape-selection-explication,html[data-theme="sombre"] .solution-personnelle,html[data-theme="sombre"] .cablage-bilan.succes{background-color:#142c21}
-        html[data-theme="sombre"] .choix-item[data-etat="faux"] .choix-contrainte,html[data-theme="sombre"] .cablage-bilan.echec,html[data-theme="sombre"] .puzzle-slot.faux,html[data-theme="sombre"] .puzzle-bilan.echec{background-color:#2b1a1c}
-        html[data-theme="sombre"] .choix-item[data-etat="manquante"] .choix-contrainte{border-color:#f59e0b;background-color:#2c2415}
-        html[data-theme="sombre"] .choix-explication{border-left:3px solid #3a4a63;color:#cbd5e1}
-        html[data-theme="sombre"] .note-liberte,html[data-theme="sombre"] .noeud-reseau[data-type="commutateur"]{background-color:#231f3d}
-        html[data-theme="sombre"] .curseur-contrainte,html[data-theme="sombre"] .bilan-n4,html[data-theme="sombre"] textarea{border:2px solid #2b3a52}
-        html[data-theme="sombre"] .modele-valeurs tbody tr:nth-child(6n + 3){background-color:#30201a}
-        html[data-theme="sombre"] .modele-valeurs tbody tr:nth-child(6n + 5),html[data-theme="sombre"] .noeud-reseau[data-type="routeur"],html[data-theme="sombre"] .puzzle-explication{background-color:#10333c}
-        html[data-theme="sombre"] .modele-alerte{background-color:#2b1a1c;color:#fca5a5}
-        html[data-theme="sombre"] .comparateur-choix{background-color:#132a20;border:2px solid #2f6b4d}
-        html[data-theme="sombre"] .cablage-n4,html[data-theme="sombre"] .puzzle-bonus{border:2px solid #3a4a63;background-color:#16202e}
-        html[data-theme="sombre"] .cablage-aide,html[data-theme="sombre"] .cablage-reserve.vide::after,html[data-theme="sombre"] .cablage-indication,html[data-theme="sombre"] .cablage-retour.info,html[data-theme="sombre"] .puzzle-aide,html[data-theme="sombre"] .puzzle-reserve.vide::after{color:#cbd5e1}
-        html[data-theme="sombre"] .cablage-reserve,html[data-theme="sombre"] .puzzle-reserve{border:2px dashed #55657f;background-color:#27334a}
-        html[data-theme="sombre"] .cablage-zone,html[data-theme="sombre"] .puzzle-piece{background-color:#1c2534;border:2px solid #55657f}
-        html[data-theme="sombre"] .fil-reseau:focus .fil-trait{stroke:#9ecbfd}
-        html[data-theme="sombre"] .noeud-reseau,html[data-theme="sombre"] .puzzle-plateau[data-layout="schema"] .puzzle-fond{border:2px solid #55657f;background-color:#1c2534}
-        html[data-theme="sombre"] .noeud-reseau[data-type="internet"]{background-color:#10333c;background-image:radial-gradient(circle at 50% 32%, #1c2534 0%, #10333c 72%)}
-        html[data-theme="sombre"] .cablage-explication{border-top:1px solid #3a4a63}
-        html[data-theme="sombre"] .fiche-synthese,html[data-theme="sombre"] .synthese-cadre,html[data-theme="sombre"] .puzzle-slot.juste,html[data-theme="sombre"] .puzzle-bilan.succes{background-color:#132a20}
-        html[data-theme="sombre"] .synthese-cadre .fiche-synthese h3{border-bottom:1px solid #2f6b4d}
-        html[data-theme="sombre"] .puzzle-slot{background-color:#1c2534;border:2px dashed #55657f}
-        html[data-theme="sombre"] .progression-actuelle{background:linear-gradient(90deg, var(--couleur-primaire-fond), var(--couleur-secondaire-fond))}
-        html[data-theme="sombre"] .ateliers-n2{border-top:2px dashed #2b3a52}
-        html[data-theme="sombre"] .atelier-carte{background:#1c2534;border:1px solid #2b3a52;border-left:5px solid #3b82f6}
-        html[data-theme="sombre"] .atelier-jeton,html[data-theme="sombre"] .atelier-option,html[data-theme="sombre"] .reseau-appareil,html[data-theme="sombre"] .env-interacteur,html[data-theme="sombre"] .cf-etape,html[data-theme="sombre"] .inter-bouton,html[data-theme="sombre"] .aroute-scenario,html[data-theme="sombre"] .aroute-noeud{background:#1c2534;border:2px solid #2b3a52}
-        html[data-theme="sombre"] .atelier-jeton:hover,html[data-theme="sombre"] .atelier-option:hover,html[data-theme="sombre"] .reseau-appareil:hover,html[data-theme="sombre"] .rotor-btn:hover,html[data-theme="sombre"] .env-interacteur:hover,html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
-        html[data-theme="sombre"] .atelier-jeton.choisi,html[data-theme="sombre"] .atelier-option.choisi,html[data-theme="sombre"] .reseau-appareil.choisi,html[data-theme="sombre"] .env-interacteur.choisi,html[data-theme="sombre"] .inter-bouton.selectionne,html[data-theme="sombre"] .aroute-scenario.selectionne{border-color:#3b82f6;background:#1a2740}
-        html[data-theme="sombre"] .atelier-jeton.apparie,html[data-theme="sombre"] .atelier-option.correcte,html[data-theme="sombre"] .reseau-appareil.relie,html[data-theme="sombre"] .rotor-btn.anti-couple,html[data-theme="sombre"] .cf-etape.actif,html[data-theme="sombre"] .aroute-noeud.actif{border-color:#22c55e;background:#16301f}
-        html[data-theme="sombre"] .atelier-jeton.erreur,html[data-theme="sombre"] .atelier-option.erreur,html[data-theme="sombre"] .atelier-option.fausse,html[data-theme="sombre"] .reseau-appareil.erreur,html[data-theme="sombre"] .rotor-btn.mauvais-sens{border-color:#ef4444;background:#2b1a1c}
-        html[data-theme="sombre"] .atelier-retour.succes{background:#16301f;color:#86efac}
-        html[data-theme="sombre"] .atelier-retour.echec{background:#2b1a1c;color:#fca5a5}
-        html[data-theme="sombre"] .atelier-retour.info{background:#1a2740;color:#9ecbfd}
-        html[data-theme="sombre"] .atelier-explication{background:#2c2415}
-        html[data-theme="sombre"] .reseau-role,html[data-theme="sombre"] .atelier-fils-vide,html[data-theme="sombre"] .rotor-nom,html[data-theme="sombre"] .env-legende{color:#b6c4d6}
-        html[data-theme="sombre"] .reseau-compteur,html[data-theme="sombre"] .atelier-fils li strong,html[data-theme="sombre"] .env-note-3 .env-mot,html[data-theme="sombre"] .legende-animation,html[data-theme="sombre"] .aroute-legende{color:#86efac}
-        html[data-theme="sombre"] .atelier-fils-cadre{border:1px solid #2b3a52;background:#1c2534}
-        html[data-theme="sombre"] .atelier-slot{border:2px dashed #3a4a63;color:#b6c4d6}
-        html[data-theme="sombre"] .atelier-slot.rempli{border-color:#22c55e;background:#16301f;color:#86efac}
-        html[data-theme="sombre"] .atelier-marqueur,html[data-theme="sombre"] .cf-etape em,html[data-theme="sombre"] .aroute-noeud em{color:#9ecbfd;background:#1a2740}
-        html[data-theme="sombre"] .atelier-drone-cadre,html[data-theme="sombre"] .atelier-formule,html[data-theme="sombre"] .env-table thead th,html[data-theme="sombre"] .atelier.curseurs,html[data-theme="sombre"] .ost-fermer{background:#16202e}
-        html[data-theme="sombre"] .rotor-btn{border:3px solid #3a4a63;background:#1c2534;color:#9ecbfd}
-        html[data-theme="sombre"] .atelier-jauge-cadre{background:#26334a}
-        html[data-theme="sombre"] .atelier-legende li,html[data-theme="sombre"] .env-effet,html[data-theme="sombre"] .qcm-correctif .action-corrective:hover,html[data-theme="sombre"] .qcm-correctif .action-corrective.selectionnee,html[data-theme="sombre"] .atelier.schema-emplacements .emplacement:hover,html[data-theme="sombre"] .choix-emplacement .option-composant:hover{background:#1a2740}
-        html[data-theme="sombre"] .env-table th,html[data-theme="sombre"] .env-table td{border-bottom:1px solid #2b3a52}
-        html[data-theme="sombre"] .env-note-0 .env-mot,html[data-theme="sombre"] .qcm-correctif .action-corrective.mauvaise .statut-action,html[data-theme="sombre"] .bilan-verdict[data-niveau="alerte"]{color:#fca5a5}
-        html[data-theme="sombre"] .qcm-correctif .action-corrective{border:2px solid #3a4a63;background:#1c2534}
-        html[data-theme="sombre"] .qcm-correctif .action-corrective.bonne,html[data-theme="sombre"] .atelier.schema-emplacements .emplacement.complet,html[data-theme="sombre"] .choix-emplacement .option-composant.choisie{background:#132a20}
-        html[data-theme="sombre"] .qcm-correctif .action-corrective.mauvaise{background:#2b1a1c}
-        html[data-theme="sombre"] .qcm-correctif .action-corrective.oubliee{border-color:#f59e0b;background:#2c2415}
-        html[data-theme="sombre"] .qcm-correctif .case-action{border:2px solid #55657f}
-        html[data-theme="sombre"] .qcm-correctif .action-corrective.bonne .statut-action,html[data-theme="sombre"] .bilan-verdict[data-niveau="succes"]{color:#6ee7b7}
-        html[data-theme="sombre"] .atelier.schema-emplacements .emplacement{background:#111a27}
-        html[data-theme="sombre"] .choix-emplacement{background:#1c2534}
-        html[data-theme="sombre"] .choix-emplacement .option-composant{border:2px solid #2b3a52;background:#1c2534}
-        html[data-theme="sombre"] #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
-        html[data-theme="sombre"] #ost-bouton-corriger.ost-arme,html[data-theme="sombre"] .ost-bouton-primaire,html[data-theme="sombre"] .ost-portee[aria-pressed="true"]{color:#ffffff}
-        html[data-theme="sombre"] #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
-        html[data-theme="sombre"] #ost-commentaire,html[data-theme="sombre"] .ost-section{border:1px solid #2b3a52}
-        html[data-theme="sombre"] .ost-identifiant,html[data-theme="sombre"] .bloc-animation{background:#16202e;border:1px solid #2b3a52}
-        html[data-theme="sombre"] .ost-apercu,html[data-theme="sombre"] .ost-chemin,html[data-theme="sombre"] .ost-entete-section::after,html[data-theme="sombre"] .indice-decouvert{color:#a9b8cc}
-        html[data-theme="sombre"] .ost-bouton,html[data-theme="sombre"] .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
-        html[data-theme="sombre"] #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
-        html[data-theme="sombre"] .ost-entete-section{background:#16202e;color:#e6ecf5}
-        html[data-theme="sombre"] .ost-entete-section[aria-expanded="true"]{background:#1b2740}
-        html[data-theme="sombre"] .activite-bonus,html[data-theme="sombre"] .activite-bonus h3{color:#fde68a}
+        :where(html[data-theme="sombre"]) .skip-link{background:var(--couleur-primaire-fond)}
+        :where(html[data-theme="sombre"]) .navigation-onglets{border-bottom:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .bouton-onglet,:where(html[data-theme="sombre"]) .bouton-action.secondaire,:where(html[data-theme="sombre"]) .barre-progression{background-color:#27334a}
+        :where(html[data-theme="sombre"]) .bouton-onglet:hover,:where(html[data-theme="sombre"]) .bouton-action.secondaire:hover{background-color:#38465c}
+        :where(html[data-theme="sombre"]) .bouton-onglet.actif,:where(html[data-theme="sombre"]) .bouton-action,:where(html[data-theme="sombre"]) .element-chaine:hover,:where(html[data-theme="sombre"]) .cadre-reponse .numero-cadre{background-color:var(--couleur-primaire-fond)}
+        :where(html[data-theme="sombre"]) .bouton-onglet.valide,:where(html[data-theme="sombre"]) .bouton-action.succes{background-color:var(--couleur-succes-fond)}
+        :where(html[data-theme="sombre"]) .carte-contenu,:where(html[data-theme="sombre"]) .atelier-question,:where(html[data-theme="sombre"]) .env-catalogue li{background:#1c2534;border:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .bouton-action:disabled{background-color:#4a5872}
+        :where(html[data-theme="sombre"]) .question-quiz{background-color:#16202e}
+        :where(html[data-theme="sombre"]) .option-reponse{background-color:#1c2534;border:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .option-reponse:hover,:where(html[data-theme="sombre"]) .objet-explorable:hover,:where(html[data-theme="sombre"]) .choix-contrainte[aria-pressed="true"],:where(html[data-theme="sombre"]) .contraintes-recap,:where(html[data-theme="sombre"]) .puzzle-piece[aria-pressed="true"],:where(html[data-theme="sombre"]) .puzzle-slot.cible{background-color:#1a2740}
+        :where(html[data-theme="sombre"]) .option-reponse.selectionnee,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 1){background-color:#1c2c4a}
+        :where(html[data-theme="sombre"]) .option-reponse.correcte,:where(html[data-theme="sombre"]) .feedback-reponse.correct,:where(html[data-theme="sombre"]) .objet-explorable.explore,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 2){background-color:#17452f}
+        :where(html[data-theme="sombre"]) .option-reponse.incorrecte,:where(html[data-theme="sombre"]) .feedback-reponse.incorrect{background-color:#3a1e20}
+        :where(html[data-theme="sombre"]) .chaine-interactive{background-color:#111a27}
+        :where(html[data-theme="sombre"]) .element-chaine,:where(html[data-theme="sombre"]) .info-element,:where(html[data-theme="sombre"]) .etape-conception,:where(html[data-theme="sombre"]) .cablage-bilan,:where(html[data-theme="sombre"]) .point-cle{background-color:#1c2534}
+        :where(html[data-theme="sombre"]) .element-chaine.revele{background-color:var(--couleur-secondaire-fond)}
+        :where(html[data-theme="sombre"]) .enigme-conteneur,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 6){background-color:#332a13}
+        :where(html[data-theme="sombre"]) .enigme-conteneur h3,:where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-marque::after,:where(html[data-theme="sombre"]) .env-note-1 .env-mot,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .case-action::after,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .statut-action{color:#fcd34d}
+        :where(html[data-theme="sombre"]) .objet-explorable{background-color:#1c2534;border:2px dashed #3a4a63}
+        :where(html[data-theme="sombre"]) .cadre-reponse,:where(html[data-theme="sombre"]) .modele-ost{background-color:#1c2534;border:2px solid #3a4a63}
+        :where(html[data-theme="sombre"]) .probleme-ouvert,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
+        :where(html[data-theme="sombre"]) .compteur-selection,:where(html[data-theme="sombre"]) .atelier-carte h4,:where(html[data-theme="sombre"]) .atelier-compteur,:where(html[data-theme="sombre"]) .rotors-nez,:where(html[data-theme="sombre"]) .atelier-verdict,:where(html[data-theme="sombre"]) .env-catalogue .env-mesure,:where(html[data-theme="sombre"]) .env-table caption,:where(html[data-theme="sombre"]) .env-note-2 .env-mot,:where(html[data-theme="sombre"]) .atelier-mesure,:where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd}
+        :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
+        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
+        :where(html[data-theme="sombre"]) .choix-item[data-etat="juste"] .choix-contrainte,:where(html[data-theme="sombre"]) .etape-selection-explication,:where(html[data-theme="sombre"]) .solution-personnelle,:where(html[data-theme="sombre"]) .cablage-bilan.succes{background-color:#142c21}
+        :where(html[data-theme="sombre"]) .choix-item[data-etat="faux"] .choix-contrainte,:where(html[data-theme="sombre"]) .cablage-bilan.echec,:where(html[data-theme="sombre"]) .puzzle-slot.faux,:where(html[data-theme="sombre"]) .puzzle-bilan.echec{background-color:#2b1a1c}
+        :where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-contrainte{border-color:#f59e0b;background-color:#2c2415}
+        :where(html[data-theme="sombre"]) .choix-explication{border-left:3px solid #3a4a63;color:#cbd5e1}
+        :where(html[data-theme="sombre"]) .note-liberte,:where(html[data-theme="sombre"]) .noeud-reseau[data-type="commutateur"]{background-color:#231f3d}
+        :where(html[data-theme="sombre"]) .curseur-contrainte,:where(html[data-theme="sombre"]) .bilan-n4,:where(html[data-theme="sombre"]) textarea{border:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 3){background-color:#30201a}
+        :where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 5),:where(html[data-theme="sombre"]) .noeud-reseau[data-type="routeur"],:where(html[data-theme="sombre"]) .puzzle-explication{background-color:#10333c}
+        :where(html[data-theme="sombre"]) .modele-alerte{background-color:#2b1a1c;color:#fca5a5}
+        :where(html[data-theme="sombre"]) .comparateur-choix{background-color:#132a20;border:2px solid #2f6b4d}
+        :where(html[data-theme="sombre"]) .cablage-n4,:where(html[data-theme="sombre"]) .puzzle-bonus{border:2px solid #3a4a63;background-color:#16202e}
+        :where(html[data-theme="sombre"]) .cablage-aide,:where(html[data-theme="sombre"]) .cablage-reserve.vide::after,:where(html[data-theme="sombre"]) .cablage-indication,:where(html[data-theme="sombre"]) .cablage-retour.info,:where(html[data-theme="sombre"]) .puzzle-aide,:where(html[data-theme="sombre"]) .puzzle-reserve.vide::after{color:#cbd5e1}
+        :where(html[data-theme="sombre"]) .cablage-reserve,:where(html[data-theme="sombre"]) .puzzle-reserve{border:2px dashed #55657f;background-color:#27334a}
+        :where(html[data-theme="sombre"]) .cablage-zone,:where(html[data-theme="sombre"]) .puzzle-piece{background-color:#1c2534;border:2px solid #55657f}
+        :where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait{stroke:#9ecbfd}
+        :where(html[data-theme="sombre"]) .noeud-reseau,:where(html[data-theme="sombre"]) .puzzle-plateau[data-layout="schema"] .puzzle-fond{border:2px solid #55657f;background-color:#1c2534}
+        :where(html[data-theme="sombre"]) .noeud-reseau[data-type="internet"]{background-color:#10333c;background-image:radial-gradient(circle at 50% 32%, #1c2534 0%, #10333c 72%)}
+        :where(html[data-theme="sombre"]) .cablage-explication{border-top:1px solid #3a4a63}
+        :where(html[data-theme="sombre"]) .fiche-synthese,:where(html[data-theme="sombre"]) .synthese-cadre,:where(html[data-theme="sombre"]) .puzzle-slot.juste,:where(html[data-theme="sombre"]) .puzzle-bilan.succes{background-color:#132a20}
+        :where(html[data-theme="sombre"]) .synthese-cadre .fiche-synthese h3{border-bottom:1px solid #2f6b4d}
+        :where(html[data-theme="sombre"]) .puzzle-slot{background-color:#1c2534;border:2px dashed #55657f}
+        :where(html[data-theme="sombre"]) .progression-actuelle{background:linear-gradient(90deg, var(--couleur-primaire-fond), var(--couleur-secondaire-fond))}
+        :where(html[data-theme="sombre"]) .ateliers-n2{border-top:2px dashed #2b3a52}
+        :where(html[data-theme="sombre"]) .atelier-carte{background:#1c2534;border:1px solid #2b3a52;border-left:5px solid #3b82f6}
+        :where(html[data-theme="sombre"]) .atelier-jeton,:where(html[data-theme="sombre"]) .atelier-option,:where(html[data-theme="sombre"]) .reseau-appareil,:where(html[data-theme="sombre"]) .env-interacteur{background:#1c2534;border:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .atelier-jeton:hover,:where(html[data-theme="sombre"]) .atelier-option:hover,:where(html[data-theme="sombre"]) .reseau-appareil:hover,:where(html[data-theme="sombre"]) .rotor-btn:hover,:where(html[data-theme="sombre"]) .env-interacteur:hover{border-color:#3b82f6}
+        :where(html[data-theme="sombre"]) .atelier-jeton.choisi,:where(html[data-theme="sombre"]) .atelier-option.choisi,:where(html[data-theme="sombre"]) .reseau-appareil.choisi,:where(html[data-theme="sombre"]) .env-interacteur.choisi{border-color:#3b82f6;background:#1a2740}
+        :where(html[data-theme="sombre"]) .atelier-jeton.apparie,:where(html[data-theme="sombre"]) .atelier-option.correcte,:where(html[data-theme="sombre"]) .reseau-appareil.relie,:where(html[data-theme="sombre"]) .rotor-btn.anti-couple{border-color:#22c55e;background:#16301f}
+        :where(html[data-theme="sombre"]) .atelier-jeton.erreur,:where(html[data-theme="sombre"]) .atelier-option.erreur,:where(html[data-theme="sombre"]) .atelier-option.fausse,:where(html[data-theme="sombre"]) .reseau-appareil.erreur,:where(html[data-theme="sombre"]) .rotor-btn.mauvais-sens{border-color:#ef4444;background:#2b1a1c}
+        :where(html[data-theme="sombre"]) .atelier-retour.succes{background:#16301f;color:#86efac}
+        :where(html[data-theme="sombre"]) .atelier-retour.echec{background:#2b1a1c;color:#fca5a5}
+        :where(html[data-theme="sombre"]) .atelier-retour.info{background:#1a2740;color:#9ecbfd}
+        :where(html[data-theme="sombre"]) .atelier-explication{background:#2c2415}
+        :where(html[data-theme="sombre"]) .reseau-role,:where(html[data-theme="sombre"]) .atelier-fils-vide,:where(html[data-theme="sombre"]) .rotor-nom,:where(html[data-theme="sombre"]) .env-legende{color:#b6c4d6}
+        :where(html[data-theme="sombre"]) .reseau-compteur,:where(html[data-theme="sombre"]) .atelier-fils li strong,:where(html[data-theme="sombre"]) .env-note-3 .env-mot{color:#86efac}
+        :where(html[data-theme="sombre"]) .atelier-fils-cadre{border:1px solid #2b3a52;background:#1c2534}
+        :where(html[data-theme="sombre"]) .atelier-slot{border:2px dashed #3a4a63;color:#b6c4d6}
+        :where(html[data-theme="sombre"]) .atelier-slot.rempli{border-color:#22c55e;background:#16301f;color:#86efac}
+        :where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd;background:#1a2740}
+        :where(html[data-theme="sombre"]) .atelier-drone-cadre,:where(html[data-theme="sombre"]) .atelier-formule,:where(html[data-theme="sombre"]) .env-table thead th,:where(html[data-theme="sombre"]) .atelier.curseurs,:where(html[data-theme="sombre"]) .ost-fermer{background:#16202e}
+        :where(html[data-theme="sombre"]) .rotor-btn{border:3px solid #3a4a63;background:#1c2534;color:#9ecbfd}
+        :where(html[data-theme="sombre"]) .atelier-jauge-cadre{background:#26334a}
+        :where(html[data-theme="sombre"]) .atelier-legende li,:where(html[data-theme="sombre"]) .env-effet,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective:hover,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.selectionnee,:where(html[data-theme="sombre"]) .atelier.schema-emplacements .emplacement:hover,:where(html[data-theme="sombre"]) .choix-emplacement .option-composant:hover{background:#1a2740}
+        :where(html[data-theme="sombre"]) .env-table th,:where(html[data-theme="sombre"]) .env-table td{border-bottom:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .env-note-0 .env-mot,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.mauvaise .statut-action,:where(html[data-theme="sombre"]) .bilan-verdict[data-niveau="alerte"]{color:#fca5a5}
+        :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective{border:2px solid #3a4a63;background:#1c2534}
+        :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.bonne,:where(html[data-theme="sombre"]) .atelier.schema-emplacements .emplacement.complet,:where(html[data-theme="sombre"]) .choix-emplacement .option-composant.choisie{background:#132a20}
+        :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.mauvaise{background:#2b1a1c}
+        :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee{border-color:#f59e0b;background:#2c2415}
+        :where(html[data-theme="sombre"]) .qcm-correctif .case-action{border:2px solid #55657f}
+        :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.bonne .statut-action,:where(html[data-theme="sombre"]) .bilan-verdict[data-niveau="succes"]{color:#6ee7b7}
+        :where(html[data-theme="sombre"]) .atelier.schema-emplacements .emplacement{background:#111a27}
+        :where(html[data-theme="sombre"]) .choix-emplacement{background:#1c2534}
+        :where(html[data-theme="sombre"]) .choix-emplacement .option-composant{border:2px solid #2b3a52;background:#1c2534}
+        :where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+        :where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+        :where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+        :where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after,:where(html[data-theme="sombre"]) .indice-decouvert{color:#a9b8cc}
+        :where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+        :where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+        :where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+        :where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+        :where(html[data-theme="sombre"]) .activite-bonus,:where(html[data-theme="sombre"]) .activite-bonus h3{color:#fde68a}
+        html[data-theme="sombre"] .bloc-animation{background:#16202e;border:1px solid #2b3a52}
+        html[data-theme="sombre"] .cf-etape,html[data-theme="sombre"] .inter-bouton,html[data-theme="sombre"] .aroute-scenario,html[data-theme="sombre"] .aroute-noeud{background:#1c2534;border:2px solid #2b3a52}
+        html[data-theme="sombre"] .cf-etape em,html[data-theme="sombre"] .aroute-noeud em{color:#9ecbfd;background:#1a2740}
+        html[data-theme="sombre"] .cf-fleche,html[data-theme="sombre"] .inter-colonne h4,html[data-theme="sombre"] .inter-fleche,html[data-theme="sombre"] .aroute-fleche{color:#9ecbfd}
+        html[data-theme="sombre"] .cf-etape.actif,html[data-theme="sombre"] .aroute-noeud.actif{border-color:#22c55e;background:#16301f}
+        html[data-theme="sombre"] .legende-animation,html[data-theme="sombre"] .aroute-legende{color:#86efac}
+        html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
+        html[data-theme="sombre"] .inter-bouton.selectionne,html[data-theme="sombre"] .aroute-scenario.selectionne{border-color:#3b82f6;background:#1a2740}
+        html[data-theme="sombre"] .interactions-resultat{background:#1c2534;border:1px solid #2b3a52}
         html[data-theme="sombre"] .interactions-resultat.info-block{background:#1a2740;border-color:#3b82f6}
+        html[data-theme="sombre"] .aroute-scenario:focus-visible,html[data-theme="sombre"] .aroute-noeud:focus-visible{outline:3px solid #5f9bd8}
         html[data-theme="sombre"] .aroute-frontiere{color:#fcd34d;background:#2c2415}
         /* @@MODE-SOMBRE-FIN@@ */
 
@@ -3351,6 +3368,18 @@
             background-color: #0b1220;
         }
 
+        /* Les équipements sans type de l'atelier de câblage (poste, imprimante)
+           sont blancs sur un plateau blanc dans le mode clair — leur bordure
+           #64748b les détache (4,76:1). Traduite en ardoise foncée, la même
+           bordure tombait à 2,6:1 sur le plateau sombre, sous le seuil de 3:1
+           d'un composant d'interface. On lui rend sa lisibilité (6,1:1) sans
+           toucher les types : routeur et internet restent cyan, le
+           commutateur violet, comme dans le mode clair. */
+        html[data-theme="sombre"] .noeud-reseau:not([data-type="routeur"]):not([data-type="commutateur"]):not([data-type="internet"]),
+        html[data-theme="sombre"] .cablage-piece {
+            border-color: #94a3b8;
+        }
+
         /* Le bandeau du bonus : sur une page sombre, l'ambre vif devient une
            tache de lumière. On garde l'ambre — c'est le signal de la
            récompense — mais dans sa déclinaison foncée, avec un texte clair
@@ -3361,10 +3390,18 @@
             color: #fde68a;
         }
 
-        /* Le damier du fond de schéma et les illustrations gardent leur
-           contraste : un liseré sombre les détache de la page. */
+        /* Le sprite du bonus est en pixel art, sur fond transparent, avec un
+           contour sombre : posé directement sur une carte sombre, sa silhouette
+           se perd (contour mesuré à ~2:1). Une ombre portée NOIRE n'y change
+           rien — elle est de la même couleur que le fond. On lui donne donc un
+           fond de présentation ardoise, comme un cadre de papier : le contour
+           sombre ressort (5:1 au lieu de 2:1) sans créer de plaque blanche —
+           luminance 0,21, sous le seuil de 0,5 que l'audit surveille. */
         html[data-theme="sombre"] .illustration-jeu {
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65));
+            background: #6f809c;
+            border: 1px solid #8fa1bc;
+            padding: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
 
@@ -4826,7 +4863,7 @@ window.__EFFETS_INTERACTIONS__={};
         // sortie (et refuse de produire si elle est introuvable). Pour
         // reverrouiller une activité déjà générée avant la classe :
         //     python3 mode-developpement.py desactiver ACTIVITE.html
-        const MODE_DEVELOPPEMENT = true;
+        const MODE_DEVELOPPEMENT = false;
 
         // ============================================
         // GESTION DES ONGLETS

@@ -154,6 +154,17 @@ ol li{margin:.25rem 0}
     outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
 }
 </style>
+<!-- @@MODE-SOMBRE-TETE@@ posé avant le premier rendu -->
+<script>
+(function () {
+  try {
+    var choix = window.localStorage.getItem('theme-activite');
+    if (choix === 'sombre' || choix === 'clair') {
+      document.documentElement.setAttribute('data-theme', choix);
+    }
+  } catch (e) {}
+})();
+</script>
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -260,6 +271,10 @@ ol li{margin:.25rem 0}
 <header>
   <div class="ligne-titre">
     <h1>TP — Comment une IA apprend-elle&nbsp;? <small>3<sup>e</sup> · technologie · 1 heure · 3 ateliers + 1 défi</small></h1>
+<button type="button" id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
+<span class="piste-theme" aria-hidden="true"><span class="curseur-theme"></span></span>
+<span class="libelle-theme">Mode sombre</span>
+</button>
     <div class="chrono" id="chrono">
       <span>Chrono&nbsp;:</span><span class="valeur" id="chrono-valeur">15:00</span>
       <button class="act sec" id="chrono-start" style="padding:2px 8px">▶</button>
@@ -2033,7 +2048,137 @@ if (/[?&]autotest=1/.test(location.search)) {
 
 <!-- RGPD : mention informative pour les élèves -->
 <footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+<!-- @@MODE-SOMBRE-PAGE-DEBUT@@ option « Mode sombre » ajoutée par appliquer_mode_sombre.py -->
+<script>
+// Option « Mode sombre » : le thème est posé avant le premier rendu, l'état du
+// bouton suit, et le choix est mémorisé sur le poste de l'élève. Sous file://
+// localStorage lève une exception : le try/catch garde la page utilisable.
+(function () {
+  var CLE = 'theme-activite';
+  var racine = document.documentElement;
+  try {
+    var choix = window.localStorage.getItem(CLE);
+    if (choix === 'sombre' || choix === 'clair') racine.setAttribute('data-theme', choix);
+  } catch (e) {}
+  function estSombre() { return racine.getAttribute('data-theme') === 'sombre'; }
+  function refleter() {
+    var bouton = document.getElementById('bouton-theme');
+    if (!bouton) return;
+    bouton.setAttribute('aria-checked', estSombre() ? 'true' : 'false');
+    bouton.title = estSombre() ? 'Revenir à l\'affichage clair' : 'Passer à l\'affichage sombre';
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var bouton = document.getElementById('bouton-theme');
+    if (!bouton) return;
+    bouton.addEventListener('click', function () {
+      var sombre = !estSombre();
+      racine.setAttribute('data-theme', sombre ? 'sombre' : 'clair');
+      try { window.localStorage.setItem(CLE, sombre ? 'sombre' : 'clair'); } catch (e) {}
+      refleter();
+    });
+    refleter();
+  });
+})();
+</script>
+<style>/* @@MODE-SOMBRE-PAGE-DEBUT@@ feuille dérivée du CSS de la page — ne pas éditer à la main : relancer appliquer_mode_sombre.py */
+html[data-theme="sombre"] {
+  --bleu: #b2cde6;
+  --bleu-fond: #1f4e79;
+  --bleu-bordure: #1f4e79;
+  --bleu2: #b2cde6;
+  --bleu2-fond: #234e76;
+  --bleu2-bordure: #2e75b6;
+  --bleuf: #dce9f7;
+  --bleuf-fond: #16212d;
+  --bleuf-bordure: #3a536f;
+  --bleuf2: #f2f7fd;
+  --bleuf2-fond: #14202f;
+  --bleuf2-bordure: #355173;
+  --orange: #f5cfa3;
+  --orange-fond: #8e510b;
+  --orange-bordure: #d97706;
+  --orangeF: #fdf0dd;
+  --orangeF-fond: #312411;
+  --orangeF-bordure: #7a5b2f;
+  --vert: #b8e0ba;
+  --vert-fond: #2d6c30;
+  --vert-bordure: #2e7d32;
+  --vertF: #e6f4e7;
+  --vertF-fond: #1a281b;
+  --vertF-bordure: #446546;
+  --gris: #c6ccd2;
+  --gris-fond: #424c57;
+  --gris-bordure: #5b6b7b;
+  --bord: #c9d6e4;
+  --bord-fond: #1b2127;
+  --bord-bordure: #465462;
+  --rouge: #ebb0ad;
+  --rouge-fond: #7e211b;
+  --rouge-bordure: #b3261e;
+}
+html[data-theme="sombre"], html[data-theme="sombre"] body { background-color: #0b1220; color: #e6ecf5 }
+html[data-theme="sombre"] * { border-color: currentColor }
+html[data-theme="sombre"] a { color: #8ab4f8 }
+html[data-theme="sombre"] input, html[data-theme="sombre"] textarea, html[data-theme="sombre"] select { background-color: #1c2534; color: #e6ecf5; border-color: #334155 }
+html[data-theme="sombre"] input::placeholder, html[data-theme="sombre"] textarea::placeholder { color: #8fa1b8 }
+html[data-theme="sombre"] img, html[data-theme="sombre"] svg { background-color: transparent }
+html[data-theme="sombre"] { color-scheme: dark }
 
+/* L'option d'affichage : un interrupteur, sans dépendre de la charte de la
+   page (chaque activité de l'ancienne chaîne a la sienne). */
+.bouton-theme{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:.25rem .8rem .25rem .4rem;border:2px solid rgba(18,33,46,.35);border-radius:999px;background:rgba(255,255,255,.75);color:#12212e;font:inherit;font-size:.8rem;font-weight:600;line-height:1.2;cursor:pointer;flex:0 0 auto}
+.bouton-theme:hover{background:rgba(255,255,255,.95)}
+.bouton-theme:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.piste-theme{position:relative;flex:0 0 auto;width:42px;height:24px;box-sizing:border-box;border:2px solid rgba(18,33,46,.45);border-radius:999px;background:rgba(18,33,46,.16);transition:background .2s}
+.curseur-theme{position:absolute;top:1px;left:1px;width:16px;height:16px;border-radius:50%;background:#12212e;transition:transform .2s,background .2s}
+.bouton-theme[aria-checked="true"] .piste-theme{background:#ffd479;border-color:#b45309}
+.bouton-theme[aria-checked="true"] .curseur-theme{background:#402a05;transform:translateX(16px)}
+html[data-theme="sombre"] .bouton-theme{border-color:rgba(230,236,245,.55);background:rgba(11,18,32,.55);color:#e6ecf5}
+html[data-theme="sombre"] .piste-theme{border-color:rgba(230,236,245,.6);background:rgba(230,236,245,.18)}
+html[data-theme="sombre"] .curseur-theme{background:#e6ecf5}
+html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .piste-theme{background:#ffd479;border-color:#ffd479}
+html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .curseur-theme{background:#402a05}
+@media print{.bouton-theme{display:none !important}}
+
+  :where(html[data-theme="sombre"]) body{color:#b9cddf;background:#17212c}
+  :where(html[data-theme="sombre"]) header{background:#141d2c;border-bottom:3px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .onglets button{border:1px solid var(--bleu2-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .onglets button:hover{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) .onglets button.actif{background:var(--bleu2-fond);color:#ffffff;border-color:var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) h2{border-bottom:2px solid var(--bleuf-bordure)}
+  :where(html[data-theme="sombre"]) .carte{background:#141d2c;border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .carte.consigne{border-left:5px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .carte.objectif{background:var(--bleuf2-fond);border-left:5px solid var(--orange-bordure)}
+  :where(html[data-theme="sombre"]) .carte.bilan{background:var(--vertF-fond);border-left:5px solid var(--vert-bordure)}
+  :where(html[data-theme="sombre"]) canvas{background:#141d2c;border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) select,:where(html[data-theme="sombre"]) input[type=text],:where(html[data-theme="sombre"]) input[type=number],:where(html[data-theme="sombre"]) textarea{border:1px solid var(--bord-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) th,:where(html[data-theme="sombre"]) td{border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) th{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) button.act{border:1px solid var(--bleu2-bordure);background:var(--bleu2-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) button.act:hover{background:var(--bleu-fond)}
+  :where(html[data-theme="sombre"]) button.act.sec{background:#141d2c}
+  :where(html[data-theme="sombre"]) button.act.sec:hover{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) .mesure{background:var(--bleuf2-fond);border:1px dashed var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .tag{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) .pastille{color:#ffffff}
+  :where(html[data-theme="sombre"]) .q{border-left:3px solid var(--orange-bordure)}
+  :where(html[data-theme="sombre"]) .chrono .valeur{background:var(--bleuf2-fond);border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .chrono.fini .valeur{border-color:var(--rouge-bordure)}
+  :where(html[data-theme="sombre"]) .barre{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) .barre > i{background:var(--vert-fond)}
+  :where(html[data-theme="sombre"]) #zone-message{background:var(--bleu-fond);color:#ffffff}
+      @media screen and (max-width: 700px), screen and (max-height: 500px) {
+        :where(html[data-theme="sombre"]) .etiquette.selectionnee,:where(html[data-theme="sombre"]) .assoc-item.selectionnee,:where(html[data-theme="sombre"]) .chip.selectionnee{outline:3px solid #c36b22;background:#33250f;border-color:#c36b22}
+      }
+  :where(html[data-theme="sombre"]) .mention-rgpd{border:1px solid #49545f;background:#1c2126;color:#c7ccd1}
+  :where(html[data-theme="sombre"]) [style*="background:#2e75b6"],:where(html[data-theme="sombre"]) [style*="background: #2e75b6"]{background:#234e76 !important}
+  :where(html[data-theme="sombre"]) [style*="background:#d97706"],:where(html[data-theme="sombre"]) [style*="background: #d97706"]{background:#8e510b !important}
+  :where(html[data-theme="sombre"]) [style*="background:#111"],:where(html[data-theme="sombre"]) [style*="background: #111"]{background:#0b1220 !important}
+  :where(html[data-theme="sombre"]) [style*="background:#8a99a8"],:where(html[data-theme="sombre"]) [style*="background: #8a99a8"]{background:#2e3338 !important}
+  :where(html[data-theme="sombre"]) [style*="background:#2e7d32"],:where(html[data-theme="sombre"]) [style*="background: #2e7d32"]{background:#2d6c30 !important}
+  :where(html[data-theme="sombre"]) [style*="color:#2e7d32"],:where(html[data-theme="sombre"]) [style*="color: #2e7d32"]{color:#b8e0ba !important}
+</style>
+<!-- @@MODE-SOMBRE-PAGE-FIN@@ -->
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
 </body>
 </html>

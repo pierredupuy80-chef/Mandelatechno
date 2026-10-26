@@ -216,6 +216,17 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
 }
 </style>
+<!-- @@MODE-SOMBRE-TETE@@ posé avant le premier rendu -->
+<script>
+(function () {
+  try {
+    var choix = window.localStorage.getItem('theme-activite');
+    if (choix === 'sombre' || choix === 'clair') {
+      document.documentElement.setAttribute('data-theme', choix);
+    }
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
 
@@ -319,6 +330,10 @@ canvas.plateau{border-radius:8px; border:1px solid var(--bord)}
     <button data-onglet="poesie">6. Bonus&nbsp;: le défi poésie</button>
   </div>
 </header>
+<button type="button" id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
+<span class="piste-theme" aria-hidden="true"><span class="curseur-theme"></span></span>
+<span class="libelle-theme">Mode sombre</span>
+</button>
 
 <main>
 <!-- ===================== ATELIER (les 3 onglets « supervisé » ont la même page) ===================== -->
@@ -4097,7 +4112,165 @@ if (/[?&]autotest=1/.test(location.search)) {
 
 <!-- RGPD : mention informative pour les élèves -->
 <footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+<!-- @@MODE-SOMBRE-PAGE-DEBUT@@ option « Mode sombre » ajoutée par appliquer_mode_sombre.py -->
+<script>
+// Option « Mode sombre » : le thème est posé avant le premier rendu, l'état du
+// bouton suit, et le choix est mémorisé sur le poste de l'élève. Sous file://
+// localStorage lève une exception : le try/catch garde la page utilisable.
+(function () {
+  var CLE = 'theme-activite';
+  var racine = document.documentElement;
+  try {
+    var choix = window.localStorage.getItem(CLE);
+    if (choix === 'sombre' || choix === 'clair') racine.setAttribute('data-theme', choix);
+  } catch (e) {}
+  function estSombre() { return racine.getAttribute('data-theme') === 'sombre'; }
+  function refleter() {
+    var bouton = document.getElementById('bouton-theme');
+    if (!bouton) return;
+    bouton.setAttribute('aria-checked', estSombre() ? 'true' : 'false');
+    bouton.title = estSombre() ? 'Revenir à l\'affichage clair' : 'Passer à l\'affichage sombre';
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var bouton = document.getElementById('bouton-theme');
+    if (!bouton) return;
+    bouton.addEventListener('click', function () {
+      var sombre = !estSombre();
+      racine.setAttribute('data-theme', sombre ? 'sombre' : 'clair');
+      try { window.localStorage.setItem(CLE, sombre ? 'sombre' : 'clair'); } catch (e) {}
+      refleter();
+    });
+    refleter();
+  });
+})();
+</script>
+<style>/* @@MODE-SOMBRE-PAGE-DEBUT@@ feuille dérivée du CSS de la page — ne pas éditer à la main : relancer appliquer_mode_sombre.py */
+html[data-theme="sombre"] {
+  --bleu: #b2cde6;
+  --bleu-fond: #1f4e79;
+  --bleu-bordure: #1f4e79;
+  --bleu2: #b2cde6;
+  --bleu2-fond: #234e76;
+  --bleu2-bordure: #2e75b6;
+  --bleuf: #e8f1fa;
+  --bleuf-fond: #15212d;
+  --bleuf-bordure: #39546f;
+  --orange: #f5cfa3;
+  --orange-fond: #8e510b;
+  --orange-bordure: #d97706;
+  --orangeF: #fdf1e0;
+  --orangeF-fond: #312411;
+  --orangeF-bordure: #795b2f;
+  --vert: #b8e0ba;
+  --vert-fond: #2d6c30;
+  --vert-bordure: #2e7d32;
+  --vertF: #e8f5e9;
+  --vertF-fond: #1a281b;
+  --vertF-bordure: #446546;
+  --rouge: #ebb0ad;
+  --rouge-fond: #7e211b;
+  --rouge-bordure: #b3261e;
+  --rougeF: #fdecea;
+  --rougeF-fond: #301512;
+  --rougeF-bordure: #773931;
+  --gris: #c6ccd2;
+  --gris-fond: #424c57;
+  --gris-bordure: #5b6b7b;
+  --bord: #c9d6e4;
+  --bord-fond: #1b2127;
+  --bord-bordure: #465462;
+  --noir: #c1ccd7;
+  --noir-fond: #1f2933;
+  --noir-bordure: #1f2933;
+}
+html[data-theme="sombre"], html[data-theme="sombre"] body { background-color: #0b1220; color: #e6ecf5 }
+html[data-theme="sombre"] * { border-color: currentColor }
+html[data-theme="sombre"] a { color: #8ab4f8 }
+html[data-theme="sombre"] input, html[data-theme="sombre"] textarea, html[data-theme="sombre"] select { background-color: #1c2534; color: #e6ecf5; border-color: #334155 }
+html[data-theme="sombre"] input::placeholder, html[data-theme="sombre"] textarea::placeholder { color: #8fa1b8 }
+html[data-theme="sombre"] img, html[data-theme="sombre"] svg { background-color: transparent }
+html[data-theme="sombre"] { color-scheme: dark }
 
+/* L'option d'affichage : un interrupteur, sans dépendre de la charte de la
+   page (chaque activité de l'ancienne chaîne a la sienne). */
+.bouton-theme{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:.25rem .8rem .25rem .4rem;border:2px solid rgba(18,33,46,.35);border-radius:999px;background:rgba(255,255,255,.75);color:#12212e;font:inherit;font-size:.8rem;font-weight:600;line-height:1.2;cursor:pointer;flex:0 0 auto}
+.bouton-theme:hover{background:rgba(255,255,255,.95)}
+.bouton-theme:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.piste-theme{position:relative;flex:0 0 auto;width:42px;height:24px;box-sizing:border-box;border:2px solid rgba(18,33,46,.45);border-radius:999px;background:rgba(18,33,46,.16);transition:background .2s}
+.curseur-theme{position:absolute;top:1px;left:1px;width:16px;height:16px;border-radius:50%;background:#12212e;transition:transform .2s,background .2s}
+.bouton-theme[aria-checked="true"] .piste-theme{background:#ffd479;border-color:#b45309}
+.bouton-theme[aria-checked="true"] .curseur-theme{background:#402a05;transform:translateX(16px)}
+html[data-theme="sombre"] .bouton-theme{border-color:rgba(230,236,245,.55);background:rgba(11,18,32,.55);color:#e6ecf5}
+html[data-theme="sombre"] .piste-theme{border-color:rgba(230,236,245,.6);background:rgba(230,236,245,.18)}
+html[data-theme="sombre"] .curseur-theme{background:#e6ecf5}
+html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .piste-theme{background:#ffd479;border-color:#ffd479}
+html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .curseur-theme{background:#402a05}
+@media print{.bouton-theme{display:none !important}}
+
+  :where(html[data-theme="sombre"]) body{background:#17212c}
+  :where(html[data-theme="sombre"]) header{background:#141d2c;border-bottom:3px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .chrono .valeur{background:var(--bleuf-fond);border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .chrono.fini .valeur{border-color:var(--rouge-bordure)}
+  :where(html[data-theme="sombre"]) .onglets button{border:2px solid var(--bleu2-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .onglets button.actif{background:var(--bleu2-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) .carte{background:#141d2c;border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .etape{background:var(--bleu2-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) .sous-carte{border:1px solid var(--bord-bordure);border-left:6px solid var(--bleu2-bordure);background:#0f2133}
+  :where(html[data-theme="sombre"]) .sous-etape{background:var(--bleu-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) .badge-mode.entrainement{background:var(--orangeF-fond);border:1px solid var(--orange-bordure)}
+  :where(html[data-theme="sombre"]) .badge-mode.utilisation{background:var(--bleuf-fond);border:1px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) canvas{background:#141d2c;border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) button.act{background:var(--bleu2-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) button.act:hover{background:var(--bleu-fond)}
+  :where(html[data-theme="sombre"]) button.act:disabled{background:#1b2128}
+  :where(html[data-theme="sombre"]) a.act:hover{background:var(--bleu-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) .opt-toggle{border:2px solid var(--rouge-bordure) !important;background:#141d2c !important}
+  :where(html[data-theme="sombre"]) .opt-toggle.active{background:var(--rouge-fond) !important;color:#ffffff !important}
+  :where(html[data-theme="sombre"]) .opt-toggle:disabled{border-color:var(--bord-bordure) !important}
+  :where(html[data-theme="sombre"]) button.act.sec{background:#141d2c;border:2px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) button.act.sec:hover{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) button.act.vert{background:var(--vert-fond)}
+  :where(html[data-theme="sombre"]) button.act.orange{background:var(--orange-fond)}
+  :where(html[data-theme="sombre"]) .bouton-play:hover{background:#141d2c}
+  :where(html[data-theme="sombre"]) .bouton-play::after{border-left:14px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .reponse.juste{background:var(--vertF-fond);border:2px solid var(--vert-bordure)}
+  :where(html[data-theme="sombre"]) .reponse.faux{background:var(--rougeF-fond);border:2px solid var(--rouge-bordure)}
+  :where(html[data-theme="sombre"]) .case{background:#1b2127;border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .case.juste{background:var(--vert-fond)}
+  :where(html[data-theme="sombre"]) .case.moyen{background:var(--orange-fond)}
+  :where(html[data-theme="sombre"]) .case.faux{background:var(--rouge-fond)}
+  :where(html[data-theme="sombre"]) .case.encours{background:var(--bleu2-fond)}
+  :where(html[data-theme="sombre"]) .qcm button{border:2px solid var(--bord-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .qcm button:hover{background:var(--bleuf-fond)}
+  :where(html[data-theme="sombre"]) .qcm button.bon{border-color:var(--vert-bordure);background:var(--vertF-fond)}
+  :where(html[data-theme="sombre"]) .qcm button.mauvais{border-color:var(--rouge-bordure);background:var(--rougeF-fond)}
+  :where(html[data-theme="sombre"]) .encadre{background:var(--bleuf-fond);border-left:6px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .encadre.orange{background:var(--orangeF-fond);border-left-color:var(--orange-bordure)}
+  :where(html[data-theme="sombre"]) .encadre.vert{background:var(--vertF-fond);border-left-color:var(--vert-bordure)}
+  :where(html[data-theme="sombre"]) .retiens{background:var(--bleuf-fond);border-left:6px solid var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) textarea{border:1px solid var(--bord-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .note-bas{background:var(--bleu-fond);color:#ffffff}
+  :where(html[data-theme="sombre"]) .paquet{border:2px dashed var(--bord-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .visage .photo{border:3px solid var(--bord-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .visage .photo.personne-0{border-color:var(--bleu2-bordure)}
+  :where(html[data-theme="sombre"]) .visage .photo.personne-1{border-color:var(--vert-bordure)}
+  :where(html[data-theme="sombre"]) .visage .photo.personne-2{border-color:var(--orange-bordure)}
+  :where(html[data-theme="sombre"]) .visage .photo.mal-rangee{border-color:var(--rouge-bordure)}
+  :where(html[data-theme="sombre"]) .marche{border:2px solid var(--bord-bordure);background:#141d2c}
+  :where(html[data-theme="sombre"]) .marche.faite{background:var(--vertF-fond);border-color:var(--vert-bordure)}
+  :where(html[data-theme="sombre"]) .marche.arrivee{border-color:var(--orange-bordure);background:var(--orangeF-fond)}
+  :where(html[data-theme="sombre"]) canvas.plateau{border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .coup .barre-valeur{background:var(--bleuf-fond);border:1px solid var(--bord-bordure)}
+  :where(html[data-theme="sombre"]) .coup .barre-valeur > i{background:var(--vert-fond)}
+      @media screen and (max-width: 700px), screen and (max-height: 500px) {
+        :where(html[data-theme="sombre"]) .etiquette.selectionnee,:where(html[data-theme="sombre"]) .assoc-item.selectionnee,:where(html[data-theme="sombre"]) .chip.selectionnee{outline:3px solid #c36b22;background:#33250f;border-color:#c36b22}
+      }
+  :where(html[data-theme="sombre"]) [style*="background:' + (valeur >= 0.85 ? '#2e7d32' : (valeur >= 0.72 ? '#d97706' : '#b3261e'))
+    + '"],:where(html[data-theme="sombre"]) [style*="background: ' + (valeur >= 0.85 ? '#2e7d32' : (valeur >= 0.72 ? '#d97706' : '#b3261e'))
+    + '"]{background:' + (valeur >= 0.85 ? '#2d6c30' : (valeur >= 0.72 ? '#8e510b' : '#7e211b'))
+    + ' !important}
+</style>
+<!-- @@MODE-SOMBRE-PAGE-FIN@@ -->
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
 </body>
 </html>

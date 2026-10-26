@@ -340,6 +340,17 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
     outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
 }
 </style>
+<!-- @@MODE-SOMBRE-TETE@@ posé avant le premier rendu -->
+<script>
+(function () {
+  try {
+    var choix = window.localStorage.getItem('theme-activite');
+    if (choix === 'sombre' || choix === 'clair') {
+      document.documentElement.setAttribute('data-theme', choix);
+    }
+  } catch (e) {}
+})();
+</script>
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -445,6 +456,10 @@ a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
 
 <header>
   <h1>🖱️ Séquence 4 — La souris &amp; ses interactions</h1>
+<button type="button" id="bouton-theme" class="bouton-theme" role="switch" aria-checked="false">
+<span class="piste-theme" aria-hidden="true"><span class="curseur-theme"></span></span>
+<span class="libelle-theme">Mode sombre</span>
+</button>
   <div class="meta">
     <div id="chrono">00:00</div>
   </div>
@@ -1118,7 +1133,148 @@ function updateBilan() {
 
 <!-- RGPD : mention informative pour les élèves -->
 <footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
-
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
+<!-- @@MODE-SOMBRE-PAGE-DEBUT@@ option « Mode sombre » ajoutée par appliquer_mode_sombre.py -->
+<script>
+// Option « Mode sombre » : le thème est posé avant le premier rendu, l'état du
+// bouton suit, et le choix est mémorisé sur le poste de l'élève. Sous file://
+// localStorage lève une exception : le try/catch garde la page utilisable.
+(function () {
+  var CLE = 'theme-activite';
+  var racine = document.documentElement;
+  try {
+    var choix = window.localStorage.getItem(CLE);
+    if (choix === 'sombre' || choix === 'clair') racine.setAttribute('data-theme', choix);
+  } catch (e) {}
+  function estSombre() { return racine.getAttribute('data-theme') === 'sombre'; }
+  function refleter() {
+    var bouton = document.getElementById('bouton-theme');
+    if (!bouton) return;
+    bouton.setAttribute('aria-checked', estSombre() ? 'true' : 'false');
+    bouton.title = estSombre() ? 'Revenir à l\'affichage clair' : 'Passer à l\'affichage sombre';
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var bouton = document.getElementById('bouton-theme');
+    if (!bouton) return;
+    bouton.addEventListener('click', function () {
+      var sombre = !estSombre();
+      racine.setAttribute('data-theme', sombre ? 'sombre' : 'clair');
+      try { window.localStorage.setItem(CLE, sombre ? 'sombre' : 'clair'); } catch (e) {}
+      refleter();
+    });
+    refleter();
+  });
+})();
+</script>
+<style>/* @@MODE-SOMBRE-PAGE-DEBUT@@ feuille dérivée du CSS de la page — ne pas éditer à la main : relancer appliquer_mode_sombre.py */
+html[data-theme="sombre"] {
+  --blue: #a8bff0;
+  --blue-fond: #17294f;
+  --blue-bordure: #305ab6;
+  --blue-light: #dbeafe;
+  --blue-light-fond: #101f32;
+  --blue-light-bordure: #2c4e7c;
+  --orange: #f3c0a5;
+  --orange-fond: #512a15;
+  --orange-bordure: #bb5c2a;
+  --orange-light: #fff7ed;
+  --orange-light-fond: #33230f;
+  --orange-light-bordure: #7e592a;
+  --green: #abedc3;
+  --green-fond: #18813f;
+  --green-bordure: #16a34a;
+  --green-light: #f0fdf4;
+  --green-light-fond: #132f1c;
+  --green-light-bordure: #347448;
+  --gray: #c5cbd3;
+  --gray-fond: #2e3238;
+  --gray-bordure: #667080;
+  --gray-light: #f1f5f9;
+  --gray-light-fond: #1a2128;
+  --gray-light-bordure: #435465;
+  --dark: #bec9da;
+  --dark-fond: #1e293b;
+  --dark-bordure: #1e293b;
+  --white: #ffffff;
+  --white-fond: #141d2c;
+  --white-bordure: #3a4a63;
+}
+html[data-theme="sombre"], html[data-theme="sombre"] body { background-color: #0b1220; color: #e6ecf5 }
+html[data-theme="sombre"] * { border-color: currentColor }
+html[data-theme="sombre"] a { color: #8ab4f8 }
+html[data-theme="sombre"] input, html[data-theme="sombre"] textarea, html[data-theme="sombre"] select { background-color: #1c2534; color: #e6ecf5; border-color: #334155 }
+html[data-theme="sombre"] input::placeholder, html[data-theme="sombre"] textarea::placeholder { color: #8fa1b8 }
+html[data-theme="sombre"] img, html[data-theme="sombre"] svg { background-color: transparent }
+html[data-theme="sombre"] { color-scheme: dark }
+
+/* L'option d'affichage : un interrupteur, sans dépendre de la charte de la
+   page (chaque activité de l'ancienne chaîne a la sienne). */
+.bouton-theme{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:.25rem .8rem .25rem .4rem;border:2px solid rgba(18,33,46,.35);border-radius:999px;background:rgba(255,255,255,.75);color:#12212e;font:inherit;font-size:.8rem;font-weight:600;line-height:1.2;cursor:pointer;flex:0 0 auto}
+.bouton-theme:hover{background:rgba(255,255,255,.95)}
+.bouton-theme:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.piste-theme{position:relative;flex:0 0 auto;width:42px;height:24px;box-sizing:border-box;border:2px solid rgba(18,33,46,.45);border-radius:999px;background:rgba(18,33,46,.16);transition:background .2s}
+.curseur-theme{position:absolute;top:1px;left:1px;width:16px;height:16px;border-radius:50%;background:#12212e;transition:transform .2s,background .2s}
+.bouton-theme[aria-checked="true"] .piste-theme{background:#ffd479;border-color:#b45309}
+.bouton-theme[aria-checked="true"] .curseur-theme{background:#402a05;transform:translateX(16px)}
+html[data-theme="sombre"] .bouton-theme{border-color:rgba(230,236,245,.55);background:rgba(11,18,32,.55);color:#e6ecf5}
+html[data-theme="sombre"] .piste-theme{border-color:rgba(230,236,245,.6);background:rgba(230,236,245,.18)}
+html[data-theme="sombre"] .curseur-theme{background:#e6ecf5}
+html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .piste-theme{background:#ffd479;border-color:#ffd479}
+html[data-theme="sombre"] .bouton-theme[aria-checked="true"] .curseur-theme{background:#402a05}
+@media print{.bouton-theme{display:none !important}}
+
+  :where(html[data-theme="sombre"]) body{background:var(--gray-light-fond)}
+  :where(html[data-theme="sombre"]) header{background:linear-gradient(135deg, var(--blue-fond), #1a274c)}
+  :where(html[data-theme="sombre"]) nav.tabs{background:var(--white-fond);border-bottom:2px solid var(--gray-light-bordure)}
+  :where(html[data-theme="sombre"]) nav.tabs button:hover{background:var(--blue-light-fond)}
+  :where(html[data-theme="sombre"]) nav.tabs button.active{border-bottom-color:var(--blue-bordure);background:var(--blue-light-fond)}
+  :where(html[data-theme="sombre"]) .card{background:var(--white-fond);border-left:5px solid var(--gray-bordure)}
+  :where(html[data-theme="sombre"]) .card.objectif{border-left-color:var(--orange-bordure);background:var(--orange-light-fond)}
+  :where(html[data-theme="sombre"]) .card.consigne{border-left-color:var(--blue-bordure);background:var(--blue-light-fond)}
+  :where(html[data-theme="sombre"]) .card.bilan{border-left-color:var(--green-bordure);background:var(--green-light-fond)}
+  :where(html[data-theme="sombre"]) .quiz-question{background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .quiz-options label:hover{background:var(--blue-light-fond)}
+  :where(html[data-theme="sombre"]) .quiz-feedback.correct{background:var(--green-light-fond)}
+  :where(html[data-theme="sombre"]) .quiz-feedback.wrong{background:#311212;color:#ebadad}
+  :where(html[data-theme="sombre"]) .interactor-panel{background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .interactor-btns button{border:2px solid var(--blue-bordure);background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .interactor-btns button:hover,:where(html[data-theme="sombre"]) .interactor-btns button.selected{background:var(--blue-fond)}
+  :where(html[data-theme="sombre"]) .interactor-btns button.correct-choice{background:var(--green-fond);border-color:var(--green-bordure)}
+  :where(html[data-theme="sombre"]) .interactor-btns button.wrong-choice{background:#4b1b1b;border-color:#ad3939}
+  :where(html[data-theme="sombre"]) .step-dot{background:var(--gray-light-fond)}
+  :where(html[data-theme="sombre"]) .step-dot.active{background:var(--blue-fond)}
+  :where(html[data-theme="sombre"]) .step-dot.done{background:var(--green-fond)}
+  :where(html[data-theme="sombre"]) .chip{border:2px solid var(--blue-bordure);background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .chip.selected{background:var(--blue-fond)}
+  :where(html[data-theme="sombre"]) .diag-validate-btn{background:var(--green-fond)}
+  :where(html[data-theme="sombre"]) .mouse-card{background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .rating-table th,:where(html[data-theme="sombre"]) .rating-table td{border-bottom:1px solid var(--gray-light-bordure)}
+  :where(html[data-theme="sombre"]) .rating-table th{background:var(--blue-light-fond)}
+  :where(html[data-theme="sombre"]) .star-rating span.filled{color:#f4d6a4}
+  :where(html[data-theme="sombre"]) .star-rating span:hover,:where(html[data-theme="sombre"]) .star-rating span:hover ~ span{color:#f6dea2}
+  :where(html[data-theme="sombre"]) .analysis-q{background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .analysis-q textarea{border:2px solid var(--gray-light-bordure)}
+  :where(html[data-theme="sombre"]) .analysis-q textarea:focus{border-color:var(--blue-bordure)}
+  :where(html[data-theme="sombre"]) .score-card{background:var(--white-fond)}
+  :where(html[data-theme="sombre"]) .print-btn{background:var(--blue-fond)}
+  :where(html[data-theme="sombre"]) #bilan-text{border:2px solid var(--gray-light-bordure)}
+  :where(html[data-theme="sombre"]) #bilan-text:focus{border-color:var(--blue-bordure)}
+  :where(html[data-theme="sombre"]) .ressources-n1{background:#0f2133;border:1px solid var(--bord,#465462)}
+  :where(html[data-theme="sombre"]) .ressources-n1 > h3{color:var(--bleu,#b2cde6)}
+  :where(html[data-theme="sombre"]) .ressources-n1 .note{color:var(--gris,#c6ccd2)}
+  :where(html[data-theme="sombre"]) .ress-carte{background:#141d2c;border:1px solid #405368}
+  :where(html[data-theme="sombre"]) .ress-code{background:#16212d;color:var(--bleu,#b2cde6)}
+  :where(html[data-theme="sombre"]) a.ress-lien.fiche{background:#312411;color:#f5cea3}
+  :where(html[data-theme="sombre"]) a.ress-lien.video{background:#271929;color:#d4acec}
+  :where(html[data-theme="sombre"]) a.ress-lien.quiz{background:#1a281b;color:#b6e2ba}
+  :where(html[data-theme="sombre"]) a.ress-lien.form{background:#171c2b;color:#bac1de}
+      @media screen and (max-width: 700px), screen and (max-height: 500px) {
+        :where(html[data-theme="sombre"]) .etiquette.selectionnee,:where(html[data-theme="sombre"]) .assoc-item.selectionnee,:where(html[data-theme="sombre"]) .chip.selectionnee{outline:3px solid #c36b22;background:#33250f;border-color:#c36b22}
+      }
+  :where(html[data-theme="sombre"]) .mention-rgpd{border:1px solid #49545f;background:#1c2126;color:#c7ccd1}
+  :where(html[data-theme="sombre"]) [style*="color:#fff"],:where(html[data-theme="sombre"]) [style*="color: #fff"]{color:#ffffff !important}
+  :where(html[data-theme="sombre"]) [style*="border:2px solid #fff"],:where(html[data-theme="sombre"]) [style*="border: 2px solid #fff"]{border:2px solid #3a4a63 !important}
+</style>
+<!-- @@MODE-SOMBRE-PAGE-FIN@@ -->
 </body>
 </html>
