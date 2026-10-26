@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Le réseau en panne — jeu de plateforme · 5e SFC1</title>
+<meta name="description" content="Jeu de plateforme : le professeur de techno traverse le collège et répare le commutateur, le routeur, les postes clients et le serveur de données.">
+<style>
+/* ============================================================================
+   « Le réseau en panne » — styles du jeu de plateforme (préfixe `jeu-`)
+   Page autonome : aucun style du template d'activité n'est utilisé.
+   ============================================================================ */
+
+:root {
+    --jeu-fond: #101826;
+    --jeu-fond-2: #182236;
+    --jeu-bord: #2c3a52;
+    --jeu-texte: #e8eef8;
+    --jeu-texte-2: #9fb0c8;
+    --jeu-accent: #e0a72e;
+    --jeu-vert: #4f9d69;
+    --jeu-rouge: #c0392b;
+    --jeu-cible: 44px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #0b1220;
+    color: var(--jeu-texte);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.entete {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.entete h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.sous-titre {
+    margin: 0.15rem 0 0;
+    color: var(--jeu-texte-2);
+    font-size: 0.95rem;
+}
+
+.lien-site {
+    color: #7cb0ff;
+    font-weight: 600;
+    text-decoration: none;
+    min-height: var(--jeu-cible);
+    display: inline-flex;
+    align-items: center;
+}
+
+.lien-site:hover, .lien-site:focus-visible { text-decoration: underline; }
+
+/* ── Cadre ─────────────────────────────────────────────────────────────── */
+.jeu-cadre {
+    background: var(--jeu-fond);
+    border: 1px solid var(--jeu-bord);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.jeu-barre {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 4px 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.jeu-barre-groupe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.jeu-item { display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+.jeu-valeur { color: var(--jeu-accent); font-variant-numeric: tabular-nums; }
+#jeu-niveau-nom { color: #8fb8ff; }
+
+.jeu-bouton {
+    min-height: var(--jeu-cible);
+    min-width: var(--jeu-cible);
+    padding: 0.5rem 0.85rem;
+    border: 2px solid #3f5478;
+    border-radius: 8px;
+    background: var(--jeu-fond-2);
+    color: var(--jeu-texte);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.jeu-bouton:hover:not(:disabled) { background: #24324a; transform: translateY(-1px); }
+.jeu-bouton:focus-visible { outline: 3px solid var(--jeu-accent); outline-offset: 2px; }
+.jeu-bouton:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+.jeu-bouton-principal { background: var(--jeu-vert); border-color: #6cc48a; color: #06210f; }
+.jeu-bouton-principal:hover:not(:disabled) { background: #5fb87b; }
+
+/* ── Scène : le canvas et ses panneaux superposés ──────────────────────── */
+.jeu-scene {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #8ec5e8;
+}
+
+#jeu-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 960 / 512;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    touch-action: manipulation;
+}
+
+.jeu-scene:focus-within { outline: none; }
+
+.jeu-surface {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: rgba(11, 18, 32, 0.9);
+    text-align: center;
+    overflow-y: auto;
+}
+
+.jeu-surface.visible { display: flex; }
+.jeu-surface h2 { margin: 0; font-size: 1.25rem; color: var(--jeu-accent); }
+.jeu-surface p { margin: 0; max-width: 54ch; }
+.jeu-niveaux { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+.jeu-fiche-role {
+    background: rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--jeu-accent);
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    text-align: left;
+}
+
+/* ── Textes sous le canvas ─────────────────────────────────────────────── */
+.jeu-indication {
+    min-height: 1.5em;
+    margin: 0.5rem 0 0;
+    color: var(--jeu-texte-2);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.jeu-annonce {
+    margin: 0.35rem 0 0;
+    min-height: 1.3em;
+    color: var(--jeu-texte-2);
+    font-size: 0.85rem;
+}
+
+/* ── Pavé tactile ──────────────────────────────────────────────────────── */
+.jeu-tactile {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 0.6rem;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.jeu-tactile .jeu-bouton {
+    min-height: 56px;
+    font-size: 1.3rem;
+    background: #1d2a40;
+    border-color: #3f5478;
+    touch-action: none;
+}
+
+.jeu-tactile .jeu-bouton:active { background: #2f6fbf; }
+
+/* ── Aide ──────────────────────────────────────────────────────────────── */
+.jeu-aide {
+    margin-top: 1rem;
+    border: 1px solid var(--jeu-bord);
+    border-radius: 8px;
+    background: var(--jeu-fond-2);
+    padding: 0.25rem 1rem;
+}
+
+.jeu-aide summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #8fb8ff;
+    min-height: var(--jeu-cible);
+    display: flex;
+    align-items: center;
+}
+
+.jeu-aide table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.jeu-aide th, .jeu-aide td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--jeu-bord); }
+.jeu-aide th { color: var(--jeu-texte); width: 34%; }
+.jeu-aide kbd {
+    display: inline-block; min-width: 1.6em; padding: 0.05rem 0.35rem;
+    border: 1px solid #4a5f85; border-bottom-width: 2px; border-radius: 4px;
+    background: #0f172a; font-family: ui-monospace, monospace; font-size: 0.85em; text-align: center;
+}
+
+.lecteur-seul {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.pied {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--jeu-bord);
+    color: var(--jeu-texte-2);
+    font-size: 0.85rem;
+}
+
+/* ── Petits écrans : les panneaux passent SOUS le canvas ─────────────────
+   Superposés, ils ne disposent que de la hauteur du canvas (≈ 160 px sur un
+   téléphone de 320 px de large) alors que le menu en demande ≈ 350 : il
+   débordait, et « Commencer » se trouvait hors de vue. Dans le flux, chaque
+   panneau prend sa hauteur naturelle et la page défile normalement.       */
+@media (max-width: 760px), (max-height: 560px) {
+    .page { padding: 0.5rem; }
+    .jeu-cadre { padding: 4px; }
+    .entete h1 { font-size: 1.1rem; }
+    .sous-titre { font-size: 0.82rem; }
+    .jeu-barre { font-size: 0.78rem; gap: 0.4rem; justify-content: center; padding: 2px 2px 6px; }
+    .jeu-surface {
+        position: static;
+        inset: auto;
+        width: 100%;
+        margin-top: 6px;
+        padding: 0.75rem 0.5rem;
+        border: 1px solid var(--jeu-bord);
+        border-radius: 8px;
+        overflow: visible;
+    }
+    .jeu-surface h2 { font-size: 1rem; }
+    .jeu-surface p { font-size: 0.9rem; }
+    .jeu-bouton { padding: 0.45rem 0.7rem; font-size: 0.85rem; }
+    .jeu-aide table { font-size: 0.82rem; }
+}
+
+/* ── Paysage sur téléphone : c'est la hauteur qui commande ─────────────── */
+@media (max-height: 620px) and (orientation: landscape) {
+    #jeu-canvas {
+        width: auto;
+        height: min(calc(100vh - 150px), calc(100vw / 1.875));
+        margin-inline: auto;
+    }
+    .jeu-scene { background: #0b1220; }
+    .jeu-aide { display: none; }
+}
+
+/* ── Plein écran ───────────────────────────────────────────────────────── */
+.jeu-cadre:fullscreen,
+.jeu-cadre:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    padding: 6px;
+    border: 0;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.jeu-cadre:fullscreen #jeu-canvas,
+.jeu-cadre:-webkit-full-screen #jeu-canvas {
+    width: auto;
+    height: min(calc(100vh - 132px), calc(100vw / 1.875));
+    margin-inline: auto;
+}
+
+.jeu-cadre:fullscreen .jeu-aide,
+.jeu-cadre:-webkit-full-screen .jeu-aide { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .jeu-bouton { transition: none; }
+    .jeu-bouton:hover:not(:disabled) { transform: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+    <header class="entete">
+        <div>
+            <h1>🧑‍🏫 Le réseau en panne</h1>
+            <p class="sous-titre">5<sup>e</sup> — SFC1 · jeu de plateforme</p>
+        </div>
+        <a class="lien-site" href="../../index.html">← Toutes les activités</a>
+    </header>
+    <div id="jeu">
+    <div class="jeu-cadre" id="jeu-cadre">
+        <div class="jeu-barre">
+            <div class="jeu-barre-groupe">
+                <span class="jeu-item"><span aria-hidden="true">❤</span>
+                    <span class="jeu-valeur" id="jeu-coeurs">❤❤❤</span>
+                    <span class="lecteur-seul">cœurs</span></span>
+                <span class="jeu-item"><span aria-hidden="true">🔧</span>
+                    <span class="jeu-valeur" id="jeu-appareils">0 / 0</span>
+                    <span class="lecteur-seul">appareils réparés</span></span>
+                <span class="jeu-item"><span aria-hidden="true">📦</span>
+                    <span class="jeu-valeur" id="jeu-paquets">0</span>
+                    <span class="lecteur-seul">paquets de données</span></span>
+            </div>
+            <div class="jeu-barre-groupe">
+                <span id="jeu-niveau-nom">—</span>
+                <button type="button" class="jeu-bouton" id="jeu-son" aria-pressed="true">🔊 Son</button>
+                <button type="button" class="jeu-bouton" id="jeu-plein-ecran" aria-pressed="false">⛶ Plein écran</button>
+                <button type="button" class="jeu-bouton" id="jeu-pause">⏸ Pause</button>
+            </div>
+        </div>
+
+        <div class="jeu-scene" id="jeu-zone" tabindex="0" role="application"
+             aria-label="Zone de jeu : flèches gauche et droite pour courir, Espace pour sauter, E pour réparer.">
+            <canvas id="jeu-canvas" width="960" height="512" width="960" height="512"
+                    aria-label="Le professeur de techno dans le collège, en pixel art."
+                    role="img"></canvas>
+
+            <div class="jeu-surface visible" id="jeu-menu" role="dialog" aria-labelledby="jeu-menu-titre">
+                <h2 id="jeu-menu-titre">Le réseau en panne</h2>
+                <p>Répare les appareils du réseau, ramasse les paquets de données et rejoins
+                   la sortie. Les élèves te barrent la route : saute par-dessus.</p>
+                <button type="button" class="jeu-bouton jeu-bouton-principal" id="jeu-demarrer">
+                    ▶ Commencer</button>
+                <div class="jeu-niveaux" id="jeu-niveaux" role="group" aria-label="Choisir un niveau">
+                    <button type="button" class="jeu-bouton" data-niveau="0">1. La cour</button>
+                    <button type="button" class="jeu-bouton" data-niveau="1">2. Le bâtiment</button>
+                </div>
+            </div>
+
+            <div class="jeu-surface" id="jeu-fiche" role="dialog" aria-hidden="true"
+                 aria-labelledby="jeu-fiche-titre">
+                <h2 id="jeu-fiche-titre">Appareil réparé</h2>
+                <p class="jeu-fiche-role" id="jeu-fiche-role"></p>
+                <button type="button" class="jeu-bouton jeu-bouton-principal" id="jeu-fiche-fermer">
+                    J'ai compris, je continue</button>
+            </div>
+
+            <div class="jeu-surface" id="jeu-bilan" role="dialog" aria-hidden="true"
+                 aria-labelledby="jeu-bilan-titre">
+                <h2 id="jeu-bilan-titre">Niveau terminé !</h2>
+                <p id="jeu-bilan-texte"></p>
+                <div class="jeu-niveaux">
+                    <button type="button" class="jeu-bouton jeu-bouton-principal" id="jeu-bilan-suivant">
+                        Niveau suivant →</button>
+                    <button type="button" class="jeu-bouton" id="jeu-bilan-rejouer">↻ Rejouer</button>
+                </div>
+            </div>
+        </div>
+
+        <p class="jeu-indication" id="jeu-indication">Appuie sur « Commencer ».</p>
+        <p class="jeu-objectif" id="jeu-objectif"></p>
+        <p class="jeu-annonce" id="jeu-annonce" role="status" aria-live="polite"></p>
+
+        <div class="jeu-tactile" role="group" aria-label="Commandes tactiles">
+            <button type="button" class="jeu-bouton" data-commande="gauche" aria-label="Aller à gauche">◀</button>
+            <button type="button" class="jeu-bouton" data-commande="saut" aria-label="Sauter">▲</button>
+            <button type="button" class="jeu-bouton" data-commande="droite" aria-label="Aller à droite">▶</button>
+            <button type="button" class="jeu-bouton" data-commande="reparer" aria-label="Réparer">🔧</button>
+        </div>
+
+        <details class="jeu-aide">
+            <summary>Comment jouer</summary>
+            <table>
+                <tbody>
+                    <tr><th scope="row">Courir</th><td><kbd>←</kbd> <kbd>→</kbd> ou <kbd>Q</kbd> <kbd>D</kbd></td></tr>
+                    <tr><th scope="row">Sauter</th><td><kbd>Espace</kbd> — maintenir saute plus haut</td></tr>
+                    <tr><th scope="row">Réparer</th><td>rester appuyé sur <kbd>E</kbd> devant un appareil en panne</td></tr>
+                </tbody>
+            </table>
+            <p>Chaque réparation affiche le rôle de l'appareil dans le réseau.</p>
+        </details>
+    </div>
+    </div>
+
+    <footer class="pied">
+        <p>Les appareils à réparer — commutateur, routeur, poste client, serveur de données —
+           sont présentés avec les mots de la fiche de synthèse SFC1.</p>
+        <p>Décor et niveaux : <em>Sunny Land</em> de Luis Zuno (ansimuz), licence CC0.
+           Personnages : planches PixelLab.</p>
+    </footer>
+</div>
+<script>
+window.JEU_MONDE = {"tuile": 32, "legende": {" ": {"indice": 0, "solide": false}, "A": {"indice": 1, "solide": false}, "B": {"indice": 2, "solide": false}, "C": {"indice": 3, "solide": false}, "D": {"indice": 4, "solide": false}, "E": {"indice": 5, "solide": false}, "F": {"indice": 6, "solide": false}, "G": {"indice": 7, "solide": false}, "H": {"indice": 8, "solide": false}, "I": {"indice": 9, "solide": false}, "J": {"indice": 10, "solide": false}, "a": {"indice": 11, "solide": true}, "b": {"indice": 12, "solide": true}, "c": {"indice": 21, "solide": true}, "d": {"indice": 14, "solide": true}, "e": {"indice": 23, "solide": false}, "f": {"indice": 16, "solide": true}, "g": {"indice": 17, "solide": true}, "h": {"indice": 18, "solide": true}, "i": {"indice": 19, "solide": true}, "j": {"indice": 20, "solide": true}, "=": {"indice": 22, "solide": true}}, "props": ["armoire-technique.png", "banc.png", "bureau.png", "cartons.png", "casier.png", "chaise.png", "distributeur.png", "etagere.png", "extincteur.png", "fenetre.png", "panneau-sortie.png", "plante.png", "porte-classe.png", "poubelle.png", "tableau-electrique.png", "tableau.png"], "niveaux": [{"cle": "college", "titre": "Le collège", "objectif": "Répare les cinq appareils du réseau, du rez-de-chaussée jusqu'au dernier étage. Prends les escaliers en sautant.", "largeur": 114, "hauteur": 78, "carte": ["                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "                                                                                                                  ", "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "AAAAAAAAAIIIIIIIIIIBBBBBBBBCCCCCCCCCCCCCCCCCCCCCAAAAAAAAAAAAHHHHHHHHIIIIIIIIIIIIDDDDDDDDDDGGGGGGGGGBBBBBBBBBBBBBBB", "CCCCCCCCCCCDDDDDDDDDDIIIIIIIIIBBBBBBBBBBBBBBBBBBBBBBBBBBBBBFFFFFFFFFFEEEEEEEEEEEEIIIIIIIIIBBBBBBBBBBBBDDDDDDDDDDDH", "EEEEEEEEEBBBBBBBBBBBBJJJJJJJJJJJJCCCCCCCCCCCCJJJJJJJJJCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDEEEEEEEEEEEDDDDDDDDDDDIIIIIIII", "CCCCCCCCCAAAAAAAAAAAAEEEEEEEEDDDDDDDDDDDDEEEEEEEEEEEEEEEEEEEJJJJJJJJJCCCCCCCCCCCCCCCCCEEEEEEEEEDDDDDDDDDDDDDDDDDDD", "BBBBBBBBBAAAAAAAAAAAEEEEEEEEEEEBBBBBBBBBBBDDDDDDDDDCCCCCCCCCCCCCCCCCCCDDDDDDDDDDCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDD", "BBBBBBBBBBEEEEEEEEDDDDDDDDCCCCCCCCCCCCCCCCCCCCCBBBBBBBBBCCCCCCCCCCEEEEEEEEEEEEAAAAAAAAAAAAAAAAACCCCCCCCCCCHHHHHHHH", "HHHHHHHHEEEEEEEEEBBBBBBBBCCCCCCCCCCAAAAAAAAAAAAAAAAAAGGGGGGGGGCCCCCCCCCIIIIIIIIIIBBBBBBBBBBGGGGGGGGGGGCCCCCCCCCCCB", "DDDDDDDDJJJJJJJJJIIIIIIIIIICCCCCCCCCCEEEEEEEEBBBBBBBBBDDDDDDDDDDDAAAAAAAAAAAHHHHHHHHHHHAAAAAAAAAAAAAAAAAAAAAAAAAAA", "AAAAAAAAAAAAAAAAAAAAEEEEEEEEEEEECCCCCCCCAAAAAAAAAACCCCCCCCCCCCEEEEEEEEEEEBBBBBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEEEE", "BBBBBBBBBBEEEEEEEEEJJJJJJJJBBBBBBBBBBBBDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDHHHHHHHHHHHEEEEEEEEIIIIIIIIIIBBBBBBBBBBBIII", "BBBBBBBBBBJJJJJJJJJJJFFFFFFFFFJJJJJJJJJFFFFFFFFFCCCCCCCCCCBBBBBBBBBBBJJJJJJJJJCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBB", "eeeeejjjjeeeeeeeeeeeeeejjjeeeeeeeeeeeeeeejjjjjeeeeeeeeeeeeejjjjeeeeeeeeeeeeeejjjCCCCeeeeeeeeeeejjjjeeeeeeeeeeeeeej", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeCCCCeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "DDDDDDDDDDDDDDDDDDDAAAAAAAAABBBBBBBBBBCCCCCCCCJJJJJJJJJJDDDDDDDDDDDDDDDDDDDDDDJJJJJJJJDDDDDDDDDDDIIIIIIIIIIIBBBBBB", "AAAAAAAAAAAJJJJJJJJJFFFFFFFFFFAAAAAAAAAEEEEEEEEEAAAAAAAAAAEEEEEEEEEAAAAAAAAAAAAAA==AEEEEEEEEAAAAAAAAABBBBBBBBBDDDD", "GGGGGGGGGAAAAAAAAAAADDDDDDDDDDCCCCCCCCCCBBBBBBBBCCCCCCCCBBBBBBBBBBBAAAAAAAAHHHHHHHHHHCCCCCCCCCCCCCCCCCCCAAAAAAAAAA", "AAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDCCCCCCCCCCCCDDDDDDDDDDDDBBBBBBBBBBBBDDDDDDDDDDDDDDDDDDDCCCCCCCCCCCCHHHHHHHHHHHCCCC", "GGGGGGGGAAAAAAAAAAFFFFFFFFFBBBBBBBBDDDDDDDDDDDDIIIIIIIICCCCCCCCCCCCBBBBBBBBBBBCCC==CCCCCCEEEEEEEEEEDDDDDDDDDDDDDDD", "AAAAAAAAAHHHHHHHHHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGGGGGGGGGBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCDDDDDDDDDDD", "CCCCCCCCCAAAAAAAABBBBBBBBBBBJJJJJJJJJJDDDDDDDDDCCCCCCCCCCDDDDDDDDDDCCCCCCCCCCCCCCCCCCCCCCCCIIIIIIIIIIIDDDDDDDDDDDD", "DDDDDDDDDDDIIIIIIIIIICCCCCCCCCCCCCCCCGGGGGGGGGGGIIIIIIIIIIIIAAAAAAAAAAAFFFFFFFFFF==CCCCCCCCIIIIIIIIIIICCCCCCCCFFFF", "DDDDDDDDDDDDDDDDCCCCCCCCCCCCCCCCCCCCFFFFFFFFFFEEEEEEEEEECCCCCCCCCCCCJJJJJJJJJJJAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDCCC", "DDDDDDDDDDDDAAAAAAAAACCCCCCCCCGGGGGGGGBBBBBBBBBBCCCCCCCCCCCCCCCCCDDDDDDDDDDDCCCCCCCCDDDDDDDDDDDDBBBBBBBBBBBCCCCCCC", "ddiiidddddddddddiiiiidddddddddiiiiidddddddddiiiiidddddddddiiCCCCddddddddiiiiidddddddddiiidddddddddddiiiidddddddddd", "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddCCCCdddddddddddddddddddddddddddddddddddddddddddddddddd", "CCCCCCCCDDDDDDDDCCCCCCCCCDDDDDDDDDDDDDDDDDDDBBBBBBBBBBBDDDDDDDDDDDAAAAAAAAAAAADDDDDDDDDDDFFFFFFFFFFFIIIIIIIIIIIHHH", "AAAAAAAAACCCCCCCCCJJJJJJJJJJJJIIIIIIIIIAAAAAAAAAAAAIIIIIIIIII==IIIIIIIIIAAAAAAAAAAADDDDDDDDDCCCCCCCCCDDDDDDDDCCCCC", "DDDDDDDDHHHHHHHHHHHHAAAAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDBBBBBBBBBBBBCCCCCCCCCCIIIIIIIIIIIIDDDDDDDDDDDDBBBBBBBBAAAAA", "AAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHIIIIIIIIIIAAAAAAAAAGGGGGGGGGGBBBBBBBBBBFFFFFFFFFFFAAAAAAAAAAAACCCCCCCCCCCFFFFFFFFF", "HHHHHHHHHHHCCCCCCCCCCAAAAAAAAAAIIIIIIIIIAAAAAAAAAAAAFFFFFFFFF==AAAAAAAAAACCCCCCCCCCCCAAAAAAAAAAAABBBBBBBBAAAAAAAAA", "AAAAAAAAAAAAFFFFFFFFFFFFDDDDDDDDDDAAAAAAAAAAADDDDDDDDDEEEEEEEEDDDDDDDDDDDDEEEEEEEEECCCCCCCCCCCCDDDDDDDDAAAAAAAAAAF", "BBBBBBBBBBBBBBBBBBBBBBBBBBBHHHHHHHHHHDDDDDDDDDDDDDDDDDDDDDAAAAAAAABBBBBBBBBBBBBBBBBBBBBBBBBDDDDDDDDDDDDDDDDDDDJJJJ", "BBBBBBBBAAAAAAAAAAAABBBBBBBBBBBBJJJJJJJJJJDDDDDDDDDDDAAAAAAAA==AAAAAAAAABBBBBBBBBBBCCCCCCCCCBBBBBBBBBIIIIIIIIDDDDD", "AAAAAAAAAAAAAAAAAABBBBBBBBJJJJJJJJJJJBBBBBBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCCCCIIIII", "AAAAAAAAAAAAAAAAAAAAAADDDDDDDDCCCCCCCCIIIIIIIIIIIIHHHHHHHHHHCCCCCCCCCCCAAAAAAAAAAADDDDDDDDDDAAAAAAAAAAFFFFFFFFFFAA", "ccccccchhhhccccccccccccchhhcccccccccccccCCCChccccccccccccchhhcccccccccccccchhhhhcccccccccccchhhcccccccccccccchhhhh", "ccccccccccccccccccccccccccccccccccccccccCCCCcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "DDDDDDDDDDDDFFFFFFFFFAAAAAAAAAAAAFFFFFFFFFFFFBBBBBBBBDDDDDDDDDDDDDDDDDDDDCCCCCCCCEEEEEEEEEEECCCCCCCCCCCFFFFFFFFFFF", "AAAAAAAAACCCCCCCCCFFFFFFFFFFFAAAAAAAABBBB==BBBBCCCCCCCCCCAAAAAAAAAGGGGGGGGGGGGBBBBBBBBBBBAAAAAAAAAADDDDDDDDDDDDJJJ", "AAAAAAAAAAABBBBBBBBBBIIIIIIIIIIBBBBBBBBBBBFFFFFFFFFFFFFFFFFFFDDDDDDDDCCCCCCCCCCBBBBBBBBBBDDDDDDDDDDBBBBBBBBBBBBBBB", "BBBBBBBBBBBHHHHHHHHHHHIIIIIIIIIBBBBBBBBBBBBBBBBBBBBBIIIIIIIICCCCCCCCCFFFFFFFFFFDDDDDDDDDCCCCCCCCCCDDDDDDDDDDDDDDDD", "JJJJJJJJJJIIIIIIIIIIICCCCCCCCCCCCCCCCCCCC==DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDAAAAAAAACCCCCCCCCCCCIIIIIIIIAAAAAAAAAAAII", "EEEEEEEEEEEDDDDDDDDDDHHHHHHHHHHCCCCCCCCCCCAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCBBBBBBBBBBBBDDDDDDDDDCCCCCCCCCCCCHHHHH", "EEEEEEEEECCCCCCCCCCCCJJJJJJJJJJBBBBBBBBBBBEEEEEEEEEEEECCCCCCCCCCCCCCCCCCCDDDDDDDDDCCCCCCCCCCCCCCCCCHHHHHHHHCCCCCCC", "DDDDDDDDCCCCCCCCCCCCCCCCCCCCCEEEEEEEEEEED==DDDDDDDDDAAAAAAAAAAAHHHHHHHHHHBBBBBBBBBBFFFFFFFFAAAAAAAAAAAAAAAAAAAAAAA", "CCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJCCCCCCCCCCCCCCCCCCCCCHHHHHHHHHHDDDDDDDDEEEEEEEEEEEEEEEEEECCCCCCCCCCDDDDDDDDCCCCCCCC", "DDDDDDDDHHHHHHHHHHHHJJJJJJJJJJFFFFFFFFFFFFFFFFFFFCCCCCCCCCCDDDDDDDDDDDCCCCCCCCCBBBBBBBBBEEEEEEEEJJJJJJJJJJJHHHHHHH", "bbbbbbbgggggbbbbbbbbCCCCbbggggbbbbbbbbbbbbbbbggggbbbbbbbbbbbbbbbgggbbbbbbbbbbbbbbbbgggggbbbbbbbbbbbbbbgggbbbbbbbbb", "bbbbbbbbbbbbbbbbbbbbCCCCbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "FFFFFFFFFFFFEEEEEEEEAAAAAAAAAAAAAAAAAAAAADDDDDDDDDGGGGGGGGGGGGFFFFFFFFFFFBBBBBBBBBBBBBBBBBBAAAAAAAAAAAABBBBBBBBBBC", "DDDDDDDDAAAAAAAAAAAAC==CCCCCCCCCDDDDDDDDDDDDFFFFFFFFFFFGGGGGGGGGGDDDDDDDDIIIIIIIIICCCCCCCCCCGGGGGGGGGAAAAAAAADDDDD", "CCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJDDDDDDDDDDDDDDDDDDDDEEEEEEEEEBBBBBBBBBBBBBBBBBBBBHHHHHHHHHAAAAAAAAAAAABBBBBBBB", "AAAAAAAAAAAAAAAAAAGGGGGGGGGGGGIIIIIIIIIIIIIIIIIIIIIIIDDDDDDDDDAAAAAAAAFFFFFFFFFFFFFFFFFFFFAAAAAAAAAAAAAAAAADDDDDDD", "AAAAAAAAADDDDDDDDDDAA==AAAAAFFFFFFFFFFFJJJJJJJJJJJJAAAAAAAAAADDDDDDDDDDDCCCCCCCCAAAAAAAAAEEEEEEEEEEEEBBBBBBBBBBBBB", "DDDDDDDDDDDIIIIIIIIIIIAAAAAAAAAAAAEEEEEEEEEEBBBBBBBBBBDDDDDDDDDDDBBBBBBBBBBBDDDDDDDDCCCCCCCCCCCAAAAAAAAHHHHHHHHHDD", "CCCCCCCCBBBBBBBBBBBJJJJJJJJJGGGGGGGGGGGDDDDDDDDDDFFFFFFFFFFFFJJJJJJJJJJJCCCCCCCCDDDDDDDDBBBBBBBBBBBAAAAAAAAAADDDDD", "HHHHHHHHHAAAAAAAAABBB==BBBBBDDDDDDDDDDDDIIIIIIIIIIIIBBBBBBBBBBBBBBBBBBBBBGGGGGGGGGIIIIIIIIIIIIGGGGGGGGGGGGDDDDDDDD", "FFFFFFFFGGGGGGGGGGGGGGGGGGGGAAAAAAAAAAAAAAAAAAAADDDDDDDDJJJJJJJJCCCCCCCCDDDDDDDDDAAAAAAAAJJJJJJJJJJJJDDDDDDDDDDDBB", "AAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDFFFFFFFFFFFFDDDDDDDDDDIIIIIIIIIIDDDD", "aaaaaafffaaaaaaaaaaaaaaaaaafffffaaaaaaaaaaaaaaaafffffaaaaaaaaaaaaaaaafffaaaaaaaaaaaaaaaaaaffffaaaaaaaaaaaaaaaaafff", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "objets": [{"type": "depart", "tx": 3, "ty": 73}, {"type": "appareil", "cle": "commutateur", "tx": 0, "ty": 73}, {"type": "paquet", "tx": 19, "ty": 73}, {"type": "paquet", "tx": 38, "ty": 73}, {"type": "paquet", "tx": 57, "ty": 73}, {"type": "paquet", "tx": 76, "ty": 73}, {"type": "eleve", "tx": 95, "ty": 73, "modele": 0}, {"type": "avion", "tx": 95, "ty": 68}, {"type": "appareil", "cle": "ordinateur", "tx": 0, "ty": 61}, {"type": "paquet", "tx": 18, "ty": 61}, {"type": "paquet", "tx": 40, "ty": 61}, {"type": "paquet", "tx": 58, "ty": 61}, {"type": "paquet", "tx": 76, "ty": 61}, {"type": "eleve", "tx": 94, "ty": 61, "modele": 1}, {"type": "avion", "tx": 94, "ty": 56}, {"type": "appareil", "cle": "serveur", "tx": 0, "ty": 49}, {"type": "paquet", "tx": 18, "ty": 49}, {"type": "paquet", "tx": 36, "ty": 49}, {"type": "paquet", "tx": 58, "ty": 49}, {"type": "paquet", "tx": 76, "ty": 49}, {"type": "eleve", "tx": 94, "ty": 49, "modele": 2}, {"type": "avion", "tx": 94, "ty": 44}, {"type": "appareil", "cle": "routeur", "tx": 0, "ty": 37}, {"type": "paquet", "tx": 18, "ty": 37}, {"type": "paquet", "tx": 36, "ty": 37}, {"type": "paquet", "tx": 54, "ty": 37}, {"type": "paquet", "tx": 76, "ty": 37}, {"type": "eleve", "tx": 94, "ty": 37, "modele": 3}, {"type": "avion", "tx": 94, "ty": 32}, {"type": "appareil", "cle": "commutateur", "tx": 0, "ty": 25}, {"type": "paquet", "tx": 18, "ty": 25}, {"type": "paquet", "tx": 36, "ty": 25}, {"type": "paquet", "tx": 54, "ty": 25}, {"type": "paquet", "tx": 72, "ty": 25}, {"type": "avion", "tx": 94, "ty": 20}, {"type": "sortie", "tx": 113, "ty": 25}], "decors": [{"image": "bureau", "tx": 6, "ty": 73}, {"image": "poubelle", "tx": 9, "ty": 73}, {"image": "extincteur", "tx": 12, "ty": 73}, {"image": "poubelle", "tx": 15, "ty": 73}, {"image": "fenetre", "tx": 16, "ty": 73}, {"image": "panneau-sortie", "tx": 19, "ty": 73}, {"image": "porte-classe", "tx": 22, "ty": 73}, {"image": "bureau", "tx": 25, "ty": 73}, {"image": "casier", "tx": 26, "ty": 73}, {"image": "armoire-technique", "tx": 29, "ty": 73}, {"image": "armoire-technique", "tx": 32, "ty": 73}, {"image": "tableau-electrique", "tx": 34, "ty": 73}, {"image": "chaise", "tx": 37, "ty": 73}, {"image": "bureau", "tx": 40, "ty": 73}, {"image": "porte-classe", "tx": 43, "ty": 73}, {"image": "fenetre", "tx": 44, "ty": 73}, {"image": "casier", "tx": 47, "ty": 73}, {"image": "etagere", "tx": 50, "ty": 73}, {"image": "casier", "tx": 53, "ty": 73}, {"image": "fenetre", "tx": 55, "ty": 73}, {"image": "armoire-technique", "tx": 58, "ty": 73}, {"image": "tableau", "tx": 61, "ty": 73}, {"image": "extincteur", "tx": 64, "ty": 73}, {"image": "cartons", "tx": 65, "ty": 73}, {"image": "tableau", "tx": 68, "ty": 73}, {"image": "armoire-technique", "tx": 71, "ty": 73}, {"image": "poubelle", "tx": 74, "ty": 73}, {"image": "panneau-sortie", "tx": 75, "ty": 73}, {"image": "extincteur", "tx": 78, "ty": 73}, {"image": "distributeur", "tx": 81, "ty": 73}, {"image": "tableau-electrique", "tx": 84, "ty": 73}, {"image": "cartons", "tx": 85, "ty": 73}, {"image": "distributeur", "tx": 88, "ty": 73}, {"image": "plante", "tx": 91, "ty": 73}, {"image": "tableau-electrique", "tx": 94, "ty": 73}, {"image": "cartons", "tx": 95, "ty": 73}, {"image": "chaise", "tx": 98, "ty": 73}, {"image": "etagere", "tx": 101, "ty": 73}, {"image": "plante", "tx": 103, "ty": 73}, {"image": "panneau-sortie", "tx": 106, "ty": 73}, {"image": "extincteur", "tx": 109, "ty": 73}, {"image": "cartons", "tx": 3, "ty": 61}, {"image": "etagere", "tx": 6, "ty": 61}, {"image": "distributeur", "tx": 9, "ty": 61}, {"image": "chaise", "tx": 12, "ty": 61}, {"image": "poubelle", "tx": 14, "ty": 61}, {"image": "extincteur", "tx": 17, "ty": 61}, {"image": "tableau", "tx": 20, "ty": 61}, {"image": "casier", "tx": 23, "ty": 61}, {"image": "chaise", "tx": 24, "ty": 61}, {"image": "panneau-sortie", "tx": 27, "ty": 61}, {"image": "tableau-electrique", "tx": 30, "ty": 61}, {"image": "banc", "tx": 32, "ty": 61}, {"image": "cartons", "tx": 35, "ty": 61}, {"image": "banc", "tx": 38, "ty": 61}, {"image": "extincteur", "tx": 41, "ty": 61}, {"image": "cartons", "tx": 44, "ty": 61}, {"image": "poubelle", "tx": 47, "ty": 61}, {"image": "fenetre", "tx": 50, "ty": 61}, {"image": "poubelle", "tx": 52, "ty": 61}, {"image": "bureau", "tx": 55, "ty": 61}, {"image": "banc", "tx": 58, "ty": 61}, {"image": "porte-classe", "tx": 61, "ty": 61}, {"image": "plante", "tx": 63, "ty": 61}, {"image": "banc", "tx": 66, "ty": 61}, {"image": "etagere", "tx": 69, "ty": 61}, {"image": "plante", "tx": 72, "ty": 61}, {"image": "panneau-sortie", "tx": 74, "ty": 61}, {"image": "armoire-technique", "tx": 77, "ty": 61}, {"image": "panneau-sortie", "tx": 80, "ty": 61}, {"image": "porte-classe", "tx": 83, "ty": 61}, {"image": "bureau", "tx": 85, "ty": 61}, {"image": "banc", "tx": 88, "ty": 61}, {"image": "panneau-sortie", "tx": 91, "ty": 61}, {"image": "fenetre", "tx": 94, "ty": 61}, {"image": "casier", "tx": 97, "ty": 61}, {"image": "banc", "tx": 100, "ty": 61}, {"image": "distributeur", "tx": 103, "ty": 61}, {"image": "tableau-electrique", "tx": 104, "ty": 61}, {"image": "etagere", "tx": 107, "ty": 61}, {"image": "poubelle", "tx": 110, "ty": 61}, {"image": "porte-classe", "tx": 4, "ty": 49}, {"image": "panneau-sortie", "tx": 7, "ty": 49}, {"image": "casier", "tx": 10, "ty": 49}, {"image": "armoire-technique", "tx": 13, "ty": 49}, {"image": "bureau", "tx": 14, "ty": 49}, {"image": "plante", "tx": 17, "ty": 49}, {"image": "chaise", "tx": 20, "ty": 49}, {"image": "etagere", "tx": 23, "ty": 49}, {"image": "casier", "tx": 26, "ty": 49}, {"image": "casier", "tx": 29, "ty": 49}, {"image": "tableau", "tx": 32, "ty": 49}, {"image": "poubelle", "tx": 34, "ty": 49}, {"image": "casier", "tx": 37, "ty": 49}, {"image": "extincteur", "tx": 40, "ty": 49}, {"image": "fenetre", "tx": 42, "ty": 49}, {"image": "extincteur", "tx": 45, "ty": 49}, {"image": "extincteur", "tx": 48, "ty": 49}, {"image": "etagere", "tx": 51, "ty": 49}, {"image": "porte-classe", "tx": 54, "ty": 49}, {"image": "plante", "tx": 57, "ty": 49}, {"image": "distributeur", "tx": 59, "ty": 49}, {"image": "banc", "tx": 62, "ty": 49}, {"image": "banc", "tx": 65, "ty": 49}, {"image": "armoire-technique", "tx": 68, "ty": 49}, {"image": "casier", "tx": 71, "ty": 49}, {"image": "porte-classe", "tx": 74, "ty": 49}, {"image": "porte-classe", "tx": 77, "ty": 49}, {"image": "cartons", "tx": 80, "ty": 49}, {"image": "distributeur", "tx": 83, "ty": 49}, {"image": "panneau-sortie", "tx": 86, "ty": 49}, {"image": "armoire-technique", "tx": 89, "ty": 49}, {"image": "casier", "tx": 92, "ty": 49}, {"image": "porte-classe", "tx": 94, "ty": 49}, {"image": "cartons", "tx": 97, "ty": 49}, {"image": "chaise", "tx": 100, "ty": 49}, {"image": "fenetre", "tx": 103, "ty": 49}, {"image": "fenetre", "tx": 105, "ty": 49}, {"image": "etagere", "tx": 108, "ty": 49}, {"image": "armoire-technique", "tx": 111, "ty": 49}, {"image": "etagere", "tx": 4, "ty": 37}, {"image": "fenetre", "tx": 7, "ty": 37}, {"image": "porte-classe", "tx": 10, "ty": 37}, {"image": "bureau", "tx": 13, "ty": 37}, {"image": "tableau-electrique", "tx": 16, "ty": 37}, {"image": "poubelle", "tx": 19, "ty": 37}, {"image": "armoire-technique", "tx": 22, "ty": 37}, {"image": "panneau-sortie", "tx": 25, "ty": 37}, {"image": "casier", "tx": 28, "ty": 37}, {"image": "chaise", "tx": 31, "ty": 37}, {"image": "porte-classe", "tx": 34, "ty": 37}, {"image": "armoire-technique", "tx": 36, "ty": 37}, {"image": "casier", "tx": 39, "ty": 37}, {"image": "fenetre", "tx": 42, "ty": 37}, {"image": "etagere", "tx": 45, "ty": 37}, {"image": "distributeur", "tx": 48, "ty": 37}, {"image": "extincteur", "tx": 51, "ty": 37}, {"image": "tableau-electrique", "tx": 53, "ty": 37}, {"image": "panneau-sortie", "tx": 56, "ty": 37}, {"image": "extincteur", "tx": 59, "ty": 37}, {"image": "porte-classe", "tx": 62, "ty": 37}, {"image": "banc", "tx": 65, "ty": 37}, {"image": "tableau-electrique", "tx": 68, "ty": 37}, {"image": "distributeur", "tx": 71, "ty": 37}, {"image": "porte-classe", "tx": 74, "ty": 37}, {"image": "distributeur", "tx": 75, "ty": 37}, {"image": "casier", "tx": 78, "ty": 37}, {"image": "fenetre", "tx": 81, "ty": 37}, {"image": "tableau-electrique", "tx": 84, "ty": 37}, {"image": "casier", "tx": 85, "ty": 37}, {"image": "chaise", "tx": 88, "ty": 37}, {"image": "extincteur", "tx": 91, "ty": 37}, {"image": "etagere", "tx": 93, "ty": 37}, {"image": "plante", "tx": 96, "ty": 37}, {"image": "armoire-technique", "tx": 99, "ty": 37}, {"image": "cartons", "tx": 102, "ty": 37}, {"image": "tableau", "tx": 103, "ty": 37}, {"image": "bureau", "tx": 106, "ty": 37}, {"image": "fenetre", "tx": 109, "ty": 37}, {"image": "cartons", "tx": 3, "ty": 25}, {"image": "tableau", "tx": 6, "ty": 25}, {"image": "porte-classe", "tx": 9, "ty": 25}, {"image": "plante", "tx": 12, "ty": 25}, {"image": "bureau", "tx": 14, "ty": 25}, {"image": "casier", "tx": 17, "ty": 25}, {"image": "panneau-sortie", "tx": 20, "ty": 25}, {"image": "plante", "tx": 23, "ty": 25}, {"image": "cartons", "tx": 24, "ty": 25}, {"image": "distributeur", "tx": 27, "ty": 25}, {"image": "tableau-electrique", "tx": 30, "ty": 25}, {"image": "tableau", "tx": 33, "ty": 25}, {"image": "distributeur", "tx": 36, "ty": 25}, {"image": "porte-classe", "tx": 39, "ty": 25}, {"image": "etagere", "tx": 42, "ty": 25}, {"image": "banc", "tx": 44, "ty": 25}, {"image": "cartons", "tx": 47, "ty": 25}, {"image": "bureau", "tx": 50, "ty": 25}, {"image": "fenetre", "tx": 53, "ty": 25}, {"image": "poubelle", "tx": 54, "ty": 25}, {"image": "armoire-technique", "tx": 57, "ty": 25}, {"image": "casier", "tx": 60, "ty": 25}, {"image": "etagere", "tx": 63, "ty": 25}, {"image": "casier", "tx": 66, "ty": 25}, {"image": "cartons", "tx": 69, "ty": 25}, {"image": "distributeur", "tx": 72, "ty": 25}, {"image": "bureau", "tx": 75, "ty": 25}, {"image": "tableau", "tx": 78, "ty": 25}, {"image": "etagere", "tx": 81, "ty": 25}, {"image": "tableau", "tx": 84, "ty": 25}, {"image": "armoire-technique", "tx": 87, "ty": 25}, {"image": "distributeur", "tx": 90, "ty": 25}, {"image": "plante", "tx": 92, "ty": 25}, {"image": "etagere", "tx": 95, "ty": 25}, {"image": "cartons", "tx": 98, "ty": 25}, {"image": "porte-classe", "tx": 100, "ty": 25}, {"image": "panneau-sortie", "tx": 103, "ty": 25}, {"image": "extincteur", "tx": 106, "ty": 25}, {"image": "extincteur", "tx": 109, "ty": 25}]}]};
+window.JEU_APPAREILS = {"commutateur": {"nom": "Commutateur", "image": "commutateur", "role": "Il relie entre eux les appareils d'un même réseau local et aiguille les données vers le bon appareil, comme un standard téléphonique. Il ne relie pas à Internet."}, "routeur": {"nom": "Routeur", "image": "routeur", "role": "Il relie le réseau local à Internet. Il choisit la route que prennent les données et émet souvent le Wi-Fi."}, "ordinateur": {"nom": "Poste client", "image": "ordinateur", "role": "L'ordinateur utilisé par une personne : il demande des informations au réseau. La carte réseau est la porte d'entrée."}, "serveur": {"nom": "Serveur de données", "image": "serveur", "role": "Un ordinateur qui stocke et partage des données pour tous les utilisateurs du réseau. Il répond aux demandes."}};
+
+</script>
+<script>
+/* ============================================================================
+   « Le réseau en panne » — jeu de plateforme 2D, 5 niveaux
+   Activité : 5e SFC1 « Exploiter le réseau informatique pour travailler »
+
+   Architecture calquée sur l'exemple MIT « HTML5_Platformer » de ZeroDayArcade
+   (https://github.com/ZeroDayArcade/HTML5_Platformer) :
+     - niveau = tableau de caractères, un caractère par tuile, tuiles de 32 px ;
+     - atlas de tuiles unique (tileset.png), dessin par indice ;
+     - tuile de sol, parallaxe à trois couches, écran de titre, audio ;
+     - collisions sprite ↔ tuiles par intersection de rectangles.
+
+   Ce qui a été ajouté par rapport au modèle, parce qu'un jeu de plateforme se
+   juge au ressenti :
+     - accélération et freinage (et non vitesse instantanée) ;
+     - « coyote time » (on peut encore sauter 0,1 s après avoir quitté le bord) ;
+     - mémorisation de l'appui (un saut demandé 0,12 s avant l'atterrissage
+       part quand on touche le sol) ;
+     - saut à hauteur variable (relâcher la touche coupe la montée) ;
+     - caméra à zone morte et lissée, secousse à l'impact ;
+     - particules (poussière de course, étincelles de ramassage).
+
+   Les personnages sont les planches PixelLab (640 × 64, 10 cases) : repos et
+   cycle de marche de 4 images dans chaque sens. Le saut tient une seule image —
+   c'est le choix de Mario 1, et il évite une animation inventée.
+   ============================================================================ */
+(function () {
+    "use strict";
+
+    // ── Constantes ──────────────────────────────────────────────────────────
+    var TUILE = 32;
+    var ECRAN_L = 960;
+    var ECRAN_H = 512;
+    var GRAVITE = 1900;
+    var SAUT = 620;
+    var VITESSE_MAX = 260;
+    var ACCELERATION = 2000;
+    var FREINAGE = 2600;
+    var VITESSE_CHUTE_MAX = 1000;
+    var PAS = 1 / 120;
+    var COYOTE = 0.10;              // s de tolérance après avoir quitté le sol
+    var TAMPON_SAUT = 0.12;         // s de mémorisation de l'appui
+    var COUPE_SAUT = 0.42;          // multiplicateur de vitesse quand on relâche
+    var DUREE_REPARATION = 1.0;
+    var PORTEE_REPARATION = 78;
+    var COEURS_MAX = 3;
+    var INVULNERABILITE = 1.4;
+    var ETROUDI = 3.0;
+
+    // Cases de la planche de personnage (640 × 64) : 10 cases de 64 px
+    var CASE = { repos: 0, marche: [1, 2, 3, 4], reposG: 5, marcheG: [6, 7, 8, 9] };
+    // Le professeur mesure 1,3 fois un enfant : sa planche est en cases
+    // de 84 px (64 x 1,3) et sa boîte de collision suit la même échelle.
+    var HEROS_CASE = 84;
+    var HEROS_PIEDS = 81;           // ligne des pieds dans la case agrandie
+    var HEROS_L = 31, HEROS_H = 76; // boîte de collision du professeur
+    var PIEDS_CASE = 62;            // ligne des pieds dans la case de 64 px
+
+    var IMAGES = {
+        personnages: ["prof-techno", "eleve-01-leo", "eleve-02-ines",
+                      "eleve-03-omar", "eleve-04-chloe", "eleve-05-yanis"],
+        objets: ["commutateur", "ordinateur", "routeur", "serveur", "avion"],
+        };
+
+    var DOSSIER = "assets/";
+
+    // ── DOM ─────────────────────────────────────────────────────────────────
+    var racine = document.getElementById("jeu");
+    var canvas = document.getElementById("jeu-canvas");
+    var ctx = canvas ? canvas.getContext("2d") : null;
+    var zone = document.getElementById("jeu-zone");
+
+    function el(id) { return document.getElementById(id); }
+
+    var ui = {
+        coeurs: el("jeu-coeurs"), appareils: el("jeu-appareils"),
+        paquets: el("jeu-paquets"), niveau: el("jeu-niveau-nom"),
+        objectif: el("jeu-objectif"), indication: el("jeu-indication"),
+        annonce: el("jeu-annonce"), menu: el("jeu-menu"),
+        demarrer: el("jeu-demarrer"), niveaux: el("jeu-niveaux"),
+        fiche: el("jeu-fiche"), ficheTitre: el("jeu-fiche-titre"),
+        ficheRole: el("jeu-fiche-role"), ficheFermer: el("jeu-fiche-fermer"),
+        bilan: el("jeu-bilan"), bilanTitre: el("jeu-bilan-titre"),
+        bilanTexte: el("jeu-bilan-texte"), bilanSuivant: el("jeu-bilan-suivant"),
+        bilanRejouer: el("jeu-bilan-rejouer"), pause: el("jeu-pause"),
+        pleinEcran: el("jeu-plein-ecran"), son: el("jeu-son"),
+        cadre: el("jeu-cadre")
+    };
+    if (!racine || !ctx) { return; }
+
+    var reduireMouvement = window.matchMedia
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : { matches: false };
+
+    // ── État ────────────────────────────────────────────────────────────────
+    var etat = {
+        mode: "accueil",        // accueil | jeu | fiche | bilan | pause | perdu
+        niveau: 0,
+        debloques: 1,
+        coeurs: COEURS_MAX,
+        paquets: 0,
+        paquetsNiveau: 0,
+        temps: 0,
+        carte: [],              // lignes de caractères
+        solides: [],
+        largeur: 0,
+        hauteur: 0,
+        depart: { x: 0, y: 0 },
+        sortie: null,
+        appareils: [],
+        paquetsSol: [],
+        entites: [],
+        particules: [],
+        joueur: null,
+        cameraX: 0,
+        cameraY: 0,
+        escaliers: [],
+        surEscalier: false,
+        decors: [],
+        secousse: 0,
+        fini: false,
+        actif: false,
+        son: true
+    };
+
+    var images = {};
+    var chargees = 0;
+    var attendues = 0;
+    var commandes = { gauche: false, droite: false, saut: false, reparer: false };
+
+    // ── Utilitaires ─────────────────────────────────────────────────────────
+    function borne(v, mini, maxi) { return v < mini ? mini : (v > maxi ? maxi : v); }
+    function annoncer(texte) { if (ui.annonce) { ui.annonce.textContent = texte; } }
+    function indiceTuile(caractere) {
+        var table = window.JEU_LEGENDE || {};
+        return table[caractere] === undefined ? 0 : table[caractere];
+    }
+    function estSolide(tx, ty) {
+        if (tx < 0 || tx >= etat.largeur) { return true; }   // murs du niveau
+        if (ty < 0 || ty >= etat.hauteur) { return false; }
+        var ligne = etat.solides[ty];
+        if (!ligne) {
+            // filet : ne jamais planter sur une carte incomplète, et garder la
+            // trace de ce qui s'est passé pour le diagnostic
+            window.__jeuDiag = { tx: tx, ty: ty, hauteur: etat.hauteur,
+                                 longueur: etat.solides.length,
+                                 joueur: etat.joueur && { x: etat.joueur.x, y: etat.joueur.y } };
+            return false;
+        }
+        return ligne[tx] === true;
+    }
+    function chevauche(a, b) {
+        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    // ── Chargement ──────────────────────────────────────────────────────────
+    function chargerImages(suite) {
+        var liste = [];
+        IMAGES.personnages.forEach(function (n) { liste.push([DOSSIER + "personnages/" + n + ".png", n]); });
+        IMAGES.objets.forEach(function (n) { liste.push([DOSSIER + "objets/" + n + ".png", n]); });
+        liste.push([DOSSIER + "interieur/structure.png", "structure"]);
+        ((window.JEU_MONDE || {}).props || []).forEach(function (nom) {
+            liste.push([DOSSIER + "interieur/props/" + nom, "prop:" + nom]);
+        });
+        attendues = liste.length;
+        chargees = 0;
+        var termine = false;
+        function finir() { if (!termine) { termine = true; suite(); } }
+        liste.forEach(function (paire) {
+            var img = new Image();
+            img.onload = function () {
+                images[paire[1]] = img;
+                chargees += 1;
+                if (chargees >= attendues) { finir(); }
+            };
+            img.onerror = function () {
+                images[paire[1]] = null;      // repli dessiné par code
+                chargees += 1;
+                if (chargees >= attendues) { finir(); }
+            };
+            img.src = paire[0];
+        });
+        window.setTimeout(finir, 5000);
+    }
+
+    // ── Audio (synthèse, aucun fichier) ─────────────────────────────────────
+    var audio = null;
+    function contexteAudio() {
+        if (!etat.son) { return null; }
+        if (!audio) {
+            var C = window.AudioContext || window.webkitAudioContext;
+            if (!C) { return null; }
+            audio = new C();
+        }
+        if (audio.state === "suspended") { audio.resume(); }
+        return audio;
+    }
+    function bip(frequence, duree, type, volume) {
+        var a = contexteAudio();
+        if (!a) { return; }
+        var o = a.createOscillator();
+        var g = a.createGain();
+        o.type = type || "square";
+        o.frequency.value = frequence;
+        g.gain.value = volume === undefined ? 0.06 : volume;
+        g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + duree);
+        o.connect(g); g.connect(a.destination);
+        o.start(); o.stop(a.currentTime + duree);
+    }
+    var sons = {
+        saut: function () { bip(520, 0.12, "square", 0.05); },
+        paquet: function () { bip(880, 0.09, "square", 0.05); setTimeout(function () { bip(1180, 0.09); }, 70); },
+        reparation: function () { bip(440, 0.1, "triangle", 0.06); setTimeout(function () { bip(660, 0.14, "triangle"); }, 110); },
+        degat: function () { bip(160, 0.22, "sawtooth", 0.07); },
+        niveau: function () {
+            [523, 659, 784, 1046].forEach(function (f, i) {
+                setTimeout(function () { bip(f, 0.16, "triangle", 0.06); }, i * 120);
+            });
+        }
+    };
+
+    // ── Niveau ──────────────────────────────────────────────────────────────
+    function chargerNiveau(index) {
+        var monde = window.JEU_MONDE || { niveaux: [] };
+        var niveau = monde.niveaux[index];
+        if (!niveau) { return; }
+        etat.niveau = index;
+        etat.carte = niveau.carte.slice();
+        etat.hauteur = niveau.hauteur;
+        etat.largeur = niveau.largeur;
+        etat.legende = monde.legende || {};
+
+        // Une case est solide si et seulement si la légende la déclare telle.
+        // C'est ce qui garantit que rien n'arrête le personnage sans être
+        // dessiné, et que rien n'est dessiné sans arrêter (cas du pont de bois
+        // signalé par l'élève : visible mais traversable).
+        etat.solides = [];
+        etat.escaliers = [];
+        for (var y = 0; y < etat.hauteur; y += 1) {
+            var ligneSolide = [], ligneEscalier = [];
+            for (var x = 0; x < etat.largeur; x += 1) {
+                var caractere = etat.carte[y].charAt(x);
+                var entree = etat.legende[caractere];
+                ligneSolide.push(!!(entree && entree.solide));
+                ligneEscalier.push(caractere === "e");
+            }
+            etat.solides.push(ligneSolide);
+            etat.escaliers.push(ligneEscalier);
+        }
+
+        etat.entites = [];
+        etat.appareils = [];
+        etat.paquetsSol = [];
+        etat.particules = [];
+        etat.paquetsNiveau = 0;
+        etat.coeurs = COEURS_MAX;
+        etat.temps = 0;
+        etat.fini = false;
+        etat.cameraX = 0;
+        etat.cameraY = 0;
+        etat.secousse = 0;
+        etat.sortie = null;
+        etat.depart = { x: TUILE * 3, y: TUILE * 2 };
+
+        (niveau.objets || []).forEach(function (o) {
+            var px = o.tx * TUILE, py = o.ty * TUILE;
+            if (o.type === "depart") {
+                etat.depart = { x: px + 4, y: py + TUILE - HEROS_H };
+            } else if (o.type === "sortie") {
+                etat.sortie = { x: px + 3, y: py + TUILE - 46, w: 26, h: 46 };
+            } else if (o.type === "paquet") {
+                etat.paquetsSol.push({ x: px + 8, y: py + 4, w: 16, h: 20,
+                                       pris: false, t: Math.random() * 6 });
+            } else if (o.type === "appareil") {
+                var fiche = (window.JEU_APPAREILS || {})[o.cle] || {};
+                etat.appareils.push({
+                    cle: o.cle, fiche: fiche, tx: o.tx, ty: o.ty,
+                    x: px, y: py + TUILE, centreX: px + TUILE / 2,
+                    centreY: py + TUILE / 2, repare: false, progres: 0
+                });
+            } else if (o.type === "eleve") {
+                creerEntite("eleve", px, py, o.modele || 0);
+            } else if (o.type === "avion") {
+                creerEntite("avion", px, py);
+            } else if (o.type === "ballon") {
+                creerEntite("ballon", px, py);
+            }
+        });
+        etat.decors = (niveau.decors || []).map(function (d) {
+            return { image: "prop:" + d.image, x: d.tx * TUILE, y: d.ty * TUILE };
+        });
+        if (!etat.sortie) {
+            etat.sortie = { x: (etat.largeur - 3) * TUILE, y: TUILE * 2, w: 26, h: 46 };
+        }
+
+        etat.joueur = {
+            x: etat.depart.x, y: etat.depart.y, w: HEROS_L, h: HEROS_H,
+            vx: 0, vy: 0, face: 1, auSol: false,
+            coyote: 0, tampon: 0, tempsAnim: 0,
+            invulnerable: 0, reparation: 0, reparationEnCours: false
+        };
+        majCamera(1);
+        majHud();
+        majIndication();
+        dessiner();
+    }
+
+    function creerEntite(type, px, py, modele) {
+        var e = { type: type, t: Math.random() * 6.28, etourdi: 0, phase: 0 };
+        if (type === "eleve") {
+            e.perso = ["eleve-01-leo", "eleve-02-ines", "eleve-03-omar",
+                       "eleve-04-chloe", "eleve-05-yanis"][modele % 5];
+            e.w = 22; e.h = 58;
+            e.x = px + 5; e.y = py + TUILE - 58;
+            e.vx = -46; e.vitesse = 46; e.gravite = true;
+        } else if (type === "chien") {
+            e.w = 30; e.h = 20; e.echelle = 2;
+            e.x = px + 2; e.y = py + TUILE - 20;
+            e.vx = -110; e.vitesse = 110; e.gravite = true;
+        } else if (type === "avion") {
+            e.w = 26; e.h = 14;
+            e.x = px + 3; e.y = py + 6;
+            e.vx = -95; e.vitesse = 95; e.vol = true; e.baseY = e.y;
+        } else {
+            e.w = 22; e.h = 22;
+            e.x = px + 5; e.y = py + TUILE - 22;
+            e.vx = -34; e.vitesse = 34; e.gravite = true; e.rebond = true;
+        }
+        etat.entites.push(e);
+    }
+
+    // ── Physique ────────────────────────────────────────────────────────────
+    function deplacerX(box, dx) {
+        box.x += dx;
+        var ty0 = Math.floor(box.y / TUILE), ty1 = Math.floor((box.y + box.h - 1) / TUILE);
+        var tx0 = Math.floor(box.x / TUILE), tx1 = Math.floor((box.x + box.w - 1) / TUILE);
+        for (var ty = ty0; ty <= ty1; ty += 1) {
+            for (var tx = tx0; tx <= tx1; tx += 1) {
+                if (!estSolide(tx, ty)) { continue; }
+                if (dx > 0) { box.x = tx * TUILE - box.w; }
+                else if (dx < 0) { box.x = (tx + 1) * TUILE; }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function deplacerY(box, dy) {
+        box.y += dy;
+        var touche = false;
+        var ty0 = Math.floor(box.y / TUILE), ty1 = Math.floor((box.y + box.h - 1) / TUILE);
+        var tx0 = Math.floor(box.x / TUILE), tx1 = Math.floor((box.x + box.w - 1) / TUILE);
+        for (var ty = ty0; ty <= ty1; ty += 1) {
+            for (var tx = tx0; tx <= tx1; tx += 1) {
+                if (!estSolide(tx, ty)) { continue; }
+                if (dy > 0) { box.y = ty * TUILE - box.h; }
+                else if (dy < 0) { box.y = (ty + 1) * TUILE; }
+                touche = true;
+            }
+        }
+        return touche;
+    }
+
+    /* Contact avec le sol : on teste la tuile sous les pieds, et non la
+       collision du pas courant. Un personnage posé sur une dalle ne
+       collisionne pas à chaque pas — déduire « au sol » de la collision
+       rendrait le saut inopérant un pas sur deux. */
+    function contactSol(box) {
+        var ty = Math.floor((box.y + box.h + 1) / TUILE);
+        var tx0 = Math.floor(box.x / TUILE), tx1 = Math.floor((box.x + box.w - 1) / TUILE);
+        for (var tx = tx0; tx <= tx1; tx += 1) {
+            if (estSolide(tx, ty)) { return true; }
+        }
+        return false;
+    }
+
+    function pasPhysique(dt) {
+        var j = etat.joueur;
+        if (!j) { return; }
+
+        // ── horizontal : accélération et freinage
+        var direction = (commandes.droite ? 1 : 0) - (commandes.gauche ? 1 : 0);
+        if (direction !== 0) {
+            j.vx += direction * ACCELERATION * dt;
+            j.vx = borne(j.vx, -VITESSE_MAX, VITESSE_MAX);
+            j.face = direction;
+        } else {
+            var frein = FREINAGE * dt;
+            if (Math.abs(j.vx) <= frein) { j.vx = 0; }
+            else { j.vx -= Math.sign(j.vx) * frein; }
+        }
+
+        // ── coyote time et mémorisation de l'appui
+        j.coyote = j.auSol ? COYOTE : Math.max(0, j.coyote - dt);
+        j.tampon = commandes.saut ? TAMPON_SAUT : Math.max(0, j.tampon - dt);
+
+        // ── saut
+        if (j.tampon > 0 && j.coyote > 0) {
+            j.vy = -SAUT;
+            j.coyote = 0;
+            j.tampon = 0;
+            j.auSol = false;
+            ajouterPoussiere(j.x + j.w / 2, j.y + j.h, 6);
+            if (sons.saut) { sons.saut(); }
+        }
+        // saut à hauteur variable : relâcher coupe la montée
+        if (!commandes.saut && j.vy < 0) { j.vy *= Math.pow(COUPE_SAUT, dt * 60); }
+
+        // ── gravité
+        j.vy = Math.min(j.vy + GRAVITE * dt, VITESSE_CHUTE_MAX);
+
+        var bloqueX = deplacerX(j, j.vx * dt);
+        // Montée automatique de marche : au sommet d'un escalier, le palier
+        // commence 8 px au-dessus des pieds — sans ce rattrapage le personnage
+        // reste bloqué juste sous l'étage (reproduit : arrêt net à y=494).
+        if (bloqueX && j.auSol && j.vx !== 0) {
+            var ancienX = j.x, ancienY = j.y;
+            j.y -= 8;
+            // `deplacerX` renvoie true quand il PERCUTE : si c'est encore le
+            // cas 8 px plus haut, on remet tout en place (position comprise).
+            if (deplacerX(j, j.vx * dt)) { j.x = ancienX; j.y = ancienY; }
+        }
+        var etaitAuSol = j.auSol;
+        var piedsAvant = j.y + j.h;
+        deplacerY(j, j.vy * dt);
+        var auSol = contactSol(j);
+        // Escaliers : les tuiles de marche ne sont pas « solides » (on ne s'y
+        // cogne pas), on repose les pieds sur la marche lue sous le centre du
+        // personnage. C'est ce qui permet de monter sans sauter.
+        // ESCALIERS À SENS UNIQUE : on ne s'y pose qu'en venant du dessus.
+        // Il faut donc les avoir sautés — marcher dessous ne les prend pas.
+        // La condition est une TRAVERSÉE : les pieds étaient au-dessus de la
+        // marche avant le déplacement, et passent en dessous après.
+        var marche = surfaceEscalier(j);
+        var surMarche = false;
+        if (marche !== null && j.vy >= 0) {
+            var pieds = j.y + j.h;
+            // 1) on entre dans l'escalier en venant du DESSUS (saut)
+            var venuDuDessus = piedsAvant <= marche + 1 && pieds >= marche - 1;
+            // 2) ou on est DÉJÀ sur l'escalier et on monte la marche suivante
+            var monteLaMarche = etat.surEscalier && marche <= pieds + 2 && marche >= pieds - 34;
+            if (venuDuDessus || monteLaMarche) {
+                j.y = marche - j.h;
+                j.vy = 0;
+                auSol = true;
+                surMarche = true;
+            }
+        }
+        etat.surEscalier = surMarche ||
+            (marche !== null && Math.abs((j.y + j.h) - marche) < 3);
+        if (auSol && !etat.auSolPrecedent && j.vy > 300) {
+            ajouterPoussiere(j.x + j.w / 2, j.y + j.h, 4);
+        }
+        j.auSol = auSol;
+        if (auSol && j.vy > 0) { j.vy = 0; }
+        etat.auSolPrecedent = auSol;
+
+        // ── animation
+        j.tempsAnim += dt;
+        if (j.invulnerable > 0) { j.invulnerable -= dt; }
+
+        // ── chute hors du niveau : on perd un cœur, on repart au départ
+        if (j.y > etat.hauteur * TUILE + 120) {
+            blesser(true);
+            j.x = etat.depart.x; j.y = etat.depart.y;
+            j.vx = 0; j.vy = 0;
+        }
+
+        // ── réparation
+        j.reparationEnCours = false;
+        var proche = appareilProche();
+        if (proche && !proche.repare && commandes.reparer) {
+            j.reparationEnCours = true;
+            proche.progres += dt / DUREE_REPARATION;
+            if (proche.progres >= 1) { reparerAppareil(proche); }
+        } else if (proche && !proche.repare) {
+            proche.progres = Math.max(0, proche.progres - dt * 2);
+        }
+
+        majEntites(dt);
+        majPaquets(dt);
+        majParticules(dt);
+        majCamera(dt);
+        majIndication(proche);
+        verifierContacts();
+        verifierSortie();
+    }
+
+    function majEntites(dt) {
+        var j = etat.joueur;
+        for (var i = 0; i < etat.entites.length; i += 1) {
+            var e = etat.entites[i];
+            e.phase += dt;
+            if (e.etourdi > 0) { e.etourdi -= dt; continue; }
+            if (e.vol) {
+                e.x += e.vx * dt;
+                e.y = e.baseY + Math.sin(e.phase * 2.2) * 16;
+                if (e.x < 0) { e.x = 0; e.vx = Math.abs(e.vx); }
+                var lim = etat.largeur * TUILE - e.w;
+                if (e.x > lim) { e.x = lim; e.vx = -Math.abs(e.vx); }
+                continue;
+            }
+            e.vy = Math.min((e.vy || 0) + GRAVITE * dt, VITESSE_CHUTE_MAX);
+            if (deplacerX(e, e.vx * dt)) { e.vx = -e.vx; }
+            deplacerY(e, e.vy * dt);
+            if (contactSol(e)) {
+                if (e.rebond) { e.vy = -430; } else { e.vy = 0; }
+            }
+            // demi-tour au bord : ne pas tomber dans un trou
+            if (!e.rebond) {
+                var devant = e.vx > 0 ? e.x + e.w + 2 : e.x - 2;
+                var tx = Math.floor(devant / TUILE);
+                var ty = Math.floor((e.y + e.h + 4) / TUILE);
+                if (!estSolide(tx, ty) && e.y + e.h >= (etat.hauteur - 3) * TUILE) {
+                    e.vx = -e.vx;
+                }
+            }
+        }
+    }
+
+    function majPaquets(dt) {
+        var j = etat.joueur;
+        for (var i = 0; i < etat.paquetsSol.length; i += 1) {
+            var p = etat.paquetsSol[i];
+            p.t += dt * 3;
+            if (p.pris) { continue; }
+            if (chevauche(j, p)) {
+                p.pris = true;
+                etat.paquets += 1;
+                etat.paquetsNiveau += 1;
+                ajouterEtincelles(p.x + 8, p.y + 10);
+                if (sons.paquet) { sons.paquet(); }
+                majHud();
+            }
+        }
+    }
+
+    function ajouterPoussiere(x, y, nombre) {
+        if (reduireMouvement.matches) { return; }
+        for (var i = 0; i < nombre; i += 1) {
+            etat.particules.push({
+                x: x + (Math.random() - 0.5) * 14, y: y - 2,
+                vx: (Math.random() - 0.5) * 70, vy: -Math.random() * 60,
+                vie: 0.4 + Math.random() * 0.25, max: 0.65, couleur: "#d3dde4", taille: 2
+            });
+        }
+    }
+
+    function ajouterEtincelles(x, y) {
+        if (reduireMouvement.matches) { return; }
+        for (var i = 0; i < 8; i += 1) {
+            var a = (Math.PI * 2 * i) / 8;
+            etat.particules.push({
+                x: x, y: y, vx: Math.cos(a) * 90, vy: Math.sin(a) * 90 - 30,
+                vie: 0.45, max: 0.45, couleur: "#e0a72e", taille: 3
+            });
+        }
+    }
+
+    function majParticules(dt) {
+        for (var i = etat.particules.length - 1; i >= 0; i -= 1) {
+            var p = etat.particules[i];
+            p.vie -= dt;
+            if (p.vie <= 0) { etat.particules.splice(i, 1); continue; }
+            p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 420 * dt;
+        }
+    }
+
+    function appareilProche() {
+        var j = etat.joueur;
+        var cx = j.x + j.w / 2, cy = j.y + j.h / 2;
+        var meilleur = null, distance = PORTEE_REPARATION;
+        for (var i = 0; i < etat.appareils.length; i += 1) {
+            var a = etat.appareils[i];
+            var dx = Math.abs(a.centreX - cx), dy = Math.abs(a.centreY - cy);
+            var d = dx + dy * 0.5;
+            if (dx < PORTEE_REPARATION && dy < 110 && d < distance) {
+                distance = d; meilleur = a;
+            }
+        }
+        return meilleur;
+    }
+
+    function reparerAppareil(appareil) {
+        appareil.repare = true;
+        appareil.progres = 1;
+        majHud();
+        if (sons.reparation) { sons.reparation(); }
+        ajouterEtincelles(appareil.centreX, appareil.centreY);
+        annoncer(appareil.fiche.nom + " réparé. " + appareil.fiche.role);
+        afficherFiche(appareil);
+    }
+
+    function verifierContacts() {
+        var j = etat.joueur;
+        if (!j || j.invulnerable > 0) { return; }
+        for (var i = 0; i < etat.entites.length; i += 1) {
+            var e = etat.entites[i];
+            if (e.etourdi > 0) { continue; }
+            if (chevauche(j, e)) {
+                blesser(false);
+                return;
+            }
+        }
+    }
+
+    function verifierSortie() {
+        var j = etat.joueur;
+        if (!j || etat.fini || !etat.sortie) { return; }
+        if (appareilsRestants() > 0) { return; }
+        if (chevauche(j, etat.sortie)) { terminerNiveau(); }
+    }
+
+    function appareilsRestants() {
+        var reste = 0;
+        for (var i = 0; i < etat.appareils.length; i += 1) {
+            if (!etat.appareils[i].repare) { reste += 1; }
+        }
+        return reste;
+    }
+
+    function blesser(chute) {
+        var j = etat.joueur;
+        if (!chute && j.invulnerable > 0) { return; }
+        etat.coeurs -= 1;
+        j.invulnerable = INVULNERABILITE;
+        j.vy = -300;
+        j.vx = -j.face * 220;
+        if (!reduireMouvement.matches) { etat.secousse = 0.3; }
+        if (sons.degat) { sons.degat(); }
+        majHud();
+        if (etat.coeurs <= 0) {
+            etat.mode = "perdu";
+            annoncer("Plus de cœurs : le niveau recommence.");
+            window.setTimeout(function () {
+                if (etat.mode === "perdu") {
+                    chargerNiveau(etat.niveau);
+                    etat.mode = "jeu";
+                }
+            }, 900);
+        } else {
+            annoncer("Aïe ! Il reste " + etat.coeurs + " cœur" + (etat.coeurs > 1 ? "s" : "") + ".");
+        }
+    }
+
+    function majCamera(dt) {
+        var j = etat.joueur;
+        if (!j) { return; }
+        var cibleX = borne(j.x + j.w / 2 - ECRAN_L * 0.42, 0,
+                           Math.max(0, etat.largeur * TUILE - ECRAN_L));
+        // caméra verticale : indispensable dès qu'un niveau dépasse l'écran en
+        // hauteur (ici 26 tuiles pour 16 visibles, soit 320 px de dénivelé)
+        var cibleY = borne(j.y + j.h / 2 - ECRAN_H * 0.55, 0,
+                           Math.max(0, etat.hauteur * TUILE - ECRAN_H));
+        etat.cameraX += (cibleX - etat.cameraX) * Math.min(1, dt * 8);
+        etat.cameraY += (cibleY - etat.cameraY) * Math.min(1, dt * 6);
+        if (etat.secousse > 0) { etat.secousse = Math.max(0, etat.secousse - dt); }
+    }
+
+    /* Hauteur de la marche d'escalier sous le personnage, ou null.
+       Géométrie identique au dessin de `tuile_escalier()` (fabriquer_interieur.py) :
+       4 marches de 8 px par tuile, montantes vers la droite. Si l'une des deux
+       définitions change, l'autre doit suivre — sinon le personnage flotte. */
+    function surfaceEscalier(box) {
+        var cx = box.x + box.w / 2;
+        var pieds = box.y + box.h;
+        var tx = Math.floor(cx / TUILE);
+        if (tx < 0 || tx >= etat.largeur) { return null; }
+        // Une tuile d'escalier se cherche sur TROIS lignes autour des pieds :
+        // au sommet d'une marche, les pieds sont pile sur la limite de la
+        // tuile, et la marche suivante appartient à la ligne du dessus. Ne
+        // regarder qu'une seule ligne faisait retomber le personnage au milieu
+        // de l'escalier (reproduit : montée jusqu'à y=678 puis chute à 711).
+        var base = Math.floor(pieds / TUILE);
+        var meilleure = null;
+        for (var d = -1; d <= 1; d += 1) {
+            var ty = base + d;
+            if (ty < 0 || ty >= etat.hauteur) { continue; }
+            if (!etat.escaliers[ty] || !etat.escaliers[ty][tx]) { continue; }
+            var k = Math.floor(((cx - tx * TUILE) / TUILE) * 4);
+            if (k < 0) { k = 0; }
+            if (k > 3) { k = 3; }
+            var surf = ty * TUILE + 24 - k * 8;
+            if (surf >= pieds - 12 && surf <= pieds + 14) {
+                if (meilleure === null || surf < meilleure) { meilleure = surf; }
+            }
+        }
+        return meilleure;
+    }
+
+    // ── Rendu ───────────────────────────────────────────────────────────────
+    function dessiner() {
+        if (!ctx) { return; }
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.imageSmoothingEnabled = false;
+        ctx.clearRect(0, 0, ECRAN_L, ECRAN_H);
+
+        var sx = 0, sy = 0;
+        if (etat.secousse > 0 && !reduireMouvement.matches) {
+            sx = (Math.random() - 0.5) * 10 * etat.secousse;
+            sy = (Math.random() - 0.5) * 10 * etat.secousse;
+        }
+
+        dessinerParallaxe(sx, sy);
+
+        ctx.save();
+        ctx.translate(-Math.round(etat.cameraX) + sx,
+                      -Math.round(etat.cameraY) + sy);
+        dessinerCalques();
+        dessinerDecors();
+        dessinerSortie();
+        dessinerPaquets();
+        dessinerAppareils();
+        dessinerEntites();
+        dessinerParticules();
+        dessinerJoueur();
+        ctx.restore();
+    }
+
+    function bande(nom, facteur, y, sx, sy) {
+        var img = images[nom];
+        if (!img) { return; }
+        var largeur = img.width;
+        var decalage = -((etat.cameraX * facteur) % largeur);
+        for (var x = decalage - largeur; x < ECRAN_L + largeur; x += largeur) {
+            ctx.drawImage(img, Math.round(x + sx), Math.round(y + sy));
+        }
+    }
+
+    function dessinerParallaxe(sx, sy) {
+        // En intérieur, pas de ciel ni de montagnes : le mur de fond du niveau
+        // occupe tout l'écran. On peint seulement un fond sombre pour les
+        // zones situées au-delà du niveau (bords du défilement).
+        ctx.fillStyle = "#1a1620";
+        ctx.fillRect(0, 0, ECRAN_L, ECRAN_H);
+    }
+
+    function dessinerCalques() {
+        var atlas = images.structure;
+        if (!atlas || !etat.carte) { return; }
+        var colonnes = Math.floor(atlas.width / TUILE);
+        var x0 = Math.max(0, Math.floor(etat.cameraX / TUILE) - 1);
+        var x1 = Math.min(etat.largeur - 1, Math.ceil((etat.cameraX + ECRAN_L) / TUILE) + 1);
+        var y0 = Math.max(0, Math.floor(etat.cameraY / TUILE) - 1);
+        var y1 = Math.min(etat.hauteur - 1, Math.ceil((etat.cameraY + ECRAN_H) / TUILE) + 1);
+        for (var y = y0; y <= y1; y += 1) {
+            for (var x = x0; x <= x1; x += 1) {
+                var entree = etat.legende[etat.carte[y].charAt(x)];
+                if (!entree || !entree.indice) { continue; }
+                var sx = (entree.indice % colonnes) * TUILE;
+                var sy = Math.floor(entree.indice / colonnes) * TUILE;
+                ctx.drawImage(atlas, sx, sy, TUILE, TUILE,
+                              x * TUILE, y * TUILE, TUILE, TUILE);
+            }
+        }
+    }
+
+    function dessinerDecors() {
+        for (var i = 0; i < etat.decors.length; i += 1) {
+            var d = etat.decors[i];
+            var img = images[d.image];
+            if (!img) { continue; }
+            ctx.drawImage(img, d.x + (TUILE - img.width) / 2,
+                          d.y + TUILE - img.height);
+        }
+    }
+
+    function dessinerPaquets() {
+        for (var i = 0; i < etat.paquetsSol.length; i += 1) {
+            var p = etat.paquetsSol[i];
+            if (p.pris) { continue; }
+            var flottement = Math.sin(p.t) * 3;
+            var x = p.x, y = p.y + flottement;
+            ctx.globalAlpha = 0.25;
+            ctx.fillStyle = "#e0a72e";
+            ctx.beginPath(); ctx.arc(x + 8, y + 10, 13, 0, Math.PI * 2); ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "#2b2230";
+            ctx.fillRect(x - 1, y - 1, 18, 22);
+            ctx.fillStyle = "#e0a72e";
+            ctx.fillRect(x + 1, y + 1, 14, 18);
+            ctx.fillStyle = "#f6d98a";
+            ctx.fillRect(x + 4, y + 4, 5, 5);
+            ctx.fillRect(x + 8, y + 11, 5, 5);
+        }
+    }
+
+    function dessinerAppareils() {
+        for (var i = 0; i < etat.appareils.length; i += 1) {
+            var a = etat.appareils[i];
+            var img = images[(a.fiche && a.fiche.image) || a.cle];
+            var largeur = img ? img.width : 44;
+            var hauteur = img ? img.height : 60;
+            var dx = Math.round(a.centreX - largeur / 2);
+            var dy = Math.round(a.y - hauteur);
+
+            var battement = 0.5 + 0.5 * Math.sin(etat.temps * 4);
+            ctx.globalAlpha = a.repare ? 0.18 : 0.10 + 0.20 * battement;
+            ctx.fillStyle = a.repare ? "#2e8b57" : "#c0392b";
+            ctx.beginPath();
+            ctx.ellipse(a.centreX, a.y - 8, largeur / 2 + 8, 16, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            if (img) {
+                ctx.drawImage(img, dx, dy, largeur, hauteur);
+            } else {
+                ctx.fillStyle = "#5c6a78"; ctx.fillRect(dx, dy, largeur, hauteur);
+                ctx.fillStyle = "#a3b2bf"; ctx.fillRect(dx + 4, dy + 4, largeur - 8, hauteur - 8);
+            }
+            if (a.repare) {
+                ctx.fillStyle = "#2e8b57";
+                ctx.beginPath(); ctx.arc(dx + largeur - 8, dy + 8, 11, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(dx + largeur - 14, dy + 8);
+                ctx.lineTo(dx + largeur - 9, dy + 13);
+                ctx.lineTo(dx + largeur - 2, dy + 2);
+                ctx.stroke();
+            }
+            if (!a.repare && a.progres > 0) {
+                var largeurJauge = 56;
+                ctx.fillStyle = "#2b2230";
+                ctx.fillRect(a.centreX - largeurJauge / 2 - 3, dy - 18, largeurJauge + 6, 12);
+                ctx.fillStyle = "#2e8b57";
+                ctx.fillRect(a.centreX - largeurJauge / 2, dy - 16, largeurJauge * a.progres, 8);
+            }
+        }
+    }
+
+    function dessinerEntites() {
+        for (var i = 0; i < etat.entites.length; i += 1) {
+            var e = etat.entites[i];
+            var img = null, sx = 0, sw = 64, sh = 64;
+            var cadre = Math.floor(e.phase * 7) % 4;
+            var versDroite = e.vx > 0;
+
+            if (e.type === "eleve") {
+                img = images[e.perso];
+                sx = (versDroite ? CASE.marche[cadre] : CASE.marcheG[cadre]) * 64;
+            } else if (e.type === "chien") {
+                img = images[(Math.floor(e.phase * 8) % 2) ? "chien-b" : "chien-a"];
+                sw = img ? img.width : 20; sh = img ? img.height : 20;
+            } else if (e.type === "avion") {
+                img = images.avion; sw = 32; sh = 32;
+            } else {
+                img = images.ballon; sw = 32; sh = 32;
+            }
+            if (!img) {
+                ctx.fillStyle = "#c0392b";
+                ctx.fillRect(e.x, e.y, e.w, e.h);
+                continue;
+            }
+            var echelle = e.echelle || 1;
+            var largeur = sw * echelle, hauteur = sh * echelle;
+            var dx = Math.round(e.x + e.w / 2 - largeur / 2);
+            var dy = Math.round(e.y + e.h - hauteur);
+
+            if (e.type === "eleve") {
+                // la case a des pieds à la ligne 62 : on aligne le sprite dessus
+                dy = Math.round(e.y + e.h - PIEDS_CASE);
+            }
+            // La planche PixelLab contient les deux sens (cases 1-4 vers l'est,
+            // 6-9 vers l'ouest) : aucun miroir n'est nécessaire pour les
+            // personnages, sinon ils se retrouvent retournés deux fois.
+            var retourne = (e.type === "avion" && versDroite);
+
+            if (retourne) {
+                ctx.save();
+                ctx.translate(dx + largeur, dy);
+                ctx.scale(-1, 1);
+                ctx.drawImage(img, sx, 0, sw, sh, 0, 0, largeur, hauteur);
+                ctx.restore();
+            } else {
+                ctx.drawImage(img, sx, 0, sw, sh, dx, dy, largeur, hauteur);
+            }
+
+            if (e.etourdi > 0) {
+                ctx.fillStyle = "#e0a72e";
+                ctx.font = "bold 18px system-ui, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("✦ ✦", e.x + e.w / 2, e.y - 8);
+                ctx.textAlign = "left";
+            }
+        }
+    }
+
+    function dessinerParticules() {
+        for (var i = 0; i < etat.particules.length; i += 1) {
+            var p = etat.particules[i];
+            ctx.globalAlpha = Math.max(0, p.vie / p.max);
+            ctx.fillStyle = p.couleur;
+            ctx.fillRect(Math.round(p.x), Math.round(p.y), p.taille, p.taille);
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    function dessinerSortie() {
+        var s = etat.sortie;
+        if (!s) { return; }
+        var ouvert = appareilsRestants() === 0;
+        var pulsation = 0.5 + 0.5 * Math.sin(etat.temps * 4);
+        ctx.globalAlpha = ouvert ? 0.35 + 0.25 * pulsation : 0.15;
+        ctx.fillStyle = ouvert ? "#7aa858" : "#8e9ca8";
+        ctx.beginPath();
+        ctx.ellipse(s.x + s.w / 2, s.y + s.h / 2, 26, 34, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#2b2230";
+        ctx.fillRect(s.x - 2, s.y - 2, s.w + 4, s.h + 4);
+        ctx.fillStyle = ouvert ? "#cfe7c0" : "#cfc4b2";
+        ctx.fillRect(s.x, s.y, s.w, s.h);
+        ctx.fillStyle = ouvert ? "#4f7a35" : "#8a7d6b";
+        ctx.font = "bold 20px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(ouvert ? "→" : "🔒", s.x + s.w / 2, s.y + s.h - 12);
+        ctx.textAlign = "left";
+    }
+
+    function dessinerJoueur() {
+        var j = etat.joueur;
+        if (!j) { return; }
+        if (j.invulnerable > 0 && Math.floor(j.invulnerable * 14) % 2 === 0) { return; }
+        var img = images["prof-techno"];
+        if (!img) {
+            ctx.fillStyle = "#727245";
+            ctx.fillRect(j.x, j.y, j.w, j.h);
+            return;
+        }
+        var case_ = CASE.repos;
+        if (!j.auSol) {
+            case_ = j.face > 0 ? CASE.marche[0] : CASE.marcheG[0];
+        } else if (Math.abs(j.vx) > 12 || j.reparationEnCours) {
+            var suite = j.face > 0 ? CASE.marche : CASE.marcheG;
+            // cadence d'images liée à la vitesse : à 260 px/s, /90 donnait
+            // 2,9 images/s — le personnage glissait au lieu de marcher
+            var vitesse = Math.abs(j.vx) > 12 ? Math.abs(j.vx) / 34 : 4;
+            case_ = suite[Math.floor(j.tempsAnim * vitesse) % suite.length];
+        } else {
+            case_ = j.face > 0 ? CASE.repos : CASE.reposG;
+        }
+        var dx = Math.round(j.x + j.w / 2 - HEROS_CASE / 2);
+        var dy = Math.round(j.y + j.h - HEROS_PIEDS);
+        ctx.drawImage(img, case_ * HEROS_CASE, 0, HEROS_CASE, HEROS_CASE,
+                      dx, dy, HEROS_CASE, HEROS_CASE);
+    }
+
+    // ── Interface ───────────────────────────────────────────────────────────
+    function majHud() {
+        if (ui.coeurs) {
+            ui.coeurs.textContent = etat.coeurs > 0
+                ? new Array(etat.coeurs + 1).join("❤")
+                : "—";
+        }
+        if (ui.appareils) {
+            var total = etat.appareils.length;
+            ui.appareils.textContent = (total - appareilsRestants()) + " / " + total;
+        }
+        if (ui.paquets) { ui.paquets.textContent = String(etat.paquetsNiveau); }
+        majMenu();
+    }
+
+    function construireMenu() {
+        if (!ui.niveaux) { return; }
+        var niveaux = (window.JEU_MONDE || {}).niveaux || [];
+        ui.niveaux.innerHTML = "";
+        niveaux.forEach(function (n, i) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "jeu-bouton";
+            b.setAttribute("data-niveau", String(i));
+            b.textContent = (i + 1) + ". " + (n.titre || ("Niveau " + (i + 1)));
+            ui.niveaux.appendChild(b);
+        });
+    }
+
+    function majMenu() {
+        if (!ui.niveaux) { return; }
+        var boutons = ui.niveaux.querySelectorAll("button[data-niveau]");
+        for (var i = 0; i < boutons.length; i += 1) {
+            var numero = parseInt(boutons[i].getAttribute("data-niveau"), 10);
+            var ouvert = numero < etat.debloques;
+            boutons[i].disabled = !ouvert;
+            boutons[i].setAttribute("aria-disabled", ouvert ? "false" : "true");
+        }
+    }
+
+    function majIndication(proche) {
+        if (!ui.indication) { return; }
+        if (!proche) {
+            ui.indication.textContent = appareilsRestants() > 0
+                ? "Trouve les appareils en panne (halo rouge) et approche-toi."
+                : "Tout est réparé ! Rejoins la sortie verte.";
+            return;
+        }
+        ui.indication.textContent = proche.repare
+            ? proche.fiche.nom + " : réparé ✔"
+            : "Maintiens E pour réparer le " + proche.fiche.nom.toLowerCase() + ".";
+    }
+
+    function afficherFiche(appareil) {
+        etat.mode = "fiche";
+        if (!ui.fiche) { etat.mode = "jeu"; return; }
+        if (ui.ficheTitre) { ui.ficheTitre.textContent = appareil.fiche.nom + " réparé !"; }
+        if (ui.ficheRole) { ui.ficheRole.textContent = appareil.fiche.role; }
+        ui.fiche.classList.add("visible");
+        ui.fiche.setAttribute("aria-hidden", "false");
+        if (ui.ficheFermer) { ui.ficheFermer.focus(); }
+    }
+
+    function fermerFiche() {
+        if (ui.fiche) {
+            ui.fiche.classList.remove("visible");
+            ui.fiche.setAttribute("aria-hidden", "true");
+        }
+        if (etat.mode === "fiche") { etat.mode = "jeu"; }
+        if (zone) { zone.focus(); }
+    }
+
+    function terminerNiveau() {
+        etat.fini = true;
+        etat.mode = "bilan";
+        var niveaux = (window.JEU_MONDE || {}).niveaux || [];
+        var dernier = etat.niveau >= niveaux.length - 1;
+        if (etat.niveau + 1 >= etat.debloques) {
+            etat.debloques = Math.min(niveaux.length, etat.niveau + 2);
+        }
+        majMenu();
+        if (sons.niveau) { sons.niveau(); }
+        annoncer("Niveau " + (etat.niveau + 1) + " terminé.");
+        if (!ui.bilan) { return; }
+        if (ui.bilanTitre) {
+            ui.bilanTitre.textContent = dernier ? "Le réseau du collège est réparé !"
+                                               : "Niveau terminé !";
+        }
+        if (ui.bilanTexte) {
+            ui.bilanTexte.textContent = dernier
+                ? "Les quatre appareils sont en service. Le trajet d'un fichier est complet : "
+                  + "poste client → carte réseau → câble ou Wi-Fi → commutateur → serveur, "
+                  + "et le routeur pour sortir vers Internet. Paquets ramassés : "
+                  + etat.paquets + "."
+                : "Appareils réparés : " + etat.appareils.length
+                  + " · Paquets : " + etat.paquetsNiveau;
+        }
+        if (ui.bilanSuivant) {
+            ui.bilanSuivant.textContent = dernier ? "Revoir les niveaux" : "Niveau suivant →";
+            ui.bilanSuivant.setAttribute("data-dernier", dernier ? "1" : "0");
+        }
+        ui.bilan.classList.add("visible");
+        ui.bilan.setAttribute("aria-hidden", "false");
+        if (ui.bilanSuivant) { ui.bilanSuivant.focus(); }
+    }
+
+    function fermerBilan() {
+        if (ui.bilan) {
+            ui.bilan.classList.remove("visible");
+            ui.bilan.setAttribute("aria-hidden", "true");
+        }
+        var niveaux = (window.JEU_MONDE || {}).niveaux || [];
+        if (etat.niveau >= niveaux.length - 1) {
+            afficherMenu();
+        } else {
+            chargerNiveau(etat.niveau + 1);
+            etat.mode = "jeu";
+            if (zone) { zone.focus(); }
+        }
+    }
+
+    function afficherMenu() {
+        etat.mode = "accueil";
+        if (ui.menu) { ui.menu.classList.add("visible"); }
+        if (ui.demarrer) { ui.demarrer.focus(); }
+    }
+
+    function cacherMenu() { if (ui.menu) { ui.menu.classList.remove("visible"); } }
+
+    // ── Boucle ──────────────────────────────────────────────────────────────
+    var accumulateur = 0;
+    var dernier = 0;
+
+    function boucle(horodatage) {
+        if (!etat.actif) { return; }
+        if (!dernier) { dernier = horodatage; }
+        var delta = (horodatage - dernier) / 1000;
+        dernier = horodatage;
+        if (delta > 0.25) { delta = 0.25; }
+        if (etat.mode === "jeu") {
+            accumulateur += delta;
+            var garde = 0;
+            while (accumulateur >= PAS && garde < 8) {
+                etat.temps += PAS;
+                pasPhysique(PAS);
+                accumulateur -= PAS;
+                garde += 1;
+                if (etat.mode !== "jeu") { break; }
+            }
+        } else {
+            etat.temps += delta;
+        }
+        dessiner();
+        window.requestAnimationFrame(boucle);
+    }
+
+    function demarrerBoucle() {
+        if (etat.actif) { return; }
+        etat.actif = true;
+        dernier = 0;
+        accumulateur = 0;
+        window.requestAnimationFrame(boucle);
+    }
+
+    // ── Commandes ───────────────────────────────────────────────────────────
+    // Noms volontairement distincts des constantes de physique : `SAUT` vaut
+    // 620 (impulsion en px/s) et un tableau de touches du même nom écrasait la
+    // constante — `-SAUT` devenait NaN, et la position du personnage avec.
+    var TOUCHES_GAUCHE = ["ArrowLeft", "q", "Q", "a", "A"];
+    var TOUCHES_DROITE = ["ArrowRight", "d", "D"];
+    var TOUCHES_SAUT = ["ArrowUp", " ", "Spacebar", "z", "Z", "w", "W"];
+    var TOUCHES_REPARER = ["e", "E"];
+
+    function surTouche(appui, evenement) {
+        if (etat.mode !== "jeu" && etat.mode !== "perdu") { return; }
+        var k = evenement.key;
+        if (TOUCHES_GAUCHE.indexOf(k) >= 0) { commandes.gauche = appui; }
+        else if (TOUCHES_DROITE.indexOf(k) >= 0) { commandes.droite = appui; }
+        else if (TOUCHES_SAUT.indexOf(k) >= 0) { commandes.saut = appui; }
+        else if (TOUCHES_REPARER.indexOf(k) >= 0) { commandes.reparer = appui; }
+        else { return; }
+        evenement.preventDefault();
+    }
+
+    function brancherEntrees() {
+        if (zone) {
+            zone.addEventListener("keydown", function (e) { surTouche(true, e); });
+            zone.addEventListener("keyup", function (e) { surTouche(false, e); });
+            zone.addEventListener("blur", function () {
+                commandes.gauche = commandes.droite = false;
+                commandes.saut = commandes.reparer = false;
+            });
+        }
+        var boutons = racine.querySelectorAll("[data-commande]");
+        for (var i = 0; i < boutons.length; i += 1) {
+            (function (bouton) {
+                var nom = bouton.getAttribute("data-commande");
+                var appuyer = function (e) {
+                    e.preventDefault();
+                    if (e.pointerId !== undefined && bouton.setPointerCapture) {
+                        try { bouton.setPointerCapture(e.pointerId); } catch (x) { /* déjà pris */ }
+                    }
+                    commandes[nom] = true;
+                };
+                var relacher = function (e) {
+                    if (e) { e.preventDefault(); }
+                    commandes[nom] = false;
+                };
+                bouton.addEventListener("pointerdown", appuyer);
+                bouton.addEventListener("pointerup", relacher);
+                bouton.addEventListener("pointercancel", relacher);
+            }(boutons[i]));
+        }
+
+        if (ui.demarrer) {
+            ui.demarrer.addEventListener("click", function () {
+                cacherMenu();
+                chargerNiveau(0);
+                etat.mode = "jeu";
+                demarrerBoucle();
+                if (zone) { zone.focus(); }
+            });
+        }
+        if (ui.niveaux) {
+            ui.niveaux.addEventListener("click", function (e) {
+                var bouton = e.target.closest("button[data-niveau]");
+                if (!bouton || bouton.disabled) { return; }
+                cacherMenu();
+                chargerNiveau(parseInt(bouton.getAttribute("data-niveau"), 10));
+                etat.mode = "jeu";
+                demarrerBoucle();
+                if (zone) { zone.focus(); }
+            });
+        }
+        if (ui.ficheFermer) { ui.ficheFermer.addEventListener("click", fermerFiche); }
+        if (ui.bilanSuivant) { ui.bilanSuivant.addEventListener("click", fermerBilan); }
+        if (ui.bilanRejouer) {
+            ui.bilanRejouer.addEventListener("click", function () {
+                if (ui.bilan) { ui.bilan.classList.remove("visible"); }
+                chargerNiveau(etat.niveau);
+                etat.mode = "jeu";
+                if (zone) { zone.focus(); }
+            });
+        }
+        if (ui.pause) {
+            ui.pause.addEventListener("click", function () {
+                if (etat.mode === "jeu") {
+                    etat.mode = "pause";
+                    ui.pause.textContent = "▶ Reprendre";
+                } else if (etat.mode === "pause") {
+                    etat.mode = "jeu";
+                    ui.pause.textContent = "⏸ Pause";
+                    demarrerBoucle();
+                }
+            });
+        }
+        if (ui.son) {
+            ui.son.addEventListener("click", function () {
+                etat.son = !etat.son;
+                ui.son.setAttribute("aria-pressed", etat.son ? "true" : "false");
+                ui.son.textContent = etat.son ? "🔊 Son" : "🔇 Son";
+                if (etat.son) { bip(660, 0.08); }
+            });
+        }
+        if (ui.pleinEcran) {
+            ui.pleinEcran.addEventListener("click", function () {
+                if (!ui.cadre) { return; }
+                var plein = document.fullscreenElement || document.webkitFullscreenElement;
+                if (plein) {
+                    (document.exitFullscreen || document.webkitExitFullscreen || function () {}).call(document);
+                } else {
+                    (ui.cadre.requestFullscreen || ui.cadre.webkitRequestFullscreen || function () {}).call(ui.cadre);
+                }
+            });
+        }
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden && etat.mode === "jeu") {
+                etat.mode = "pause";
+                if (ui.pause) { ui.pause.textContent = "▶ Reprendre"; }
+            }
+        });
+    }
+
+    // ── API de contrôle (vérificateur automatique) ──────────────────────────
+    window.jeuDebug = {
+        pret: function () { return !!etat.joueur; },
+        imagesPretes: function () { return chargees >= attendues; },
+        imagesChargees: function () {
+            return Object.keys(images).filter(function (c) { return !!images[c]; });
+        },
+        charger: function (n) {
+            cacherMenu();
+            if (ui.bilan) { ui.bilan.classList.remove("visible"); }
+            chargerNiveau(n);
+            etat.mode = "jeu";
+            demarrerBoucle();
+            return true;
+        },
+        etat: function () {
+            var j = etat.joueur;
+            return {
+                mode: etat.mode, niveau: etat.niveau, coeurs: etat.coeurs,
+                paquets: etat.paquets, reste: appareilsRestants(),
+                appareils: etat.appareils.map(function (a) {
+                    return { nom: a.fiche.nom, repare: a.repare, progres: a.progres };
+                }),
+                joueur: j ? { x: j.x, y: j.y, w: j.w, h: j.h, auSol: j.auSol,
+                              vx: j.vx, vy: j.vy } : null,
+                camera: etat.cameraX, cameraY: etat.cameraY,
+                surEscalier: !!etat.surEscalier,
+                debloques: etat.debloques,
+                solides: etat.solides ? etat.solides.length : -1,
+                hauteur: etat.hauteur, largeur: etat.largeur,
+                niveaux: ((window.JEU_MONDE || {}).niveaux || []).length
+            };
+        },
+        avancer: function (dt) {
+            var reste = dt;
+            while (reste > 0) {
+                var pas = Math.min(PAS, reste);
+                etat.temps += pas;
+                pasPhysique(pas);
+                reste -= pas;
+                if (etat.mode !== "jeu") { break; }
+            }
+        },
+        toucher: function (nom, appui) { commandes[nom] = !!appui; },
+        teleporter: function (x, y) {
+            if (!etat.joueur) { return; }
+            etat.joueur.x = x; etat.joueur.y = y;
+            etat.joueur.vx = 0; etat.joueur.vy = 0;
+        },
+        appareils: function () {
+            return etat.appareils.map(function (a) {
+                return { nom: a.fiche.nom, x: a.centreX, y: a.centreY, repare: a.repare };
+            });
+        },
+        sortie: function () {
+            return etat.sortie ? { x: etat.sortie.x + etat.sortie.w / 2,
+                                   y: etat.sortie.y + etat.sortie.h / 2 } : null;
+        },
+        fermerFiche: fermerFiche,
+        dessiner: dessiner,
+        commandes: commandes
+    };
+
+    // ── Démarrage ───────────────────────────────────────────────────────────
+    function initialiser() {
+        if (!window.JEU_MONDE || !window.JEU_MONDE.niveaux || !window.JEU_MONDE.niveaux.length) {
+            if (ui.objectif) {
+                ui.objectif.textContent = "Les niveaux n'ont pas pu être chargés.";
+            }
+            return;
+        }
+        construireMenu();
+        brancherEntrees();
+        chargerImages(function () {
+            chargerNiveau(0);
+            afficherMenu();
+            majMenu();
+            dessiner();
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initialiser);
+    } else {
+        initialiser();
+    }
+}());
+</script>
+</body>
+</html>
