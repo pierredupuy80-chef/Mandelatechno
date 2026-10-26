@@ -1036,27 +1036,61 @@
             margin-bottom: var(--espacement-sm);
         }
 
+        /* Les caractéristiques d'une fiche sont un TABLEAU, pas une liste à
+           puces : le libellé à gauche, la valeur alignée à droite, et chaque
+           critère dans sa couleur — la même d'une fiche à l'autre, puisque
+           l'ordre des critères est celui de `comparateur.criteres`. Les huit
+           fiches se lisent alors ligne par ligne, sans décortiquer un
+           paragraphe. Le texte de la description reste court : c'est ici que
+           sont les chiffres. */
         .modele-valeurs {
-            list-style: none;
+            width: 100%;
+            border-collapse: collapse;
             margin: 0 0 var(--espacement-sm);
-            padding: 0;
             font-size: 0.9375rem;
         }
 
-        .modele-valeurs li {
-            display: flex;
-            justify-content: space-between;
-            gap: var(--espacement-sm);
-            padding: 0.15rem 0;
-            border-bottom: 1px dashed #e2e8f0;
+        .modele-valeurs th,
+        .modele-valeurs td {
+            text-align: left;
+            padding: 0.2rem 0.4rem;
+            border-bottom: 1px solid rgba(30, 41, 59, 0.12);
+            vertical-align: baseline;
         }
 
-        .modele-valeurs li:last-child {
+        .modele-valeurs th {
+            font-weight: 500;
+            color: var(--couleur-texte);
+            overflow-wrap: anywhere;
+        }
+
+        .modele-valeurs td {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .modele-valeurs td strong {
+            font-weight: 700;
+            color: var(--couleur-texte);
+        }
+
+        .modele-valeurs tr:last-child th,
+        .modele-valeurs tr:last-child td {
             border-bottom: none;
         }
 
+        /* Une couleur par critère, attribuée par rang : la même teinte désigne
+           le même critère dans les huit fiches, même si une autre activité
+           nomme ses critères autrement. */
+        .modele-valeurs tbody tr:nth-child(6n + 1) { background-color: #dbeafe; }
+        .modele-valeurs tbody tr:nth-child(6n + 2) { background-color: #dcfce7; }
+        .modele-valeurs tbody tr:nth-child(6n + 3) { background-color: #ffedd5; }
+        .modele-valeurs tbody tr:nth-child(6n + 4) { background-color: #ede9fe; }
+        .modele-valeurs tbody tr:nth-child(6n + 5) { background-color: #cffafe; }
+        .modele-valeurs tbody tr:nth-child(6n + 6) { background-color: #fef9c3; }
+
         .modele-critere {
-            color: var(--couleur-texte-leger);
+            color: var(--couleur-texte);
         }
 
         .modele-verdict {
@@ -3841,15 +3875,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle A — Le Corso</h4>
                                         </div>
-                                    <p class="modele-description">VAE de ville, moteur dans le moyeu arrière, batterie 400 Wh amovible, freins à patins. Le modèle le plus répandu : simple et peu coûteux, mais le démontage de la roue arrière demande un outil spécial.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>1 090 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>55 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>23 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>6 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>250 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>11 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Moteur au moyeu arrière, freins à patins : simple et peu cher.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>1 090 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>55 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>23 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>6 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>250 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>11 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-2"
                                              data-ost-bloc="n4-modele-2"
@@ -3868,15 +3904,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle B — Le Replié</h4>
                                         </div>
-                                    <p class="modele-description">VAE pliant, moteur dans le moyeu avant, batterie 360 Wh, cadre en deux parties. Léger et rangeable dans un local étroit, mais son moteur avant patine sur sol mouillé et le cadre pliant supporte moins de charge.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>1 390 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>42 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>19 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>5 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>300 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>12 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Pliant à moteur avant : léger, mais patine sur sol mouillé.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>1 390 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>42 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>19 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>5 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>300 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>12 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-3"
                                              data-ost-bloc="n4-modele-3"
@@ -3895,15 +3933,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle C — Le Central</h4>
                                         </div>
-                                    <p class="modele-description">VAE à moteur central (au pédalier) et capteur de couple, batterie 500 Wh, freins à disque. Il grimpe bien et se comporte comme un vélo classique, mais il coûte cher et use la chaîne plus vite.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>2 150 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>80 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>25 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>7 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>340 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>10 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Moteur central et capteur de couple : il grimpe bien, mais cher.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>2 150 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>80 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>25 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>7 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>340 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>10 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-4"
                                              data-ost-bloc="n4-modele-4"
@@ -3922,15 +3962,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle D — Le Longtail</h4>
                                         </div>
-                                    <p class="modele-description">VAE longtail à moteur central, batterie 630 Wh, porte-bagages rallongé. Il offre la plus grande autonomie et le meilleur indice de réparabilité, mais c'est le plus lourd et le plus cher de la sélection.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>2 690 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>105 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>29 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>8 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>390 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>9 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Longtail à moteur central : très autonome, mais lourd et cher.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>2 690 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>105 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>29 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>8 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>390 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>9 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-5"
                                              data-ost-bloc="n4-modele-5"
@@ -3949,15 +3991,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🛴</span>
                                             <h4>Modèle E — La Plume</h4>
                                         </div>
-                                    <p class="modele-description">Trottinette électrique (250 W, batterie 250 Wh), bridée à 25 km/h comme les VAE. La moins chère et la plus légère, mais la plus faible autonomie, et elle n'est pas faite pour rouler sous la pluie ni pour transporter un sac de courses.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>590 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>25 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>14 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>5 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>150 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>14 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Trottinette 250 W bridée à 25 km/h : la moins chère, peu autonome.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>590 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>25 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>14 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>5 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>150 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>14 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-6"
                                              data-ost-bloc="n4-modele-6"
@@ -3976,15 +4020,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle F — Le Réemployé</h4>
                                         </div>
-                                    <p class="modele-description">VAE de ville reconditionné par un atelier de réemploi local : moteur dans le moyeu arrière, batterie 400 Wh remise à neuf, pièces standard disponibles partout. C'est le VAE le moins cher et le plus réparable de la sélection, avec très peu de matière neuve à fabriquer, mais son autonomie est modeste et sa batterie d'occasion n'est garantie qu'un an.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>790 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>45 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>24 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>9 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>160 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>13 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">VAE reconditionné local : le moins cher et le plus réparable.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>790 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>45 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>24 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>9 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>160 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>13 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-7"
                                              data-ost-bloc="n4-modele-7"
@@ -4003,15 +4049,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle G — Le Sans-Chaîne</h4>
                                         </div>
-                                    <p class="modele-description">VAE à transmission par courroie et boîtier de vitesses intégré au moyeu arrière, batterie 500 Wh. Sans chaîne à graisser ni à remettre en place, il demande très peu d'entretien et ne salit pas les mains : un vrai atout pour un vélo partagé. En contrepartie il coûte cher à l'achat, et sa courroie comme son boîtier ne se remplacent que chez le fabricant.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>1 890 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>65 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>22 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>7 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>290 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>11 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Courroie et vitesses intégrées : peu d'entretien, cher à réparer.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>1 890 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>65 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>22 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>7 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>290 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>11 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-8"
                                              data-ost-bloc="n4-modele-8"
@@ -4030,15 +4078,17 @@ window.__EFFETS_INTERACTIONS__={};
                                             <span class="modele-icone" aria-hidden="true">🚲</span>
                                             <h4>Modèle H — Le Connecté</h4>
                                         </div>
-                                    <p class="modele-description">VAE à moteur central équipé d'origine d'un boîtier GPS et d'un antivol intégré au cadre, batterie 700 Wh, freins à disque. Sa longue autonomie et sa géolocalisation rassurent l'exploitant du service, mais l'électronique embarquée alourdit le véhicule, augmente son empreinte et le rend dépendant du fabricant : un boîtier en panne et le vélo reste immobilisé.</p>
-                                        <ul class="modele-valeurs">
-                                        <li><span class="modele-critere">Prix d'achat</span> <strong>2 300 €</strong></li>
-                                        <li><span class="modele-critere">Autonomie</span> <strong>90 km</strong></li>
-                                        <li><span class="modele-critere">Masse</span> <strong>26 kg</strong></li>
-                                        <li><span class="modele-critere">Indice de réparabilité</span> <strong>4 /10</strong></li>
-                                        <li><span class="modele-critere">Empreinte carbone</span> <strong>370 kg CO₂e</strong></li>
-                                        <li><span class="modele-critere">Consommation</span> <strong>11 Wh/km</strong></li>
-                                        </ul>
+                                    <p class="modele-description">Moteur central, GPS et antivol intégrés : dépendant du fabricant.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>2 300 €</strong></td></tr>
+                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie</th><td><strong>90 km</strong></td></tr>
+                                            <tr data-critere="masse"><th scope="row" class="modele-critere">Masse</th><td><strong>26 kg</strong></td></tr>
+                                            <tr data-critere="reparabilite"><th scope="row" class="modele-critere">Indice de réparabilité</th><td><strong>4 /10</strong></td></tr>
+                                            <tr data-critere="empreinte"><th scope="row" class="modele-critere">Empreinte carbone</th><td><strong>370 kg CO₂e</strong></td></tr>
+                                            <tr data-critere="consommation"><th scope="row" class="modele-critere">Consommation</th><td><strong>11 Wh/km</strong></td></tr>
+                                            </tbody>
+                                        </table>
                                     </article>
                                 </div>
                                 <p class="comparateur-choix" aria-live="polite">Modèle que tu retiens :
@@ -5898,9 +5948,19 @@ window.__EFFETS_INTERACTIONS__={};
             const choisi = zone ? zone.querySelector('.modele-ost.choisi') : null;
             if (choisi) {
                 lignes.push(String(choisi.getAttribute('data-nom') || '').trim());
-                const valeurs = choisi.querySelectorAll('.modele-valeurs li');
+                // Les caractéristiques sont un tableau (une ligne = un
+                // critère, deux cellules) : le bilan joint le libellé et sa
+                // valeur par « : », sinon les deux se colleraient. Les pages
+                // plus anciennes, qui listaient encore des `<li>`, restent
+                // lues telles quelles.
+                const valeurs = choisi.querySelectorAll('.modele-valeurs tr, .modele-valeurs li');
                 for (const ligne of valeurs) {
-                    lignes.push('- ' + String(ligne.textContent || '').replace(/\s+/g, ' ').trim());
+                    const cellules = ligne.querySelectorAll('th, td');
+                    lignes.push('- ' + (cellules.length
+                        ? Array.prototype.map.call(cellules, function (cellule) {
+                            return String(cellule.textContent || '').replace(/\s+/g, ' ').trim();
+                        }).join(' : ')
+                        : String(ligne.textContent || '').replace(/\s+/g, ' ').trim()));
                 }
                 const alerte = choisi.querySelector('.modele-alerte');
                 if (alerte) lignes.push('Point de vigilance : ' +
