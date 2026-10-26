@@ -3685,7 +3685,7 @@ window.__EFFETS_INTERACTIONS__={};
                         </div>
                         <div class="etape-conception">
                             <h4>Étape 2 : Hiérarchiser mes contraintes</h4>
-                            <p>Pour chaque critère, choisissez dans la liste l'importance qu'il a à VOS yeux : « non considéré », « importance modeste », « assez important » ou « très important ». Aucun critère n'est important par défaut : c'est à vous de dire lequel compte, et à quel point. Quand vos choix vous conviennent, cliquez sur « Figer vos contraintes ».</p>
+                            <p>Pour chaque critère, choisissez dans la liste l'importance qu'il a à VOS yeux : « non considéré », « importance modeste », « assez important » ou « très important ». Aucun critère n'est important par défaut : c'est à vous de dire lequel compte, et à quel point. Quand vos choix vous conviennent, cliquez sur « Figer vos contraintes » : l'étape 3 ne s'ouvrira qu'à ce moment-là, puisque c'est ce cahier des charges figé que les huit véhicules devront respecter.</p>
                             <p class="note-liberte">Quatre mots, aucun chiffre : la page ne vous impose aucune valeur, c'est à vous de vous faire votre idée. Un critère « non considéré » ne pèsera pas dans votre choix ; un critère « très important » en sera la condition.</p>
                             <div class="reglages-contraintes" data-figer="1">
                                 <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-budget"
@@ -3800,10 +3800,10 @@ window.__EFFETS_INTERACTIONS__={};
                             <div class="contraintes-recap" id="contraintes-recap" hidden>
                                 <h5>Mes contraintes figées</h5>
                                 <ul id="contraintes-recap-liste"></ul>
-                                <p class="contraintes-recap-note">Les listes sont maintenant verrouillées : c'est le cahier des charges que vous imposez aux huit véhicules. Si vous vous êtes trompé, cliquez sur « Modifier mes contraintes ».</p>
+                                <p class="contraintes-recap-note">Les listes sont maintenant verrouillées : c'est le cahier des charges que vous imposez aux huit véhicules, et l'étape 3 vient de s'ouvrir pour les comparer. Si vous vous êtes trompé, cliquez sur « Modifier mes contraintes ».</p>
                             </div>
                         </div>
-                        <div class="etape-conception">
+                        <div id="etape-comparateur" class="etape-conception cache" data-comparateur-apres-gel="1">
                             <h4>Étape 3 : Étape 3 — Comparer les huit véhicules</h4>
                             <p>Les huit véhicules sont fictifs : ils servent à apprendre à comparer. Choisissez un tri dans le menu, puis lisez les valeurs de chaque fiche. Comparez-les aux contraintes que vous avez figées à l'étape 2. Cliquez enfin sur la fiche du véhicule que vous retenez. Aucun voyant vert ni rouge ne s'affiche : seule votre analyse compte, et plusieurs choix se défendent.</p>
                             <div class="comparateur-ost" data-conception-modele
@@ -5759,6 +5759,27 @@ window.__EFFETS_INTERACTIONS__={};
         // les curseurs se verrouillent et le récapitulatif fige les mots
         // choisis. C'est réversible, pour qu'une erreur de manipulation ne
         // condamne pas la démarche ; la finalisation, elle, exige le gel.
+        //
+        // C'est aussi le gel qui ouvre l'étape de comparaison : les fiches de
+        // modèles restent fermées tant que l'élève n'a pas arrêté ses
+        // contraintes, sinon il compare des véhicules sans savoir à quoi. Le
+        // dégel referme l'étape, sans effacer le modèle déjà retenu : revenir
+        // sur ses contraintes ne doit pas coûter son choix à l'élève.
+
+        // L'étape de comparaison, quand le générateur la ferme jusqu'au gel.
+        function n4EtapeComparateur() {
+            return document.getElementById('etape-comparateur');
+        }
+
+        // Ouvre (ou referme) l'étape 3. Sans l'étape marquée — conception
+        // guidée sans gel — la fonction ne fait rien. La classe `cache`
+        // (display:none) suffit : elle retire aussi l'étape de l'arbre
+        // d'accessibilité, aucun aria-hidden n'est nécessaire.
+        function n4OuvrirComparateur(ouvert) {
+            const etape = n4EtapeComparateur();
+            if (!etape) return;
+            etape.classList.toggle('cache', !ouvert);
+        }
 
         function n4EstFige() {
             const reglages = document.querySelector(
@@ -5787,6 +5808,9 @@ window.__EFFETS_INTERACTIONS__={};
                         'Figer vos contraintes';
                     bouton.setAttribute('aria-pressed', 'false');
                 }
+                // Les contraintes bougent de nouveau : la comparaison se
+                // referme, l'étape 3 est de nouveau sans objet.
+                n4OuvrirComparateur(false);
             } else {
                 reglages.setAttribute('data-fige', '1');
                 reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
@@ -5819,6 +5843,9 @@ window.__EFFETS_INTERACTIONS__={};
                         'Modifier mes contraintes';
                     bouton.setAttribute('aria-pressed', 'true');
                 }
+                // Le cahier des charges est arrêté : la comparaison peut
+                // commencer, et seulement maintenant.
+                n4OuvrirComparateur(true);
             }
             n4MettreAJourContraintes();
         }
