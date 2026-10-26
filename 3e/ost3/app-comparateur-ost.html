@@ -2841,14 +2841,22 @@
         .ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
         .ost-bouton:disabled{opacity:.55;cursor:default}
         #ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
-        .ost-notice{margin-top:10px;font-size:11px;color:#64748b}
         /* Portée du correctif : élément / exercice / onglet */
         .ost-portees{display:flex;gap:6px;margin:6px 0 0}
         .ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
         .ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
         .ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
         .ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
-        .ost-champ .ost-aide{margin:4px 0 0;font-size:10.5px;color:#64748b;font-style:italic}
+        /* Menus repliables : une seule catégorie ouverte à la fois */
+        .ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+        .ost-section[hidden]{display:none}
+        .ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+        .ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+        .ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+        .ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+        .ost-contenu-section{padding:8px 10px 10px}
+        .ost-contenu-section[hidden]{display:none}
+        #ost-prompt-genere[hidden]{display:none}
         body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
     </style>
 </head>
@@ -7908,13 +7916,30 @@ window.__EFFETS_INTERACTIONS__={};
         var PORTEES = ['element', 'exercice', 'onglet'];
         var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
 
+        // Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+        // champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+        var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
         // ── Options du panneau ───────────────────────────────────────────────
-        // Chaque série commence par « ne rien changer » : le panneau ne demande
-        // donc que ce que le professeur veut changer, et le prompt reste court.
+        // Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+        var OPTIONS_TYPE_ERREUR = [
+            'label à changer',
+            'inconsistance de la réponse',
+            'exercice cassé',
+            'petite adaptation',
+            "ajout d'options"
+        ];
+        var OPTIONS_PRECO = [
+            "régénérer l'exercice en entier",
+            "reformuler la question/l'énoncé",
+            "changer le type d'exercice"
+        ];
+        // Chaque série de réglages commence par « ne rien changer » : le prompt
+        // ne contient que ce que le professeur a réellement choisi.
         var OPTIONS_DIFFICULTE = [
             ['inchangee', 'ne rien changer'],
-            ['augmenter', 'augmenter la difficulté du quiz'],
-            ['reduire', 'réduire la difficulté du quiz']
+            ['augmenter', 'augmenter la difficulté'],
+            ['reduire', 'réduire la difficulté']
         ];
         var OPTIONS_VISUELS = [
             ['inchanges', 'ne rien changer'],
@@ -7922,20 +7947,30 @@ window.__EFFETS_INTERACTIONS__={};
             ['pixellab', 'PixelLab (API)'],
             ['icone-standard', 'icône standard (aucune génération)']
         ];
-        var OPTIONS_CHAMP = [
+        // Forme de l'exercice entier.
+        var OPTIONS_EXERCICE = [
+            ['inchange', 'ne rien changer'],
+            ['saisie-libre', 'saisie libre'],
+            ['liste-de-choix', 'liste de choix'],
+            ['jeu-relier', 'jeu pour relier'],
+            ['jeu-graphe', 'jeu de graphe (réseau)']
+        ];
+        // Forme d'un champ de saisie.
+        var OPTIONS_TYPE_CHAMP = [
             ['inchange', 'ne rien changer'],
             ['saisie-libre', 'saisie libre (champ texte)'],
-            ['liste-de-choix', 'liste de choix (une réponse parmi N)'],
-            ['jeu-relier', 'jeu pour relier (association)'],
-            ['jeu-graphe', 'jeu de graphe (câbler un réseau)']
+            ['liste-de-choix', 'liste de choix (une réponse)'],
+            ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
         ];
 
         var arme = false;
         var origine = null;        // élément réellement cliqué
         var portee = 'element';    // 'element' | 'exercice' | 'onglet'
         var panneau = null;
-        var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier;
+        var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
         var zoneChemin, boutonsPortee = [];
+        var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+        var sectionOuverte = '';   // une seule catégorie dépliée à la fois
 
         function identifiantDe(el) {
             if (!el || !el.getAttribute) return null;
@@ -8101,6 +8136,7 @@ window.__EFFETS_INTERACTIONS__={};
                 b.setAttribute('aria-pressed',
                     b.getAttribute('data-portee') === portee ? 'true' : 'false');
             });
+            majSections();
             majPrompt();
         }
 
@@ -8173,33 +8209,27 @@ window.__EFFETS_INTERACTIONS__={};
             blocPortee.appendChild(zoneChemin);
             panneau.appendChild(blocPortee);
 
-            panneau.appendChild(champRadio("Type d'erreur", 'ost-type', [
-                'label à changer', 'inconsistance de la réponse'
-            ]));
-            panneau.appendChild(champRadio('Préconisation', 'ost-preco', [
-                "régénérer l'exercice en entier",
-                "reformuler la question/l'énoncé",
-                "changer le type d'exercice"
-            ]));
+            panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+            panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
 
-            // Les trois demandes de fond : niveau, images, forme de l'exercice.
-            // Chacune commence par « ne rien changer » : le prompt ne réclame
-            // que ce que le professeur a réellement choisi.
-            panneau.appendChild(champRadio('Difficulté du quiz', 'ost-difficulte',
-                OPTIONS_DIFFICULTE, 'inchangee',
-                'Agit sur le quiz visé : mêmes notions, mêmes questions, mais des distracteurs plus ou moins exigeants.'));
-            panneau.appendChild(champRadio('Visuels', 'ost-visuels',
-                OPTIONS_VISUELS, 'inchanges',
-                'ComfyUI exige le serveur lancé sur VOTRE machine ; sans lui, l\'agent doit le dire plutôt qu\'inventer une image.'));
-            panneau.appendChild(champRadio("Type de champ ou d'exercice", 'ost-champ',
-                OPTIONS_CHAMP, 'inchange',
-                'Transforme l\'exercice visé dans une forme que le template sait déjà produire.'));
+            // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+            // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+            // sur un exercice, « Type de champ » sur un champ.
+            panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+                'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+            panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+                'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+            panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+                'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+            panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+                'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
 
             var blocCom = document.createElement('div');
             blocCom.className = 'ost-champ';
             var libCom = document.createElement('label');
             libCom.className = 'ost-libelle';
-            libCom.textContent = "Commentaire (nouveau libellé / énoncé, réponse attendue…)";
+            libCom.textContent = 'Commentaire';
+            libCom.setAttribute('for', 'ost-commentaire');
             zoneCommentaire = document.createElement('textarea');
             zoneCommentaire.id = 'ost-commentaire';
             zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
@@ -8216,29 +8246,35 @@ window.__EFFETS_INTERACTIONS__={};
             boutonCopier.textContent = '📋 Copier le prompt';
             boutonCopier.addEventListener('click', copier);
             actions.appendChild(boutonCopier);
+            // Le prompt se consulte à la demande : masqué par défaut.
+            boutonPrompt = document.createElement('button');
+            boutonPrompt.type = 'button';
+            boutonPrompt.id = 'ost-bouton-prompt';
+            boutonPrompt.className = 'ost-bouton';
+            boutonPrompt.textContent = 'Afficher le prompt';
+            boutonPrompt.setAttribute('aria-expanded', 'false');
+            boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+            boutonPrompt.addEventListener('click', function () {
+                montrerPrompt(zonePrompt.hidden);
+            });
+            actions.appendChild(boutonPrompt);
             panneau.appendChild(actions);
 
             zonePrompt = document.createElement('textarea');
             zonePrompt.id = 'ost-prompt-genere';
             zonePrompt.readOnly = true;
+            zonePrompt.hidden = true;
             zonePrompt.setAttribute('aria-label', 'Prompt généré');
             panneau.appendChild(zonePrompt);
-
-            var notice = document.createElement('p');
-            notice.className = 'ost-notice';
-            notice.textContent = "Collez ce prompt dans l'onglet « Dépôt » du panneau DSH : la tâche se met à la suite (correctif → vérification → publication automatique). Les réglages de difficulté, de visuels et de type de champ demandent une modification réelle, pas une simple relecture.";
-            panneau.appendChild(notice);
 
             document.body.appendChild(panneau);
             return panneau;
         }
 
-        function champRadio(legende, nom, valeurs, defaut, aide) {
-            var fieldset = document.createElement('fieldset');
-            fieldset.className = 'ost-champ';
-            var legend = document.createElement('legend');
-            legend.textContent = legende;
-            fieldset.appendChild(legend);
+        function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+            var groupe = document.createElement('div');
+            groupe.setAttribute('role', 'radiogroup');
+            groupe.setAttribute('aria-label', libelleGroupe);
             valeurs.forEach(function (valeur) {
                 // Une option s'écrit « code » ou [code, libellé] : le code part dans
                 // le prompt (lisible par script), le libellé s'affiche.
@@ -8254,15 +8290,103 @@ window.__EFFETS_INTERACTIONS__={};
                 input.addEventListener('change', majPrompt);
                 label.appendChild(input);
                 label.appendChild(document.createTextNode(libelle));
-                fieldset.appendChild(label);
+                groupe.appendChild(label);
             });
-            if (aide) {
-                var p = document.createElement('p');
-                p.className = 'ost-aide';
-                p.textContent = aide;
-                fieldset.appendChild(p);
-            }
+            return groupe;
+        }
+
+        function champRadio(legende, nom, valeurs, defaut) {
+            var fieldset = document.createElement('fieldset');
+            fieldset.className = 'ost-champ';
+            var legend = document.createElement('legend');
+            legend.textContent = legende;
+            fieldset.appendChild(legend);
+            fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
             return fieldset;
+        }
+
+        // ── Menus repliables ──────────────────────────────────────────────────
+        // Une seule catégorie dépliée à la fois : le panneau tient dans une
+        // colonne étroite sans noyer le réglage en cours.
+        function sectionAccordeon(cle, titre, nom, options, defaut) {
+            var section = document.createElement('div');
+            section.className = 'ost-section';
+            section.setAttribute('data-section', cle);
+            var entete = document.createElement('button');
+            entete.type = 'button';
+            entete.className = 'ost-entete-section';
+            entete.textContent = titre;
+            entete.setAttribute('aria-expanded', 'false');
+            entete.setAttribute('aria-controls', 'ost-section-' + cle);
+            var contenu = document.createElement('div');
+            contenu.className = 'ost-contenu-section';
+            contenu.id = 'ost-section-' + cle;
+            contenu.hidden = true;
+            contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+            entete.addEventListener('click', function () { basculerSection(cle); });
+            section.appendChild(entete);
+            section.appendChild(contenu);
+            sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                             nom: nom, defaut: defaut};
+            return section;
+        }
+
+        function basculerSection(cle) {
+            var etaitOuverte = (sectionOuverte === cle);
+            fermerSections();
+            if (etaitOuverte) return;
+            var s = sections[cle];
+            if (!s) return;
+            s.entete.setAttribute('aria-expanded', 'true');
+            s.contenu.hidden = false;
+            sectionOuverte = cle;
+        }
+
+        function fermerSections() {
+            Object.keys(sections).forEach(function (cle) {
+                sections[cle].entete.setAttribute('aria-expanded', 'false');
+                sections[cle].contenu.hidden = true;
+            });
+            sectionOuverte = '';
+        }
+
+        function remettreSection(cle) {
+            var s = sections[cle];
+            if (!s) return;
+            var defaut = document.querySelector(
+                'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+            if (defaut) defaut.checked = true;
+        }
+
+        function sectionVisible(cle) {
+            var s = sections[cle];
+            return !!s && !s.racine.hidden;
+        }
+
+        // Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+        // l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+        // exercice, « Type de champ » que sur un champ.
+        function typeDeCible() {
+            var el = cible();
+            if (!el || !el.matches) return '';
+            var estBloc = el.matches(SELECTEUR_BLOC);
+            if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+                return 'champ';
+            }
+            return estBloc ? 'exercice' : '';
+        }
+
+        function majSections() {
+            var type = typeDeCible();
+            var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+            Object.keys(sections).forEach(function (cle) {
+                var visible = (cle in pertinents) ? pertinents[cle] : true;
+                sections[cle].racine.hidden = !visible;
+                if (!visible) {
+                    if (sectionOuverte === cle) fermerSections();
+                    remettreSection(cle);
+                }
+            });
         }
 
         function valeurRadio(nom, defaut) {
@@ -8274,6 +8398,13 @@ window.__EFFETS_INTERACTIONS__={};
         // QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
         // relancer ni ce qu'il faut faire quand le serveur ne répond pas.
         var CONSIGNES = {
+            type_erreur: {
+                'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+                'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+                'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+                'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+                "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+            },
             difficulte: {
                 'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
                 'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
@@ -8283,11 +8414,16 @@ window.__EFFETS_INTERACTIONS__={};
                 'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
                 'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
             },
+            exercice: {
+                'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+                'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+                'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+                'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+            },
             champ: {
-                'saisie-libre': "type de champ : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
-                'liste-de-choix': "type de champ : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
-                'jeu-relier': "type de champ : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
-                'jeu-graphe': "type de champ : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+                'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+                'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+                'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
             }
         };
 
@@ -8298,7 +8434,12 @@ window.__EFFETS_INTERACTIONS__={};
             if (!type || !preco) return '';
             var difficulte = valeurRadio('ost-difficulte', 'inchangee');
             var visuels = valeurRadio('ost-visuels', 'inchanges');
-            var champ = valeurRadio('ost-champ', 'inchange');
+            // Un réglage dont la section est masquée ne part pas dans le prompt :
+            // la section est d'ailleurs remise à zéro quand elle disparaît.
+            var typeExercice = sectionVisible('exercice')
+                ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+            var typeChamp = sectionVisible('champ')
+                ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
             var id = identifiantCourant();
             var onglet = ongletDe(origine);
             var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
@@ -8313,18 +8454,25 @@ window.__EFFETS_INTERACTIONS__={};
             lignes.push('- preconisation: ' + preco);
             if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
             if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
-            if (champ !== 'inchange') lignes.push('- type_champ_demande: ' + champ);
+            if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+            if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
             if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
 
             var consignes = [];
+            if (CONSIGNES.type_erreur[type]) {
+                consignes.push(CONSIGNES.type_erreur[type]);
+            }
             if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
                 consignes.push(CONSIGNES.difficulte[difficulte]);
             }
             if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
                 consignes.push(CONSIGNES.visuels[visuels]);
             }
-            if (champ !== 'inchange' && CONSIGNES.champ[champ]) {
-                consignes.push(CONSIGNES.champ[champ]);
+            if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+                consignes.push(CONSIGNES.exercice[typeExercice]);
+            }
+            if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+                consignes.push(CONSIGNES.champ[typeChamp]);
             }
             consignes.push("ensuite : modifier la configuration JSON de l'activité, la régénérer, puis relancer verifier_quiz.py, verifier_parcours.py et verifier_panneau_dev.py — publier seulement si les trois passent.");
             lignes.push('');
@@ -8339,9 +8487,22 @@ window.__EFFETS_INTERACTIONS__={};
             if (boutonCopier) boutonCopier.disabled = !prompt;
         }
 
+        function montrerPrompt(visible) {
+            if (!zonePrompt) return;
+            zonePrompt.hidden = !visible;
+            if (boutonPrompt) {
+                boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+                boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+            }
+        }
+
         function copier() {
             var prompt = genererPrompt();
             if (!prompt) return;
+            // Le prompt est masqué par défaut ; on l'affiche au moment de la
+            // copie pour que la sélection soit possible et que l'on voie ce qui
+            // part dans le presse-papiers.
+            if (zonePrompt.hidden) montrerPrompt(true);
             zonePrompt.value = prompt;
             zonePrompt.focus();
             zonePrompt.select();
