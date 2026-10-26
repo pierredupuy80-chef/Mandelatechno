@@ -4303,7 +4303,7 @@ background: #16202e;
     /* ── La scène : une bande étroite entre deux blocs d'exercice ────────────── */
     .anim-scene {
         position: relative;
-        height: 114px;
+        height: 143px;
         margin: 10px 0 12px;
         overflow: hidden;
         border: 1px solid rgba(70, 120, 200, .14);
@@ -4353,7 +4353,7 @@ background: #16202e;
     .anim-acteur {
         position: absolute;
         bottom: 6px;
-        left: -96px;
+        left: -84px;
         animation-duration: var(--anim-duree, 18s);
         animation-timing-function: linear;
         animation-iteration-count: infinite;
@@ -4364,39 +4364,53 @@ background: #16202e;
     .anim-vers-gauche { animation-name: anim-traverse-gauche; transform: scaleX(-1); }
 
     @keyframes anim-traverse-droite {
-        from { left: -96px; }
+        from { left: -84px; }
         to   { left: 100%; }
     }
 
     @keyframes anim-traverse-gauche {
         from { left: 100%; }
-        to   { left: -96px; }
+        to   { left: -84px; }
     }
 
-    /* ── Le professeur qui marche ───────────────────────────────────────────── */
+    /* ── Le professeur : deux allures du pack `prof-detail` ─────────────────── */
     .anim-sprite-prof {
         display: block;
-        width: 64px;
-        height: 64px;
         image-rendering: pixelated;
-        background: url("assets-jeu/anim/prof-marche.png") no-repeat 0 0;
-        animation: anim-images-prof 0.66s steps(6) infinite;
     }
 
-    @keyframes anim-images-prof {
+    /* Il court : scènes « le professeur traverse l'écran ». */
+    .anim-sprite-course {
+        width: 52px;
+        height: 119px;
+        background: url("assets-jeu/anim/prof-course.png") no-repeat 0 0;
+        animation: anim-images-course 0.64s steps(8) infinite;
+    }
+
+    @keyframes anim-images-course {
         from { background-position: 0 0; }
-        to   { background-position: -384px 0; }
+        to   { background-position: -416px 0; }
     }
 
-    /* ── Le drone piloté par le professeur ──────────────────────────────────── */
-    .anim-pilote {
-        position: absolute;
-        bottom: 4px;
-        left: 10px;
-        width: 42px;
-        height: 52px;
-        image-rendering: pixelated;
-        background: url("assets-jeu/anim/prof-pilote.png") no-repeat 0 0;
+    /* Il marche : scènes « le drone zigzague au-dessus de lui ». */
+    .anim-sprite-marche {
+        width: 40px;
+        height: 113px;
+        background: url("assets-jeu/anim/prof-marche.png") no-repeat 0 0;
+        animation: anim-images-marche 0.88s steps(8) infinite;
+    }
+
+    @keyframes anim-images-marche {
+        from { background-position: 0 0; }
+        to   { background-position: -320px 0; }
+    }
+
+    /* ── Le drone, à hauteur d'épaule, derrière le professeur ────────────────── */
+    .anim-prof { z-index: 2; }
+
+    .anim-drone {
+        bottom: 69px;
+        z-index: 1;
     }
 
     .anim-drone-corps {
@@ -4411,8 +4425,8 @@ background: #16202e;
 
     .anim-sprite-drone {
         display: block;
-        width: 64px;
-        height: 64px;
+        width: 48px;
+        height: 48px;
         image-rendering: pixelated;
         background: url("assets-jeu/anim/drone-survol.png") no-repeat 0 0;
     }
@@ -4422,13 +4436,15 @@ background: #16202e;
 
     @keyframes anim-images-drone {
         from { background-position: 0 0; }
-        to   { background-position: -256px 0; }
+        to   { background-position: -192px 0; }
     }
 
     /* ── Mouvement réduit : plus rien ne bouge, tout reste lisible ──────────── */
     @media (prefers-reduced-motion: reduce) {
         .anim-acteur,
         .anim-sprite-prof,
+        .anim-sprite-course,
+        .anim-sprite-marche,
         .anim-sprite-drone,
         .anim-drone-corps { animation: none !important; }
 
@@ -4445,7 +4461,7 @@ background: #16202e;
 
     /* ── Téléphones : la scène se resserre, les sprites gardent leur taille ─── */
     @media (max-width: 480px) {
-        .anim-scene { height: 106px; }
+        .anim-scene { height: 137px; }
         .anim-bascule { font-size: .72rem; padding: 4px 10px; }
     }
     /* animations-activite:css-fin */
@@ -4574,7 +4590,7 @@ background: #16202e;
                     
                     <!-- animations-activite:scene n1-intro-1 -->
                     <div class="anim-scene anim-scene-prof" data-anim-scene="n1-intro-1" data-anim-onglet="contenu-n1-intro" data-anim-type="prof" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:17s;--anim-retard:-3s"><span class="anim-sprite-prof"></span></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:17s;--anim-retard:-3s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                     </div>
                     <!-- /animations-activite:scene n1-intro-1 -->
                     <h3>Vidéos à regarder</h3>
@@ -4616,7 +4632,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n1-intro-2 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="n1-intro-2" data-anim-onglet="contenu-n1-intro" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:26s;--anim-retard:-9s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:26s;--anim-retard:-9s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene n1-intro-2 -->
@@ -4634,7 +4650,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n1-quiz-1 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="n1-quiz-1" data-anim-onglet="contenu-n1-quiz" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:24s;--anim-retard:-4s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-gauche" style="--anim-duree:24s;--anim-retard:-4s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene n1-quiz-1 -->
@@ -4731,7 +4747,7 @@ background: #16202e;
                         
                         <!-- animations-activite:scene n1-quiz-2 -->
                         <div class="anim-scene anim-scene-prof" data-anim-scene="n1-quiz-2" data-anim-onglet="contenu-n1-quiz" data-anim-type="prof" aria-hidden="true">
-                            <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:19s;--anim-retard:-11s"><span class="anim-sprite-prof"></span></span>
+                            <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:19s;--anim-retard:-11s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                         </div>
                         <!-- /animations-activite:scene n1-quiz-2 -->
                         <div id="resultat-quiz-n1" class="marge-haut" style="display: none;">
@@ -4814,7 +4830,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n2-intro-1 -->
                     <div class="anim-scene anim-scene-prof" data-anim-scene="n2-intro-1" data-anim-onglet="contenu-n2-intro" data-anim-type="prof" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:18s;--anim-retard:-6s"><span class="anim-sprite-prof"></span></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:18s;--anim-retard:-6s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                     </div>
                     <!-- /animations-activite:scene n2-intro-1 -->
                     <div class="ateliers-n2" id="ateliers-n2">
@@ -4997,7 +5013,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n2-intro-2 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="n2-intro-2" data-anim-onglet="contenu-n2-intro" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:28s;--anim-retard:-2s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:28s;--anim-retard:-2s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene n2-intro-2 -->
@@ -5015,7 +5031,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n2-quiz-1 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="n2-quiz-1" data-anim-onglet="contenu-n2-quiz" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:25s;--anim-retard:-7s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:25s;--anim-retard:-7s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene n2-quiz-1 -->
@@ -5112,7 +5128,7 @@ background: #16202e;
                         
                         <!-- animations-activite:scene n2-quiz-2 -->
                         <div class="anim-scene anim-scene-prof" data-anim-scene="n2-quiz-2" data-anim-onglet="contenu-n2-quiz" data-anim-type="prof" aria-hidden="true">
-                            <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:17s;--anim-retard:-1s"><span class="anim-sprite-prof"></span></span>
+                            <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:17s;--anim-retard:-1s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                         </div>
                         <!-- /animations-activite:scene n2-quiz-2 -->
                         <div id="resultat-quiz-n2" class="marge-haut" style="display: none;">
@@ -5144,7 +5160,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n3-enigme-1 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="n3-enigme-1" data-anim-onglet="contenu-n3-enigme" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:27s;--anim-retard:-5s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-gauche" style="--anim-duree:27s;--anim-retard:-5s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene n3-enigme-1 -->
@@ -5193,7 +5209,7 @@ background: #16202e;
                     <div class="solution-enigme marge-haut">
                         <!-- animations-activite:scene n3-enigme-2 -->
                         <div class="anim-scene anim-scene-prof" data-anim-scene="n3-enigme-2" data-anim-onglet="contenu-n3-enigme" data-anim-type="prof" aria-hidden="true">
-                            <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:18s;--anim-retard:-8s"><span class="anim-sprite-prof"></span></span>
+                            <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:18s;--anim-retard:-8s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                         </div>
                         <!-- /animations-activite:scene n3-enigme-2 -->
                         <h3>Vos réponses</h3>
@@ -5527,7 +5543,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n4-probleme-1 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="n4-probleme-1" data-anim-onglet="contenu-n4-probleme" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:26s;--anim-retard:-10s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:26s;--anim-retard:-10s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene n4-probleme-1 -->
@@ -5559,7 +5575,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene n4-probleme-2 -->
                     <div class="anim-scene anim-scene-prof" data-anim-scene="n4-probleme-2" data-anim-onglet="contenu-n4-probleme" data-anim-type="prof" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:19s;--anim-retard:-2s"><span class="anim-sprite-prof"></span></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:19s;--anim-retard:-2s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                     </div>
                     <!-- /animations-activite:scene n4-probleme-2 -->
                     <h3 class="marge-haut">Étape 3 — Conclusion</h3>
@@ -5618,7 +5634,7 @@ background: #16202e;
                         <div class="fiche-synthese" data-ost-id="synthese-f2">
                             <!-- animations-activite:scene synthese-1 -->
                             <div class="anim-scene anim-scene-prof" data-anim-scene="synthese-1" data-anim-onglet="contenu-synthese" data-anim-type="prof" aria-hidden="true">
-                                <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:18s;--anim-retard:-5s"><span class="anim-sprite-prof"></span></span>
+                                <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:18s;--anim-retard:-5s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
                             </div>
                             <!-- /animations-activite:scene synthese-1 -->
                             <h3>📖 L'évolution du drone et ses contraintes (N2 - Compréhension)</h3>
@@ -5665,7 +5681,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene synthese-2 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="synthese-2" data-anim-onglet="contenu-synthese" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:25s;--anim-retard:-12s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-gauche" style="--anim-duree:25s;--anim-retard:-12s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene synthese-2 -->
@@ -5931,7 +5947,7 @@ background: #16202e;
 
                     <!-- animations-activite:scene bonus-1 -->
                     <div class="anim-scene anim-scene-drone" data-anim-scene="bonus-1" data-anim-onglet="contenu-bonus" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-pilote"></span>
+                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:27s;--anim-retard:-6s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
                         <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:27s;--anim-retard:-6s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
                     </div>
                     <!-- /animations-activite:scene bonus-1 -->
@@ -14123,6 +14139,8 @@ if ('droite' in commandes) vol.touches.droite = !!commandes.droite;
 };
 })();
     </script>
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte et n'envoie rien sur Internet. Seul le choix « Animations : actives / coupées » est mémorisé dans ton navigateur. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 <script data-animations-activite="1">
 /* Bascule et mesure des animations de liaison — 4e OST2 « évolution des drones ».
    Le décor est purement CSS : ce script ne fait que trois choses.
@@ -14216,8 +14234,6 @@ if ('droite' in commandes) vol.touches.droite = !!commandes.droite;
 })();
 /* animations-activite:js-fin */
 </script>
-<!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte et n'envoie rien sur Internet. Seul le choix « Animations : actives / coupées » est mémorisé dans ton navigateur. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
 </body>
 </html>
