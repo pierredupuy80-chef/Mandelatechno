@@ -3556,31 +3556,93 @@
             --sprite-prof: url("assets-jeu/prof-planche.png");
         }
 
-.atelier.curseurs {
-background: #f1f5f9;
-border-radius: var(--rayon-bordure);
-padding: var(--espacement-md);
+.grille-terrains {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: var(--espacement-md);
 margin-top: var(--espacement-md);
 }
-.ligne-curseur {
-margin-bottom: var(--espacement-md);
+.carte-terrain {
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: var(--espacement-xs);
+text-align: left;
+font: inherit;
+color: inherit;
+background: #f8fafc;
+border: 2px dashed var(--couleur-primaire);
+border-radius: var(--rayon-bordure);
+padding: var(--espacement-md);
+min-height: var(--hauteur-cible-min);
+cursor: pointer;
+transition: background 0.15s, border-style 0.15s, border-color 0.15s;
 }
-.ligne-curseur:last-child {
-margin-bottom: 0;
+.carte-terrain:hover,
+.carte-terrain:focus-visible {
+background: #eff6ff;
 }
-.ligne-curseur label {
+.carte-terrain[aria-checked="true"] {
+border-style: solid;
+border-color: var(--couleur-succes);
+background: #ecfdf5;
+}
+.carte-terrain .terrain-icone {
+font-size: 1.6rem;
+line-height: 1;
+}
+.carte-terrain .terrain-nom {
+font-weight: 700;
+font-size: 1rem;
+}
+.carte-terrain .terrain-resume {
+font-size: 0.87rem;
+color: var(--couleur-texte-leger);
+line-height: 1.35;
+}
+.carte-terrain[aria-checked="true"] .terrain-nom {
+color: var(--couleur-succes);
+}
+.grille-demandes {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: var(--espacement-md);
+margin-top: var(--espacement-md);
+}
+.ligne-demande {
+background: #f8fafc;
+border: 1px solid #e2e8f0;
+border-radius: var(--rayon-bordure);
+padding: var(--espacement-sm) var(--espacement-md) var(--espacement-md);
+}
+.ligne-demande label {
 display: block;
 font-weight: 600;
 margin-bottom: var(--espacement-xs);
 }
-.ligne-curseur input[type="range"] {
+.ligne-demande select {
 width: 100%;
 min-height: var(--hauteur-cible-min);
-accent-color: var(--couleur-primaire);
+font: inherit;
+color: inherit;
+padding: var(--espacement-xs) var(--espacement-sm);
+border: 2px solid #cbd5e1;
+border-radius: var(--rayon-bordure);
+background: #fff;
+}
+.ligne-demande select:focus-visible {
+outline: 3px solid var(--couleur-primaire);
+outline-offset: 2px;
+}
+.demande-aide {
+margin-top: var(--espacement-xs);
+font-size: 0.85rem;
+color: var(--couleur-texte-leger);
+line-height: 1.35;
 }
 .atelier.schema-drone {
 display: grid;
-grid-template-columns: repeat(2, 1fr);
+grid-template-columns: repeat(2, minmax(0, 1fr));
 gap: var(--espacement-md);
 margin-top: var(--espacement-md);
 }
@@ -3600,6 +3662,10 @@ transition: background 0.15s, border-style 0.15s;
 .atelier.schema-drone .emplacement:hover,
 .atelier.schema-drone .emplacement:focus {
 background: #eff6ff;
+}
+.atelier.schema-drone .emplacement:focus-visible {
+outline: 3px solid var(--couleur-primaire);
+outline-offset: 2px;
 }
 .atelier.schema-drone .emplacement.complet {
 border-style: solid;
@@ -3634,6 +3700,8 @@ border-radius: var(--rayon-bordure);
 box-shadow: var(--ombre-moyenne);
 max-width: 520px;
 width: 100%;
+max-height: 90vh;
+overflow-y: auto;
 padding: var(--espacement-lg);
 }
 .overlay-choix .panneau-choix h4 {
@@ -3643,6 +3711,8 @@ margin-bottom: var(--espacement-md);
 display: block;
 width: 100%;
 text-align: left;
+font: inherit;
+color: inherit;
 border: 2px solid #e2e8f0;
 border-radius: var(--rayon-bordure);
 padding: var(--espacement-sm) var(--espacement-md);
@@ -3660,39 +3730,108 @@ background: #eff6ff;
 display: block;
 }
 .overlay-choix .option-composant .detail-composant {
+display: block;
 font-size: 0.85rem;
 color: var(--couleur-texte-leger);
 margin-top: var(--espacement-xs);
 }
-@media (max-width: 480px) {
+.bilan-compromis {
+background: #f8fafc;
+border: 1px solid #e2e8f0;
+border-left: 6px solid var(--couleur-info);
+border-radius: var(--rayon-bordure);
+padding: var(--espacement-md) var(--espacement-lg);
+margin-top: var(--espacement-md);
+}
+.bilan-compromis h4 {
+margin-top: var(--espacement-md);
+margin-bottom: var(--espacement-sm);
+}
+.bilan-compromis h4:first-child {
+margin-top: 0;
+}
+.compromis-liste {
+margin: 0 0 var(--espacement-sm);
+padding-left: 1.25rem;
+}
+.compromis-liste li {
+margin-bottom: var(--espacement-xs);
+line-height: 1.45;
+}
+.compromis-assume {
+border-left: 4px solid var(--couleur-alerte);
+padding-left: var(--espacement-md);
+list-style: none;
+margin-left: 0;
+}
+.compromis-assume li {
+position: relative;
+padding-left: var(--espacement-md);
+}
+.compromis-assume li::before {
+content: "⚖";
+position: absolute;
+left: 0;
+}
+.compromis-note {
+font-size: 0.9rem;
+font-style: italic;
+color: var(--couleur-texte-leger);
+margin-top: var(--espacement-sm);
+}
+@media (max-width: 640px) {
+.grille-terrains,
+.grille-demandes,
 .atelier.schema-drone {
 grid-template-columns: 1fr;
 }
 }
-:where(html[data-theme="sombre"]) .atelier.curseurs {
-background: #16202e;
-border: 1px solid #2b3a52;
-color: #e6ecf5;
-}
-:where(html[data-theme="sombre"]) .atelier.curseurs label,
-:where(html[data-theme="sombre"]) .atelier.curseurs strong,
-:where(html[data-theme="sombre"]) .atelier.curseurs p {
-color: #e6ecf5;
-}
+:where(html[data-theme="sombre"]) .carte-terrain,
+:where(html[data-theme="sombre"]) .ligne-demande,
+:where(html[data-theme="sombre"]) .ligne-demande select,
 :where(html[data-theme="sombre"]) .atelier.schema-drone .emplacement,
 :where(html[data-theme="sombre"]) .overlay-choix .panneau-choix,
-:where(html[data-theme="sombre"]) .overlay-choix .option-composant {
+:where(html[data-theme="sombre"]) .overlay-choix .option-composant,
+:where(html[data-theme="sombre"]) .bilan-compromis {
 background: #1c2534;
 border-color: #3a5c8f;
 color: #e6ecf5;
 }
+:where(html[data-theme="sombre"]) .carte-terrain:hover,
+:where(html[data-theme="sombre"]) .carte-terrain:focus-visible,
+:where(html[data-theme="sombre"]) .atelier.schema-drone .emplacement:hover,
+:where(html[data-theme="sombre"]) .atelier.schema-drone .emplacement:focus,
+:where(html[data-theme="sombre"]) .overlay-choix .option-composant:hover,
+:where(html[data-theme="sombre"]) .overlay-choix .option-composant:focus {
+background: #243247;
+}
+:where(html[data-theme="sombre"]) .carte-terrain[aria-checked="true"],
 :where(html[data-theme="sombre"]) .atelier.schema-drone .emplacement.complet {
 background: #17452f;
 border-color: #2f6b4f;
 }
-:where(html[data-theme="sombre"]) .schema-drone .role-zone,
-:where(html[data-theme="sombre"]) .schema-drone .choix-zone {
+:where(html[data-theme="sombre"]) .carte-terrain .terrain-resume,
+:where(html[data-theme="sombre"]) .demande-aide,
+:where(html[data-theme="sombre"]) .overlay-choix .option-composant .detail-composant,
+:where(html[data-theme="sombre"]) .compromis-note,
+:where(html[data-theme="sombre"]) .schema-drone .role-zone {
+color: #a9b8cc;
+}
+:where(html[data-theme="sombre"]) .carte-terrain .terrain-nom,
+:where(html[data-theme="sombre"]) .schema-drone .choix-zone,
+:where(html[data-theme="sombre"]) .bilan-compromis h4 {
 color: #e6ecf5;
+}
+:where(html[data-theme="sombre"]) .carte-terrain[aria-checked="true"] .terrain-nom,
+:where(html[data-theme="sombre"]) .atelier.schema-drone .emplacement.complet .choix-zone {
+color: #6ee7a8;
+}
+:where(html[data-theme="sombre"]) .ligne-demande select {
+border-color: #3a5c8f;
+background-color: #16202e;
+}
+:where(html[data-theme="sombre"]) .bilan-compromis {
+border-left-color: #3aa8c8;
 }
 .jeu {
 margin-top: var(--espacement-md);
@@ -5448,94 +5587,175 @@ background: #16202e;
                 </div>
             </section>
 
-            <!-- N4 - Atelier de dimensionnement sur mesure (drone de secours en montagne) -->
+<!-- N4 — Concevoir un drone de sauvetage (atelier sur mesure)
+                 Refonte du 27/10/2026 à la demande du professeur : la situation
+                 est un drone de sauvetage, l'élève choisit son TERRAIN, dit
+                 pour chaque composant s'il doit être performant ou non, puis
+                 compose son drone. Aucune donnée chiffrée — ni mAh, ni kilos,
+                 ni minutes : des mots, et un budget dit « serré ». Le compromis
+                 est forcé par construction : dans chaque terrain, satisfaire
+                 les quatre exigences coûte plus que le budget de l'équipe
+                 (démonstration : `verifier-compromis.py`). -->
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
-                    <h2>Niveau 4 : Dimensionner un drone de secours en montagne</h2>
-                    <p>Un refuge de haute montagne est isolé par la neige. Vous devez dimensionner un drone pour livrer du matériel de secours (médicaments, couverture de survie, radio). Réglez les paramètres, choisissez les composants du schéma, puis rédigez une courte conclusion.</p>
+                    <h2>Niveau 4 : Concevoir le drone de sauvetage de votre terrain</h2>
+                    <p>Une équipe de secours doit retrouver une personne blessée. Aucun drone n'est bon partout, et le budget de l'équipe est serré : à vous de choisir le terrain de l'intervention, de dire quels composants doivent être performants, puis d'assumer le compromis que votre drone impose. Il n'y a pas une bonne réponse : ce sont votre démarche et le compromis que vous acceptez qui seront regardés.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
-                        <p><strong>Situation :</strong> Un refuge d'altitude à 2500 m est coupé du monde par une tempête de neige. Un blessé a besoin de médicaments et d'une radio. Aucun hélicoptère ne peut décoller. Vous devez dimensionner un drone capable d'acheminer 2 kg de matériel de secours jusqu'au refuge, puis de revenir. Concevez-le en réglant les paramètres et en choisissant ses composants.</p>
+                        <p><strong>Situation :</strong> Une personne est blessée quelque part dans la zone après un éboulement. Les secouristes ne peuvent pas la chercher à pied assez vite : un drone doit la repérer depuis le ciel et guider l'équipe. Le maire vous confie le choix de ce drone de sauvetage. À vous de jouer : le terrain d'abord, puis ce que chaque composant doit savoir faire, puis les composants — et enfin le compromis, car aucun drone ne peut être le meilleur partout.</p>
                     </div>
 
-                    <!-- Les 4 champs requis par le moteur (remplis automatiquement
-                         par les interactions ci-dessous ; masqués visuellement
-                         car l'élève ne tape pas dedans). Ils portent
-                         `data-conception-texte` — le contrat que lit le moteur
-                         « conception » — et restent donc vérifiables : le
-                         contrôle du parcours les remplit comme le ferait
-                         l'atelier, et une conception inaboutie est refusée. -->
-                    <textarea id="besoin-identifie" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Besoin identifié (synthèse auto)"></textarea>
-                    <textarea id="contraintes-definies" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Contraintes (synthèse auto)"></textarea>
-                    <textarea id="solutions-imaginees" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Solutions (synthèse auto)"></textarea>
-                    <textarea id="solution-choisie" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Solution choisie (synthèse auto)"></textarea>
+                    <!-- Les quatre champs du moteur de conception : remplis
+                         automatiquement par l'atelier (l'élève ne tape pas
+                         dedans), ils portent `data-conception-texte` et
+                         gardent leurs identifiants historiques, que lisent
+                         `finaliserConception()` et `verifier_parcours.py`. -->
+                    <textarea id="besoin-identifie" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Besoin identifié (synthèse automatique)"></textarea>
+                    <textarea id="contraintes-definies" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Exigences par composant (synthèse automatique)"></textarea>
+                    <textarea id="solutions-imaginees" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Composants retenus (synthèse automatique)"></textarea>
+                    <textarea id="solution-choisie" class="cache" aria-hidden="true" data-conception-texte data-min="10" aria-label="Solution retenue (synthèse automatique)"></textarea>
 
-                    <h3 class="marge-haut">Étape 1 — Régler les paramètres de mission</h3>
-                    <p>Déplacez les curseurs pour fixer la charge utile, l'altitude du refuge et la distance depuis la base de secours.</p>
+                    <!-- L'atelier entier porte le contrat du moteur : tant que
+                         le terrain, les exigences et les quatre composants ne
+                         sont pas arrêtés, `data-atelier-valide` reste à 0 et
+                         `finaliserConception()` refuse la conception, avec la
+                         consigne ci-dessous. -->
+                    <div id="atelier-drone" data-conception-atelier data-atelier-valide="0"
+                         data-conception-consigne="Terminez l'atelier avant de finaliser : choisissez le terrain, indiquez ce que chaque composant doit savoir faire, puis cliquez sur les quatre zones du schéma pour choisir les composants.">
 
-                    <div class="atelier curseurs">
-                        <div class="ligne-curseur">
-                            <label for="curseur-charge">Charge utile à livrer : <strong id="val-charge">2,0 kg</strong></label>
-                            <input type="range" id="curseur-charge" min="5" max="40" value="20" step="1">
+                        <h3 class="marge-haut">Étape 1 — Choisir le terrain de l'intervention</h3>
+                        <p>Le terrain décide de presque tout. Cliquez sur le paysage où l'équipe doit chercher la personne blessée.</p>
+
+                        <div class="grille-terrains" id="grille-terrains" role="radiogroup" aria-label="Terrain de l'intervention">
+                            <button type="button" class="carte-terrain" role="radio" aria-checked="false"
+                                    data-atelier-scenario="plaine" onclick="choisirTerrain(this)">
+                                <span class="terrain-icone" aria-hidden="true">🌾</span>
+                                <span class="terrain-nom">Large plaine agricole</span>
+                                <span class="terrain-resume">Des champs ouverts à perte de vue : la zone est vaste et loin de la base.</span>
+                            </button>
+                            <button type="button" class="carte-terrain" role="radio" aria-checked="false"
+                                    data-atelier-scenario="montagne" onclick="choisirTerrain(this)">
+                                <span class="terrain-icone" aria-hidden="true">🏔️</span>
+                                <span class="terrain-nom">Haute montagne</span>
+                                <span class="terrain-resume">Du relief, des rafales, du froid : le drone est secoué et la liaison se perd derrière les crêtes.</span>
+                            </button>
+                            <button type="button" class="carte-terrain" role="radio" aria-checked="false"
+                                    data-atelier-scenario="metropole" onclick="choisirTerrain(this)">
+                                <span class="terrain-icone" aria-hidden="true">🏙️</span>
+                                <span class="terrain-nom">Métropole dense</span>
+                                <span class="terrain-resume">Des immeubles partout : le drone vole près des façades et doit repérer une silhouette dans la foule.</span>
+                            </button>
+                            <button type="button" class="carte-terrain" role="radio" aria-checked="false"
+                                    data-atelier-scenario="littoral" onclick="choisirTerrain(this)">
+                                <span class="terrain-icone" aria-hidden="true">🌊</span>
+                                <span class="terrain-nom">Littoral venteux</span>
+                                <span class="terrain-resume">Le vent de mer souffle fort, le sel attaque les matériaux, et la mer ne pardonne pas une panne.</span>
+                            </button>
                         </div>
-                        <div class="ligne-curseur">
-                            <label for="curseur-altitude">Altitude du refuge : <strong id="val-altitude">2 500 m</strong></label>
-                            <input type="range" id="curseur-altitude" min="500" max="4000" value="2500" step="100">
+
+                        <h3 class="marge-haut">Étape 2 — Dire quels composants doivent être performants</h3>
+                        <p>Pour chaque composant, dites ce que votre terrain exige. Sur certains terrains, un composant simple suffit ; ailleurs, il ne pardonnera pas l'approximation. Vous pouvez demander plus que nécessaire — mais cela se paie, et l'atelier vous le montrera.</p>
+
+                        <div class="grille-demandes">
+                            <div class="ligne-demande">
+                                <label for="demande-structure">🔩 Bras et structure</label>
+                                <select id="demande-structure" data-atelier-demande="structure" aria-describedby="aide-demande-structure">
+                                    <option value="">— à définir —</option>
+                                    <option value="1">Peu performant suffit</option>
+                                    <option value="2">Doit être performant</option>
+                                    <option value="3">Doit être très performant</option>
+                                </select>
+                                <p class="demande-aide" id="aide-demande-structure">Ils portent les moteurs et encaissent les rafales et le froid.</p>
+                            </div>
+                            <div class="ligne-demande">
+                                <label for="demande-batterie">🔋 Batterie</label>
+                                <select id="demande-batterie" data-atelier-demande="batterie" aria-describedby="aide-demande-batterie">
+                                    <option value="">— à définir —</option>
+                                    <option value="1">Peu performant suffit</option>
+                                    <option value="2">Doit être performant</option>
+                                    <option value="3">Doit être très performant</option>
+                                </select>
+                                <p class="demande-aide" id="aide-demande-batterie">Elle donne le temps de vol, donc la surface que l'on peut balayer.</p>
+                            </div>
+                            <div class="ligne-demande">
+                                <label for="demande-moteurs">⚙️ Moteurs et hélices</label>
+                                <select id="demande-moteurs" data-atelier-demande="moteurs" aria-describedby="aide-demande-moteurs">
+                                    <option value="">— à définir —</option>
+                                    <option value="1">Peu performant suffit</option>
+                                    <option value="2">Doit être performant</option>
+                                    <option value="3">Doit être très performant</option>
+                                </select>
+                                <p class="demande-aide" id="aide-demande-moteurs">Ils poussent le drone contre le vent et le font monter.</p>
+                            </div>
+                            <div class="ligne-demande">
+                                <label for="demande-capteur">📷 Capteur embarqué</label>
+                                <select id="demande-capteur" data-atelier-demande="capteur" aria-describedby="aide-demande-capteur">
+                                    <option value="">— à définir —</option>
+                                    <option value="1">Peu performant suffit</option>
+                                    <option value="2">Doit être performant</option>
+                                    <option value="3">Doit être très performant</option>
+                                </select>
+                                <p class="demande-aide" id="aide-demande-capteur">C'est lui qui repère la personne : de jour, de nuit, sous la végétation.</p>
+                            </div>
                         </div>
-                        <div class="ligne-curseur">
-                            <label for="curseur-distance">Distance base → refuge : <strong id="val-distance">8 km</strong></label>
-                            <input type="range" id="curseur-distance" min="2" max="25" value="8" step="1">
+
+                        <h3 class="marge-haut">Étape 3 — Composer le drone</h3>
+                        <p>Cliquez sur chaque zone du schéma (en pointillé) et choisissez un composant dans la liste qui s'ouvre. Aucun composant n'est le meilleur partout : celui qui gagne sur un point coûte plus cher ou pèse plus lourd.</p>
+
+                        <div class="atelier schema-drone" id="schema-drone" role="group" aria-label="Schéma du drone à compléter">
+                            <div class="emplacement" data-atelier-zone="structure" tabindex="0" role="button"
+                                 aria-label="Emplacement bras et structure : cliquer pour choisir un composant"
+                                 onclick="ouvrirChoixComposant('structure')" onkeydown="clavierEmplacement(event, 'structure')">
+                                <span class="role-zone">Bras &amp; structure</span>
+                                <span class="choix-zone" id="choix-structure">— cliquer —</span>
+                            </div>
+                            <div class="emplacement" data-atelier-zone="batterie" tabindex="0" role="button"
+                                 aria-label="Emplacement batterie : cliquer pour choisir un composant"
+                                 onclick="ouvrirChoixComposant('batterie')" onkeydown="clavierEmplacement(event, 'batterie')">
+                                <span class="role-zone">Batterie</span>
+                                <span class="choix-zone" id="choix-batterie">— cliquer —</span>
+                            </div>
+                            <div class="emplacement" data-atelier-zone="moteurs" tabindex="0" role="button"
+                                 aria-label="Emplacement moteurs et hélices : cliquer pour choisir un composant"
+                                 onclick="ouvrirChoixComposant('moteurs')" onkeydown="clavierEmplacement(event, 'moteurs')">
+                                <span class="role-zone">Moteurs &amp; hélices</span>
+                                <span class="choix-zone" id="choix-moteurs">— cliquer —</span>
+                            </div>
+                            <div class="emplacement" data-atelier-zone="capteur" tabindex="0" role="button"
+                                 aria-label="Emplacement capteur embarqué : cliquer pour choisir un composant"
+                                 onclick="ouvrirChoixComposant('capteur')" onkeydown="clavierEmplacement(event, 'capteur')">
+                                <span class="role-zone">Capteur embarqué</span>
+                                <span class="choix-zone" id="choix-capteur">— cliquer —</span>
+                            </div>
                         </div>
+
+                        <p class="marge-haut" id="compteur-composants" role="status" aria-live="polite">Terrain : aucun. Exigences indiquées : 0 sur 4. Composants choisis : 0 sur 4.</p>
                     </div>
 
-                    <div class="info-block marge-haut" id="bilan-mission" role="status" aria-live="polite">
-                        <p id="texte-bilan-mission">Réglez les curseurs et choisissez les composants : le bilan de mission s'affichera ici.</p>
+                    <h3 class="marge-haut">Le compromis de votre drone</h3>
+                    <p>Ce que votre drone sait faire, et ce que le terrain lui demande : tout ne peut pas tomber juste — c'est là que le compromis apparaît.</p>
+                    <div class="bilan-compromis" id="bilan-mission" data-atelier-bilan role="status" aria-live="polite">
+                        <p id="texte-bilan-mission">Choisissez un terrain, indiquez vos exigences, puis composez le drone : le compromis s'affichera ici.</p>
                     </div>
 
-                    <h3 class="marge-haut">Étape 2 — Choisir les composants du drone</h3>
-                    <p>Cliquez sur chaque zone du schéma (en pointillé) et choisissez un composant dans la liste qui s'ouvre. Le schéma se complète au fur et à mesure.</p>
-
-                    <div class="atelier schema-drone" id="schema-drone" role="group" aria-label="Schéma du drone à compléter">
-                        <div class="emplacement" data-zone="bras" tabindex="0" role="button" aria-label="Emplacement bras du drone : cliquer pour choisir un matériau" onclick="ouvrirChoixComposant('bras')">
-                            <span class="role-zone">Bras &amp; structure</span>
-                            <span class="choix-zone" id="choix-bras">— cliquer —</span>
-                        </div>
-                        <div class="emplacement" data-zone="batterie" tabindex="0" role="button" aria-label="Emplacement batterie : cliquer pour choisir" onclick="ouvrirChoixComposant('batterie')">
-                            <span class="role-zone">Batterie</span>
-                            <span class="choix-zone" id="choix-batterie">— cliquer —</span>
-                        </div>
-                        <div class="emplacement" data-zone="moteur" tabindex="0" role="button" aria-label="Emplacement moteurs : cliquer pour choisir" onclick="ouvrirChoixComposant('moteur')">
-                            <span class="role-zone">Moteurs &amp; hélices</span>
-                            <span class="choix-zone" id="choix-moteur">— cliquer —</span>
-                        </div>
-                        <div class="emplacement" data-zone="capteur" tabindex="0" role="button" aria-label="Emplacement capteur : cliquer pour choisir" onclick="ouvrirChoixComposant('capteur')">
-                            <span class="role-zone">Capteur embarqué</span>
-                            <span class="choix-zone" id="choix-capteur">— cliquer —</span>
-                        </div>
-                    </div>
-
-                    <div class="info-block marge-haut">
-                        <p id="compteur-composants">0 / 4 composants choisis.</p>
-                    </div>
-
-                    <h3 class="marge-haut">Étape 3 — Conclusion</h3>
-                    <p>En deux ou trois phrases, résumez votre dimensionnement : votre drone tient-il la mission ? Quels compromis avez-vous acceptés (masse, autonomie, coût, résistance au froid) ?</p>
+                    <h3 class="marge-haut">Étape 4 — Le compromis que vous acceptez</h3>
+                    <p>Votre drone ne peut pas tout faire, et le budget ne suit pas. Nommez ce à quoi vous renoncez, et comment l'équipe de secours s'en accommode : un vol de jour, une batterie de rechange, un relais au sol, un pilote qui connaît le terrain, un second drone plus simple…</p>
                     <textarea
                         id="schema-solution"
                         data-conception-texte
                         data-min="40"
-                        placeholder="Ex. : mon drone de 4 kg embarque une batterie Li-Po 6000 mAh et une caméra thermique ; il atteint le refuge à 2500 m et revient, mais le coût est élevé…"
-                        aria-label="Conclusion du dimensionnement"></textarea>
+                        placeholder="Ex. : je renonce à voler par grand vent, donc l'équipe surveille la météo et attend une accalmie ; pour compenser le repérage de nuit, elle éclaire la zone au sol…"
+                        aria-label="Compromis accepté et façon dont l'équipe s'en accommode"></textarea>
 
-                    <button class="bouton-action marge-haut" onclick="finaliserConception()">
+                    <button class="bouton-action marge-haut" onclick="finaliserConceptionDrone()">
                         Finaliser ma conception
                     </button>
 
                     <div id="confirmation-conception" class="marge-haut" style="display: none;">
                         <div class="solution-personnelle">
                             <h3>✨ Félicitations !</h3>
-                            <p>Vous avez dimensionné un drone de secours en montagne en réglant ses paramètres et en choisissant ses composants. Cette démarche — du besoin aux choix techniques justifiés — est exactement celle d'un ingénieur confronté à des contraintes réelles (masse, autonomie, altitude, froid).</p>
+                            <p>Vous avez conçu un drone de sauvetage pour votre terrain, en disant ce que chaque composant doit savoir faire et en assumant le compromis. C'est exactement la démarche d'un ingénieur : le meilleur drone n'est pas celui qui a les meilleurs composants, c'est celui dont les limites sont connues et compensées par l'équipe.</p>
                             <p>Maintenant, consultez la synthèse de l'activité pour consolider vos apprentissages.</p>
                         </div>
                         <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n4')">
@@ -5543,6 +5763,122 @@ background: #16202e;
                         </button>
                     </div>
                 </div>
+
+                <!-- Données de l'atelier : terrains, composants, options et
+                     effets. Elles vivent DANS la page (autonomie hors ligne) et
+                     sont lues par `scripts-n3n4.js` d'un côté, par
+                     `verifier-compromis.py` de l'autre — une seule source, donc
+                     aucune dérive possible entre ce que la page raconte et ce
+                     que le contrôle démontre. Aucun chiffre n'est montré à
+                     l'élève : `niveau`, `cout` et les seuils servent au calcul,
+                     la page n'affiche que des mots. -->
+                <script type="application/json" id="n4-donnees">
+{
+  "budget": {
+    "bandes": [
+      {"max": 5, "cle": "economique", "nom": "économique", "detail": "l'équipe peut même garder de quoi acheter une batterie de rechange."},
+      {"max": 7, "cle": "dans-le-budget", "nom": "dans le budget", "detail": "l'équipe peut payer, mais sans marge."},
+      {"max": 9, "cle": "au-dessus", "nom": "au-dessus du budget", "detail": "il faudrait une autorisation et rogner ailleurs : ce n'est plus le budget d'un secours de proximité."},
+      {"max": 99, "cle": "tres-au-dessus", "nom": "très au-dessus du budget", "detail": "l'équipe ne peut pas acheter ce drone."}
+    ]
+  },
+  "composants": [
+    {"cle": "structure", "nom": "Bras et structure", "icone": "🔩",
+     "aide": "Ils portent les moteurs et encaissent les rafales et le froid."},
+    {"cle": "batterie", "nom": "Batterie", "icone": "🔋",
+     "aide": "Elle donne le temps de vol, donc la surface que l'on peut balayer."},
+    {"cle": "moteurs", "nom": "Moteurs et hélices", "icone": "⚙️",
+     "aide": "Ils poussent le drone contre le vent et le font monter."},
+    {"cle": "capteur", "nom": "Capteur embarqué", "icone": "📷",
+     "aide": "C'est lui qui repère la personne : de jour, de nuit, sous la végétation."}
+  ],
+  "terrains": [
+    {"cle": "plaine", "nom": "Large plaine agricole", "icone": "🌾",
+     "resume": "Des champs ouverts à perte de vue : la zone est vaste et loin de la base.",
+     "epreuve": "la distance à couvrir, sous un soleil qui échauffe les batteries",
+     "compensation": "découper la recherche en plusieurs vols et emporter des batteries de rechange",
+     "impose": {"structure": 1, "batterie": 3, "moteurs": 2, "capteur": 2}},
+    {"cle": "montagne", "nom": "Haute montagne", "icone": "🏔️",
+     "resume": "Du relief, des rafales, du froid : le drone est secoué et la liaison se perd derrière les crêtes.",
+     "epreuve": "les rafales, le froid et les crêtes qui masquent le signal",
+     "compensation": "attendre une accalmie, voler à vue depuis une crête et relayer le signal depuis un second poste",
+     "impose": {"structure": 3, "batterie": 2, "moteurs": 3, "capteur": 2}},
+    {"cle": "metropole", "nom": "Métropole dense", "icone": "🏙️",
+     "resume": "Des immeubles partout : le drone vole près des façades et doit repérer une silhouette dans la foule.",
+     "epreuve": "les façades qui masquent le signal et la foule où il faut distinguer une personne",
+     "compensation": "quadriller à pied les rues que le drone ne voit pas, et survoler les toits en dernier recours",
+     "impose": {"structure": 2, "batterie": 1, "moteurs": 2, "capteur": 3}},
+    {"cle": "littoral", "nom": "Littoral venteux", "icone": "🌊",
+     "resume": "Le vent de mer souffle fort, le sel attaque les matériaux, et la mer ne pardonne pas une panne.",
+     "epreuve": "le vent, le sel et l'eau, où une panne est définitive",
+     "compensation": "voler par vent plus faible, amarrer un repère flottant et garder un second drone prêt à décoller",
+     "impose": {"structure": 3, "batterie": 3, "moteurs": 3, "capteur": 1}}
+  ],
+  "options": {
+    "structure": [
+      {"cle": "legere", "nom": "Structure allégée", "niveau": 1, "cout": 1, "vol": 1,
+       "detail": "Légère : elle allonge le temps de vol, mais elle se déforme dès que le vent forcit."},
+      {"cle": "renforcee", "nom": "Structure renforcée", "niveau": 3, "cout": 2, "vol": 0,
+       "detail": "Rigide et solide par grand vent ; elle pèse un peu plus, donc le vol est un peu plus court."},
+      {"cle": "composite", "nom": "Structure composite", "niveau": 3, "cout": 3, "vol": 1,
+       "detail": "Légère et rigide à la fois : le meilleur des deux, mais son prix dépasse ce que l'équipe peut mettre."}
+    ],
+    "batterie": [
+      {"cle": "compacte", "nom": "Batterie compacte", "niveau": 1, "cout": 1, "vol": 0,
+       "detail": "Peu encombrante et bon marché, mais le vol est court : il faut revenir souvent."},
+      {"cle": "standard", "nom": "Batterie standard", "niveau": 2, "cout": 2, "vol": 0,
+       "detail": "Le temps de vol courant : de quoi faire un aller-retour, sans chercher longtemps."},
+      {"cle": "grande", "nom": "Batterie de grande capacité", "niveau": 3, "cout": 3, "vol": 0,
+       "detail": "Longtemps en l'air, mais lourde et chère : elle pèse sur la structure et sur le budget."}
+    ],
+    "moteurs": [
+      {"cle": "petits", "nom": "Petits moteurs", "niveau": 1, "cout": 1, "vol": 1,
+       "detail": "Économes, ils allongent le vol, mais ils s'essoufflent dans les montées et par vent fort."},
+      {"cle": "standards", "nom": "Moteurs standards", "niveau": 2, "cout": 2, "vol": 0,
+       "detail": "Un bon équilibre : ils montent, ils luttent contre le vent, ils ne vident pas la batterie."},
+      {"cle": "puissants", "nom": "Moteurs puissants", "niveau": 3, "cout": 3, "vol": -1,
+       "detail": "Ils tiennent tête aux rafales et portent le drone haut, mais ils vident la batterie plus vite."}
+    ],
+    "capteur": [
+      {"cle": "jour", "nom": "Caméra de jour", "niveau": 1, "cout": 1, "vol": 0,
+       "detail": "Une image nette en plein jour, et rien du tout la nuit ou dans la fumée."},
+      {"cle": "projecteur", "nom": "Caméra de jour avec projecteur", "niveau": 2, "cout": 2, "vol": -1,
+       "detail": "Elle voit aussi la nuit, mais le projecteur consomme et n'éclaire pas loin."},
+      {"cle": "thermique", "nom": "Caméra thermique", "niveau": 3, "cout": 3, "vol": 0,
+       "detail": "Elle repère une silhouette par sa chaleur, même dans le noir et sous la végétation — c'est l'option la plus chère."}
+    ]
+  },
+  "socleBatterie": {"compacte": 1, "standard": 2, "grande": 3},
+  "consequences": {
+    "vol": {"nom": "Temps de vol", "icone": "🛫",
+            "bandes": [
+              {"max": 1, "nom": "court", "detail": "le drone revient vite à la base : peu de zone couverte par vol."},
+              {"max": 3, "nom": "moyen", "detail": "de quoi faire un aller-retour, pas de quoi chercher longtemps."},
+              {"max": 99, "nom": "long", "detail": "le drone peut balayer une vaste zone avant de revenir."}
+            ]},
+    "tenue": {"nom": "Tenue au vent et au froid", "icone": "💨",
+              "bandes": [
+                {"max": 1, "nom": "fragile", "detail": "dès que le vent forcit, il reste au sol."},
+                {"max": 3, "nom": "correcte", "detail": "il vole par vent modéré, mais pas par tempête."},
+                {"max": 99, "nom": "solide", "detail": "il tient par grand vent et supporte le froid."}
+              ]},
+    "reperage": {"nom": "Repérage", "icone": "🔍",
+                 "bandes": [
+                   {"max": 1, "nom": "limité", "detail": "de jour seulement, et à faible distance."},
+                   {"max": 2, "nom": "moyen", "detail": "de jour, et de nuit avec le projecteur, mais l'image reste grossière."},
+                   {"max": 99, "nom": "précis", "detail": "il distingue une personne même la nuit ou sous la végétation."}
+                 ]}
+  },
+  "resultat": {
+    "titre": "Le compromis de votre drone",
+    "sansTerrain": "Choisissez d'abord un terrain : c'est lui qui décide de ce que le drone devra savoir faire.",
+    "exigencesManquantes": "Indiquez maintenant, pour chaque composant, s'il doit être performant ou non.",
+    "composantsManquants": "Composez votre drone : cliquez sur les zones du schéma restées en pointillé.",
+    "compromis": "Le compromis que vous devez assumer",
+    "aucunCompromis": "Votre drone tient les exigences de ce terrain — mais regardez le budget : il ne rentre pas dans ce que l'équipe peut payer."
+  }
+}
+                </script>
             </section>
 
             <!-- Synthèse - Fiches de cours -->
@@ -10689,62 +11025,165 @@ background: #16202e;
         }
     })();
     // ==== PANNEAU-DEV:FIN ====
-var CATALOGUE_COMPOSANTS = {
-bras: [
-{ id: 'plastique', nom: 'Plastique ABS', detail: 'Léger et bon marché, mais fragile au froid et moins rigide.' },
-{ id: 'alu', nom: 'Aluminium', detail: 'Rigide et résistant, mais plus lourd : réduit l\'autonomie.' },
-{ id: 'carbone', nom: 'Fibre de carbone', detail: 'Très léger, très rigide, résistant au froid. Coût élevé. Choix typique des drones de secours.' }
-],
-batterie: [
-{ id: 'lipo3000', nom: 'Li-Po 3000 mAh', detail: 'Légère, mais autonomie courte : insuffisant pour un aller-retour en montagne.' },
-{ id: 'lipo6000', nom: 'Li-Po 6000 mAh', detail: 'Bon compromis masse/autonomie. Sensible au froid : à isoler.' },
-{ id: 'lipo9000', nom: 'Li-Po 9000 mAh', detail: 'Autonomie longue, mais masse élevée : alourdit le drone et limite la charge utile.' }
-],
-moteur: [
-{ id: 'brushless-petit', nom: 'Brushless 2204', detail: 'Économe, suffisant pour un drone léger, mais limite la charge.' },
-{ id: 'brushless-moyen', nom: 'Brushless 5008', detail: 'Bon couple pour porter 2 kg en altitude. Choix adapté à la mission.' },
-{ id: 'brushless-gros', nom: 'Brushless 8015', detail: 'Très puissant, mais lourd et gourmand en énergie : surdimensionné.' }
-],
-capteur: [
-{ id: 'camera-visible', nom: 'Caméra visible HD', detail: 'Utile le jour, inutile la nuit ou dans le brouillard.' },
-{ id: 'camera-thermique', nom: 'Caméra thermique', detail: 'Détecte les personnes et les sources de chaleur même dans le noir. Choix pertinent pour un secours de nuit.' },
-{ id: 'lidar', nom: 'LiDAR', detail: 'Évite les obstacles, mais lourd et coûteux : utile seulement si le relief est très accidenté.' }
-]
+var N4_DONNEES = null;
+var n4Choix = {};        // composant -> option retenue
+var n4TerrainChoisi = null;
+var n4ZoneOverlay = null;
+var n4OuvertureOverlay = null;   // élément à re-focaliser à la fermeture
+var N4_ATELIER_VERSION = 'drone-sauvetage-2026-10-27';
+function n4LireDonnees() {
+if (N4_DONNEES) return N4_DONNEES;
+var bloc = document.getElementById('n4-donnees');
+if (!bloc) return null;
+try {
+N4_DONNEES = JSON.parse(bloc.textContent);
+} catch (e) {
+N4_DONNEES = null;
+}
+return N4_DONNEES;
+}
+function n4Composant(cle) {
+var d = n4LireDonnees();
+if (!d) return null;
+for (var i = 0; i < d.composants.length; i++) {
+if (d.composants[i].cle === cle) return d.composants[i];
+}
+return null;
+}
+function n4TerrainCourant() {
+var d = n4LireDonnees();
+if (!d || !n4TerrainChoisi) return null;
+for (var i = 0; i < d.terrains.length; i++) {
+if (d.terrains[i].cle === n4TerrainChoisi) return d.terrains[i];
+}
+return null;
+}
+function n4LibelleExigence(cle, niveau) {
+if (!niveau) return 'à définir';
+var select = document.querySelector('[data-atelier-demande="' + cle + '"]');
+if (select) {
+for (var i = 0; i < select.options.length; i++) {
+if (String(select.options[i].value) === String(niveau)) {
+return String(select.options[i].textContent).trim().toLowerCase();
+}
+}
+}
+return 'niveau ' + niveau;
+}
+function n4Exigence(cle) {
+var select = document.querySelector('[data-atelier-demande="' + cle + '"]');
+return select ? (parseInt(select.value, 10) || 0) : 0;
+}
+function n4Bande(liste, valeur) {
+for (var i = 0; i < liste.length; i++) {
+if (valeur <= liste[i].max) return liste[i];
+}
+return liste[liste.length - 1];
+}
+function n4Calculer() {
+var d = n4LireDonnees();
+if (!d) return null;
+var socle = d.socleBatterie;
+var components = d.composants;
+var pointsVol = 0;
+var cout = 0;
+var complet = true;
+for (var i = 0; i < components.length; i++) {
+var choix = n4Choix[components[i].cle];
+if (!choix) { complet = false; continue; }
+cout += choix.cout;
+pointsVol += (components[i].cle === 'batterie')
+? (socle[choix.cle] || 0)
+: (choix.vol || 0);
+}
+var tenue = 0;
+if (n4Choix.structure) tenue += n4Choix.structure.niveau;
+if (n4Choix.moteurs) {
+tenue += (n4Choix.moteurs.niveau === 3) ? 1 : (n4Choix.moteurs.niveau === 1 ? -1 : 0);
+}
+return {
+complet: complet,
+cout: cout,
+coutBande: n4Bande(d.budget.bandes, cout),
+vol: n4Bande(d.consequences.vol.bandes, pointsVol),
+tenue: n4Bande(d.consequences.tenue.bandes, tenue),
+reperage: n4Bande(d.consequences.reperage.bandes,
+n4Choix.capteur ? n4Choix.capteur.niveau : 0)
 };
-var choixComposants = {}; // zone -> {id, nom}
-var zoneOverlay = null;
+}
+function choisirTerrain(bouton) {
+var cartes = document.querySelectorAll('#grille-terrains .carte-terrain');
+for (var i = 0; i < cartes.length; i++) {
+cartes[i].setAttribute('aria-checked', 'false');
+cartes[i].classList.remove('choisi');
+}
+bouton.setAttribute('aria-checked', 'true');
+bouton.classList.add('choisi');
+n4TerrainChoisi = bouton.getAttribute('data-atelier-scenario');
+majCompteurComposants();
+synchroniserChampsN4();
+majBilanMission();
+}
+function n4ExigencesIndiquees() {
+var selects = document.querySelectorAll('[data-atelier-demande]');
+var n = 0;
+for (var i = 0; i < selects.length; i++) {
+if (parseInt(selects[i].value, 10) > 0) n++;
+}
+return n;
+}
+function nomZone(zone) {
+var composant = n4Composant(zone);
+return composant ? composant.nom : zone;
+}
+function clavierEmplacement(evenement, zone) {
+if (evenement.key === 'Enter' || evenement.key === ' ' || evenement.key === 'Spacebar') {
+evenement.preventDefault();
+ouvrirChoixComposant(zone);
+}
+}
 function ouvrirChoixComposant(zone) {
-zoneOverlay = zone;
-var options = CATALOGUE_COMPOSANTS[zone] || [];
-var html = '<div class="overlay-choix" id="overlay-choix" role="dialog" aria-modal="true" aria-label="Choisir un composant">'
-+ '<div class="panneau-choix"><h4>Choisir un composant pour : ' + nomZone(zone) + '</h4>';
+var d = n4LireDonnees();
+if (!d || !d.options[zone]) return;
+n4ZoneOverlay = zone;
+var options = d.options[zone];
+var html = '<div class="overlay-choix" id="overlay-choix" role="dialog" aria-modal="true"'
++ ' aria-label="Choisir un composant : ' + echapperSaisie(nomZone(zone)) + '">'
++ '<div class="panneau-choix"><h4>Choisir pour : '
++ echapperSaisie(nomZone(zone)) + '</h4>';
 for (var i = 0; i < options.length; i++) {
 var o = options[i];
-html += '<button type="button" class="option-composant" data-id="' + o.id + '" onclick="validerChoixComposant(\'' + o.id + '\')">'
-+ '<strong>' + o.nom + '</strong>'
-+ '<span class="detail-composant">' + o.detail + '</span>'
+html += '<button type="button" class="option-composant" data-option="'
++ echapperSaisie(o.cle) + '" onclick="validerChoixComposant(\''
++ o.cle.replace(/'/g, "\\'") + '\')">'
++ '<strong>' + echapperSaisie(o.nom) + '</strong>'
++ '<span class="detail-composant">' + echapperSaisie(o.detail) + '</span>'
 + '</button>';
 }
 html += '<button type="button" class="bouton-action secondaire" onclick="fermerOverlayChoix()">Annuler</button>';
 html += '</div></div>';
 var ancien = document.getElementById('overlay-choix');
 if (ancien) ancien.remove();
+n4OuvertureOverlay = document.querySelector(
+'.emplacement[data-atelier-zone="' + zone + '"]');
 document.body.insertAdjacentHTML('beforeend', html);
+var premier = document.querySelector('#overlay-choix .option-composant');
+if (premier) premier.focus();
 }
-function nomZone(zone) {
-return { bras: 'Bras & structure', batterie: 'Batterie', moteur: 'Moteurs & hélices', capteur: 'Capteur embarqué' }[zone] || zone;
-}
-function validerChoixComposant(idComposant) {
-var options = CATALOGUE_COMPOSANTS[zoneOverlay] || [];
+function validerChoixComposant(cleOption) {
+var d = n4LireDonnees();
+if (!d || !n4ZoneOverlay || !d.options[n4ZoneOverlay]) return;
+var options = d.options[n4ZoneOverlay];
 var choisi = null;
 for (var i = 0; i < options.length; i++) {
-if (options[i].id === idComposant) { choisi = options[i]; break; }
+if (options[i].cle === cleOption) { choisi = options[i]; break; }
 }
 if (!choisi) return;
-choixComposants[zoneOverlay] = choisi;
-var span = document.getElementById('choix-' + zoneOverlay);
+n4Choix[n4ZoneOverlay] = choisi;
+var span = document.getElementById('choix-' + n4ZoneOverlay);
 if (span) span.textContent = choisi.nom;
-var emp = document.querySelector('.atelier.schema-drone .emplacement[data-zone="' + zoneOverlay + '"]');
+var emp = document.querySelector(
+'.emplacement[data-atelier-zone="' + n4ZoneOverlay + '"]');
 if (emp) emp.classList.add('complet');
 fermerOverlayChoix();
 majCompteurComposants();
@@ -10754,11 +11193,31 @@ majBilanMission();
 function fermerOverlayChoix() {
 var ov = document.getElementById('overlay-choix');
 if (ov) ov.remove();
+n4ZoneOverlay = null;
+if (n4OuvertureOverlay && typeof n4OuvertureOverlay.focus === 'function') {
+n4OuvertureOverlay.focus();
+}
+n4OuvertureOverlay = null;
+}
+function echapperSaisie(texte) {
+return String(texte === undefined || texte === null ? '' : texte)
+.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+.replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function majCompteurComposants() {
-var n = Object.keys(choixComposants).length;
 var el = document.getElementById('compteur-composants');
-if (el) el.textContent = n + ' / 4 composants choisis.';
+var terrain = n4TerrainCourant();
+var n = Object.keys(n4Choix).length;
+var exigences = n4ExigencesIndiquees();
+var texte = 'Terrain : ' + (terrain ? terrain.nom : 'aucun')
++ '. Exigences indiquées : ' + exigences + ' sur 4'
++ '. Composants choisis : ' + n + ' sur 4.';
+if (el) el.textContent = texte;
+var atelier = document.getElementById('atelier-drone');
+if (atelier) {
+var complet = !!terrain && exigences === 4 && n === 4;
+atelier.setAttribute('data-atelier-valide', complet ? '1' : '0');
+}
 }
 function synchroniserChampsN4() {
 var besoin = document.getElementById('besoin-identifie');
@@ -10766,68 +11225,156 @@ var contraintes = document.getElementById('contraintes-definies');
 var solutions = document.getElementById('solutions-imaginees');
 var solution = document.getElementById('solution-choisie');
 if (!besoin || !contraintes || !solutions || !solution) return;
-besoin.value = "Livrer 2 kg de matériel de secours à un refuge isolé à 2500 m, par tempête de neige, sans hélicoptère.";
-var c = choixComposants;
-var ligneContraintes = "Altitude 2500 m, froid, distance aller-retour, charge 2 kg, autonomie, réglementation des vols.";
-contraintes.value = ligneContraintes;
-var composantsChoisis = Object.keys(c).map(function (z) { return c[z].nom; }).join(', ');
-solutions.value = composantsChoisis
-? "Drone équipé de : " + composantsChoisis + ". Alternative : hélicoptère (impossible par tempête) ou tracteur chenillé (trop lent)."
-: "Drone de livraison aérienne ; alternative : véhicule terrestre (lent) ou hélicoptère (impossible).";
-solution.value = composantsChoisis
-? "Choix retenu : drone avec " + composantsChoisis + ", justifié par la masse, l'autonomie et la résistance au froid."
-: "Choix retenu : drone de livraison, justifié par la rapidité et l'accès au refuge isolé.";
+var d = n4LireDonnees();
+var terrain = n4TerrainCourant();
+besoin.value = 'Retrouver une personne blessée après un éboulement : le drone doit la repérer '
++ 'depuis le ciel et guider l\u2019équipe de secours'
++ (terrain ? ', sur le terrain « ' + terrain.nom + ' ».' : '.');
+if (d) {
+var lignes = [];
+for (var i = 0; i < d.composants.length; i++) {
+var c = d.composants[i];
+lignes.push(c.nom + ' : ' + n4LibelleExigence(c.cle, n4Exigence(c.cle)));
+}
+contraintes.value = 'Exigences par composant — ' + lignes.join(' ; ') + '.';
+var noms = [];
+for (var j = 0; j < d.composants.length; j++) {
+var choix = n4Choix[d.composants[j].cle];
+noms.push(d.composants[j].nom + ' : ' + (choix ? choix.nom : 'à définir'));
+}
+solutions.value = 'Drone composé — ' + noms.join(' ; ') + '.';
+}
+var calcul = n4Calculer();
+var resume = terrain ? 'Drone de sauvetage pour le terrain « ' + terrain.nom + ' ». ' : '';
+if (calcul && calcul.complet) {
+resume += 'Temps de vol ' + calcul.vol.nom
++ ', tenue au vent et au froid ' + calcul.tenue.nom
++ ', repérage ' + calcul.reperage.nom
++ ', coût ' + calcul.coutBande.nom + '.';
+} else {
+resume += 'Composants encore à définir.';
+}
+solution.value = resume;
 }
 function majBilanMission() {
-var charge = document.getElementById('curseur-charge');
-var altitude = document.getElementById('curseur-altitude');
-var distance = document.getElementById('curseur-distance');
-if (!charge || !altitude || !distance) return;
-var valCharge = (parseInt(charge.value, 10) / 10).toFixed(1).replace('.', ',');
-var valAltitude = parseInt(altitude.value, 10);
-var valDistance = parseInt(distance.value, 10);
-document.getElementById('val-charge').textContent = valCharge + ' kg';
-document.getElementById('val-altitude').textContent = valAltitude.toLocaleString('fr-FR').replace(/\u202f|\u00a0/g, ' ') + ' m';
-document.getElementById('val-distance').textContent = valDistance + ' km';
-var masseTotale = parseFloat(valCharge.replace(',', '.')) + 2;
-var consoWhParKm = 5 * masseTotale;
-var distanceTotale = valDistance * 2; // aller-retour
-var energieRequise = consoWhParKm * distanceTotale;
-var penaliteAlt = 1 + Math.max(0, (valAltitude - 1000) / 1000) * 0.1;
-energieRequise = energieRequise * penaliteAlt;
-var txt = document.getElementById('texte-bilan-mission');
-if (!txt) return;
-var nComposants = Object.keys(choixComposants).length;
-var batterie = choixComposants.batterie;
-var batterieOk = batterie && (batterie.id === 'lipo6000' || batterie.id === 'lipo9000');
-var autonomieBatterieWh = { lipo3000: 44, lipo6000: 89, lipo9000: 133 }[batterie ? batterie.id : null] || 0;
-var html = '<p><strong>Mission :</strong> livrer ' + valCharge + ' kg à ' + valAltitude
-+ ' m, à ' + valDistance + ' km (aller-retour : ' + distanceTotale + ' km).</p>'
-+ '<p><strong>Énergie estimée requise :</strong> ~' + Math.round(energieRequise) + ' Wh '
-+ '(masse totale ~' + masseTotale.toFixed(1).replace('.', ',') + ' kg, pénalité altitude incluse).</p>';
-if (nComposants === 0) {
-html += '<p>Choisissez maintenant les composants pour vérifier la faisabilité.</p>';
+var sortie = document.getElementById('texte-bilan-mission');
+var d = n4LireDonnees();
+if (!sortie || !d) return;
+var terrain = n4TerrainCourant();
+if (!terrain) {
+sortie.textContent = d.resultat.sansTerrain;
+return;
+}
+if (n4ExigencesIndiquees() < 4) {
+sortie.innerHTML = '<p><strong>' + echapperSaisie(terrain.icone + ' ' + terrain.nom)
++ '</strong> — l\u2019épreuve du terrain : ' + echapperSaisie(terrain.epreuve) + '.</p>'
++ '<p>' + echapperSaisie(d.resultat.exigencesManquantes) + '</p>';
+return;
+}
+var calcul = n4Calculer();
+if (!calcul || !calcul.complet) {
+sortie.innerHTML = '<p><strong>' + echapperSaisie(terrain.icone + ' ' + terrain.nom)
++ '</strong> — l\u2019épreuve du terrain : ' + echapperSaisie(terrain.epreuve) + '.</p>'
++ '<p>' + echapperSaisie(d.resultat.composantsManquants) + '</p>';
+return;
+}
+var html = '<p><strong>' + echapperSaisie(terrain.icone + ' ' + terrain.nom)
++ '</strong> — l\u2019épreuve du terrain : ' + echapperSaisie(terrain.epreuve) + '.</p>';
+html += '<h4>Vos exigences, face à ce que ce terrain impose</h4><ul class="compromis-liste">';
+var manques = [];
+var surplus = [];
+for (var i = 0; i < d.composants.length; i++) {
+var c = d.composants[i];
+var impose = terrain.impose[c.cle];
+var demande = n4Exigence(c.cle);
+var retenu = n4Choix[c.cle];
+var face;
+if (demande < impose) {
+face = 'vous demandez moins que ce terrain ne l\u2019exige';
+} else if (demande > impose) {
+face = 'vous demandez plus que ce terrain ne l\u2019exige';
 } else {
-if (batterie) {
-if (autonomieBatterieWh >= energieRequise) {
-html += '<p>✅ Batterie « ' + batterie.nom + ' » (' + autonomieBatterieWh + ' Wh) : autonomie suffisante.</p>';
+face = 'vous êtes en phase avec le terrain';
+}
+html += '<li>' + echapperSaisie(c.icone + ' ' + c.nom) + ' — vous : <em>'
++ echapperSaisie(n4LibelleExigence(c.cle, demande)) + '</em> ; le terrain demande : <em>'
++ echapperSaisie(n4LibelleExigence(c.cle, impose)) + '</em> — '
++ echapperSaisie(face) + '.</li>';
+if (retenu && retenu.niveau < impose) manques.push(c);
+if (retenu && retenu.niveau > impose) surplus.push(c);
+}
+html += '</ul>';
+html += '<h4>Ce que votre drone sait faire</h4><ul class="compromis-liste">';
+html += '<li>' + echapperSaisie(d.consequences.vol.icone + ' ' + d.consequences.vol.nom)
++ ' : <strong>' + echapperSaisie(calcul.vol.nom) + '</strong> — '
++ echapperSaisie(calcul.vol.detail) + '.</li>';
+html += '<li>' + echapperSaisie(d.consequences.tenue.icone + ' ' + d.consequences.tenue.nom)
++ ' : <strong>' + echapperSaisie(calcul.tenue.nom) + '</strong> — '
++ echapperSaisie(calcul.tenue.detail) + '.</li>';
+html += '<li>' + echapperSaisie(d.consequences.reperage.icone + ' ' + d.consequences.reperage.nom)
++ ' : <strong>' + echapperSaisie(calcul.reperage.nom) + '</strong> — '
++ echapperSaisie(calcul.reperage.detail) + '.</li>';
+html += '<li>💰 Ce que coûte ce drone : <strong>' + echapperSaisie(calcul.coutBande.nom)
++ '</strong> — ' + echapperSaisie(calcul.coutBande.detail) + '</li>';
+html += '</ul>';
+var compromis = [];
+for (var m = 0; m < manques.length; m++) {
+var cm = manques[m];
+compromis.push(cm.icone + ' ' + cm.nom + ' : « ' + n4Choix[cm.cle].nom
++ ' » reste en dessous de ce que ce terrain exige ('
++ n4LibelleExigence(cm.cle, terrain.impose[cm.cle]) + '). L\u2019équipe devra '
++ terrain.compensation + '.');
+}
+for (var s = 0; s < surplus.length; s++) {
+var cs = surplus[s];
+compromis.push(cs.icone + ' ' + cs.nom + ' : vous avez payé « ' + n4Choix[cs.cle].nom
++ ' » alors que ce terrain n\u2019en demande pas tant — c\u2019est autant de budget '
++ 'retiré aux autres composants.');
+}
+if (calcul.coutBande.cle !== 'economique' && calcul.coutBande.cle !== 'dans-le-budget') {
+compromis.push('💰 Budget : votre drone coûte ' + calcul.coutBande.nom
++ ' de ce que l\u2019équipe peut mettre — ' + calcul.coutBande.detail);
+}
+html += '<h4>' + echapperSaisie(d.resultat.compromis) + '</h4>';
+if (compromis.length === 0) {
+html += '<p>' + echapperSaisie(d.resultat.aucunCompromis) + '</p>';
 } else {
-html += '<p>⚠️ Batterie « ' + batterie.nom + ' » (' + autonomieBatterieWh + ' Wh) : autonomie INSUFFISANTE pour cette mission.</p>';
+html += '<ul class="compromis-liste compromis-assume">';
+for (var k = 0; k < compromis.length; k++) {
+html += '<li>' + echapperSaisie(compromis[k]) + '</li>';
 }
+html += '</ul>';
 }
-if (choixComposants.capteur) {
-html += '<p>📷 Capteur « ' + choixComposants.capteur.nom + ' » embarqué.</p>';
+html += '<p class="compromis-note">Un drone ne peut pas être le meilleur partout : '
++ 'la dernière étape vous demande de nommer ce à quoi vous renoncez, et comment '
++ 'l\u2019équipe de secours s\u2019en accommode.</p>';
+sortie.innerHTML = html;
 }
-html += '<p>' + nComposants + ' / 4 composants choisis.</p>';
+function finaliserConceptionDrone() {
+var atelier = document.getElementById('atelier-drone');
+if (atelier && atelier.getAttribute('data-atelier-valide') !== '1') {
+majCompteurComposants();
+var consigne = atelier.getAttribute('data-conception-consigne')
+|| 'Terminez l\u2019atelier avant de finaliser.';
+if (typeof alert === 'function') alert(consigne);
+atelier.scrollIntoView({ behavior: 'smooth', block: 'start' });
+return;
 }
-txt.innerHTML = html;
+finaliserConception();
 }
 document.addEventListener('DOMContentLoaded', function () {
-synchroniserChampsN4(); // pré-remplit les 4 champs masqués
-['curseur-charge', 'curseur-altitude', 'curseur-distance'].forEach(function (id) {
-var el = document.getElementById(id);
-if (el) el.addEventListener('input', majBilanMission);
+var d = n4LireDonnees();
+if (!d) return;
+var selects = document.querySelectorAll('[data-atelier-demande]');
+for (var i = 0; i < selects.length; i++) {
+selects[i].addEventListener('change', function () {
+majCompteurComposants();
+synchroniserChampsN4();
+majBilanMission();
 });
+}
+majCompteurComposants();
+synchroniserChampsN4();
 majBilanMission();
 document.addEventListener('click', function (e) {
 if (e.target && e.target.id === 'overlay-choix') fermerOverlayChoix();
