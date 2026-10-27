@@ -952,6 +952,148 @@
             font-variant-numeric: tabular-nums;
         }
 
+        /* ============================================
+           ÉTAPE 2 EN CLASSEMENT
+           (n4.contraintes.mode = "classement" : des tuiles à
+            ordonner ; le groupe de réglages porte data-mode,
+            marquage lu par le moteur et par verifier_parcours.py)
+
+           L'élève déplace une tuile pour fixer son ordre de priorité : la
+           première est SON besoin numéro un. Deux gestes, tous deux annoncés
+           dans la page — les boutons ▲ ▼ (clavier, lecteur d'écran, cibles de
+           44 px) et le glisser-déposer à la souris ou au stylet. Au doigt, les
+           boutons restent la voie fiable : un glissement vertical fait défiler
+           la page (`touch-action` le laisse faire).
+           ============================================ */
+
+        .reglages-contraintes[data-mode="classement"] {
+            display: block;
+        }
+
+        .classement-consigne {
+            margin-bottom: var(--espacement-sm);
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .tuiles-contraintes {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            /* `minmax(0, 1fr)` et non `1fr` : sans le minimum à zéro, la
+               colonne prend la largeur MINIMALE de la tuile — un mot long
+               suffisait à faire déborder la page de 2 px à 320 px de large. */
+            grid-template-columns: minmax(0, 1fr);
+            gap: var(--espacement-sm);
+        }
+
+        .tuile-contrainte {
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+            min-height: 56px;
+            padding: var(--espacement-sm) var(--espacement-md);
+            background-color: white;
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            cursor: grab;
+            touch-action: pan-y;
+        }
+
+        .tuile-contrainte.tuile-glissee {
+            cursor: grabbing;
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        .tuile-rang {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: var(--couleur-primaire);
+            color: white;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tuile-texte {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .tuile-nom {
+            font-weight: 600;
+            color: var(--couleur-texte);
+            overflow-wrap: anywhere;
+        }
+
+        .tuile-aide {
+            font-size: 0.8125rem;
+            color: var(--couleur-texte-leger);
+            overflow-wrap: anywhere;
+        }
+
+        .tuile-actions {
+            display: flex;
+            gap: var(--espacement-xs);
+            flex: 0 0 auto;
+        }
+
+        .tuile-deplacer {
+            width: var(--hauteur-cible-min);
+            min-width: var(--hauteur-cible-min);
+            height: var(--hauteur-cible-min);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: white;
+            color: var(--couleur-texte);
+            font-size: 1rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .tuile-deplacer:hover:not(:disabled) {
+            border-color: var(--couleur-primaire);
+            color: var(--couleur-primaire);
+        }
+
+        .tuile-deplacer:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        .tuile-deplacer:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .classement-etat {
+            margin: var(--espacement-xs) 0 0;
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .classement-argumentation-consigne {
+            margin-top: var(--espacement-md);
+            font-weight: 600;
+        }
+
+        /* Hiérarchie figée : elle reste lisible, mais les tuiles ne bougent
+           plus — c'est l'engagement de l'élève, exactement comme les curseurs. */
+        .reglages-contraintes[data-mode="classement"][data-fige="1"] .tuile-contrainte {
+            border-style: dashed;
+            border-color: var(--couleur-primaire);
+            cursor: default;
+        }
+
         /* Contraintes figées : le réglage est verrouillé et visible comme tel. */
         .reglages-contraintes[data-fige="1"] .curseur-contrainte {
             border-style: dashed;
@@ -2018,12 +2160,7 @@
             width: 0%;
         }
 
-        .texte-progression {
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--couleur-texte-leger);
-            margin-top: var(--espacement-xs);
-        }
+        
 
         /* ============================================
            RESPONSIVE MOBILE
@@ -3238,13 +3375,13 @@
         :where(html[data-theme="sombre"]) .navigation-onglets{border-bottom:2px solid #2b3a52}
         :where(html[data-theme="sombre"]) .bouton-onglet,:where(html[data-theme="sombre"]) .bouton-action.secondaire,:where(html[data-theme="sombre"]) .barre-progression{background-color:#27334a}
         :where(html[data-theme="sombre"]) .bouton-onglet:hover,:where(html[data-theme="sombre"]) .bouton-action.secondaire:hover{background-color:#38465c}
-        :where(html[data-theme="sombre"]) .bouton-onglet.actif,:where(html[data-theme="sombre"]) .bouton-action,:where(html[data-theme="sombre"]) .element-chaine:hover,:where(html[data-theme="sombre"]) .cadre-reponse .numero-cadre{background-color:var(--couleur-primaire-fond)}
+        :where(html[data-theme="sombre"]) .bouton-onglet.actif,:where(html[data-theme="sombre"]) .bouton-action,:where(html[data-theme="sombre"]) .element-chaine:hover,:where(html[data-theme="sombre"]) .cadre-reponse .numero-cadre,:where(html[data-theme="sombre"]) .tuile-rang{background-color:var(--couleur-primaire-fond)}
         :where(html[data-theme="sombre"]) .bouton-onglet.valide,:where(html[data-theme="sombre"]) .bouton-action.succes{background-color:var(--couleur-succes-fond)}
         :where(html[data-theme="sombre"]) .carte-contenu,:where(html[data-theme="sombre"]) .atelier-question,:where(html[data-theme="sombre"]) .env-catalogue li{background:#1c2534;border:1px solid #2b3a52}
         :where(html[data-theme="sombre"]) .bouton-action:disabled{background-color:#4a5872}
         :where(html[data-theme="sombre"]) .question-quiz{background-color:#16202e}
         :where(html[data-theme="sombre"]) .option-reponse{background-color:#1c2534;border:2px solid #2b3a52}
-        :where(html[data-theme="sombre"]) .option-reponse:hover,:where(html[data-theme="sombre"]) .objet-explorable:hover,:where(html[data-theme="sombre"]) .choix-contrainte[aria-pressed="true"],:where(html[data-theme="sombre"]) .contraintes-recap,:where(html[data-theme="sombre"]) .puzzle-piece[aria-pressed="true"],:where(html[data-theme="sombre"]) .puzzle-slot.cible{background-color:#1a2740}
+        :where(html[data-theme="sombre"]) .option-reponse:hover,:where(html[data-theme="sombre"]) .objet-explorable:hover,:where(html[data-theme="sombre"]) .choix-contrainte[aria-pressed="true"],:where(html[data-theme="sombre"]) .tuile-contrainte.tuile-glissee,:where(html[data-theme="sombre"]) .contraintes-recap,:where(html[data-theme="sombre"]) .puzzle-piece[aria-pressed="true"],:where(html[data-theme="sombre"]) .puzzle-slot.cible{background-color:#1a2740}
         :where(html[data-theme="sombre"]) .option-reponse.selectionnee,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 1){background-color:#1c2c4a}
         :where(html[data-theme="sombre"]) .option-reponse.correcte,:where(html[data-theme="sombre"]) .feedback-reponse.correct,:where(html[data-theme="sombre"]) .objet-explorable.explore,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 2){background-color:#17452f}
         :where(html[data-theme="sombre"]) .option-reponse.incorrecte,:where(html[data-theme="sombre"]) .feedback-reponse.incorrect{background-color:#3a1e20}
@@ -3254,10 +3391,10 @@
         :where(html[data-theme="sombre"]) .enigme-conteneur,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 6){background-color:#332a13}
         :where(html[data-theme="sombre"]) .enigme-conteneur h3,:where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-marque::after,:where(html[data-theme="sombre"]) .env-note-1 .env-mot,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .case-action::after,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .statut-action{color:#fcd34d}
         :where(html[data-theme="sombre"]) .objet-explorable{background-color:#1c2534;border:2px dashed #3a4a63}
-        :where(html[data-theme="sombre"]) .cadre-reponse,:where(html[data-theme="sombre"]) .modele-ost{background-color:#1c2534;border:2px solid #3a4a63}
+        :where(html[data-theme="sombre"]) .cadre-reponse,:where(html[data-theme="sombre"]) .tuile-contrainte,:where(html[data-theme="sombre"]) .modele-ost{background-color:#1c2534;border:2px solid #3a4a63}
         :where(html[data-theme="sombre"]) .probleme-ouvert,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
         :where(html[data-theme="sombre"]) .compteur-selection,:where(html[data-theme="sombre"]) .atelier-carte h4,:where(html[data-theme="sombre"]) .atelier-compteur,:where(html[data-theme="sombre"]) .rotors-nez,:where(html[data-theme="sombre"]) .atelier-verdict,:where(html[data-theme="sombre"]) .env-catalogue .env-mesure,:where(html[data-theme="sombre"]) .env-table caption,:where(html[data-theme="sombre"]) .env-note-2 .env-mot,:where(html[data-theme="sombre"]) .atelier-mesure,:where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd}
-        :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
+        :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .tuile-deplacer,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
         :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="juste"] .choix-contrainte,:where(html[data-theme="sombre"]) .etape-selection-explication,:where(html[data-theme="sombre"]) .solution-personnelle,:where(html[data-theme="sombre"]) .cablage-bilan.succes{background-color:#142c21}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="faux"] .choix-contrainte,:where(html[data-theme="sombre"]) .cablage-bilan.echec,:where(html[data-theme="sombre"]) .puzzle-slot.faux,:where(html[data-theme="sombre"]) .puzzle-bilan.echec{background-color:#2b1a1c}
@@ -3313,7 +3450,6 @@
         :where(html[data-theme="sombre"]) .atelier.schema-emplacements .emplacement{background:#111a27}
         :where(html[data-theme="sombre"]) .choix-emplacement{background:#1c2534}
         :where(html[data-theme="sombre"]) .choix-emplacement .option-composant{border:2px solid #2b3a52;background:#1c2534}
-        /* ==== PANNEAU-DEV:DEBUT-SOMBRE ==== */
         :where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
         :where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
         :where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
@@ -3324,15 +3460,14 @@
         :where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
         :where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
         :where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
-        /* ==== PANNEAU-DEV:FIN-SOMBRE ==== */
         :where(html[data-theme="sombre"]) .activite-bonus,:where(html[data-theme="sombre"]) .activite-bonus h3{color:#fde68a}
         html[data-theme="sombre"] .bloc-animation{background:#16202e;border:1px solid #2b3a52}
         html[data-theme="sombre"] .cf-etape,html[data-theme="sombre"] .inter-bouton,html[data-theme="sombre"] .aroute-scenario,html[data-theme="sombre"] .aroute-noeud{background:#1c2534;border:2px solid #2b3a52}
+        html[data-theme="sombre"] .cf-etape:hover,html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
         html[data-theme="sombre"] .cf-etape em,html[data-theme="sombre"] .aroute-noeud em{color:#9ecbfd;background:#1a2740}
         html[data-theme="sombre"] .cf-fleche,html[data-theme="sombre"] .inter-colonne h4,html[data-theme="sombre"] .inter-fleche,html[data-theme="sombre"] .aroute-fleche{color:#9ecbfd}
         html[data-theme="sombre"] .cf-etape.actif,html[data-theme="sombre"] .aroute-noeud.actif{border-color:#22c55e;background:#16301f}
         html[data-theme="sombre"] .legende-animation,html[data-theme="sombre"] .aroute-legende{color:#86efac}
-        html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
         html[data-theme="sombre"] .inter-bouton.selectionne,html[data-theme="sombre"] .aroute-scenario.selectionne{border-color:#3b82f6;background:#1a2740}
         html[data-theme="sombre"] .interactions-resultat{background:#1c2534;border:1px solid #2b3a52}
         html[data-theme="sombre"] .interactions-resultat.info-block{background:#1a2740;border-color:#3b82f6}
@@ -4269,202 +4404,6 @@ color: #a9b8cc;
 :where(html[data-theme="sombre"]) .vol-banc > legend {
 background: #16202e;
 }
-    /* animations-activite:css-debut */
-    /* Animations de liaison entre les exercices — 4e OST2 « évolution des drones ».
-       Deux scènes au maximum par onglet : le professeur de techno qui traverse
-       l'écran, et son drone qui zigzague. Tout est décoratif (aria-hidden), se
-       coupe d'un clic (bascule « Animations ») et respecte `prefers-reduced-motion`.
-       Les nombres de __…__ sont remplacés à la pose par les dimensions réelles des
-       bandes d'images (animations.py) : rien n'est codé en dur ici. */
-
-    /* ── La bascule de confort, sous la barre de progression ─────────────────── */
-    .anim-reglage {
-        margin: 2px 0 0;
-        text-align: right;
-    }
-
-    .anim-bascule {
-        min-height: 32px;
-        padding: 4px 12px;
-        font: inherit;
-        font-size: .78rem;
-        line-height: 1.2;
-        color: inherit;
-        background: rgba(255, 255, 255, .72);
-        border: 1px solid rgba(20, 40, 80, .25);
-        border-radius: 999px;
-        cursor: pointer;
-    }
-
-    .anim-bascule:hover { background: #fff; }
-    .anim-bascule:focus-visible { outline: 3px solid #1a5fb4; outline-offset: 2px; }
-    .anim-bascule[aria-pressed="false"] { opacity: .7; }
-
-    /* ── La scène : une bande étroite entre deux blocs d'exercice ────────────── */
-    .anim-scene {
-        position: relative;
-        height: 143px;
-        margin: 10px 0 12px;
-        overflow: hidden;
-        border: 1px solid rgba(70, 120, 200, .14);
-        border-radius: 12px;
-        background: linear-gradient(180deg, rgba(120, 170, 255, .05), rgba(120, 170, 255, .14));
-    }
-
-    /* Coupée : la bande disparaît, sa hauteur ne laisse pas de trou. */
-    html[data-animations="off"] .anim-scene { display: none; }
-
-    /* Le sol de la bande : sans lui, le professeur et le drone semblent flotter.
-       Gris-bleu translucide : il se voit sur fond clair comme sur fond nuit. */
-    .anim-scene::after {
-        content: "";
-        position: absolute;
-        left: 8px;
-        right: 8px;
-        bottom: 5px;
-        height: 2px;
-        border-radius: 2px;
-        background: rgba(120, 170, 255, .28);
-    }
-
-    /* ── Mode sombre (les activités publiées ont un interrupteur de thème) ─────
-       Les règles ci-dessus sont pensées pour le fond clair : sans ces
-       surcharges, la bascule deviendrait du texte clair sur un bouton blanc.
-       Le sélecteur ne s'applique que si la page porte `data-theme="sombre"`. */
-    html[data-theme="sombre"] .anim-scene {
-        border-color: rgba(138, 180, 248, .28);
-        background: linear-gradient(180deg, rgba(120, 170, 255, .07), rgba(120, 170, 255, .17));
-    }
-
-    html[data-theme="sombre"] .anim-scene::after {
-        background: rgba(138, 180, 248, .38);
-    }
-
-    html[data-theme="sombre"] .anim-bascule {
-        color: #e6ecf5;
-        background: #27334a;
-        border-color: #3d4f6e;
-    }
-
-    html[data-theme="sombre"] .anim-bascule:hover { background: #38465c; }
-    html[data-theme="sombre"] .anim-bascule:focus-visible { outline-color: #8ab4f8; }
-
-    /* ── Les acteurs : traversée horizontale ────────────────────────────────── */
-    .anim-acteur {
-        position: absolute;
-        bottom: 6px;
-        left: -84px;
-        animation-duration: var(--anim-duree, 18s);
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
-        animation-delay: var(--anim-retard, 0s);
-    }
-
-    .anim-vers-droite { animation-name: anim-traverse-droite; }
-    .anim-vers-gauche { animation-name: anim-traverse-gauche; transform: scaleX(-1); }
-
-    @keyframes anim-traverse-droite {
-        from { left: -84px; }
-        to   { left: 100%; }
-    }
-
-    @keyframes anim-traverse-gauche {
-        from { left: 100%; }
-        to   { left: -84px; }
-    }
-
-    /* ── Le professeur : deux allures du pack `prof-detail` ─────────────────── */
-    .anim-sprite-prof {
-        display: block;
-        image-rendering: pixelated;
-    }
-
-    /* Il court : scènes « le professeur traverse l'écran ». */
-    .anim-sprite-course {
-        width: 52px;
-        height: 119px;
-        background: url("assets-jeu/anim/prof-course.png") no-repeat 0 0;
-        animation: anim-images-course 0.64s steps(8) infinite;
-    }
-
-    @keyframes anim-images-course {
-        from { background-position: 0 0; }
-        to   { background-position: -416px 0; }
-    }
-
-    /* Il marche : scènes « le drone zigzague au-dessus de lui ». */
-    .anim-sprite-marche {
-        width: 40px;
-        height: 113px;
-        background: url("assets-jeu/anim/prof-marche.png") no-repeat 0 0;
-        animation: anim-images-marche 0.88s steps(8) infinite;
-    }
-
-    @keyframes anim-images-marche {
-        from { background-position: 0 0; }
-        to   { background-position: -320px 0; }
-    }
-
-    /* ── Le drone, à hauteur d'épaule, derrière le professeur ────────────────── */
-    .anim-prof { z-index: 2; }
-
-    .anim-drone {
-        bottom: 69px;
-        z-index: 1;
-    }
-
-    .anim-drone-corps {
-        display: block;
-        animation: anim-zigzag 1.7s ease-in-out infinite alternate;
-    }
-
-    @keyframes anim-zigzag {
-        from { transform: translateY(-12px) rotate(-7deg); }
-        to   { transform: translateY(12px) rotate(7deg); }
-    }
-
-    .anim-sprite-drone {
-        display: block;
-        width: 48px;
-        height: 48px;
-        image-rendering: pixelated;
-        background: url("assets-jeu/anim/drone-survol.png") no-repeat 0 0;
-    }
-
-    /* Bandes multi-images : les hélices tournent. Une seule image (repli) : rien. */
-    .anim-sprite-drone[data-images="4"] { animation: anim-images-drone 0.64s steps(4) infinite; }
-
-    @keyframes anim-images-drone {
-        from { background-position: 0 0; }
-        to   { background-position: -192px 0; }
-    }
-
-    /* ── Mouvement réduit : plus rien ne bouge, tout reste lisible ──────────── */
-    @media (prefers-reduced-motion: reduce) {
-        .anim-acteur,
-        .anim-sprite-prof,
-        .anim-sprite-course,
-        .anim-sprite-marche,
-        .anim-sprite-drone,
-        .anim-drone-corps { animation: none !important; }
-
-        .anim-acteur {
-            left: 50% !important;
-            animation-name: none !important;
-        }
-
-        .anim-vers-droite { transform: translateX(-50%) !important; }
-        .anim-vers-gauche { transform: translateX(-50%) scaleX(-1) !important; }
-
-        .anim-drone-corps { transform: none !important; }
-    }
-
-    /* ── Téléphones : la scène se resserre, les sprites gardent leur taille ─── */
-    @media (max-width: 480px) {
-        .anim-scene { height: 137px; }
-        .anim-bascule { font-size: .72rem; padding: 4px 10px; }
-    }
-    /* animations-activite:css-fin */
     </style>
 </head>
 <body>
@@ -4543,14 +4482,10 @@ background: #16202e;
             <div class="barre-progression" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progression-actuelle" id="barre-progression"></div>
             </div>
-            <p class="texte-progression" id="texte-progression">Progression : 0%</p>
+            <!-- Pas de libellé « Progression : X % » : la barre se suffit, et le
+                 texte se répétait sous les onglets. -->
         </nav>
 
-        <!-- animations-activite:reglage -->
-        <p class="anim-reglage">
-            <button type="button" class="anim-bascule" id="anim-bascule" aria-pressed="true">Animations : actives</button>
-        </p>
-        <!-- /animations-activite:reglage -->
         <!-- Navigation par onglets -->
         <nav aria-label="Navigation des niveaux" class="navigation-onglets" role="tablist">
             <button class="bouton-onglet actif" data-niveau="n1-intro" role="tab" aria-selected="true" aria-controls="contenu-n1-intro" tabindex="0">
@@ -4588,11 +4523,6 @@ background: #16202e;
                     <h2>Niveau 1 : Comprendre les bases</h2>
                     <p>Commencez par observer ces vidéos pour comprendre les concepts fondamentaux.</p>
                     
-                    <!-- animations-activite:scene n1-intro-1 -->
-                    <div class="anim-scene anim-scene-prof" data-anim-scene="n1-intro-1" data-anim-onglet="contenu-n1-intro" data-anim-type="prof" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:17s;--anim-retard:-3s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n1-intro-1 -->
                     <h3>Vidéos à regarder</h3>
                     <div class="ressources-video">
                         <article class="carte-video" data-ost-id="n1-video-1">
@@ -4630,12 +4560,6 @@ background: #16202e;
                         <p><strong>Consigne :</strong> Regardez attentivement les vidéos ci-dessus. Prenez des notes si nécessaire. Lorsque vous vous sentez prêt, passez à l'onglet suivant pour tester vos connaissances.</p>
                     </div>
 
-                    <!-- animations-activite:scene n1-intro-2 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="n1-intro-2" data-anim-onglet="contenu-n1-intro" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:26s;--anim-retard:-9s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:26s;--anim-retard:-9s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n1-intro-2 -->
                     <button class="bouton-action marge-haut" onclick="passerOngletSuivant('n1-intro')">
                         J'ai regardé les vidéos →
                     </button>
@@ -4648,12 +4572,6 @@ background: #16202e;
                     <h2>Niveau 1 : Vérification des connaissances</h2>
                     <p>Répondez aux questions suivantes pour valider ce niveau. Vous devez obtenir toutes les bonnes réponses pour continuer.</p>
 
-                    <!-- animations-activite:scene n1-quiz-1 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="n1-quiz-1" data-anim-onglet="contenu-n1-quiz" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:24s;--anim-retard:-4s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-gauche" style="--anim-duree:24s;--anim-retard:-4s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n1-quiz-1 -->
                     <form id="quiz-n1" class="quiz-conteneur">
 
                         <div class="question-quiz" data-ost-id="n1-quiz-q1" data-question="1" data-explication="Le drone est un aéronef sans pilote à bord : il est piloté à distance, ce qui le distingue d'un avion classique.">
@@ -4745,11 +4663,6 @@ background: #16202e;
                             Valider mes réponses
                         </button>
                         
-                        <!-- animations-activite:scene n1-quiz-2 -->
-                        <div class="anim-scene anim-scene-prof" data-anim-scene="n1-quiz-2" data-anim-onglet="contenu-n1-quiz" data-anim-type="prof" aria-hidden="true">
-                            <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:19s;--anim-retard:-11s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                        </div>
-                        <!-- /animations-activite:scene n1-quiz-2 -->
                         <div id="resultat-quiz-n1" class="marge-haut" style="display: none;">
                             <p id="message-resultat-n1"></p>
                             <button type="button" class="bouton-action succes cache" id="bouton-suite-n1" onclick="debloquerNiveauSuivant('n1')">
@@ -4764,10 +4677,10 @@ background: #16202e;
             <section id="contenu-n2-intro" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-intro">
                 <div class="carte-contenu">
                     <h2>Niveau 2 : Explorer en détail</h2>
-                    <p>Cliquez sur chaque élément de la chaîne ci-dessous pour découvrir son rôle et ses caractéristiques.</p>
+                    <p>Cette frise n'est pas une chaîne de fonctionnement : les étapes se succèdent dans le temps, chacune pour répondre à un nouveau besoin de la société. Cliquez sur chaque étape, de la plus ancienne à la plus récente, pour découvrir le besoin visé, s'il s'agit d'une invention ou d'une innovation, et la contrainte de développement durable associée.</p>
 
-                    <h3>Chaîne de fonctionnement</h3>
-                    <div class="chaine-interactive" role="list" aria-label="Chaîne d'éléments interactifs">
+                    <h3>Frise chronologique : les étapes de l'évolution du drone</h3>
+                    <div class="chaine-interactive" role="list" aria-label="Frise chronologique : les étapes de l'évolution du drone — éléments interactifs">
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e1"
                              aria-label="Aéronef militaire : Cliquer pour plus d'informations" 
@@ -4775,7 +4688,7 @@ background: #16202e;
                             Aéronef militaire
                             <div class="info-element">
                                 <strong>Description détaillée :</strong>
-                                <p>Premier maillon de l'histoire : l'aéronef sans pilote à usage militaire. C'est une INVENTION, car cette solution technique n'existait pas auparavant. Besoin : observer et intervenir sans exposer un pilote. Contrainte DD : consommation d'énergie et impact environnemental des essais.</p>
+                                <p>Première étape de l'histoire : l'aéronef sans pilote à usage militaire. C'est une INVENTION, car cette solution technique n'existait pas auparavant. Besoin : observer et intervenir sans exposer un pilote. Contrainte DD : consommation d'énergie et impact environnemental des essais.</p>
                             </div>
                         </div>
                         <span class="fleuve-chaine" aria-hidden="true">→</span>
@@ -4828,11 +4741,6 @@ background: #16202e;
                          aria-label="Descriptions des éléments explorés"></div>
 
 
-                    <!-- animations-activite:scene n2-intro-1 -->
-                    <div class="anim-scene anim-scene-prof" data-anim-scene="n2-intro-1" data-anim-onglet="contenu-n2-intro" data-anim-type="prof" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:18s;--anim-retard:-6s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n2-intro-1 -->
                     <div class="ateliers-n2" id="ateliers-n2">
                         <h3>🔧 Ateliers — comment fonctionne un drone ?</h3>
                     <p class="texte-secondaire">Trois ateliers pour comprendre un drone de l'intérieur : ses constituants et leurs fonctions, l'environnement qui le perturbe et les capteurs qui le mesurent, puis le trajet de l'énergie qui le fait voler. Chaque atelier se corrige lui-même et explique la réponse. Les réglages du vol (hélices, batterie, commandes) se manipulent dans le mini-jeu du bonus.</p>
@@ -5011,12 +4919,6 @@ background: #16202e;
                         <p><strong>Consigne :</strong> Explorez tous les éléments en cliquant dessus. Une fois que vous avez découvert toutes les informations, passez au quiz pour valider ce niveau.</p>
                     </div>
 
-                    <!-- animations-activite:scene n2-intro-2 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="n2-intro-2" data-anim-onglet="contenu-n2-intro" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:28s;--anim-retard:-2s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:28s;--anim-retard:-2s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n2-intro-2 -->
                     <button class="bouton-action marge-haut" onclick="passerOngletSuivant('n2-intro')" id="bouton-suite-n2-intro" disabled>
                         J'ai tout exploré →
                     </button>
@@ -5029,12 +4931,6 @@ background: #16202e;
                     <h2>Niveau 2 : Maîtriser les détails</h2>
                     <p>Testez votre compréhension approfondie du système.</p>
 
-                    <!-- animations-activite:scene n2-quiz-1 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="n2-quiz-1" data-anim-onglet="contenu-n2-quiz" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:25s;--anim-retard:-7s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:25s;--anim-retard:-7s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n2-quiz-1 -->
                     <form id="quiz-n2" class="quiz-conteneur">
 
                         <div class="question-quiz" data-ost-id="n2-quiz-q1" data-question="1" data-explication="On améliore l'existant en ajoutant une fonction à un drone déjà créé : c'est donc une innovation, par définition l'amélioration de l'existant.">
@@ -5126,11 +5022,6 @@ background: #16202e;
                             Valider mes réponses
                         </button>
                         
-                        <!-- animations-activite:scene n2-quiz-2 -->
-                        <div class="anim-scene anim-scene-prof" data-anim-scene="n2-quiz-2" data-anim-onglet="contenu-n2-quiz" data-anim-type="prof" aria-hidden="true">
-                            <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:17s;--anim-retard:-1s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                        </div>
-                        <!-- /animations-activite:scene n2-quiz-2 -->
                         <div id="resultat-quiz-n2" class="marge-haut" style="display: none;">
                             <p id="message-resultat-n2"></p>
                             <button type="button" class="bouton-action succes cache" id="bouton-suite-n2" onclick="debloquerNiveauSuivant('n2')">
@@ -5158,12 +5049,6 @@ background: #16202e;
                         <p><strong>Problématique :</strong> Une commune a équipé son drone de surveillance forestière d'un capteur de mouvement pour détecter les départs de feu. Mais depuis cette modification, le drone déclenche de fausses alertes presque tous les soirs, alors qu'aucun incendie n'est déclaré. Le maire vous demande de trouver la cause, puis de choisir les actions correctives à mener. Explorez les quatre éléments du système pour répondre à la problématique.</p>
                     </div>
 
-                    <!-- animations-activite:scene n3-enigme-1 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="n3-enigme-1" data-anim-onglet="contenu-n3-enigme" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:27s;--anim-retard:-5s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-gauche" style="--anim-duree:27s;--anim-retard:-5s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n3-enigme-1 -->
                     <h3>Zone d'exploration</h3>
                     <p>Cliquez sur chaque objet pour découvrir des indices :</p>
                     
@@ -5207,11 +5092,6 @@ background: #16202e;
                     </div>
 
                     <div class="solution-enigme marge-haut">
-                        <!-- animations-activite:scene n3-enigme-2 -->
-                        <div class="anim-scene anim-scene-prof" data-anim-scene="n3-enigme-2" data-anim-onglet="contenu-n3-enigme" data-anim-type="prof" aria-hidden="true">
-                            <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:18s;--anim-retard:-8s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                        </div>
-                        <!-- /animations-activite:scene n3-enigme-2 -->
                         <h3>Vos réponses</h3>
                         <p>Remplissez les deux cadres ci-dessous : le premier expose ce que vous avez constaté, le second ce que vous proposez de faire.</p>
 
@@ -5541,12 +5421,6 @@ background: #16202e;
                         <p id="texte-bilan-mission">Réglez les curseurs et choisissez les composants : le bilan de mission s'affichera ici.</p>
                     </div>
 
-                    <!-- animations-activite:scene n4-probleme-1 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="n4-probleme-1" data-anim-onglet="contenu-n4-probleme" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:26s;--anim-retard:-10s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:26s;--anim-retard:-10s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n4-probleme-1 -->
                     <h3 class="marge-haut">Étape 2 — Choisir les composants du drone</h3>
                     <p>Cliquez sur chaque zone du schéma (en pointillé) et choisissez un composant dans la liste qui s'ouvre. Le schéma se complète au fur et à mesure.</p>
 
@@ -5573,11 +5447,6 @@ background: #16202e;
                         <p id="compteur-composants">0 / 4 composants choisis.</p>
                     </div>
 
-                    <!-- animations-activite:scene n4-probleme-2 -->
-                    <div class="anim-scene anim-scene-prof" data-anim-scene="n4-probleme-2" data-anim-onglet="contenu-n4-probleme" data-anim-type="prof" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:19s;--anim-retard:-2s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                    </div>
-                    <!-- /animations-activite:scene n4-probleme-2 -->
                     <h3 class="marge-haut">Étape 3 — Conclusion</h3>
                     <p>En deux ou trois phrases, résumez votre dimensionnement : votre drone tient-il la mission ? Quels compromis avez-vous acceptés (masse, autonomie, coût, résistance au froid) ?</p>
                     <textarea
@@ -5632,11 +5501,6 @@ background: #16202e;
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f2">
-                            <!-- animations-activite:scene synthese-1 -->
-                            <div class="anim-scene anim-scene-prof" data-anim-scene="synthese-1" data-anim-onglet="contenu-synthese" data-anim-type="prof" aria-hidden="true">
-                                <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:18s;--anim-retard:-5s"><span class="anim-sprite-prof anim-sprite-course"></span></span>
-                            </div>
-                            <!-- /animations-activite:scene synthese-1 -->
                             <h3>📖 L'évolution du drone et ses contraintes (N2 - Compréhension)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f2-p1">
                                     <strong>Besoin → évolution → contrainte DD :</strong>
@@ -5679,12 +5543,6 @@ background: #16202e;
                         <p><strong>💡 Astuce :</strong> Relisez régulièrement ces fiches pour consolider vos connaissances. Elles constituent la base pour les activités suivantes.</p>
                     </div>
 
-                    <!-- animations-activite:scene synthese-2 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="synthese-2" data-anim-onglet="contenu-synthese" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-gauche" style="--anim-duree:25s;--anim-retard:-12s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-gauche" style="--anim-duree:25s;--anim-retard:-12s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene synthese-2 -->
                     <button class="bouton-action succes marge-haut" onclick="debloquerBonus()">
                         Débloquer l'activité bonus 🎮
                     </button>
@@ -5945,12 +5803,6 @@ background: #16202e;
                         </p>
                     </div>
 
-                    <!-- animations-activite:scene bonus-1 -->
-                    <div class="anim-scene anim-scene-drone" data-anim-scene="bonus-1" data-anim-onglet="contenu-bonus" data-anim-type="drone" aria-hidden="true">
-                        <span class="anim-acteur anim-prof anim-vers-droite" style="--anim-duree:27s;--anim-retard:-6s"><span class="anim-sprite-prof anim-sprite-marche"></span></span>
-                        <span class="anim-acteur anim-drone anim-vers-droite" style="--anim-duree:27s;--anim-retard:-6s"><span class="anim-drone-corps"><span class="anim-sprite-drone" data-images="4"></span></span></span>
-                    </div>
-                    <!-- /animations-activite:scene bonus-1 -->
                     <h3 class="marge-haut">Autres ressources pour aller plus loin</h3>
                     <div class="jeux-bonus">
                         <article class="carte-jeu marge-haut">
@@ -7539,6 +7391,122 @@ background: #16202e;
             return !!reglages && reglages.getAttribute('data-fige') === '1';
         }
 
+        // ============================================
+        // N4 — HIÉRARCHIE DES BESOINS (étape 2 en classement)
+        // ============================================
+        //
+        // `n4.contraintes.mode: "classement"` remplace les réglages par une
+        // liste de tuiles à ordonner : la première est le besoin le plus
+        // important pour l'élève. La page ne vérifie RIEN et ne connaît aucune
+        // bonne place — un classement se défend, il ne se corrige pas : c'est
+        // la hiérarchie argumentée qui est remise au professeur.
+        //
+        // Deux gestes pour déplacer une tuile, et ils doivent rester
+        // équivalents, sinon la règle d'accessibilité du gabarit tombe :
+        //   • les boutons ▲ ▼ — clavier, lecteur d'écran, cibles de 44 px ;
+        //   • le glisser-déposer — souris et stylet seulement. Au doigt, un
+        //     glissement vertical fait défiler la page : le geste serait une
+        //     source de blocage, les boutons restent la voie fiable.
+
+        let tuileEnDeplacement = null;
+
+        function n4Tuiles() {
+            const liste = document.getElementById('tuiles-contraintes');
+            if (!liste) return [];
+            return Array.prototype.slice.call(
+                liste.querySelectorAll('.tuile-contrainte'));
+        }
+
+        function n4ClassementFige() {
+            const reglages = document.querySelector(
+                '#conception-guidee .reglages-contraintes[data-mode="classement"]');
+            return !!reglages && reglages.getAttribute('data-fige') === '1';
+        }
+
+        // Le rang affiché est TOUJOURS recalculé depuis la position réelle dans
+        // la liste : une tuile déplacée qui garderait son ancien numéro ferait
+        // lire une hiérarchie qui n'est plus celle de l'écran.
+        function n4RenumeroterTuiles(annonce) {
+            const tuiles = n4Tuiles();
+            const fige = n4ClassementFige();
+            tuiles.forEach(function (tuile, indice) {
+                tuile.setAttribute('data-rang', String(indice + 1));
+                const rang = tuile.querySelector('.tuile-rang');
+                if (rang) rang.textContent = String(indice + 1);
+                tuile.querySelectorAll('.tuile-deplacer').forEach(function (bouton) {
+                    const sens = parseInt(bouton.getAttribute('data-direction'), 10);
+                    // Monter depuis la première place (ou descendre depuis la
+                    // dernière) ne mène nulle part : le bouton est neutralisé
+                    // plutôt que de laisser croire qu'il agit.
+                    bouton.disabled = fige ||
+                        (sens < 0 && indice === 0) ||
+                        (sens > 0 && indice === tuiles.length - 1);
+                });
+            });
+            if (annonce) n4AnnoncerHierarchie(annonce);
+        }
+
+        function n4AnnoncerHierarchie(texte) {
+            const etat = document.getElementById('classement-etat');
+            if (etat) etat.textContent = texte;
+        }
+
+        function n4DeplacerTuile(bouton, direction) {
+            if (n4ClassementFige()) return;
+            const tuile = bouton.closest('.tuile-contrainte');
+            if (!tuile) return;
+            const voisine = direction < 0 ? tuile.previousElementSibling
+                                          : tuile.nextElementSibling;
+            if (!voisine || !voisine.classList.contains('tuile-contrainte')) return;
+            if (direction < 0) tuile.parentNode.insertBefore(tuile, voisine);
+            else tuile.parentNode.insertBefore(voisine, tuile);
+            n4RenumeroterTuiles();
+            // Le focus reste sur le bouton de la tuile déplacée : sans cela un
+            // élève au clavier perdrait sa place à chaque cran.
+            bouton.focus();
+            n4AnnoncerHierarchie('« ' + (tuile.getAttribute('data-nom') || 'Besoin') +
+                ' » est maintenant en position ' + tuile.getAttribute('data-rang') + '.');
+        }
+
+        function n4DemarrerDeplacementTuile(evenement) {
+            if (n4ClassementFige()) return;
+            // Un appui sur un bouton ▲ / ▼ est un clic, pas un glissement.
+            if (evenement.target.closest('.tuile-deplacer')) return;
+            // Au doigt, le geste appartient au défilement de la page.
+            if (evenement.pointerType === 'touch') return;
+            if (evenement.pointerType === 'mouse' && evenement.button !== 0) return;
+            tuileEnDeplacement = evenement.currentTarget;
+            tuileEnDeplacement.classList.add('tuile-glissee');
+            try { tuileEnDeplacement.setPointerCapture(evenement.pointerId); } catch (e) {}
+        }
+
+        function n4DeplacerTuileAuGlissement(evenement) {
+            if (!tuileEnDeplacement) return;
+            const liste = tuileEnDeplacement.parentNode;
+            if (!liste) return;
+            const soeurs = n4Tuiles();
+            for (const autre of soeurs) {
+                if (autre === tuileEnDeplacement) continue;
+                const cadre = autre.getBoundingClientRect();
+                if (evenement.clientY < cadre.top || evenement.clientY > cadre.bottom) continue;
+                const apres = evenement.clientY > cadre.top + cadre.height / 2;
+                liste.insertBefore(tuileEnDeplacement,
+                    apres ? autre.nextElementSibling : autre);
+                n4RenumeroterTuiles();
+                return;
+            }
+        }
+
+        function n4TerminerDeplacementTuile() {
+            if (!tuileEnDeplacement) return;
+            const tuile = tuileEnDeplacement;
+            tuileEnDeplacement = null;
+            tuile.classList.remove('tuile-glissee');
+            n4RenumeroterTuiles();
+            n4AnnoncerHierarchie('« ' + (tuile.getAttribute('data-nom') || 'Besoin') +
+                ' » est maintenant en position ' + tuile.getAttribute('data-rang') + '.');
+        }
+
         function n4FigerContraintes(bouton) {
             const zone = document.getElementById('conception-guidee');
             if (!zone) return;
@@ -7547,12 +7515,17 @@ background: #16202e;
             const liste = document.getElementById('contraintes-recap-liste');
             if (!reglages) return;
 
+            // Un classement n'a ni curseur ni liste : ce sont les tuiles qui
+            // se verrouillent (boutons neutralisés, glissement coupé).
+            const classement = reglages.getAttribute('data-mode') === 'classement';
+
             const fige = reglages.getAttribute('data-fige') === '1';
             if (fige) {
                 reglages.removeAttribute('data-fige');
                 reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
                     controle.disabled = false;
                 });
+                if (classement) n4RenumeroterTuiles();
                 if (liste) liste.innerHTML = '';
                 if (recap) recap.hidden = true;
                 if (bouton) {
@@ -7568,7 +7541,24 @@ background: #16202e;
                 reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
                     controle.disabled = true;
                 });
-                if (liste) {
+                if (liste && classement) {
+                    // Le récapitulatif d'un classement est la hiérarchie
+                    // elle-même : les tuiles dans l'ordre choisi, numérotées.
+                    liste.innerHTML = '';
+                    n4Tuiles().forEach(function (tuile, indice) {
+                        const item = document.createElement('li');
+                        const nom = document.createElement('strong');
+                        nom.textContent = String(indice + 1) + '. ' +
+                            (tuile.getAttribute('data-nom') || 'Besoin');
+                        item.appendChild(nom);
+                        const aide = tuile.querySelector('.tuile-aide');
+                        const texteAide = aide ? String(aide.textContent || '').trim() : '';
+                        if (texteAide) {
+                            item.appendChild(document.createTextNode(' — ' + texteAide));
+                        }
+                        liste.appendChild(item);
+                    });
+                } else if (liste) {
                     liste.innerHTML = '';
                     reglages.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
                         const curseur = n4ControleContrainte(bloc);
@@ -7589,6 +7579,7 @@ background: #16202e;
                         liste.appendChild(item);
                     });
                 }
+                if (classement) n4RenumeroterTuiles();
                 if (recap) recap.hidden = false;
                 if (bouton) {
                     bouton.textContent = bouton.getAttribute('data-libelle-modifier') ||
@@ -7625,8 +7616,20 @@ background: #16202e;
                 ? besoin.value.trim() : '(non renseigné)');
             lignes.push('');
 
-            lignes.push('2. MES CONTRAINTES');
-            if (zone) {
+            // Étape 2 : soit une hiérarchie de tuiles, soit des réglages. Le
+            // bilan recopie ce que l'élève voit à l'écran — l'ordre des tuiles
+            // est la hiérarchie qu'il a construite, c'est elle qui est évaluée.
+            const classementBilan = zone
+                ? zone.querySelector('.reglages-contraintes[data-mode="classement"]')
+                : null;
+            lignes.push(classementBilan ? '2. MA HIÉRARCHIE DES BESOINS'
+                                        : '2. MES CONTRAINTES');
+            if (classementBilan) {
+                n4Tuiles().forEach(function (tuile, indice) {
+                    lignes.push('- ' + String(indice + 1) + '. ' +
+                        (tuile.getAttribute('data-nom') || 'Besoin'));
+                });
+            } else if (zone) {
                 zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
                     const curseur = n4ControleContrainte(bloc);
                     if (!curseur) return;
@@ -7644,6 +7647,14 @@ background: #16202e;
             lignes.push(n4EstFige()
                 ? 'Contraintes figées : oui.'
                 : 'Contraintes figées : NON (l\'élève ne les a pas figées).');
+            // L'argumentation de la hiérarchie est le livrable de l'étape 2 :
+            // sans elle, un classement ne dit pas pourquoi il est celui-là.
+            const argumentationHierarchie = document.getElementById('hierarchie-justifiee');
+            if (argumentationHierarchie) {
+                lignes.push('');
+                lignes.push('Pourquoi cette hiérarchie :');
+                lignes.push(argumentationHierarchie.value.trim() || '(non renseigné)');
+            }
             lignes.push('');
 
             lignes.push('3. LE MODÈLE QUE JE RETIENS');
@@ -7793,6 +7804,23 @@ background: #16202e;
                 if (defaut !== null) controle.value = defaut;
                 controle.disabled = false;
             });
+            // Un classement se remet, lui aussi, dans l'ordre de départ —
+            // l'ordre déclaré en configuration, celui que l'élève a trouvé en
+            // arrivant. Sinon « Recommencer » laisserait sa hiérarchie en
+            // place et il croirait l'exercice déjà commencé.
+            const listeTuiles = document.getElementById('tuiles-contraintes');
+            if (listeTuiles) {
+                Array.prototype.slice.call(
+                    listeTuiles.querySelectorAll('.tuile-contrainte')
+                ).sort(function (a, b) {
+                    return parseInt(a.getAttribute('data-ordre-depart') || '0', 10) -
+                           parseInt(b.getAttribute('data-ordre-depart') || '0', 10);
+                }).forEach(function (tuile) {
+                    listeTuiles.appendChild(tuile);
+                });
+                n4RenumeroterTuiles();
+                n4AnnoncerHierarchie('');
+            }
             const tri = document.getElementById('tri-comparateur');
             if (tri) tri.value = '';
             n4TrierModeles();
@@ -7820,6 +7848,17 @@ background: #16202e;
             const tri = document.getElementById('tri-comparateur');
             if (tri) tri.addEventListener('change', n4TrierModeles);
 
+            // Les tuiles du classement (étape 2 en mode « classement ») : le
+            // glisser-déposer est posé ici, une fois, sur chaque tuile ; les
+            // boutons ▲ ▼ passent par leur onclick et n'ont rien à écouter.
+            zone.querySelectorAll('.tuile-contrainte').forEach(function (tuile) {
+                tuile.addEventListener('pointerdown', n4DemarrerDeplacementTuile);
+                tuile.addEventListener('pointermove', n4DeplacerTuileAuGlissement);
+                tuile.addEventListener('pointerup', n4TerminerDeplacementTuile);
+                tuile.addEventListener('pointercancel', n4TerminerDeplacementTuile);
+            });
+            n4RenumeroterTuiles();
+
             n4MettreAJourContraintes();
         }
 
@@ -7830,12 +7869,10 @@ background: #16202e;
         function mettreAJourProgression() {
             const progression = Math.round((niveauxDebloques.length / 8) * 100);
             const barre = document.getElementById('barre-progression');
-            const texte = document.getElementById('texte-progression');
             
-            if (barre && texte) {
+            if (barre) {
                 barre.style.width = `${progression}%`;
                 barre.parentElement.setAttribute('aria-valuenow', progression);
-                texte.textContent = `Progression : ${progression}%`;
             }
         }
 
@@ -10524,6 +10561,10 @@ background: #16202e;
             if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
                 consignes.push(CONSIGNES.champ[typeChamp]);
             }
+            // Le panneau sert aussi les pages qui ne viennent pas du template
+            // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+            // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+            // dans les deux cas, sinon l'agent cherche un fichier inexistant.
             consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
             lignes.push('');
             lignes.push("## Consigne pour l'agent");
@@ -14139,101 +14180,6 @@ if ('droite' in commandes) vol.touches.droite = !!commandes.droite;
 };
 })();
     </script>
-<!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte et n'envoie rien sur Internet. Seul le choix « Animations : actives / coupées » est mémorisé dans ton navigateur. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
-<script data-animations-activite="1">
-/* Bascule et mesure des animations de liaison — 4e OST2 « évolution des drones ».
-   Le décor est purement CSS : ce script ne fait que trois choses.
-     1. poser `data-animations="on|off"` sur <html> (l'élève peut couper le
-        mouvement, le choix est retenu d'une visite à l'autre) ;
-     2. tenir à jour le bouton `#anim-bascule` (aria-pressed + libellé) ;
-     3. exposer `window.animationsActivite`, que le contrôle automatique
-        (`verifier-animations.py`) utilise pour couper et rallumer sans cliquer
-        au hasard, et pour lire ce que la page croit afficher.
-   Aucune dépendance au moteur du template : si ce bloc disparaît, l'activité
-   fonctionne exactement comme avant. */
-/* animations-activite:js-debut */
-(function () {
-    'use strict';
-
-    var CLE = 'anim-activite-drones';
-    var ID_BOUTON = 'anim-bascule';
-
-    function memoriser(valeur) {
-        try { window.localStorage.setItem(CLE, valeur); } catch (e) { /* mode privé, file:// */ }
-    }
-
-    function relire() {
-        try { return window.localStorage.getItem(CLE); } catch (e) { return null; }
-    }
-
-    function actif() {
-        return document.documentElement.getAttribute('data-animations') !== 'off';
-    }
-
-    function appliquer(actifVoulu) {
-        document.documentElement.setAttribute('data-animations', actifVoulu ? 'on' : 'off');
-        var bouton = document.getElementById(ID_BOUTON);
-        if (bouton) {
-            bouton.setAttribute('aria-pressed', actifVoulu ? 'true' : 'false');
-            bouton.textContent = actifVoulu ? 'Animations : actives' : 'Animations : coupées';
-        }
-        return actifVoulu;
-    }
-
-    function basculer() {
-        var voulu = !actif();
-        memoriser(voulu ? 'on' : 'off');
-        return appliquer(voulu);
-    }
-
-    function scenes() {
-        var liste = [];
-        var elements = document.querySelectorAll('[data-anim-scene]');
-        for (var i = 0; i < elements.length; i++) {
-            var e = elements[i];
-            liste.push({
-                id: e.getAttribute('data-anim-scene'),
-                onglet: e.getAttribute('data-anim-onglet'),
-                type: e.getAttribute('data-anim-type'),
-                visible: e.getBoundingClientRect().width > 0
-            });
-        }
-        return liste;
-    }
-
-    window.animationsActivite = {
-        version: 1,
-        actif: actif,
-        activer: function () {
-            memoriser('on');
-            return appliquer(true);
-        },
-        desactiver: function () {
-            memoriser('off');
-            return appliquer(false);
-        },
-        basculer: basculer,
-        scenes: scenes
-    };
-
-    function demarrer() {
-        var bouton = document.getElementById(ID_BOUTON);
-        if (bouton) {
-            bouton.addEventListener('click', basculer);
-        }
-        // Le choix mémorisé l'emporte sur l'état par défaut (animations actives).
-        appliquer(relire() === 'off' ? false : true);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', demarrer);
-    } else {
-        demarrer();
-    }
-})();
-/* animations-activite:js-fin */
-</script>
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
 </body>
 </html>
