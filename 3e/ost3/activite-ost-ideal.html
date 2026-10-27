@@ -4183,115 +4183,109 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                         </div>
                         <div class="etape-conception">
                             <h4>Étape 2 : Régler mes contraintes</h4>
-                            <p>Chaque curseur a cinq crans, et chaque cran porte un mot. Choisis le mot qui correspond à TON exigence : il n'y a pas de bon réglage. La valeur chiffrée reste affichée en petit sous le curseur. Quand tes contraintes te conviennent, clique sur « Figer vos contraintes ».</p>
-                            <p class="note-liberte">Un cran, un mot : « ultraléger » ou « très lourd », « très serré » ou « très large ». Serre les crans pour un projet exigeant, ouvre-les si tu acceptes des compromis. Les mots s'affinent, mais la mesure chiffrée reste là, en gris, pour que tu saches exactement ce que tu demandes.</p>
+                            <p>Chaque critère a maintenant une liste de choix : dis l'importance que tu lui accordes, de « Insignifiant » à « primordiale ». Aucun critère n'est important par défaut : c'est à toi de dire lequel compte, et à quel point. Quand tes choix te conviennent, clique sur « Figer vos contraintes ».</p>
+                            <p class="note-liberte">Quatre mots, aucun chiffre : la page ne t'impose aucune valeur, c'est à toi de te faire ton idée. Un critère laissé sur « Insignifiant » ne pèsera pas dans ton choix ; un critère placé sur « primordiale » en sera la condition.</p>
                             <div class="reglages-contraintes" data-figer="1">
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-budget" data-critere="prix" data-sens="max" data-nom="Budget maximal">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-budget"
+                                     data-nom="Budget d'achat">
                                     <div class="curseur-entete">
-                                        <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget maximal</label>
-                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">moyen</output>
+                                        <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget d'achat</label>
+                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">Insignifiant</output>
                                     </div>
-                                    <input type="range" id="curseur-budget"
-                                           min="200"
-                                           max="1400"
-                                           step="300"
-                                           value="800"
-                                           data-defaut="800"
-                                           data-unite="€"
-                                           data-niveaux="très serré|serré|moyen|large|très large"
-                                           aria-valuetext="moyen (800 €)"
-                                           aria-describedby="aide-budget">
-                                    <p class="curseur-bornes"><span>200 €</span><span class="curseur-mesure" id="mesure-budget">800 €</span><span>1 400 €</span></p>
+                                    <select id="curseur-budget"
+                                            data-defaut="0"
+                                            data-niveaux="Insignifiant|importance modérée|importance élevée|primordiale"
+                                            aria-describedby="aide-budget">
+                                               <option value="0" selected>Insignifiant</option>
+                                               <option value="1">importance modérée</option>
+                                               <option value="2">importance élevée</option>
+                                               <option value="3">primordiale</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-budget">Prix d'achat de la trottinette, batterie comprise.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-autonomie" data-critere="autonomie" data-sens="min" data-nom="Autonomie minimale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-autonomie"
+                                     data-nom="Autonomie">
                                     <div class="curseur-entete">
-                                        <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie minimale</label>
-                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">courte</output>
+                                        <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie</label>
+                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">Insignifiant</output>
                                     </div>
-                                    <input type="range" id="curseur-autonomie"
-                                           min="8"
-                                           max="48"
-                                           step="10"
-                                           value="18"
-                                           data-defaut="18"
-                                           data-unite="km"
-                                           data-niveaux="très courte|courte|moyenne|longue|très longue"
-                                           aria-valuetext="courte (18 km)"
-                                           aria-describedby="aide-autonomie">
-                                    <p class="curseur-bornes"><span>8 km</span><span class="curseur-mesure" id="mesure-autonomie">18 km</span><span>48 km</span></p>
+                                    <select id="curseur-autonomie"
+                                            data-defaut="0"
+                                            data-niveaux="Insignifiant|importance modérée|importance élevée|primordiale"
+                                            aria-describedby="aide-autonomie">
+                                               <option value="0" selected>Insignifiant</option>
+                                               <option value="1">importance modérée</option>
+                                               <option value="2">importance élevée</option>
+                                               <option value="3">primordiale</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-autonomie">Distance que tu veux pouvoir parcourir avec une seule charge, par temps doux.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-masse" data-critere="masse" data-sens="max" data-nom="Masse maximale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-masse"
+                                     data-nom="Masse">
                                     <div class="curseur-entete">
-                                        <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse maximale</label>
-                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">moyen</output>
+                                        <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse</label>
+                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">Insignifiant</output>
                                     </div>
-                                    <input type="range" id="curseur-masse"
-                                           min="6"
-                                           max="26"
-                                           step="5"
-                                           value="16"
-                                           data-defaut="16"
-                                           data-unite="kg"
-                                           data-niveaux="ultraléger|léger|moyen|lourd|très lourd"
-                                           aria-valuetext="moyen (16 kg)"
-                                           aria-describedby="aide-masse">
-                                    <p class="curseur-bornes"><span>6 kg</span><span class="curseur-mesure" id="mesure-masse">16 kg</span><span>26 kg</span></p>
+                                    <select id="curseur-masse"
+                                            data-defaut="0"
+                                            data-niveaux="Insignifiant|importance modérée|importance élevée|primordiale"
+                                            aria-describedby="aide-masse">
+                                               <option value="0" selected>Insignifiant</option>
+                                               <option value="1">importance modérée</option>
+                                               <option value="2">importance élevée</option>
+                                               <option value="3">primordiale</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-masse">Une trottinette légère se porte dans les escaliers et se range plus facilement.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-recharge" data-critere="recharge" data-sens="max" data-nom="Temps de recharge maximal">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-recharge"
+                                     data-nom="Temps de recharge">
                                     <div class="curseur-entete">
-                                        <label for="curseur-recharge"><span aria-hidden="true">⏱️</span> Temps de recharge maximal</label>
-                                        <output class="curseur-valeur" id="valeur-recharge" for="curseur-recharge">moyen</output>
+                                        <label for="curseur-recharge"><span aria-hidden="true">⏱️</span> Temps de recharge</label>
+                                        <output class="curseur-valeur" id="valeur-recharge" for="curseur-recharge">Insignifiant</output>
                                     </div>
-                                    <input type="range" id="curseur-recharge"
-                                           min="2"
-                                           max="10"
-                                           step="2"
-                                           value="6"
-                                           data-defaut="6"
-                                           data-unite="h"
-                                           data-niveaux="très rapide|rapide|moyen|lent|très lent"
-                                           aria-valuetext="moyen (6 h)"
-                                           aria-describedby="aide-recharge">
-                                    <p class="curseur-bornes"><span>2 h</span><span class="curseur-mesure" id="mesure-recharge">6 h</span><span>10 h</span></p>
+                                    <select id="curseur-recharge"
+                                            data-defaut="0"
+                                            data-niveaux="Insignifiant|importance modérée|importance élevée|primordiale"
+                                            aria-describedby="aide-recharge">
+                                               <option value="0" selected>Insignifiant</option>
+                                               <option value="1">importance modérée</option>
+                                               <option value="2">importance élevée</option>
+                                               <option value="3">primordiale</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-recharge">Durée nécessaire pour recharger complètement la batterie.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-reparabilite" data-critere="reparabilite" data-sens="min" data-nom="Indice de réparabilité minimal">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-reparabilite"
+                                     data-nom="Indice de réparabilité">
                                     <div class="curseur-entete">
-                                        <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité minimal</label>
-                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">moyenne</output>
+                                        <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité</label>
+                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">Insignifiant</output>
                                     </div>
-                                    <input type="range" id="curseur-reparabilite"
-                                           min="3"
-                                           max="9"
-                                           step="1.5"
-                                           value="6"
-                                           data-defaut="6"
-                                           data-unite="/10"
-                                           data-niveaux="très basse|basse|moyenne|haute|très haute"
-                                           aria-valuetext="moyenne (6 /10)"
-                                           aria-describedby="aide-reparabilite">
-                                    <p class="curseur-bornes"><span>3 /10</span><span class="curseur-mesure" id="mesure-reparabilite">6 /10</span><span>9 /10</span></p>
+                                    <select id="curseur-reparabilite"
+                                            data-defaut="0"
+                                            data-niveaux="Insignifiant|importance modérée|importance élevée|primordiale"
+                                            aria-describedby="aide-reparabilite">
+                                               <option value="0" selected>Insignifiant</option>
+                                               <option value="1">importance modérée</option>
+                                               <option value="2">importance élevée</option>
+                                               <option value="3">primordiale</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-reparabilite">Note officielle sur 10 : plus elle est haute, plus la trottinette est facile à réparer.</p>
                                 </div>
-                                <div class="curseur-contrainte" data-ost-bloc="n4-contrainte-empreinte" data-critere="empreinte" data-sens="max" data-nom="Empreinte carbone maximale">
+                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-empreinte"
+                                     data-nom="Empreinte carbone">
                                     <div class="curseur-entete">
-                                        <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone maximale</label>
-                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">moyenne</output>
+                                        <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone</label>
+                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">Insignifiant</output>
                                     </div>
-                                    <input type="range" id="curseur-empreinte"
-                                           min="100"
-                                           max="500"
-                                           step="100"
-                                           value="300"
-                                           data-defaut="300"
-                                           data-unite="kg CO₂e"
-                                           data-niveaux="très faible|faible|moyenne|élevée|très élevée"
-                                           aria-valuetext="moyenne (300 kg CO₂e)"
-                                           aria-describedby="aide-empreinte">
-                                    <p class="curseur-bornes"><span>100 kg CO₂e</span><span class="curseur-mesure" id="mesure-empreinte">300 kg CO₂e</span><span>500 kg CO₂e</span></p>
+                                    <select id="curseur-empreinte"
+                                            data-defaut="0"
+                                            data-niveaux="Insignifiant|importance modérée|importance élevée|primordiale"
+                                            aria-describedby="aide-empreinte">
+                                               <option value="0" selected>Insignifiant</option>
+                                               <option value="1">importance modérée</option>
+                                               <option value="2">importance élevée</option>
+                                               <option value="3">primordiale</option>
+                                    </select>
                                 <p class="curseur-aide" id="aide-empreinte">Masse de gaz à effet de serre émise pour fabriquer et utiliser la trottinette.</p>
                                 </div>
                             </div>
@@ -4304,7 +4298,7 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
                             <div class="contraintes-recap" id="contraintes-recap" hidden>
                                 <h5>Mes contraintes figées</h5>
                                 <ul id="contraintes-recap-liste"></ul>
-                                <p class="contraintes-recap-note">Les curseurs sont maintenant verrouillés : c'est le cahier des charges que tu imposes aux six modèles. Si tu t'es trompé, clique sur « Modifier mes contraintes ».</p>
+                                <p class="contraintes-recap-note">Les listes sont maintenant verrouillées : c'est le cahier des charges que tu imposes aux six modèles. Si tu t'es trompé, clique sur « Modifier mes contraintes ».</p>
                             </div>
                         </div>
                         <div id="etape-comparateur" class="etape-conception cache" data-comparateur-apres-gel="1">
