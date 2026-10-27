@@ -2515,6 +2515,237 @@
             color: #4a5d70;
         }
 
+        /* ── Type « erreur-schema » : un schéma de câblage à diagnostiquer ──
+           Le schéma est COMPLET : un câble seulement est mal branché, et c'est
+           lui que l'élève doit désigner. Les appareils sont posés par rangées
+           (flex) et le moteur trace les câbles entre les appareils RÉELS :
+           aucune coordonnée en dur, donc le schéma reste juste à 320 px, où un
+           pourcentage figé sortirait du cadre.
+
+           Deux couches, et c'est voulu : le dessin (SVG, `aria-hidden`) ne
+           porte aucun nom, et chaque câble a par-dessus un VRAI bouton HTML de
+           44 × 44 px posé à son milieu. Un groupe SVG focusable se comporte
+           mal selon les lecteurs d'écran, et un trait de 4 px est une cible
+           introuvable au doigt. */
+        .schema-aide {
+            font-size: .85rem;
+            color: #4a5d70;
+            margin: .1rem 0 .6rem;
+        }
+
+        .schema-cadre {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* Écart vertical généreux : c'est l'espace où vivent les câbles, et
+               où doit tenir le repère cliquable de 44 px. Trop serré, deux
+               repères de câbles voisins se recouvrent. */
+            gap: 2.6rem;
+            padding: 1rem .6rem;
+            background: #f4f8fc;
+            border: 2px solid #dce3ed;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .schema-rangee {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem;
+            justify-content: center;
+        }
+
+        .schema-noeud {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .1rem;
+            min-width: 74px;
+            min-height: 48px;
+            max-width: 150px;
+            padding: .35rem .5rem;
+            background: #ffffff;
+            border: 2px solid #2e74b5;
+            border-radius: 9px;
+            font-size: .78rem;
+            line-height: 1.15;
+            text-align: center;
+        }
+
+        .schema-noeud .schema-icone {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .schema-noeud .schema-nom {
+            font-weight: 600;
+        }
+
+        /* Placement dans la rangée : c'est ce qui laisse passer un câble sur le
+           côté au lieu de le cacher derrière un appareil centré. */
+        .schema-noeud-gauche { margin-right: auto; }
+        .schema-noeud-centre { margin-left: auto; margin-right: auto; }
+        .schema-noeud-droite { margin-left: auto; }
+
+        .schema-fils {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .schema-cable .schema-trait {
+            fill: none;
+            stroke: #2e74b5;
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+
+        .schema-cable.survol .schema-trait,
+        .schema-cable.survol-focus .schema-trait {
+            stroke: #1a4f7a;
+            stroke-width: 6;
+        }
+
+        .schema-cable.examine .schema-trait {
+            stroke: #94a3b8;
+            stroke-dasharray: 9 7;
+        }
+
+        .schema-cable.trouve .schema-trait {
+            stroke: #c62828;
+            stroke-width: 6;
+        }
+
+        /* Le bouton du câble : transparent, 44 px de côté, avec un repère rond
+           au centre. Sans ce repère, un trait ne se lit pas comme un bouton. */
+        .schema-lien {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .schema-lien::before {
+            content: "";
+            display: block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #2e74b5;
+            box-sizing: border-box;
+        }
+
+        .schema-lien:hover::before {
+            background: #2e74b5;
+            border-color: #1a4f7a;
+        }
+
+        .schema-lien:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .schema-lien.examine::before {
+            border-color: #94a3b8;
+        }
+
+        .schema-lien.trouve::before {
+            background: #fdecea;
+            border-color: #c62828;
+        }
+
+        .schema-cables {
+            margin-top: .6rem;
+            padding: .6rem .7rem;
+            border: 1px solid #dce3ed;
+            border-radius: 9px;
+            background: #fbfcfe;
+        }
+
+        .schema-cables h4 {
+            margin: 0 0 .35rem;
+        }
+
+        .schema-cables ul {
+            margin: 0 0 0 1.1rem;
+            font-size: .85rem;
+        }
+
+        .schema-cables li {
+            margin-bottom: .2rem;
+        }
+
+        @media (max-width: 480px) {
+            .schema-cadre {
+                gap: 4.6rem;
+                padding: .7rem .25rem;
+            }
+            /* Les appareils d'une même rangée doivent tenir SUR UNE LIGNE à
+               320 px : répartis sur deux lignes, leurs câbles passent derrière
+               les appareils de l'autre ligne, et les repères des câbles d'un
+               même commutateur se retrouvent à moins de 44 px les uns des
+               autres — au doigt, ils n'en font qu'un. On rétrécit donc les
+               boîtes (le nom passe à la ligne) plutôt que de les empiler. */
+            .schema-rangee {
+                /* Une seule ligne, toujours : les quatre appareils d'une rangée
+                   se partagent la largeur au lieu de passer à la ligne. Deux
+                   lignes d'appareils feraient passer les câbles derrière ceux
+                   d'en dessous, et rapprocheraient les repères jusqu'à les
+                   confondre au doigt. */
+                flex-wrap: nowrap;
+                gap: .3rem;
+            }
+            .schema-noeud {
+                flex: 0 1 auto;
+                min-width: 0;
+                max-width: 78px;
+                font-size: .68rem;
+                padding: .25rem .3rem;
+                overflow-wrap: anywhere;
+            }
+            .schema-noeud .schema-icone {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* À 320 px, la largeur utile du schéma tombe sous 240 px : chaque pixel
+           gagné sur les boîtes écarte les repères des câbles d'un même
+           commutateur, qui sont les plus serrés. */
+        @media (max-width: 360px) {
+            .schema-cadre {
+                /* Encore plus d'air ici : c'est la hauteur où les repères des
+                   quatre câbles peuvent se décaler les uns des autres. Sur
+                   231 px de large, c'est la seule marge qui reste. */
+                gap: 6rem;
+            }
+            .schema-rangee {
+                gap: .2rem;
+            }
+            .schema-noeud {
+                padding: .2rem .2rem;
+                font-size: .66rem;
+            }
+        }
+
         .atelier-slots {
             display: flex;
             flex-wrap: wrap;
@@ -3395,7 +3626,7 @@
         :where(html[data-theme="sombre"]) .probleme-ouvert,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
         :where(html[data-theme="sombre"]) .compteur-selection,:where(html[data-theme="sombre"]) .atelier-carte h4,:where(html[data-theme="sombre"]) .atelier-compteur,:where(html[data-theme="sombre"]) .rotors-nez,:where(html[data-theme="sombre"]) .atelier-verdict,:where(html[data-theme="sombre"]) .env-catalogue .env-mesure,:where(html[data-theme="sombre"]) .env-table caption,:where(html[data-theme="sombre"]) .env-note-2 .env-mot,:where(html[data-theme="sombre"]) .atelier-mesure,:where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd}
         :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .tuile-deplacer,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
-        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
+        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .schema-lien:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="juste"] .choix-contrainte,:where(html[data-theme="sombre"]) .etape-selection-explication,:where(html[data-theme="sombre"]) .solution-personnelle,:where(html[data-theme="sombre"]) .cablage-bilan.succes{background-color:#142c21}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="faux"] .choix-contrainte,:where(html[data-theme="sombre"]) .cablage-bilan.echec,:where(html[data-theme="sombre"]) .puzzle-slot.faux,:where(html[data-theme="sombre"]) .puzzle-bilan.echec{background-color:#2b1a1c}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-contrainte{border-color:#f59e0b;background-color:#2c2415}
@@ -3410,7 +3641,7 @@
         :where(html[data-theme="sombre"]) .cablage-aide,:where(html[data-theme="sombre"]) .cablage-reserve.vide::after,:where(html[data-theme="sombre"]) .cablage-indication,:where(html[data-theme="sombre"]) .cablage-retour.info,:where(html[data-theme="sombre"]) .puzzle-aide,:where(html[data-theme="sombre"]) .puzzle-reserve.vide::after{color:#cbd5e1}
         :where(html[data-theme="sombre"]) .cablage-reserve,:where(html[data-theme="sombre"]) .puzzle-reserve{border:2px dashed #55657f;background-color:#27334a}
         :where(html[data-theme="sombre"]) .cablage-zone,:where(html[data-theme="sombre"]) .puzzle-piece{background-color:#1c2534;border:2px solid #55657f}
-        :where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait{stroke:#9ecbfd}
+        :where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait,:where(html[data-theme="sombre"]) .schema-cable .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol-focus .schema-trait{stroke:#9ecbfd}
         :where(html[data-theme="sombre"]) .noeud-reseau,:where(html[data-theme="sombre"]) .puzzle-plateau[data-layout="schema"] .puzzle-fond{border:2px solid #55657f;background-color:#1c2534}
         :where(html[data-theme="sombre"]) .noeud-reseau[data-type="internet"]{background-color:#10333c;background-image:radial-gradient(circle at 50% 32%, #1c2534 0%, #10333c 72%)}
         :where(html[data-theme="sombre"]) .cablage-explication{border-top:1px solid #3a4a63}
@@ -3429,9 +3660,17 @@
         :where(html[data-theme="sombre"]) .atelier-retour.echec{background:#2b1a1c;color:#fca5a5}
         :where(html[data-theme="sombre"]) .atelier-retour.info{background:#1a2740;color:#9ecbfd}
         :where(html[data-theme="sombre"]) .atelier-explication{background:#2c2415}
-        :where(html[data-theme="sombre"]) .reseau-role,:where(html[data-theme="sombre"]) .atelier-fils-vide,:where(html[data-theme="sombre"]) .rotor-nom,:where(html[data-theme="sombre"]) .env-legende{color:#b6c4d6}
+        :where(html[data-theme="sombre"]) .reseau-role,:where(html[data-theme="sombre"]) .atelier-fils-vide,:where(html[data-theme="sombre"]) .schema-aide,:where(html[data-theme="sombre"]) .rotor-nom,:where(html[data-theme="sombre"]) .env-legende{color:#b6c4d6}
         :where(html[data-theme="sombre"]) .reseau-compteur,:where(html[data-theme="sombre"]) .atelier-fils li strong,:where(html[data-theme="sombre"]) .env-note-3 .env-mot{color:#86efac}
-        :where(html[data-theme="sombre"]) .atelier-fils-cadre{border:1px solid #2b3a52;background:#1c2534}
+        :where(html[data-theme="sombre"]) .atelier-fils-cadre,:where(html[data-theme="sombre"]) .schema-cables{border:1px solid #2b3a52;background:#1c2534}
+        :where(html[data-theme="sombre"]) .schema-cadre{background:#16202e;border:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .schema-noeud{background:#1c2534;border:2px solid #3b82f6}
+        :where(html[data-theme="sombre"]) .schema-cable.examine .schema-trait{stroke:#c3d0e0}
+        :where(html[data-theme="sombre"]) .schema-cable.trouve .schema-trait{stroke:#fca5a5}
+        :where(html[data-theme="sombre"]) .schema-lien::before{background:#1c2534;border:3px solid #3b82f6}
+        :where(html[data-theme="sombre"]) .schema-lien:hover::before{border-color:#5f9bd8}
+        :where(html[data-theme="sombre"]) .schema-lien.examine::before{border-color:#55657f}
+        :where(html[data-theme="sombre"]) .schema-lien.trouve::before{background:#2b1a1c;border-color:#ef4444}
         :where(html[data-theme="sombre"]) .atelier-slot{border:2px dashed #3a4a63;color:#b6c4d6}
         :where(html[data-theme="sombre"]) .atelier-slot.rempli{border-color:#22c55e;background:#16301f;color:#86efac}
         :where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd;background:#1a2740}
@@ -3919,7 +4158,7 @@
 
                     <div class="ateliers-n2" id="ateliers-n2">
                         <h3>🔧 Qui fait quoi, et avec quelle mémoire ?</h3>
-                    <p class="texte-secondaire">Deux exercices pour fixer le vocabulaire avant le quiz : d'abord associer chaque composant à son rôle, puis séparer ce qui garde l'information de ce qui la traite.</p>
+                    <p class="texte-secondaire">Deux exercices pour fixer le vocabulaire avant le quiz : d'abord associer chaque composant à son rôle, puis relier les composants entre eux comme ils le sont réellement dans le poste.</p>
 
                     <article class="atelier-carte" data-ost-bloc="n2-atelier-qui-fait-quoi" data-type="association" data-atelier="qui-fait-quoi" aria-labelledby="atelier-titre-qui-fait-quoi">
                         <h3 id="atelier-titre-qui-fait-quoi">🔎 Associe chaque composant à son rôle</h3>
@@ -3958,30 +4197,57 @@
                         <p class="atelier-explication cache" data-role="explication">Chaque composant a une seule grande fonction, et c'est cette division du travail qui rend l'ordinateur rapide : le processeur traite, la mémoire vive garde le travail en cours, le disque conserve pour plus tard, le bus transporte, la carte mère relie, l'alimentation fournit l'énergie et la carte graphique s'occupe de l'image. Un composant en panne suffit à bloquer toute la chaîne, même si les autres sont intacts.</p>
                     </article>
 
-                    <article class="atelier-carte" data-ost-bloc="n2-atelier-trajet-information" data-type="ordre" data-atelier="trajet-information" aria-labelledby="atelier-titre-trajet-information">
-                        <h3 id="atelier-titre-trajet-information">🔗 Remets le trajet de l'information dans l'ordre</h3>
-                        <p class="atelier-consigne">Place chaque étape à sa place, de la touche frappée jusqu'à l'affichage du résultat.</p>
-                        <div class="atelier-slots" role="list" aria-label="Emplacements de la chaîne, du premier au dernier maillon">
-                            <div class="atelier-slot" role="listitem" data-slot="0"><span class="atelier-marqueur">1</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="1"><span class="atelier-marqueur">2</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="2"><span class="atelier-marqueur">3</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="3"><span class="atelier-marqueur">4</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="4"><span class="atelier-marqueur">5</span></div>
+                    <article class="atelier-carte" data-ost-bloc="n2-atelier-trajet-information" data-type="liaison" data-atelier="trajet-information" data-liens="[{&quot;de&quot;: &quot;clavier&quot;, &quot;vers&quot;: &quot;carte-mere&quot;, &quot;pourquoi&quot;: &quot;Le clavier est branché sur un port de la carte mère : c'est par ce câble que la touche frappée entre dans l'unité centrale.&quot;}, {&quot;de&quot;: &quot;carte-mere&quot;, &quot;vers&quot;: &quot;processeur&quot;, &quot;pourquoi&quot;: &quot;Le processeur est enfiché dans son support, sur la carte mère : les pistes du circuit imprimé lui apportent les données à traiter.&quot;}, {&quot;de&quot;: &quot;carte-mere&quot;, &quot;vers&quot;: &quot;memoire-vive&quot;, &quot;pourquoi&quot;: &quot;La barrette de mémoire vive est enfichée dans un connecteur de la carte mère : le processeur y lit et y écrit ses données par le bus.&quot;}, {&quot;de&quot;: &quot;carte-mere&quot;, &quot;vers&quot;: &quot;carte-graphique&quot;, &quot;pourquoi&quot;: &quot;La carte graphique est enfichée dans un connecteur de la carte mère : elle reçoit du processeur les données de l'image à composer.&quot;}, {&quot;de&quot;: &quot;carte-graphique&quot;, &quot;vers&quot;: &quot;ecran&quot;, &quot;pourquoi&quot;: &quot;L'écran est branché sur la sortie vidéo de la carte graphique : c'est elle qui lui envoie les pixels. L'écran n'est pas relié directement à la carte mère.&quot;}]" data-messages="{&quot;selection&quot;: &quot;{nom} est choisi. Clique maintenant le composant auquel il est relié.&quot;, &quot;annulation&quot;: &quot;Sélection annulée.&quot;, &quot;refus&quot;: &quot;❌ {a} et {b} ne sont pas reliés directement. Repense au trajet de l'information : par quel composant passe-t-elle ?&quot;, &quot;dejaRelies&quot;: &quot;Ces deux composants sont déjà reliés.&quot;, &quot;liaison&quot;: &quot;✅ Liaison établie : {a} ↔ {b}. Il reste {reste} liaison(s) à trouver.&quot;, &quot;complet&quot;: &quot;🎉 Tous les composants sont reliés : {total} liaisons établies.&quot;, &quot;verifierComplet&quot;: &quot;🎉 Schéma complet : les {total} liaisons sont établies.&quot;, &quot;incomplet&quot;: &quot;Il manque des liaisons : {faits} sur {total}. Clique deux composants pour créer la liaison suivante.&quot;, &quot;verrouille&quot;: &quot;Tout est déjà relié : clique « {bouton} ».&quot;, &quot;compteurComplet&quot;: &quot;Toutes les liaisons sont établies.&quot;, &quot;aucunFil&quot;: &quot;aucune liaison&quot;, &quot;unFil&quot;: &quot;{n} liaison&quot;, &quot;desFils&quot;: &quot;{n} liaisons&quot;}" aria-labelledby="atelier-titre-trajet-information">
+                        <h3 id="atelier-titre-trajet-information">🔗 Relie les composants entre eux</h3>
+                        <p class="atelier-consigne">Clique un composant, puis celui auquel il est réellement relié dans le poste. Chaque liaison juste s'inscrit avec sa raison ; une liaison impossible est refusée tout de suite.</p>
+                        <div class="atelier-reseau" role="group" aria-label="Composants à relier">
+                            <button type="button" class="reseau-appareil" data-appareil="clavier" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">⌨️</span>
+                                <span class="reseau-nom">Clavier</span>
+                                <span class="reseau-role">périphérique d'entrée</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucune liaison</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="carte-mere" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🔌</span>
+                                <span class="reseau-nom">Carte mère</span>
+                                <span class="reseau-role">le circuit qui relie tout</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucune liaison</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="processeur" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🧠</span>
+                                <span class="reseau-nom">Processeur</span>
+                                <span class="reseau-role">exécute les instructions</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucune liaison</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="memoire-vive" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">⚡</span>
+                                <span class="reseau-nom">Mémoire vive (RAM)</span>
+                                <span class="reseau-role">garde le travail en cours</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucune liaison</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="carte-graphique" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🖼️</span>
+                                <span class="reseau-nom">Carte graphique</span>
+                                <span class="reseau-role">compose l'image</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucune liaison</span>
+                            </button>
+                            <button type="button" class="reseau-appareil" data-appareil="ecran" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
+                                <span class="reseau-icone" aria-hidden="true">🖥️</span>
+                                <span class="reseau-nom">Écran</span>
+                                <span class="reseau-role">périphérique de sortie</span>
+                                <span class="reseau-compteur" data-role="fils-appareil">aucune liaison</span>
+                            </button>
                         </div>
-                        <h4>Maillons à replacer</h4>
-                        <div class="atelier-jetons-melanges" role="group" aria-label="Maillons mélangés">
-                            <button type="button" class="atelier-jeton" data-rang="4" onclick="atelierPlacerMaillon(this)">🖥️ L'écran affiche le résultat — Périphérique de sortie : il montre l'image reçue</button>
-                            <button type="button" class="atelier-jeton" data-rang="3" onclick="atelierPlacerMaillon(this)">🖼️ La carte graphique compose l'image — Le résultat est transformé en pixels</button>
-                            <button type="button" class="atelier-jeton" data-rang="2" onclick="atelierPlacerMaillon(this)">🧠 Le processeur exécute l'instruction — Il calcule le résultat grâce aux données rangées en mémoire vive</button>
-                            <button type="button" class="atelier-jeton" data-rang="0" onclick="atelierPlacerMaillon(this)">⌨️ Le clavier transmet la touche frappée — Périphérique d'entrée : il transforme le geste en information</button>
-                            <button type="button" class="atelier-jeton" data-rang="1" onclick="atelierPlacerMaillon(this)">🛣️ Le bus transporte l'information — Les liaisons de la carte mère amènent l'information au processeur</button>
+                        <p class="atelier-compteur" data-role="compteur">0 / 5 liaison(s) établie(s).</p>
+                        <div class="atelier-fils-cadre">
+                            <h4>Tes liaisons, l'une après l'autre</h4>
+                            <ol class="atelier-fils" data-role="fils"><li class="atelier-fils-vide">Aucune liaison pour l'instant : clique deux composants pour les relier.</li></ol>
                         </div>
-                        <p class="atelier-compteur" data-role="compteur">0 maillon(s) placé(s) sur 5.</p>
                         <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierOrdre(this)">Vérifier l'atelier</button>
+                            <button type="button" class="bouton-action" onclick="reseauVerifier(this)">Vérifier les liaisons</button>
                         </div>
                         <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">L'ordre n'est pas décoratif : l'information entre, circule, est traitée, puis ressort. Inverser deux étapes casse la chaîne — un écran ne peut pas afficher une image que la carte graphique n'a pas encore composée, et un processeur ne peut pas calculer une information qui ne lui est pas encore parvenue.</p>
+                        <p class="atelier-explication cache" data-role="explication">Aucun composant ne travaille seul : la carte mère est le support qui les relie tous, et l'information circule de l'un à l'autre. Le clavier entre par un port, le processeur, la mémoire vive et la carte graphique sont enfichés sur la carte mère, et seule la carte graphique sort vers l'écran par le câble vidéo. Un composant mal enfiché coupe cette chaîne : c'est pour cela qu'un poste peut démarrer sans afficher la moindre image.</p>
                     </article>
                     </div>
 
@@ -4799,6 +5065,12 @@
                 
                 niveauActuel = niveauId;
                 mettreAJourProgression();
+                // Un atelier caché n'a pas de cotes : ses câbles ont été tracés
+                // à zéro au chargement. On les retrace maintenant qu'il est
+                // visible (les autres types d'atelier n'ont pas ce besoin).
+                if (typeof schemaTracerTout === 'function') {
+                    schemaTracerTout();
+                }
             }
         }
 
@@ -7408,11 +7680,59 @@
             atelierAfficherExplication(carte);
         }
 
-        // ── Type « reseau » : reconstituer le câblage d'un réseau entier ──
+        // ── Type « reseau » / « liaison » : relier des éléments entre eux ──
         //    L'élève clique deux appareils : la liaison est vérifiée tout de
         //    suite, et la réponse (« pourquoi ces deux-là sont reliés ») est
-        //    celle de la configuration. Le réseau se construit fil par fil,
+        //    celle de la configuration. Le schéma se construit fil par fil,
         //    puis la vérification finale rend l'explication d'ensemble.
+        //
+        //    Le MÊME moteur sert deux leçons : câbler un réseau, ou relier les
+        //    composants internes d'un ordinateur. Les phrases affichées ne sont
+        //    donc pas écrites ici en dur : le générateur les pose sur la carte
+        //    (`data-messages`, table MESSAGES_RESEAU de personnaliser.py) et
+        //    les jetons {nom}, {a}, {b}, {reste}, {faits}, {total}, {bouton},
+        //    {n} sont remplacés à l'affichage. Sans attribut, les fragments de
+        //    repli ci-dessous prennent le relais — le moteur ne se taît jamais.
+        const RESEAU_PHRASES_REPLI = {
+            selection: '{nom} choisi. Clique maintenant le second élément à relier.',
+            annulation: 'Sélection annulée.',
+            refus: '❌ {a} et {b} ne sont pas reliés.',
+            dejaRelies: 'Ces deux éléments sont déjà reliés.',
+            liaison: '✅ Liaison établie : {a} ↔ {b}. Il reste {reste} liaison(s) à trouver.',
+            complet: '🎉 Toutes les liaisons sont établies : {total}.',
+            verifierComplet: '🎉 Toutes les liaisons sont établies : {total}.',
+            incomplet: 'Il manque des liaisons : {faits} sur {total}.',
+            verrouille: 'Tout est déjà relié : clique « {bouton} ».',
+            compteurComplet: 'Toutes les liaisons sont établies.',
+            aucunFil: 'aucun fil',
+            unFil: '{n} fil',
+            desFils: '{n} fils'
+        };
+
+        // Phrase de l'atelier : celle que le générateur pose sur la carte
+        // (`data-messages`), jetons remplacés ; à défaut, le repli ci-dessus.
+        function reseauPhrase(carte, cle, valeurs) {
+            let table = RESEAU_PHRASES_REPLI;
+            try {
+                const brut = carte.getAttribute('data-messages');
+                if (brut) table = Object.assign({}, RESEAU_PHRASES_REPLI, JSON.parse(brut));
+            } catch (erreur) {
+                table = RESEAU_PHRASES_REPLI;
+            }
+            let modele = String(table[cle] || RESEAU_PHRASES_REPLI[cle] || '');
+            Object.keys(valeurs || {}).forEach(function (jeton) {
+                modele = modele.split('{' + jeton + '}').join(String(valeurs[jeton]));
+            });
+            return modele;
+        }
+
+        // Libellé réel du bouton de vérification : la phrase « tout est déjà
+        // relié » doit citer le bouton tel que l'élève le voit.
+        function reseauLibelleVerifier(carte) {
+            const bouton = carte.querySelector('button[onclick*="reseauVerifier"]');
+            return bouton ? String(bouton.textContent || '').trim() : 'Vérifier';
+        }
+
         function reseauEtat(carte) {
             if (!carte.__reseau) {
                 let liens = [];
@@ -7460,8 +7780,8 @@
                 const marque = bouton.querySelector('[data-role="fils-appareil"]');
                 if (marque) {
                     marque.textContent = nombre === 0
-                        ? 'aucun fil'
-                        : nombre + (nombre > 1 ? ' fils' : ' fil');
+                        ? reseauPhrase(carte, 'aucunFil', {})
+                        : reseauPhrase(carte, nombre > 1 ? 'desFils' : 'unFil', { n: nombre });
                 }
                 bouton.classList.toggle('relie', nombre > 0);
             });
@@ -7474,7 +7794,11 @@
             if (zone) {
                 zone.textContent = etat.paires + ' / ' + etat.liens.length +
                     ' liaison(s) établie(s).' +
-                    (etat.paires >= etat.liens.length ? ' Le réseau est complet.' : '');
+                    (etat.paires >= etat.liens.length
+                        ? ' ' + reseauPhrase(carte, 'compteurComplet', {
+                            total: etat.liens.length
+                        })
+                        : '');
             }
             reseauRafraichirAppareils(carte);
         }
@@ -7484,7 +7808,9 @@
             if (!carte) return;
             const etat = reseauEtat(carte);
             if (etat.verrouille) {
-                atelierRetour(carte, 'Le réseau est déjà complet : clique « Vérifier le réseau ».', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'verrouille', {
+                    bouton: reseauLibelleVerifier(carte)
+                }), 'info');
                 return;
             }
             const cle = bouton.getAttribute('data-appareil');
@@ -7494,8 +7820,9 @@
                 bouton.classList.add('choisi');
                 bouton.setAttribute('aria-pressed', 'true');
                 etat.attente = bouton;
-                atelierRetour(carte, 'Appareil choisi : ' + reseauNom(carte, cle) +
-                    '. Clique maintenant l\'appareil auquel il se relie.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'selection', {
+                    nom: reseauNom(carte, cle)
+                }), 'info');
                 return;
             }
 
@@ -7503,7 +7830,7 @@
                 attente.classList.remove('choisi');
                 attente.setAttribute('aria-pressed', 'false');
                 etat.attente = null;
-                atelierRetour(carte, 'Sélection annulée.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'annulation', {}), 'info');
                 return;
             }
 
@@ -7523,16 +7850,16 @@
 
             if (!lienTrouve) {
                 atelierSignaler([bouton], 'erreur');
-                atelierRetour(carte, '❌ ' + reseauNom(carte, cleAttente) + ' et ' +
-                    reseauNom(carte, cle) + ' ne se relient pas directement. ' +
-                    'Repense au trajet des données : par quel appareil passent-elles ?',
-                    'echec');
+                atelierRetour(carte, reseauPhrase(carte, 'refus', {
+                    a: reseauNom(carte, cleAttente),
+                    b: reseauNom(carte, cle)
+                }), 'echec');
                 return;
             }
 
             const id = [lienTrouve.de, lienTrouve.vers].sort().join('|');
             if (etat.faits[id]) {
-                atelierRetour(carte, 'Ces deux appareils sont déjà reliés par un fil.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'dejaRelies', {}), 'info');
                 return;
             }
 
@@ -7555,13 +7882,16 @@
 
             if (etat.paires >= etat.liens.length) {
                 etat.verrouille = true;
-                atelierRetour(carte, '🎉 Le réseau est entièrement câblé : ' +
-                    etat.liens.length + ' liaisons établies.', 'succes');
+                atelierRetour(carte, reseauPhrase(carte, 'complet', {
+                    total: etat.liens.length
+                }), 'succes');
                 atelierAfficherExplication(carte);
             } else {
-                atelierRetour(carte, '✅ Fil établi : ' + reseauNom(carte, lienTrouve.de) +
-                    ' ↔ ' + reseauNom(carte, lienTrouve.vers) + '. Il reste ' +
-                    (etat.liens.length - etat.paires) + ' liaison(s) à trouver.', 'succes');
+                atelierRetour(carte, reseauPhrase(carte, 'liaison', {
+                    a: reseauNom(carte, lienTrouve.de),
+                    b: reseauNom(carte, lienTrouve.vers),
+                    reste: etat.liens.length - etat.paires
+                }), 'succes');
             }
         }
 
@@ -7572,14 +7902,421 @@
             const etat = reseauEtat(carte);
             if (etat.paires >= etat.liens.length) {
                 etat.verrouille = true;
-                atelierRetour(carte, '🎉 Réseau complet : les ' + etat.liens.length +
-                    ' liaisons sont établies.', 'succes');
+                atelierRetour(carte, reseauPhrase(carte, 'verifierComplet', {
+                    total: etat.liens.length
+                }), 'succes');
                 atelierAfficherExplication(carte);
             } else {
-                atelierRetour(carte, 'Le réseau n\'est pas encore complet : ' + etat.paires +
-                    ' liaison(s) sur ' + etat.liens.length + '. Clique deux appareils ' +
-                    'pour tendre le fil suivant.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'incomplet', {
+                    faits: etat.paires,
+                    total: etat.liens.length
+                }), 'info');
             }
+        }
+
+        // ── Type « erreur-schema » : un schéma de câblage faux à diagnostiquer ──
+        //    Le schéma est complet et un seul câble est mal branché. L'élève
+        //    examine un câble : le moteur lui rend le VERDICT et la
+        //    JUSTIFICATION de ce câble, juste comme faux — c'est là que
+        //    l'apprentissage se fait, pas dans un score.
+        //
+        //    Pourquoi le moteur trace les câbles au lieu de les écrire en dur :
+        //    les appareils sont posés par le CSS (rangées flex), donc leurs
+        //    positions changent à 320 px comme sur un écran large. Des
+        //    coordonnées figées casseraient le schéma sur mobile — et l'élève
+        //    ne verrait plus le câble qu'il doit examiner. On mesure donc les
+        //    appareils réels, et l'on retrace quand la mise en page change.
+        //
+        //    Deux couches : le trait (SVG, sans nom, hors de l'arbre
+        //    d'accessibilité) et, par-dessus, un VRAI bouton HTML de 44 px
+        //    posé au milieu du câble. Un `<g>` SVG focusable n'est pas annoncé
+        //    comme un bouton par tous les lecteurs d'écran, et un trait de 4 px
+        //    n'est pas une cible tactile : le bouton règle les deux.
+        const SCHEMA_SVG_NS = 'http://www.w3.org/2000/svg';
+
+        function schemaCarteDe(element) {
+            return element && element.closest
+                ? element.closest('.atelier-carte[data-type="erreur-schema"]')
+                : null;
+        }
+
+        function schemaLiaisons(carte) {
+            if (!carte.__schemaLiaisons) {
+                let liaisons = [];
+                try {
+                    liaisons = JSON.parse(carte.getAttribute('data-liaisons') || '[]');
+                } catch (erreur) {
+                    liaisons = [];
+                }
+                carte.__schemaLiaisons = liaisons;
+            }
+            return carte.__schemaLiaisons;
+        }
+
+        function schemaEtat(carte) {
+            if (!carte.__schema) {
+                let fausses = 0;
+                schemaLiaisons(carte).forEach(function (liaison) {
+                    if (liaison.fausse) fausses += 1;
+                });
+                carte.__schema = {
+                    examinees: {},
+                    trouvees: {},
+                    fausses: fausses,
+                    verrouille: false
+                };
+            }
+            return carte.__schema;
+        }
+
+        function schemaNomNoeud(carte, cle) {
+            const tuile = carte.querySelector('.schema-noeud[data-noeud="' + cle + '"]');
+            const nom = tuile ? tuile.querySelector('.schema-nom') : null;
+            return nom ? nom.textContent.trim() : cle;
+        }
+
+        function schemaCompteur(carte) {
+            const etat = carte.__schema;
+            if (!etat) return;
+            const zone = carte.querySelector('[data-role="compteur"]');
+            if (!zone) return;
+            zone.textContent = 'Câbles examinés : ' + Object.keys(etat.examinees).length +
+                ' — erreurs trouvées : ' + Object.keys(etat.trouvees).length +
+                ' sur ' + etat.fausses + '.';
+        }
+
+        function schemaMarquer(groupe, bouton, etat, index) {
+            const trouve = !!etat.trouvees[index];
+            const examine = !trouve && !!etat.examinees[index];
+            ['examine', 'trouve'].forEach(function (classe) {
+                if (groupe) groupe.classList.toggle(classe, classe === 'trouve' ? trouve : examine);
+                if (bouton) bouton.classList.toggle(classe, classe === 'trouve' ? trouve : examine);
+            });
+        }
+
+        // Où poser le repère cliquable d'un câble : sur la partie du trait qui
+        // sort vraiment des deux appareils qu'il relie, et du côté de celui qui
+        // a le MOINS de câbles. Les quatre câbles d'un commutateur ont sinon des
+        // repères à moins de 44 px les uns des autres : au doigt, ils n'en font
+        // qu'un, et l'élève ne peut plus désigner le bon.
+        function schemaBornesVisibles(a, b, boiteA, boiteB) {
+            // Marge de 4 px : un repère collé au bord d'une boîte se lit comme
+            // posé dessus, et les mesures d'accessibilité le comptent comme
+            // recouvert.
+            const MARGE = 4;
+            const dedans = function (x, y, boite) {
+                return !!boite && x > boite.x1 - MARGE && x < boite.x2 + MARGE &&
+                    y > boite.y1 - MARGE && y < boite.y2 + MARGE;
+            };
+            const pas = 200;
+            let premier = 0.5;
+            let dernier = 0.5;
+            for (let i = 0; i <= pas; i++) {
+                const t = i / pas;
+                if (!dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteA) &&
+                    !dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteB)) {
+                    premier = t;
+                    break;
+                }
+            }
+            for (let i = pas; i >= 0; i--) {
+                const t = i / pas;
+                if (!dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteA) &&
+                    !dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteB)) {
+                    dernier = t;
+                    break;
+                }
+            }
+            if (dernier < premier) { premier = 0.5; dernier = 0.5; }
+            return { premier: premier, dernier: dernier };
+        }
+
+        function schemaSurSegment(repere, t) {
+            return {
+                x: repere.a.x + (repere.b.x - repere.a.x) * t,
+                y: repere.a.y + (repere.b.y - repere.a.y) * t
+            };
+        }
+
+        // Deux repères à moins de 44 px l'un de l'autre n'en font qu'un au
+        // doigt. Chacun prend donc, sur SON câble, la position la PLUS PROCHE de
+        // sa place naturelle qui respecte l'écart — jamais hors du trait, sinon
+        // le repère ne désignerait plus rien. À défaut de place, il s'écarte au
+        // maximum. Les câbles les plus courts passent en premier : ce sont eux
+        // qui n'ont pas de marge, les longs se placent ensuite.
+        function schemaRepartirReperes(reperes) {
+            const pas = 0.02;
+            const ECART = 46;
+            const distance = function (p, q) {
+                const dx = p.x - q.x, dy = p.y - q.y;
+                return Math.sqrt(dx * dx + dy * dy);
+            };
+            // Un repère posé SUR un autre appareil désignerait un câble caché
+            // derrière lui : cette position est interdite, pas seulement
+            // pénalisée.
+            const surUnAppareil = function (point, boitesInterdites) {
+                return boitesInterdites.some(function (boite) {
+                    return point.x > boite.x1 && point.x < boite.x2 &&
+                           point.y > boite.y1 && point.y < boite.y2;
+                });
+            };
+            const poses = [];
+            const ordre = reperes
+                .filter(function (repere) { return !!repere; })
+                .sort(function (x, y) {
+                    return (x.dernier - x.premier) - (y.dernier - y.premier);
+                });
+            ordre.forEach(function (repere) {
+                let plusProche = null;
+                let meilleurEcart = -1;
+                let meilleurT = repere.t;
+                for (let t = repere.premier; t <= repere.dernier + 1e-9; t += pas) {
+                    const point = schemaSurSegment(repere, t);
+                    if (surUnAppareil(point, repere.boitesInterdites || [])) continue;
+                    let ecart = Infinity;
+                    poses.forEach(function (pose) {
+                        ecart = Math.min(ecart, distance(point, pose));
+                    });
+                    if (ecart >= ECART &&
+                        (plusProche === null || Math.abs(t - repere.t) < Math.abs(plusProche - repere.t))) {
+                        plusProche = t;
+                    }
+                    if (ecart === Infinity) ecart = 1e6;
+                    if (ecart > meilleurEcart) {
+                        meilleurEcart = ecart;
+                        meilleurT = t;
+                    }
+                }
+                repere.t = (plusProche === null) ? meilleurT : plusProche;
+                poses.push(schemaSurSegment(repere, repere.t));
+            });
+        }
+
+        // Trace (ou retrace) les câbles entre les centres réels des appareils.
+        // La signature évite de redessiner pour rien : un observateur de
+        // redimensionnement rappelle cette fonction à chaque changement de
+        // largeur, et redessiner sans condition ferait boucler la page.
+        function schemaTracer(carte) {
+            const svg = carte.querySelector('[data-role="fils-schema"]');
+            const cadre = carte.querySelector('.schema-cadre');
+            if (!svg || !cadre) return;
+            const boite = cadre.getBoundingClientRect();
+            if (!boite.width || !boite.height) return;   // onglet masqué : on retracera à l'affichage
+
+            const etat = schemaEtat(carte);
+            const centres = {};
+            const boites = {};
+            // Le cadre a une bordure, et le SVG comme les boutons des câbles sont
+            // positionnés dans sa BOÎTE DE REMPLISSAGE : on retire donc l'épaisseur
+            // de bordure, sinon tous les repères sont décalés vers le bas-droite.
+            const origineX = cadre.clientLeft;
+            const origineY = cadre.clientTop;
+            let signature = Math.round(boite.width) + 'x' + Math.round(boite.height);
+            carte.querySelectorAll('.schema-noeud').forEach(function (tuile) {
+                const rect = tuile.getBoundingClientRect();
+                const cle = tuile.getAttribute('data-noeud');
+                centres[cle] = {
+                    x: Math.round(rect.left - boite.left - origineX + rect.width / 2),
+                    y: Math.round(rect.top - boite.top - origineY + rect.height / 2)
+                };
+                boites[cle] = {
+                    x1: rect.left - boite.left - origineX,
+                    y1: rect.top - boite.top - origineY,
+                    x2: rect.left - boite.left - origineX + rect.width,
+                    y2: rect.top - boite.top - origineY + rect.height
+                };
+                signature += '|' + cle + ':' + centres[cle].x + ',' + centres[cle].y;
+            });
+
+            const liaisons = schemaLiaisons(carte);
+            const degre = {};
+            liaisons.forEach(function (liaison) {
+                degre[liaison.de] = (degre[liaison.de] || 0) + 1;
+                degre[liaison.vers] = (degre[liaison.vers] || 0) + 1;
+            });
+
+            // Premier temps : calculer la position de chaque repère sur son câble.
+            const reperes = [];
+            liaisons.forEach(function (liaison) {
+                const a = centres[liaison.de];
+                const b = centres[liaison.vers];
+                if (!a || !b) { reperes.push(null); return; }
+                const bornes = schemaBornesVisibles(a, b, boites[liaison.de], boites[liaison.vers]);
+                // Près de l'appareil terminal : les repères y sont
+                // naturellement espacés, alors qu'au voisinage d'un commutateur
+                // tous les câbles convergent. Au milieu quand les deux bouts
+                // sont des carrefours (commutateur ↔ routeur, routeur ↔
+                // Internet) : là, le câble est isolé et sa longueur est la
+                // meilleure place.
+                let fraction = 0.5;
+                if ((degre[liaison.de] || 0) < (degre[liaison.vers] || 0)) fraction = 0.24;
+                else if ((degre[liaison.vers] || 0) < (degre[liaison.de] || 0)) fraction = 0.76;
+                const interdites = [];
+                Object.keys(boites).forEach(function (cle) {
+                    if (cle !== liaison.de && cle !== liaison.vers) interdites.push(boites[cle]);
+                });
+                reperes.push({
+                    a: a,
+                    b: b,
+                    premier: bornes.premier,
+                    dernier: bornes.dernier,
+                    boitesInterdites: interdites,
+                    t: bornes.premier + (bornes.dernier - bornes.premier) * fraction
+                });
+            });
+            schemaRepartirReperes(reperes);
+
+            // Second temps : le dessin, puis les boutons posés dessus.
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+            cadre.querySelectorAll('.schema-lien').forEach(function (bouton) {
+                bouton.parentNode.removeChild(bouton);
+            });
+
+            liaisons.forEach(function (liaison, index) {
+                const repere = reperes[index];
+                const a = centres[liaison.de];
+                const b = centres[liaison.vers];
+                if (!repere || !a || !b) return;
+                const point = schemaSurSegment(repere, repere.t);
+
+                const groupe = document.createElementNS(SCHEMA_SVG_NS, 'g');
+                groupe.setAttribute('class', 'schema-cable');
+                groupe.setAttribute('data-lien', String(index));
+                groupe.setAttribute('aria-hidden', 'true');
+                const ligne = document.createElementNS(SCHEMA_SVG_NS, 'line');
+                ligne.setAttribute('class', 'schema-trait');
+                ligne.setAttribute('x1', a.x);
+                ligne.setAttribute('y1', a.y);
+                ligne.setAttribute('x2', b.x);
+                ligne.setAttribute('y2', b.y);
+                groupe.appendChild(ligne);
+                svg.appendChild(groupe);
+
+                const bouton = document.createElement('button');
+                bouton.type = 'button';
+                bouton.className = 'schema-lien';
+                bouton.setAttribute('data-lien', String(index));
+                bouton.style.left = Math.round(point.x) + 'px';
+                bouton.style.top = Math.round(point.y) + 'px';
+                bouton.setAttribute('aria-label', 'Câble entre ' +
+                    schemaNomNoeud(carte, liaison.de) + ' et ' +
+                    schemaNomNoeud(carte, liaison.vers) + ' : examiner ce câble');
+
+                const survoler = function (actif) {
+                    groupe.classList.toggle('survol', actif);
+                };
+                bouton.addEventListener('mouseenter', function () { survoler(true); });
+                bouton.addEventListener('mouseleave', function () { survoler(false); });
+                bouton.addEventListener('focus', function () { survoler(true); });
+                bouton.addEventListener('blur', function () { survoler(false); });
+                bouton.addEventListener('click', function (evenement) {
+                    evenement.stopPropagation();
+                    schemaChoisirLien(bouton);
+                });
+
+                schemaMarquer(groupe, bouton, etat, index);
+                cadre.appendChild(bouton);
+            });
+        }
+
+        function schemaTracerTout() {
+            document.querySelectorAll('.atelier-carte[data-type="erreur-schema"]')
+                .forEach(schemaTracer);
+        }
+
+        function schemaChoisirLien(bouton) {
+            const carte = schemaCarteDe(bouton);
+            if (!carte) return;
+            const etat = schemaEtat(carte);
+            const index = parseInt(bouton.getAttribute('data-lien'), 10);
+            const liaison = schemaLiaisons(carte)[index];
+            if (!liaison) return;
+            const groupe = carte.querySelector(
+                '.schema-cable[data-lien="' + index + '"]');
+            const nomA = schemaNomNoeud(carte, liaison.de);
+            const nomB = schemaNomNoeud(carte, liaison.vers);
+
+            if (etat.verrouille) {
+                atelierRetour(carte, 'Tu as trouvé le câble mal branché : clique « ' +
+                    'Vérifier mon diagnostic » pour relire la règle du réseau.', 'info');
+                return;
+            }
+
+            etat.examinees[index] = true;
+
+            if (liaison.fausse) {
+                etat.trouvees[index] = true;
+                atelierRetour(carte, '✅ Tu as trouvé : ' + nomA + ' ↔ ' + nomB + '. ' +
+                    liaison.justification, 'succes');
+            } else {
+                atelierRetour(carte, '❌ Ce câble est bien branché : ' + nomA + ' ↔ ' +
+                    nomB + '. ' + liaison.justification +
+                    ' Cherche un câble qui ne respecte pas la règle du réseau.', 'echec');
+            }
+
+            schemaMarquer(groupe, bouton, etat, index);
+            schemaCompteur(carte);
+
+            const trouvees = Object.keys(etat.trouvees).length;
+            if (trouvees >= etat.fausses) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 C\'est le câble mal branché : ' + nomA +
+                    ' ↔ ' + nomB + '. ' + liaison.justification, 'succes');
+                atelierAfficherExplication(carte);
+            }
+        }
+
+        function schemaVerifier(bouton) {
+            const carte = schemaCarteDe(bouton);
+            if (!carte) return;
+            const etat = schemaEtat(carte);
+            const examinees = Object.keys(etat.examinees).length;
+            const trouvees = Object.keys(etat.trouvees).length;
+            if (trouvees >= etat.fausses) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 Câble mal branché trouvé : tu as bien lu le schéma.',
+                    'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'Pas encore : tu as examiné ' + examinees +
+                    ' câble(s) sur ' + schemaLiaisons(carte).length + ', et trouvé ' +
+                    trouvees + ' erreur(s) sur ' + etat.fausses + '. Clique un câble du ' +
+                    'schéma pour l\'examiner.', 'info');
+            }
+        }
+
+        function schemaReinitialiser() {
+            document.querySelectorAll('.atelier-carte[data-type="erreur-schema"]')
+                .forEach(function (carte) {
+                    delete carte.__schema;
+                    carte.__schemaSignature = null;
+                    carte.removeAttribute('data-termine');
+                    const explication = carte.querySelector('[data-role="explication"]');
+                    if (explication) explication.classList.add('cache');
+                    const retour = carte.querySelector('[data-role="retour-atelier"]');
+                    if (retour) {
+                        retour.textContent = '';
+                        retour.className = 'atelier-retour';
+                    }
+                    schemaEtat(carte);          // état neuf : compteur à zéro
+                    schemaCompteur(carte);
+                    schemaTracer(carte);
+                });
+        }
+
+        function schemaInitialiser() {
+            schemaTracerTout();
+            document.querySelectorAll('.atelier-carte[data-type="erreur-schema"]')
+                .forEach(function (carte) {
+                    const cadre = carte.querySelector('.schema-cadre');
+                    if (cadre && typeof ResizeObserver === 'function') {
+                        // L'onglet N2 est masqué au chargement : ses cotes valent
+                        // 0. L'observateur retrace dès qu'il devient visible, à
+                        // la bonne largeur — et à chaque rotation d'écran.
+                        new ResizeObserver(function () { schemaTracer(carte); }).observe(cadre);
+                    }
+                });
+            window.addEventListener('resize', schemaTracerTout);
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -8700,6 +9437,8 @@
                 // sinon l'atelier restauré croirait avoir déjà ses réponses.
                 delete entree.bloc.__atelier;
                 delete entree.bloc.__reseau;
+                delete entree.bloc.__schema;
+                entree.bloc.__schemaSignature = null;
                 entree.bloc.innerHTML = entree.html;
             });
             if (window.__AROUTE) {
@@ -8721,11 +9460,19 @@
             if (document.getElementById('puzzle-bonus')) {
                 puzzleReinitialiser();
             }
+            // Le schéma à diagnostiquer : les câbles restaurés par innerHTML
+            // ont perdu leurs écouteurs, et l'état de jeu est oublié juste
+            // au-dessus. On retrace donc les câbles, sans quoi l'atelier
+            // reviendrait à l'écran vide de tout trait.
+            if (typeof schemaReinitialiser === 'function') {
+                schemaReinitialiser();
+            }
             mettreAJourSuiteN2();
         }
 
         cablageInitialiser();
         puzzleInitialiser();
+        schemaInitialiser();
         memoriserAteliersInitiaux();
         mettreAJourSuiteN2();
 
@@ -9441,5 +10188,6 @@
     })();
     // ==== PANNEAU-DEV:FIN ====
     </script>
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
 </body>
 </html>
