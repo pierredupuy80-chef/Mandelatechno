@@ -4860,13 +4860,13 @@ background: #16202e;
                                 </div>
                                 <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
                             </div>
-                            <div class="atelier-question" data-defi="4" data-bonne="imu" data-explication="La centrale inertielle intègre les rotations du drone : elle garde le cap sans boussole ni satellite. Le magnétomètre est justement trompé par le métal, le GNSS dépend d'un signal radio, et le flux optique mesure un déplacement par rapport au sol, pas un cap.">
-                                <p class="atelier-enonce"><strong>Défi 4 :</strong> Le drone survole un pont métallique : la boussole indique une direction fausse. Quel capteur permet de garder le cap sans dépendre d'un signal radio ni du champ magnétique ?</p>
+                            <div class="atelier-question" data-defi="4" data-bonne="barometre" data-explication="Le baromètre mesure la pression de l'air : plus le drone monte, plus elle baisse, ce qui donne l'altitude à chaque instant. Le GNSS est justement trop imprécis en hauteur, le télémètre à ultrasons ne porte que quelques mètres vers le sol, et la centrale inertielle mesure des rotations et des accélérations, pas une altitude absolue.">
+                                <p class="atelier-enonce"><strong>Défi 4 :</strong> Un drone de cartographie doit garder la même hauteur au-dessus d'un terrain qui monte et descend. Le GNSS n'est pas assez précis en altitude et il n'y a aucun obstacle à viser sous le drone : quel capteur embarqué permet de connaître l'altitude ?</p>
                                 <div class="atelier-options" role="radiogroup" aria-label="Capteurs possibles pour le défi 4">
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="imu" onclick="atelierChoisirOption(this)">📐 Centrale inertielle (gyroscope + accéléromètre)</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="magnetometre" onclick="atelierChoisirOption(this)">🧲 Magnétomètre (boussole)</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="barometre" onclick="atelierChoisirOption(this)">📉 Baromètre</button>
                                 <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="gnss" onclick="atelierChoisirOption(this)">🛰️ Récepteur GNSS (GPS)</button>
-                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="flux_optique" onclick="atelierChoisirOption(this)">🔍 Capteur de flux optique</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="ultrasons" onclick="atelierChoisirOption(this)">🔊 Télémètre à ultrasons</button>
+                                <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="imu" onclick="atelierChoisirOption(this)">📐 Centrale inertielle (gyroscope + accéléromètre)</button>
                                 </div>
                                 <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
                             </div>
