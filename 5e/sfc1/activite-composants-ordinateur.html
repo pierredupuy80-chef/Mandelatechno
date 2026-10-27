@@ -4596,11 +4596,11 @@
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>Aucune réponse unique ici : deux configurations peuvent se défendre. Ce qui compte est la démarche — décrire le besoin, fixer vos priorités, comparer avec les chiffres des fiches, puis justifier votre choix en assumant ce à quoi vous renoncez.</p>
+                    <p>Aucune réponse unique ici : plusieurs configurations peuvent se défendre. Ce qui compte est la démarche — décrire le besoin, fixer vos priorités, comparer avec les chiffres des fiches, puis justifier votre choix en assumant ce à quoi vous renoncez.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
-                        <p><strong>Situation :</strong> Le collège veut acheter deux postes pour le club de programmation, avec un budget total de 1 200 €. Les élèves y feront de la programmation par blocs et de la retouche d'images, jamais de jeux vidéo. Deux configurations tiennent dans le budget, et une troisième le dépasse. À vous de dire laquelle vous retenez, et pourquoi.</p>
+                        <p><strong>Situation :</strong> Le collège veut acheter deux postes pour le club de programmation, avec un budget total de 1 200 €. Les élèves y feront de la programmation par blocs et de la retouche d'images, jamais de jeux vidéo. Cinq configurations sont proposées : quatre tiennent dans le budget, la cinquième le dépasse. Elles ne sont pas classées de la meilleure à la moins bonne : chacune privilégie un composant au détriment d'un autre — beaucoup de mémoire vive mais peu de disque, ou un processeur puissant avec moins de mémoire. À vous de dire laquelle vous retenez, et pourquoi.</p>
                     </div>
 
                     <h3>Étapes de conception</h3>
@@ -4689,7 +4689,7 @@
                                                <option value="2">important</option>
                                                <option value="3">prioritaire</option>
                                     </select>
-                                <p class="curseur-aide" id="aide-processeur">La programmation par blocs ne demande pas un processeur très puissant ; la retouche d'images, un peu plus.</p>
+                                <p class="curseur-aide" id="aide-processeur">La programmation par blocs ne demande pas un processeur très puissant ; la retouche d'images, un peu plus. Un processeur se juge à sa fréquence (en GHz) et à son nombre de cœurs.</p>
                                 </div>
                             </div>
                             <p class="contraintes-actions"><button type="button" class="bouton-action"
@@ -4706,7 +4706,7 @@
                         </div>
                         <div id="etape-comparateur" class="etape-conception cache" data-comparateur-apres-gel="1">
                             <h4>Étape 3 : Comparer les configurations</h4>
-                            <p>Les trois configurations sont fictives : elles servent à apprendre à comparer. Choisissez un tri dans le menu, lisez les valeurs ligne par ligne, puis cliquez sur la fiche de la configuration que vous retenez.</p>
+                            <p>Les cinq configurations sont fictives : elles servent à apprendre à comparer. Chacune privilégie un composant et en néglige un autre : beaucoup de mémoire vive avec peu de stockage, ou un processeur puissant avec peu de mémoire. Un processeur se lit à sa fréquence (en GHz) et à son nombre de cœurs. Choisissez un tri dans le menu, lisez les valeurs ligne par ligne, puis cliquez sur la fiche de la configuration que vous retenez.</p>
                             <div class="comparateur-ost" data-conception-modele
                                  data-verdicts="0"
                                  data-conception-consigne="Choisissez une configuration : cliquez sur sa fiche, puis justifiez votre choix à l'étape suivante.">
@@ -4715,22 +4715,24 @@
                                     <select id="tri-comparateur">
                                         <option value="prix" data-sens="bas">Prix du poste : du plus bas au plus haut</option>
                                         <option value="memoire" data-sens="haut">Mémoire vive : du plus haut au plus bas</option>
-                                        <option value="stockage" data-sens="haut">Stockage : du plus haut au plus bas</option>
-                                        <option value="processeur" data-sens="haut">Indice de puissance du processeur : du plus haut au plus bas</option>
+                                        <option value="stockage" data-sens="haut">Stockage (SSD) : du plus haut au plus bas</option>
+                                        <option value="frequence" data-sens="haut">Fréquence du processeur : du plus haut au plus bas</option>
+                                        <option value="coeurs" data-sens="haut">Nombre de cœurs : du plus haut au plus bas</option>
                                         <option value="">Ordre du magasin</option>
                                     </select>
                                 </div>
                                 <div class="comparateur-modeles" id="comparateur-modeles"
                                      role="radiogroup"
-                                     aria-label="Trois configurations de poste à comparer">
+                                     aria-label="Cinq configurations de poste à comparer">
                                     <article class="modele-ost" id="modele-ost-1"
                                              data-ost-bloc="n4-modele-1"
                                              data-rang="1"
                                              data-nom="Configuration A — « L'entrée de gamme »"
-                                         data-prix="480"
+                                         data-prix="420"
                                          data-memoire="4"
                                          data-stockage="256"
-                                         data-processeur="35"
+                                         data-frequence="2.4"
+                                         data-coeurs="2"
                                              tabindex="0" role="radio" aria-checked="false"
                                              aria-label="Configuration A — « L'entrée de gamme » : cliquer pour retenir ce modèle"
                                              onclick="n4ChoisirModele(this)">
@@ -4738,13 +4740,14 @@
                                             <span class="modele-icone" aria-hidden="true">🖥️</span>
                                             <h4>Configuration A — « L'entrée de gamme »</h4>
                                         </div>
-                                    <p class="modele-description">La moins chère, mais juste pour deux logiciels ouverts.</p>
+                                    <p class="modele-description">La moins chère, mais juste pour deux logiciels ouverts à la fois.</p>
                                         <table class="modele-valeurs">
                                             <tbody>
-                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>480 €</strong></td></tr>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>420 €</strong></td></tr>
                                             <tr data-critere="memoire"><th scope="row" class="modele-critere">Mémoire vive</th><td><strong>4 Go</strong></td></tr>
-                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage</th><td><strong>256 Go</strong></td></tr>
-                                            <tr data-critere="processeur"><th scope="row" class="modele-critere">Indice de puissance du processeur</th><td><strong>35 /100</strong></td></tr>
+                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage (SSD)</th><td><strong>256 Go</strong></td></tr>
+                                            <tr data-critere="frequence"><th scope="row" class="modele-critere">Fréquence du processeur</th><td><strong>2,4 GHz</strong></td></tr>
+                                            <tr data-critere="coeurs"><th scope="row" class="modele-critere">Nombre de cœurs</th><td><strong>2</strong></td></tr>
                                             </tbody>
                                         </table>
                                     </article>
@@ -4752,10 +4755,11 @@
                                              data-ost-bloc="n4-modele-2"
                                              data-rang="2"
                                              data-nom="Configuration B — « L'équilibrée »"
-                                         data-prix="580"
+                                         data-prix="560"
                                          data-memoire="8"
                                          data-stockage="512"
-                                         data-processeur="55"
+                                         data-frequence="2.9"
+                                         data-coeurs="4"
                                              tabindex="0" role="radio" aria-checked="false"
                                              aria-label="Configuration B — « L'équilibrée » : cliquer pour retenir ce modèle"
                                              onclick="n4ChoisirModele(this)">
@@ -4763,38 +4767,97 @@
                                             <span class="modele-icone" aria-hidden="true">🖥️</span>
                                             <h4>Configuration B — « L'équilibrée »</h4>
                                         </div>
-                                    <p class="modele-description">Le bon compromis mémoire et stockage pour la programmation.</p>
+                                    <p class="modele-description">Le compromis habituel : de quoi programmer et retoucher des images sans attendre.</p>
                                         <table class="modele-valeurs">
                                             <tbody>
-                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>580 €</strong></td></tr>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>560 €</strong></td></tr>
                                             <tr data-critere="memoire"><th scope="row" class="modele-critere">Mémoire vive</th><td><strong>8 Go</strong></td></tr>
-                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage</th><td><strong>512 Go</strong></td></tr>
-                                            <tr data-critere="processeur"><th scope="row" class="modele-critere">Indice de puissance du processeur</th><td><strong>55 /100</strong></td></tr>
+                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage (SSD)</th><td><strong>512 Go</strong></td></tr>
+                                            <tr data-critere="frequence"><th scope="row" class="modele-critere">Fréquence du processeur</th><td><strong>2,9 GHz</strong></td></tr>
+                                            <tr data-critere="coeurs"><th scope="row" class="modele-critere">Nombre de cœurs</th><td><strong>4</strong></td></tr>
                                             </tbody>
                                         </table>
                                     </article>
                                     <article class="modele-ost" id="modele-ost-3"
                                              data-ost-bloc="n4-modele-3"
                                              data-rang="3"
-                                             data-nom="Configuration C — « La surdimensionnée »"
-                                         data-prix="720"
+                                             data-nom="Configuration C — « La mémoire d'abord »"
+                                         data-prix="590"
                                          data-memoire="16"
-                                         data-stockage="1024"
-                                         data-processeur="85"
+                                         data-stockage="256"
+                                         data-frequence="2.6"
+                                         data-coeurs="2"
                                              tabindex="0" role="radio" aria-checked="false"
-                                             aria-label="Configuration C — « La surdimensionnée » : cliquer pour retenir ce modèle"
+                                             aria-label="Configuration C — « La mémoire d'abord » : cliquer pour retenir ce modèle"
                                              onclick="n4ChoisirModele(this)">
                                         <div class="modele-entete">
                                             <span class="modele-icone" aria-hidden="true">🖥️</span>
-                                            <h4>Configuration C — « La surdimensionnée »</h4>
+                                            <h4>Configuration C — « La mémoire d'abord »</h4>
                                         </div>
-                                    <p class="modele-description">Très rapide, mais deux exemplaires dépassent le budget.</p>
+                                    <p class="modele-description">Beaucoup de mémoire vive, mais peu de stockage et un processeur modeste.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>590 €</strong></td></tr>
+                                            <tr data-critere="memoire"><th scope="row" class="modele-critere">Mémoire vive</th><td><strong>16 Go</strong></td></tr>
+                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage (SSD)</th><td><strong>256 Go</strong></td></tr>
+                                            <tr data-critere="frequence"><th scope="row" class="modele-critere">Fréquence du processeur</th><td><strong>2,6 GHz</strong></td></tr>
+                                            <tr data-critere="coeurs"><th scope="row" class="modele-critere">Nombre de cœurs</th><td><strong>2</strong></td></tr>
+                                            </tbody>
+                                        </table>
+                                    <p><span class="modele-alerte">⚠ Peu de stockage : les images de retouche remplissent vite le disque</span></p>
+                                    </article>
+                                    <article class="modele-ost" id="modele-ost-4"
+                                             data-ost-bloc="n4-modele-4"
+                                             data-rang="4"
+                                             data-nom="Configuration D — « Le processeur d'abord »"
+                                         data-prix="570"
+                                         data-memoire="8"
+                                         data-stockage="256"
+                                         data-frequence="3.8"
+                                         data-coeurs="8"
+                                             tabindex="0" role="radio" aria-checked="false"
+                                             aria-label="Configuration D — « Le processeur d'abord » : cliquer pour retenir ce modèle"
+                                             onclick="n4ChoisirModele(this)">
+                                        <div class="modele-entete">
+                                            <span class="modele-icone" aria-hidden="true">🖥️</span>
+                                            <h4>Configuration D — « Le processeur d'abord »</h4>
+                                        </div>
+                                    <p class="modele-description">Un processeur rapide à huit cœurs, mais peu de mémoire vive et peu de disque.</p>
+                                        <table class="modele-valeurs">
+                                            <tbody>
+                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>570 €</strong></td></tr>
+                                            <tr data-critere="memoire"><th scope="row" class="modele-critere">Mémoire vive</th><td><strong>8 Go</strong></td></tr>
+                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage (SSD)</th><td><strong>256 Go</strong></td></tr>
+                                            <tr data-critere="frequence"><th scope="row" class="modele-critere">Fréquence du processeur</th><td><strong>3,8 GHz</strong></td></tr>
+                                            <tr data-critere="coeurs"><th scope="row" class="modele-critere">Nombre de cœurs</th><td><strong>8</strong></td></tr>
+                                            </tbody>
+                                        </table>
+                                    <p><span class="modele-alerte">⚠ Peu de mémoire vive : deux gros logiciels ouverts en même temps la saturent</span></p>
+                                    </article>
+                                    <article class="modele-ost" id="modele-ost-5"
+                                             data-ost-bloc="n4-modele-5"
+                                             data-rang="5"
+                                             data-nom="Configuration E — « La surdimensionnée »"
+                                         data-prix="720"
+                                         data-memoire="16"
+                                         data-stockage="1024"
+                                         data-frequence="3.8"
+                                         data-coeurs="8"
+                                             tabindex="0" role="radio" aria-checked="false"
+                                             aria-label="Configuration E — « La surdimensionnée » : cliquer pour retenir ce modèle"
+                                             onclick="n4ChoisirModele(this)">
+                                        <div class="modele-entete">
+                                            <span class="modele-icone" aria-hidden="true">🖥️</span>
+                                            <h4>Configuration E — « La surdimensionnée »</h4>
+                                        </div>
+                                    <p class="modele-description">Rapide et spacieuse, mais deux exemplaires dépassent le budget.</p>
                                         <table class="modele-valeurs">
                                             <tbody>
                                             <tr data-critere="prix"><th scope="row" class="modele-critere">Prix du poste</th><td><strong>720 €</strong></td></tr>
                                             <tr data-critere="memoire"><th scope="row" class="modele-critere">Mémoire vive</th><td><strong>16 Go</strong></td></tr>
-                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage</th><td><strong>1 024 Go</strong></td></tr>
-                                            <tr data-critere="processeur"><th scope="row" class="modele-critere">Indice de puissance du processeur</th><td><strong>85 /100</strong></td></tr>
+                                            <tr data-critere="stockage"><th scope="row" class="modele-critere">Stockage (SSD)</th><td><strong>1 024 Go</strong></td></tr>
+                                            <tr data-critere="frequence"><th scope="row" class="modele-critere">Fréquence du processeur</th><td><strong>3,8 GHz</strong></td></tr>
+                                            <tr data-critere="coeurs"><th scope="row" class="modele-critere">Nombre de cœurs</th><td><strong>8</strong></td></tr>
                                             </tbody>
                                         </table>
                                     <p><span class="modele-alerte">⚠ Deux postes à ce prix dépassent les 1 200 € du collège</span></p>
