@@ -39,6 +39,10 @@ index.html                          page d'accueil : les 21 pages, sommaire par 
 4e/ost4/activite-chauffage-choix-tapo.html        Séquence 4 — choisir un chauffage (choix de l'OST)
 4e/ost4/activite-chauffage-domotique.html         Séquence 4 — chauffage domotique
 
+5e/sfc1/diaporama-decouvrir-l-ordinateur.html      Progression « Découvrir l'ordinateur » — support de présentation
+5e/sfc1/activite-composants-ordinateur.html        Progression — séance 1 : les composants internes
+5e/sfc1/activite-demarrage-systeme-exploitation.html  Progression — séance 2 : démarrage et système d'exploitation
+5e/ost2/activite-peripheriques.html                Progression — séance 3 : les périphériques
 5e/sfc1/activite-reseau.html                      SFC 1 — exploiter le réseau informatique
 5e/ost2/activite-outils-numeriques.html           Séquence 2 — outils numériques
 5e/ost3/activite-evolution-ost.html               Séquence 3 — évolution des OST
