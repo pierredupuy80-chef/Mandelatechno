@@ -4148,7 +4148,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <span>🔋</span>
                             <strong>Batterie</strong>
                             <div class="indice-decouvert">
-                                Indice : La batterie est chargée à 100 % et la tension mesurée est de 41,2 V, ce qui est normal pour un système 36 V chargé. Le contrôleur ne signale aucun défaut d'énergie. Elle n'est pas en cause.
+                                Indice : La batterie est chargée à 100 %. On a mesuré sa tension : environ 41 volts, ce qui est normal pour une batterie de 36 volts complètement chargée (le volt, noté V, est l'unité de la tension, comme le mètre est l'unité d'une longueur). Le contrôleur ne signale aucun défaut d'énergie : elle est donc bien chargée.
                             </div>
                         </div>
 
@@ -4166,7 +4166,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <span>🦶</span>
                             <strong>Capteur de pédalage</strong>
                             <div class="indice-decouvert">
-                                Indice : Sur ce modèle, un capteur à effet Hall fixé sur le cadre fait face à un aimant collé sur la manivelle. Après un choc sur le trottoir, le support du capteur a tourné : l'aimant passe désormais à 18 mm au lieu des 5 mm attendus. Le contrôleur ne reçoit plus aucune impulsion.
+                                Indice : Ce capteur est un petit détecteur magnétique (on l'appelle capteur à effet Hall) : un aimant est collé sur la manivelle, et le capteur, fixé sur le cadre, repère chaque fois que l'aimant passe devant lui. Chaque passage, c'est un coup de pédale compté. Après un choc sur le trottoir, le support du capteur a tourné : l'aimant passe maintenant à 18 mm au lieu des 5 mm attendus, donc plus de trois fois plus loin. Trop loin, il ne repère plus rien : le contrôleur ne reçoit plus aucun coup de pédale.
                             </div>
                         </div>
 
@@ -4175,7 +4175,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <span>⚙️</span>
                             <strong>Moteur et roue</strong>
                             <div class="indice-decouvert">
-                                Indice : Roue arrière levée et moteur alimenté directement en 36 V : il tourne à pleine vitesse, sans bruit anormal, et la roue libre ne bloque pas. Le moteur n'est pas en cause.
+                                Indice : Roue arrière levée, on a branché le moteur directement sur la batterie (36 volts) : il tourne à pleine vitesse, sans bruit anormal, et la roue libre ne bloque pas. Le moteur n'est pas en cause.
                             </div>
                         </div>
                     </div>
@@ -4186,7 +4186,7 @@ window.__EFFETS_INTERACTIONS__={};
 
                         <div class="cadre-reponse">
                             <h4><span class="numero-cadre" aria-hidden="true">1</span> Mon diagnostic</h4>
-                            <p class="consigne-cadre" id="consigne-diagnostic">Après avoir exploré les quatre éléments, formulez votre diagnostic : quel élément est en cause, et par quel mécanisme l'assistance disparaît-elle complètement ?</p>
+                            <p class="consigne-cadre" id="consigne-diagnostic">Après avoir exploré les quatre éléments, formulez votre diagnostic : quel élément est en cause, et pourquoi l'assistance ne se déclenche-t-elle plus du tout ?</p>
                             <textarea 
                                 id="diagnostic-eleve" 
                                 placeholder="L'élément en cause est … parce que … ; le contrôleur, lui, … donc le moteur …"
@@ -4201,7 +4201,7 @@ window.__EFFETS_INTERACTIONS__={};
                             <p class="texte-secondaire">Un plan de réparation commence par la cause, se poursuit par le réglage, et se termine par un essai qui prouve que la réparation tient.</p>
                             <div class="qcm-correctif" id="qcm-correctif" data-maximum="3" role="group" aria-label="Plan d'action : 3 actions à retenir parmi 9">
                             <div class="action-corrective-ligne" data-ost-bloc="n3-action-1">
-                                <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a01" data-correcte="1" data-explication="Le choc a fait tourner le support : l'aimant passe à 18 mm, hors de portée du capteur à effet Hall. Le réaligner rétablit l'impulsion, donc le signal de pédalage.">
+                                <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a01" data-correcte="1" data-explication="Le choc a fait tourner le support : l'aimant passe à 18 mm, trop loin pour que le capteur le repère. Le réaligner rétablit les coups de pédale, donc le signal de pédalage.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Réaligner et refixer le support du capteur à 5 mm de l'aimant
                                         <span class="statut-action" aria-live="polite"></span>
@@ -4209,19 +4209,19 @@ window.__EFFETS_INTERACTIONS__={};
                                 </button>
                                 <details class="explication-action" hidden>
                                     <summary>Explication</summary>
-                                    <p>Le choc a fait tourner le support : l'aimant passe à 18 mm, hors de portée du capteur à effet Hall. Le réaligner rétablit l'impulsion, donc le signal de pédalage.</p>
+                                    <p>Le choc a fait tourner le support : l'aimant passe à 18 mm, trop loin pour que le capteur le repère. Le réaligner rétablit les coups de pédale, donc le signal de pédalage.</p>
                                 </details>
                             </div>
                             <div class="action-corrective-ligne" data-ost-bloc="n3-action-2">
-                                <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a02" data-correcte="1" data-explication="Un réglage ne vaut que s'il est contrôlé : l'écran de diagnostic, ou un test du contrôleur, dit si le signal est revenu avant de rendre le vélo au service.">
+                                <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a02" data-correcte="1" data-explication="Un réglage ne vaut que s'il est contrôlé : l'écran de diagnostic, ou un test du contrôleur, dit si le capteur repère de nouveau l'aimant avant de rendre le vélo au service.">
                                     <span class="case-action" aria-hidden="true"></span>
-                                    <span class="texte-action">Régler la distance capteur-aimant, puis vérifier que l'impulsion est de nouveau détectée
+                                    <span class="texte-action">Régler la distance capteur-aimant, puis vérifier que les coups de pédale sont de nouveau détectés
                                         <span class="statut-action" aria-live="polite"></span>
                                     </span>
                                 </button>
                                 <details class="explication-action" hidden>
                                     <summary>Explication</summary>
-                                    <p>Un réglage ne vaut que s'il est contrôlé : l'écran de diagnostic, ou un test du contrôleur, dit si le signal est revenu avant de rendre le vélo au service.</p>
+                                    <p>Un réglage ne vaut que s'il est contrôlé : l'écran de diagnostic, ou un test du contrôleur, dit si le capteur repère de nouveau l'aimant avant de rendre le vélo au service.</p>
                                 </details>
                             </div>
                             <div class="action-corrective-ligne" data-ost-bloc="n3-action-3">
@@ -4237,7 +4237,7 @@ window.__EFFETS_INTERACTIONS__={};
                                 </details>
                             </div>
                             <div class="action-corrective-ligne" data-ost-bloc="n3-action-4">
-                                <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a04" data-correcte="0" data-explication="La batterie est chargée (41,2 V) et ne présente aucun défaut : la changer ne rétablit aucun signal de pédalage. C'est une dépense inutile.">
+                                <button type="button" class="action-corrective" role="checkbox" aria-checked="false" data-action="a04" data-correcte="0" data-explication="La batterie est chargée (environ 41 volts) et ne présente aucun défaut : la changer ne rétablit aucun signal de pédalage. C'est une dépense inutile.">
                                     <span class="case-action" aria-hidden="true"></span>
                                     <span class="texte-action">Remplacer la batterie par une batterie neuve
                                         <span class="statut-action" aria-live="polite"></span>
@@ -4245,7 +4245,7 @@ window.__EFFETS_INTERACTIONS__={};
                                 </button>
                                 <details class="explication-action" hidden>
                                     <summary>Explication</summary>
-                                    <p>La batterie est chargée (41,2 V) et ne présente aucun défaut : la changer ne rétablit aucun signal de pédalage. C'est une dépense inutile.</p>
+                                    <p>La batterie est chargée (environ 41 volts) et ne présente aucun défaut : la changer ne rétablit aucun signal de pédalage. C'est une dépense inutile.</p>
                                 </details>
                             </div>
                             <div class="action-corrective-ligne" data-ost-bloc="n3-action-5">
@@ -4320,10 +4320,10 @@ window.__EFFETS_INTERACTIONS__={};
 
                         <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
                             <div class="info-block" id="bloc-diagnostic-attendu">
-                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">C'est le capteur de pédalage qui est en cause : après le choc, son support a tourné et l'aimant de la manivelle passe à 18 mm au lieu des 5 mm attendus. L'impulsion n'est plus détectée, donc le contrôleur ne reçoit aucun signal de pédalage et n'envoie aucun courant au moteur. La batterie (chargée, 41,2 V), l'écran, le contrôleur et le moteur — qui tourne quand on l'alimente directement — fonctionnent : ils donnent des indices qui éliminent les autres pistes.</span></p>
+                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">C'est le capteur de pédalage qui est en cause : après le choc, son support a tourné et l'aimant de la manivelle passe à 18 mm au lieu des 5 mm attendus. Trop loin pour être repéré : le capteur ne compte plus les coups de pédale, donc le contrôleur ne reçoit aucun signal de pédalage et n'envoie aucun courant au moteur. La batterie (chargée, environ 41 volts), l'écran, le contrôleur et le moteur — qui tourne quand on le branche directement sur la batterie — fonctionnent : ils donnent des indices qui éliminent les autres pistes.</span></p>
                             </div>
                             <div class="info-block" id="bloc-solution-attendue">
-                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Réaligner et refixer le support du capteur à la bonne distance de l'aimant (5 mm), contrôler que l'impulsion est de nouveau détectée (écran de diagnostic ou test du contrôleur), puis essayer le vélo dans la côte qui posait problème. On ne change ni la batterie ni le moteur : ils fonctionnent, et les remplacer serait une dépense inutile qui ne rétablirait pas le signal.</span></p>
+                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Réaligner et refixer le support du capteur pour ramener l'aimant à 5 mm, contrôler que le capteur repère de nouveau les coups de pédale (écran de diagnostic ou test du contrôleur), puis essayer le vélo dans la côte qui posait problème. On ne change ni la batterie ni le moteur : ils fonctionnent, et les remplacer serait une dépense inutile qui ne rétablirait pas le signal.</span></p>
                             </div>
                             <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
                                 Continuer vers N4 →
