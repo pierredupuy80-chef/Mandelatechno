@@ -3828,7 +3828,9 @@
 .bloc-animation{background:#f7f9fc;border:1px solid #dce3ed;border-radius:12px;padding:1rem 1.1rem;margin-top:1.5rem}
 .bloc-animation h3{margin-top:0}
 .chaine-fonctionnement{display:flex;flex-wrap:wrap;align-items:stretch;gap:.35rem;margin:1rem 0}
-.cf-etape{flex:1 1 120px;min-width:108px;background:#fff;border:2px solid #dce3ed;border-radius:10px;padding:.7rem .5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.25rem;transition:transform .3s,box-shadow .3s,border-color .3s}
+.cf-etape{flex:1 1 120px;min-width:108px;background:#fff;border:2px solid #dce3ed;border-radius:10px;padding:.7rem .5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.25rem;transition:transform .3s,box-shadow .3s,border-color .3s;font:inherit;color:inherit;cursor:pointer;min-height:44px}
+.cf-etape:hover{border-color:#3a6ea5}
+.cf-etape:focus-visible{outline:3px solid currentColor;outline-offset:2px}
 .cf-etape .cf-icone{font-size:1.7rem;line-height:1}
 .cf-etape strong{font-size:.92rem}
 .cf-etape em{font-size:.74rem;color:#3a6ea5;font-style:normal;background:#eaf1f8;padding:.1rem .45rem;border-radius:6px}
@@ -3872,11 +3874,10 @@
 
                                         <div class="bloc-animation marge-haut">
                         <h3>🔁 La chaîne de fonctionnement du vélo à assistance électrique</h3>
-                        <p class="texte-secondaire">Cliquez sur « Démarrer l'animation » pour suivre le parcours de l'énergie, de la batterie jusqu'à la roue.</p>
-                        <div class="chaine-fonctionnement" id="chaine-fonctionnement">
-                            <div class="cf-etape" data-etape="1" data-desc="Stocke l'énergie électrique et alimente tout le système."><span class="cf-icone">🔋</span><strong>Batterie</strong><em>Alimenter</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="2" data-desc="Répartit et règle l'énergie envoyée au moteur selon le pédalage et la vitesse."><span class="cf-icone">⚡</span><strong>Contrôleur</strong><em>Distribuer</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="3" data-desc="Convertit l'énergie électrique en énergie mécanique (rotation de l'axe)."><span class="cf-icone">⚙️</span><strong>Moteur électrique</strong><em>Convertir</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="4" data-desc="Transmet le mouvement du moteur à la roue par la chaîne et les pignons."><span class="cf-icone">🔗</span><strong>Transmission</strong><em>Transmettre</em></div><span class="cf-fleche" aria-hidden="true">→</span><div class="cf-etape" data-etape="5" data-desc="La roue propulse le vélo : l'énergie mécanique devient le déplacement de l'usager."><span class="cf-icone">🛞</span><strong>Roue</strong><em>Agir</em></div>
+                        <p class="texte-secondaire">Cliquez sur chaque étape pour découvrir sa fonction, de la batterie jusqu'à la roue.</p>
+                        <div class="chaine-fonctionnement" id="chaine-fonctionnement" role="group" aria-label="La chaîne de fonctionnement du vélo à assistance électrique">
+                            <button type="button" class="cf-etape" data-etape="1" data-desc="Stocke l'énergie électrique et alimente tout le système." aria-expanded="false" aria-label="Batterie : cliquer pour afficher sa description" onclick="revelerEtapeChaine(this)"><span class="cf-icone">🔋</span><strong>Batterie</strong><em>Alimenter</em></button><span class="cf-fleche" aria-hidden="true">→</span><button type="button" class="cf-etape" data-etape="2" data-desc="Répartit et règle l'énergie envoyée au moteur selon le pédalage et la vitesse." aria-expanded="false" aria-label="Contrôleur : cliquer pour afficher sa description" onclick="revelerEtapeChaine(this)"><span class="cf-icone">⚡</span><strong>Contrôleur</strong><em>Distribuer</em></button><span class="cf-fleche" aria-hidden="true">→</span><button type="button" class="cf-etape" data-etape="3" data-desc="Convertit l'énergie électrique en énergie mécanique (rotation de l'axe)." aria-expanded="false" aria-label="Moteur électrique : cliquer pour afficher sa description" onclick="revelerEtapeChaine(this)"><span class="cf-icone">⚙️</span><strong>Moteur électrique</strong><em>Convertir</em></button><span class="cf-fleche" aria-hidden="true">→</span><button type="button" class="cf-etape" data-etape="4" data-desc="Transmet le mouvement du moteur à la roue par la chaîne et les pignons." aria-expanded="false" aria-label="Transmission : cliquer pour afficher sa description" onclick="revelerEtapeChaine(this)"><span class="cf-icone">🔗</span><strong>Transmission</strong><em>Transmettre</em></button><span class="cf-fleche" aria-hidden="true">→</span><button type="button" class="cf-etape" data-etape="5" data-desc="La roue propulse le vélo : l'énergie mécanique devient le déplacement de l'usager." aria-expanded="false" aria-label="Roue : cliquer pour afficher sa description" onclick="revelerEtapeChaine(this)"><span class="cf-icone">🛞</span><strong>Roue</strong><em>Agir</em></button>
                         </div>
-                        <button type="button" class="bouton-action" onclick="demarrerChaineFonctionnement(this)">▶ Démarrer l'animation</button>
                         <p class="legende-animation" id="legende-cf" role="status" aria-live="polite"></p>
                     </div>
 
@@ -3902,19 +3903,16 @@
                     </div>
 
                     <script>
-function demarrerChaineFonctionnement(btn){
-  var c=document.getElementById("chaine-fonctionnement");if(!c)return;
-  var etapes=c.querySelectorAll(".cf-etape");var legende=document.getElementById("legende-cf");
-  if(!etapes.length)return;
-  for(var i=0;i<etapes.length;i++)etapes[i].classList.remove("actif");
-  if(btn)btn.disabled=true;var k=0;
-  var t=setInterval(function(){
-    if(k>0)etapes[k-1].classList.remove("actif");
-    if(k>=etapes.length){clearInterval(t);if(legende)legende.textContent="\u2705 L'énergie électrique est convertie en mouvement : le vélo avance.";if(btn)btn.disabled=false;return;}
-    etapes[k].classList.add("actif");
-    if(legende){var s=etapes[k].querySelector("strong");var nom=s?s.textContent:"";var desc=etapes[k].getAttribute("data-desc")||"";legende.textContent=(k+1)+"/"+etapes.length+" \u2014 "+nom+" : "+desc;}
-    k++;
-  },1100);
+function revelerEtapeChaine(etape){
+  if(!etape)return;
+  var c=document.getElementById("chaine-fonctionnement");
+  var etapes=c?c.querySelectorAll(".cf-etape"):[];
+  var legende=document.getElementById("legende-cf");
+  var deja=etape.classList.contains("actif");
+  for(var i=0;i<etapes.length;i++){etapes[i].classList.remove("actif");etapes[i].setAttribute("aria-expanded","false");}
+  if(deja){if(legende)legende.textContent="";return;}
+  etape.classList.add("actif");etape.setAttribute("aria-expanded","true");
+  if(legende){var s=etape.querySelector("strong");var nom=s?s.textContent:"";var desc=etape.getAttribute("data-desc")||"";legende.textContent=(etape.getAttribute("data-etape")||"")+"/"+etapes.length+" \u2014 "+nom+" : "+desc;}
 }
 var __interSel={interacteur:null,element:null};
 function choisirInteracteur(btn){
