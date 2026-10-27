@@ -2018,12 +2018,7 @@
             width: 0%;
         }
 
-        .texte-progression {
-            text-align: center;
-            font-size: 0.875rem;
-            color: var(--couleur-texte-leger);
-            margin-top: var(--espacement-xs);
-        }
+        
 
         /* ============================================
            RESPONSIVE MOBILE
@@ -3493,7 +3488,8 @@
             <div class="barre-progression" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progression-actuelle" id="barre-progression"></div>
             </div>
-            <p class="texte-progression" id="texte-progression">Progression : 0%</p>
+            <!-- Pas de libellé « Progression : X % » : la barre se suffit, et le
+                 texte se répétait sous les onglets. -->
         </nav>
 
         <!-- Navigation par onglets -->
@@ -6541,12 +6537,10 @@ window.__EFFETS_INTERACTIONS__={"Froid|Batterie": "Le froid dégrade temporairem
         function mettreAJourProgression() {
             const progression = Math.round((niveauxDebloques.length / 8) * 100);
             const barre = document.getElementById('barre-progression');
-            const texte = document.getElementById('texte-progression');
             
-            if (barre && texte) {
+            if (barre) {
                 barre.style.width = `${progression}%`;
                 barre.parentElement.setAttribute('aria-valuenow', progression);
-                texte.textContent = `Progression : ${progression}%`;
             }
         }
 
