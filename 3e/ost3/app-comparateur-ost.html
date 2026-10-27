@@ -952,6 +952,148 @@
             font-variant-numeric: tabular-nums;
         }
 
+        /* ============================================
+           ÉTAPE 2 EN CLASSEMENT
+           (n4.contraintes.mode = "classement" : des tuiles à
+            ordonner ; le groupe de réglages porte data-mode,
+            marquage lu par le moteur et par verifier_parcours.py)
+
+           L'élève déplace une tuile pour fixer son ordre de priorité : la
+           première est SON besoin numéro un. Deux gestes, tous deux annoncés
+           dans la page — les boutons ▲ ▼ (clavier, lecteur d'écran, cibles de
+           44 px) et le glisser-déposer à la souris ou au stylet. Au doigt, les
+           boutons restent la voie fiable : un glissement vertical fait défiler
+           la page (`touch-action` le laisse faire).
+           ============================================ */
+
+        .reglages-contraintes[data-mode="classement"] {
+            display: block;
+        }
+
+        .classement-consigne {
+            margin-bottom: var(--espacement-sm);
+            font-size: 0.9375rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .tuiles-contraintes {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            /* `minmax(0, 1fr)` et non `1fr` : sans le minimum à zéro, la
+               colonne prend la largeur MINIMALE de la tuile — un mot long
+               suffisait à faire déborder la page de 2 px à 320 px de large. */
+            grid-template-columns: minmax(0, 1fr);
+            gap: var(--espacement-sm);
+        }
+
+        .tuile-contrainte {
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+            min-height: 56px;
+            padding: var(--espacement-sm) var(--espacement-md);
+            background-color: white;
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            cursor: grab;
+            touch-action: pan-y;
+        }
+
+        .tuile-contrainte.tuile-glissee {
+            cursor: grabbing;
+            border-color: var(--couleur-primaire);
+            background-color: #eff6ff;
+        }
+
+        .tuile-rang {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: var(--couleur-primaire);
+            color: white;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tuile-texte {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .tuile-nom {
+            font-weight: 600;
+            color: var(--couleur-texte);
+            overflow-wrap: anywhere;
+        }
+
+        .tuile-aide {
+            font-size: 0.8125rem;
+            color: var(--couleur-texte-leger);
+            overflow-wrap: anywhere;
+        }
+
+        .tuile-actions {
+            display: flex;
+            gap: var(--espacement-xs);
+            flex: 0 0 auto;
+        }
+
+        .tuile-deplacer {
+            width: var(--hauteur-cible-min);
+            min-width: var(--hauteur-cible-min);
+            height: var(--hauteur-cible-min);
+            border: 2px solid #cbd5e1;
+            border-radius: var(--rayon-bordure);
+            background-color: white;
+            color: var(--couleur-texte);
+            font-size: 1rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .tuile-deplacer:hover:not(:disabled) {
+            border-color: var(--couleur-primaire);
+            color: var(--couleur-primaire);
+        }
+
+        .tuile-deplacer:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        .tuile-deplacer:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .classement-etat {
+            margin: var(--espacement-xs) 0 0;
+            font-size: 0.875rem;
+            color: var(--couleur-texte-leger);
+        }
+
+        .classement-argumentation-consigne {
+            margin-top: var(--espacement-md);
+            font-weight: 600;
+        }
+
+        /* Hiérarchie figée : elle reste lisible, mais les tuiles ne bougent
+           plus — c'est l'engagement de l'élève, exactement comme les curseurs. */
+        .reglages-contraintes[data-mode="classement"][data-fige="1"] .tuile-contrainte {
+            border-style: dashed;
+            border-color: var(--couleur-primaire);
+            cursor: default;
+        }
+
         /* Contraintes figées : le réglage est verrouillé et visible comme tel. */
         .reglages-contraintes[data-fige="1"] .curseur-contrainte {
             border-style: dashed;
@@ -3233,13 +3375,13 @@
         :where(html[data-theme="sombre"]) .navigation-onglets{border-bottom:2px solid #2b3a52}
         :where(html[data-theme="sombre"]) .bouton-onglet,:where(html[data-theme="sombre"]) .bouton-action.secondaire,:where(html[data-theme="sombre"]) .barre-progression{background-color:#27334a}
         :where(html[data-theme="sombre"]) .bouton-onglet:hover,:where(html[data-theme="sombre"]) .bouton-action.secondaire:hover{background-color:#38465c}
-        :where(html[data-theme="sombre"]) .bouton-onglet.actif,:where(html[data-theme="sombre"]) .bouton-action,:where(html[data-theme="sombre"]) .element-chaine:hover,:where(html[data-theme="sombre"]) .cadre-reponse .numero-cadre{background-color:var(--couleur-primaire-fond)}
+        :where(html[data-theme="sombre"]) .bouton-onglet.actif,:where(html[data-theme="sombre"]) .bouton-action,:where(html[data-theme="sombre"]) .element-chaine:hover,:where(html[data-theme="sombre"]) .cadre-reponse .numero-cadre,:where(html[data-theme="sombre"]) .tuile-rang{background-color:var(--couleur-primaire-fond)}
         :where(html[data-theme="sombre"]) .bouton-onglet.valide,:where(html[data-theme="sombre"]) .bouton-action.succes{background-color:var(--couleur-succes-fond)}
         :where(html[data-theme="sombre"]) .carte-contenu,:where(html[data-theme="sombre"]) .atelier-question,:where(html[data-theme="sombre"]) .env-catalogue li{background:#1c2534;border:1px solid #2b3a52}
         :where(html[data-theme="sombre"]) .bouton-action:disabled{background-color:#4a5872}
         :where(html[data-theme="sombre"]) .question-quiz{background-color:#16202e}
         :where(html[data-theme="sombre"]) .option-reponse{background-color:#1c2534;border:2px solid #2b3a52}
-        :where(html[data-theme="sombre"]) .option-reponse:hover,:where(html[data-theme="sombre"]) .objet-explorable:hover,:where(html[data-theme="sombre"]) .choix-contrainte[aria-pressed="true"],:where(html[data-theme="sombre"]) .contraintes-recap,:where(html[data-theme="sombre"]) .puzzle-piece[aria-pressed="true"],:where(html[data-theme="sombre"]) .puzzle-slot.cible{background-color:#1a2740}
+        :where(html[data-theme="sombre"]) .option-reponse:hover,:where(html[data-theme="sombre"]) .objet-explorable:hover,:where(html[data-theme="sombre"]) .choix-contrainte[aria-pressed="true"],:where(html[data-theme="sombre"]) .tuile-contrainte.tuile-glissee,:where(html[data-theme="sombre"]) .contraintes-recap,:where(html[data-theme="sombre"]) .puzzle-piece[aria-pressed="true"],:where(html[data-theme="sombre"]) .puzzle-slot.cible{background-color:#1a2740}
         :where(html[data-theme="sombre"]) .option-reponse.selectionnee,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 1){background-color:#1c2c4a}
         :where(html[data-theme="sombre"]) .option-reponse.correcte,:where(html[data-theme="sombre"]) .feedback-reponse.correct,:where(html[data-theme="sombre"]) .objet-explorable.explore,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 2){background-color:#17452f}
         :where(html[data-theme="sombre"]) .option-reponse.incorrecte,:where(html[data-theme="sombre"]) .feedback-reponse.incorrect{background-color:#3a1e20}
@@ -3249,10 +3391,10 @@
         :where(html[data-theme="sombre"]) .enigme-conteneur,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 6){background-color:#332a13}
         :where(html[data-theme="sombre"]) .enigme-conteneur h3,:where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-marque::after,:where(html[data-theme="sombre"]) .env-note-1 .env-mot,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .case-action::after,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .statut-action{color:#fcd34d}
         :where(html[data-theme="sombre"]) .objet-explorable{background-color:#1c2534;border:2px dashed #3a4a63}
-        :where(html[data-theme="sombre"]) .cadre-reponse,:where(html[data-theme="sombre"]) .modele-ost{background-color:#1c2534;border:2px solid #3a4a63}
+        :where(html[data-theme="sombre"]) .cadre-reponse,:where(html[data-theme="sombre"]) .tuile-contrainte,:where(html[data-theme="sombre"]) .modele-ost{background-color:#1c2534;border:2px solid #3a4a63}
         :where(html[data-theme="sombre"]) .probleme-ouvert,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
         :where(html[data-theme="sombre"]) .compteur-selection,:where(html[data-theme="sombre"]) .atelier-carte h4,:where(html[data-theme="sombre"]) .atelier-compteur,:where(html[data-theme="sombre"]) .rotors-nez,:where(html[data-theme="sombre"]) .atelier-verdict,:where(html[data-theme="sombre"]) .env-catalogue .env-mesure,:where(html[data-theme="sombre"]) .env-table caption,:where(html[data-theme="sombre"]) .env-note-2 .env-mot,:where(html[data-theme="sombre"]) .atelier-mesure,:where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd}
-        :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
+        :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .tuile-deplacer,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
         :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="juste"] .choix-contrainte,:where(html[data-theme="sombre"]) .etape-selection-explication,:where(html[data-theme="sombre"]) .solution-personnelle,:where(html[data-theme="sombre"]) .cablage-bilan.succes{background-color:#142c21}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="faux"] .choix-contrainte,:where(html[data-theme="sombre"]) .cablage-bilan.echec,:where(html[data-theme="sombre"]) .puzzle-slot.faux,:where(html[data-theme="sombre"]) .puzzle-bilan.echec{background-color:#2b1a1c}
@@ -3321,11 +3463,11 @@
         :where(html[data-theme="sombre"]) .activite-bonus,:where(html[data-theme="sombre"]) .activite-bonus h3{color:#fde68a}
         html[data-theme="sombre"] .bloc-animation{background:#16202e;border:1px solid #2b3a52}
         html[data-theme="sombre"] .cf-etape,html[data-theme="sombre"] .inter-bouton,html[data-theme="sombre"] .aroute-scenario,html[data-theme="sombre"] .aroute-noeud{background:#1c2534;border:2px solid #2b3a52}
+        html[data-theme="sombre"] .cf-etape:hover,html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
         html[data-theme="sombre"] .cf-etape em,html[data-theme="sombre"] .aroute-noeud em{color:#9ecbfd;background:#1a2740}
         html[data-theme="sombre"] .cf-fleche,html[data-theme="sombre"] .inter-colonne h4,html[data-theme="sombre"] .inter-fleche,html[data-theme="sombre"] .aroute-fleche{color:#9ecbfd}
         html[data-theme="sombre"] .cf-etape.actif,html[data-theme="sombre"] .aroute-noeud.actif{border-color:#22c55e;background:#16301f}
         html[data-theme="sombre"] .legende-animation,html[data-theme="sombre"] .aroute-legende{color:#86efac}
-        html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
         html[data-theme="sombre"] .inter-bouton.selectionne,html[data-theme="sombre"] .aroute-scenario.selectionne{border-color:#3b82f6;background:#1a2740}
         html[data-theme="sombre"] .interactions-resultat{background:#1c2534;border:1px solid #2b3a52}
         html[data-theme="sombre"] .interactions-resultat.info-block{background:#1a2740;border-color:#3b82f6}
@@ -4337,11 +4479,11 @@ window.__EFFETS_INTERACTIONS__={};
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>C'est ici que vous choisissez le véhicule. La commune ne cherche pas « le meilleur VAE » : elle cherche celui qui correspond à ses contraintes. Exprimez le besoin, réglez vos contraintes et figez-les, comparez les huit fiches, retenez un véhicule, puis justifiez votre choix avec des valeurs chiffrées. Plusieurs réponses se défendent : c'est votre justification qui compte.</p>
+                    <p>C'est ici que vous choisissez le véhicule. La commune ne cherche pas « le meilleur VAE » : elle cherche celui qui correspond à ses besoins. Exprimez le besoin, hiérarchisez les besoins de la mairie en déplaçant les tuiles, figez cette hiérarchie, comparez les huit fiches, retenez un véhicule, puis justifiez votre choix avec des valeurs chiffrées. Aucun classement n'est le bon : c'est votre argumentation qui compte.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
-                        <p><strong>Situation :</strong> La communauté de communes veut mettre 60 véhicules en libre-service entre la gare et le centre-ville, sur des trajets de 2 à 6 km avec quelques côtes. Huit véhicules ont été présélectionnés : sept VAE et une trottinette électrique, pour ne pas oublier qu'un autre véhicule peut répondre au même besoin. Avant de voter le budget, le conseil municipal vous demande votre analyse : fixez les contraintes du service, comparez les huit fiches, puis recommandez un véhicule en expliquant le compromis accepté.</p>
+                        <p><strong>Situation :</strong> La communauté de communes veut mettre 60 véhicules en libre-service entre la gare et le centre-ville, sur des trajets de 2 à 6 km avec quelques côtes. Huit véhicules ont été présélectionnés : sept VAE et une trottinette électrique, pour ne pas oublier qu'un autre véhicule peut répondre au même besoin. Avant de voter le budget, le conseil municipal vous demande votre analyse : mettez-vous à la place de la mairie pour dire quels besoins passent en premier, comparez les huit fiches, puis recommandez un véhicule en expliquant le compromis accepté. Le conseil ne cherche pas un corrigé : il veut comprendre vos priorités et vos raisons.</p>
                     </div>
 
                     <h3>Étapes de conception</h3>
@@ -4350,138 +4492,231 @@ window.__EFFETS_INTERACTIONS__={};
 
                     <div class="conception-guidee" id="conception-guidee">
                         <div class="etape-conception">
-                            <h4>Étape 1 : Étape 1 — Exprimer le besoin</h4>
-                            <p>Décrivez le besoin du service avec vos mots : qui utilisera ces véhicules, pour quels trajets, et quelles contraintes pèsent sur la commune (budget, entretien, stationnement, image du service) ?</p>
+                            <h4>Étape 1 : Exprimer le besoin de la mairie</h4>
+                            <p>Mettez-vous à la place de la mairie et décrivez SON besoin avec vos mots : qui utilisera ces véhicules, pour quels trajets, et quelles contraintes pèsent sur la commune (budget, entretien, stationnement, sécurité, image du service) ?</p>
                             <textarea
                                 id="besoin-identifie"
                                 data-conception-texte
                                 data-min="20"
-                                placeholder="Ex. : les habitants font 2 à 6 km entre la gare et le centre-ville, il y a des côtes, les vélos restent dehors toute l'année, la commune doit maîtriser son budget d'achat et d'entretien…"
-                                aria-label="Description du besoin du service de libre-service"></textarea>
+                                placeholder="Ex. : les habitants font 2 à 6 km entre la gare et le centre-ville, il y a des côtes, les vélos restent dehors toute l'année, les usagers doivent pouvoir rentrer de nuit sans se blesser, la commune doit maîtriser son budget d'achat et d'entretien…"
+                                aria-label="Description du besoin de la mairie"></textarea>
                         </div>
                         <div class="etape-conception">
-                            <h4>Étape 2 : Hiérarchiser mes contraintes</h4>
-                            <p>Pour chaque critère, choisissez dans la liste l'importance qu'il a à VOS yeux : « non considéré », « importance modeste », « assez important » ou « très important ». Aucun critère n'est important par défaut : c'est à vous de dire lequel compte, et à quel point. Quand vos choix vous conviennent, cliquez sur « Figer vos contraintes » : l'étape 3 ne s'ouvrira qu'à ce moment-là, puisque c'est ce cahier des charges figé que les huit véhicules devront respecter.</p>
-                            <p class="note-liberte">Quatre mots, aucun chiffre : la page ne vous impose aucune valeur, c'est à vous de vous faire votre idée. Un critère « non considéré » ne pèsera pas dans votre choix ; un critère « très important » en sera la condition.</p>
-                            <div class="reglages-contraintes" data-figer="1">
-                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-budget"
-                                     data-nom="Budget d'achat par véhicule">
-                                    <div class="curseur-entete">
-                                        <label for="curseur-budget"><span aria-hidden="true">💰</span> Budget d'achat par véhicule</label>
-                                        <output class="curseur-valeur" id="valeur-budget" for="curseur-budget">non considéré</output>
-                                    </div>
-                                    <select id="curseur-budget"
-                                            data-defaut="0"
-                                            data-niveaux="non considéré|importance modeste|assez important|très important"
-                                            aria-describedby="aide-budget">
-                                               <option value="0" selected>non considéré</option>
-                                               <option value="1">importance modeste</option>
-                                               <option value="2">assez important</option>
-                                               <option value="3">très important</option>
-                                    </select>
-                                <p class="curseur-aide" id="aide-budget">Prix d'achat d'un véhicule, batterie comprise, pour une flotte de 60.</p>
-                                </div>
-                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-autonomie"
-                                     data-nom="Autonomie">
-                                    <div class="curseur-entete">
-                                        <label for="curseur-autonomie"><span aria-hidden="true">🔋</span> Autonomie</label>
-                                        <output class="curseur-valeur" id="valeur-autonomie" for="curseur-autonomie">non considéré</output>
-                                    </div>
-                                    <select id="curseur-autonomie"
-                                            data-defaut="0"
-                                            data-niveaux="non considéré|importance modeste|assez important|très important"
-                                            aria-describedby="aide-autonomie">
-                                               <option value="0" selected>non considéré</option>
-                                               <option value="1">importance modeste</option>
-                                               <option value="2">assez important</option>
-                                               <option value="3">très important</option>
-                                    </select>
-                                <p class="curseur-aide" id="aide-autonomie">Distance à parcourir avec une seule charge : il faut couvrir plusieurs trajets avant de recharger.</p>
-                                </div>
-                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-masse"
-                                     data-nom="Masse du véhicule">
-                                    <div class="curseur-entete">
-                                        <label for="curseur-masse"><span aria-hidden="true">⚖️</span> Masse du véhicule</label>
-                                        <output class="curseur-valeur" id="valeur-masse" for="curseur-masse">non considéré</output>
-                                    </div>
-                                    <select id="curseur-masse"
-                                            data-defaut="0"
-                                            data-niveaux="non considéré|importance modeste|assez important|très important"
-                                            aria-describedby="aide-masse">
-                                               <option value="0" selected>non considéré</option>
-                                               <option value="1">importance modeste</option>
-                                               <option value="2">assez important</option>
-                                               <option value="3">très important</option>
-                                    </select>
-                                <p class="curseur-aide" id="aide-masse">Un véhicule lourd se manipule mal en station et se répare moins facilement sur le trottoir.</p>
-                                </div>
-                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-reparabilite"
-                                     data-nom="Indice de réparabilité">
-                                    <div class="curseur-entete">
-                                        <label for="curseur-reparabilite"><span aria-hidden="true">🔧</span> Indice de réparabilité</label>
-                                        <output class="curseur-valeur" id="valeur-reparabilite" for="curseur-reparabilite">non considéré</output>
-                                    </div>
-                                    <select id="curseur-reparabilite"
-                                            data-defaut="0"
-                                            data-niveaux="non considéré|importance modeste|assez important|très important"
-                                            aria-describedby="aide-reparabilite">
-                                               <option value="0" selected>non considéré</option>
-                                               <option value="1">importance modeste</option>
-                                               <option value="2">assez important</option>
-                                               <option value="3">très important</option>
-                                    </select>
-                                <p class="curseur-aide" id="aide-reparabilite">Note officielle sur 10 : plus elle est haute, plus le véhicule se répare et dure longtemps.</p>
-                                </div>
-                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-empreinte"
-                                     data-nom="Empreinte carbone">
-                                    <div class="curseur-entete">
-                                        <label for="curseur-empreinte"><span aria-hidden="true">🌍</span> Empreinte carbone</label>
-                                        <output class="curseur-valeur" id="valeur-empreinte" for="curseur-empreinte">non considéré</output>
-                                    </div>
-                                    <select id="curseur-empreinte"
-                                            data-defaut="0"
-                                            data-niveaux="non considéré|importance modeste|assez important|très important"
-                                            aria-describedby="aide-empreinte">
-                                               <option value="0" selected>non considéré</option>
-                                               <option value="1">importance modeste</option>
-                                               <option value="2">assez important</option>
-                                               <option value="3">très important</option>
-                                    </select>
-                                <p class="curseur-aide" id="aide-empreinte">Gaz à effet de serre émis pour fabriquer le véhicule et sa batterie.</p>
-                                </div>
-                                <div class="curseur-contrainte contrainte-liste" data-ost-bloc="n4-contrainte-consommation"
-                                     data-nom="Consommation d'énergie">
-                                    <div class="curseur-entete">
-                                        <label for="curseur-consommation"><span aria-hidden="true">⚡</span> Consommation d'énergie</label>
-                                        <output class="curseur-valeur" id="valeur-consommation" for="curseur-consommation">non considéré</output>
-                                    </div>
-                                    <select id="curseur-consommation"
-                                            data-defaut="0"
-                                            data-niveaux="non considéré|importance modeste|assez important|très important"
-                                            aria-describedby="aide-consommation">
-                                               <option value="0" selected>non considéré</option>
-                                               <option value="1">importance modeste</option>
-                                               <option value="2">assez important</option>
-                                               <option value="3">très important</option>
-                                    </select>
-                                <p class="curseur-aide" id="aide-consommation">Énergie consommée par kilomètre : c'est l'efficacité énergétique du véhicule.</p>
-                                </div>
+                            <h4>Étape 2 : Hiérarchiser les besoins de la mairie</h4>
+                            <p>La mairie a plusieurs besoins à la fois : à vous de dire lesquels passent en premier. Déplacez les tuiles pour les classer, du besoin le plus important (en haut) au moins important (en bas). Il n'y a pas de bonne réponse : deux mairies n'ont pas les mêmes priorités, et c'est votre classement qui sera discuté en classe. Justifiez-le à la fin de l'étape, puis cliquez sur « Figer ma hiérarchie » : l'étape 3 ne s'ouvrira qu'à ce moment-là.</p>
+                            <p class="note-liberte">Aucun chiffre, aucune échelle d'importance : vous choisissez un ordre, et vous pouvez le changer autant de fois que nécessaire avant de le figer. Le besoin de sécurité est un besoin comme les autres — à vous de décider où il se place, et de dire pourquoi.</p>
+                            <div class="reglages-contraintes" data-mode="classement" data-figer="1">
+                            <p class="classement-consigne" id="classement-consigne-usage">Déplacez les tuiles pour les classer : la première est le besoin le plus important pour la mairie. Utilisez les boutons ▲ ▼ (au clavier aussi), ou faites glisser une tuile à la souris. Sur tablette ou au doigt, servez-vous des boutons.</p>
+                            <ol class="tuiles-contraintes" id="tuiles-contraintes"
+                                aria-describedby="classement-consigne-usage">
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-1"
+                                    data-ost-bloc="n4-tuile-budget"
+                                    data-cle="budget"
+                                    data-nom="Budget d'achat et d'entretien"
+                                    data-ordre-depart="1"
+                                    data-rang="1"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">1</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">💰</span> Budget d'achat et d'entretien</span>
+                                    <span class="tuile-aide">Soixante véhicules à acheter, puis à entretenir : l'argent est public, et la commune s'engage pour des années.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-1-monter"
+                                                aria-label="Monter le besoin « Budget d'achat et d'entretien »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-1-descendre"
+                                                aria-label="Descendre le besoin « Budget d'achat et d'entretien »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-2"
+                                    data-ost-bloc="n4-tuile-securite"
+                                    data-cle="securite"
+                                    data-nom="Sécurité des usagers"
+                                    data-ordre-depart="2"
+                                    data-rang="2"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">2</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🦺</span> Sécurité des usagers</span>
+                                    <span class="tuile-aide">Que personne ne se blesse : freins fiables, éclairage pour rentrer de nuit, batterie conforme à la norme NF EN 15194.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-2-monter"
+                                                aria-label="Monter le besoin « Sécurité des usagers »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-2-descendre"
+                                                aria-label="Descendre le besoin « Sécurité des usagers »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-3"
+                                    data-ost-bloc="n4-tuile-autonomie"
+                                    data-cle="autonomie"
+                                    data-nom="Autonomie"
+                                    data-ordre-depart="3"
+                                    data-rang="3"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">3</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🔋</span> Autonomie</span>
+                                    <span class="tuile-aide">Les usagers font 2 à 6 km, parfois en côte : le véhicule doit tenir sans recharger en cours de trajet.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-3-monter"
+                                                aria-label="Monter le besoin « Autonomie »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-3-descendre"
+                                                aria-label="Descendre le besoin « Autonomie »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-4"
+                                    data-ost-bloc="n4-tuile-empreinte"
+                                    data-cle="empreinte"
+                                    data-nom="Empreinte carbone"
+                                    data-ordre-depart="4"
+                                    data-rang="4"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">4</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🌍</span> Empreinte carbone</span>
+                                    <span class="tuile-aide">La commune affiche ses engagements climat : fabrication, batterie et fin de vie entrent dans le bilan.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-4-monter"
+                                                aria-label="Monter le besoin « Empreinte carbone »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-4-descendre"
+                                                aria-label="Descendre le besoin « Empreinte carbone »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-5"
+                                    data-ost-bloc="n4-tuile-reparabilite"
+                                    data-cle="reparabilite"
+                                    data-nom="Indice de réparabilité"
+                                    data-ordre-depart="5"
+                                    data-rang="5"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">5</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🔧</span> Indice de réparabilité</span>
+                                    <span class="tuile-aide">Un véhicule immobilisé coûte cher : pièces disponibles, atelier local, note officielle sur 10.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-5-monter"
+                                                aria-label="Monter le besoin « Indice de réparabilité »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-5-descendre"
+                                                aria-label="Descendre le besoin « Indice de réparabilité »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-6"
+                                    data-ost-bloc="n4-tuile-consommation"
+                                    data-cle="consommation"
+                                    data-nom="Consommation d'énergie"
+                                    data-ordre-depart="6"
+                                    data-rang="6"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">6</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">⚡</span> Consommation d'énergie</span>
+                                    <span class="tuile-aide">Recharger soixante véhicules chaque jour a un coût, et pèse sur le réseau électrique de la commune.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-6-monter"
+                                                aria-label="Monter le besoin « Consommation d'énergie »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-6-descendre"
+                                                aria-label="Descendre le besoin « Consommation d'énergie »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                                <li class="tuile-contrainte"
+                                    data-ost-id="n4-tuile-7"
+                                    data-ost-bloc="n4-tuile-masse"
+                                    data-cle="masse"
+                                    data-nom="Facilité de manipulation"
+                                    data-ordre-depart="7"
+                                    data-rang="7"
+                                    draggable="true">
+                                    <span class="tuile-rang" aria-hidden="true">7</span>
+                                    <span class="tuile-texte">
+                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">⚖️</span> Facilité de manipulation</span>
+                                    <span class="tuile-aide">Ce sont les usagers et les agents qui déplacent et rangent les véhicules : trop lourd, il décourage.</span>
+                                    </span>
+                                    <span class="tuile-actions">
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="-1"
+                                                data-ost-id="n4-tuile-7-monter"
+                                                aria-label="Monter le besoin « Facilité de manipulation »"
+                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
+                                        <button type="button" class="tuile-deplacer"
+                                                data-direction="1"
+                                                data-ost-id="n4-tuile-7-descendre"
+                                                aria-label="Descendre le besoin « Facilité de manipulation »"
+                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
+                                    </span>
+                                </li>
+                            </ol>
+                            <p class="classement-etat" id="classement-etat"
+                               role="status" aria-live="polite"></p>
                             </div>
                             <p class="contraintes-actions"><button type="button" class="bouton-action"
                                     id="bouton-figer-contraintes"
-                                    data-libelle-figer="Figer vos contraintes"
-                                    data-libelle-modifier="Modifier mes contraintes"
+                                    data-libelle-figer="Figer ma hiérarchie"
+                                    data-libelle-modifier="Modifier ma hiérarchie"
                                     aria-pressed="false"
-                                    onclick="n4FigerContraintes(this)">Figer vos contraintes</button></p>
+                                    onclick="n4FigerContraintes(this)">Figer ma hiérarchie</button></p>
                             <div class="contraintes-recap" id="contraintes-recap" hidden>
-                                <h5>Mes contraintes figées</h5>
+                                <h5>Ma hiérarchie des besoins</h5>
                                 <ul id="contraintes-recap-liste"></ul>
-                                <p class="contraintes-recap-note">Les listes sont maintenant verrouillées : c'est le cahier des charges que vous imposez aux huit véhicules, et l'étape 3 vient de s'ouvrir pour les comparer. Si vous vous êtes trompé, cliquez sur « Modifier mes contraintes ».</p>
+                                <p class="contraintes-recap-note">Votre hiérarchie est maintenant verrouillée : c'est l'ordre dans lequel la mairie va arbitrer ses choix, et l'étape 3 vient de s'ouvrir pour comparer les véhicules. Si vous vous êtes trompé, cliquez sur « Modifier ma hiérarchie ».</p>
                             </div>
+                            <p class="classement-argumentation-consigne">Expliquez votre classement : pourquoi ce besoin passe-t-il avant les autres, et à quoi la mairie accepte-t-elle de renoncer en le plaçant là ?</p>
+                            <textarea
+                                id="hierarchie-justifiee"
+                                data-conception-texte
+                                data-min="40"
+                                placeholder="Ex. : je place la sécurité en premier parce que la commune engage sa responsabilité si un usager se blesse. Ensuite vient le budget, car soixante véhicules coûtent cher et…"
+                                aria-label="Argumentation de la hiérarchie des besoins de la mairie"></textarea>
                         </div>
                         <div id="etape-comparateur" class="etape-conception cache" data-comparateur-apres-gel="1">
-                            <h4>Étape 3 : Étape 3 — Comparer les huit véhicules</h4>
-                            <p>Les huit véhicules sont fictifs : ils servent à apprendre à comparer. Choisissez un tri dans le menu, puis lisez les valeurs de chaque fiche. Comparez-les aux contraintes que vous avez figées à l'étape 2. Cliquez enfin sur la fiche du véhicule que vous retenez. Aucun voyant vert ni rouge ne s'affiche : seule votre analyse compte, et plusieurs choix se défendent.</p>
+                            <h4>Étape 3 : Comparer les huit véhicules</h4>
+                            <p>Les huit véhicules sont fictifs : ils servent à apprendre à comparer. Choisissez un tri dans le menu, puis lisez les valeurs de chaque fiche. Comparez-les aux besoins que vous avez hiérarchisés et figés à l'étape 2. Cliquez enfin sur la fiche du véhicule que vous retenez. Aucun voyant vert ni rouge ne s'affiche : seule votre analyse compte, et plusieurs choix se défendent.</p>
                             <div class="comparateur-ost" data-conception-modele
                                  data-verdicts="0"
                                  data-conception-consigne="Choisissez un véhicule : cliquez sur la fiche du modèle que vous retenez, puis justifiez votre choix à l'étape 4.">
@@ -4738,8 +4973,8 @@ window.__EFFETS_INTERACTIONS__={};
                             </div>
                         </div>
                         <div class="etape-conception">
-                            <h4>Étape 4 : Étape 4 — Justifier mon choix</h4>
-                            <p>Expliquez votre recommandation au conseil municipal : nommez le véhicule retenu, citez au moins deux valeurs chiffrées de sa fiche, dites quelle contrainte a tranché — et à quoi vous renoncez en le choisissant.</p>
+                            <h4>Étape 4 : Justifier mon choix</h4>
+                            <p>Expliquez votre recommandation au conseil municipal : nommez le véhicule retenu, citez au moins deux valeurs chiffrées de sa fiche, dites quel besoin de votre hiérarchie a tranché — et à quoi vous renoncez en le choisissant.</p>
                             <textarea
                                 id="solution-choisie"
                                 data-conception-texte
@@ -4749,7 +4984,7 @@ window.__EFFETS_INTERACTIONS__={};
                         </div>
                         <div class="bilan-n4" id="bilan-n4">
                             <h4 id="bilan-n4-titre">Mon bilan à transmettre au professeur</h4>
-                            <p class="bilan-n4-consigne">Générez votre bilan : il reprend votre besoin, vos contraintes figées, le véhicule retenu avec ses valeurs et votre justification. Copiez-le ou imprimez-le pour le remettre au professeur.</p>
+                            <p class="bilan-n4-consigne">Générez votre bilan : il reprend votre besoin, votre hiérarchie des besoins figée, le véhicule retenu avec ses valeurs et votre justification. Copiez-le ou imprimez-le pour le remettre au professeur.</p>
                             <p class="contraintes-actions"><button type="button" class="bouton-action"
                                     id="bouton-bilan" onclick="n4GenererBilan()">Générer mon bilan</button></p>
                             <div class="bilan-n4-resultat" id="bilan-n4-resultat" hidden>
@@ -6478,6 +6713,122 @@ window.__EFFETS_INTERACTIONS__={};
             return !!reglages && reglages.getAttribute('data-fige') === '1';
         }
 
+        // ============================================
+        // N4 — HIÉRARCHIE DES BESOINS (étape 2 en classement)
+        // ============================================
+        //
+        // `n4.contraintes.mode: "classement"` remplace les réglages par une
+        // liste de tuiles à ordonner : la première est le besoin le plus
+        // important pour l'élève. La page ne vérifie RIEN et ne connaît aucune
+        // bonne place — un classement se défend, il ne se corrige pas : c'est
+        // la hiérarchie argumentée qui est remise au professeur.
+        //
+        // Deux gestes pour déplacer une tuile, et ils doivent rester
+        // équivalents, sinon la règle d'accessibilité du gabarit tombe :
+        //   • les boutons ▲ ▼ — clavier, lecteur d'écran, cibles de 44 px ;
+        //   • le glisser-déposer — souris et stylet seulement. Au doigt, un
+        //     glissement vertical fait défiler la page : le geste serait une
+        //     source de blocage, les boutons restent la voie fiable.
+
+        let tuileEnDeplacement = null;
+
+        function n4Tuiles() {
+            const liste = document.getElementById('tuiles-contraintes');
+            if (!liste) return [];
+            return Array.prototype.slice.call(
+                liste.querySelectorAll('.tuile-contrainte'));
+        }
+
+        function n4ClassementFige() {
+            const reglages = document.querySelector(
+                '#conception-guidee .reglages-contraintes[data-mode="classement"]');
+            return !!reglages && reglages.getAttribute('data-fige') === '1';
+        }
+
+        // Le rang affiché est TOUJOURS recalculé depuis la position réelle dans
+        // la liste : une tuile déplacée qui garderait son ancien numéro ferait
+        // lire une hiérarchie qui n'est plus celle de l'écran.
+        function n4RenumeroterTuiles(annonce) {
+            const tuiles = n4Tuiles();
+            const fige = n4ClassementFige();
+            tuiles.forEach(function (tuile, indice) {
+                tuile.setAttribute('data-rang', String(indice + 1));
+                const rang = tuile.querySelector('.tuile-rang');
+                if (rang) rang.textContent = String(indice + 1);
+                tuile.querySelectorAll('.tuile-deplacer').forEach(function (bouton) {
+                    const sens = parseInt(bouton.getAttribute('data-direction'), 10);
+                    // Monter depuis la première place (ou descendre depuis la
+                    // dernière) ne mène nulle part : le bouton est neutralisé
+                    // plutôt que de laisser croire qu'il agit.
+                    bouton.disabled = fige ||
+                        (sens < 0 && indice === 0) ||
+                        (sens > 0 && indice === tuiles.length - 1);
+                });
+            });
+            if (annonce) n4AnnoncerHierarchie(annonce);
+        }
+
+        function n4AnnoncerHierarchie(texte) {
+            const etat = document.getElementById('classement-etat');
+            if (etat) etat.textContent = texte;
+        }
+
+        function n4DeplacerTuile(bouton, direction) {
+            if (n4ClassementFige()) return;
+            const tuile = bouton.closest('.tuile-contrainte');
+            if (!tuile) return;
+            const voisine = direction < 0 ? tuile.previousElementSibling
+                                          : tuile.nextElementSibling;
+            if (!voisine || !voisine.classList.contains('tuile-contrainte')) return;
+            if (direction < 0) tuile.parentNode.insertBefore(tuile, voisine);
+            else tuile.parentNode.insertBefore(voisine, tuile);
+            n4RenumeroterTuiles();
+            // Le focus reste sur le bouton de la tuile déplacée : sans cela un
+            // élève au clavier perdrait sa place à chaque cran.
+            bouton.focus();
+            n4AnnoncerHierarchie('« ' + (tuile.getAttribute('data-nom') || 'Besoin') +
+                ' » est maintenant en position ' + tuile.getAttribute('data-rang') + '.');
+        }
+
+        function n4DemarrerDeplacementTuile(evenement) {
+            if (n4ClassementFige()) return;
+            // Un appui sur un bouton ▲ / ▼ est un clic, pas un glissement.
+            if (evenement.target.closest('.tuile-deplacer')) return;
+            // Au doigt, le geste appartient au défilement de la page.
+            if (evenement.pointerType === 'touch') return;
+            if (evenement.pointerType === 'mouse' && evenement.button !== 0) return;
+            tuileEnDeplacement = evenement.currentTarget;
+            tuileEnDeplacement.classList.add('tuile-glissee');
+            try { tuileEnDeplacement.setPointerCapture(evenement.pointerId); } catch (e) {}
+        }
+
+        function n4DeplacerTuileAuGlissement(evenement) {
+            if (!tuileEnDeplacement) return;
+            const liste = tuileEnDeplacement.parentNode;
+            if (!liste) return;
+            const soeurs = n4Tuiles();
+            for (const autre of soeurs) {
+                if (autre === tuileEnDeplacement) continue;
+                const cadre = autre.getBoundingClientRect();
+                if (evenement.clientY < cadre.top || evenement.clientY > cadre.bottom) continue;
+                const apres = evenement.clientY > cadre.top + cadre.height / 2;
+                liste.insertBefore(tuileEnDeplacement,
+                    apres ? autre.nextElementSibling : autre);
+                n4RenumeroterTuiles();
+                return;
+            }
+        }
+
+        function n4TerminerDeplacementTuile() {
+            if (!tuileEnDeplacement) return;
+            const tuile = tuileEnDeplacement;
+            tuileEnDeplacement = null;
+            tuile.classList.remove('tuile-glissee');
+            n4RenumeroterTuiles();
+            n4AnnoncerHierarchie('« ' + (tuile.getAttribute('data-nom') || 'Besoin') +
+                ' » est maintenant en position ' + tuile.getAttribute('data-rang') + '.');
+        }
+
         function n4FigerContraintes(bouton) {
             const zone = document.getElementById('conception-guidee');
             if (!zone) return;
@@ -6486,12 +6837,17 @@ window.__EFFETS_INTERACTIONS__={};
             const liste = document.getElementById('contraintes-recap-liste');
             if (!reglages) return;
 
+            // Un classement n'a ni curseur ni liste : ce sont les tuiles qui
+            // se verrouillent (boutons neutralisés, glissement coupé).
+            const classement = reglages.getAttribute('data-mode') === 'classement';
+
             const fige = reglages.getAttribute('data-fige') === '1';
             if (fige) {
                 reglages.removeAttribute('data-fige');
                 reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
                     controle.disabled = false;
                 });
+                if (classement) n4RenumeroterTuiles();
                 if (liste) liste.innerHTML = '';
                 if (recap) recap.hidden = true;
                 if (bouton) {
@@ -6507,7 +6863,24 @@ window.__EFFETS_INTERACTIONS__={};
                 reglages.querySelectorAll('input[type="range"], select').forEach(function (controle) {
                     controle.disabled = true;
                 });
-                if (liste) {
+                if (liste && classement) {
+                    // Le récapitulatif d'un classement est la hiérarchie
+                    // elle-même : les tuiles dans l'ordre choisi, numérotées.
+                    liste.innerHTML = '';
+                    n4Tuiles().forEach(function (tuile, indice) {
+                        const item = document.createElement('li');
+                        const nom = document.createElement('strong');
+                        nom.textContent = String(indice + 1) + '. ' +
+                            (tuile.getAttribute('data-nom') || 'Besoin');
+                        item.appendChild(nom);
+                        const aide = tuile.querySelector('.tuile-aide');
+                        const texteAide = aide ? String(aide.textContent || '').trim() : '';
+                        if (texteAide) {
+                            item.appendChild(document.createTextNode(' — ' + texteAide));
+                        }
+                        liste.appendChild(item);
+                    });
+                } else if (liste) {
                     liste.innerHTML = '';
                     reglages.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
                         const curseur = n4ControleContrainte(bloc);
@@ -6528,6 +6901,7 @@ window.__EFFETS_INTERACTIONS__={};
                         liste.appendChild(item);
                     });
                 }
+                if (classement) n4RenumeroterTuiles();
                 if (recap) recap.hidden = false;
                 if (bouton) {
                     bouton.textContent = bouton.getAttribute('data-libelle-modifier') ||
@@ -6564,8 +6938,20 @@ window.__EFFETS_INTERACTIONS__={};
                 ? besoin.value.trim() : '(non renseigné)');
             lignes.push('');
 
-            lignes.push('2. MES CONTRAINTES');
-            if (zone) {
+            // Étape 2 : soit une hiérarchie de tuiles, soit des réglages. Le
+            // bilan recopie ce que l'élève voit à l'écran — l'ordre des tuiles
+            // est la hiérarchie qu'il a construite, c'est elle qui est évaluée.
+            const classementBilan = zone
+                ? zone.querySelector('.reglages-contraintes[data-mode="classement"]')
+                : null;
+            lignes.push(classementBilan ? '2. MA HIÉRARCHIE DES BESOINS'
+                                        : '2. MES CONTRAINTES');
+            if (classementBilan) {
+                n4Tuiles().forEach(function (tuile, indice) {
+                    lignes.push('- ' + String(indice + 1) + '. ' +
+                        (tuile.getAttribute('data-nom') || 'Besoin'));
+                });
+            } else if (zone) {
                 zone.querySelectorAll('.curseur-contrainte').forEach(function (bloc) {
                     const curseur = n4ControleContrainte(bloc);
                     if (!curseur) return;
@@ -6583,6 +6969,14 @@ window.__EFFETS_INTERACTIONS__={};
             lignes.push(n4EstFige()
                 ? 'Contraintes figées : oui.'
                 : 'Contraintes figées : NON (l\'élève ne les a pas figées).');
+            // L'argumentation de la hiérarchie est le livrable de l'étape 2 :
+            // sans elle, un classement ne dit pas pourquoi il est celui-là.
+            const argumentationHierarchie = document.getElementById('hierarchie-justifiee');
+            if (argumentationHierarchie) {
+                lignes.push('');
+                lignes.push('Pourquoi cette hiérarchie :');
+                lignes.push(argumentationHierarchie.value.trim() || '(non renseigné)');
+            }
             lignes.push('');
 
             lignes.push('3. LE MODÈLE QUE JE RETIENS');
@@ -6732,6 +7126,23 @@ window.__EFFETS_INTERACTIONS__={};
                 if (defaut !== null) controle.value = defaut;
                 controle.disabled = false;
             });
+            // Un classement se remet, lui aussi, dans l'ordre de départ —
+            // l'ordre déclaré en configuration, celui que l'élève a trouvé en
+            // arrivant. Sinon « Recommencer » laisserait sa hiérarchie en
+            // place et il croirait l'exercice déjà commencé.
+            const listeTuiles = document.getElementById('tuiles-contraintes');
+            if (listeTuiles) {
+                Array.prototype.slice.call(
+                    listeTuiles.querySelectorAll('.tuile-contrainte')
+                ).sort(function (a, b) {
+                    return parseInt(a.getAttribute('data-ordre-depart') || '0', 10) -
+                           parseInt(b.getAttribute('data-ordre-depart') || '0', 10);
+                }).forEach(function (tuile) {
+                    listeTuiles.appendChild(tuile);
+                });
+                n4RenumeroterTuiles();
+                n4AnnoncerHierarchie('');
+            }
             const tri = document.getElementById('tri-comparateur');
             if (tri) tri.value = '';
             n4TrierModeles();
@@ -6758,6 +7169,17 @@ window.__EFFETS_INTERACTIONS__={};
 
             const tri = document.getElementById('tri-comparateur');
             if (tri) tri.addEventListener('change', n4TrierModeles);
+
+            // Les tuiles du classement (étape 2 en mode « classement ») : le
+            // glisser-déposer est posé ici, une fois, sur chaque tuile ; les
+            // boutons ▲ ▼ passent par leur onclick et n'ont rien à écouter.
+            zone.querySelectorAll('.tuile-contrainte').forEach(function (tuile) {
+                tuile.addEventListener('pointerdown', n4DemarrerDeplacementTuile);
+                tuile.addEventListener('pointermove', n4DeplacerTuileAuGlissement);
+                tuile.addEventListener('pointerup', n4TerminerDeplacementTuile);
+                tuile.addEventListener('pointercancel', n4TerminerDeplacementTuile);
+            });
+            n4RenumeroterTuiles();
 
             n4MettreAJourContraintes();
         }
