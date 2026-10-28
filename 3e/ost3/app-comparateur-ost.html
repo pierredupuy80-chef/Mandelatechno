@@ -2153,322 +2153,6 @@
         }
 
         /* ============================================
-           JEU DE LIVRAISON DU BONUS (bonus.jeuLivraison)
-           (bloc produit depuis bonus.jeuLivraison ; les
-            marqueurs JEU-LIVRAISON sont retirés si la
-            configuration n'en déclare pas)
-
-           Jeu d'adresse en vue de dessus, repris du jeu « colis
-           express » : le professeur de techno livre des colis avec
-           l'objet technique du cours (VAE, trottinette, drone… le
-           nom vient de la configuration). L'assistance électrique
-           se paie en énergie, le pédalage est gratuit : c'est
-           exactement le compromis que le cours fait mesurer.
-
-           Aucune animation CSS ici : tout le mouvement vit dans le
-           canevas, et seulement quand l'élève a cliqué « Démarrer ».
-           L'onglet reste donc immobile, comme l'exige
-           `bonus.animations: false` quand cette option est posée.
-           Le panneau est sombre dans les deux thèmes : c'est un
-           écran de jeu, pas une plaque de texte du cours.
-           ============================================ */
-
-        .jeu-livraison {
-            margin: var(--espacement-lg) 0;
-            padding: var(--espacement-md);
-            border: 2px solid #1e293b;
-            border-radius: var(--rayon-bordure);
-            background-color: #0b1020;
-            color: #e2e8f0;
-        }
-
-        .jeu-livraison h3 {
-            color: #fde68a;
-            margin-bottom: var(--espacement-sm);
-        }
-
-        .jeu-livraison-chapeau {
-            margin-bottom: var(--espacement-md);
-            /* 11:1 sur le fond du panneau */
-            color: #cbd5e1;
-        }
-
-        /* --- HUD --- */
-        .jeu-livraison-hud {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: var(--espacement-xs) var(--espacement-md);
-            padding: var(--espacement-sm) var(--espacement-md);
-            margin-bottom: var(--espacement-sm);
-            border: 2px solid #1e293b;
-            border-radius: var(--rayon-bordure);
-            background-color: #111a30;
-            font-size: 0.85rem;
-        }
-
-        .jeu-livraison-hud .jl-etiquette {
-            color: #94a3b8;
-        }
-
-        .jeu-livraison-hud .jl-valeur {
-            font-weight: 700;
-            color: #f8fafc;
-        }
-
-        .jl-jauge {
-            flex: 1 1 140px;
-            min-width: 120px;
-            height: 14px;
-            border: 2px solid #334155;
-            border-radius: 999px;
-            background-color: #1e293b;
-            overflow: hidden;
-        }
-
-        .jl-jauge span {
-            display: block;
-            height: 100%;
-            width: 100%;
-            background-color: #22c55e;
-        }
-
-        /* Batterie basse : la couleur seule ne suffit pas (RGAA), le texte du
-           HUD l'annonce aussi (« batterie 12 % »). */
-        .jl-jauge[data-etat="basse"] span {
-            background-color: #f59e0b;
-        }
-
-        .jl-jauge[data-etat="vide"] span {
-            background-color: #ef4444;
-        }
-
-        /* --- Barre d'objectif --- */
-        .jl-objectif {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--espacement-sm);
-            padding: var(--espacement-xs) var(--espacement-md);
-            margin-bottom: var(--espacement-sm);
-            border-radius: var(--rayon-bordure);
-            background-color: #1e293b;
-            color: #f8fafc;
-            font-size: 0.9rem;
-        }
-
-        .jl-objectif-titre {
-            font-weight: 700;
-            color: #fde68a;
-            font-size: 0.85rem;
-        }
-
-        .jl-pastille {
-            width: 14px;
-            height: 14px;
-            flex: 0 0 auto;
-            margin-top: 3px;
-            border-radius: 50%;
-            background-color: #facc15;
-        }
-
-        .jl-pastille[data-etat="livraison"] {
-            background-color: #22c55e;
-        }
-
-        /* --- Écran (canevas + voile) --- */
-        .jl-ecran {
-            position: relative;
-            max-width: 520px;
-            margin: 0 auto var(--espacement-sm);
-            border: 2px solid #334155;
-            border-radius: var(--rayon-bordure);
-            overflow: hidden;
-            background-color: #14532d;
-        }
-
-        .jl-canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            touch-action: none;
-        }
-
-        .jl-voile {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: var(--espacement-sm);
-            padding: var(--espacement-md);
-            overflow-y: auto;
-            background-color: rgba(8, 13, 26, 0.92);
-            color: #f8fafc;
-            text-align: center;
-        }
-
-        .jl-voile[hidden] {
-            display: none;
-        }
-
-        .jl-voile h4 {
-            color: #fde68a;
-            font-size: 1.05rem;
-        }
-
-        .jl-voile p {
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        /* --- Boutique d'améliorations --- */
-        .jl-articles {
-            display: grid;
-            gap: var(--espacement-sm);
-            text-align: left;
-        }
-
-        .jl-article {
-            padding: var(--espacement-xs) var(--espacement-sm);
-            border: 2px solid #334155;
-            border-radius: var(--rayon-bordure);
-            background-color: #16202e;
-        }
-
-        .jl-article[data-achetee="oui"] {
-            border-color: #22c55e;
-        }
-
-        .jl-article h5 {
-            font-size: 0.95rem;
-            color: #f8fafc;
-        }
-
-        .jl-article p {
-            font-size: 0.82rem;
-            color: #cbd5e1;
-            margin: 2px 0 var(--espacement-xs);
-        }
-
-        .jl-article button {
-            min-height: var(--hauteur-cible-min);
-            padding: var(--espacement-xs) var(--espacement-sm);
-            font: inherit;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #0b1020;
-            background-color: #22c55e;
-            border: 2px solid #16a34a;
-            border-radius: var(--rayon-bordure);
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-
-        .jl-article button[disabled] {
-            color: #cbd5e1;
-            background-color: #334155;
-            border-color: #475569;
-            cursor: default;
-        }
-
-        /* --- Barre d'outils et pavé tactile --- */
-        .jl-barre-outils {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--espacement-sm);
-            justify-content: center;
-            margin-bottom: var(--espacement-sm);
-        }
-
-        .jl-pave {
-            display: grid;
-            grid-template-columns: repeat(3, 64px);
-            grid-auto-rows: 48px;
-            gap: 6px;
-            justify-content: center;
-            margin: 0 auto var(--espacement-sm);
-            max-width: 100%;
-        }
-
-        .jl-pave button {
-            min-height: var(--hauteur-cible-min);
-            font-size: 1.1rem;
-            line-height: 1;
-            color: #f8fafc;
-            background-color: #1e293b;
-            border: 2px solid #475569;
-            border-radius: var(--rayon-bordure);
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-
-        .jl-pave button[data-touche="haut"] { grid-column: 2; grid-row: 1; }
-        .jl-pave button[data-touche="gauche"] { grid-column: 1; grid-row: 2; }
-        .jl-pave button[data-touche="bas"] { grid-column: 2; grid-row: 2; }
-        .jl-pave button[data-touche="droite"] { grid-column: 3; grid-row: 2; }
-
-        .jl-pave button[data-touche="assistance"] {
-            grid-column: 1 / span 3;
-            grid-row: 3;
-            font-size: 0.9rem;
-            font-weight: 700;
-            background-color: #1d4ed8;
-            border-color: #2563eb;
-        }
-
-        .jl-pave button[aria-pressed="true"] {
-            background-color: #2563eb;
-            border-color: #60a5fa;
-        }
-
-        .jl-pave button:focus-visible,
-        .jl-article button:focus-visible,
-        .jl-barre-outils button:focus-visible {
-            outline: 3px solid #fde68a;
-            outline-offset: 2px;
-        }
-
-        /* --- Dialogue et aide --- */
-        .jl-dialogue {
-            padding: var(--espacement-sm) var(--espacement-md);
-            margin-bottom: var(--espacement-sm);
-            border-left: 4px solid #facc15;
-            border-radius: var(--rayon-bordure);
-            background-color: #16202e;
-            color: #e2e8f0;
-            font-size: 0.9rem;
-        }
-
-        .jl-dialogue .jl-nom {
-            font-weight: 700;
-            color: #fde68a;
-        }
-
-        .jeu-livraison-aide {
-            font-size: 0.85rem;
-            line-height: 1.45;
-            color: #cbd5e1;
-        }
-
-        .jl-statut {
-            min-height: 1.2em;
-            margin-top: var(--espacement-xs);
-            font-size: 0.85rem;
-            color: #fde68a;
-        }
-
-        @media (max-width: 420px) {
-            .jl-pave {
-                grid-template-columns: repeat(3, 56px);
-                grid-auto-rows: 44px;
-            }
-
-            .jeu-livraison {
-                padding: var(--espacement-sm);
-            }
-        }
-
-        /* ============================================
            BARRE DE PROGRESSION
            ============================================ */
         
@@ -4130,6 +3814,276 @@
 
 
     </style>
+    <style>
+        /* ============================================ LIVRAISON-VAE : DEBUT ============================================ */
+        /* Portrait du professeur dans le HUD du jeu (planche 8 x 4 du
+           prof canonique). Le chemin est relatif à la page publiée. */
+        :root {
+            --sprite-prof: url("assets-jeu/prof-planche.png");
+        }
+/* ============================================
+           BONUS — jeu « Le prof de techno : colis express »
+           ============================================ */
+        .jeu {
+            margin-top: var(--espacement-md);
+            overscroll-behavior: contain;
+            background: #0b1020;
+            border-radius: var(--rayon-bordure);
+            overflow: hidden;
+            border: 2px solid #1e293b;
+        }
+
+        /* --- HUD --- */
+        .jeu-hud {
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm) var(--espacement-md);
+            flex-wrap: wrap;
+            padding: var(--espacement-sm) var(--espacement-md);
+            background: #111a30;
+            border-bottom: 2px solid #1e293b;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+        }
+        .jeu-hud .portrait-prof {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 auto;
+            background-image: var(--sprite-prof);
+            background-repeat: no-repeat;
+            background-size: 384px 192px;   /* planche 8 x 4 lignes (repos, lancer, rigoler, rage) */
+            image-rendering: pixelated;
+            background-position: 0 0;
+            border-radius: 4px;
+            border: 2px solid #334155;
+            background-color: #1e293b;
+        }
+        /* planche recadrée : ligne 0 repos, 1 lancer, 2 rigoler, 3 rage */
+        .jeu-hud .portrait-prof[data-etat="repos"] {
+            animation: prof-repos 1.32s steps(6) infinite;
+        }
+        .jeu-hud .portrait-prof[data-etat="lancer"] {
+            animation: prof-lancer 0.57s steps(6) 1;
+        }
+        .jeu-hud .portrait-prof[data-etat="rigoler"] {
+            animation: prof-rigoler 0.72s steps(6) 2;
+        }
+        .jeu-hud .portrait-prof[data-etat="rage"] {
+            animation: prof-rage 0.72s steps(8) 2;
+        }
+        /* 6 images par animation (8 pour la rage), cases de 48 px à l'écran :
+           on parcourt exactement 6 x 48 = 288 px (8 x 48 = 384 px pour la rage). */
+        @keyframes prof-repos {
+            from { background-position: 0 0; }
+            to   { background-position: -288px 0; }
+        }
+        @keyframes prof-lancer {
+            from { background-position: 0 -48px; }
+            to   { background-position: -288px -48px; }
+        }
+        @keyframes prof-rigoler {
+            from { background-position: 0 -96px; }
+            to   { background-position: -288px -96px; }
+        }
+        @keyframes prof-rage {
+            from { background-position: 0 -144px; }
+            to   { background-position: -384px -144px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .jeu-hud .portrait-prof { animation: none !important; }
+        }
+
+        .jeu-hud .jauge {
+            flex: 1 1 160px;
+            min-width: 96px;
+            height: 14px;
+            background: #24314d;
+            border: 2px solid #475569;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        .jeu-hud .jauge > span {
+            display: block;
+            height: 100%;
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+        .jeu-hud .bloc-jauge { flex: 2 1 180px; }
+        .jeu-hud .jauge-batterie > span { background: #22c55e; }
+        .jeu-hud .jauge-batterie > span.bas { background: #f59e0b; }
+        .jeu-hud .jauge-batterie > span.critique { background: #ef4444; }
+        .jeu-hud .etiquette {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #94a3b8;
+        }
+        .jeu-hud .valeur {
+            font-weight: 700;
+            color: #fbbf24;
+            white-space: nowrap;
+        }
+
+        .jeu-objectif {
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-sm);
+            padding: 6px var(--espacement-md);
+            background: #0e1730;
+            border-bottom: 2px solid #1e293b;
+            color: #e2e8f0;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .jeu-objectif .pastille {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--couleur-alerte, #fbbf24);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+            flex: 0 0 auto;
+        }
+
+        /* --- zone de jeu --- */
+        .jeu-ecran {
+            position: relative;
+            touch-action: none;
+            line-height: 0;
+            background: #0b1020;
+        }
+        #jeu-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            image-rendering: pixelated;
+            touch-action: none;
+        }
+        .jeu-voile {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--espacement-sm);
+            padding: var(--espacement-md);
+            background: rgba(8, 12, 26, 0.9);
+            color: #e2e8f0;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .jeu-voile.cache { display: none; }
+        .jeu-voile h4 { margin: 0; font-size: 1rem; }
+        .jeu-voile p { margin: 0; font-size: 0.82rem; max-width: 36ch; }
+        .jeu-voile .recap { color: #fbbf24; font-weight: 700; }
+
+        .jeu-barre-outils {
+            display: flex;
+            gap: var(--espacement-sm);
+            flex-wrap: wrap;
+            padding: var(--espacement-sm) var(--espacement-md);
+            background: #111a30;
+            border-top: 2px solid #1e293b;
+        }
+        .jeu-barre-outils button { flex: 1 1 auto; min-height: var(--hauteur-cible-min); }
+        .jeu-barre-outils .bouton-boost { flex: 0 1 96px; }
+
+        .jeu-dialogue {
+            display: flex;
+            gap: var(--espacement-sm);
+            margin: 0;
+            padding: var(--espacement-sm) var(--espacement-md);
+            background: #16223c;
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            min-height: 54px;
+            align-items: flex-start;
+        }
+        .jeu-dialogue .nom { color: #7dd3fc; font-weight: 700; }
+        .jeu-dialogue p { margin: 0; }
+
+        .jeu-pave {
+            touch-action: none;
+            display: grid;
+            grid-template-columns: repeat(3, 54px);
+            grid-template-rows: repeat(2, 54px);
+            gap: 4px;
+            justify-content: center;
+            padding: var(--espacement-sm) 0;
+            background: #111a30;
+        }
+        .jeu-pave button {
+            width: 54px; height: 54px;
+            font-size: 1.1rem;
+            border: 2px solid #334155;
+            border-radius: 6px;
+            background: #1e293b;
+            color: #e2e8f0;
+            cursor: pointer;
+        }
+        .jeu-pave button:active { background: #334155; }
+        .jeu-pave .h { grid-column: 2; grid-row: 1; }
+        .jeu-pave .g { grid-column: 1; grid-row: 2; }
+        .jeu-pave .b { grid-column: 2; grid-row: 2; }
+        .jeu-pave .d { grid-column: 3; grid-row: 2; }
+
+        .jeu-aide {
+            margin: 0;
+            padding: var(--espacement-sm) var(--espacement-md) var(--espacement-md);
+            font-size: 0.8rem;
+            background: #111a30;
+            color: #94a3b8;
+        }
+        /* --- boutique : SURIMPRESSION sur l'écran de jeu --- */
+        .boutique {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            gap: var(--espacement-sm);
+            padding: var(--espacement-md);
+            background: rgba(8, 12, 26, 0.93);
+            color: #e2e8f0;
+            overflow: auto;
+        }
+        .boutique[hidden] { display: none; }
+        .boutique h4 { margin: 0; font-size: 0.95rem; }
+        .boutique .texte-boutique {
+            margin: 0 0 var(--espacement-sm);
+            font-size: 0.78rem;
+            color: #94a3b8;
+        }
+        .boutique .articles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: var(--espacement-sm);
+            margin-bottom: var(--espacement-sm);
+        }
+        .boutique .article {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: left;
+            padding: var(--espacement-sm);
+            min-height: var(--hauteur-cible-min);
+            border: 2px solid #334155;
+            border-radius: var(--rayon-bordure);
+            background: #1e293b;
+            color: #e2e8f0;
+            cursor: pointer;
+            font-size: 0.78rem;
+        }
+        .boutique .article strong { font-size: 0.85rem; color: #7dd3fc; }
+        .boutique .article em { font-style: normal; color: #fbbf24; }
+        .boutique .article:hover:not(:disabled) { border-color: var(--couleur-primaire); }
+        .boutique .article:disabled { opacity: 0.45; cursor: not-allowed; }
+        .boutique .article.epuise { border-color: #22c55e; }
+
+        /* ============================================ LIVRAISON-VAE : FIN ============================================ */
+    </style>
 </head>
 <body>
     <!-- Skip link pour accessibilité -->
@@ -5692,70 +5646,101 @@ window.__EFFETS_INTERACTIONS__={};
                     <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
 
 
-                    <article class="jeu-livraison" id="jeu-livraison" data-ost-id="bonus-jeu-livraison" aria-labelledby="jeu-livraison-titre">
-                        <h3 id="jeu-livraison-titre">🚲 Livraison express en VAE : le prof de techno pédale</h3>
-                        <p class="jeu-livraison-chapeau">Le prof de techno s'est fait embaucher par la régie de la commune : il livre les colis du quartier avec un VAE. Cinq tournées, trois ou quatre colis chacune, un chrono serré — et une seule réserve d'assistance. Tu vas sentir dans les jambes ce que le cours dit des critères de performance : l'assistance électrique fait aller presque deux fois plus vite, mais elle se paie en énergie, alors que le pédalage ne coûte rien. Entre deux tournées, tu améliores le vélo avec la cagnotte — un objet technique évolue par améliorations successives.</p>
-                        <script type="application/json" class="jl-donnees">{"vehicule": "VAE", "argentParColis": 2, "destinations": [{"nom": "la gare", "lieu": "sud-ouest"}, {"nom": "le centre-ville", "lieu": "nord-est"}, {"nom": "l'école", "lieu": "nord-ouest"}, {"nom": "la mairie", "lieu": "sud-est"}], "tournees": [{"titre": "Tournée 1 — La tournée de découverte", "objectif": "« Première tournée : trois colis à livrer, et le temps de comprendre le vélo. »", "colis": 3, "chrono": 100}, {"titre": "Tournée 2 — Le centre-ville se réveille", "objectif": "« Deuxième tournée : il y a plus de monde sur les trottoirs, ouvre l'œil. »", "colis": 3, "chrono": 95}, {"titre": "Tournée 3 — Quatre colis, ça commence à faire", "objectif": "« La commune m'a ajouté une destination. Quatre colis : il faut gérer la batterie. »", "colis": 4, "chrono": 95}, {"titre": "Tournée 4 — Le coup de feu de midi", "objectif": "« Midi ! Les rues sont pleines. Pédale au bon moment, l'assistance coûte cher. »", "colis": 4, "chrono": 90}, {"titre": "Tournée 5 — La dernière, la plus dure", "objectif": "« Dernière tournée : quatre colis et moins de temps. Montre que tu maîtrises le compromis. »", "colis": 4, "chrono": 85}], "ameliorations": [{"cle": "batterie", "nom": "Batterie 500 Wh", "description": "Une batterie de plus grande capacité : l'autonomie grimpe de 25 %, mais la masse et le prix aussi.", "prix": 12}, {"cle": "assistance", "nom": "Moteur plus coupleux", "description": "Plus de couple dans les côtes : la vitesse assistée gagne 15 %.", "prix": 14}, {"cle": "pneus", "nom": "Pneus anti-crevaison", "description": "Un choc coûte deux fois moins d'énergie : c'est de la durabilité, donc de la réparabilité.", "prix": 10}, {"cle": "eclairage", "nom": "Éclairage et feu stop", "description": "Les piétons voient le prof arriver et s'écartent : moins de chocs, plus de sécurité.", "prix": 8}], "messages": {"titreAccueil": "🚲 Livraison express en VAE", "accueil": "<strong>{tournees} tournées<\/strong> de {colis} colis, du dépôt jusqu'aux clients de la commune. L'<strong>assistance électrique<\/strong> va presque deux fois plus vite mais vide la batterie ; le <strong>pédalage<\/strong> ne coûte rien. Ramasse les batteries vertes 🟩, évite les piétons, et dépense ta cagnotte dans l'atelier entre deux tournées.", "titreBoutique": "🛠️ Atelier : améliorer le VAE", "boutique": "Tournée {tournee} livrée avec {chrono} restantes : +{bonus} €. C'est ainsi qu'un objet technique évolue : par améliorations successives, avec un budget.", "titreEchec": "⏱️ Le temps est écoulé", "echec": "Tournée {tournee} : {colis} colis livrés sur {total}. La tournée est à refaire — les améliorations, elles, restent sur le vélo.", "titreFin": "🏆 La commune est livrée !", "fin": "Score : <strong>{score}<\/strong> — cagnotte : <strong>{argent} €<\/strong>. Question pour la classe : laquelle de tes améliorations avait le meilleur rapport performance / prix ?", "colisPris": "Colis chargé : direction {destination}.", "colisLivre": "Colis livré à {destination} ! ({colis} / {total})", "charge": "Batterie rechargée : {batterie} % d'autonomie.", "panne": "Batterie vide : l'assistance se coupe, le professeur termine au pédalage.", "choc": "Aïe ! Un piéton surpris : −{degats} % d'assistance.", "achat": "« {nom} » installé sur le vélo.", "dejaInstalle": "Déjà installé sur le vélo.", "boutonInstalle": "✔ Installé", "boutonAcheter": "Acheter — {prix} €", "dialogueAccueil": "« Prêt ? Le colis est au dépôt, à gauche. À toi de pédaler ! »", "dialogueDepart": "« C'est parti ! Premier colis au dépôt. »", "dialogueColis": "« Colis à bord ! Plus qu'à rejoindre la destination. »", "dialogueChoc": "« Attention aux piétons ! Je ralentis et je reprends mon souffle. »", "objectifDepot": "Prends un colis au dépôt", "objectifLivraison": "Livre le colis à {destination}", "statutAccueil": "Appuie sur « Démarrer la tournée » pour jouer.", "statutDepart": "Tournée {tournee} : prends un colis au dépôt.", "statutBoutique": "Tournée {tournee} réussie. Améliore le vélo, puis passe à la tournée suivante.", "statutEchec": "Temps écoulé : la tournée est à refaire.", "statutFin": "Partie terminée.", "statutPause": "Partie en pause.", "statutReprise": "La partie reprend."}, "boutons": {"demarrer": "Démarrer la tournée", "tourneeSuivante": "Tournée suivante →", "recommencerTournee": "Refaire la tournée", "rejouer": "Rejouer", "pauser": "⏸️ Pause", "reprendre": "▶️ Reprendre", "assistanceAllumee": "⚡ Assistance ON", "assistanceCoupee": "🦵 Pédalage seul"}}</script>
-                        <div class="jeu-livraison-hud">
-                            <span class="jl-etiquette">Assistance</span>
-                            <div class="jl-jauge" id="jl-jauge" role="progressbar"
-                                 aria-label="Batterie d'assistance du VAE, qui se vide quand l'assistance travaille"
-                                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-etat="haute">
-                                <span id="jl-barre"></span>
-                            </div>
-                            <span class="jl-valeur" id="jl-batterie">100 %</span>
-                            <div><span class="jl-etiquette">Mode</span> <span class="jl-valeur" id="jl-assistance">Pédalage seul</span></div>
-                            <div><span class="jl-etiquette">Tournée</span> <span class="jl-valeur" id="jl-tournee">1 / 1</span></div>
-                            <div><span class="jl-etiquette">Colis</span> <span class="jl-valeur" id="jl-colis">0 / 3</span></div>
-                            <div><span class="jl-etiquette">Cagnotte</span> <span class="jl-valeur" id="jl-argent">0 €</span></div>
-                            <div><span class="jl-etiquette">Temps</span> <span class="jl-valeur" id="jl-chrono">1:40</span></div>
-                            <div><span class="jl-etiquette">Score</span> <span class="jl-valeur" id="jl-score">0</span></div>
-                        </div>
-                        <div class="jl-objectif">
-                            <span class="jl-pastille" id="jl-pastille" aria-hidden="true"></span>
-                            <div>
-                                <p class="jl-objectif-titre" id="jl-tournee-titre"></p>
-                                <p id="jl-objectif"></p>
-                            </div>
-                        </div>
-                        <div class="jl-ecran">
-                            <canvas class="jl-canvas" id="jl-canvas" width="480" height="360" role="application"
-                                    aria-label="Jeu en vue de dessus : le professeur de techno livre ses colis avec son VAE. Utilise les flèches du clavier, ou les boutons du pavé tactile sur tablette." aria-describedby="jl-aide"></canvas>
-                            <div class="jl-voile" id="jl-voile">
-                                <h4 id="jl-voile-titre"></h4>
-                                <p id="jl-voile-texte"></p>
-                                <div id="jl-boutique" hidden>
-                                    <h4>🛠️ Atelier — <span id="jl-argent-boutique">0 €</span></h4>
-                                    <div class="jl-articles" id="jl-articles"></div>
+
+
+
+                                        <!-- LIVRAISON-VAE : DEBUT -->
+<!-- ============================================================
+     BLOC DU JEU BONUS — « Le jeu de livraison par VAE »
+     Injecté dans #contenu-bonus par appliquer-livraison-vae.py.
+     ============================================================ -->
+<div class="carte-contenu" id="jeu-vae-carte" data-ost-id="bonus-jeu-vae">
+                    <h2>🚲 Le jeu de livraison par VAE</h2>
+                    <p>Le professeur de techno s'est fait embaucher par la régie de la commune : il livre les colis du quartier avec son <strong>VAE</strong> — un vélo à assistance électrique. À toi de le conduire. Une seule réserve d'énergie, la <strong>batterie d'assistance</strong>, qui sert en même temps de <strong>réserve de vie</strong> : elle fond quand tu enclenches l'assistance électrique et quand tu cognes un obstacle, jamais quand tu pédales. Ramasse les <strong>batteries vertes</strong> pour la recharger, et les <strong>pièces détachées</strong> pour améliorer le vélo. Attention aux enfants qui lancent des ballons, aux arbres du trottoir et aux maisons.</p>
+
+                    <div class="jeu" id="jeu">
+                        <div class="jeu-hud">
+                            <div class="portrait-prof" id="portrait-prof" data-etat="repos"
+                                 role="img" aria-label="Le professeur de techno"></div>
+                            <div class="bloc-jauge">
+                                <div class="etiquette">Batterie d'assistance (réserve du VAE)</div>
+                                <div class="jauge jauge-batterie" id="jauge-batterie" role="progressbar"
+                                     aria-label="Batterie d'assistance du VAE, qui sert aussi de réserve de vie"
+                                     aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+                                    <span id="barre-batterie"></span>
                                 </div>
-                                <button type="button" class="bouton-action succes" id="jl-btn-action" onclick="livraisonAction()">Démarrer la tournée</button>
+                            </div>
+                            <div><span class="etiquette">Tournée</span> <span class="valeur" id="niveau-jeu">1 / 5</span></div>
+                            <div><span class="etiquette">Colis</span> <span class="valeur" id="livres-jeu">0 / 5</span></div>
+                            <div><span class="etiquette">Cagnotte</span> <span class="valeur" id="argent-jeu">0 €</span></div>
+                            <div><span class="etiquette">Temps</span> <span class="valeur" id="chrono-jeu">2:45</span></div>
+                            <div><span class="etiquette">Score</span> <span class="valeur" id="score-jeu">0</span></div>
+                        </div>
+
+                        <div class="jeu-objectif" id="jeu-objectif-barre">
+                            <span class="pastille" id="pastille-objectif" aria-hidden="true"></span>
+                            <span id="jeu-objectif">Prends le colis au dépôt</span>
+                        </div>
+
+                        <div class="jeu-ecran">
+                            <canvas id="jeu-canvas" width="480" height="360"
+                                    role="application"
+                                    aria-label="Jeu en vue de dessus : conduire le VAE du professeur de techno pour livrer les colis du quartier. Flèches du clavier ou pavé tactile, Maj pour l'assistance électrique."
+                                    aria-describedby="jeu-aide"></canvas>
+                            <div class="jeu-voile" id="jeu-voile">
+                                <h4 id="jeu-voile-titre">🚲 Le jeu de livraison par VAE</h4>
+                                <p id="jeu-voile-texte"><strong>5 tournées</strong>, de 5 à 9 colis. À chaque tournée, il y a <strong>30 % d'enfants en plus</strong> dehors. Entre deux tournées, le professeur améliore le vélo avec la cagnotte : c'est ainsi qu'un objet technique évolue. La boucle : colis au dépôt (flèche <strong>jaune</strong>) → livraison dans la zone (flèche <strong>verte</strong>). Le <strong>pédalage ne coûte aucune énergie</strong> ; l'<strong>assistance électrique</strong> (Maj, ou le bouton ⚡) va presque deux fois plus vite mais vide la batterie. Ramasse les batteries vertes 🟩.</p>
+                                <p class="recap" id="jeu-voile-recap"></p>
+                                <button type="button" class="bouton-action succes" id="jeu-btn-demarrer" onclick="demarrerJeuVae()">
+                                    Démarrer la tournée
+                                </button>
+                            </div>
+                            <div class="boutique" id="boutique" hidden>
+                                <h4>🛠️ Atelier : améliorer le VAE — <span id="boutique-argent">0 €</span></h4>
+                                <p class="texte-boutique">Le professeur investit la cagnotte : un objet technique évolue par améliorations successives, avec un budget — question de classe : laquelle de ces améliorations change aussi l'<strong>indice de réparabilité</strong> ?</p>
+                                <div class="articles" id="boutique-articles"></div>
+                                <button type="button" class="bouton-action succes" onclick="niveauSuivantJeu()">
+                                    Passer à la tournée suivante →
+                                </button>
                             </div>
                         </div>
-                        <div class="jl-barre-outils">
-                            <button type="button" class="bouton-action secondaire" id="jl-btn-pause"
-                                    onclick="livraisonBasculerPause()" aria-pressed="false" disabled>⏸️ Pause</button>
-                            <button type="button" class="bouton-action secondaire" id="jl-btn-rejouer"
-                                    onclick="livraisonReinitialiser()">🔁 Rejouer</button>
-                        </div>
-                        <div class="jl-dialogue">
-                            <p><span class="jl-nom">Le prof de techno :</span> <span id="jl-dialogue"></span></p>
-                        </div>
-                        <div class="jl-pave" id="jl-pave" role="group"
-                             aria-label="Commandes tactiles du VAE">
-                            <button type="button" data-touche="haut" aria-label="Avancer">▲</button>
-                            <button type="button" data-touche="gauche" aria-label="Aller à gauche">◀</button>
-                            <button type="button" data-touche="bas" aria-label="Reculer">▼</button>
-                            <button type="button" data-touche="droite" aria-label="Aller à droite">▶</button>
-                            <button type="button" data-touche="assistance" aria-pressed="false" aria-label="Maintenir l'assistance électrique">⚡ Assistance</button>
-                        </div>
-                        <p class="jeu-livraison-aide" id="jl-aide"><strong>Commandes :</strong> flèches, ZQSD ou WASD pour pédaler ; <strong>Maj</strong> (ou le bouton ⚡ Assistance) pour enclencher l'assistance électrique ; boutons ▲◀▼▶ sur tablette. <strong>But :</strong> livrer tous les colis de la tournée avant la fin du chrono. <strong>À savoir :</strong> le pédalage ne coûte aucune énergie, l'assistance vide la batterie ; les batteries vertes la rechargent.</p>
-                        <p class="jl-statut" id="jl-statut" role="status" aria-live="polite"></p>
-                    </article>
-                    
 
+                        <div class="jeu-barre-outils">
+                            <button type="button" class="bouton-action secondaire" id="jeu-btn-pause" onclick="basculerPauseJeuVae()" disabled>
+                                ⏸️ Pause
+                            </button>
+                            <button type="button" class="bouton-action secondaire" id="jeu-btn-rejouer" onclick="rejouerJeuVae()">
+                                🔁 Rejouer
+                            </button>
+                            <button type="button" class="bouton-action secondaire bouton-boost" id="jeu-btn-assistance"
+                                    data-touche="boost" aria-pressed="false"
+                                    aria-label="Maintenir l'assistance électrique">
+                                ⚡ Assistance
+                            </button>
+                        </div>
 
+                        <div class="jeu-dialogue">
+                            <p><span class="nom">Le prof de techno :</span> <span id="jeu-dialogue-texte">« Prêt ? Le colis est au dépôt, à gauche. À toi de pédaler ! »</span></p>
+                        </div>
 
-                    <div class="jeux-bonus">
+                        <div class="jeu-pave" aria-label="Commandes tactiles du VAE">
+                            <button type="button" class="h" data-touche="haut" aria-label="Avancer">▲</button>
+                            <button type="button" class="g" data-touche="gauche" aria-label="Aller à gauche">◀</button>
+                            <button type="button" class="b" data-touche="bas" aria-label="Reculer">▼</button>
+                            <button type="button" class="d" data-touche="droite" aria-label="Aller à droite">▶</button>
+                        </div>
+
+                        <p class="jeu-aide" id="jeu-aide">
+                            <strong>Commandes :</strong> flèches, ZQSD ou WASD pour pédaler ; <strong>Maj</strong> (ou le bouton ⚡ Assistance) pour l'assistance électrique ; boutons ▲◀▼▶ sur tablette.
+                            <strong>But :</strong> livrer tous les colis de la tournée avant la fin du chrono.
+                            <strong>À savoir :</strong> le pédalage est gratuit, l'assistance vide la batterie 🟩 ;
+                            les <strong>pneus anti-crevaison</strong> 🛡️ réduisent les dégâts, la <strong>batterie de secours</strong> 🔋 augmente la réserve,
+                            l'<strong>éclairage et le feu stop</strong> 📷 allongent l'alerte avant les lancers.
+                        </p>
+                    </div>
+                </div>
+                    <!-- LIVRAISON-VAE : FIN -->
+<div class="jeux-bonus">
                         
                     <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-1">
                         <img class="illustration-jeu" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEJklEQVR4nO1aTUhUURT+jArH8id7MFo6ozJKfwphTCX0Y7QKwf4MWqSLpKKFtCihhYFoDIwbyZBctBCMFtrPpkUwEihIChLoyhLJqXAeDJJM+aLNazHe55uZN87Mm3vPU5oPZN6799yf891zz7nveIH/HFnUA0qSU00kEwwuks2LlACmvLtsm2G9X15BQMkFQEcCySD6VY+nPIOeBEA8EcIJSLTq8UBlDanNyiRSVR4AHPZ8FNlCAmYTCaEEJOPwKPsxgnALMLP6DBRWQLIFNjO2Uw42MtCVtOzV2x0CZ7IOMgtIRXkz8mYhLLzow9/IQBfcF9tiZKbePgGAhHUiw6HQLfCx/wbavC8ArCtkhI3qHPZ89F07gybvB+7zAwRvgW9fv6O5vTeirLyxG+WN3YbyRnXR7bcMJMmpSpJTvXCsXPXNKerq9JBqLzmgrk4PxTzHq/PNKeqR0kKV9SVinkKPwpLkVItsIfT6fqDu16uU20/svoJ75/cjoOQKOw4LJwAIO8L8vBwAwPOehwCAmw88AICuO5cAAB3P3mj1rG72y5Lw7wGhTjAYXMySJKfql1dQnZcDqSAbAOBpfgoXwooNdvoAQHtnYLKsH1FzJPsaLLKFUF1ZHC4ryEbB3I4Y2Xn7+rGXYvUB4nxAkS2EXbadqCjZC5eci8vH6zSZ15MTqPV0wnO/Bb+Vv2SJEbKMkN6L+98/jqmfHPXFxHqKrJBQH5Bu6NK337JRwN160rCu0lUVU/Zl/nNMmX9mAYEpeWtGgY3AlK10VRkqTgVhR+FkzT9Z5UWdBIUQoHl9tz3tvhw1FVo/IkgQZgF65f0zC6b6YO30JPCG8IQIc2IM7zwv0T8bQv/sxrm+6HaiwJ2ARGa62NBgWP5zaVn70yPaenhvAyEWoDfXdFeRtRe1DbiGwWRW5251biKRGPhnFuCoqYgYh9e5gPs5wOzqFxQXxq0LTMlw1FRoJPD0Ddy2AFv9vrOHeHVpCNY/L1/A1QKG2+sB6EhY+00noWn04TScZp96kByFh9vr0bP8JynZkaa1KNFkXD856uM0qzC4EsBWhVkCD0QrzDs9zo0A5pUlyalGT9IsIUY5Av1YPECXEnPbI0JZIuhPglv6ggSbfCqhi0p5gOifo2aVoEiJZe4HWD0BhkcnDmvPrSY/n82AlIDoM33El56OAEqQEhCYktF8cJ/27tU7xlvhn7HxaZI8AIPlPoDyWqwRSAlobzmaUOb0qdqk5HjBcguwGhkCrJ4Aw9j4tCXjWkaAd/DThu9UsNQCWASwMhKQECDysnO6ILMAytCWCoQTkMzqx5OhsByShEhpaVlEWTAoQ1GUiCxSIhlR2DRh0CoQJURkBIOy9mxWRgRICFAUBYqi4Pq5PdqzGRkRsOSWWLx9TXEpKoMMMsggAx3+AW187IjXcGOYAAAAAElFTkSuQmCC" alt="Le professeur de techno en pixel art, la tête renversée en arrière et les mains sur le ventre, qui rit" decoding="async">
@@ -12292,6 +12277,2120 @@ window.__EFFETS_INTERACTIONS__={};
         }
     })();
     // ==== PANNEAU-DEV:FIN ====
+    </script>
+    <!-- LIVRAISON-VAE : DEBUT -->
+    <script>
+        /* Assets du jeu de livraison par VAE — fichiers servis à côté
+           de l'activité, dans assets-jeu/. */
+        window.ASSETS_JEU = {
+            "arbre": "assets-jeu/arbre.png",
+            "avion": "assets-jeu/avion-papier.png",
+            "ballon": "assets-jeu/ballon-basket.png",
+            "ballon": "assets-jeu/ballon-basket.png",
+            "barriere": "assets-jeu/barriere.png",
+            "batterie": "assets-jeu/batterie.png",
+            "bois": "assets-jeu/baton-bois-v2.png",
+            "bois": "assets-jeu/baton-bois-v2.png",
+            "camera": "assets-jeu/camera-thermique.png",
+            "carbone": "assets-jeu/carbone.png",
+            "chatA": "assets-jeu/chat-a.png",
+            "chatB": "assets-jeu/chat-b.png",
+            "chien": "assets-jeu/chien-course.png",
+            "chien": "assets-jeu/chien-course.png",
+            "colis": "assets-jeu/colis.png",
+            "filleLancerEst": "assets-jeu/enfant-fille-lancer-est.png",
+            "filleLancerNord": "assets-jeu/enfant-fille-lancer-nord.png",
+            "filleLancerNordEst": "assets-jeu/enfant-fille-lancer-nord-est.png",
+            "filleLancerOuest": "assets-jeu/enfant-fille-lancer-ouest.png",
+            "filleLancerSud": "assets-jeu/enfant-fille-lancer-sud.png",
+            "filleLancerSudEst": "assets-jeu/enfant-fille-lancer-sud-est.png",
+            "filleLancerSudOuest": "assets-jeu/enfant-fille-lancer-sud-ouest.png",
+            "filleMarcheEst": "assets-jeu/enfant-fille-marche-est.png",
+            "filleMarcheNord": "assets-jeu/enfant-fille-marche-nord.png",
+            "filleMarcheNordEst": "assets-jeu/enfant-fille-marche-nord-est.png",
+            "filleMarcheNordOuest": "assets-jeu/enfant-fille-marche-nord-ouest.png",
+            "filleMarcheOuest": "assets-jeu/enfant-fille-marche-ouest.png",
+            "filleMarcheSud": "assets-jeu/enfant-fille-marche-sud.png",
+            "filleMarcheSudEst": "assets-jeu/enfant-fille-marche-sud-est.png",
+            "filleMarcheSudOuest": "assets-jeu/enfant-fille-marche-sud-ouest.png",
+            "fleur0": "assets-jeu/massif-fleurs-rouge.png",
+            "fleur1": "assets-jeu/massif-fleurs-jaune.png",
+            "fleur2": "assets-jeu/massif-fleurs-blanc.png",
+            "garconLancerEst": "assets-jeu/enfant-garcon-lancer-est.png",
+            "garconLancerNord": "assets-jeu/enfant-garcon-lancer-nord.png",
+            "garconLancerNordEst": "assets-jeu/enfant-garcon-lancer-nord-est.png",
+            "garconLancerNordOuest": "assets-jeu/enfant-garcon-lancer-nord-ouest.png",
+            "garconLancerOuest": "assets-jeu/enfant-garcon-lancer-ouest.png",
+            "garconLancerSud": "assets-jeu/enfant-garcon-lancer-sud.png",
+            "garconLancerSudEst": "assets-jeu/enfant-garcon-lancer-sud-est.png",
+            "garconLancerSudOuest": "assets-jeu/enfant-garcon-lancer-sud-ouest.png",
+            "garconPoseEst": "assets-jeu/enfant-garcon-pose-est.png",
+            "garconPoseNord": "assets-jeu/enfant-garcon-pose-nord.png",
+            "garconPoseNordEst": "assets-jeu/enfant-garcon-pose-nord-est.png",
+            "garconPoseNordOuest": "assets-jeu/enfant-garcon-pose-nord-ouest.png",
+            "garconPoseOuest": "assets-jeu/enfant-garcon-pose-ouest.png",
+            "garconPoseSud": "assets-jeu/enfant-garcon-pose-sud.png",
+            "garconPoseSudEst": "assets-jeu/enfant-garcon-pose-sud-est.png",
+            "garconPoseSudOuest": "assets-jeu/enfant-garcon-pose-sud-ouest.png",
+            "lipo": "assets-jeu/lipo.png",
+            "maison1": "assets-jeu/maison-facade-1.png",
+            "maison2": "assets-jeu/maison-facade-2.png",
+            "maison3": "assets-jeu/maison-facade-3.png",
+            "plateforme": "assets-jeu/plateforme-h.png",
+            "profVaeRouleEst": "assets-jeu/prof-vae-roule-est.png",
+            "profVaeRouleNord": "assets-jeu/prof-vae-roule-nord.png",
+            "profVaeRouleNordEst": "assets-jeu/prof-vae-roule-nord-est.png",
+            "profVaeRouleNordOuest": "assets-jeu/prof-vae-roule-nord-ouest.png",
+            "profVaeRouleOuest": "assets-jeu/prof-vae-roule-ouest.png",
+            "profVaeRouleSud": "assets-jeu/prof-vae-roule-sud.png",
+            "profVaeRouleSudEst": "assets-jeu/prof-vae-roule-sud-est.png",
+            "profVaeRouleSudOuest": "assets-jeu/prof-vae-roule-sud-ouest.png"
+        };
+        /* Feuilles du professeur à VAE : direction -> { cle, n } */
+        window.PROF_VAE_JEU = { directions: {"est":{"cle":"profVaeRouleEst","n":1},"sud-est":{"cle":"profVaeRouleSudEst","n":1},"sud":{"cle":"profVaeRouleSud","n":1},"sud-ouest":{"cle":"profVaeRouleSudOuest","n":1},"ouest":{"cle":"profVaeRouleOuest","n":1},"nord-ouest":{"cle":"profVaeRouleNordOuest","n":1},"nord":{"cle":"profVaeRouleNord","n":1},"nord-est":{"cle":"profVaeRouleNordEst","n":1}} };
+        /* Bandes animées : nombre d'images et taille d'une case */
+        window.ANIM_JEU = {"ballon":{"n":2,"l":22,"h":22},"bois":{"n":2,"l":28,"h":20},"chien":{"n":4,"l":43,"h":34}};
+        /* Feuilles des enfants : modele -> anim -> direction */
+        window.ENFANTS_JEU = {"fille":{"marche":{"est":{"cle":"filleMarcheEst","n":9},"sud-est":{"cle":"filleMarcheSudEst","n":9},"sud":{"cle":"filleMarcheSud","n":9},"sud-ouest":{"cle":"filleMarcheSudOuest","n":9},"ouest":{"cle":"filleMarcheOuest","n":9},"nord-ouest":{"cle":"filleMarcheNordOuest","n":9},"nord":{"cle":"filleMarcheNord","n":9},"nord-est":{"cle":"filleMarcheNordEst","n":9}},"lancer":{"est":{"cle":"filleLancerEst","n":7},"sud-est":{"cle":"filleLancerSudEst","n":7},"sud":{"cle":"filleLancerSud","n":7},"sud-ouest":{"cle":"filleLancerSudOuest","n":7},"ouest":{"cle":"filleLancerOuest","n":7},"nord":{"cle":"filleLancerNord","n":7},"nord-est":{"cle":"filleLancerNordEst","n":7}}},"garcon":{"lancer":{"est":{"cle":"garconLancerEst","n":9},"sud-est":{"cle":"garconLancerSudEst","n":9},"sud":{"cle":"garconLancerSud","n":9},"sud-ouest":{"cle":"garconLancerSudOuest","n":9},"ouest":{"cle":"garconLancerOuest","n":9},"nord-ouest":{"cle":"garconLancerNordOuest","n":9},"nord":{"cle":"garconLancerNord","n":9},"nord-est":{"cle":"garconLancerNordEst","n":9}},"pose":{"est":{"cle":"garconPoseEst","n":1},"sud-est":{"cle":"garconPoseSudEst","n":1},"sud":{"cle":"garconPoseSud","n":1},"sud-ouest":{"cle":"garconPoseSudOuest","n":1},"ouest":{"cle":"garconPoseOuest","n":1},"nord-ouest":{"cle":"garconPoseNordOuest","n":1},"nord":{"cle":"garconPoseNord","n":1},"nord-est":{"cle":"garconPoseNordEst","n":1}}}};
+    </script>
+    // ============================================ LIVRAISON-VAE : DEBUT ============================================
+    // Moteur du jeu bonus « Le jeu de livraison par VAE » (copie adaptée du
+    // jeu « colis express » de l'activité 4e OST2).
+    // ============================================ LIVRAISON-VAE : FIN ============================================
+    <script>
+// ============================================
+        // BONUS — « Le jeu de livraison par VAE »
+        //
+        // COPIE du jeu « Le prof de techno : colis express » de l'activité 4e
+        // OST2 (évolution des drones). Le moteur est le même — cinq niveaux,
+        // colis au dépôt puis zones de livraison, enfants qui lancent, boutique
+        // d'améliorations entre deux niveaux — et deux choses changent :
+        //
+        //   1. l'appareil piloté n'est plus un drone, mais le VÉLO À
+        //      ASSISTANCE ÉLECTRIQUE du professeur de techno, avec HUIT
+        //      directions de sprites (PixelLab) et un cycle de pédalage : le
+        //      personnage se déplace dans toutes les directions, et c'est lui
+        //      que l'élève conduit ;
+        //   2. le professeur qui se tenait DEBOUT au bord de la zone de retrait
+        //      des colis a été retiré : il n'y a plus qu'un professeur, celui
+        //      qui roule. Le portrait du HUD, lui, reste.
+        //
+        // Le compromis du cours est joué, pas récité : le pédalage ne coûte
+        // aucune énergie, l'assistance électrique vide la batterie.
+        // ============================================
+        (function () {
+            'use strict';
+
+            var canvas = document.getElementById('jeu-canvas');
+            if (!canvas || !canvas.getContext) return;
+            var ctx = canvas.getContext('2d');
+
+            // --- dimensions : carte de 90 x 66 tuiles de 32 px, soit
+            //     2880 x 2112 px — 50 % de plus en largeur et en hauteur que
+            //     la carte d'origine (60 x 44 tuiles). La fenêtre de jeu, elle,
+            //     ne change pas : c'est la caméra qui suit le velo. ---
+            var VUE_L = 480, VUE_H = 360;
+            var TUILE = 32, COLS = 90, ROWS = 66;
+            var MONDE_L = COLS * TUILE, MONDE_H = ROWS * TUILE;
+            // rayon de collision : un vélo occupe plus de place qu'un drone
+            var VELO_R = 13;
+
+            var NIVEAUX_MAX = 5;
+            // La carte a été agrandie de 50 % en largeur et en hauteur : le
+            // trajet depot → zone de livraison s'allonge d'autant, et une
+            // tournée ne se boucle plus dans le temps d'avant. Le chrono suit
+            // donc la même échelle — la difficulté par mètre parcouru, elle,
+            // ne change pas.
+            var ECHELLE_CARTE = 1.5;
+            // 5 colis au niveau 1, puis un de plus par niveau (5 → 9)
+            function livraisonsRequises() { return 4 + niveau; }
+            function dureeNiveau() {
+                return Math.round((110 + 10 * (niveau - 1)) * ECHELLE_CARTE);
+            }
+            var ENFANTS_BASE = 16;
+            // Le pédalage ne coûte RIEN (c'est le point du cours) ; l'assistance
+            // électrique, elle, vide la batterie : c'est le compromis que l'élève
+            // doit sentir dans les jambes. La pression du temps, elle, vient du
+            // chrono de la tournée.
+            var CONSO_BASE = 0;            // pédalage seul : aucune énergie
+            var CONSO_ASSISTANCE = 3.0;    // assistance électrique enclenchée
+            var AMORTI_NORMAL = 5.2;       // amortissement « normal » (avant)
+            var FACTEUR_INERTIE = 5;       // par défaut : 5x plus d'inertie
+            var ELAN_ENFANT = 112;         // prise d'élan : 3,5 cases de 32 px
+
+            var C = {
+                contour: '#171722',
+                herbe1: '#2f5138', herbe2: '#386043', herbe3: '#28452f',
+                route1: '#41414d', route2: '#36363f', route3: '#4c4c59',
+                trottoir: '#6d7280', trottoir2: '#7d8391', marquage: '#e8e2c0',
+                toit1: '#b4543c', toit4: '#d0684a', mur: '#d8d2c4',
+                bois: '#7a5230', boisOm: '#5e3d22',
+                feuille1: '#2c6b3d', feuille2: '#3d8a4c', feuille3: '#215233',
+                metal1: '#9aa3b2', metal2: '#6b7484', metal3: '#c3cad6',
+                droneCorps: '#e4eaf5', droneOm: '#a9b6cc', droneAccent: '#2f6fd0',
+                rotor: '#b9c4d6', rotorOm: '#7f8ea6',
+                colis: '#c98a4b', colisOm: '#9c6733', colisRuban: '#f2d08a',
+                batt1: '#34d399', batt2: '#a7f3d0', batt3: '#0f7a5a',
+                carbone1: '#3b4252', carbone2: '#22262f', carbone3: '#8b93a5',
+                lipo1: '#2f6fd0', lipo2: '#9cc4f5',
+                cam1: '#12151d', cam2: '#38bdf8', cam3: '#7dd3fc',
+                zone: '#fbbf24', zone2: '#fde68a', peau: '#f6cda4'
+            };
+            var CIBLE_JAUNE = '#fbbf24';
+            var CIBLE_VERTE = '#22c55e';
+
+            function px(g, x, y, w, h, c) {
+                if (w <= 0 || h <= 0) return;
+                g.fillStyle = c;
+                g.fillRect(x | 0, y | 0, w | 0, h | 0);
+            }
+            function disque(g, cx, cy, r, c) {
+                g.fillStyle = c;
+                for (var dy = -r; dy <= r; dy++) {
+                    var demi = Math.floor(Math.sqrt(r * r - dy * dy));
+                    if (demi > 0) g.fillRect((cx - demi) | 0, (cy + dy) | 0, demi * 2, 1);
+                }
+            }
+            function nouvelCanvas(l, h) {
+                var c = document.createElement('canvas');
+                c.width = l; c.height = h;
+                var g = c.getContext('2d');
+                g.imageSmoothingEnabled = false;
+                return { canvas: c, g: g };
+            }
+            function alea(graine) {
+                var s = graine;
+                return function () {
+                    s = (s * 1103515245 + 12345) & 0x7fffffff;
+                    return s / 0x7fffffff;
+                };
+            }
+
+            // --- sprites statiques ---
+            function faireArbre() {
+                var o = nouvelCanvas(34, 36), g = o.g;
+                px(g, 8, 28, 20, 5, 'rgba(12, 18, 12, 0.35)');
+                px(g, 15, 22, 4, 8, C.boisOm);
+                px(g, 16, 22, 2, 7, C.bois);
+                disque(g, 17, 14, 12, C.feuille3);
+                disque(g, 16, 13, 10, C.feuille1);
+                disque(g, 14, 11, 6, C.feuille2);
+                px(g, 11, 10, 2, 2, C.feuille3);
+                px(g, 20, 14, 2, 2, C.feuille3);
+                px(g, 12, 8, 3, 2, C.feuille2);
+                return o.canvas;
+            }
+            function faireDepot() {
+                var o = nouvelCanvas(56, 56), g = o.g;
+                px(g, 2, 2, 52, 52, C.contour);
+                px(g, 3, 3, 50, 50, '#2b3a57');
+                for (var y = 3; y < 53; y += 8) {
+                    for (var x = 3; x < 53; x += 8) {
+                        if (((x + y) / 8) % 2 === 0) px(g, x, y, 8, 8, '#33456a');
+                    }
+                }
+                px(g, 24, 12, 8, 32, C.marquage);
+                px(g, 12, 24, 32, 8, C.marquage);
+                px(g, 26, 14, 4, 28, '#2b3a57');
+                px(g, 14, 26, 28, 4, '#2b3a57');
+                return o.canvas;
+            }
+            // Barrière de jardin : planches + poteaux, dessinée par code
+            // (le rendu LoRA ne donnait pas une barrière lisible).
+            // Fleur : tige, deux feuilles, cinq pétales et cœur. Trois variantes
+            // de couleur. Dessinée par code : le rendu LoRA en 18 px n'était
+            // qu'une bouillie de pixels.
+            function faireFleur(variante) {
+                var petales = ['#e8556d', '#f6c445', '#f2f0e6'][variante % 3];
+                var coeur = ['#f7c948', '#a3562f', '#e8a33a'][variante % 3];
+                var o = nouvelCanvas(16, 16), g = o.g;
+                px(g, 3, 14, 10, 2, 'rgba(12, 18, 12, 0.22)');
+                px(g, 7, 8, 2, 7, '#2f7d3a');
+                px(g, 4, 10, 3, 2, '#43a052');
+                px(g, 9, 11, 3, 2, '#43a052');
+                // pétales : contour puis disque, puis cœur
+                disque(g, 8, 5, 4, C.contour);
+                disque(g, 8, 5, 3, petales);
+                px(g, 5, 2, 6, 1, petales);
+                px(g, 4, 4, 1, 3, petales);
+                px(g, 11, 4, 1, 3, petales);
+                px(g, 6, 8, 4, 1, petales);
+                disque(g, 8, 5, 1, coeur);
+                return o.canvas;
+            }
+
+            function faireBarriere() {
+                var o = nouvelCanvas(44, 22), g = o.g;
+                px(g, 2, 18, 40, 3, 'rgba(12, 18, 12, 0.3)');
+                // poteaux
+                [2, 18, 34].forEach(function (x) {
+                    px(g, x, 2, 6, 17, C.contour);
+                    px(g, x + 1, 3, 4, 15, '#a9773f');
+                    px(g, x + 1, 3, 2, 15, '#c08c4d');
+                });
+                // deux lisses claires
+                [6, 12].forEach(function (y) {
+                    px(g, 2, y, 38, 5, C.contour);
+                    px(g, 3, y + 1, 36, 3, '#d3a468');
+                    px(g, 3, y + 1, 36, 1, '#e8c088');
+                });
+                return o.canvas;
+            }
+
+            // Repli dessiné par code : un VAE vu de dessus (deux roues, cadre,
+            // panier), avec le professeur penché sur le guidon. Il ne sert que
+            // si les feuilles PixelLab manquent — `image` 0 et 1 donnent les
+            // deux positions du cycle de pédalage.
+            function faireVelo(image) {
+                var o = nouvelCanvas(34, 32), g = o.g;
+                var cx = 17, cy = 16;
+                disque(g, cx + 1, cy + 9, 8, 'rgba(10, 14, 22, 0.22)');
+                var roues = [[-9, 1], [9, 1]];
+                for (var i = 0; i < roues.length; i++) {
+                    var rx = cx + roues[i][0], ry = cy + roues[i][1];
+                    px(g, rx - 4, ry - 4, 9, 9, C.contour);
+                    px(g, rx - 3, ry - 3, 7, 7, '#cbd5e1');
+                    px(g, rx - 2, ry - 2, 5, 5, C.contour);
+                    px(g, rx - 1, ry - 1, 3, 3, '#94a3b8');
+                }
+                px(g, cx - 9, cy - 1, 18, 2, '#1d4ed8');
+                px(g, cx - 5, cy - 4, 10, 3, '#2563eb');
+                px(g, cx - 1, cy - 7, 2, 7, '#64748b');
+                px(g, cx + 4, cy - 9, 8, 6, C.contour);
+                px(g, cx + 5, cy - 8, 6, 4, C.colis);
+                px(g, cx - 4, cy - 13, 9, 9, C.contour);
+                px(g, cx - 3, cy - 12, 7, 7, '#4a7858');
+                px(g, cx - 3, cy - 18, 6, 5, C.contour);
+                px(g, cx - 2, cy - 17, 4, 3, C.peau);
+                px(g, cx - 2, cy - 15, 4, 2, '#9aa0a6');
+                var jambe = image === 1 ? 2 : -2;
+                px(g, cx - 2 + jambe, cy - 4, 2, 5, '#d6c7a1');
+                px(g, cx + 1 - jambe, cy - 4, 2, 5, '#d6c7a1');
+                return o.canvas;
+            }
+            function faireObjet(type) {
+                var o, g;
+                if (type === 'batterie') {
+                    o = nouvelCanvas(16, 18); g = o.g;
+                    px(g, 2, 15, 12, 3, 'rgba(10, 14, 22, 0.28)');
+                    px(g, 2, 2, 12, 13, C.contour);
+                    px(g, 3, 3, 10, 11, C.batt1);
+                    px(g, 4, 4, 8, 3, C.batt2);
+                    px(g, 4, 8, 2, 6, C.batt3);
+                    px(g, 7, 7, 2, 5, C.batt2);
+                    px(g, 5, 9, 6, 2, C.batt2);
+                    px(g, 6, 0, 4, 3, C.contour);
+                    px(g, 7, 1, 2, 2, C.metal3);
+                } else if (type === 'colis') {
+                    o = nouvelCanvas(16, 16); g = o.g;
+                    px(g, 1, 2, 14, 13, C.contour);
+                    px(g, 2, 3, 12, 11, C.colis);
+                    px(g, 2, 3, 12, 2, '#dda86a');
+                    px(g, 7, 3, 2, 11, C.colisRuban);
+                    px(g, 2, 8, 12, 2, C.colisRuban);
+                    px(g, 2, 12, 12, 2, C.colisOm);
+                } else if (type === 'carbone') {
+                    o = nouvelCanvas(16, 16); g = o.g;
+                    px(g, 2, 14, 12, 3, 'rgba(10, 14, 22, 0.28)');
+                    px(g, 2, 2, 12, 12, C.contour);
+                    px(g, 3, 3, 10, 10, C.carbone1);
+                    for (var i = 0; i < 5; i++) px(g, 3, 3 + i * 2, 10, 1, C.carbone2);
+                    px(g, 6, 6, 4, 4, C.metal3);
+                } else if (type === 'lipo') {
+                    o = nouvelCanvas(16, 16); g = o.g;
+                    px(g, 2, 14, 12, 3, 'rgba(10, 14, 22, 0.28)');
+                    px(g, 2, 3, 12, 11, C.contour);
+                    px(g, 3, 4, 10, 9, C.lipo1);
+                    px(g, 4, 5, 8, 2, C.lipo2);
+                    px(g, 5, 11, 6, 2, C.metal3);
+                } else {
+                    o = nouvelCanvas(16, 16); g = o.g;
+                    px(g, 2, 14, 12, 3, 'rgba(10, 14, 22, 0.28)');
+                    px(g, 2, 2, 12, 12, C.contour);
+                    px(g, 3, 3, 10, 10, C.cam1);
+                    disque(g, 8, 8, 4, C.cam2);
+                    disque(g, 8, 8, 2, C.cam3);
+                }
+                return o.canvas;
+            }
+            function faireProjectile(type) {
+                var o = nouvelCanvas(14, 12), g = o.g;
+                if (type === 'ballon') {
+                    disque(g, 7, 5, 4, C.contour);
+                    disque(g, 7, 5, 3, '#f97316');
+                    px(g, 5, 3, 2, 2, '#fed7aa');
+                    px(g, 7, 9, 1, 2, '#f97316');
+                } else if (type === 'avion') {
+                    px(g, 1, 5, 12, 2, C.contour);
+                    px(g, 2, 5, 10, 1, '#e2e8f0');
+                    px(g, 4, 3, 6, 2, '#cbd5e1');
+                    px(g, 4, 8, 6, 2, '#cbd5e1');
+                    px(g, 10, 3, 3, 5, C.contour);
+                    px(g, 11, 4, 1, 3, '#94a3b8');
+                } else {
+                    px(g, 1, 4, 12, 4, C.contour);
+                    px(g, 2, 5, 10, 2, '#8a5c33');
+                    px(g, 3, 5, 4, 1, '#b98a58');
+                    px(g, 9, 6, 3, 2, '#6d4525');
+                }
+                return o.canvas;
+            }
+
+            // --- assets LoRA ---
+            var ASSETS = (typeof window !== 'undefined' && window.ASSETS_JEU) ? window.ASSETS_JEU : {};
+            // type d'élément du jeu -> clé d'asset (les deux vocabulaires
+            // diffèrent pour la caméra et les projectiles)
+            var CLE_OBJET = { batterie: 'batterie', colis: 'colis', carbone: 'carbone',
+                              lipo: 'lipo', camera: 'camera' };
+            var CLE_PROJECTILE = { ballon: 'ballon', avion: 'avion', bois: 'bois' };
+            // Bandes animées fournies par `preparer_jeu_v2.py` :
+            // { clé: { n: nombre d'images, l, h } }. Une image de plus, c'est
+            // une animation : le ballon tourne, le bâton culbute, le chien court.
+            var ANIM = (typeof window !== 'undefined' && window.ANIM_JEU) ? window.ANIM_JEU : {};
+            // Feuilles du PROFESSEUR À VAE, produites par
+            // `_outils/pixel-art/pixellab_prof_vae.py` puis assemblées par
+            // `_outils/illustrations/jeux/preparer_prof_vae.py` :
+            //   { directions: { 'sud': { cle, n }, … } }
+            // Une feuille = une direction, images côte à côte, roues posées sur
+            // la même ligne basse. On découpe donc à la volée.
+            var PROF = (typeof window !== 'undefined' && window.PROF_VAE_JEU)
+                ? window.PROF_VAE_JEU : null;
+            function nbImages(cle) {
+                return (ANIM[cle] && ANIM[cle].n) ? ANIM[cle].n : 1;
+            }
+            var imagesAssets = {};
+            function imgAsset(cle) {
+                var src = ASSETS[cle];
+                if (!src) return null;
+                if (!imagesAssets[cle]) {
+                    var im = new Image();
+                    im.src = src;
+                    imagesAssets[cle] = im;
+                }
+                return imagesAssets[cle];
+            }
+            function assetPret(im) { return !!im && im.complete && im.naturalWidth > 0; }
+
+            // --- pose des sprites d'objet (PixelLab) ---
+            // Les objets du jeu sont livrés RECADRÉS sur leur contenu
+            // (`_outils/illustrations/jeux/recadrer_objets.py`) : ils se
+            // dessinent donc à l'échelle 1:1, sans rééchantillonnage, et leur
+            // taille à l'écran est exactement celle du fichier.
+            // `cx, cy` est le CENTRE du sprite ; `bas` = true ancre le PIED du
+            // sprite sur `cy` (un objet qui se dresse au-dessus de son
+            // empreinte au sol). Si l'image n'est pas encore chargée — ou
+            // absente — on retombe sur le dessin procédural : un visuel manquant
+            // ne laisse jamais un trou dans la scène.
+            function poserSprite(g2, cle, repli, cx, cy, bas) {
+                var im = cle ? imgAsset(cle) : null;
+                if (assetPret(im)) {
+                    var l = im.naturalWidth, h = im.naturalHeight;
+                    g2.drawImage(im, Math.round(cx - l / 2),
+                                 Math.round(bas ? cy - h : cy - h / 2), l, h);
+                    return true;
+                }
+                if (repli) {
+                    g2.drawImage(repli, Math.round(cx - repli.width / 2),
+                                 Math.round(bas ? cy - repli.height : cy - repli.height / 2));
+                    return true;
+                }
+                return false;
+            }
+            // Pose d'une image d'une BANDE animée (projectiles, chien) : la
+            // largeur d'une image est la largeur du fichier divisée par le
+            // nombre d'images — la bande est donc exactement un multiple.
+            function poserSpriteAnime(g2, cle, repli, cx, cy, image) {
+                var im = cle ? imgAsset(cle) : null;
+                if (assetPret(im)) {
+                    var n = nbImages(cle);
+                    var l = Math.round(im.naturalWidth / n);
+                    var h = im.naturalHeight;
+                    var k = ((image | 0) % n + n) % n;
+                    g2.drawImage(im, k * l, 0, l, h,
+                                 Math.round(cx - l / 2), Math.round(cy - h / 2), l, h);
+                    return true;
+                }
+                if (repli) {
+                    g2.drawImage(repli, Math.round(cx - repli.width / 2),
+                                 Math.round(cy - repli.height / 2));
+                    return true;
+                }
+                return false;
+            }
+            // Même chose, ancré par le COIN haut-gauche : le décor (arbres,
+            // massifs, barrières) garde son ancrage d'origine, donc les
+            // emplacements calculés par `genererCarte` restent valides.
+            function poserCoin(g2, cle, repli, x, y) {
+                var im = cle ? imgAsset(cle) : null;
+                if (assetPret(im)) { g2.drawImage(im, Math.round(x), Math.round(y)); return true; }
+                if (repli) { g2.drawImage(repli, Math.round(x), Math.round(y)); return true; }
+                return false;
+            }
+            // Encombrement réel du sprite (image si chargée, repli sinon) :
+            // sert à poser le décor sans qu'il déborde sur la chaussée.
+            function encombrement(cle, repli) {
+                var im = cle ? imgAsset(cle) : null;
+                if (assetPret(im)) return { l: im.naturalWidth, h: im.naturalHeight };
+                if (repli) return { l: repli.width, h: repli.height };
+                return { l: 0, h: 0 };
+            }
+
+            // --- carte ---
+            // Le quadrillage des rues garde le même pas qu'avant (une rue toutes
+            // les 13 tuiles en colonne, toutes les 9 en ligne) : l'agrandissement
+            // de la carte ajoute donc des rues à parcourir, il ne dilate pas le
+            // quartier.
+            var COLS_ROUTES = [3, 16, 29, 42, 55, 68, 81];
+            var ROWS_ROUTES = [5, 14, 23, 32, 41, 50, 59];
+            var MAISON_AFF = 216;          // affichage : 4x la taille d'origine (56)
+            var DEPOT = { x: 10 * TUILE, y: 28 * TUILE };
+            // Note : l'ancien emplacement du professeur debout près du dépôt a
+            // été supprimé. Le seul professeur du jeu est celui qui roule.
+            // Zones de livraison : six emplacements calés sur les blocs de
+            // maisons (jamais sur une chaussée), répartis sur toute la carte —
+            // sinon les livraisons resteraient tassées dans le quart nord-ouest
+            // de la carte agrandie.
+            var ZONES_CANDIDATES = [
+                { x: 15 * TUILE, y: 13 * TUILE }, { x: 53 * TUILE, y: 3 * TUILE },
+                { x: 77 * TUILE, y: 27 * TUILE }, { x: 53 * TUILE, y: 54 * TUILE },
+                { x: 15 * TUILE, y: 55 * TUILE }, { x: 77 * TUILE, y: 54 * TUILE }
+            ];
+
+            // Quantités de décor et de recharges : elles sont données POUR LA
+            // CARTE D'ORIGINE (60 x 44 tuiles) et ramenées à la surface réelle.
+            // Sans cela, agrandir la carte diluerait le décor (pelouses vides) et
+            // espacerait les batteries dont le velo a besoin pour traverser.
+            var AIRE_CARTE_ORIGINE = 60 * 44;
+            function parSurface(nombre) {
+                return Math.round(nombre * (COLS * ROWS) / AIRE_CARTE_ORIGINE);
+            }
+
+            var solides = [], maisons = [], enfants = [], objets = [], projectiles = [];
+            var zones = [], arbres = [], arbresObstacle = [];
+            var decorFleurs = [], decorBarrieres = [], animaux = [];
+            var fond = null;
+            var graineCarte = 1;           // graine de la carte courante (re-cuisson)
+            var solArbre = null, solDepot = null, solBarriere = null;
+            var solFleurs = [];
+            var solVelo = [], solObjets = {}, solProjectiles = {};
+
+            function chargerAssets() {
+                ['maison1', 'maison2', 'maison3',
+                 'decorFleurs', 'chatA', 'chatB', 'chien']
+                    .forEach(imgAsset);
+                // objets du jeu : colis, recharges, projectiles, décor
+                ['colis', 'batterie', 'lipo',
+                 'carbone', 'camera', 'ballon', 'avion', 'bois',
+                 'plateforme', 'arbre', 'fleur0', 'fleur1', 'fleur2', 'barriere']
+                    .forEach(imgAsset);
+                if (PROF && PROF.directions) {
+                    for (var dp in PROF.directions) imgAsset(PROF.directions[dp].cle);
+                }
+                if (ENFANTS) {
+                    for (var m in ENFANTS) {
+                        for (var a in ENFANTS[m]) {
+                            for (var d in ENFANTS[m][a]) imgAsset(ENFANTS[m][a][d].cle);
+                        }
+                    }
+                }
+            }
+
+            // Les images se chargent APRÈS le premier tracé : la carte est donc
+            // d'abord cuite avec les replis procéduraux, puis re-cuite dès que
+            // tout est arrivé. `graineCarte` rend cette re-cuisson identique à
+            // l'originale (mêmes emplacements), donc les enfants et les objets
+            // déjà posés restent valides.
+            var assetsArrives = false;
+            function apresChargementAssets() {
+                if (assetsArrives) return;
+                assetsArrives = true;
+                preparerSprites();
+                if (!fond) return;
+                if (ETAT === 'pret') {
+                    // Personne n'a encore cliqué : on reconstruit la carte ET
+                    // les placements d'un seul tenant. C'est nécessaire parce
+                    // que l'empreinte au sol du décor change de taille avec les
+                    // sprites (une couronne d'arbre de 50 x 56 peut être refusée
+                    // là où le dessin de repli passait).
+                    reinitialiserNiveau();
+                } else {
+                    // Partie déjà lancée : on ne re-cuit que le décor, avec la
+                    // même graine, donc rien ne se déplace sous les pieds de
+                    // l'élève. `demarrer()` reconstruira tout de toute façon.
+                    genererCarte(graineCarte);
+                }
+                dessiner();
+            }
+            function quandAssetsPrets() {
+                var cles = Object.keys(ASSETS);
+                if (!cles.length) { apresChargementAssets(); return; }
+                var restants = cles.length;
+                var fini = function () { restants -= 1; if (restants <= 0) apresChargementAssets(); };
+                cles.forEach(function (cle) {
+                    var im = imgAsset(cle);
+                    if (!im || assetPret(im)) { fini(); return; }
+                    im.addEventListener('load', fini, { once: true });
+                    im.addEventListener('error', fini, { once: true });
+                });
+            }
+
+            function preparerSprites() {
+                solArbre = faireArbre();
+                solBarriere = faireBarriere();
+                solFleurs = [faireFleur(0), faireFleur(1), faireFleur(2)];
+                solDepot = faireDepot();
+                solVelo = [faireVelo(0), faireVelo(1)];
+                ['batterie', 'colis', 'carbone', 'lipo', 'camera'].forEach(function (t) {
+                    solObjets[t] = faireObjet(t);
+                });
+                ['ballon', 'avion', 'bois'].forEach(function (t) {
+                    solProjectiles[t] = faireProjectile(t);
+                });
+                chargerAssets();
+            }
+
+            function collisionne(x, y, l, h) {
+                for (var i = 0; i < solides.length; i++) {
+                    var s = solides[i];
+                    if (x + l > s.x - 4 && x < s.x + s.l + 4 &&
+                        y + h > s.y - 4 && y < s.y + s.h + 4) return true;
+                }
+                return false;
+            }
+            // Empiètement exact (sans marge) : sert à garantir qu'un élément
+            // décoré/dessiné ne recouvre pas un obstacle solide.
+            function empiète(x, y, l, h) {
+                for (var i = 0; i < solides.length; i++) {
+                    var s = solides[i];
+                    if (x + l > s.x && x < s.x + s.l && y + h > s.y && y < s.y + s.h) return true;
+                }
+                return false;
+            }
+            function surRoute(x, y) {
+                var cx = x / TUILE, cy = y / TUILE;
+                for (var i = 0; i < COLS_ROUTES.length; i++) {
+                    if (cx >= COLS_ROUTES[i] - 0.6 && cx <= COLS_ROUTES[i] + 2.6) return true;
+                }
+                for (var j = 0; j < ROWS_ROUTES.length; j++) {
+                    if (cy >= ROWS_ROUTES[j] - 0.6 && cy <= ROWS_ROUTES[j] + 2.6) return true;
+                }
+                return false;
+            }
+            // Même question, mais pour un RECTANGLE : un sprite de décor est
+            // plus large qu'un point, et une couronne d'arbre de 50 px posée à
+            // 30 px du trottoir déborde sur la chaussée. On teste donc
+            // l'intersection avec la bande de route, trottoirs compris (6 px).
+            function surRouteRect(x, y, l, h) {
+                var marge = 6;
+                for (var i = 0; i < COLS_ROUTES.length; i++) {
+                    var rx = COLS_ROUTES[i] * TUILE;
+                    if (x + l > rx - marge && x < rx + 2 * TUILE + marge) return true;
+                }
+                for (var j = 0; j < ROWS_ROUTES.length; j++) {
+                    var ry = ROWS_ROUTES[j] * TUILE;
+                    if (y + h > ry - marge && y < ry + 2 * TUILE + marge) return true;
+                }
+                return false;
+            }
+            // Rectangle occupé par la plateforme de livraison : elle est
+            // dessinée à l'échelle 1:1, centrée sur DEPOT + 28. Aucun arbre ne
+            // doit se dresser dessus, sinon l'élève ne voit plus où
+            // prendre et où poser le colis.
+            function chevauchePad(x, y, l, h, marge) {
+                var pad = encombrement('plateforme', solDepot);
+                var px0 = DEPOT.x + 28 - pad.l / 2 - marge;
+                var py0 = DEPOT.y + 28 - pad.h / 2 - marge;
+                return x + l > px0 && x < px0 + pad.l + 2 * marge &&
+                       y + h > py0 && y < py0 + pad.h + 2 * marge;
+            }
+            // Une zone de livraison doit rester dégagée : c'est là que l'élève
+            // pose son colis, et son marqueur clignotant ne doit pas se perdre
+            // sous une couronne d'arbre — ni, pour un arbre à obstacle, rendre
+            // le survol impossible. On réserve les SIX emplacements candidats,
+            // pas seulement les trois tirés pour la partie en cours.
+            function chevaucheZone(x, y, l, h, marge) {
+                var m = marge === undefined ? 6 : marge;
+                for (var i = 0; i < ZONES_CANDIDATES.length; i++) {
+                    var z = ZONES_CANDIDATES[i];
+                    if (x + l > z.x - 6 - m && x < z.x + 50 + m &&
+                        y + h > z.y - 6 - m && y < z.y + 50 + m) return true;
+                }
+                return false;
+            }
+
+            function genererCarte(graine) {
+                var rnd = alea(graine);
+                graineCarte = graine;
+                solides = []; maisons = []; arbres = []; arbresObstacle = [];
+
+                for (var bi = 0; bi < COLS_ROUTES.length + 1; bi++) {
+                    var colDebut = bi === 0 ? 1 : COLS_ROUTES[bi - 1] + 2;
+                    var colFin = bi < COLS_ROUTES.length ? COLS_ROUTES[bi] - 1 : COLS - 2;
+                    for (var bj = 0; bj < ROWS_ROUTES.length + 1; bj++) {
+                        var rowDebut = bj === 0 ? 1 : ROWS_ROUTES[bj - 1] + 2;
+                        var rowFin = bj < ROWS_ROUTES.length ? ROWS_ROUTES[bj] - 1 : ROWS - 2;
+                        for (var cx2 = colDebut; cx2 <= colFin - 6; cx2 += 7) {
+                            for (var cy2 = rowDebut; cy2 <= rowFin - 6; cy2 += 7) {
+                                if (rnd() > 0.98) continue;
+                                var mx = cx2 * TUILE, my = cy2 * TUILE;
+                                // dégagement juste nécessaire : une maison fait
+                                // 216 px, le dépôt 56 px -> 260 px suffisent
+                                // exclusion par RECTANGLE exact : la maison ne doit
+                                // jamais recouvrir le dépôt, le prof ni un marqueur
+                                // de zone (sinon on ne voit plus où livrer)
+                                var gene = false;
+                                var zonesInterdites = [
+                                    { x: DEPOT.x - 50, y: DEPOT.y - 50, l: 156, h: 156 }
+                                ];
+                                for (var z2 = 0; z2 < ZONES_CANDIDATES.length; z2++) {
+                                    var zz = ZONES_CANDIDATES[z2];
+                                    zonesInterdites.push({ x: zz.x - 34, y: zz.y - 34, l: 112, h: 112 });
+                                }
+                                for (var zi = 0; zi < zonesInterdites.length; zi++) {
+                                    var ni = zonesInterdites[zi];
+                                    if (mx + MAISON_AFF > ni.x && mx < ni.x + ni.l &&
+                                        my + MAISON_AFF > ni.y && my < ni.y + ni.h) { gene = true; break; }
+                                }
+                                if (gene || collisionne(mx, my, 200, 200)) continue;
+                                maisons.push({ x: mx, y: my, v: Math.floor(rnd() * 3) });
+                                solides.push({ x: mx + 16, y: my + 32, l: 184, h: 176, type: 'maison' });
+                            }
+                        }
+                    }
+                }
+
+                // ARBRES À OBSTACLE — ils remplacent les pylônes, retirés du
+                // jeu (sprite peu lisible). Même emplacement qu'eux : les coins
+                // de trottoir, là où le velo doit slalomer. Ces arbres sont les
+                // SEULS solides parmi les arbres, et ils sont dessinés avec une
+                // ombre au sol marquée (voir dessinerObstacleArbre) pour que
+                // l'élève voie tout de suite lesquels il ne peut pas traverser.
+                var couronne = encombrement('arbre', solArbre);
+                for (var ci = 0; ci < COLS_ROUTES.length; ci++) {
+                    for (var rj = 0; rj < ROWS_ROUTES.length; rj++) {
+                        if (rnd() > 0.55) continue;
+                        var pxx = (COLS_ROUTES[ci] - 1) * TUILE, pyy = (ROWS_ROUTES[rj] - 1) * TUILE;
+                        if (pxx + couronne.l > MONDE_L || pyy + couronne.h > MONDE_H) continue;
+                        if (empiète(pxx, pyy, couronne.l, couronne.h)) continue;
+                        if (chevauchePad(pxx, pyy, couronne.l, couronne.h, 4)) continue;
+                        if (chevaucheZone(pxx, pyy, couronne.l, couronne.h, 8)) continue;
+                        arbresObstacle.push({ x: pxx, y: pyy });
+                        // tronc : au centre-bas du sprite, comme un arbre planté
+                        solides.push({ x: pxx + Math.round(couronne.l / 2) - 13,
+                                       y: pyy + couronne.h - 20, l: 26, h: 20,
+                                       type: 'arbre' });
+                    }
+                }
+
+                // Arbres : la couronne fait 50 × 56 px, on teste donc son
+                // encombrement réel — un point ne suffisait plus.
+                var bois = encombrement('arbre', solArbre);
+                var essais = 0;
+                while (arbres.length < parSurface(70) && essais < parSurface(2500)) {
+                    essais++;
+                    var ax = Math.floor(rnd() * (COLS - 2)) * TUILE;
+                    var ay = Math.floor(rnd() * (ROWS - 2)) * TUILE;
+                    if (surRouteRect(ax, ay, bois.l, bois.h)) continue;
+                    if (collisionne(ax, ay, bois.l, bois.h)) continue;
+                    if (chevauchePad(ax, ay, bois.l, bois.h, 8)) continue;
+                    if (chevaucheZone(ax, ay, bois.l, bois.h, 8)) continue;
+                    arbres.push({ x: ax, y: ay });
+                }
+
+                // décor : fleurs, barrières de jardin, animaux
+                decorFleurs = []; decorBarrieres = []; animaux = [];
+                var massif = { l: 16, h: 16 };
+                ['fleur0', 'fleur1', 'fleur2'].forEach(function (c) {
+                    var e = encombrement(c, null);
+                    massif.l = Math.max(massif.l, e.l);
+                    massif.h = Math.max(massif.h, e.h);
+                });
+                var essaisDeco = 0;
+                while (decorFleurs.length < parSurface(90) && essaisDeco < parSurface(2000)) {
+                    essaisDeco++;
+                    var fx = Math.floor(rnd() * (COLS - 1)) * TUILE + Math.floor(rnd() * 26);
+                    var fy = Math.floor(rnd() * (ROWS - 1)) * TUILE + Math.floor(rnd() * 26);
+                    if (surRouteRect(fx, fy, massif.l, massif.h)) continue;
+                    if (empiète(fx, fy, massif.l, massif.h)) continue;
+                    if (Math.abs(fx - DEPOT.x) < 90 && Math.abs(fy - DEPOT.y) < 90) continue;
+                    decorFleurs.push({ x: fx, y: fy, v: Math.floor(rnd() * 3) });
+                }
+                essaisDeco = 0;
+                while (animaux.length < parSurface(10) && essaisDeco < parSurface(2000)) {
+                    essaisDeco++;
+                    var ax2 = Math.floor(rnd() * (COLS - 2)) * TUILE + Math.floor(rnd() * 20);
+                    var ay2 = Math.floor(rnd() * (ROWS - 2)) * TUILE + Math.floor(rnd() * 20);
+                    if (surRoute(ax2, ay2) || empiète(ax2, ay2, 20, 16)) continue;
+                    // Chiens retirés du décor : le seul chien du jeu est celui
+                    // qui suit le velo (voir le bloc « chien chasseur »).
+                    animaux.push({ type: 'chat', x: ax2, y: ay2 });
+                }
+
+                var couronneObstacle = encombrement('arbre', solArbre);
+                var o = nouvelCanvas(MONDE_L, MONDE_H), g = o.g;
+                var rnd2 = alea(graine + 7);
+                px(g, 0, 0, MONDE_L, MONDE_H, C.herbe1);
+                for (var i2 = 0; i2 < parSurface(4200); i2++) {
+                    px(g, Math.floor(rnd2() * MONDE_L / 4) * 4, Math.floor(rnd2() * MONDE_H / 4) * 4,
+                       4, 4, rnd2() < 0.5 ? C.herbe2 : C.herbe3);
+                }
+                for (var t2 = 0; t2 < parSurface(1200); t2++) {
+                    px(g, Math.floor(rnd2() * MONDE_L), Math.floor(rnd2() * MONDE_H), 1, 3, C.herbe2);
+                }
+                // 0 bis. L'HERBE AUTOUR DES MAISONS — une couronne d'herbe plus
+                // dense (touffes de 4 px et brins de 1 × 3) sur 28 px autour de
+                // chaque emprise de maison. Les maisons sont des façades sur
+                // fond transparent, sans le moindre terrain dans leur PNG : sans
+                // cette couronne, elles poseraient leur silhouette sur un aplat
+                // uniforme et l'on ne verrait pas qu'elles sont dans l'herbe.
+                // On saute la zone couverte par la maison elle-même, et les
+                // chaussées (elles sont peintes après, elles recouvriraient la
+                // couronne de toute façon).
+                for (var hm = 0; hm < maisons.length; hm++) {
+                    var mh = maisons[hm], margeHerbe = 28;
+                    var hx0 = Math.max(0, mh.x - margeHerbe);
+                    var hy0 = Math.max(0, mh.y - margeHerbe);
+                    var hx1 = Math.min(MONDE_L, mh.x + MAISON_AFF + margeHerbe);
+                    var hy1 = Math.min(MONDE_H, mh.y + MAISON_AFF + margeHerbe);
+                    var touffes = Math.round((hx1 - hx0) * (hy1 - hy0) / 42);
+                    for (var ht = 0; ht < touffes; ht++) {
+                        var hx = hx0 + Math.floor(rnd2() * (hx1 - hx0) / 4) * 4;
+                        var hy = hy0 + Math.floor(rnd2() * (hy1 - hy0) / 4) * 4;
+                        if (hx > mh.x + 18 && hx < mh.x + MAISON_AFF - 18 &&
+                            hy > mh.y + 34 && hy < mh.y + MAISON_AFF - 14) continue;
+                        if (surRoute(hx, hy)) continue;
+                        px(g, hx, hy, 4, 4, rnd2() < 0.5 ? C.herbe2 : C.herbe3);
+                    }
+                    for (var hb = 0; hb < Math.round(touffes / 3); hb++) {
+                        var bx = hx0 + Math.floor(rnd2() * (hx1 - hx0));
+                        var by = hy0 + Math.floor(rnd2() * (hy1 - hy0));
+                        if (bx > mh.x + 18 && bx < mh.x + MAISON_AFF - 18 &&
+                            by > mh.y + 34 && by < mh.y + MAISON_AFF - 14) continue;
+                        if (surRoute(bx, by)) continue;
+                        px(g, bx, by, 1, 3, rnd2() < 0.5 ? C.herbe2 : C.herbe3);
+                    }
+                }
+                // 1. trottoirs : seulement les bords extérieurs (pas de doublon
+                //    aux croisements)
+                COLS_ROUTES.forEach(function (col) {
+                    var x = col * TUILE;
+                    px(g, x - 6, 0, 6, MONDE_H, C.trottoir);
+                    px(g, x + 2 * TUILE, 0, 6, MONDE_H, C.trottoir);
+                });
+                ROWS_ROUTES.forEach(function (row) {
+                    var y = row * TUILE;
+                    px(g, 0, y - 6, MONDE_L, 6, C.trottoir);
+                    px(g, 0, y + 2 * TUILE, MONDE_L, 6, C.trottoir);
+                });
+
+                // 2. asphalte
+                COLS_ROUTES.forEach(function (col) { px(g, col * TUILE, 0, 2 * TUILE, MONDE_H, C.route1); });
+                ROWS_ROUTES.forEach(function (row) { px(g, 0, row * TUILE, MONDE_L, 2 * TUILE, C.route1); });
+
+                // grain d'asphalte (uniquement sur la chaussée)
+                for (var k2 = 0; k2 < parSurface(3400); k2++) {
+                    var gx2 = Math.floor(rnd2() * MONDE_L), gy2 = Math.floor(rnd2() * MONDE_H);
+                    if (!surRoute(gx2, gy2)) continue;
+                    px(g, gx2, gy2, 2, 2, rnd2() < 0.5 ? C.route2 : C.route3);
+                }
+
+                // 3. croisements : graphisme dédié (asphalte plus sombre, coins
+                //    arrondis, passages piétons) au lieu de deux routes empilées
+                var CROIS = [];
+                COLS_ROUTES.forEach(function (col) {
+                    ROWS_ROUTES.forEach(function (row) {
+                        CROIS.push({ x: col * TUILE, y: row * TUILE, l: 2 * TUILE, h: 2 * TUILE });
+                    });
+                });
+                CROIS.forEach(function (c) {
+                    px(g, c.x - 6, c.y - 6, c.l + 12, c.h + 12, C.route1);
+                    px(g, c.x, c.y, c.l, c.h, '#3a3a45');
+                    px(g, c.x + 3, c.y + 3, c.l - 6, c.h - 6, '#43434f');
+                    // coins arrondis : on « mange » le trottoir dans les angles
+                    px(g, c.x - 6, c.y - 6, 10, 10, '#3a3a45');
+                    px(g, c.x + c.l - 4, c.y - 6, 10, 10, '#3a3a45');
+                    px(g, c.x - 6, c.y + c.h - 4, 10, 10, '#3a3a45');
+                    px(g, c.x + c.l - 4, c.y + c.h - 4, 10, 10, '#3a3a45');
+                    // passages piétons sur deux côtés
+                    for (var k3 = 0; k3 < 5; k3++) {
+                        px(g, c.x + 5 + k3 * 11, c.y - 5, 6, 5, C.marquage);
+                        px(g, c.x + 5 + k3 * 11, c.y + c.h, 6, 5, C.marquage);
+                        px(g, c.x - 5, c.y + 5 + k3 * 11, 5, 6, C.marquage);
+                        px(g, c.x + c.l, c.y + 5 + k3 * 11, 5, 6, C.marquage);
+                    }
+                });
+
+                // 4. lignes axiales : jamais dans un croisement
+                function dansCroisement(x, y, l, h) {
+                    for (var i = 0; i < CROIS.length; i++) {
+                        var c = CROIS[i];
+                        if (x + l > c.x - 14 && x < c.x + c.l + 14 &&
+                            y + h > c.y - 14 && y < c.y + c.h + 14) return true;
+                    }
+                    return false;
+                }
+                COLS_ROUTES.forEach(function (col) {
+                    var x = col * TUILE + TUILE - 2;
+                    for (var y2 = 14; y2 < MONDE_H - 14; y2 += 26) {
+                        if (dansCroisement(x, y2, 4, 14)) continue;
+                        px(g, x, y2, 4, 14, C.marquage);
+                    }
+                });
+                ROWS_ROUTES.forEach(function (row) {
+                    var y3 = row * TUILE + TUILE - 2;
+                    for (var x3 = 14; x3 < MONDE_L - 14; x3 += 26) {
+                        if (dansCroisement(x3, y3, 14, 4)) continue;
+                        px(g, x3, y3, 14, 4, C.marquage);
+                    }
+                });
+
+                arbres.forEach(function (a) { poserCoin(g, 'arbre', solArbre, a.x, a.y); });
+                // les arbres à obstacle : même sprite, mais une ombre au sol
+                // les distingue des arbres décoratifs (on ne les traverse pas)
+                arbresObstacle.forEach(function (a) {
+                    var cx = Math.round(a.x + couronneObstacle.l / 2);
+                    var cy = Math.round(a.y + couronneObstacle.h - 10);
+                    px(g, cx - 17, cy - 3, 34, 8, 'rgba(10, 16, 10, 0.34)');
+                    px(g, cx - 13, cy + 3, 26, 4, 'rgba(10, 16, 10, 0.22)');
+                    poserCoin(g, 'arbre', solArbre, a.x, a.y);
+                });
+                poserSprite(g, 'plateforme', solDepot, DEPOT.x + 28, DEPOT.y + 28);
+
+                // barrières : segments de clôture posés sur les pelouses libres
+                var cloture = encombrement('barriere', solBarriere);
+                var essaisB = 0;
+                while (decorBarrieres.length < parSurface(22) && essaisB < parSurface(1500)) {
+                    essaisB++;
+                    var bx0 = Math.floor(rnd() * (COLS - 2)) * TUILE;
+                    var by0 = Math.floor(rnd() * (ROWS - 2)) * TUILE;
+                    if (surRouteRect(bx0, by0, cloture.l, cloture.h)) continue;
+                    if (empiète(bx0, by0, cloture.l, cloture.h)) continue;
+                    if (chevauchePad(bx0, by0, cloture.l, cloture.h, 4)) continue;
+                    if (chevaucheZone(bx0, by0, cloture.l, cloture.h, 6)) continue;
+                    decorBarrieres.push({ x: bx0, y: by0 });
+                }
+                fond = o.canvas;
+            }
+
+            // --- état ---
+            var ETAT = 'pret';
+            var velo = null;
+            // Le chien chasseur : purement décoratif (aucune collision, aucun
+            // dégât), il court après le velo pendant toute la partie.
+            var chien = null;
+            // Orientation de la bande du chien : elle est dessinée museau vers
+            // le HAUT (les deux yeux sombres sont en haut de la cellule, les
+            // pattes en bas). Le dessin la tourne d'un quart de tour pour la
+            // mettre de PROFIL (museau vers la droite), puis la retourne en
+            // miroir quand le chien va vers la gauche : le chien regarde donc
+            // toujours « à droite » ou « à gauche », il reste droit sur ses
+            // pattes, jamais de trois quarts ni sur le dos.
+            //
+            // C'est le SEUL réglage d'orientation. Si un jour la bande change
+            // de sens, on ne retouche pas le dessin : on change cette constante
+            // (museau vers le bas : -Math.PI / 2).
+            var ROTATION_CHIEN = Math.PI / 2;
+            // Seuil de bascule du miroir : sans cette hystérésis, un chien qui
+            // court presque à la verticale clignoterait d'un côté à l'autre.
+            var SEUIL_MIROIR_CHIEN = 0.25;
+            var niveau = 1, livraisons = 0, argent = 0, score = 0;
+            var grainePartie = 1;
+            var upgrades = { batterie: 0, moteur: 0, coque: 0, camera: 0, stabilite: 0 };
+            var temps = 0, tempsRestant = 0;   // posé par reinitialiserNiveau()
+            var colis = 'depot';
+            var camera = { x: 0, y: 0 };
+            var dernierAppel = 0;
+            var cles = { haut: false, bas: false, gauche: false, droite: false, boost: false };
+
+            // La règle d'énergie, isolée pour être vérifiable SANS jouer :
+            // le pédalage ne coûte rien, l'assistance électrique vide la
+            // batterie (et un peu plus à chaque tournée, le vélo étant plus
+            // lourd à mener). `verifier-livraison-vae.py` lit ces deux valeurs.
+            function consommation(assistance, n) {
+                return CONSO_BASE + (assistance ? CONSO_ASSISTANCE + ((n || 1) - 1) * 0.08 : 0);
+            }
+            function statsVelo() {
+                return {
+                    hpMax: 100 + 25 * upgrades.batterie,
+                    vitesseMax: 185 + 25 * upgrades.moteur,
+                    armure: upgrades.coque >= 1,
+                    armureForte: upgrades.coque >= 2,
+                    cameraUp: upgrades.camera >= 1,
+                    stabilise: upgrades.stabilite >= 1
+                };
+            }
+            function creerVelo() {
+                var s = statsVelo();
+                return {
+                    x: DEPOT.x + 28, y: DEPOT.y + 28, vx: 0, vy: 0, r: VELO_R,
+                    hp: s.hpMax, hpMax: s.hpMax, vitesseMax: s.vitesseMax,
+                    cooldown: 0, boost: false,
+                    armure: s.armure, armureForte: s.armureForte, cameraUp: s.cameraUp,
+                    stabilise: s.stabilise,
+                    // direction du sprite : les huit directions de PixelLab
+                    cap: 'sud',
+                    // phase du cycle de pédalage, en images (avance avec la vitesse)
+                    pedale: 0
+                };
+            }
+            function nbEnfantsNiveau(n) {
+                return Math.min(48, Math.round(ENFANTS_BASE * Math.pow(1.3, n - 1)));
+            }
+            // Candidats répartis sur TOUTE la carte (grille irrégulière), puis
+            // mélangés : sinon on ne prenait que les premiers, tous groupés en
+            // haut à gauche. Le mélange dépend de la graine de la partie, donc
+            // la disposition change à chaque nouvelle partie.
+            function positionsEnfants(rnd) {
+                var pos = [];
+                for (var cx = 2; cx < COLS - 2; cx += 3) {
+                    for (var cy = 2; cy < ROWS - 2; cy += 3) {
+                        var x = cx * TUILE + Math.floor(rnd() * TUILE);
+                        var y = cy * TUILE + Math.floor(rnd() * TUILE);
+                        if (x < 24 || y < 24 || x > MONDE_L - 24 || y > MONDE_H - 24) continue;
+                        if (empiète(x - 9, y - 11, 18, 22)) continue;
+                        // ni sur le dépôt
+                        if (Math.abs(x - DEPOT.x) < 90 && Math.abs(y - DEPOT.y) < 90) continue;
+                        pos.push({ x: x, y: y });
+                    }
+                }
+                for (var i = pos.length - 1; i > 0; i--) {
+                    var j = Math.floor(rnd() * (i + 1));
+                    var tmp = pos[i]; pos[i] = pos[j]; pos[j] = tmp;
+                }
+                var couleurs = ['#22d3ee', '#f472b6', '#facc15', '#a78bfa', '#fb923c', '#4ade80'];
+                return pos.map(function (p4, k) {
+                    return { x: p4.x, y: p4.y, c: couleurs[k % couleurs.length], i: k };
+                });
+            }
+
+            function reinitialiserNiveau() {
+                var rnd = alea(niveau * 977 + 13);
+                velo = creerVelo();
+                chien = { x: velo.x - 52, y: velo.y + 34, a: 2.3,
+                          cap: Math.PI / 2, galop: 0, versLaGauche: false };
+                temps = 0; tempsRestant = dureeNiveau();
+                colis = 'depot'; livraisons = 0;
+                projectiles = [];
+                genererCarte(niveau * 733 + 101);
+
+                var melange = ZONES_CANDIDATES.slice();
+                for (var i = melange.length - 1; i > 0; i--) {
+                    var j = Math.floor(rnd() * (i + 1));
+                    var tmp = melange[i]; melange[i] = melange[j]; melange[j] = tmp;
+                }
+                zones = melange.slice(0, 3);          // 3 zones, réutilisées en rotation
+
+                var cands = positionsEnfants(alea(grainePartie + niveau * 37));
+                enfants = cands.slice(0, nbEnfantsNiveau(niveau)).map(function (e, k) {
+                    return { x: e.x, y: e.y, baseX: e.x, baseY: e.y, c: e.c, i: e.i,
+                             modele: (e.i % 2 === 0) ? 'fille' : 'garcon',
+                             faceX: 0, faceY: 1,
+                             timer: 2 + (k % 4) * 0.6, preavis: 0,
+                             dx: 1, dy: 0, course: 0, dureeCourse: 2.1,
+                             departX: e.x, departY: e.y, cibleX: e.x, cibleY: e.y,
+                             typeTir: 'ballon' };
+                });
+
+                objets = [];
+                var batteries = 0, tries = 0;
+                while (batteries < parSurface(14) && tries < parSurface(600)) {
+                    tries++;
+                    var bx2 = Math.floor(rnd() * (COLS - 2)) * TUILE + 8;
+                    var by2 = Math.floor(rnd() * (ROWS - 2)) * TUILE + 8;
+                    if (empiète(bx2 - 8, by2 - 8, 16, 18)) continue;
+                    objets.push({ type: 'batterie', x: bx2, y: by2, pris: false });
+                    batteries++;
+                }
+                ['carbone', 'lipo', 'camera'].forEach(function (t) {
+                    var essais = 0;
+                    while (essais < 200) {
+                        essais++;
+                        var cx3 = Math.floor(rnd() * (COLS - 2)) * TUILE + 8;
+                        var cy3 = Math.floor(rnd() * (ROWS - 2)) * TUILE + 8;
+                        if (empiète(cx3 - 8, cy3 - 8, 16, 18)) continue;
+                        objets.push({ type: t, x: cx3, y: cy3, pris: false });
+                        break;
+                    }
+                });
+
+                // filet de sécurité : jamais d'élément sur un obstacle
+                enfants = enfants.filter(function (e) { return !empiète(e.x - 9, e.y - 11, 18, 22); });
+                objets = objets.filter(function (o) { return !empiète(o.x - 8, o.y - 8, 16, 18); });
+
+                cles.haut = cles.bas = cles.gauche = cles.droite = cles.boost = false;
+                camera.x = Math.max(0, Math.min(MONDE_L - VUE_L, Math.round(velo.x - VUE_L / 2)));
+                camera.y = Math.max(0, Math.min(MONDE_H - VUE_H, Math.round(velo.y - VUE_H / 2)));
+                majHUD();
+                etatProf('repos');
+            }
+
+            // --- HUD ---
+            function etatProf(nom) {
+                var p5 = document.getElementById('portrait-prof');
+                if (!p5) return;
+                p5.style.animation = 'none';
+                p5.setAttribute('data-etat', nom);
+                void p5.offsetWidth;
+                p5.style.animation = '';
+            }
+            function dire(texte) {
+                var el = document.getElementById('jeu-dialogue-texte');
+                if (el) el.textContent = texte;
+            }
+            function objectif() {
+                if (colis === 'depot') {
+                    return { x: DEPOT.x + 28, y: DEPOT.y + 28, couleur: CIBLE_JAUNE,
+                             halo: 'rgba(251, 191, 36, 0.28)', texte: 'COLIS',
+                             consigne: 'Prends le colis au dépôt' };
+                }
+                var z = zones[livraisons % zones.length];
+                return { x: z.x + 22, y: z.y + 22, couleur: CIBLE_VERTE,
+                         halo: 'rgba(34, 197, 94, 0.28)', texte: 'LIVRER',
+                         consigne: 'Livre le colis dans la zone verte' };
+            }
+            function majHUD() {
+                if (!velo) return;
+                var pv = Math.max(0, Math.round(velo.hp / velo.hpMax * 100));
+                var bv = document.getElementById('barre-batterie');
+                var jv = document.getElementById('jauge-batterie');
+                if (bv) {
+                    bv.style.width = pv + '%';
+                    bv.className = pv <= 25 ? 'critique' : (pv <= 55 ? 'bas' : '');
+                }
+                if (jv) {
+                    jv.setAttribute('aria-valuenow', String(pv));
+                    jv.setAttribute('aria-valuemax', String(velo.hpMax));
+                }
+                var t = document.getElementById('livres-jeu');
+                if (t) t.textContent = livraisons + ' / ' + livraisonsRequises();
+                var n = document.getElementById('niveau-jeu');
+                if (n) n.textContent = niveau + ' / ' + NIVEAUX_MAX;
+                var ar = document.getElementById('argent-jeu');
+                if (ar) ar.textContent = argent + ' €';
+                var ch = document.getElementById('chrono-jeu');
+                if (ch) {
+                    var s = Math.max(0, Math.ceil(tempsRestant));
+                    ch.textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+                }
+                var sc = document.getElementById('score-jeu');
+                if (sc) sc.textContent = String(Math.round(score));
+                var obj = objectif();
+                var objTxt = document.getElementById('jeu-objectif');
+                if (objTxt) objTxt.textContent = obj.consigne;
+                var pastille = document.getElementById('pastille-objectif');
+                if (pastille) pastille.style.background = obj.couleur;
+            }
+            function voile(titre, texte, recap, bouton) {
+                var v = document.getElementById('jeu-voile');
+                if (!v) return;
+                v.classList.remove('cache');
+                document.getElementById('jeu-voile-titre').textContent = titre;
+                document.getElementById('jeu-voile-texte').textContent = texte;
+                document.getElementById('jeu-voile-recap').textContent = recap || '';
+                document.getElementById('jeu-btn-demarrer').textContent = bouton || 'Démarrer la partie';
+            }
+            function cacherVoile() {
+                var v = document.getElementById('jeu-voile');
+                if (v) v.classList.add('cache');
+            }
+
+            // --- boutique ---
+            var ARTICLES = {
+                batterie: { nom: 'Batterie plus grosse', desc: '+25 % de réserve d\'assistance', cout: 150, max: 3 },
+                moteur: { nom: 'Moteur plus coupleux', desc: '+25 de vitesse max', cout: 180, max: 3 },
+                coque: { nom: 'Pneus anti-crevaison', desc: '-20 % puis -35 % de dégâts', cout: 220, max: 2 },
+                camera: { nom: 'Éclairage et feu stop', desc: 'les enfants le voient arriver : alerte allongée', cout: 120, max: 1 },
+                stabilite: { nom: 'Freins et direction', desc: 'le vélo répond au doigt, il ne file plus tout droit', cout: 300, max: 1 }
+            };
+            function majBoutique() {
+                var solde = document.getElementById('boutique-argent');
+                if (solde) solde.textContent = argent + ' €';
+                var liste = document.getElementById('boutique-articles');
+                if (!liste) return;
+                liste.innerHTML = '';
+                Object.keys(ARTICLES).forEach(function (cle) {
+                    var a = ARTICLES[cle];
+                    var lvl = upgrades[cle];
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'article' + (lvl >= a.max ? ' epuise' : '');
+                    b.innerHTML = '<strong>' + a.nom + '</strong><span>' + a.desc + '</span>' +
+                        '<em>' + (lvl >= a.max ? 'maximum atteint' : a.cout + ' €') +
+                        ' — niveau ' + lvl + '/' + a.max + '</em>';
+                    b.disabled = lvl >= a.max || argent < a.cout;
+                    b.addEventListener('click', function () { acheter(cle); });
+                    liste.appendChild(b);
+                });
+            }
+            function acheter(cle) {
+                var a = ARTICLES[cle];
+                if (!a || upgrades[cle] >= a.max || argent < a.cout) return false;
+                argent -= a.cout;
+                upgrades[cle] += 1;
+                var s = statsVelo();
+                if (velo) {
+                    velo.hpMax = s.hpMax; velo.hp = s.hpMax;
+                    velo.vitesseMax = s.vitesseMax;
+                    velo.armure = s.armure; velo.armureForte = s.armureForte;
+                    velo.cameraUp = s.cameraUp; velo.stabilise = s.stabilise;
+                }
+                majHUD(); majBoutique();
+                dire('« ' + a.nom + ' installé ! Le VAE progresse, comme l\'objet technique de la séquence. »');
+                return true;
+            }
+            function ouvrirBoutique() {
+                ETAT = 'boutique';
+                var b = document.getElementById('boutique');
+                if (b) b.hidden = false;
+                majBoutique();
+                etatProf('rigoler');
+                dire('« Tournée ' + niveau + ' terminée ! Dépense la cagnotte à l\'atelier : c\'est comme ça qu\'un objet technique évolue. »');
+                var bp = document.getElementById('jeu-btn-pause');
+                if (bp) bp.disabled = true;
+            }
+            function niveauSuivant() {
+                var b = document.getElementById('boutique');
+                if (b) b.hidden = true;
+                if (niveau >= NIVEAUX_MAX) { terminer(true); return; }
+                niveau += 1;
+                reinitialiserNiveau();
+                ETAT = 'en_cours';
+                cacherVoile();
+                var bp = document.getElementById('jeu-btn-pause');
+                if (bp) { bp.disabled = false; bp.textContent = '⏸️ Pause'; }
+                dire('« Tournée ' + niveau + ' sur ' + NIVEAUX_MAX + ' : ' +
+                     nbEnfantsNiveau(niveau) + ' enfants dehors. Prudence ! »');
+                lancer();
+            }
+
+            // --- règles ---
+            function subirDegats(n) {
+                if (!velo || velo.cooldown > 0 || ETAT !== 'en_cours') return;
+                velo.cooldown = 0.6;
+                var m = velo.armureForte ? 0.65 : (velo.armure ? 0.8 : 1);
+                velo.hp -= n * m;
+                if (velo.hp <= 0) { velo.hp = 0; terminer(false); }
+                majHUD();
+            }
+            function ramasser(type) {
+                if (type === 'batterie') {
+                    velo.hp = Math.min(velo.hpMax, velo.hp + 30);
+                    argent += 5; score += 40;
+                    dire('« Batterie : la réserve d\'assistance remonte (+5 €). »');
+                } else if (type === 'carbone') {
+                    velo.armure = true; velo.armureForte = true; argent += 15; score += 120;
+                    dire('« Pneus renforcés : le vélo encaisse mieux les chocs (+15 €). »');
+                } else if (type === 'lipo') {
+                    velo.hpMax += 20; velo.hp = velo.hpMax; argent += 15; score += 120;
+                    dire('« Batterie de secours : la réserve d\'assistance augmente (+15 €). »');
+                } else if (type === 'camera') {
+                    velo.cameraUp = true; argent += 15; score += 120;
+                    dire('« Éclairage : tu vois les lancers arriver (+15 €). »');
+                }
+                majHUD();
+            }
+            function terminer(gagne) {
+                ETAT = gagne ? 'gagne' : 'perdu';
+                var bonus = Math.round(velo.hp * 2 + Math.max(0, tempsRestant) * 2);
+                if (gagne) bonus += 600;
+                score += bonus; argent += Math.round(bonus / 10);
+                majHUD();
+                var bp = document.getElementById('jeu-btn-pause');
+                if (bp) bp.disabled = true;
+                if (gagne) {
+                    etatProf('rigoler');
+                    dire('« Cinq tournées livrées ! Le VAE a évolué, comme les objets techniques de la séquence. »');
+                    voile('🏆 Les 5 tournées sont livrées !',
+                        'Le professeur range son VAE et recharge la batterie. Score final : réserve d\'assistance restante, temps gagné et bonus de mission.',
+                        'Score : ' + Math.round(score) + ' — cagnotte : ' + argent + ' €', 'Rejouer');
+                } else {
+                    etatProf('rage');
+                    dire('« Aïe ! La batterie du VAE est à plat… Ramasse les batteries vertes et évite les arbres. »');
+                    voile('💥 Batterie à plat',
+                        'La réserve d\'assistance est tombée à zéro : le vélo s\'arrête. Les batteries vertes la rechargent, les pneus anti-crevaison réduisent les dégâts.',
+                        'Tournée ' + niveau + ' — score : ' + Math.round(score), 'Réessayer');
+                }
+            }
+
+            // --- logique ---
+            function cercleRect(cx, cy, r, rect) {
+                var qx = Math.max(rect.x, Math.min(cx, rect.x + rect.l));
+                var qy = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
+                var dx = cx - qx, dy = cy - qy;
+                return { d: Math.sqrt(dx * dx + dy * dy), dx: dx, dy: dy, px: qx, py: qy };
+            }
+            function viserEnAvance(pr) {
+                if (!velo) return;
+                var dx = velo.x - pr.x, dy = velo.y - pr.y;
+                var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                var tVol = dist / (pr.vitesse || 120);
+                var k = Math.min(1, 0.75 + (niveau - 1) * 0.06);
+                var cx = velo.x + velo.vx * tVol * k;
+                var cy = velo.y + velo.vy * tVol * k;
+                var vx = cx - pr.x, vy = cy - pr.y;
+                var n = Math.sqrt(vx * vx + vy * vy) || 1;
+                pr.vx = (vx / n) * (pr.vitesse || 120);
+                pr.vy = (vy / n) * (pr.vitesse || 120);
+            }
+            // Vitesses des projectiles lancés par les enfants, en px/s : +20 % par
+            // rapport aux valeurs d'origine (100 / 120 / 165), un tir trop lent se
+            // laissait traverser sans risque. Le ballon reste le plus lent, le
+            // bâton le plus lent de tous, et l'avion de papier le plus rapide.
+            var TIRS = {
+                ballon: { vitesse: 144, degats: 8 },
+                avion: { vitesse: 198, degats: 6 },
+                bois: { vitesse: 120, degats: 12 }
+            };
+
+            function mettreAJour(dt) {
+                if (ETAT !== 'en_cours' || !velo) return;
+                dt = Math.min(dt, 0.05);
+                temps += dt; tempsRestant -= dt;
+                if (tempsRestant <= 0) { tempsRestant = 0; return terminer(false); }
+
+                var ax = 0, ay = 0;
+                if (cles.gauche) ax -= 1;
+                if (cles.droite) ax += 1;
+                if (cles.haut) ay -= 1;
+                if (cles.bas) ay += 1;
+                if (ax || ay) { var n2 = Math.sqrt(ax * ax + ay * ay); ax /= n2; ay /= n2; }
+
+                var veutBoost = cles.boost && velo.hp > 4;
+                velo.boost = veutBoost;
+                var accel = (veutBoost ? 1500 : 900) * (velo.stabilise ? 1 : 0.85);
+                velo.vx += ax * accel * dt;
+                velo.vy += ay * accel * dt;
+                var tauxAmorti = velo.stabilise ? AMORTI_NORMAL
+                                                 : AMORTI_NORMAL / FACTEUR_INERTIE;
+                var amorti = Math.exp(-tauxAmorti * dt);
+                if (!ax) velo.vx *= amorti;
+                if (!ay) velo.vy *= amorti;
+                var vmax = veutBoost ? velo.vitesseMax * 1.85 : velo.vitesseMax;
+                var v = Math.sqrt(velo.vx * velo.vx + velo.vy * velo.vy);
+                if (v > vmax) { velo.vx = velo.vx / v * vmax; velo.vy = velo.vy / v * vmax; }
+                // Le sprite regarde là où le vélo va. En dessous de 12 px/s on
+                // garde le cap précédent : à l'arrêt, le vélo ne se met pas à
+                // clignoter entre deux directions.
+                if (v > 12) velo.cap = directionVecteur(velo.vx, velo.vy);
+                // cycle de pédalage : il tourne avec la vitesse, et s'arrête à
+                // l'arrêt (un vélo arrêté ne pédale pas)
+                if (v > 8) velo.pedale += dt * (2.4 + v / 90);
+
+                var conso = consommation(veutBoost, niveau);
+                velo.hp -= conso * dt;
+                if (velo.hp <= 0) { velo.hp = 0; majHUD(); return terminer(false); }
+
+                velo.x += velo.vx * dt;
+                velo.y += velo.vy * dt;
+                if (velo.x < 14) { velo.x = 14; velo.vx = 0; }
+                if (velo.x > MONDE_L - 14) { velo.x = MONDE_L - 14; velo.vx = 0; }
+                if (velo.y < 14) { velo.y = 14; velo.vy = 0; }
+                if (velo.y > MONDE_H - 14) { velo.y = MONDE_H - 14; velo.vy = 0; }
+
+                velo.cooldown = Math.max(0, velo.cooldown - dt);
+
+                for (var s = 0; s < solides.length; s++) {
+                    var col = cercleRect(velo.x, velo.y, velo.r, solides[s]);
+                    if (col.d < velo.r) {
+                        var d = col.d || 0.001;
+                        velo.x = col.px + (col.dx / d) * (velo.r + 0.5);
+                        velo.y = col.py + (col.dy / d) * (velo.r + 0.5);
+                        velo.vx *= -0.3; velo.vy *= -0.3;
+                        if (velo.cooldown === 0) {
+                            subirDegats(solides[s].type === 'pylone' ? 15 : 12);
+                            dire('« ' + (solides[s].type === 'pylone' ? 'Pylône !' : 'Maison !') + ' Garde tes distances, le cadre n\'aime pas. »');
+                        }
+                    }
+                }
+
+                // ── le chien chasseur ────────────────────────────────
+                // Il vise un point DERRIÈRE le velo. Quand le velo fait du
+                // surplace, il tourne autour de lui : c'est ce qui donne au
+                // décor son air décalé, et l'animation ne s'arrête jamais.
+                if (chien && velo) {
+                    var vitesseDrone = Math.sqrt(velo.vx * velo.vx + velo.vy * velo.vy);
+                    if (vitesseDrone > 30) {
+                        var vise = Math.atan2(-velo.vy, -velo.vx);
+                        var ecart = Math.atan2(Math.sin(vise - chien.a), Math.cos(vise - chien.a));
+                        chien.a += ecart * Math.min(1, dt * 2.2);
+                    } else {
+                        chien.a += dt * 0.8;
+                    }
+                    var portee = 54;
+                    var cibleChienX = velo.x + Math.cos(chien.a) * portee;
+                    var cibleChienY = velo.y + Math.sin(chien.a) * portee;
+                    var dxc = cibleChienX - chien.x, dyc = cibleChienY - chien.y;
+                    var dc = Math.sqrt(dxc * dxc + dyc * dyc) || 1;
+                    var vitesseChien = Math.min(330, 55 + dc * 2.6);
+                    if (dc > 3) {
+                        var pas = vitesseChien * dt;
+                        chien.x += (dxc / dc) * pas;
+                        chien.y += (dyc / dc) * pas;
+                        chien.cap = Math.atan2(dyc, dxc);
+                        chien.galop += pas;          // avance le cycle de course
+                        if (chien.galop > 1e6) chien.galop = 0;
+                    }
+                    chien.x = Math.max(14, Math.min(MONDE_L - 14, chien.x));
+                    chien.y = Math.max(14, Math.min(MONDE_H - 14, chien.y));
+                    // Le sprite ne pivote PAS vers ce cap : il regarde à droite ou
+                    // à gauche. Le côté est décidé ici, avec une hystérésis pour
+                    // qu'il ne clignote pas quand le chien court vers le haut ou
+                    // le bas ; le dessin n'a plus qu'à appliquer un miroir.
+                    var cosCap = Math.cos(chien.cap);
+                    if (cosCap > SEUIL_MIROIR_CHIEN) chien.versLaGauche = false;
+                    else if (cosCap < -SEUIL_MIROIR_CHIEN) chien.versLaGauche = true;
+                }
+
+                var cadence = Math.max(1.2, 3.2 - (niveau - 1) * 0.28);
+                for (var e = 0; e < enfants.length; e++) {
+                    var enf = enfants[e];
+                    var dxE = velo.x - enf.x, dyE = velo.y - enf.y;
+                    var distE = Math.sqrt(dxE * dxE + dyE * dyE);
+                    // orientation du sprite : le sens de la course, ou le
+                    // velo quand l'enfant attend (il le suit des yeux)
+                    if (enf.course > 0) {
+                        enf.faceX = enf.dx; enf.faceY = enf.dy;
+                    } else if (distE > 0.5) {
+                        enf.faceX = dxE / distE; enf.faceY = dyE / distE;
+                    }
+                    if (enf.course > 0) {
+                        // COURSE D'ÉLAN (3x plus lente qu'avant) : l'enfant avance
+                        // vers le velo, et ne lance qu'une fois ARRIVÉ.
+                        enf.course += dt;
+                        var pCourse = Math.min(1, enf.course / enf.dureeCourse);
+                        enf.x = enf.departX + (enf.cibleX - enf.departX) * pCourse;
+                        enf.y = enf.departY + (enf.cibleY - enf.departY) * pCourse;
+                        enf.preavis = (1 - pCourse) * enf.dureeCourse;   // alerte visuelle
+                        if (pCourse >= 1) {
+                            // tir depuis la nouvelle position, avec anticipation
+                            var type = enf.typeTir;
+                            var t3 = TIRS[type];
+                            var pr = {
+                                x: enf.x, y: enf.y - 4, vx: 0, vy: 0, type: type,
+                                vitesse: t3.vitesse, degats: t3.degats, vie: 5
+                            };
+                            viserEnAvance(pr);
+                            projectiles.push(pr);
+                            // le point d'arrivée devient sa nouvelle position
+                            enf.baseX = enf.x; enf.baseY = enf.y;
+                            enf.course = 0; enf.preavis = 0;
+                            enf.timer = cadence + Math.random() * 0.8;
+                        }
+                    } else {
+                        enf.timer -= dt;
+                        if (distE < 330 && enf.timer <= 0 && projectiles.length < 70 &&
+                            enf.modele === 'garcon') {
+                            // Le garçon reste planté là : son pack PixelLab n'a
+                            // pas de cycle de marche (`preparer_enfants.py`). Il
+                            // arme son tir sur place — l'animation de lancer est
+                            // sa feuille, jouée pendant l'armement — puis lance
+                            // dans la direction du velo.
+                            var nxG = dxE / (distE || 1), nyG = dyE / (distE || 1);
+                            enf.dx = nxG; enf.dy = nyG;
+                            enf.departX = enf.baseX; enf.departY = enf.baseY;
+                            enf.cibleX = enf.baseX; enf.cibleY = enf.baseY;
+                            var typesG = ['ballon', 'avion', 'bois'];
+                            enf.typeTir = typesG[Math.floor(Math.random() * typesG.length)];
+                            enf.dureeCourse = 1.35 * (velo.cameraUp ? 1.05 : 0.7);
+                            enf.course = 0.0001;
+                        } else if (distE < 330 && enf.timer <= 0 && projectiles.length < 70) {
+                            // direction ALÉATOIRE : viser le velo créait des
+                            // attroupements. On cherche un cap dégagé.
+                            var cxE = enf.baseX, cyE = enf.baseY;
+                            var ddx = 0, ddy = 0;
+                            for (var essai = 0; essai < 10; essai++) {
+                                var ang = Math.random() * Math.PI * 2;
+                                var vx2 = Math.cos(ang), vy2 = Math.sin(ang);
+                                var tx2 = Math.max(22, Math.min(MONDE_L - 22, enf.baseX + vx2 * ELAN_ENFANT));
+                                var ty2 = Math.max(22, Math.min(MONDE_H - 22, enf.baseY + vy2 * ELAN_ENFANT));
+                                if (!empiète(tx2 - 9, ty2 - 11, 18, 22)) {
+                                    cxE = tx2; cyE = ty2; ddx = vx2; ddy = vy2; break;
+                                }
+                            }
+                            enf.dx = ddx; enf.dy = ddy;
+                            enf.departX = enf.baseX; enf.departY = enf.baseY;
+                            enf.cibleX = cxE; enf.cibleY = cyE;
+                            var types = ['ballon', 'avion', 'bois'];
+                            enf.typeTir = types[Math.floor(Math.random() * types.length)];
+                            enf.dureeCourse = 3 * (velo.cameraUp ? 1.05 : 0.7);
+                            enf.course = 0.0001;      // démarre la course
+                        }
+                    }
+                }
+
+                for (var p6 = projectiles.length - 1; p6 >= 0; p6--) {
+                    var pr = projectiles[p6];
+                    if (pr.arme > 0) {
+                        var eLanceur = (pr.enfant != null) ? enfants[pr.enfant] : null;
+                        if (eLanceur) { pr.x = eLanceur.x; pr.y = eLanceur.y - 4; }
+                        pr.arme -= dt;
+                        if (pr.arme <= 0) viserEnAvance(pr);
+                        continue;
+                    }
+                    pr.x += pr.vx * dt; pr.y += pr.vy * dt; pr.vie -= dt;
+                    var dxp = pr.x - velo.x, dyp = pr.y - velo.y;
+                    if (dxp * dxp + dyp * dyp < (velo.r + 4) * (velo.r + 4)) {
+                        projectiles.splice(p6, 1);
+                        if (velo.cooldown === 0) {
+                            subirDegats(pr.degats);
+                            dire('« Touché par un ' + (pr.type === 'avion' ? 'avion en papier' :
+                                (pr.type === 'bois' ? 'bout de bois' : 'ballon')) + ' ! Change de trajectoire. »');
+                        }
+                        continue;
+                    }
+                    if (pr.vie <= 0 || pr.x < -20 || pr.x > MONDE_L + 20 ||
+                        pr.y < -20 || pr.y > MONDE_H + 20) projectiles.splice(p6, 1);
+                }
+
+                for (var o2 = 0; o2 < objets.length; o2++) {
+                    var ob = objets[o2];
+                    if (ob.pris) continue;
+                    var dxo = ob.x - velo.x, dyo = ob.y - velo.y;
+                    if (dxo * dxo + dyo * dyo < 420) { ob.pris = true; ramasser(ob.type); }
+                }
+
+                var zone = zones[livraisons % zones.length];
+                if (colis === 'depot') {
+                    var dxd = velo.x - (DEPOT.x + 28), dyd = velo.y - (DEPOT.y + 28);
+                    if (dxd * dxd + dyd * dyd < 700) {
+                        colis = 'porte'; etatProf('lancer'); score += 50;
+                        dire('« Colis dans le panier ! Direction la zone verte. »');
+                        majHUD();
+                    }
+                } else if (velo.x > zone.x - 6 && velo.x < zone.x + 44 &&
+                           velo.y > zone.y - 6 && velo.y < zone.y + 44) {
+                    livraisons += 1;
+                    argent += 45;
+                    score += 250 * (1 + (niveau - 1) * 0.1);
+                    majHUD();
+                    if (livraisons >= livraisonsRequises()) {
+                        argent += 60 + niveau * 20;
+                        majHUD();
+                        if (niveau >= NIVEAUX_MAX) return terminer(true);
+                        ouvrirBoutique();
+                        return;
+                    }
+                    colis = 'depot'; etatProf('rigoler');
+                    dire('« Livré ! Encore ' + (livraisonsRequises() - livraisons) + ' colis pour cette tournée. »');
+                }
+
+                camera.x = Math.max(0, Math.min(MONDE_L - VUE_L, Math.round(velo.x - VUE_L / 2)));
+                camera.y = Math.max(0, Math.min(MONDE_H - VUE_H, Math.round(velo.y - VUE_H / 2)));
+            }
+
+            // --- rendu ---
+            function dessinerMarqueur(cible, ox, oy, t) {
+                var x = cible.x + ox, y = cible.y + oy;
+                var r = 24 + Math.sin(t * 4) * 3;
+                ctx.fillStyle = cible.halo;
+                ctx.fillRect(Math.round(x) - 22, Math.round(y) - 22, 44, 44);
+                ctx.fillStyle = cible.couleur;
+                for (var a = 0; a < 12; a++) {
+                    var ang = (a / 12) * Math.PI * 2;
+                    ctx.fillRect(Math.round(x + Math.cos(ang) * r) - 2, Math.round(y + Math.sin(ang) * r) - 2, 4, 4);
+                }
+                if (Math.sin(t * 6) > 0) {
+                    ctx.fillRect(Math.round(x) - 2, Math.round(y) - 12, 4, 9);
+                    ctx.fillRect(Math.round(x) - 6, Math.round(y) - 2, 12, 3);
+                    ctx.fillRect(Math.round(x) - 4, Math.round(y) + 1, 8, 3);
+                }
+                var txt = cible.texte;
+                ctx.font = 'bold 9px monospace';
+                ctx.textAlign = 'center';
+                var largeur = txt.length * 6 + 8;
+                ctx.fillStyle = 'rgba(8, 12, 26, 0.78)';
+                ctx.fillRect(Math.round(x) - largeur / 2, Math.round(y) - 46, largeur, 13);
+                ctx.fillStyle = cible.couleur;
+                ctx.fillText(txt, Math.round(x), Math.round(y) - 36);
+                ctx.textAlign = 'start';
+            }
+            // --- enfants : feuilles d'animation PixelLab ---
+            // `window.ENFANTS_JEU` décrit ce qui a été produit par
+            // `_outils/illustrations/jeux/preparer_enfants.py` :
+            //   { modele: { anim: { direction: { cle, n } } } }
+            // Une feuille = une animation dans une direction, images côte à
+            // côte, chaussées sur la même ligne de pieds. On découpe donc à la
+            // volée : largeur d'une image = largeur / n.
+            var ENFANTS = (typeof window !== 'undefined' && window.ENFANTS_JEU) ? window.ENFANTS_JEU : null;
+            // 8 directions, dans l'ordre trigonométrique (est -> nord-est)
+            var DIRECTIONS = ['est', 'sud-est', 'sud', 'sud-ouest',
+                              'ouest', 'nord-ouest', 'nord', 'nord-est'];
+            // Durée de l'animation de lancer en fin de course (s), et modèle
+            // par défaut. Le garçon n'a pas de cycle de marche dans son pack
+            // PixelLab (voir preparer_enfants.py) : il lance sur place.
+            var FENETRE_LANCER = 0.6;
+            function modeleEnfant(enf) { return enf.modele || 'fille'; }
+            // Repli quand une direction n'a pas été produite par le pack
+            var REPLI_DIRECTION = { 'nord-ouest': 'ouest', 'nord-est': 'est',
+                                    'sud-est': 'est', 'sud-ouest': 'ouest' };
+
+            function directionVecteur(dx, dy) {
+                if (!dx && !dy) return 'sud';
+                var octant = Math.round(Math.atan2(dy, dx) / (Math.PI / 4));
+                return DIRECTIONS[((octant % 8) + 8) % 8];
+            }
+            // feuille disponible pour un modèle, une animation et une direction
+            function feuilleEnfant(modele, anim, dir) {
+                if (!ENFANTS || !ENFANTS[modele] || !ENFANTS[modele][anim]) return null;
+                var table = ENFANTS[modele][anim];
+                var essais = [dir, REPLI_DIRECTION[dir], 'sud', 'est'];
+                for (var i = 0; i < essais.length; i++) {
+                    if (essais[i] && table[essais[i]]) return table[essais[i]];
+                }
+                for (var k in table) if (table.hasOwnProperty(k)) return table[k];
+                return null;
+            }
+            // L'enfant est dessiné à l'échelle 1:1 (images PixelLab, pieds
+            // chaussés sur la ligne basse de la cellule) : plus de mise à
+            // l'échelle, donc aucune ligne fusionnée.
+            function dessinerChien(ox, oy) {
+                var im = imgAsset('chien');
+                if (!assetPret(im)) return;
+                var n = nbImages('chien');
+                var l = Math.round(im.naturalWidth / n), h = im.naturalHeight;
+                var k = Math.floor(chien.galop / 9) % n;
+                var sx = Math.round(chien.x + ox), sy = Math.round(chien.y + oy);
+                ctx.fillStyle = 'rgba(12, 18, 12, 0.22)';
+                ctx.fillRect(sx - 13, sy + 7, 26, 8);
+                // Le chien ne pivote pas vers son cap : il regarde toujours à
+                // droite ou à gauche, droit sur ses pattes. Le côté a été décidé
+                // dans la mise à jour (`chien.versLaGauche`).
+                //
+                // L'ORDRE compte : on tourne d'abord, on retourne ensuite. Un
+                // miroir appliqué avant la rotation ne change rien du tout —
+                // un quart de tour ramène le museau du même côté, et le chien
+                // regardait alors toujours dans la même direction.
+                ctx.save();
+                ctx.translate(sx, sy);
+                ctx.rotate(ROTATION_CHIEN);                // museau vers la droite
+                if (chien.versLaGauche) ctx.scale(-1, 1);  // miroir : vers la gauche
+                ctx.drawImage(im, k * l, 0, l, h,
+                              -Math.round(l / 2), -Math.round(h / 2), l, h);
+                ctx.restore();
+            }
+
+            function dessinerEnfant(enf, ox, oy) {
+                var x = Math.round(enf.x + ox), y = Math.round(enf.y + oy);
+                var dir = directionVecteur(enf.faceX, enf.faceY);
+                var feuille = null, frame = 0;
+                if (enf.course > 0) {
+                    var reste = enf.dureeCourse - enf.course;
+                    if (modeleEnfant(enf) === 'fille') {
+                        if (reste < FENETRE_LANCER) {
+                            // fin de course = le tir part : on joue le lancer
+                            feuille = feuilleEnfant('fille', 'lancer', dir);
+                            if (feuille) {
+                                frame = Math.min(feuille.n - 1,
+                                    Math.floor((1 - reste / FENETRE_LANCER) * feuille.n));
+                            }
+                        } else {
+                            feuille = feuilleEnfant('fille', 'marche', dir);
+                            if (feuille) {
+                                var nMarche = Math.max(1, feuille.n - 1);   // image 0 = repos
+                                frame = 1 + (Math.floor(enf.course / 0.13) % nMarche);
+                            }
+                        }
+                    } else {
+                        // le garçon n'a pas de cycle de marche : il arme son
+                        // tir sur place, sa feuille de lancer fait l'animation
+                        feuille = feuilleEnfant('garcon', 'lancer', dir);
+                        if (feuille) {
+                            frame = Math.min(feuille.n - 1,
+                                Math.floor((1 - reste / enf.dureeCourse) * feuille.n));
+                        }
+                    }
+                } else {
+                    feuille = feuilleEnfant(modeleEnfant(enf),
+                                            modeleEnfant(enf) === 'fille' ? 'marche' : 'pose', dir);
+                    frame = 0;
+                }
+                var im = feuille ? imgAsset(feuille.cle) : null;
+                if (feuille && assetPret(im)) {
+                    var fw = Math.round(im.naturalWidth / feuille.n);
+                    var fh = im.naturalHeight;
+                    ctx.drawImage(im, frame * fw, 0, fw, fh,
+                                  x - Math.round(fw / 2), y + 12 - fh, fw, fh);
+                } else {
+                    ctx.fillStyle = enf.c;
+                    ctx.fillRect(x - 6, y - 12, 12, 16);
+                    ctx.fillStyle = C.peau;
+                    ctx.fillRect(x - 4, y - 20, 8, 8);
+                }
+                if (enf.preavis > 0 && ETAT === 'en_cours') {
+                    ctx.fillStyle = Math.sin(temps * 26) > 0 ? '#ef4444' : '#fbbf24';
+                    ctx.fillRect(x - 2, y - 24, 4, 8);
+                }
+            }
+            function dessinerProjectile(pr, ox, oy) {
+                var x = Math.round(pr.x + ox), y = Math.round(pr.y + oy);
+                if (pr.arme > 0) {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.fillRect(x + 4, y - 6, 6, 6);
+                    return;
+                }
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
+                ctx.fillRect(x - Math.round(pr.vx * 0.03) - 1, y - Math.round(pr.vy * 0.03) - 1, 3, 3);
+                // deux images en boucle : le ballon de basket tourne sur
+                // lui-même, le bâton culbute (l'avion, lui, n'en a qu'une)
+                var cle = CLE_PROJECTILE[pr.type];
+                var image = nbImages(cle) > 1 ? Math.floor(temps * 10) : 0;
+                poserSpriteAnime(ctx, cle, solProjectiles[pr.type] || solProjectiles.ballon,
+                                 pr.x + ox, pr.y + oy, image);
+            }
+            // --- le professeur à VAE : feuille d'animation PixelLab ---
+            // `window.PROF_VAE_JEU.directions` décrit les huit feuilles
+            // produites par `preparer_prof_vae.py` :
+            //   { 'sud': { cle: 'profVaeRouleSud', n: 1 }, … }
+            // Repli quand une direction n'a pas été produite : on prend la
+            // diagonale la plus proche, puis le sud.
+            var REPLI_PROF = { 'nord-ouest': 'ouest', 'nord-est': 'est',
+                               'sud-est': 'est', 'sud-ouest': 'ouest' };
+            function feuilleProf(dir) {
+                if (!PROF || !PROF.directions) return null;
+                var essais = [dir, REPLI_PROF[dir], 'sud', 'est'];
+                for (var i = 0; i < essais.length; i++) {
+                    if (essais[i] && PROF.directions[essais[i]]) return PROF.directions[essais[i]];
+                }
+                for (var k in PROF.directions) {
+                    if (PROF.directions.hasOwnProperty(k)) return PROF.directions[k];
+                }
+                return null;
+            }
+            // Le sprite est posé à l'échelle 1:1, centré en largeur et calé par
+            // le BAS : les roues touchent la chaussée, comme les enfants du jeu
+            // drone qui sont calés sur leurs pieds. `ANCRAGE_VELO` décale ce
+            // point de contact de quelques pixels vers le bas.
+            var ANCRAGE_VELO = 8;
+            function dessinerVelo(ox, oy) {
+                var x = Math.round(velo.x + ox), y = Math.round(velo.y + oy);
+                var feuille = feuilleProf(velo.cap);
+                var im = feuille ? imgAsset(feuille.cle) : null;
+                // Ombre portée : au sol, pas sous un appareil qui vole.
+                ctx.fillStyle = 'rgba(12, 18, 12, 0.30)';
+                ctx.fillRect(x - 11, y + ANCRAGE_VELO - 2, 22, 6);
+                // Le sprite du prof vient de PixelLab en UNE image par
+                // direction (le cycle de pédalage du modèle déformait le vélo :
+                // mesuré, la silhouette passait de 1 à 30 morceaux et de 46 à
+                // 61 px de haut). Le mouvement se lit donc autrement : une
+                // oscillation d'un pixel, liée à la phase de pédalage — un vélo
+                // arrêté ne bouge pas, un vélo qui roule vit.
+                var bob = (Math.floor(velo.pedale * 2) % 2 === 0) ? 0 : -1;
+                if (feuille && assetPret(im)) {
+                    var fw = Math.round(im.naturalWidth / feuille.n);
+                    var fh = im.naturalHeight;
+                    var k = ((Math.floor(velo.pedale) % feuille.n) + feuille.n) % feuille.n;
+                    ctx.drawImage(im, k * fw, 0, fw, fh,
+                                  x - Math.round(fw / 2), y + ANCRAGE_VELO - fh + bob, fw, fh);
+                } else {
+                    // repli : le VAE dessiné par code, deux positions de pédale
+                    var repli = solVelo[Math.floor(velo.pedale) % 2 === 1 ? 1 : 0];
+                    ctx.drawImage(repli, x - Math.round(repli.width / 2),
+                                  y + ANCRAGE_VELO - repli.height + bob);
+                }
+                // L'assistance électrique se voit : une traînée bleue derrière
+                // la roue arrière, dans le sens contraire du déplacement.
+                if (velo.boost) {
+                    var vv = Math.sqrt(velo.vx * velo.vx + velo.vy * velo.vy) || 1;
+                    ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+                    for (var t2 = 1; t2 <= 3; t2++) {
+                        ctx.fillRect(Math.round(x - velo.vx / vv * (10 + t2 * 5)) - 2,
+                                     Math.round(y + ANCRAGE_VELO - 6 - velo.vy / vv * (10 + t2 * 5)),
+                                     4, 4);
+                    }
+                }
+                // Flèche vers l'objectif : le dépôt (jaune) puis la zone (verte)
+                if (ETAT === 'en_cours') {
+                    var cible = objectif();
+                    var ang2 = Math.atan2(cible.y - velo.y, cible.x - velo.x);
+                    ctx.fillStyle = cible.couleur;
+                    for (var i3 = 1; i3 <= 3; i3++) {
+                        ctx.fillRect(Math.round(x + Math.cos(ang2) * (26 + i3 * 5)) - 1,
+                                     Math.round(y + Math.sin(ang2) * (26 + i3 * 5)) - 1, 3, 3);
+                    }
+                    ctx.fillRect(Math.round(x + Math.cos(ang2) * 44) - 3,
+                                 Math.round(y + Math.sin(ang2) * 44) - 3, 6, 6);
+                }
+            }
+            function dessinerMinimap() {
+                var l = 104, h = 76, mg = 6;
+                var mx = VUE_L - l - mg, my = VUE_H - h - mg;
+                ctx.fillStyle = 'rgba(8, 12, 26, 0.72)';
+                ctx.fillRect(mx, my, l, h);
+                ctx.strokeStyle = 'rgba(226, 232, 240, 0.4)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(mx + 0.5, my + 0.5, l - 1, h - 1);
+                var ex = function (x) { return mx + (x / MONDE_L) * l; };
+                var ey = function (y) { return my + (y / MONDE_H) * h; };
+                ctx.fillStyle = CIBLE_JAUNE;
+                ctx.fillRect(Math.round(ex(DEPOT.x + 28)) - 2, Math.round(ey(DEPOT.y + 28)) - 2, 4, 4);
+                var o = objectif();
+                ctx.fillStyle = o.couleur;
+                ctx.fillRect(Math.round(ex(o.x)) - 2, Math.round(ey(o.y)) - 2, 4, 4);
+                ctx.fillStyle = '#ef4444';
+                for (var i = 0; i < enfants.length; i++) {
+                    ctx.fillRect(Math.round(ex(enfants[i].x)) - 1, Math.round(ey(enfants[i].y)) - 1, 2, 2);
+                }
+                if (velo) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(Math.round(ex(velo.x)) - 2, Math.round(ey(velo.y)) - 2, 4, 4);
+                }
+            }
+            function dessiner() {
+                if (!fond) return;
+                ctx.imageSmoothingEnabled = false;
+                ctx.fillStyle = '#0b1020';
+                ctx.fillRect(0, 0, VUE_L, VUE_H);
+                var ox = -camera.x, oy = -camera.y;
+                ctx.drawImage(fond, camera.x, camera.y, VUE_L, VUE_H, 0, 0, VUE_L, VUE_H);
+
+                for (var m = 0; m < maisons.length; m++) {
+                    var ms = maisons[m];
+                    var sx = Math.round(ms.x + ox), sy = Math.round(ms.y + oy);
+                    if (sx < -260 || sy < -260 || sx > VUE_L + 260 || sy > VUE_H + 260) continue;
+                    var im = imgAsset('maison' + (ms.v + 1));
+                    ctx.fillStyle = 'rgba(12, 18, 12, 0.34)';
+                    ctx.fillRect(sx + 20, sy + MAISON_AFF - 28, MAISON_AFF - 40, 22);
+                    if (assetPret(im)) {
+                        var lw = Math.round(im.naturalWidth * MAISON_AFF / im.naturalHeight);
+                        ctx.drawImage(im, sx, sy, lw, MAISON_AFF);
+                    } else {
+                        px(ctx, sx + 16, sy + 32, 184, 176, C.contour);
+                        px(ctx, sx + 20, sy + 36, 176, 168, C.toit1);
+                    }
+                }
+
+                // décor animé : barrières, fleurs et chats
+                for (var db = 0; db < decorBarrieres.length; db++) {
+                    var bi2 = decorBarrieres[db];
+                    var sxb = bi2.x + ox, syb = bi2.y + oy;
+                    if (sxb < -60 || syb < -60 || sxb > VUE_L + 60 || syb > VUE_H + 60) continue;
+                    poserCoin(ctx, 'barriere', solBarriere, sxb, syb);
+                }
+                for (var df = 0; df < decorFleurs.length; df++) {
+                    var fi = decorFleurs[df];
+                    var sxf = fi.x + ox, syf = fi.y + oy;
+                    if (sxf < -34 || syf < -34 || sxf > VUE_L + 34 || syf > VUE_H + 34) continue;
+                    poserCoin(ctx, 'fleur' + (fi.v % 3), solFleurs[fi.v % 3], sxf, syf);
+                }
+                for (var da = 0; da < animaux.length; da++) {
+                    var an = animaux[da];
+                    var sxa = an.x + ox, sya = an.y + oy;
+                    if (sxa < -40 || sya < -40 || sxa > VUE_L + 40 || sya > VUE_H + 40) continue;
+                    var frame = Math.floor(temps * 3 + an.x * 0.01) % 2;
+                    var ima = imgAsset(an.type + (frame ? 'B' : 'A'));
+                    if (assetPret(ima)) ctx.drawImage(ima, Math.round(sxa), Math.round(sya), 24, 20);
+                }
+
+                if (ETAT !== 'perdu' && ETAT !== 'gagne') dessinerMarqueur(objectif(), ox, oy, temps);
+
+                if (colis === 'depot') {
+                    var bob = Math.round(Math.sin(temps * 3) * 2);
+                    poserSprite(ctx, 'colis', solObjets.colis,
+                                DEPOT.x + 28 + ox, DEPOT.y + 28 + oy + bob);
+                }
+                for (var o3 = 0; o3 < objets.length; o3++) {
+                    if (objets[o3].pris) continue;
+                    var bob2 = Math.round(Math.sin(temps * 3 + objets[o3].x) * 2);
+                    poserSprite(ctx, CLE_OBJET[objets[o3].type], solObjets[objets[o3].type],
+                                objets[o3].x + ox, objets[o3].y + oy + bob2);
+                }
+                // le chien : dessiné AVANT le velo (il passe dessous) et
+                // tourné vers son cap — c'est une vue du dessus, donc la
+                // rotation est légitime
+                if (chien) dessinerChien(ox, oy);
+                for (var e2 = 0; e2 < enfants.length; e2++) dessinerEnfant(enfants[e2], ox, oy);
+                for (var p8 = 0; p8 < projectiles.length; p8++) dessinerProjectile(projectiles[p8], ox, oy);
+
+                if (velo) dessinerVelo(ox, oy);
+                dessinerMinimap();
+                if (ETAT === 'pause') {
+                    ctx.fillStyle = 'rgba(8, 12, 26, 0.72)';
+                    ctx.fillRect(0, 0, VUE_L, VUE_H);
+                    ctx.fillStyle = '#e2e8f0';
+                    ctx.font = 'bold 20px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('PAUSE', VUE_L / 2, VUE_H / 2);
+                    ctx.textAlign = 'start';
+                }
+            }
+
+            // --- animation ---
+            function boucle(ts) {
+                if (!dernierAppel) dernierAppel = ts;
+                var dt = (ts - dernierAppel) / 1000;
+                dernierAppel = ts;
+                if (ETAT === 'en_cours') { mettreAJour(dt); majHUD(); }
+                dessiner();
+                if (ETAT === 'en_cours' || ETAT === 'pause') requestAnimationFrame(boucle);
+            }
+            function lancer() { dernierAppel = 0; requestAnimationFrame(boucle); }
+
+            // --- commandes ---
+            function demarrer() {
+                if (!fond) preparerSprites();
+                niveau = 1; livraisons = 0; argent = 0; score = 0;
+                grainePartie = Math.floor(Math.random() * 100000) + 1;
+                upgrades = { batterie: 0, moteur: 0, coque: 0, camera: 0, stabilite: 0 };
+                var b = document.getElementById('boutique');
+                if (b) b.hidden = true;
+                reinitialiserNiveau();
+                ETAT = 'en_cours';
+                cacherVoile();
+                var bp = document.getElementById('jeu-btn-pause');
+                if (bp) { bp.disabled = false; bp.textContent = '⏸️ Pause'; }
+                dire('« Première tournée : ' + (livraisonsRequises()) + ' colis à livrer, ' +
+                     nbEnfantsNiveau(1) + ' enfants dehors. Prends le colis au dépôt (flèche jaune). »');
+                lancer();
+            }
+            function basculerPause() {
+                if (ETAT === 'en_cours') {
+                    ETAT = 'pause';
+                    var bp = document.getElementById('jeu-btn-pause');
+                    if (bp) bp.textContent = '▶️ Reprendre';
+                    dessiner();
+                } else if (ETAT === 'pause') {
+                    ETAT = 'en_cours';
+                    var bp2 = document.getElementById('jeu-btn-pause');
+                    if (bp2) bp2.textContent = '⏸️ Pause';
+                    lancer();
+                }
+            }
+
+            // ── remise à zéro ───────────────────────────────────────────
+            // Le bouton « Recommencer l'activité », en bas de page, remet la
+            // page à zéro : le jeu doit revenir à son écran d'accueil, sans
+            // lancer de partie. Les textes de cet écran sont ceux du bloc
+            // HTML (ils viennent de l'injection), donc on les mémorise au
+            // chargement plutôt que de les réécrire ici.
+            var ACCUEIL = null;
+            function memoriserAccueil() {
+                var titre = document.getElementById('jeu-voile-titre');
+                var texte = document.getElementById('jeu-voile-texte');
+                var recap = document.getElementById('jeu-voile-recap');
+                var bouton = document.getElementById('jeu-btn-demarrer');
+                if (!titre || !texte || !bouton) return;
+                ACCUEIL = { titre: titre.innerHTML, texte: texte.innerHTML,
+                            recap: recap ? recap.innerHTML : '',
+                            bouton: bouton.innerHTML };
+            }
+            function reinitialiser() {
+                if (!ACCUEIL) memoriserAccueil();
+                ETAT = 'pret';
+                niveau = 1; livraisons = 0; argent = 0; score = 0;
+                upgrades = { batterie: 0, moteur: 0, coque: 0, camera: 0, stabilite: 0 };
+                var b = document.getElementById('boutique');
+                if (b) b.hidden = true;
+                reinitialiserNiveau();
+                var v = document.getElementById('jeu-voile');
+                if (v && ACCUEIL) {
+                    v.classList.remove('cache');
+                    var titre = document.getElementById('jeu-voile-titre');
+                    var texte = document.getElementById('jeu-voile-texte');
+                    var recap = document.getElementById('jeu-voile-recap');
+                    var bouton = document.getElementById('jeu-btn-demarrer');
+                    if (titre) titre.innerHTML = ACCUEIL.titre;
+                    if (texte) texte.innerHTML = ACCUEIL.texte;
+                    if (recap) recap.innerHTML = ACCUEIL.recap;
+                    if (bouton) bouton.innerHTML = ACCUEIL.bouton;
+                }
+                var bp = document.getElementById('jeu-btn-pause');
+                if (bp) { bp.disabled = true; bp.textContent = '⏸️ Pause'; }
+                cles.haut = cles.bas = cles.gauche = cles.droite = cles.boost = false;
+                etatProf('repos');
+                dire('« Prêt ? Le colis est au dépôt, à gauche. À toi de pédaler ! »');
+                majHUD();
+                dessiner();
+            }
+            window.reinitialiserJeuVae = reinitialiser;
+
+            window.demarrerJeuVae = demarrer;
+            window.basculerPauseJeuVae = basculerPause;
+            window.rejouerJeuVae = demarrer;
+            window.acheterAmelioration = acheter;
+            window.niveauSuivantJeu = niveauSuivant;
+
+            window.JeuVae = {
+                etat: function () { return ETAT; },
+                velo: function () { return velo; },
+                // fenêtre de vue : indispensable au contrôle automatique pour
+                // retrouver à l'écran un élément donné du monde
+                vue: function () { return { x: camera.x, y: camera.y, l: VUE_L, h: VUE_H }; },
+                // état réel de chaque sprite déclaré (chargé ou non)
+                sprites: function () {
+                    var r = {};
+                    Object.keys(ASSETS).forEach(function (k) {
+                        var im = imagesAssets[k];
+                        r[k] = { charge: assetPret(im),
+                                 l: assetPret(im) ? im.naturalWidth : 0,
+                                 h: assetPret(im) ? im.naturalHeight : 0 };
+                    });
+                    return r;
+                },
+                // emplacement du décor fixe, pour échantillonner un sprite précis
+                plan: function () {
+                    return { arbres: arbres, arbresObstacle: arbresObstacle,
+                             fleurs: decorFleurs,
+                             barrieres: decorBarrieres, depot: DEPOT };
+                },
+                niveau: function () { return niveau; },
+                livraisons: function () { return livraisons; },
+                argent: function () { return argent; },
+                upgrades: function () { return upgrades; },
+                nbEnfants: function () { return enfants.length; },
+                colis: function () { return colis; },
+                zones: function () { return zones; },
+                depot: function () { return DEPOT; },
+                monde: function () { return { l: MONDE_L, h: MONDE_H }; },
+                decor: function () {
+                    return { fleurs: decorFleurs.length, barrieres: decorBarrieres.length,
+                             animaux: animaux.length };
+                },
+                objets: function () { return objets; },
+                enfants: function () { return enfants; },
+                chien: function () { return chien; },
+                projectiles: function () { return projectiles; },
+                solides: function () { return solides; },
+                maisonCount: function () { return maisons.length; },
+                score: function () { return score; },
+                tempsRestant: function () { return tempsRestant; },
+                objectif: objectif,
+                // Le professeur du jeu : celui qui roule. Plus de prof statique,
+                // donc plus de coordonnées de décor à exposer.
+                prof: function () { return velo; },
+                assets: function () {
+                    var r = {};
+                    for (var k in imagesAssets) r[k] = assetPret(imagesAssets[k]);
+                    return r;
+                },
+                demarrer: demarrer,
+                reinitialiser: reinitialiser,
+                // la règle d'énergie, lue telle quelle par le contrôle
+                consommation: consommation,
+                mettreAJour: mettreAJour,
+                dessiner: dessiner,
+                acheter: acheter,
+                niveauSuivant: niveauSuivant,
+                deplacer: function (d, v) { cles[d] = !!v; },
+                teleporter: function (x, y) { if (velo) { velo.x = x; velo.y = y; } },
+                blesser: function (n) { if (velo) { velo.cooldown = 0; subirDegats(n); } },
+                // Les cinq zones de livraison sont-elles réellement
+                // atteignables à vélo depuis le dépôt ? Une carte générée
+                // pourrait les enfermer derrière un pâté de maisons, et le
+                // défaut ne se verrait qu'en classe. Parcours en largeur sur
+                // une grille de 16 px, avec l'emprise du vélo.
+                verifierJouabilite: function () {
+                    var pas = 16, marge = 12;
+                    var cols = Math.floor(MONDE_L / pas), rows = Math.floor(MONDE_H / pas);
+                    var depart = { cx: Math.floor((DEPOT.x + 28) / pas),
+                                   cy: Math.floor((DEPOT.y + 28) / pas) };
+                    var vus = {};
+                    var cle = function (cx, cy) { return cx + ':' + cy; };
+                    var libre = function (cx, cy) {
+                        if (cx < 1 || cy < 1 || cx >= cols - 1 || cy >= rows - 1) return false;
+                        return !collisionne(cx * pas + marge, cy * pas + marge,
+                                            pas - 2 * marge, pas - 2 * marge);
+                    };
+                    var pile = [[depart.cx, depart.cy]];
+                    vus[cle(depart.cx, depart.cy)] = 1;
+                    while (pile.length) {
+                        var c = pile.pop();
+                        var voisins = [[c[0] + 1, c[1]], [c[0] - 1, c[1]],
+                                       [c[0], c[1] + 1], [c[0], c[1] - 1]];
+                        for (var i = 0; i < voisins.length; i++) {
+                            var v = voisins[i], k = cle(v[0], v[1]);
+                            if (vus[k] || !libre(v[0], v[1])) continue;
+                            vus[k] = 1;
+                            pile.push(v);
+                        }
+                    }
+                    var atteignables = zones.map(function (z) {
+                        var cx = Math.floor((z.x + 22) / pas), cy = Math.floor((z.y + 22) / pas);
+                        return { x: z.x, y: z.y, atteinte: !!vus[cle(cx, cy)] };
+                    });
+                    return { depart: depart, cases: Object.keys(vus).length,
+                             zones: atteignables,
+                             toutesAtteintes: atteignables.every(function (a) { return a.atteinte; }) };
+                },
+                verifierPlacement: function () {
+                    var souci = [];
+                    function gene(nom, x, y, l, h) {
+                        if (x < 0 || y < 0 || x + l > MONDE_L || y + h > MONDE_H) souci.push(nom + ' hors du monde');
+                        for (var i = 0; i < solides.length; i++) {
+                            var so = solides[i];
+                            if (x + l > so.x && x < so.x + so.l && y + h > so.y && y < so.y + so.h) {
+                                souci.push(nom + ' sur un ' + so.type);
+                            }
+                        }
+                    }
+                    zones.forEach(function (z, i) { gene('zone ' + (i + 1), z.x - 6, z.y - 6, 56, 56); });
+                    gene('dépôt', DEPOT.x + 2, DEPOT.y + 2, 52, 52);
+                    objets.forEach(function (o, i) { gene('objet ' + (i + 1), o.x - 8, o.y - 8, 16, 16); });
+                    enfants.forEach(function (e, i) { gene('enfant ' + (i + 1), e.x - 8, e.y - 8, 16, 16); });
+                    return souci;
+                }
+            };
+
+            // --- entrées ---
+            var TOUCHES = {
+                ArrowUp: 'haut', ArrowDown: 'bas', ArrowLeft: 'gauche', ArrowRight: 'droite',
+                z: 'haut', Z: 'haut', w: 'haut', W: 'haut', s: 'bas', S: 'bas',
+                q: 'gauche', Q: 'gauche', a: 'gauche', A: 'gauche', d: 'droite', D: 'droite',
+                Shift: 'boost', ' ': 'boost'
+            };
+            function jeuAffiche() {
+                var sec = document.getElementById('contenu-bonus');
+                return !!sec && sec.classList.contains('actif');
+            }
+            document.addEventListener('keydown', function (ev) {
+                var t = TOUCHES[ev.key];
+                if (!t) return;
+                var c = ev.target;
+                if (c && (c.tagName === 'TEXTAREA' || c.tagName === 'INPUT')) return;
+                if (!jeuAffiche()) return;
+                ev.preventDefault(); ev.stopPropagation();
+                cles[t] = true;
+                if (ETAT === 'pret' || ETAT === 'gagne' || ETAT === 'perdu') demarrer();
+            }, { passive: false });
+            document.addEventListener('keyup', function (ev) {
+                var t = TOUCHES[ev.key];
+                if (!t) return;
+                if (jeuAffiche()) { ev.preventDefault(); ev.stopPropagation(); }
+                cles[t] = false;
+            }, { passive: false });
+            window.addEventListener('blur', function () {
+                cles.haut = cles.bas = cles.gauche = cles.droite = cles.boost = false;
+            });
+            document.querySelectorAll('.jeu-pave button').forEach(function (b) {
+                var dir = b.getAttribute('data-touche');
+                var on = function (ev) {
+                    ev.preventDefault(); cles[dir] = true;
+                    if (ETAT === 'pret' || ETAT === 'gagne' || ETAT === 'perdu') demarrer();
+                };
+                var off = function (ev) { ev.preventDefault(); cles[dir] = false; };
+                b.addEventListener('pointerdown', on);
+                b.addEventListener('pointerup', off);
+                b.addEventListener('pointerleave', off);
+                b.addEventListener('pointercancel', off);
+                b.addEventListener('keydown', function (ev) {
+                    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); on(ev); }
+                });
+                b.addEventListener('keyup', function (ev) {
+                    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); off(ev); }
+                });
+            });
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden && ETAT === 'en_cours') basculerPause();
+            });
+
+            preparerSprites();
+            memoriserAccueil();
+            niveau = 1;
+            reinitialiserNiveau();
+            dessiner();
+            // Les sprites d'objet arrivent après ce premier tracé : la carte est
+            // alors re-cuite avec les vraies images (voir apresChargementAssets).
+            quandAssetsPrets();
+        })();
     </script>
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" style="position:fixed;left:14px;bottom:14px;z-index:9999;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:9px 16px;border-radius:999px;background:#1f4e79;color:#fff;text-decoration:none;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:.92rem;font-weight:700;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.28);border:2px solid #fff;" aria-label="Retour à l'accueil du site">← Retour à l’accueil</a>
 </body>
