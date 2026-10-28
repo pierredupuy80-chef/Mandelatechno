@@ -1861,6 +1861,18 @@
             50% { transform: scale(1.02); }
         }
 
+        /* Onglet bonus SANS MOUVEMENT (`bonus.animations: false`) : la bannière
+           reste affichée et lisible, sans pulsation, et le panneau s'ouvre sans
+           fondu. Un écran projeté en classe ne doit pas faire bouger le texte à
+           côté du contenu ; le réglage vient de la configuration, il n'est
+           jamais deviné à l'exécution. Les images animées des cartes de jeux ne
+           relèvent pas du CSS : personnaliser.py refuse ce cas (voir
+           `image_est_animee()`), plutôt que de laisser le mouvement revenir. */
+        .activite-bonus.deverrouille.sans-animation,
+        .contenu-onglet.sans-animation {
+            animation: none;
+        }
+
         .activite-bonus h3 {
             color: white;
             margin-bottom: var(--espacement-md);
@@ -2137,6 +2149,322 @@
 
             .puzzle-piece {
                 padding: var(--espacement-xs) var(--espacement-sm);
+            }
+        }
+
+        /* ============================================
+           JEU DE LIVRAISON DU BONUS (bonus.jeuLivraison)
+           (bloc produit depuis bonus.jeuLivraison ; les
+            marqueurs JEU-LIVRAISON sont retirés si la
+            configuration n'en déclare pas)
+
+           Jeu d'adresse en vue de dessus, repris du jeu « colis
+           express » : le professeur de techno livre des colis avec
+           l'objet technique du cours (VAE, trottinette, drone… le
+           nom vient de la configuration). L'assistance électrique
+           se paie en énergie, le pédalage est gratuit : c'est
+           exactement le compromis que le cours fait mesurer.
+
+           Aucune animation CSS ici : tout le mouvement vit dans le
+           canevas, et seulement quand l'élève a cliqué « Démarrer ».
+           L'onglet reste donc immobile, comme l'exige
+           `bonus.animations: false` quand cette option est posée.
+           Le panneau est sombre dans les deux thèmes : c'est un
+           écran de jeu, pas une plaque de texte du cours.
+           ============================================ */
+
+        .jeu-livraison {
+            margin: var(--espacement-lg) 0;
+            padding: var(--espacement-md);
+            border: 2px solid #1e293b;
+            border-radius: var(--rayon-bordure);
+            background-color: #0b1020;
+            color: #e2e8f0;
+        }
+
+        .jeu-livraison h3 {
+            color: #fde68a;
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .jeu-livraison-chapeau {
+            margin-bottom: var(--espacement-md);
+            /* 11:1 sur le fond du panneau */
+            color: #cbd5e1;
+        }
+
+        /* --- HUD --- */
+        .jeu-livraison-hud {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--espacement-xs) var(--espacement-md);
+            padding: var(--espacement-sm) var(--espacement-md);
+            margin-bottom: var(--espacement-sm);
+            border: 2px solid #1e293b;
+            border-radius: var(--rayon-bordure);
+            background-color: #111a30;
+            font-size: 0.85rem;
+        }
+
+        .jeu-livraison-hud .jl-etiquette {
+            color: #94a3b8;
+        }
+
+        .jeu-livraison-hud .jl-valeur {
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .jl-jauge {
+            flex: 1 1 140px;
+            min-width: 120px;
+            height: 14px;
+            border: 2px solid #334155;
+            border-radius: 999px;
+            background-color: #1e293b;
+            overflow: hidden;
+        }
+
+        .jl-jauge span {
+            display: block;
+            height: 100%;
+            width: 100%;
+            background-color: #22c55e;
+        }
+
+        /* Batterie basse : la couleur seule ne suffit pas (RGAA), le texte du
+           HUD l'annonce aussi (« batterie 12 % »). */
+        .jl-jauge[data-etat="basse"] span {
+            background-color: #f59e0b;
+        }
+
+        .jl-jauge[data-etat="vide"] span {
+            background-color: #ef4444;
+        }
+
+        /* --- Barre d'objectif --- */
+        .jl-objectif {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--espacement-sm);
+            padding: var(--espacement-xs) var(--espacement-md);
+            margin-bottom: var(--espacement-sm);
+            border-radius: var(--rayon-bordure);
+            background-color: #1e293b;
+            color: #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        .jl-objectif-titre {
+            font-weight: 700;
+            color: #fde68a;
+            font-size: 0.85rem;
+        }
+
+        .jl-pastille {
+            width: 14px;
+            height: 14px;
+            flex: 0 0 auto;
+            margin-top: 3px;
+            border-radius: 50%;
+            background-color: #facc15;
+        }
+
+        .jl-pastille[data-etat="livraison"] {
+            background-color: #22c55e;
+        }
+
+        /* --- Écran (canevas + voile) --- */
+        .jl-ecran {
+            position: relative;
+            max-width: 520px;
+            margin: 0 auto var(--espacement-sm);
+            border: 2px solid #334155;
+            border-radius: var(--rayon-bordure);
+            overflow: hidden;
+            background-color: #14532d;
+        }
+
+        .jl-canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            touch-action: none;
+        }
+
+        .jl-voile {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: var(--espacement-sm);
+            padding: var(--espacement-md);
+            overflow-y: auto;
+            background-color: rgba(8, 13, 26, 0.92);
+            color: #f8fafc;
+            text-align: center;
+        }
+
+        .jl-voile[hidden] {
+            display: none;
+        }
+
+        .jl-voile h4 {
+            color: #fde68a;
+            font-size: 1.05rem;
+        }
+
+        .jl-voile p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* --- Boutique d'améliorations --- */
+        .jl-articles {
+            display: grid;
+            gap: var(--espacement-sm);
+            text-align: left;
+        }
+
+        .jl-article {
+            padding: var(--espacement-xs) var(--espacement-sm);
+            border: 2px solid #334155;
+            border-radius: var(--rayon-bordure);
+            background-color: #16202e;
+        }
+
+        .jl-article[data-achetee="oui"] {
+            border-color: #22c55e;
+        }
+
+        .jl-article h5 {
+            font-size: 0.95rem;
+            color: #f8fafc;
+        }
+
+        .jl-article p {
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            margin: 2px 0 var(--espacement-xs);
+        }
+
+        .jl-article button {
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-xs) var(--espacement-sm);
+            font: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0b1020;
+            background-color: #22c55e;
+            border: 2px solid #16a34a;
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .jl-article button[disabled] {
+            color: #cbd5e1;
+            background-color: #334155;
+            border-color: #475569;
+            cursor: default;
+        }
+
+        /* --- Barre d'outils et pavé tactile --- */
+        .jl-barre-outils {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+            justify-content: center;
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .jl-pave {
+            display: grid;
+            grid-template-columns: repeat(3, 64px);
+            grid-auto-rows: 48px;
+            gap: 6px;
+            justify-content: center;
+            margin: 0 auto var(--espacement-sm);
+            max-width: 100%;
+        }
+
+        .jl-pave button {
+            min-height: var(--hauteur-cible-min);
+            font-size: 1.1rem;
+            line-height: 1;
+            color: #f8fafc;
+            background-color: #1e293b;
+            border: 2px solid #475569;
+            border-radius: var(--rayon-bordure);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .jl-pave button[data-touche="haut"] { grid-column: 2; grid-row: 1; }
+        .jl-pave button[data-touche="gauche"] { grid-column: 1; grid-row: 2; }
+        .jl-pave button[data-touche="bas"] { grid-column: 2; grid-row: 2; }
+        .jl-pave button[data-touche="droite"] { grid-column: 3; grid-row: 2; }
+
+        .jl-pave button[data-touche="assistance"] {
+            grid-column: 1 / span 3;
+            grid-row: 3;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background-color: #1d4ed8;
+            border-color: #2563eb;
+        }
+
+        .jl-pave button[aria-pressed="true"] {
+            background-color: #2563eb;
+            border-color: #60a5fa;
+        }
+
+        .jl-pave button:focus-visible,
+        .jl-article button:focus-visible,
+        .jl-barre-outils button:focus-visible {
+            outline: 3px solid #fde68a;
+            outline-offset: 2px;
+        }
+
+        /* --- Dialogue et aide --- */
+        .jl-dialogue {
+            padding: var(--espacement-sm) var(--espacement-md);
+            margin-bottom: var(--espacement-sm);
+            border-left: 4px solid #facc15;
+            border-radius: var(--rayon-bordure);
+            background-color: #16202e;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .jl-dialogue .jl-nom {
+            font-weight: 700;
+            color: #fde68a;
+        }
+
+        .jeu-livraison-aide {
+            font-size: 0.85rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+        }
+
+        .jl-statut {
+            min-height: 1.2em;
+            margin-top: var(--espacement-xs);
+            font-size: 0.85rem;
+            color: #fde68a;
+        }
+
+        @media (max-width: 420px) {
+            .jl-pave {
+                grid-template-columns: repeat(3, 56px);
+                grid-auto-rows: 44px;
+            }
+
+            .jeu-livraison {
+                padding: var(--espacement-sm);
             }
         }
 
@@ -2513,6 +2841,237 @@
         .atelier-fils-vide {
             font-style: italic;
             color: #4a5d70;
+        }
+
+        /* ── Type « erreur-schema » : un schéma de câblage à diagnostiquer ──
+           Le schéma est COMPLET : un câble seulement est mal branché, et c'est
+           lui que l'élève doit désigner. Les appareils sont posés par rangées
+           (flex) et le moteur trace les câbles entre les appareils RÉELS :
+           aucune coordonnée en dur, donc le schéma reste juste à 320 px, où un
+           pourcentage figé sortirait du cadre.
+
+           Deux couches, et c'est voulu : le dessin (SVG, `aria-hidden`) ne
+           porte aucun nom, et chaque câble a par-dessus un VRAI bouton HTML de
+           44 × 44 px posé à son milieu. Un groupe SVG focusable se comporte
+           mal selon les lecteurs d'écran, et un trait de 4 px est une cible
+           introuvable au doigt. */
+        .schema-aide {
+            font-size: .85rem;
+            color: #4a5d70;
+            margin: .1rem 0 .6rem;
+        }
+
+        .schema-cadre {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* Écart vertical généreux : c'est l'espace où vivent les câbles, et
+               où doit tenir le repère cliquable de 44 px. Trop serré, deux
+               repères de câbles voisins se recouvrent. */
+            gap: 2.6rem;
+            padding: 1rem .6rem;
+            background: #f4f8fc;
+            border: 2px solid #dce3ed;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .schema-rangee {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem;
+            justify-content: center;
+        }
+
+        .schema-noeud {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .1rem;
+            min-width: 74px;
+            min-height: 48px;
+            max-width: 150px;
+            padding: .35rem .5rem;
+            background: #ffffff;
+            border: 2px solid #2e74b5;
+            border-radius: 9px;
+            font-size: .78rem;
+            line-height: 1.15;
+            text-align: center;
+        }
+
+        .schema-noeud .schema-icone {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .schema-noeud .schema-nom {
+            font-weight: 600;
+        }
+
+        /* Placement dans la rangée : c'est ce qui laisse passer un câble sur le
+           côté au lieu de le cacher derrière un appareil centré. */
+        .schema-noeud-gauche { margin-right: auto; }
+        .schema-noeud-centre { margin-left: auto; margin-right: auto; }
+        .schema-noeud-droite { margin-left: auto; }
+
+        .schema-fils {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .schema-cable .schema-trait {
+            fill: none;
+            stroke: #2e74b5;
+            stroke-width: 4;
+            stroke-linecap: round;
+        }
+
+        .schema-cable.survol .schema-trait,
+        .schema-cable.survol-focus .schema-trait {
+            stroke: #1a4f7a;
+            stroke-width: 6;
+        }
+
+        .schema-cable.examine .schema-trait {
+            stroke: #94a3b8;
+            stroke-dasharray: 9 7;
+        }
+
+        .schema-cable.trouve .schema-trait {
+            stroke: #c62828;
+            stroke-width: 6;
+        }
+
+        /* Le bouton du câble : transparent, 44 px de côté, avec un repère rond
+           au centre. Sans ce repère, un trait ne se lit pas comme un bouton. */
+        .schema-lien {
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .schema-lien::before {
+            content: "";
+            display: block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid #2e74b5;
+            box-sizing: border-box;
+        }
+
+        .schema-lien:hover::before {
+            background: #2e74b5;
+            border-color: #1a4f7a;
+        }
+
+        .schema-lien:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .schema-lien.examine::before {
+            border-color: #94a3b8;
+        }
+
+        .schema-lien.trouve::before {
+            background: #fdecea;
+            border-color: #c62828;
+        }
+
+        .schema-cables {
+            margin-top: .6rem;
+            padding: .6rem .7rem;
+            border: 1px solid #dce3ed;
+            border-radius: 9px;
+            background: #fbfcfe;
+        }
+
+        .schema-cables h4 {
+            margin: 0 0 .35rem;
+        }
+
+        .schema-cables ul {
+            margin: 0 0 0 1.1rem;
+            font-size: .85rem;
+        }
+
+        .schema-cables li {
+            margin-bottom: .2rem;
+        }
+
+        @media (max-width: 480px) {
+            .schema-cadre {
+                gap: 4.6rem;
+                padding: .7rem .25rem;
+            }
+            /* Les appareils d'une même rangée doivent tenir SUR UNE LIGNE à
+               320 px : répartis sur deux lignes, leurs câbles passent derrière
+               les appareils de l'autre ligne, et les repères des câbles d'un
+               même commutateur se retrouvent à moins de 44 px les uns des
+               autres — au doigt, ils n'en font qu'un. On rétrécit donc les
+               boîtes (le nom passe à la ligne) plutôt que de les empiler. */
+            .schema-rangee {
+                /* Une seule ligne, toujours : les quatre appareils d'une rangée
+                   se partagent la largeur au lieu de passer à la ligne. Deux
+                   lignes d'appareils feraient passer les câbles derrière ceux
+                   d'en dessous, et rapprocheraient les repères jusqu'à les
+                   confondre au doigt. */
+                flex-wrap: nowrap;
+                gap: .3rem;
+            }
+            .schema-noeud {
+                flex: 0 1 auto;
+                min-width: 0;
+                max-width: 78px;
+                font-size: .68rem;
+                padding: .25rem .3rem;
+                overflow-wrap: anywhere;
+            }
+            .schema-noeud .schema-icone {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* À 320 px, la largeur utile du schéma tombe sous 240 px : chaque pixel
+           gagné sur les boîtes écarte les repères des câbles d'un même
+           commutateur, qui sont les plus serrés. */
+        @media (max-width: 360px) {
+            .schema-cadre {
+                /* Encore plus d'air ici : c'est la hauteur où les repères des
+                   quatre câbles peuvent se décaler les uns des autres. Sur
+                   231 px de large, c'est la seule marge qui reste. */
+                gap: 6rem;
+            }
+            .schema-rangee {
+                gap: .2rem;
+            }
+            .schema-noeud {
+                padding: .2rem .2rem;
+                font-size: .66rem;
+            }
         }
 
         .atelier-slots {
@@ -3259,6 +3818,13 @@
         .ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
         .ost-option input{margin-top:3px}
         #ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+        /* Modèles de commentaire : des phrases génériques à compléter, jamais un
+           niveau ni un identifiant figé — le panneau les déduit déjà de l'onglet
+           et de l'élément sélectionnés. */
+        .ost-modeles{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+        .ost-modele{min-height:32px;padding:0 10px;border:1px dashed #c7d2e3;border-radius:999px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+        .ost-modele:hover{background:#f1f5f9}
+        .ost-modeles-legende{margin:0;font-size:11px;color:#64748b}
         .ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
         .ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
         .ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
@@ -3395,7 +3961,7 @@
         :where(html[data-theme="sombre"]) .probleme-ouvert,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
         :where(html[data-theme="sombre"]) .compteur-selection,:where(html[data-theme="sombre"]) .atelier-carte h4,:where(html[data-theme="sombre"]) .atelier-compteur,:where(html[data-theme="sombre"]) .rotors-nez,:where(html[data-theme="sombre"]) .atelier-verdict,:where(html[data-theme="sombre"]) .env-catalogue .env-mesure,:where(html[data-theme="sombre"]) .env-table caption,:where(html[data-theme="sombre"]) .env-note-2 .env-mot,:where(html[data-theme="sombre"]) .atelier-mesure,:where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd}
         :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .tuile-deplacer,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
-        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
+        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .schema-lien:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="juste"] .choix-contrainte,:where(html[data-theme="sombre"]) .etape-selection-explication,:where(html[data-theme="sombre"]) .solution-personnelle,:where(html[data-theme="sombre"]) .cablage-bilan.succes{background-color:#142c21}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="faux"] .choix-contrainte,:where(html[data-theme="sombre"]) .cablage-bilan.echec,:where(html[data-theme="sombre"]) .puzzle-slot.faux,:where(html[data-theme="sombre"]) .puzzle-bilan.echec{background-color:#2b1a1c}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-contrainte{border-color:#f59e0b;background-color:#2c2415}
@@ -3410,7 +3976,7 @@
         :where(html[data-theme="sombre"]) .cablage-aide,:where(html[data-theme="sombre"]) .cablage-reserve.vide::after,:where(html[data-theme="sombre"]) .cablage-indication,:where(html[data-theme="sombre"]) .cablage-retour.info,:where(html[data-theme="sombre"]) .puzzle-aide,:where(html[data-theme="sombre"]) .puzzle-reserve.vide::after{color:#cbd5e1}
         :where(html[data-theme="sombre"]) .cablage-reserve,:where(html[data-theme="sombre"]) .puzzle-reserve{border:2px dashed #55657f;background-color:#27334a}
         :where(html[data-theme="sombre"]) .cablage-zone,:where(html[data-theme="sombre"]) .puzzle-piece{background-color:#1c2534;border:2px solid #55657f}
-        :where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait{stroke:#9ecbfd}
+        :where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait,:where(html[data-theme="sombre"]) .schema-cable .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol-focus .schema-trait{stroke:#9ecbfd}
         :where(html[data-theme="sombre"]) .noeud-reseau,:where(html[data-theme="sombre"]) .puzzle-plateau[data-layout="schema"] .puzzle-fond{border:2px solid #55657f;background-color:#1c2534}
         :where(html[data-theme="sombre"]) .noeud-reseau[data-type="internet"]{background-color:#10333c;background-image:radial-gradient(circle at 50% 32%, #1c2534 0%, #10333c 72%)}
         :where(html[data-theme="sombre"]) .cablage-explication{border-top:1px solid #3a4a63}
@@ -3429,9 +3995,17 @@
         :where(html[data-theme="sombre"]) .atelier-retour.echec{background:#2b1a1c;color:#fca5a5}
         :where(html[data-theme="sombre"]) .atelier-retour.info{background:#1a2740;color:#9ecbfd}
         :where(html[data-theme="sombre"]) .atelier-explication{background:#2c2415}
-        :where(html[data-theme="sombre"]) .reseau-role,:where(html[data-theme="sombre"]) .atelier-fils-vide,:where(html[data-theme="sombre"]) .rotor-nom,:where(html[data-theme="sombre"]) .env-legende{color:#b6c4d6}
+        :where(html[data-theme="sombre"]) .reseau-role,:where(html[data-theme="sombre"]) .atelier-fils-vide,:where(html[data-theme="sombre"]) .schema-aide,:where(html[data-theme="sombre"]) .rotor-nom,:where(html[data-theme="sombre"]) .env-legende{color:#b6c4d6}
         :where(html[data-theme="sombre"]) .reseau-compteur,:where(html[data-theme="sombre"]) .atelier-fils li strong,:where(html[data-theme="sombre"]) .env-note-3 .env-mot{color:#86efac}
-        :where(html[data-theme="sombre"]) .atelier-fils-cadre{border:1px solid #2b3a52;background:#1c2534}
+        :where(html[data-theme="sombre"]) .atelier-fils-cadre,:where(html[data-theme="sombre"]) .schema-cables{border:1px solid #2b3a52;background:#1c2534}
+        :where(html[data-theme="sombre"]) .schema-cadre{background:#16202e;border:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .schema-noeud{background:#1c2534;border:2px solid #3b82f6}
+        :where(html[data-theme="sombre"]) .schema-cable.examine .schema-trait{stroke:#c3d0e0}
+        :where(html[data-theme="sombre"]) .schema-cable.trouve .schema-trait{stroke:#fca5a5}
+        :where(html[data-theme="sombre"]) .schema-lien::before{background:#1c2534;border:3px solid #3b82f6}
+        :where(html[data-theme="sombre"]) .schema-lien:hover::before{border-color:#5f9bd8}
+        :where(html[data-theme="sombre"]) .schema-lien.examine::before{border-color:#55657f}
+        :where(html[data-theme="sombre"]) .schema-lien.trouve::before{background:#2b1a1c;border-color:#ef4444}
         :where(html[data-theme="sombre"]) .atelier-slot{border:2px dashed #3a4a63;color:#b6c4d6}
         :where(html[data-theme="sombre"]) .atelier-slot.rempli{border-color:#22c55e;background:#16301f;color:#86efac}
         :where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd;background:#1a2740}
@@ -3457,6 +4031,9 @@
         :where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
         :where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after,:where(html[data-theme="sombre"]) .indice-decouvert{color:#a9b8cc}
         :where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+        :where(html[data-theme="sombre"]) .ost-modele{border:1px dashed #2b3a52;background:#16202e;color:#d6e2f1}
+        :where(html[data-theme="sombre"]) .ost-modele:hover{background:#1c2534}
+        :where(html[data-theme="sombre"]) .ost-modeles-legende{color:#a9b8cc}
         :where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
         :where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
         :where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
@@ -5104,8 +5681,8 @@ window.__EFFETS_INTERACTIONS__={};
             </section>
 
             <!-- Activité Bonus -->
-            <section id="contenu-bonus" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-bonus">
-                <div class="activite-bonus deverrouille">
+            <section id="contenu-bonus" class="contenu-onglet sans-animation" role="tabpanel" aria-labelledby="onglet-bonus">
+                <div class="activite-bonus deverrouille sans-animation">
                     <h3>🎉 Activité Bonus Déverrouillée !</h3>
                     <p>Félicitations ! Vous avez terminé tous les niveaux. Voici une activité ludique pour approfondir vos connaissances de manière amusante.</p>
                 </div>
@@ -5115,21 +5692,73 @@ window.__EFFETS_INTERACTIONS__={};
                     <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
 
 
+                    <article class="jeu-livraison" id="jeu-livraison" data-ost-id="bonus-jeu-livraison" aria-labelledby="jeu-livraison-titre">
+                        <h3 id="jeu-livraison-titre">🚲 Livraison express en VAE : le prof de techno pédale</h3>
+                        <p class="jeu-livraison-chapeau">Le prof de techno s'est fait embaucher par la régie de la commune : il livre les colis du quartier avec un VAE. Cinq tournées, trois ou quatre colis chacune, un chrono serré — et une seule réserve d'assistance. Tu vas sentir dans les jambes ce que le cours dit des critères de performance : l'assistance électrique fait aller presque deux fois plus vite, mais elle se paie en énergie, alors que le pédalage ne coûte rien. Entre deux tournées, tu améliores le vélo avec la cagnotte — un objet technique évolue par améliorations successives.</p>
+                        <script type="application/json" class="jl-donnees">{"vehicule": "VAE", "argentParColis": 2, "destinations": [{"nom": "la gare", "lieu": "sud-ouest"}, {"nom": "le centre-ville", "lieu": "nord-est"}, {"nom": "l'école", "lieu": "nord-ouest"}, {"nom": "la mairie", "lieu": "sud-est"}], "tournees": [{"titre": "Tournée 1 — La tournée de découverte", "objectif": "« Première tournée : trois colis à livrer, et le temps de comprendre le vélo. »", "colis": 3, "chrono": 100}, {"titre": "Tournée 2 — Le centre-ville se réveille", "objectif": "« Deuxième tournée : il y a plus de monde sur les trottoirs, ouvre l'œil. »", "colis": 3, "chrono": 95}, {"titre": "Tournée 3 — Quatre colis, ça commence à faire", "objectif": "« La commune m'a ajouté une destination. Quatre colis : il faut gérer la batterie. »", "colis": 4, "chrono": 95}, {"titre": "Tournée 4 — Le coup de feu de midi", "objectif": "« Midi ! Les rues sont pleines. Pédale au bon moment, l'assistance coûte cher. »", "colis": 4, "chrono": 90}, {"titre": "Tournée 5 — La dernière, la plus dure", "objectif": "« Dernière tournée : quatre colis et moins de temps. Montre que tu maîtrises le compromis. »", "colis": 4, "chrono": 85}], "ameliorations": [{"cle": "batterie", "nom": "Batterie 500 Wh", "description": "Une batterie de plus grande capacité : l'autonomie grimpe de 25 %, mais la masse et le prix aussi.", "prix": 12}, {"cle": "assistance", "nom": "Moteur plus coupleux", "description": "Plus de couple dans les côtes : la vitesse assistée gagne 15 %.", "prix": 14}, {"cle": "pneus", "nom": "Pneus anti-crevaison", "description": "Un choc coûte deux fois moins d'énergie : c'est de la durabilité, donc de la réparabilité.", "prix": 10}, {"cle": "eclairage", "nom": "Éclairage et feu stop", "description": "Les piétons voient le prof arriver et s'écartent : moins de chocs, plus de sécurité.", "prix": 8}], "messages": {"titreAccueil": "🚲 Livraison express en VAE", "accueil": "<strong>{tournees} tournées<\/strong> de {colis} colis, du dépôt jusqu'aux clients de la commune. L'<strong>assistance électrique<\/strong> va presque deux fois plus vite mais vide la batterie ; le <strong>pédalage<\/strong> ne coûte rien. Ramasse les batteries vertes 🟩, évite les piétons, et dépense ta cagnotte dans l'atelier entre deux tournées.", "titreBoutique": "🛠️ Atelier : améliorer le VAE", "boutique": "Tournée {tournee} livrée avec {chrono} restantes : +{bonus} €. C'est ainsi qu'un objet technique évolue : par améliorations successives, avec un budget.", "titreEchec": "⏱️ Le temps est écoulé", "echec": "Tournée {tournee} : {colis} colis livrés sur {total}. La tournée est à refaire — les améliorations, elles, restent sur le vélo.", "titreFin": "🏆 La commune est livrée !", "fin": "Score : <strong>{score}<\/strong> — cagnotte : <strong>{argent} €<\/strong>. Question pour la classe : laquelle de tes améliorations avait le meilleur rapport performance / prix ?", "colisPris": "Colis chargé : direction {destination}.", "colisLivre": "Colis livré à {destination} ! ({colis} / {total})", "charge": "Batterie rechargée : {batterie} % d'autonomie.", "panne": "Batterie vide : l'assistance se coupe, le professeur termine au pédalage.", "choc": "Aïe ! Un piéton surpris : −{degats} % d'assistance.", "achat": "« {nom} » installé sur le vélo.", "dejaInstalle": "Déjà installé sur le vélo.", "boutonInstalle": "✔ Installé", "boutonAcheter": "Acheter — {prix} €", "dialogueAccueil": "« Prêt ? Le colis est au dépôt, à gauche. À toi de pédaler ! »", "dialogueDepart": "« C'est parti ! Premier colis au dépôt. »", "dialogueColis": "« Colis à bord ! Plus qu'à rejoindre la destination. »", "dialogueChoc": "« Attention aux piétons ! Je ralentis et je reprends mon souffle. »", "objectifDepot": "Prends un colis au dépôt", "objectifLivraison": "Livre le colis à {destination}", "statutAccueil": "Appuie sur « Démarrer la tournée » pour jouer.", "statutDepart": "Tournée {tournee} : prends un colis au dépôt.", "statutBoutique": "Tournée {tournee} réussie. Améliore le vélo, puis passe à la tournée suivante.", "statutEchec": "Temps écoulé : la tournée est à refaire.", "statutFin": "Partie terminée.", "statutPause": "Partie en pause.", "statutReprise": "La partie reprend."}, "boutons": {"demarrer": "Démarrer la tournée", "tourneeSuivante": "Tournée suivante →", "recommencerTournee": "Refaire la tournée", "rejouer": "Rejouer", "pauser": "⏸️ Pause", "reprendre": "▶️ Reprendre", "assistanceAllumee": "⚡ Assistance ON", "assistanceCoupee": "🦵 Pédalage seul"}}</script>
+                        <div class="jeu-livraison-hud">
+                            <span class="jl-etiquette">Assistance</span>
+                            <div class="jl-jauge" id="jl-jauge" role="progressbar"
+                                 aria-label="Batterie d'assistance du VAE, qui se vide quand l'assistance travaille"
+                                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-etat="haute">
+                                <span id="jl-barre"></span>
+                            </div>
+                            <span class="jl-valeur" id="jl-batterie">100 %</span>
+                            <div><span class="jl-etiquette">Mode</span> <span class="jl-valeur" id="jl-assistance">Pédalage seul</span></div>
+                            <div><span class="jl-etiquette">Tournée</span> <span class="jl-valeur" id="jl-tournee">1 / 1</span></div>
+                            <div><span class="jl-etiquette">Colis</span> <span class="jl-valeur" id="jl-colis">0 / 3</span></div>
+                            <div><span class="jl-etiquette">Cagnotte</span> <span class="jl-valeur" id="jl-argent">0 €</span></div>
+                            <div><span class="jl-etiquette">Temps</span> <span class="jl-valeur" id="jl-chrono">1:40</span></div>
+                            <div><span class="jl-etiquette">Score</span> <span class="jl-valeur" id="jl-score">0</span></div>
+                        </div>
+                        <div class="jl-objectif">
+                            <span class="jl-pastille" id="jl-pastille" aria-hidden="true"></span>
+                            <div>
+                                <p class="jl-objectif-titre" id="jl-tournee-titre"></p>
+                                <p id="jl-objectif"></p>
+                            </div>
+                        </div>
+                        <div class="jl-ecran">
+                            <canvas class="jl-canvas" id="jl-canvas" width="480" height="360" role="application"
+                                    aria-label="Jeu en vue de dessus : le professeur de techno livre ses colis avec son VAE. Utilise les flèches du clavier, ou les boutons du pavé tactile sur tablette." aria-describedby="jl-aide"></canvas>
+                            <div class="jl-voile" id="jl-voile">
+                                <h4 id="jl-voile-titre"></h4>
+                                <p id="jl-voile-texte"></p>
+                                <div id="jl-boutique" hidden>
+                                    <h4>🛠️ Atelier — <span id="jl-argent-boutique">0 €</span></h4>
+                                    <div class="jl-articles" id="jl-articles"></div>
+                                </div>
+                                <button type="button" class="bouton-action succes" id="jl-btn-action" onclick="livraisonAction()">Démarrer la tournée</button>
+                            </div>
+                        </div>
+                        <div class="jl-barre-outils">
+                            <button type="button" class="bouton-action secondaire" id="jl-btn-pause"
+                                    onclick="livraisonBasculerPause()" aria-pressed="false" disabled>⏸️ Pause</button>
+                            <button type="button" class="bouton-action secondaire" id="jl-btn-rejouer"
+                                    onclick="livraisonReinitialiser()">🔁 Rejouer</button>
+                        </div>
+                        <div class="jl-dialogue">
+                            <p><span class="jl-nom">Le prof de techno :</span> <span id="jl-dialogue"></span></p>
+                        </div>
+                        <div class="jl-pave" id="jl-pave" role="group"
+                             aria-label="Commandes tactiles du VAE">
+                            <button type="button" data-touche="haut" aria-label="Avancer">▲</button>
+                            <button type="button" data-touche="gauche" aria-label="Aller à gauche">◀</button>
+                            <button type="button" data-touche="bas" aria-label="Reculer">▼</button>
+                            <button type="button" data-touche="droite" aria-label="Aller à droite">▶</button>
+                            <button type="button" data-touche="assistance" aria-pressed="false" aria-label="Maintenir l'assistance électrique">⚡ Assistance</button>
+                        </div>
+                        <p class="jeu-livraison-aide" id="jl-aide"><strong>Commandes :</strong> flèches, ZQSD ou WASD pour pédaler ; <strong>Maj</strong> (ou le bouton ⚡ Assistance) pour enclencher l'assistance électrique ; boutons ▲◀▼▶ sur tablette. <strong>But :</strong> livrer tous les colis de la tournée avant la fin du chrono. <strong>À savoir :</strong> le pédalage ne coûte aucune énergie, l'assistance vide la batterie ; les batteries vertes la rechargent.</p>
+                        <p class="jl-statut" id="jl-statut" role="status" aria-live="polite"></p>
+                    </article>
+                    
+
+
 
                     <div class="jeux-bonus">
                         
                     <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-1">
-                        <img class="illustration-jeu" src="data:image/webp;base64,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" alt="Le professeur de techno en pixel art, debout, en train de marcher vers la droite" decoding="async">
-                        <h3>🎮 Le trajet du prof de techno</h3>
-                        <p>Le professeur de techno doit rejoindre le collège : choisis son véhicule selon ses caractéristiques (batterie, vitesse, masse, freinage), affronte la météo et gère ton énergie jusqu'à l'arrivée. C'est le même exercice de choix, mais en jeu.</p>
-                        <a href="https://pierredupuy80-chef.github.io/Mandelatechno/3e/ost3/jeu-trottinette.html" class="bouton-action" target="_blank" rel="noopener noreferrer">
-                            Jouer maintenant →
-                        </a>
-                        <p class="texte-secondaire marge-haut">Durée : 10-15 minutes</p>
-                    </article>
-
-                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-2">
-                        <img class="illustration-jeu" src="data:image/webp;base64,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" alt="Le professeur de techno en pixel art, la tête renversée en arrière et les mains sur le ventre, qui rit" decoding="async">
+                        <img class="illustration-jeu" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEJklEQVR4nO1aTUhUURT+jArH8id7MFo6ozJKfwphTCX0Y7QKwf4MWqSLpKKFtCihhYFoDIwbyZBctBCMFtrPpkUwEihIChLoyhLJqXAeDJJM+aLNazHe55uZN87Mm3vPU5oPZN6799yf891zz7nveIH/HFnUA0qSU00kEwwuks2LlACmvLtsm2G9X15BQMkFQEcCySD6VY+nPIOeBEA8EcIJSLTq8UBlDanNyiRSVR4AHPZ8FNlCAmYTCaEEJOPwKPsxgnALMLP6DBRWQLIFNjO2Uw42MtCVtOzV2x0CZ7IOMgtIRXkz8mYhLLzow9/IQBfcF9tiZKbePgGAhHUiw6HQLfCx/wbavC8ArCtkhI3qHPZ89F07gybvB+7zAwRvgW9fv6O5vTeirLyxG+WN3YbyRnXR7bcMJMmpSpJTvXCsXPXNKerq9JBqLzmgrk4PxTzHq/PNKeqR0kKV9SVinkKPwpLkVItsIfT6fqDu16uU20/svoJ75/cjoOQKOw4LJwAIO8L8vBwAwPOehwCAmw88AICuO5cAAB3P3mj1rG72y5Lw7wGhTjAYXMySJKfql1dQnZcDqSAbAOBpfgoXwooNdvoAQHtnYLKsH1FzJPsaLLKFUF1ZHC4ryEbB3I4Y2Xn7+rGXYvUB4nxAkS2EXbadqCjZC5eci8vH6zSZ15MTqPV0wnO/Bb+Vv2SJEbKMkN6L+98/jqmfHPXFxHqKrJBQH5Bu6NK337JRwN160rCu0lUVU/Zl/nNMmX9mAYEpeWtGgY3AlK10VRkqTgVhR+FkzT9Z5UWdBIUQoHl9tz3tvhw1FVo/IkgQZgF65f0zC6b6YO30JPCG8IQIc2IM7zwv0T8bQv/sxrm+6HaiwJ2ARGa62NBgWP5zaVn70yPaenhvAyEWoDfXdFeRtRe1DbiGwWRW5251biKRGPhnFuCoqYgYh9e5gPs5wOzqFxQXxq0LTMlw1FRoJPD0Ddy2AFv9vrOHeHVpCNY/L1/A1QKG2+sB6EhY+00noWn04TScZp96kByFh9vr0bP8JynZkaa1KNFkXD856uM0qzC4EsBWhVkCD0QrzDs9zo0A5pUlyalGT9IsIUY5Av1YPECXEnPbI0JZIuhPglv6ggSbfCqhi0p5gOifo2aVoEiJZe4HWD0BhkcnDmvPrSY/n82AlIDoM33El56OAEqQEhCYktF8cJ/27tU7xlvhn7HxaZI8AIPlPoDyWqwRSAlobzmaUOb0qdqk5HjBcguwGhkCrJ4Aw9j4tCXjWkaAd/DThu9UsNQCWASwMhKQECDysnO6ILMAytCWCoQTkMzqx5OhsByShEhpaVlEWTAoQ1GUiCxSIhlR2DRh0CoQJURkBIOy9mxWRgRICFAUBYqi4Pq5PdqzGRkRsOSWWLx9TXEpKoMMMsggAx3+AW187IjXcGOYAAAAAElFTkSuQmCC" alt="Le professeur de techno en pixel art, la tête renversée en arrière et les mains sur le ventre, qui rit" decoding="async">
                         <h3>✅ Quiz auto-correctif : indice énergétique et indice de réparabilité (OST3b)</h3>
                         <p>Le quiz officiel qui accompagne la première vidéo : vérifie en cinq minutes que les deux indices n'ont plus de secret pour toi, avec correction immédiate.</p>
                         <a href="https://podeduc.apps.education.fr/quiz/113212-ost3b-lindice-energetique-et-lindice-de-reparabilite/" class="bouton-action" target="_blank" rel="noopener noreferrer">
@@ -5138,8 +5767,8 @@ window.__EFFETS_INTERACTIONS__={};
                         <p class="texte-secondaire marge-haut">Durée : 5 minutes</p>
                     </article>
 
-                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-3">
-                        <img class="illustration-jeu" src="data:image/webp;base64,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" alt="Le professeur de techno en pixel art, bras levé, en train de lancer un objet" decoding="async">
+                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-2">
+                        <img class="illustration-jeu" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAD7ElEQVR4nO2bX0hTURzHv0aBCnMrBnPB5jAVNBTqYdSbGfQkYeSIiIxQMiIkEgdCBmUhTIqREAb1UC8RSVb0h0KT9KESJLBeSjNdgbtwCc3o9mYP49zd3e3ObZ3fuQvvB4Y7f3bO+X3P7/zOuWcTsLBY1xSI7MzpLFtdq44sLwgdk7DOmPF+34aU5RFpGVHFBkCsCOQdaWfdyHiGVgRAjBCkHaw160aI9IbsRpYD2RoPAF6XHaVFKwSjSYZMgEwCnsh2jCD1gFxmnyHKCzaS98CJVJ7AIz4IE2DoRm/GdZvbexLSzPgHz57j5egrAMDglX4u4xIiQERahr+pIyFv8uE1AEjKZ2XN7T3wuuxoOtgJIG7wvr0Nqgg8INlitNtfNjOvx9/UkXAuiLy4DAB4NzqCQGiMyxIgC4Jvrx/95za8LjvuB/dwGI0xZEvg2/x3tATDAGKRvGjnEQBAqacaAPD10Tm1rlFZSzAMzA9TDREAoQCB0Bj8vtdAMIz927Lfzh5/seFS5/GEJUAB2THT6SxbLS1aQW2lG7f6u7P+fGtXHz7MLCKq2CDLCwVOZ9kqRQwg3QWiig3en7/R2tUHAKoQLN178gAAoGdwWC1nZcx4asgEUGdNWkZtSTGcjkK1rEKy4eLHN/H0hRF03zmtprV1WTtU4xTyNMiWAhAzzvFpU1LdWVc8TqSafX/bbgwFGgHwXQKkMUCb9vs2wF5SHC93FEJe+qOmD525invhs4bGMyLTc4hOSgD4HIVJBdAOXEtlRVVS3szs56Q8Zixrh7fxgEkPQ8zYyoqqlIYzvHXl8NaVJ+XzvCQhOQlmGrTSGa9HO/s84S6AGvj8Lm5tUrg+g8QDtMZHpudyaiPV5yjuB0ljAJs5to6f9t3FQmNsKztVa3zI0bs7heszhAZBZryepcUf6nuHe4v6Xms41e1wXl+JifhegKsAa0X/dG5vFtw9QBsAM127WrcXDfkXI/kOdwEG6mswUF/Du1kyyDzgfxGBmwD6ABgIjfFqmhSuHqC/wRX9Y4dcEBIEcz0Oi0CIANkcZame+owgFyDXZSBq+az7c0BePAuc37Vdfd8mOF5w9YB0W58+EEam59SXmXDzAHZ/byRCdFJCS/VWNR3SBroTsT/jE1NCAyDA2QNkeaFA+9Lm6+sGj+1I2w7PcaXD9CD45Gabqf2bLoDZCBUgdPu9yO4yQpgA+fpckDdLYHxiyhQPyRsBGKI9Je8EEI2pApi9BQKWB4j/lxmPx5eyTJYlKIpixQDRCBdAliXIsgS32wNZltQ8sxAugKIoUBQF9dW/oCgKDjdsVvPMwJTTGdVv/y0sLCwssuQvUXSu0UhlqdoAAAAASUVORK5CYII=" alt="Le professeur de techno en pixel art, bras levé, en train de lancer un objet" decoding="async">
                         <h3>✅ Quiz auto-correctif : les critères de performance d'un OST (OST3f)</h3>
                         <p>Le quiz officiel de la seconde vidéo : grandeurs mesurables, unités et critères de performance d'un objet technique.</p>
                         <a href="https://podeduc.apps.education.fr/quiz/113189-ost3f-les-criteres-de-performance-dun-ost-grandeurs-mesurables-vitesse-autonomie-energetique-etc/" class="bouton-action" target="_blank" rel="noopener noreferrer">
@@ -5223,6 +5852,12 @@ window.__EFFETS_INTERACTIONS__={};
                 
                 niveauActuel = niveauId;
                 mettreAJourProgression();
+                // Un atelier caché n'a pas de cotes : ses câbles ont été tracés
+                // à zéro au chargement. On les retrace maintenant qu'il est
+                // visible (les autres types d'atelier n'ont pas ce besoin).
+                if (typeof schemaTracerTout === 'function') {
+                    schemaTracerTout();
+                }
             }
         }
 
@@ -7836,11 +8471,59 @@ window.__EFFETS_INTERACTIONS__={};
             atelierAfficherExplication(carte);
         }
 
-        // ── Type « reseau » : reconstituer le câblage d'un réseau entier ──
+        // ── Type « reseau » / « liaison » : relier des éléments entre eux ──
         //    L'élève clique deux appareils : la liaison est vérifiée tout de
         //    suite, et la réponse (« pourquoi ces deux-là sont reliés ») est
-        //    celle de la configuration. Le réseau se construit fil par fil,
+        //    celle de la configuration. Le schéma se construit fil par fil,
         //    puis la vérification finale rend l'explication d'ensemble.
+        //
+        //    Le MÊME moteur sert deux leçons : câbler un réseau, ou relier les
+        //    composants internes d'un ordinateur. Les phrases affichées ne sont
+        //    donc pas écrites ici en dur : le générateur les pose sur la carte
+        //    (`data-messages`, table MESSAGES_RESEAU de personnaliser.py) et
+        //    les jetons {nom}, {a}, {b}, {reste}, {faits}, {total}, {bouton},
+        //    {n} sont remplacés à l'affichage. Sans attribut, les fragments de
+        //    repli ci-dessous prennent le relais — le moteur ne se taît jamais.
+        const RESEAU_PHRASES_REPLI = {
+            selection: '{nom} choisi. Clique maintenant le second élément à relier.',
+            annulation: 'Sélection annulée.',
+            refus: '❌ {a} et {b} ne sont pas reliés.',
+            dejaRelies: 'Ces deux éléments sont déjà reliés.',
+            liaison: '✅ Liaison établie : {a} ↔ {b}. Il reste {reste} liaison(s) à trouver.',
+            complet: '🎉 Toutes les liaisons sont établies : {total}.',
+            verifierComplet: '🎉 Toutes les liaisons sont établies : {total}.',
+            incomplet: 'Il manque des liaisons : {faits} sur {total}.',
+            verrouille: 'Tout est déjà relié : clique « {bouton} ».',
+            compteurComplet: 'Toutes les liaisons sont établies.',
+            aucunFil: 'aucun fil',
+            unFil: '{n} fil',
+            desFils: '{n} fils'
+        };
+
+        // Phrase de l'atelier : celle que le générateur pose sur la carte
+        // (`data-messages`), jetons remplacés ; à défaut, le repli ci-dessus.
+        function reseauPhrase(carte, cle, valeurs) {
+            let table = RESEAU_PHRASES_REPLI;
+            try {
+                const brut = carte.getAttribute('data-messages');
+                if (brut) table = Object.assign({}, RESEAU_PHRASES_REPLI, JSON.parse(brut));
+            } catch (erreur) {
+                table = RESEAU_PHRASES_REPLI;
+            }
+            let modele = String(table[cle] || RESEAU_PHRASES_REPLI[cle] || '');
+            Object.keys(valeurs || {}).forEach(function (jeton) {
+                modele = modele.split('{' + jeton + '}').join(String(valeurs[jeton]));
+            });
+            return modele;
+        }
+
+        // Libellé réel du bouton de vérification : la phrase « tout est déjà
+        // relié » doit citer le bouton tel que l'élève le voit.
+        function reseauLibelleVerifier(carte) {
+            const bouton = carte.querySelector('button[onclick*="reseauVerifier"]');
+            return bouton ? String(bouton.textContent || '').trim() : 'Vérifier';
+        }
+
         function reseauEtat(carte) {
             if (!carte.__reseau) {
                 let liens = [];
@@ -7888,8 +8571,8 @@ window.__EFFETS_INTERACTIONS__={};
                 const marque = bouton.querySelector('[data-role="fils-appareil"]');
                 if (marque) {
                     marque.textContent = nombre === 0
-                        ? 'aucun fil'
-                        : nombre + (nombre > 1 ? ' fils' : ' fil');
+                        ? reseauPhrase(carte, 'aucunFil', {})
+                        : reseauPhrase(carte, nombre > 1 ? 'desFils' : 'unFil', { n: nombre });
                 }
                 bouton.classList.toggle('relie', nombre > 0);
             });
@@ -7902,7 +8585,11 @@ window.__EFFETS_INTERACTIONS__={};
             if (zone) {
                 zone.textContent = etat.paires + ' / ' + etat.liens.length +
                     ' liaison(s) établie(s).' +
-                    (etat.paires >= etat.liens.length ? ' Le réseau est complet.' : '');
+                    (etat.paires >= etat.liens.length
+                        ? ' ' + reseauPhrase(carte, 'compteurComplet', {
+                            total: etat.liens.length
+                        })
+                        : '');
             }
             reseauRafraichirAppareils(carte);
         }
@@ -7912,7 +8599,9 @@ window.__EFFETS_INTERACTIONS__={};
             if (!carte) return;
             const etat = reseauEtat(carte);
             if (etat.verrouille) {
-                atelierRetour(carte, 'Le réseau est déjà complet : clique « Vérifier le réseau ».', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'verrouille', {
+                    bouton: reseauLibelleVerifier(carte)
+                }), 'info');
                 return;
             }
             const cle = bouton.getAttribute('data-appareil');
@@ -7922,8 +8611,9 @@ window.__EFFETS_INTERACTIONS__={};
                 bouton.classList.add('choisi');
                 bouton.setAttribute('aria-pressed', 'true');
                 etat.attente = bouton;
-                atelierRetour(carte, 'Appareil choisi : ' + reseauNom(carte, cle) +
-                    '. Clique maintenant l\'appareil auquel il se relie.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'selection', {
+                    nom: reseauNom(carte, cle)
+                }), 'info');
                 return;
             }
 
@@ -7931,7 +8621,7 @@ window.__EFFETS_INTERACTIONS__={};
                 attente.classList.remove('choisi');
                 attente.setAttribute('aria-pressed', 'false');
                 etat.attente = null;
-                atelierRetour(carte, 'Sélection annulée.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'annulation', {}), 'info');
                 return;
             }
 
@@ -7951,16 +8641,16 @@ window.__EFFETS_INTERACTIONS__={};
 
             if (!lienTrouve) {
                 atelierSignaler([bouton], 'erreur');
-                atelierRetour(carte, '❌ ' + reseauNom(carte, cleAttente) + ' et ' +
-                    reseauNom(carte, cle) + ' ne se relient pas directement. ' +
-                    'Repense au trajet des données : par quel appareil passent-elles ?',
-                    'echec');
+                atelierRetour(carte, reseauPhrase(carte, 'refus', {
+                    a: reseauNom(carte, cleAttente),
+                    b: reseauNom(carte, cle)
+                }), 'echec');
                 return;
             }
 
             const id = [lienTrouve.de, lienTrouve.vers].sort().join('|');
             if (etat.faits[id]) {
-                atelierRetour(carte, 'Ces deux appareils sont déjà reliés par un fil.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'dejaRelies', {}), 'info');
                 return;
             }
 
@@ -7983,13 +8673,16 @@ window.__EFFETS_INTERACTIONS__={};
 
             if (etat.paires >= etat.liens.length) {
                 etat.verrouille = true;
-                atelierRetour(carte, '🎉 Le réseau est entièrement câblé : ' +
-                    etat.liens.length + ' liaisons établies.', 'succes');
+                atelierRetour(carte, reseauPhrase(carte, 'complet', {
+                    total: etat.liens.length
+                }), 'succes');
                 atelierAfficherExplication(carte);
             } else {
-                atelierRetour(carte, '✅ Fil établi : ' + reseauNom(carte, lienTrouve.de) +
-                    ' ↔ ' + reseauNom(carte, lienTrouve.vers) + '. Il reste ' +
-                    (etat.liens.length - etat.paires) + ' liaison(s) à trouver.', 'succes');
+                atelierRetour(carte, reseauPhrase(carte, 'liaison', {
+                    a: reseauNom(carte, lienTrouve.de),
+                    b: reseauNom(carte, lienTrouve.vers),
+                    reste: etat.liens.length - etat.paires
+                }), 'succes');
             }
         }
 
@@ -8000,14 +8693,421 @@ window.__EFFETS_INTERACTIONS__={};
             const etat = reseauEtat(carte);
             if (etat.paires >= etat.liens.length) {
                 etat.verrouille = true;
-                atelierRetour(carte, '🎉 Réseau complet : les ' + etat.liens.length +
-                    ' liaisons sont établies.', 'succes');
+                atelierRetour(carte, reseauPhrase(carte, 'verifierComplet', {
+                    total: etat.liens.length
+                }), 'succes');
                 atelierAfficherExplication(carte);
             } else {
-                atelierRetour(carte, 'Le réseau n\'est pas encore complet : ' + etat.paires +
-                    ' liaison(s) sur ' + etat.liens.length + '. Clique deux appareils ' +
-                    'pour tendre le fil suivant.', 'info');
+                atelierRetour(carte, reseauPhrase(carte, 'incomplet', {
+                    faits: etat.paires,
+                    total: etat.liens.length
+                }), 'info');
             }
+        }
+
+        // ── Type « erreur-schema » : un schéma de câblage faux à diagnostiquer ──
+        //    Le schéma est complet et un seul câble est mal branché. L'élève
+        //    examine un câble : le moteur lui rend le VERDICT et la
+        //    JUSTIFICATION de ce câble, juste comme faux — c'est là que
+        //    l'apprentissage se fait, pas dans un score.
+        //
+        //    Pourquoi le moteur trace les câbles au lieu de les écrire en dur :
+        //    les appareils sont posés par le CSS (rangées flex), donc leurs
+        //    positions changent à 320 px comme sur un écran large. Des
+        //    coordonnées figées casseraient le schéma sur mobile — et l'élève
+        //    ne verrait plus le câble qu'il doit examiner. On mesure donc les
+        //    appareils réels, et l'on retrace quand la mise en page change.
+        //
+        //    Deux couches : le trait (SVG, sans nom, hors de l'arbre
+        //    d'accessibilité) et, par-dessus, un VRAI bouton HTML de 44 px
+        //    posé au milieu du câble. Un `<g>` SVG focusable n'est pas annoncé
+        //    comme un bouton par tous les lecteurs d'écran, et un trait de 4 px
+        //    n'est pas une cible tactile : le bouton règle les deux.
+        const SCHEMA_SVG_NS = 'http://www.w3.org/2000/svg';
+
+        function schemaCarteDe(element) {
+            return element && element.closest
+                ? element.closest('.atelier-carte[data-type="erreur-schema"]')
+                : null;
+        }
+
+        function schemaLiaisons(carte) {
+            if (!carte.__schemaLiaisons) {
+                let liaisons = [];
+                try {
+                    liaisons = JSON.parse(carte.getAttribute('data-liaisons') || '[]');
+                } catch (erreur) {
+                    liaisons = [];
+                }
+                carte.__schemaLiaisons = liaisons;
+            }
+            return carte.__schemaLiaisons;
+        }
+
+        function schemaEtat(carte) {
+            if (!carte.__schema) {
+                let fausses = 0;
+                schemaLiaisons(carte).forEach(function (liaison) {
+                    if (liaison.fausse) fausses += 1;
+                });
+                carte.__schema = {
+                    examinees: {},
+                    trouvees: {},
+                    fausses: fausses,
+                    verrouille: false
+                };
+            }
+            return carte.__schema;
+        }
+
+        function schemaNomNoeud(carte, cle) {
+            const tuile = carte.querySelector('.schema-noeud[data-noeud="' + cle + '"]');
+            const nom = tuile ? tuile.querySelector('.schema-nom') : null;
+            return nom ? nom.textContent.trim() : cle;
+        }
+
+        function schemaCompteur(carte) {
+            const etat = carte.__schema;
+            if (!etat) return;
+            const zone = carte.querySelector('[data-role="compteur"]');
+            if (!zone) return;
+            zone.textContent = 'Câbles examinés : ' + Object.keys(etat.examinees).length +
+                ' — erreurs trouvées : ' + Object.keys(etat.trouvees).length +
+                ' sur ' + etat.fausses + '.';
+        }
+
+        function schemaMarquer(groupe, bouton, etat, index) {
+            const trouve = !!etat.trouvees[index];
+            const examine = !trouve && !!etat.examinees[index];
+            ['examine', 'trouve'].forEach(function (classe) {
+                if (groupe) groupe.classList.toggle(classe, classe === 'trouve' ? trouve : examine);
+                if (bouton) bouton.classList.toggle(classe, classe === 'trouve' ? trouve : examine);
+            });
+        }
+
+        // Où poser le repère cliquable d'un câble : sur la partie du trait qui
+        // sort vraiment des deux appareils qu'il relie, et du côté de celui qui
+        // a le MOINS de câbles. Les quatre câbles d'un commutateur ont sinon des
+        // repères à moins de 44 px les uns des autres : au doigt, ils n'en font
+        // qu'un, et l'élève ne peut plus désigner le bon.
+        function schemaBornesVisibles(a, b, boiteA, boiteB) {
+            // Marge de 4 px : un repère collé au bord d'une boîte se lit comme
+            // posé dessus, et les mesures d'accessibilité le comptent comme
+            // recouvert.
+            const MARGE = 4;
+            const dedans = function (x, y, boite) {
+                return !!boite && x > boite.x1 - MARGE && x < boite.x2 + MARGE &&
+                    y > boite.y1 - MARGE && y < boite.y2 + MARGE;
+            };
+            const pas = 200;
+            let premier = 0.5;
+            let dernier = 0.5;
+            for (let i = 0; i <= pas; i++) {
+                const t = i / pas;
+                if (!dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteA) &&
+                    !dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteB)) {
+                    premier = t;
+                    break;
+                }
+            }
+            for (let i = pas; i >= 0; i--) {
+                const t = i / pas;
+                if (!dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteA) &&
+                    !dedans(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, boiteB)) {
+                    dernier = t;
+                    break;
+                }
+            }
+            if (dernier < premier) { premier = 0.5; dernier = 0.5; }
+            return { premier: premier, dernier: dernier };
+        }
+
+        function schemaSurSegment(repere, t) {
+            return {
+                x: repere.a.x + (repere.b.x - repere.a.x) * t,
+                y: repere.a.y + (repere.b.y - repere.a.y) * t
+            };
+        }
+
+        // Deux repères à moins de 44 px l'un de l'autre n'en font qu'un au
+        // doigt. Chacun prend donc, sur SON câble, la position la PLUS PROCHE de
+        // sa place naturelle qui respecte l'écart — jamais hors du trait, sinon
+        // le repère ne désignerait plus rien. À défaut de place, il s'écarte au
+        // maximum. Les câbles les plus courts passent en premier : ce sont eux
+        // qui n'ont pas de marge, les longs se placent ensuite.
+        function schemaRepartirReperes(reperes) {
+            const pas = 0.02;
+            const ECART = 46;
+            const distance = function (p, q) {
+                const dx = p.x - q.x, dy = p.y - q.y;
+                return Math.sqrt(dx * dx + dy * dy);
+            };
+            // Un repère posé SUR un autre appareil désignerait un câble caché
+            // derrière lui : cette position est interdite, pas seulement
+            // pénalisée.
+            const surUnAppareil = function (point, boitesInterdites) {
+                return boitesInterdites.some(function (boite) {
+                    return point.x > boite.x1 && point.x < boite.x2 &&
+                           point.y > boite.y1 && point.y < boite.y2;
+                });
+            };
+            const poses = [];
+            const ordre = reperes
+                .filter(function (repere) { return !!repere; })
+                .sort(function (x, y) {
+                    return (x.dernier - x.premier) - (y.dernier - y.premier);
+                });
+            ordre.forEach(function (repere) {
+                let plusProche = null;
+                let meilleurEcart = -1;
+                let meilleurT = repere.t;
+                for (let t = repere.premier; t <= repere.dernier + 1e-9; t += pas) {
+                    const point = schemaSurSegment(repere, t);
+                    if (surUnAppareil(point, repere.boitesInterdites || [])) continue;
+                    let ecart = Infinity;
+                    poses.forEach(function (pose) {
+                        ecart = Math.min(ecart, distance(point, pose));
+                    });
+                    if (ecart >= ECART &&
+                        (plusProche === null || Math.abs(t - repere.t) < Math.abs(plusProche - repere.t))) {
+                        plusProche = t;
+                    }
+                    if (ecart === Infinity) ecart = 1e6;
+                    if (ecart > meilleurEcart) {
+                        meilleurEcart = ecart;
+                        meilleurT = t;
+                    }
+                }
+                repere.t = (plusProche === null) ? meilleurT : plusProche;
+                poses.push(schemaSurSegment(repere, repere.t));
+            });
+        }
+
+        // Trace (ou retrace) les câbles entre les centres réels des appareils.
+        // La signature évite de redessiner pour rien : un observateur de
+        // redimensionnement rappelle cette fonction à chaque changement de
+        // largeur, et redessiner sans condition ferait boucler la page.
+        function schemaTracer(carte) {
+            const svg = carte.querySelector('[data-role="fils-schema"]');
+            const cadre = carte.querySelector('.schema-cadre');
+            if (!svg || !cadre) return;
+            const boite = cadre.getBoundingClientRect();
+            if (!boite.width || !boite.height) return;   // onglet masqué : on retracera à l'affichage
+
+            const etat = schemaEtat(carte);
+            const centres = {};
+            const boites = {};
+            // Le cadre a une bordure, et le SVG comme les boutons des câbles sont
+            // positionnés dans sa BOÎTE DE REMPLISSAGE : on retire donc l'épaisseur
+            // de bordure, sinon tous les repères sont décalés vers le bas-droite.
+            const origineX = cadre.clientLeft;
+            const origineY = cadre.clientTop;
+            let signature = Math.round(boite.width) + 'x' + Math.round(boite.height);
+            carte.querySelectorAll('.schema-noeud').forEach(function (tuile) {
+                const rect = tuile.getBoundingClientRect();
+                const cle = tuile.getAttribute('data-noeud');
+                centres[cle] = {
+                    x: Math.round(rect.left - boite.left - origineX + rect.width / 2),
+                    y: Math.round(rect.top - boite.top - origineY + rect.height / 2)
+                };
+                boites[cle] = {
+                    x1: rect.left - boite.left - origineX,
+                    y1: rect.top - boite.top - origineY,
+                    x2: rect.left - boite.left - origineX + rect.width,
+                    y2: rect.top - boite.top - origineY + rect.height
+                };
+                signature += '|' + cle + ':' + centres[cle].x + ',' + centres[cle].y;
+            });
+
+            const liaisons = schemaLiaisons(carte);
+            const degre = {};
+            liaisons.forEach(function (liaison) {
+                degre[liaison.de] = (degre[liaison.de] || 0) + 1;
+                degre[liaison.vers] = (degre[liaison.vers] || 0) + 1;
+            });
+
+            // Premier temps : calculer la position de chaque repère sur son câble.
+            const reperes = [];
+            liaisons.forEach(function (liaison) {
+                const a = centres[liaison.de];
+                const b = centres[liaison.vers];
+                if (!a || !b) { reperes.push(null); return; }
+                const bornes = schemaBornesVisibles(a, b, boites[liaison.de], boites[liaison.vers]);
+                // Près de l'appareil terminal : les repères y sont
+                // naturellement espacés, alors qu'au voisinage d'un commutateur
+                // tous les câbles convergent. Au milieu quand les deux bouts
+                // sont des carrefours (commutateur ↔ routeur, routeur ↔
+                // Internet) : là, le câble est isolé et sa longueur est la
+                // meilleure place.
+                let fraction = 0.5;
+                if ((degre[liaison.de] || 0) < (degre[liaison.vers] || 0)) fraction = 0.24;
+                else if ((degre[liaison.vers] || 0) < (degre[liaison.de] || 0)) fraction = 0.76;
+                const interdites = [];
+                Object.keys(boites).forEach(function (cle) {
+                    if (cle !== liaison.de && cle !== liaison.vers) interdites.push(boites[cle]);
+                });
+                reperes.push({
+                    a: a,
+                    b: b,
+                    premier: bornes.premier,
+                    dernier: bornes.dernier,
+                    boitesInterdites: interdites,
+                    t: bornes.premier + (bornes.dernier - bornes.premier) * fraction
+                });
+            });
+            schemaRepartirReperes(reperes);
+
+            // Second temps : le dessin, puis les boutons posés dessus.
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+            cadre.querySelectorAll('.schema-lien').forEach(function (bouton) {
+                bouton.parentNode.removeChild(bouton);
+            });
+
+            liaisons.forEach(function (liaison, index) {
+                const repere = reperes[index];
+                const a = centres[liaison.de];
+                const b = centres[liaison.vers];
+                if (!repere || !a || !b) return;
+                const point = schemaSurSegment(repere, repere.t);
+
+                const groupe = document.createElementNS(SCHEMA_SVG_NS, 'g');
+                groupe.setAttribute('class', 'schema-cable');
+                groupe.setAttribute('data-lien', String(index));
+                groupe.setAttribute('aria-hidden', 'true');
+                const ligne = document.createElementNS(SCHEMA_SVG_NS, 'line');
+                ligne.setAttribute('class', 'schema-trait');
+                ligne.setAttribute('x1', a.x);
+                ligne.setAttribute('y1', a.y);
+                ligne.setAttribute('x2', b.x);
+                ligne.setAttribute('y2', b.y);
+                groupe.appendChild(ligne);
+                svg.appendChild(groupe);
+
+                const bouton = document.createElement('button');
+                bouton.type = 'button';
+                bouton.className = 'schema-lien';
+                bouton.setAttribute('data-lien', String(index));
+                bouton.style.left = Math.round(point.x) + 'px';
+                bouton.style.top = Math.round(point.y) + 'px';
+                bouton.setAttribute('aria-label', 'Câble entre ' +
+                    schemaNomNoeud(carte, liaison.de) + ' et ' +
+                    schemaNomNoeud(carte, liaison.vers) + ' : examiner ce câble');
+
+                const survoler = function (actif) {
+                    groupe.classList.toggle('survol', actif);
+                };
+                bouton.addEventListener('mouseenter', function () { survoler(true); });
+                bouton.addEventListener('mouseleave', function () { survoler(false); });
+                bouton.addEventListener('focus', function () { survoler(true); });
+                bouton.addEventListener('blur', function () { survoler(false); });
+                bouton.addEventListener('click', function (evenement) {
+                    evenement.stopPropagation();
+                    schemaChoisirLien(bouton);
+                });
+
+                schemaMarquer(groupe, bouton, etat, index);
+                cadre.appendChild(bouton);
+            });
+        }
+
+        function schemaTracerTout() {
+            document.querySelectorAll('.atelier-carte[data-type="erreur-schema"]')
+                .forEach(schemaTracer);
+        }
+
+        function schemaChoisirLien(bouton) {
+            const carte = schemaCarteDe(bouton);
+            if (!carte) return;
+            const etat = schemaEtat(carte);
+            const index = parseInt(bouton.getAttribute('data-lien'), 10);
+            const liaison = schemaLiaisons(carte)[index];
+            if (!liaison) return;
+            const groupe = carte.querySelector(
+                '.schema-cable[data-lien="' + index + '"]');
+            const nomA = schemaNomNoeud(carte, liaison.de);
+            const nomB = schemaNomNoeud(carte, liaison.vers);
+
+            if (etat.verrouille) {
+                atelierRetour(carte, 'Tu as trouvé le câble mal branché : clique « ' +
+                    'Vérifier mon diagnostic » pour relire la règle du réseau.', 'info');
+                return;
+            }
+
+            etat.examinees[index] = true;
+
+            if (liaison.fausse) {
+                etat.trouvees[index] = true;
+                atelierRetour(carte, '✅ Tu as trouvé : ' + nomA + ' ↔ ' + nomB + '. ' +
+                    liaison.justification, 'succes');
+            } else {
+                atelierRetour(carte, '❌ Ce câble est bien branché : ' + nomA + ' ↔ ' +
+                    nomB + '. ' + liaison.justification +
+                    ' Cherche un câble qui ne respecte pas la règle du réseau.', 'echec');
+            }
+
+            schemaMarquer(groupe, bouton, etat, index);
+            schemaCompteur(carte);
+
+            const trouvees = Object.keys(etat.trouvees).length;
+            if (trouvees >= etat.fausses) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 C\'est le câble mal branché : ' + nomA +
+                    ' ↔ ' + nomB + '. ' + liaison.justification, 'succes');
+                atelierAfficherExplication(carte);
+            }
+        }
+
+        function schemaVerifier(bouton) {
+            const carte = schemaCarteDe(bouton);
+            if (!carte) return;
+            const etat = schemaEtat(carte);
+            const examinees = Object.keys(etat.examinees).length;
+            const trouvees = Object.keys(etat.trouvees).length;
+            if (trouvees >= etat.fausses) {
+                etat.verrouille = true;
+                atelierRetour(carte, '🎉 Câble mal branché trouvé : tu as bien lu le schéma.',
+                    'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, 'Pas encore : tu as examiné ' + examinees +
+                    ' câble(s) sur ' + schemaLiaisons(carte).length + ', et trouvé ' +
+                    trouvees + ' erreur(s) sur ' + etat.fausses + '. Clique un câble du ' +
+                    'schéma pour l\'examiner.', 'info');
+            }
+        }
+
+        function schemaReinitialiser() {
+            document.querySelectorAll('.atelier-carte[data-type="erreur-schema"]')
+                .forEach(function (carte) {
+                    delete carte.__schema;
+                    carte.__schemaSignature = null;
+                    carte.removeAttribute('data-termine');
+                    const explication = carte.querySelector('[data-role="explication"]');
+                    if (explication) explication.classList.add('cache');
+                    const retour = carte.querySelector('[data-role="retour-atelier"]');
+                    if (retour) {
+                        retour.textContent = '';
+                        retour.className = 'atelier-retour';
+                    }
+                    schemaEtat(carte);          // état neuf : compteur à zéro
+                    schemaCompteur(carte);
+                    schemaTracer(carte);
+                });
+        }
+
+        function schemaInitialiser() {
+            schemaTracerTout();
+            document.querySelectorAll('.atelier-carte[data-type="erreur-schema"]')
+                .forEach(function (carte) {
+                    const cadre = carte.querySelector('.schema-cadre');
+                    if (cadre && typeof ResizeObserver === 'function') {
+                        // L'onglet N2 est masqué au chargement : ses cotes valent
+                        // 0. L'observateur retrace dès qu'il devient visible, à
+                        // la bonne largeur — et à chaque rotation d'écran.
+                        new ResizeObserver(function () { schemaTracer(carte); }).observe(cadre);
+                    }
+                });
+            window.addEventListener('resize', schemaTracerTout);
         }
 
         // ══════════════════════════════════════════════════════════════════
@@ -9104,6 +10204,1275 @@ window.__EFFETS_INTERACTIONS__={};
         };
 
         // ══════════════════════════════════════════════════════════════════
+        //  JEU DE LIVRAISON DU BONUS (bonus.jeuLivraison)
+        //
+        //  Données : `bonus.jeuLivraison` de la configuration JSON. Le
+        //  balisage et le bloc JSON sont produits par personnaliser.py ; ce
+        //  moteur ne connaît que le DOM et ses propres règles de jeu — aucun
+        //  texte pédagogique n'est écrit ici.
+        //
+        //  Le jeu reprend la mécanique du jeu « colis express » de l'activité
+        //  sur les drones (vue de dessus, tournées de colis, boutique
+        //  d'améliorations entre les tournées) et l'applique à l'objet
+        //  technique du cours : le professeur pédale, et l'assistance
+        //  électrique est un CHOIX. Elle fait aller presque deux fois plus
+        //  vite, mais elle vide la batterie ; le pédalage seul ne coûte rien.
+        //  C'est le compromis autonomie / performance que le cours fait
+        //  mesurer, joué au lieu d'être récité.
+        //
+        //  Rien ne bouge avant le clic « Démarrer » : la boucle d'animation
+        //  n'existe que pendant une partie, et « Pause » l'arrête vraiment.
+        //  L'onglet bonus reste donc immobile, comme l'exige
+        //  `bonus.animations: false`.
+        // ══════════════════════════════════════════════════════════════════
+
+        const JL_LARGEUR = 480;
+        const JL_HAUTEUR = 360;
+
+        /* Mécanique du jeu : les mêmes nombres pour toutes les activités. Ce
+           qui change d'une activité à l'autre (textes, tournées, prix des
+           améliorations) vient de la configuration. */
+        const JL_REGLAGES = {
+            vitessePedalage: 58,      // px/s, sans assistance
+            vitesseAssistance: 118,   // px/s, assistance enclenchée
+            lissage: 8,               // 1/s : la vitesse rejoint sa cible sans à-coup
+            consoAssistance: 11,      // % de batterie par seconde d'assistance
+            repriseCharge: 30,        // % rendus par une batterie ramassée
+            degatsChoc: 8,            // % perdus en percutant un piéton
+            delaiChoc: 1.4,           // s avant de pouvoir re-percuter le même piéton
+            porteeChoc: 17,           // px : distance de contact avec un piéton
+            porteeDepot: 26,          // px : rayon d'action du dépôt et des zones
+            porteeCharge: 16,         // px
+            rayonVelo: 9,
+            margeBord: 12             // px : le vélo ne sort pas du canevas
+        };
+
+        /* Le quartier : deux rues qui se croisent, quatre pâtés de maisons.
+           La géométrie est fixe (c'est du décor, pas du contenu) ; les NOMS
+           des destinations et des tournées viennent de la configuration. Les
+           zones et les maisons ne se recouvrent pas : un colis doit toujours
+           être atteignable, c'est ce que `verifier_parcours.py` finit par
+           mesurer en jouant. */
+        const JL_CARTE = {
+            blocs: [
+                { x: 0, y: 0, l: 212, h: 150 },
+                { x: 268, y: 0, l: 212, h: 150 },
+                { x: 0, y: 206, l: 212, h: 154 },
+                { x: 268, y: 206, l: 212, h: 154 }
+            ],
+            routes: [
+                { x: 0, y: 150, l: 480, h: 56 },
+                { x: 212, y: 0, l: 56, h: 360 }
+            ],
+            maisons: [
+                { x: 100, y: 20, l: 64, h: 44, toit: '#b45309' },
+                { x: 300, y: 60, l: 70, h: 42, toit: '#9f1239' },
+                { x: 110, y: 250, l: 70, h: 46, toit: '#7c2d12' },
+                { x: 300, y: 240, l: 76, h: 40, toit: '#1e3a8a' }
+            ],
+            arbres: [
+                { x: 30, y: 120, r: 13 }, { x: 330, y: 30, r: 14 },
+                { x: 172, y: 328, r: 13 }, { x: 450, y: 232, r: 12 },
+                { x: 240, y: 176, r: 0 }   // (aucun arbre sur le croisement)
+            ],
+            depot: { x: 52, y: 48 },
+            lieux: {
+                'nord-ouest': { x: 160, y: 104 },
+                'nord-est': { x: 420, y: 52 },
+                'sud-ouest': { x: 60, y: 300 },
+                'sud-est': { x: 420, y: 300 }
+            },
+            /* Batteries de rechange posées le long des rues. */
+            charges: [
+                { x: 118, y: 178 }, { x: 240, y: 76 },
+                { x: 240, y: 284 }, { x: 362, y: 178 }, { x: 46, y: 178 }
+            ],
+            /* Trottoirs où marchent les piétons : des rectangles de patrouille. */
+            rondes: [
+                { x: 24, y: 132, l: 160, h: 10 },
+                { x: 292, y: 132, l: 164, h: 10 },
+                { x: 24, y: 214, l: 160, h: 10 },
+                { x: 292, y: 214, l: 164, h: 10 },
+                { x: 198, y: 22, l: 10, h: 100 },
+                { x: 274, y: 22, l: 10, h: 100 },
+                { x: 198, y: 222, l: 10, h: 108 },
+                { x: 274, y: 222, l: 10, h: 108 }
+            ]
+        };
+
+        /* Effet de chaque amélioration, par clé. Le moteur connaît ces quatre
+           effets ; la configuration en choisit un sous-ensemble et fournit le
+           nom, la description et le prix. Une clé inconnue est refusée à la
+           génération. */
+        const JL_EFFETS = {
+            batterie: 'capacité de la batterie +25 %',
+            assistance: 'vitesse assistée +15 %',
+            pneus: 'dégâts de choc divisés par deux',
+            eclairage: 'les piétons s\'écartent à l\'approche'
+        };
+
+        const LIVRAISON = {
+            dom: null,        // références aux éléments de la page
+            donnees: null,    // contenu venu de la configuration
+            etat: null,       // état de la partie en cours
+            voile: 'accueil', // accueil | boutique | echec | fin
+            pause: false,
+            animation: null,
+            dernier: 0,
+            touches: { haut: false, bas: false, gauche: false, droite: false, assistance: false },
+            graine: 1
+        };
+
+        function livraisonRacine() { return document.getElementById('jeu-livraison'); }
+
+        /* Tirage pseudo-aléatoire reproductible : deux parties de la même
+           tournée placent les piétons au même endroit, ce qui rend le jeu
+           contrôlable (et rejouable) au lieu d'être imprévisible. */
+        function jlAleatoire() {
+            LIVRAISON.graine = (LIVRAISON.graine * 1103515245 + 12345) % 2147483648;
+            return LIVRAISON.graine / 2147483648;
+        }
+
+        function livraisonDonnees() {
+            if (LIVRAISON.donnees) return LIVRAISON.donnees;
+            const racine = livraisonRacine();
+            LIVRAISON.donnees = { tournees: [], ameliorations: [], messages: {}, boutons: {}, destinations: [] };
+            if (!racine) return LIVRAISON.donnees;
+            const bloc = racine.querySelector('script.jl-donnees');
+            if (bloc) {
+                try {
+                    const lu = JSON.parse(bloc.textContent || '{}');
+                    Object.keys(lu || {}).forEach(function (cle) {
+                        LIVRAISON.donnees[cle] = lu[cle];
+                    });
+                } catch (erreur) {
+                    LIVRAISON.donnees = { tournees: [], ameliorations: [], messages: {}, boutons: {}, destinations: [] };
+                }
+            }
+            return LIVRAISON.donnees;
+        }
+
+        function jlMessage(cle, repli) {
+            const messages = livraisonDonnees().messages || {};
+            const valeur = String(messages[cle] || '').trim();
+            return valeur || repli || '';
+        }
+
+        function jlBouton(cle, repli) {
+            const boutons = livraisonDonnees().boutons || {};
+            const valeur = String(boutons[cle] || '').trim();
+            return valeur || repli || '';
+        }
+
+        /* Texte de substitution des messages : {colis}, {batterie}, {tournee},
+           {destinations}, {prix}, {vehicule}. Les accolades évitent de coller
+           les textes dans le moteur. */
+        function jlRemplir(texte, valeurs) {
+            let sortie = String(texte || '');
+            Object.keys(valeurs || {}).forEach(function (cle) {
+                sortie = sortie.split('{' + cle + '}').join(String(valeurs[cle]));
+            });
+            return sortie;
+        }
+
+        // ── État de la partie ────────────────────────────────────────────────
+
+        function livraisonEtatVide() {
+            const donnees = livraisonDonnees();
+            return {
+                enCours: false,
+                tournee: 1,
+                tournees: Math.max(1, (donnees.tournees || []).length),
+                colisTotal: 3,
+                colisLivres: 0,
+                colisPris: false,
+                batterie: 100,
+                batterieMax: 100,
+                assistance: false,
+                coupre: 0,           // s restantes de coupure d'assistance (après un choc)
+                chrono: 90,
+                chronoMax: 90,
+                argent: 0,
+                score: 0,
+                ameliorations: [],
+                velo: { x: JL_CARTE.depot.x, y: JL_CARTE.depot.y, vx: 0, vy: 0, angle: 0, pedale: 0 },
+                zones: [],
+                charges: [],
+                pietons: []
+            };
+        }
+
+        /* Les trois destinations d'une tournée : on tourne sur la liste des
+           lieux déclarés, de sorte que deux tournées successives n'envoient
+           pas le professeur aux mêmes endroits. */
+        function jlDestinationsTournee(index) {
+            const liste = (livraisonDonnees().destinations || []).slice();
+            if (!liste.length) {
+                return [{ nom: 'la destination', lieu: 'nord-est' }];
+            }
+            const choisies = [];
+            for (let i = 0; i < 3 && i < liste.length; i++) {
+                choisies.push(liste[(index + i) % liste.length]);
+            }
+            while (choisies.length < 3) choisies.push(liste[choisies.length % liste.length]);
+            return choisies;
+        }
+
+        function jlPreparerTournee(index) {
+            const etat = livraisonEtatVide();
+            const donnees = livraisonDonnees();
+            const tournee = (donnees.tournees || [])[index] || {};
+            etat.tournee = index + 1;
+            // Titre et objectif de la tournée : ce sont les deux textes que
+            // l'élève lit (barre d'objectif et dialogue du professeur). Ils
+            // viennent de la configuration, jamais du moteur.
+            etat.tourneeTitre = String(tournee.titre || '').trim();
+            etat.tourneeObjectif = String(tournee.objectif || '').trim();
+            etat.colisTotal = Math.max(1, Number(tournee.colis) || 3);
+            etat.chronoMax = Math.max(20, Number(tournee.chrono) || (100 - 5 * index));
+            etat.chrono = etat.chronoMax;
+            etat.argent = LIVRAISON.etat ? LIVRAISON.etat.argent : 0;
+            etat.score = LIVRAISON.etat ? LIVRAISON.etat.score : 0;
+            etat.ameliorations = (LIVRAISON.etat ? LIVRAISON.etat.ameliorations.slice() : []);
+            etat.batterieMax = etat.ameliorations.indexOf('batterie') !== -1 ? 125 : 100;
+            etat.batterie = etat.batterieMax;
+            etat.enCours = true;
+            etat.velo.x = JL_CARTE.depot.x;
+            etat.velo.y = JL_CARTE.depot.y;
+
+            // Une zone par colis : si une tournée demande plus de trois colis,
+            // les destinations se répètent au lieu de manquer (un colis sans
+            // destination serait un colis invendable).
+            const destinations = jlDestinationsTournee(index);
+            etat.zones = [];
+            for (let i = 0; i < etat.colisTotal; i++) {
+                const destination = destinations[i % destinations.length];
+                const lieu = JL_CARTE.lieux[destination.lieu] || JL_CARTE.lieux['nord-est'];
+                etat.zones.push({
+                    nom: destination.nom,
+                    lieu: destination.lieu,
+                    x: lieu.x, y: lieu.y,
+                    livree: false
+                });
+            }
+            etat.charges = JL_CARTE.charges.slice(0, 4).map(function (charge) {
+                return { x: charge.x, y: charge.y, prise: false };
+            });
+
+            const nombrePietons = Math.min(8, 2 + index);
+            LIVRAISON.graine = 97 + index * 31;
+            etat.pietons = [];
+            for (let i = 0; i < nombrePietons; i++) {
+                const ronde = JL_CARTE.rondes[(i * 3 + index) % JL_CARTE.rondes.length];
+                const horizontal = ronde.l > ronde.h;
+                const sens = jlAleatoire() > 0.5 ? 1 : -1;
+                etat.pietons.push({
+                    x: ronde.x + ronde.l * (0.2 + 0.6 * jlAleatoire()),
+                    y: ronde.y + ronde.h * (0.2 + 0.6 * jlAleatoire()),
+                    vx: horizontal ? 20 * sens : 0,
+                    vy: horizontal ? 0 : 18 * sens,
+                    ronde: ronde,
+                    delai: 0,
+                    maillot: ['#f97316', '#a855f7', '#0ea5e9', '#eab308'][i % 4]
+                });
+            }
+            return etat;
+        }
+
+        // ── Boucle et physique ──────────────────────────────────────────────
+
+        function livraisonAnimer() {
+            livraisonArreter();
+            LIVRAISON.dernier = 0;
+            LIVRAISON.animation = window.requestAnimationFrame(livraisonBoucle);
+        }
+
+        function livraisonArreter() {
+            if (LIVRAISON.animation) {
+                window.cancelAnimationFrame(LIVRAISON.animation);
+                LIVRAISON.animation = null;
+            }
+        }
+
+        function livraisonBoucle(instant) {
+            if (!LIVRAISON.etat || !LIVRAISON.etat.enCours) { LIVRAISON.animation = null; return; }
+            const dt = LIVRAISON.dernier
+                ? Math.min(0.05, Math.max(0, (instant - LIVRAISON.dernier) / 1000))
+                : 0;
+            LIVRAISON.dernier = instant;
+            livraisonAvancer(dt);
+            if (!LIVRAISON.etat || !LIVRAISON.etat.enCours) {
+                // Une tournée qui vient de s'achever (réussite ou temps écoulé)
+                // a déjà arrêté la boucle : ne pas la relancer.
+                LIVRAISON.animation = null;
+                livraisonDessiner();
+                return;
+            }
+            livraisonDessiner();
+            LIVRAISON.animation = window.requestAnimationFrame(livraisonBoucle);
+        }
+
+        function jlDirection() {
+            const touches = LIVRAISON.touches;
+            let dx = (touches.droite ? 1 : 0) - (touches.gauche ? 1 : 0);
+            let dy = (touches.bas ? 1 : 0) - (touches.haut ? 1 : 0);
+            const longueur = Math.hypot(dx, dy);
+            if (longueur > 0) { dx /= longueur; dy /= longueur; }
+            return { dx: dx, dy: dy, actif: longueur > 0 };
+        }
+
+        function jlCollisionObstacle(x, y) {
+            const rayon = JL_REGLAGES.rayonVelo;
+            for (let i = 0; i < JL_CARTE.maisons.length; i++) {
+                const maison = JL_CARTE.maisons[i];
+                if (x + rayon > maison.x && x - rayon < maison.x + maison.l &&
+                    y + rayon > maison.y && y - rayon < maison.y + maison.h) {
+                    return true;
+                }
+            }
+            for (let j = 0; j < JL_CARTE.arbres.length; j++) {
+                const arbre = JL_CARTE.arbres[j];
+                if (arbre.r > 0 && Math.hypot(x - arbre.x, y - arbre.y) < arbre.r + rayon - 2) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function livraisonAvancer(dt) {
+            const etat = LIVRAISON.etat;
+            if (!etat || !etat.enCours || LIVRAISON.pause) return;
+            const reglages = JL_REGLAGES;
+
+            // ── Le temps de la tournée ──────────────────────────────────────
+            etat.chrono = Math.max(0, etat.chrono - dt);
+            if (etat.chrono <= 0) {
+                livraisonEchec();
+                return;
+            }
+            if (etat.coupre > 0) etat.coupre = Math.max(0, etat.coupre - dt);
+
+            // ── L'assistance, et son coût ───────────────────────────────────
+            const veutAssistance = LIVRAISON.touches.assistance && etat.coupre <= 0;
+            etat.assistance = veutAssistance && etat.batterie > 0;
+            if (veutAssistance && etat.batterie <= 0 && !etat.panneSignalee) {
+                etat.panneSignalee = true;
+                livraisonAnnoncer(jlMessage('panne',
+                    'Batterie vide : l\'assistance se coupe, le professeur termine au pédalage.'));
+            }
+            if (etat.assistance) {
+                etat.batterie = Math.max(0, etat.batterie - reglages.consoAssistance * dt);
+                if (etat.batterie === 0) etat.assistance = false;
+            }
+
+            // ── Déplacement ─────────────────────────────────────────────────
+            const direction = jlDirection();
+            const facteurAssistance = etat.ameliorations.indexOf('assistance') !== -1 ? 1.15 : 1;
+            const vitesseCible = etat.assistance
+                ? reglages.vitesseAssistance * facteurAssistance
+                : reglages.vitessePedalage;
+            const velo = etat.velo;
+            const cibleX = direction.dx * vitesseCible;
+            const cibleY = direction.dy * vitesseCible;
+            const lissage = Math.min(1, dt * reglages.lissage);
+            velo.vx += (cibleX - velo.vx) * lissage;
+            velo.vy += (cibleY - velo.vy) * lissage;
+
+            const nouveauX = Math.max(reglages.margeBord,
+                Math.min(JL_LARGEUR - reglages.margeBord, velo.x + velo.vx * dt));
+            const nouveauY = Math.max(reglages.margeBord,
+                Math.min(JL_HAUTEUR - reglages.margeBord, velo.y + velo.vy * dt));
+            // Un obstacle arrête le vélo (il ne l'abîme pas) : on teste les
+            // deux axes séparément pour pouvoir glisser le long d'un mur.
+            if (!jlCollisionObstacle(nouveauX, velo.y)) {
+                velo.x = nouveauX;
+            } else {
+                velo.vx = 0;
+            }
+            if (!jlCollisionObstacle(velo.x, nouveauY)) {
+                velo.y = nouveauY;
+            } else {
+                velo.vy = 0;
+            }
+            if (Math.hypot(velo.vx, velo.vy) > 4) {
+                velo.angle = Math.atan2(velo.vy, velo.vx);
+            }
+            velo.pedale += (Math.hypot(velo.vx, velo.vy) / 10 + 1) * dt * 4;
+
+            jlAvancerPietons(dt);
+            jlRamasser(etat);
+            livraisonHud();
+        }
+
+        function jlAvancerPietons(dt) {
+            const etat = LIVRAISON.etat;
+            const eclairage = etat.ameliorations.indexOf('eclairage') !== -1;
+            etat.pietons.forEach(function (pieton) {
+                if (pieton.delai > 0) pieton.delai = Math.max(0, pieton.delai - dt);
+                const ronde = pieton.ronde;
+
+                // Éclairage acheté : dans un rayon de 70 px, le piéton voit le
+                // professeur arriver et s'écarte — c'est la sécurité, pas la
+                // vitesse, que le professeur a payée.
+                if (eclairage) {
+                    const dx = pieton.x - etat.velo.x;
+                    const dy = pieton.y - etat.velo.y;
+                    const distance = Math.hypot(dx, dy);
+                    if (distance > 0.1 && distance < 70) {
+                        pieton.x += (dx / distance) * 16 * dt;
+                        pieton.y += (dy / distance) * 16 * dt;
+                    }
+                }
+
+                pieton.x += pieton.vx * dt;
+                pieton.y += pieton.vy * dt;
+                if (pieton.x < ronde.x) { pieton.x = ronde.x; pieton.vx = Math.abs(pieton.vx); }
+                if (pieton.x > ronde.x + ronde.l) { pieton.x = ronde.x + ronde.l; pieton.vx = -Math.abs(pieton.vx); }
+                if (pieton.y < ronde.y) { pieton.y = ronde.y; pieton.vy = Math.abs(pieton.vy); }
+                if (pieton.y > ronde.y + ronde.h) { pieton.y = ronde.y + ronde.h; pieton.vy = -Math.abs(pieton.vy); }
+
+                // Le contact : la batterie encaisse, et l'assistance se coupe
+                // un instant (le professeur reprend ses esprits).
+                const distanceVelo = Math.hypot(pieton.x - etat.velo.x, pieton.y - etat.velo.y);
+                if (distanceVelo < JL_REGLAGES.porteeChoc && pieton.delai <= 0) {
+                    pieton.delai = JL_REGLAGES.delaiChoc;
+                    const degats = etat.ameliorations.indexOf('pneus') !== -1
+                        ? JL_REGLAGES.degatsChoc / 2
+                        : JL_REGLAGES.degatsChoc;
+                    etat.batterie = Math.max(0, etat.batterie - degats);
+                    etat.score = Math.max(0, etat.score - 10);
+                    etat.coupre = 0.9;
+                    etat.assistance = false;
+                    livraisonAnnoncer(jlRemplir(jlMessage('choc',
+                        'Aïe ! Un piéton surpris : −{degats} % d\'assistance.'),
+                        { degats: degats }));
+                    livraisonDialogue(jlMessage('dialogueChoc',
+                        '« Attention aux piétons ! Je ralentis. »'));
+                }
+            });
+        }
+
+        function jlRamasser(etat) {
+            const velo = etat.velo;
+
+            // 1. Le colis du dépôt.
+            if (!etat.colisPris && etat.colisLivres < etat.colisTotal &&
+                Math.hypot(velo.x - JL_CARTE.depot.x, velo.y - JL_CARTE.depot.y) < JL_REGLAGES.porteeDepot) {
+                const attendue = jlCible(etat);
+                if (!attendue) return;
+                etat.colisPris = true;
+                livraisonAnnoncer(jlRemplir(jlMessage('colisPris',
+                    'Colis chargé : direction {destination}.'), { destination: attendue.nom }));
+                livraisonDialogue(jlMessage('dialogueColis',
+                    '« Colis à bord ! Je pédale vers la destination. »'));
+                livraisonObjectif();
+            }
+
+            // 2. La batterie de rechange.
+            etat.charges.forEach(function (charge) {
+                if (charge.prise) return;
+                if (Math.hypot(velo.x - charge.x, velo.y - charge.y) < JL_REGLAGES.porteeCharge) {
+                    charge.prise = true;
+                    etat.batterie = Math.min(etat.batterieMax, etat.batterie + JL_REGLAGES.repriseCharge);
+                    livraisonAnnoncer(jlRemplir(jlMessage('charge',
+                        'Batterie ramassée : {batterie} % d\'autonomie.'),
+                        { batterie: Math.round(etat.batterie) }));
+                }
+            });
+
+            // 3. La livraison.
+            const cible = jlCible(etat);
+            if (cible && Math.hypot(velo.x - cible.x, velo.y - cible.y) < JL_REGLAGES.porteeDepot) {
+                cible.livree = true;
+                etat.colisLivres += 1;
+                etat.colisPris = false;
+                etat.argent += Math.max(0, Number(livraisonDonnees().argentParColis) || 2);
+                etat.score += 100;
+                livraisonAnnoncer(jlRemplir(jlMessage('colisLivre',
+                    'Colis livré à {destination} ! ({colis} / {total})'),
+                    { destination: cible.nom, colis: etat.colisLivres, total: etat.colisTotal }));
+                if (etat.colisLivres >= etat.colisTotal) {
+                    livraisonReussite();
+                    return;
+                }
+                livraisonObjectif();
+            }
+        }
+
+        /* Destination en cours : la première zone non livrée. */
+        function jlCible(etat) {
+            const zones = (etat || LIVRAISON.etat || { zones: [] }).zones || [];
+            for (let i = 0; i < zones.length; i++) {
+                if (!zones[i].livree) return zones[i];
+            }
+            return null;
+        }
+
+        // ── HUD, objectif, dialogue, statut ─────────────────────────────────
+
+        function livraisonHud() {
+            const dom = LIVRAISON.dom;
+            const etat = LIVRAISON.etat;
+            if (!dom || !etat) return;
+            const pourcentage = Math.round((etat.batterie / etat.batterieMax) * 100);
+            if (dom.barre) dom.barre.style.width = pourcentage + '%';
+            if (dom.jauge) {
+                dom.jauge.setAttribute('aria-valuenow', String(pourcentage));
+                dom.jauge.setAttribute('data-etat',
+                    etat.batterie <= 0 ? 'vide' : (pourcentage < 25 ? 'basse' : 'haute'));
+            }
+            if (dom.batterie) dom.batterie.textContent = pourcentage + ' %';
+            if (dom.assistance) {
+                dom.assistance.textContent = etat.assistance
+                    ? (jlBouton('assistanceAllumee', '⚡ Assistance ON') )
+                    : (jlBouton('assistanceCoupee', '🦵 Pédalage seul'));
+                dom.assistance.setAttribute('data-allumee', etat.assistance ? 'oui' : 'non');
+            }
+            if (dom.tournee) dom.tournee.textContent = etat.tournee + ' / ' + etat.tournees;
+            if (dom.colis) dom.colis.textContent = etat.colisLivres + ' / ' + etat.colisTotal;
+            if (dom.argent) dom.argent.textContent = Math.round(etat.argent) + ' €';
+            if (dom.chrono) dom.chrono.textContent = jlChrono(etat.chrono);
+            if (dom.score) dom.score.textContent = String(etat.score);
+        }
+
+        function jlChrono(secondes) {
+            const total = Math.max(0, Math.ceil(secondes));
+            return Math.floor(total / 60) + ':' + ('0' + (total % 60)).slice(-2);
+        }
+
+        function livraisonObjectif() {
+            const dom = LIVRAISON.dom;
+            const etat = LIVRAISON.etat;
+            if (!dom || !etat) return;
+            if (dom.tourneeTitre) {
+                dom.tourneeTitre.textContent = etat.tourneeTitre || '';
+            }
+            const cible = jlCible(etat);
+            const pastille = dom.pastille;
+            if (!cible) {
+                if (dom.objectif) dom.objectif.textContent = jlMessage('objectifFini', 'Tournée terminée !');
+                if (pastille) pastille.setAttribute('data-etat', 'livraison');
+                return;
+            }
+            if (etat.colisPris) {
+                if (dom.objectif) {
+                    dom.objectif.textContent = jlRemplir(
+                        jlMessage('objectifLivraison', 'Livre le colis à {destination}'), { destination: cible.nom });
+                }
+                if (pastille) pastille.setAttribute('data-etat', 'livraison');
+            } else {
+                if (dom.objectif) dom.objectif.textContent = jlMessage('objectifDepot', 'Prends un colis au dépôt');
+                if (pastille) pastille.setAttribute('data-etat', 'depot');
+            }
+        }
+
+        function livraisonDialogue(texte) {
+            const dom = LIVRAISON.dom;
+            if (dom && dom.dialogue) dom.dialogue.textContent = texte || '';
+        }
+
+        /* Zone d'annonce : c'est ce que lit un lecteur d'écran (aria-live).
+           Le canevas, lui, ne dit rien. */
+        function livraisonAnnoncer(texte) {
+            const dom = LIVRAISON.dom;
+            if (dom && dom.statut) dom.statut.textContent = texte || '';
+        }
+
+        // ── Déroulé : accueil, tournée, boutique, échec, fin ────────────────
+
+        function livraisonOuvrirVoile(mode, titre, texte) {
+            const dom = LIVRAISON.dom;
+            LIVRAISON.voile = mode;
+            if (!dom || !dom.voile) return;
+            dom.voile.hidden = false;
+            if (dom.voileTitre) dom.voileTitre.textContent = titre || '';
+            if (dom.voileTexte) dom.voileTexte.innerHTML = texte || '';
+            if (dom.boutique) dom.boutique.hidden = mode !== 'boutique';
+            if (dom.boutonAction) {
+                dom.boutonAction.hidden = mode === 'boutique';
+                dom.boutonAction.textContent = jlBouton('demarrer', 'Démarrer la partie');
+            }
+            // « Pause » n'a de sens que pendant une partie : sous un voile,
+            // il n'y a rien à suspendre.
+            if (dom.pause) dom.pause.disabled = true;
+        }
+
+        function livraisonFermerVoile() {
+            const dom = LIVRAISON.dom;
+            LIVRAISON.voile = null;
+            if (!dom || !dom.voile) return;
+            dom.voile.hidden = true;
+            if (dom.boutique) dom.boutique.hidden = true;
+            if (dom.pause) dom.pause.disabled = false;
+        }
+
+        function livraisonAccueil() {
+            const donnees = livraisonDonnees();
+            const nombreTournees = Math.max(1, (donnees.tournees || []).length);
+            const texte = jlRemplir(jlMessage('accueil',
+                '<strong>{tournees} tournées</strong>, {colis} colis chacune. ' +
+                'L\'assistance électrique va vite mais vide la batterie ; ' +
+                'le pédalage ne coûte rien. Ramasse les batteries vertes, ' +
+                'évite les piétons, et améliore le vélo entre deux tournées.'),
+                {
+                    tournees: nombreTournees,
+                    colis: Math.max(1, Number((donnees.tournees || [])[0] && donnees.tournees[0].colis) || 3),
+                    vehicule: jlVehicule()
+                });
+            livraisonOuvrirVoile('accueil', jlMessage('titreAccueil', '🚲 Livraison express'), texte);
+            if (LIVRAISON.dom && LIVRAISON.dom.boutonAction) {
+                LIVRAISON.dom.boutonAction.textContent = jlBouton('demarrer', 'Démarrer la partie');
+            }
+            livraisonAnnoncer(jlMessage('statutAccueil', 'Appuie sur « Démarrer la partie » pour jouer.'));
+        }
+
+        function jlVehicule() {
+            return String(livraisonDonnees().vehicule || 'VAE').trim();
+        }
+
+        function livraisonDemarrer() {
+            livraisonLancerTournee(0);
+        }
+
+        /* Lance une tournée (index à partir de 0) en reportant ce qui est
+           gagné : argent, score et améliorations survivent d'une tournée à
+           l'autre, y compris quand une tournée est refaite. */
+        function livraisonLancerTournee(index) {
+            const ancien = LIVRAISON.etat;
+            LIVRAISON.pause = false;
+            LIVRAISON.etat = jlPreparerTournee(Math.max(0, index));
+            if (ancien) {
+                LIVRAISON.etat.argent = ancien.argent;
+                LIVRAISON.etat.score = ancien.score;
+                LIVRAISON.etat.ameliorations = ancien.ameliorations.slice();
+                LIVRAISON.etat.batterieMax = LIVRAISON.etat.ameliorations.indexOf('batterie') !== -1 ? 125 : 100;
+                LIVRAISON.etat.batterie = LIVRAISON.etat.batterieMax;
+            }
+            livraisonFermerVoile();
+            livraisonHud();
+            livraisonObjectif();
+            livraisonDialogue(LIVRAISON.etat.tourneeObjectif || (LIVRAISON.etat.tournee === 1
+                ? jlMessage('dialogueDepart', '« C\'est parti ! Le colis m\'attend au dépôt. »')
+                : jlMessage('dialogueTournee', '« Nouvelle tournée : la batterie est rechargée. »')));
+            livraisonAnnoncer(jlRemplir(jlMessage('statutDepart',
+                'Tournée {tournee} : prends un colis au dépôt.'),
+                { tournee: LIVRAISON.etat.tournee }));
+            livraisonDessiner();
+            livraisonAnimer();
+        }
+
+        function livraisonReussite() {
+            const etat = LIVRAISON.etat;
+            livraisonArreter();
+            etat.enCours = false;
+            const bonusTemps = Math.round(etat.chrono / 10);
+            etat.argent += bonusTemps;
+            etat.score += bonusTemps * 5;
+            LIVRAISON.bonusTemps = bonusTemps;
+            livraisonHud();
+
+            if (etat.tournee >= etat.tournees) {
+                livraisonOuvrirVoile('fin', jlMessage('titreFin', '🏆 Toutes les tournées sont livrées !'),
+                    jlRemplir(jlMessage('fin', 'Score : <strong>{score}</strong> — ' +
+                        'argent gagné : <strong>{argent} €</strong>. ' +
+                        'Tu peux rejouer pour faire mieux.'), {
+                        score: etat.score, argent: Math.round(etat.argent)
+                    }));
+                if (LIVRAISON.dom && LIVRAISON.dom.boutonAction) {
+                    LIVRAISON.dom.boutonAction.textContent = jlBouton('rejouer', 'Rejouer');
+                }
+                livraisonAnnoncer(jlMessage('statutFin', 'Partie terminée.'));
+                livraisonDessiner();
+                return;
+            }
+
+            livraisonOuvrirVoile('boutique', jlMessage('titreBoutique', '🛠️ Améliorer le vélo'),
+                jlRemplir(jlMessage('boutique',
+                    'Tournée {tournee} livrée avec {chrono} restantes : ' +
+                    '+{bonus} €. Dépense ce que tu as gagné.'),
+                    { tournee: etat.tournee, chrono: jlChrono(etat.chrono), bonus: bonusTemps }));
+            livraisonRemplirBoutique();
+            livraisonAnnoncer(jlRemplir(jlMessage('statutBoutique',
+                'Tournée {tournee} réussie. Améliore le vélo puis passe à la tournée suivante.'),
+                { tournee: etat.tournee }));
+            livraisonDessiner();
+        }
+
+        function livraisonEchec() {
+            const etat = LIVRAISON.etat;
+            livraisonArreter();
+            etat.enCours = false;
+            livraisonOuvrirVoile('echec', jlMessage('titreEchec', '⏱️ Le temps est écoulé'),
+                jlRemplir(jlMessage('echec',
+                    'Tournée {tournee} : {colis} colis livrés sur {total}. ' +
+                    'La tournée est à refaire — sans perdre tes améliorations.'),
+                    { tournee: etat.tournee, colis: etat.colisLivres, total: etat.colisTotal }));
+            if (LIVRAISON.dom && LIVRAISON.dom.boutonAction) {
+                LIVRAISON.dom.boutonAction.textContent = jlBouton('recommencerTournee', 'Refaire la tournée');
+            }
+            livraisonAnnoncer(jlMessage('statutEchec', 'Temps écoulé : la tournée est à refaire.'));
+            livraisonHud();
+            livraisonDessiner();
+        }
+
+        function livraisonRemplirBoutique() {
+            const dom = LIVRAISON.dom;
+            const etat = LIVRAISON.etat;
+            if (!dom || !dom.articles || !etat) return;
+            dom.articles.innerHTML = '';
+            const ameliorations = livraisonDonnees().ameliorations || [];
+            ameliorations.forEach(function (amelioration) {
+                const cle = String(amelioration.cle || '');
+                const achetee = etat.ameliorations.indexOf(cle) !== -1;
+                const prix = Math.max(0, Number(amelioration.prix) || 0);
+                const article = document.createElement('div');
+                article.className = 'jl-article';
+                article.setAttribute('data-achetee', achetee ? 'oui' : 'non');
+                const titre = document.createElement('h5');
+                titre.textContent = String(amelioration.nom || cle);
+                const detail = document.createElement('p');
+                detail.textContent = achetee
+                    ? jlMessage('dejaInstalle', 'Déjà installé sur le vélo.')
+                    : String(amelioration.description || '');
+                const bouton = document.createElement('button');
+                bouton.type = 'button';
+                bouton.setAttribute('data-amelioration', cle);
+                bouton.textContent = achetee
+                    ? jlMessage('boutonInstalle', '✔ Installé')
+                    : jlRemplir(jlMessage('boutonAcheter', 'Acheter — {prix} €'), { prix: prix });
+                bouton.disabled = achetee || etat.argent < prix;
+                bouton.addEventListener('click', function () { livraisonAcheter(cle); });
+                article.appendChild(titre);
+                article.appendChild(detail);
+                article.appendChild(bouton);
+                dom.articles.appendChild(article);
+            });
+            if (dom.argentBoutique) {
+                dom.argentBoutique.textContent = Math.round(etat.argent) + ' €';
+            }
+            if (dom.boutonAction) {
+                dom.boutonAction.hidden = false;
+                dom.boutonAction.textContent = jlBouton('tourneeSuivante', 'Tournée suivante →');
+            }
+        }
+
+        function livraisonAcheter(cle) {
+            const etat = LIVRAISON.etat;
+            if (!etat || LIVRAISON.voile !== 'boutique') return false;
+            const ameliration = (livraisonDonnees().ameliorations || []).filter(function (candidat) {
+                return String(candidat.cle || '') === String(cle || '');
+            })[0];
+            if (!ameliration) return false;
+            const prix = Math.max(0, Number(ameliration.prix) || 0);
+            if (etat.ameliorations.indexOf(String(cle)) !== -1) return false;
+            if (etat.argent < prix) return false;
+            etat.argent -= prix;
+            etat.ameliorations.push(String(cle));
+            if (cle === 'batterie') {
+                etat.batterieMax = 125;
+                etat.batterie = 125;
+            }
+            livraisonAnnoncer(jlRemplir(jlMessage('achat', '« {nom} » installé sur le vélo.'),
+                { nom: String(ameliration.nom || cle) }));
+            livraisonHud();
+            livraisonRemplirBoutique();
+            return true;
+        }
+
+        function livraisonTourneeSuivante() {
+            const etat = LIVRAISON.etat;
+            if (!etat) return;
+            if (etat.tournee >= etat.tournees) { livraisonReinitialiser(); return; }
+            livraisonLancerTournee(etat.tournee);
+        }
+
+        /* Une tournée ratée se refait à l'identique : mêmes destinations, même
+           chrono, mêmes améliorations. Le professeur ne perd pas son argent —
+           sinon un échec rendrait la suite injouable. */
+        function livraisonRefaireTournee() {
+            const etat = LIVRAISON.etat;
+            if (!etat) return;
+            livraisonLancerTournee(Math.max(0, etat.tournee - 1));
+        }
+
+        function livraisonAction() {
+            // Un seul bouton pour tous les voiles : son sens dépend de l'état.
+            if (LIVRAISON.voile === 'accueil' || LIVRAISON.voile === 'fin') {
+                livraisonDemarrer();
+            } else if (LIVRAISON.voile === 'boutique') {
+                livraisonTourneeSuivante();
+            } else if (LIVRAISON.voile === 'echec') {
+                livraisonRefaireTournee();
+            }
+        }
+
+        function livraisonBasculerPause() {
+            const etat = LIVRAISON.etat;
+            const dom = LIVRAISON.dom;
+            if (!etat || !etat.enCours) return;
+            LIVRAISON.pause = !LIVRAISON.pause;
+            if (LIVRAISON.pause) {
+                livraisonArreter();
+            } else {
+                livraisonAnimer();
+            }
+            if (dom && dom.pause) {
+                dom.pause.textContent = LIVRAISON.pause
+                    ? jlBouton('reprendre', '▶️ Reprendre')
+                    : jlBouton('pauser', '⏸️ Pause');
+                dom.pause.setAttribute('aria-pressed', LIVRAISON.pause ? 'true' : 'false');
+            }
+            livraisonAnnoncer(LIVRAISON.pause
+                ? jlMessage('statutPause', 'Partie en pause.')
+                : jlMessage('statutReprise', 'La partie reprend.'));
+        }
+
+        function livraisonReinitialiser() {
+            livraisonArreter();
+            LIVRAISON.pause = false;
+            LIVRAISON.touches = { haut: false, bas: false, gauche: false, droite: false, assistance: false };
+            LIVRAISON.etat = livraisonEtatVide();
+            LIVRAISON.etat.tournees = Math.max(1, (livraisonDonnees().tournees || []).length);
+            livraisonMajAssistance();
+            livraisonHud();
+            livraisonObjectif();
+            livraisonDialogue(jlMessage('dialogueAccueil',
+                '« Prêt ? Le colis est au dépôt, à gauche. À toi de pédaler ! »'));
+            livraisonAccueil();
+            livraisonDessiner();
+            if (LIVRAISON.dom && LIVRAISON.dom.pause) {
+                LIVRAISON.dom.pause.textContent = jlBouton('pauser', '⏸️ Pause');
+                LIVRAISON.dom.pause.setAttribute('aria-pressed', 'false');
+                LIVRAISON.dom.pause.disabled = true;
+            }
+        }
+
+        function livraisonMajAssistance() {
+            const dom = LIVRAISON.dom;
+            if (!dom) return;
+            const bouton = dom.pave ? dom.pave.querySelector('[data-touche="assistance"]') : null;
+            if (bouton) {
+                bouton.setAttribute('aria-pressed', LIVRAISON.touches.assistance ? 'true' : 'false');
+            }
+        }
+
+        // ── Rendu du canevas ────────────────────────────────────────────────
+
+        function livraisonDessiner() {
+            const dom = LIVRAISON.dom;
+            const etat = LIVRAISON.etat;
+            if (!dom || !dom.canvas || !etat) return;
+            const ctx = dom.canvas.getContext('2d');
+            if (!ctx) return;
+
+            ctx.clearRect(0, 0, JL_LARGEUR, JL_HAUTEUR);
+
+            // Pâtés de maisons : herbe, un liseré de trottoir clair.
+            JL_CARTE.blocs.forEach(function (bloc) {
+                ctx.fillStyle = '#4b7c3f';
+                ctx.fillRect(bloc.x, bloc.y, bloc.l, bloc.h);
+                ctx.fillStyle = '#6ea760';
+                ctx.fillRect(bloc.x, bloc.y, bloc.l, Math.min(6, bloc.h));
+            });
+
+            // Rues, avec leur ligne d'axe.
+            JL_CARTE.routes.forEach(function (route) {
+                ctx.fillStyle = '#4b5563';
+                ctx.fillRect(route.x, route.y, route.l, route.h);
+            });
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 10]);
+            ctx.beginPath();
+            ctx.moveTo(0, 178); ctx.lineTo(212, 178);
+            ctx.moveTo(268, 178); ctx.lineTo(480, 178);
+            ctx.moveTo(240, 0); ctx.lineTo(240, 150);
+            ctx.moveTo(240, 206); ctx.lineTo(240, 360);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            jlDessinerDepot(ctx);
+            etat.zones.forEach(function (zone) { jlDessinerZone(ctx, zone); });
+
+            JL_CARTE.arbres.forEach(function (arbre) {
+                if (arbre.r > 0) jlDessinerArbre(ctx, arbre);
+            });
+            JL_CARTE.maisons.forEach(function (maison) { jlDessinerMaison(ctx, maison); });
+            etat.charges.forEach(function (charge) {
+                if (!charge.prise) jlDessinerCharge(ctx, charge);
+            });
+            etat.pietons.forEach(function (pieton) { jlDessinerPieton(ctx, pieton); });
+            jlDessinerVelo(ctx, etat);
+        }
+
+        function jlDessinerMaison(ctx, maison) {
+            ctx.fillStyle = '#e5e7eb';
+            ctx.fillRect(maison.x, maison.y, maison.l, maison.h);
+            ctx.fillStyle = maison.toit;
+            ctx.fillRect(maison.x - 4, maison.y - 4, maison.l + 8, 14);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillRect(maison.x + 8, maison.y + maison.h - 12, 12, 12);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(maison.x, maison.y, maison.l, maison.h);
+        }
+
+        function jlDessinerArbre(ctx, arbre) {
+            ctx.fillStyle = '#78350f';
+            ctx.fillRect(arbre.x - 2, arbre.y - 2, 4, 10);
+            ctx.fillStyle = '#166534';
+            ctx.beginPath();
+            ctx.arc(arbre.x, arbre.y - 4, arbre.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#16a34a';
+            ctx.beginPath();
+            ctx.arc(arbre.x - 3, arbre.y - 7, arbre.r * 0.6, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function jlDessinerDepot(ctx) {
+            const depot = JL_CARTE.depot;
+            ctx.fillStyle = '#facc15';
+            ctx.beginPath();
+            ctx.arc(depot.x, depot.y, 22, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#78350f';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            // Trois cartons empilés.
+            ctx.fillStyle = '#b45309';
+            ctx.fillRect(depot.x - 11, depot.y - 6, 10, 9);
+            ctx.fillRect(depot.x + 1, depot.y - 2, 9, 8);
+            ctx.fillStyle = '#fde68a';
+            ctx.fillRect(depot.x - 9, depot.y - 4, 6, 2);
+            ctx.fillRect(depot.x + 3, depot.y, 5, 2);
+            ctx.fillStyle = '#78350f';
+            ctx.font = 'bold 9px system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('DÉPÔT', depot.x, depot.y + 17);
+        }
+
+        function jlDessinerZone(ctx, zone) {
+            ctx.beginPath();
+            ctx.arc(zone.x, zone.y, 20, 0, Math.PI * 2);
+            ctx.fillStyle = zone.livree ? '#16a34a' : 'rgba(34, 197, 94, 0.35)';
+            ctx.fill();
+            ctx.strokeStyle = zone.livree ? '#14532d' : '#22c55e';
+            ctx.lineWidth = zone.livree ? 2 : 3;
+            ctx.stroke();
+            if (zone.livree) {
+                ctx.strokeStyle = '#bbf7d0';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(zone.x - 7, zone.y);
+                ctx.lineTo(zone.x - 2, zone.y + 6);
+                ctx.lineTo(zone.x + 8, zone.y - 6);
+                ctx.stroke();
+            } else {
+                ctx.fillStyle = '#052e16';
+                ctx.font = 'bold 9px system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(zone.nom.slice(0, 14), zone.x, zone.y + 30);
+            }
+        }
+
+        function jlDessinerCharge(ctx, charge) {
+            ctx.fillStyle = '#166534';
+            ctx.fillRect(charge.x - 5, charge.y - 8, 10, 16);
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(charge.x - 3, charge.y - 6, 6, 12);
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(charge.x - 1, charge.y - 4, 2, 8);
+            ctx.fillRect(charge.x - 3, charge.y - 1, 6, 2);
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(charge.x - 2, charge.y - 10, 4, 2);
+        }
+
+        function jlDessinerPieton(ctx, pieton) {
+            ctx.fillStyle = pieton.maillot;
+            ctx.beginPath();
+            ctx.ellipse(pieton.x, pieton.y, 5, 6.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#f5d0a9';
+            ctx.beginPath();
+            ctx.arc(pieton.x, pieton.y - 7, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(pieton.x - 4, pieton.y + 5, 3, 3);
+            ctx.fillRect(pieton.x + 1, pieton.y + 5, 3, 3);
+        }
+
+        /* Le professeur à vélo, vu de dessus : deux roues, un cadre, la
+           batterie sur le porte-bagages et un colis quand il en porte un. */
+        function jlDessinerVelo(ctx, etat) {
+            const velo = etat.velo;
+            ctx.save();
+            ctx.translate(velo.x, velo.y);
+            ctx.rotate(velo.angle);
+
+            // Roues (vues de dessus : deux traits épais).
+            ctx.fillStyle = '#111827';
+            ctx.beginPath();
+            ctx.ellipse(-11, 0, 3, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(11, 0, 3, 7, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cadre et guidon.
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(-11, 0);
+            ctx.lineTo(0, 0);
+            ctx.lineTo(11, 0);
+            ctx.stroke();
+            ctx.strokeStyle = '#1e3a8a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(9, -7);
+            ctx.lineTo(9, 7);
+            ctx.stroke();
+
+            // La batterie d'assistance : verte quand elle travaille.
+            ctx.fillStyle = etat.assistance ? '#22c55e' : '#64748b';
+            ctx.fillRect(-6, -3.5, 8, 7);
+
+            // Le colis, sur le porte-bagages arrière.
+            if (etat.colisPris) {
+                ctx.fillStyle = '#b45309';
+                ctx.fillRect(-18, -5, 8, 10);
+                ctx.fillStyle = '#fde68a';
+                ctx.fillRect(-17, -1, 6, 2);
+            }
+
+            // Jambes qui pédalent, puis buste, bras et tête coiffée.
+            const pedale = Math.sin(velo.pedale) * 3.5;
+            ctx.strokeStyle = '#1f2937';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -3);
+            ctx.lineTo(pedale, -4);
+            ctx.moveTo(0, 3);
+            ctx.lineTo(-pedale, 4);
+            ctx.stroke();
+
+            ctx.fillStyle = '#f97316';
+            ctx.beginPath();
+            ctx.ellipse(-1, 0, 7, 6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#f5d0a9';
+            ctx.beginPath();
+            ctx.arc(4, 0, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#1d4ed8';
+            ctx.beginPath();
+            ctx.arc(6, 0, 4.5, -Math.PI * 0.5, Math.PI * 0.5);
+            ctx.fill();
+            ctx.restore();
+
+            // Flèche vers l'objectif : le repère dont l'élève a besoin quand
+            // la destination est hors du champ du regard.
+            const cible = jlCible(etat) || JL_CARTE.depot;
+            const angle = Math.atan2(cible.y - velo.y, cible.x - velo.x);
+            ctx.save();
+            ctx.translate(velo.x + Math.cos(angle) * 24, velo.y + Math.sin(angle) * 24);
+            ctx.rotate(angle);
+            ctx.fillStyle = etat.colisPris ? '#22c55e' : '#facc15';
+            ctx.beginPath();
+            ctx.moveTo(7, 0);
+            ctx.lineTo(-4, -4);
+            ctx.lineTo(-4, 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // ── Entrées : clavier et pavé tactile ───────────────────────────────
+
+        function jlTouche(code, enfoncee) {
+            const touches = LIVRAISON.touches;
+            const avant = Object.assign({}, touches);
+            switch (code) {
+                case 'haut': touches.haut = enfoncee; break;
+                case 'bas': touches.bas = enfoncee; break;
+                case 'gauche': touches.gauche = enfoncee; break;
+                case 'droite': touches.droite = enfoncee; break;
+                case 'assistance': touches.assistance = enfoncee; break;
+                default: return;
+            }
+            if (avant[code] !== touches[code]) livraisonMajAssistance();
+        }
+
+        function jlCodeClavier(evenement) {
+            const code = evenement.code || '';
+            const touche = String(evenement.key || '').toLowerCase();
+            if (code === 'ArrowUp' || touche === 'z' || touche === 'w') return 'haut';
+            if (code === 'ArrowDown' || touche === 's') return 'bas';
+            if (code === 'ArrowLeft' || touche === 'q' || touche === 'a') return 'gauche';
+            if (code === 'ArrowRight' || touche === 'd') return 'droite';
+            if (code === 'ShiftLeft' || code === 'ShiftRight' || touche === 'shift') return 'assistance';
+            return null;
+        }
+
+        function livraisonSurTouche(evenement, enfoncee) {
+            const etat = LIVRAISON.etat;
+            if (!etat || !etat.enCours || LIVRAISON.pause) return;
+            const code = jlCodeClavier(evenement);
+            if (!code) return;
+            // La page ne doit pas défiler quand l'élève joue au clavier.
+            if (evenement.preventDefault) evenement.preventDefault();
+            jlTouche(code, enfoncee);
+        }
+
+        function livraisonLierEntrees() {
+            const dom = LIVRAISON.dom;
+            if (!dom) return;
+
+            document.addEventListener('keydown', function (evenement) {
+                livraisonSurTouche(evenement, true);
+            });
+            document.addEventListener('keyup', function (evenement) {
+                livraisonSurTouche(evenement, false);
+            });
+
+            if (dom.pave) {
+                const boutons = dom.pave.querySelectorAll('[data-touche]');
+                Array.prototype.forEach.call(boutons, function (bouton) {
+                    const code = bouton.getAttribute('data-touche');
+                    const appuyer = function (evenement) {
+                        if (evenement.preventDefault) evenement.preventDefault();
+                        jlTouche(code, true);
+                    };
+                    const relacher = function (evenement) {
+                        if (evenement.preventDefault) evenement.preventDefault();
+                        jlTouche(code, false);
+                    };
+                    bouton.addEventListener('pointerdown', appuyer);
+                    bouton.addEventListener('pointerup', relacher);
+                    bouton.addEventListener('pointerleave', relacher);
+                    bouton.addEventListener('pointercancel', relacher);
+                    // Au clavier, le bouton se maintient avec la barre d'espace
+                    // ou Entrée : sans cela, le jeu serait injouable sans souris.
+                    bouton.addEventListener('keydown', function (evenement) {
+                        if (evenement.key === ' ' || evenement.key === 'Enter') {
+                            evenement.preventDefault();
+                            jlTouche(code, true);
+                        }
+                    });
+                    bouton.addEventListener('keyup', function (evenement) {
+                        if (evenement.key === ' ' || evenement.key === 'Enter') {
+                            evenement.preventDefault();
+                            jlTouche(code, false);
+                        }
+                    });
+                });
+            }
+        }
+
+        // ── Montage ─────────────────────────────────────────────────────────
+
+        function livraisonInitialiser() {
+            const racine = livraisonRacine();
+            if (!racine) return false;
+            LIVRAISON.dom = {
+                racine: racine,
+                canvas: document.getElementById('jl-canvas'),
+                jauge: document.getElementById('jl-jauge'),
+                barre: document.getElementById('jl-barre'),
+                batterie: document.getElementById('jl-batterie'),
+                assistance: document.getElementById('jl-assistance'),
+                tournee: document.getElementById('jl-tournee'),
+                colis: document.getElementById('jl-colis'),
+                argent: document.getElementById('jl-argent'),
+                chrono: document.getElementById('jl-chrono'),
+                score: document.getElementById('jl-score'),
+                objectif: document.getElementById('jl-objectif'),
+                pastille: document.getElementById('jl-pastille'),
+                dialogue: document.getElementById('jl-dialogue'),
+                statut: document.getElementById('jl-statut'),
+                voile: document.getElementById('jl-voile'),
+                voileTitre: document.getElementById('jl-voile-titre'),
+                voileTexte: document.getElementById('jl-voile-texte'),
+                boutique: document.getElementById('jl-boutique'),
+                articles: document.getElementById('jl-articles'),
+                argentBoutique: document.getElementById('jl-argent-boutique'),
+                boutonAction: document.getElementById('jl-btn-action'),
+                pause: document.getElementById('jl-btn-pause'),
+                rejouer: document.getElementById('jl-btn-rejouer'),
+                pave: document.getElementById('jl-pave')
+            };
+            livraisonDonnees();
+            livraisonLierEntrees();
+            livraisonReinitialiser();
+            return true;
+        }
+
+        /* API de contrôle : jouer sans souris. Elle permet à un contrôle
+           automatique de dérouler une tournée (déplacer, livrer, vérifier
+           l'état) au lieu de simuler des frappes au hasard. */
+        window.JeuLivraison = {
+            etat: function () {
+                const etat = LIVRAISON.etat;
+                if (!livraisonRacine() || !etat) return null;
+                return {
+                    present: true,
+                    voile: LIVRAISON.voile,
+                    pause: LIVRAISON.pause,
+                    enCours: etat.enCours,
+                    tournee: etat.tournee,
+                    tournees: etat.tournees,
+                    colisPris: etat.colisPris,
+                    colisLivres: etat.colisLivres,
+                    colisTotal: etat.colisTotal,
+                    batterie: Math.round(etat.batterie),
+                    batterieMax: etat.batterieMax,
+                    assistance: etat.assistance,
+                    chrono: Math.round(etat.chrono),
+                    argent: Math.round(etat.argent),
+                    score: etat.score,
+                    ameliorations: etat.ameliorations.slice(),
+                    destinations: etat.zones.map(function (zone) {
+                        return { nom: zone.nom, lieu: zone.lieu, livree: zone.livree };
+                    }),
+                    velo: { x: Math.round(etat.velo.x), y: Math.round(etat.velo.y) }
+                };
+            },
+            demarrer: function () { livraisonDemarrer(); return this.etat(); },
+            action: function () { livraisonAction(); return this.etat(); },
+            pause: function () { livraisonBasculerPause(); return this.etat(); },
+            reinitialiser: function () { livraisonReinitialiser(); return this.etat(); },
+            acheter: function (cle) { livraisonAcheter(cle); return this.etat(); },
+            /* Téléporte le vélo : sert à dérouler une tournée dans un contrôle,
+               et ne peut pas fausser le jeu (les collisions et les ramassages
+               sont recalculés à la frame suivante). */
+            placer: function (x, y) {
+                if (!LIVRAISON.etat) return false;
+                LIVRAISON.etat.velo.x = Math.max(0, Math.min(JL_LARGEUR, Number(x) || 0));
+                LIVRAISON.etat.velo.y = Math.max(0, Math.min(JL_HAUTEUR, Number(y) || 0));
+                return true;
+            },
+            /* Avance la simulation sans attendre les frames : un contrôle n'a
+               pas à dépendre de la cadence d'affichage de la machine. */
+            avancer: function (secondes) {
+                const pas = Math.max(0, Number(secondes) || 0);
+                let reste = pas;
+                while (reste > 0) {
+                    const tranche = Math.min(0.05, reste);
+                    livraisonAvancer(tranche);
+                    reste -= tranche;
+                }
+                livraisonDessiner();
+                return this.etat();
+            },
+            touche: function (code, enfoncee) { jlTouche(code, !!enfoncee); return this.etat(); },
+            lieux: {
+                depot: { x: JL_CARTE.depot.x, y: JL_CARTE.depot.y },
+                destinations: JL_CARTE.lieux
+            }
+        };
+
+        // ══════════════════════════════════════════════════════════════════
         //  RÉINITIALISATION DES ATELIERS ET ANIMATIONS N2
         //
         //  « Recommencer » doit remettre les exercices de découverte et les
@@ -9128,6 +11497,8 @@ window.__EFFETS_INTERACTIONS__={};
                 // sinon l'atelier restauré croirait avoir déjà ses réponses.
                 delete entree.bloc.__atelier;
                 delete entree.bloc.__reseau;
+                delete entree.bloc.__schema;
+                entree.bloc.__schemaSignature = null;
                 entree.bloc.innerHTML = entree.html;
             });
             if (window.__AROUTE) {
@@ -9149,11 +11520,26 @@ window.__EFFETS_INTERACTIONS__={};
             if (document.getElementById('puzzle-bonus')) {
                 puzzleReinitialiser();
             }
+            // Le jeu de livraison du bonus repart de l'accueil : ni tournée en
+            // cours, ni boucle d'animation. Sans cela, « Recommencer »
+            // laisserait un professeur à mi-parcours sur son vélo.
+            if (typeof livraisonReinitialiser === 'function' && livraisonRacine()) {
+                livraisonReinitialiser();
+            }
+            // Le schéma à diagnostiquer : les câbles restaurés par innerHTML
+            // ont perdu leurs écouteurs, et l'état de jeu est oublié juste
+            // au-dessus. On retrace donc les câbles, sans quoi l'atelier
+            // reviendrait à l'écran vide de tout trait.
+            if (typeof schemaReinitialiser === 'function') {
+                schemaReinitialiser();
+            }
             mettreAJourSuiteN2();
         }
 
         cablageInitialiser();
         puzzleInitialiser();
+        livraisonInitialiser();
+        schemaInitialiser();
         memoriserAteliersInitiaux();
         mettreAJourSuiteN2();
 
@@ -9247,6 +11633,19 @@ window.__EFFETS_INTERACTIONS__={};
             "reformuler la question/l'énoncé",
             "régénérer l'exercice en entier",
             "changer le type d'exercice"
+        ];
+        // Modèles de commentaire : des phrases génériques, à compléter par le
+        // professeur. Elles ne nomment NI niveau NI identifiant — le panneau les
+        // déduit déjà de l'onglet et de l'élément sélectionnés. C'est ce qui
+        // remplace les exemples figés, qui désignaient toujours un autre niveau
+        // que celui qu'on corrigeait.
+        var MODELES_COMMENTAIRE = [
+            {libelle: 'énoncé pas clair', texte: "L'énoncé n'est pas clair : reformule-le plus simplement, sans jargon."},
+            {libelle: 'pas ce que je veux', texte: "Ça ne correspond pas à ce que je veux : <ce que j'attends, en une phrase>."},
+            {libelle: 'élève bloqué', texte: "L'élève est bloqué ici : il devrait pouvoir <ce qu'il doit réussir à faire>."},
+            {libelle: 'trop long', texte: "C'est trop long et illisible : raccourcis ce texte, l'essentiel seul compte."},
+            {libelle: 'à retirer', texte: "Retire ce texte : il n'apporte rien à l'élève."},
+            {libelle: 'ajouter des choix', texte: "Ajoute <nombre> propositions de plus, du même niveau de difficulté."}
         ];
         // Chaque série de réglages commence par « ne rien changer » : le prompt
         // ne contient que ce que le professeur a réellement choisi.
@@ -9563,6 +11962,31 @@ window.__EFFETS_INTERACTIONS__={};
             zoneCommentaire.addEventListener('input', majPrompt);
             blocCom.appendChild(libCom);
             blocCom.appendChild(zoneCommentaire);
+            // Un modèle remplit un commentaire vide, s'ajoute à la suite sinon :
+            // rien de ce qui est déjà écrit n'est effacé.
+            var rangeeModeles = document.createElement('div');
+            rangeeModeles.className = 'ost-modeles';
+            rangeeModeles.setAttribute('role', 'group');
+            rangeeModeles.setAttribute('aria-label', 'Modèles de commentaire');
+            MODELES_COMMENTAIRE.forEach(function (modele) {
+                var bouton = document.createElement('button');
+                bouton.type = 'button';
+                bouton.className = 'ost-modele';
+                bouton.textContent = modele.libelle;
+                bouton.title = 'Insère « ' + modele.texte + ' » — à compléter.';
+                bouton.addEventListener('click', function () {
+                    var actuel = zoneCommentaire.value.trim();
+                    zoneCommentaire.value = actuel === '' ? modele.texte : actuel + ' ' + modele.texte;
+                    zoneCommentaire.dispatchEvent(new Event('input'));
+                    zoneCommentaire.focus();
+                });
+                rangeeModeles.appendChild(bouton);
+            });
+            blocCom.appendChild(rangeeModeles);
+            var legendeModeles = document.createElement('p');
+            legendeModeles.className = 'ost-modeles-legende';
+            legendeModeles.textContent = "Un modèle s'ajoute au commentaire : complétez les <…> avant de copier le prompt.";
+            blocCom.appendChild(legendeModeles);
             panneau.appendChild(blocCom);
 
             var actions = document.createElement('div');
