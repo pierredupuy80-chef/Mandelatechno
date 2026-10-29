@@ -69,29 +69,23 @@ table.roles td { padding: 5pt 8pt 5pt 0; border-bottom: 0.8pt solid #eef2f8;
 table.roles td:first-child { font-weight: 700; color: #12233d; white-space: nowrap; }
 table.roles td .ic { display: inline-block; width: 16pt; }
 
-/* ---------- schéma du dedans (représentation, pas une photo) ---------- */
-.schema-boitier { border: 2.4pt solid #1f4fa8; border-radius: 7pt; background: #f7faff;
-                  padding: 12pt; position: relative; }
-.schema-boitier .titre-schema { position: absolute; top: -9pt; left: 12pt;
-                  background: #ffffff; padding: 0 5pt; font-size: 8.4pt; font-weight: 800;
-                  letter-spacing: 0.1em; text-transform: uppercase; color: #1f4fa8; }
-.carte { border: 2pt solid #7d8ea6; border-radius: 5pt; background: #ffffff; padding: 7pt; }
-.carte .nom-carte { font-size: 7.6pt; font-weight: 800; letter-spacing: 0.09em;
-                    text-transform: uppercase; color: #7d8ea6; margin-bottom: 5pt; }
-.bloc { border-radius: 4pt; padding: 6pt 8pt; font-size: 9.6pt; line-height: 1.25;
-        color: #12233d; background: #eaf1fb; border: 1.2pt solid #b9cdea; }
-.bloc b { display: block; font-size: 10.2pt; }
-.bloc small { display: block; color: #4a5f7d; font-size: 8.4pt; line-height: 1.25; }
-.bloc.cpu { background: #fde8dd; border-color: #e3622d; }
-.bloc.ram { background: #e7f6ec; border-color: #2f9e53; }
-.bloc.gpu { background: #efe9fb; border-color: #6f4bd0; }
-.bloc.disque { background: #fff4d6; border-color: #c99612; }
-.bloc.alim { background: #eef0f3; border-color: #8695ad; }
-.bus { height: 6pt; border-radius: 3pt; background: linear-gradient(90deg,#e3622d,#1f4fa8);
-       margin: 6pt 0; position: relative; }
-.bus span { position: absolute; right: 0; top: -13pt; font-size: 8pt; font-weight: 700;
-            color: #1f4fa8; letter-spacing: 0.04em; }
-.grille-dedans { display: grid; grid-template-columns: 1fr 1fr; gap: 7pt; }
+/* ---------- le dedans, en photo (les zones colorées sont dans l'image) ---------- */
+.dedans-photo { flex: 1; display: flex; gap: 0.32in; min-height: 0; align-items: stretch; }
+.photo-dedans { flex: 1.15; margin: 0; display: flex; align-items: center;
+                justify-content: center; min-width: 0; min-height: 0; }
+.photo-dedans img { max-width: 100%; max-height: 100%; width: auto; height: auto; display: block;
+                    border-radius: 6pt; border: 1pt solid #dce6f7; }
+.legende-dedans { flex: 1; list-style: none; margin: 0; padding: 0; min-width: 0;
+                  display: flex; flex-direction: column; justify-content: center; gap: 4.5pt; }
+.legende-dedans li { display: grid; grid-template-columns: auto 1fr; column-gap: 7pt;
+                     align-items: center; }
+.legende-dedans .pastille { grid-row: span 2; width: 21pt; height: 21pt; border-radius: 50%;
+                            color: #ffffff; font-weight: 800; font-size: 10.5pt;
+                            display: flex; align-items: center; justify-content: center; }
+.legende-dedans b { font-size: 11pt; color: #12233d; line-height: 1.2; }
+.legende-dedans small { font-size: 9pt; color: #4a5f7d; line-height: 1.25; }
+.legende-dedans .note { grid-column: 1 / -1; font-size: 8.4pt; color: #8695ad;
+                        margin-top: 5pt; line-height: 1.35; }
 
 /* ---------- trois couches (matériel / OS / applications) ---------- */
 .couches { display: flex; flex-direction: column; gap: 6pt; }
@@ -143,7 +137,16 @@ table.roles td .ic { display: inline-block; width: 16pt; }
 @media print {
   .barre { display: none; }
   body { background: #ffffff; }
-  .slide { display: flex !important; }
+  /* Le script de navigation pose sur chaque diapositive un transform
+     translate(-50%,-50%) scale(k) calculé pour la fenêtre : à l'impression,
+     ce décalage reste et rogne la page. On le neutralise ici. */
+  .slide { display: flex !important; transform: none !important;
+           top: auto !important; left: auto !important;
+           page-break-after: always; break-after: page; }
+  /* La barre de navigation et le panneau de correctif suivent les
+     diapositives dans le corps : sans cette règle, un saut de page final
+     produit une page blanche. */
+  .slide:last-of-type { page-break-after: auto; break-after: auto; }
 }
 
 @media screen {
@@ -273,27 +276,27 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
   </div>
 </section>
 
-<!-- ============ 4 · séance 1 : schéma du dedans ============ -->
-<section class="slide" aria-label="Séance 1 — schéma des composants internes">
+<!-- ============ 4 · séance 1 : le dedans, en photo ============ -->
+<section class="slide" aria-label="Séance 1 — photo des composants internes, zones colorées">
   <header class="tete"><span class="marque">Séance 1</span><span class="etape">Les composants internes</span></header>
-  <div class="corps" style="gap:10pt">
-    <h1 style="margin-bottom:2pt">Le dedans, en un schéma</h1>
-    <p class="chapo" style="margin-bottom:6pt">Représentation schématique — ce n'est pas une photo : les formes sont simplifiées pour montrer les liaisons.</p>
-    <div class="schema-boitier">
-      <span class="titre-schema">Boîtier</span>
-      <div class="carte">
-        <p class="nom-carte">Carte mère — elle porte et relie tout</p>
-        <div class="grille-dedans">
-          <div class="bloc cpu"><b>Processeur</b><small>Exécute les instructions, fait les calculs</small></div>
-          <div class="bloc ram"><b>Mémoire vive (RAM)</b><small>Travail en cours, effacée hors tension</small></div>
-          <div class="bloc gpu"><b>Carte graphique</b><small>Calcule l'image envoyée à l'écran</small></div>
-          <div class="bloc disque"><b>Disque dur ou SSD</b><small>Conserve fichiers et programmes</small></div>
-        </div>
-        <div class="bus"><span>Bus de données — les informations circulent ici</span></div>
-        <div class="grille-dedans" style="grid-template-columns:1fr">
-          <div class="bloc alim"><b>Alimentation</b><small>Reçoit le 230 V et fournit les tensions aux cartes — c'est l'énergie, pas l'information</small></div>
-        </div>
-      </div>
+  <div class="corps">
+    <h1 style="margin-bottom:2pt">Le dedans, en photo</h1>
+    <p class="chapo" style="margin-bottom:8pt">Une tour ouverte, photographiée : sept zones numérotées, à retrouver dans la légende.</p>
+    <div class="dedans-photo">
+      <figure class="photo-dedans">
+        <img src="assets/diaporama/interieur-ordinateur-zones.webp" width="1200" height="1041"
+             alt="Intérieur d'une tour d'ordinateur ouverte. Sept zones colorées et numérotées désignent la carte mère (1), le processeur (2), la mémoire vive (3), la carte graphique (4), le disque SSD (5), l'alimentation (6) et les câbles (7).">
+      </figure>
+      <ol class="legende-dedans" aria-label="Légende des zones numérotées de la photo">
+        <li><span class="pastille" style="background:#7d8ea6">1</span><b>Carte mère</b><small>elle porte et relie tout</small></li>
+        <li><span class="pastille" style="background:#e3622d">2</span><b>Processeur</b><small>exécute les instructions, fait les calculs</small></li>
+        <li><span class="pastille" style="background:#2f9e53">3</span><b>Mémoire vive (RAM)</b><small>le travail en cours, effacée hors tension</small></li>
+        <li><span class="pastille" style="background:#6f4bd0">4</span><b>Carte graphique</b><small>calcule l'image envoyée à l'écran</small></li>
+        <li><span class="pastille" style="background:#c99612">5</span><b>Disque dur ou SSD</b><small>conserve fichiers et programmes</small></li>
+        <li><span class="pastille" style="background:#8695ad">6</span><b>Alimentation</b><small>fournit l'énergie aux cartes — l'énergie, pas l'information</small></li>
+        <li><span class="pastille" style="background:#1f4fa8">7</span><b>Bus et câbles</b><small>les informations circulent ici</small></li>
+        <li class="note">Sur une photo, les liaisons se devinent mal : le tableau « Qui fait quoi » de la diapositive suivante donne le rôle exact de chaque composant.</li>
+      </ol>
     </div>
   </div>
 </section>
