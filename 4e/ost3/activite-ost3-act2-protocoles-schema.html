@@ -3437,6 +3437,86 @@
             flex: 1 1 160px;
         }
 
+        /* ── Atelier « bits » : écrire un mot binaire aux flèches haut/bas ──
+           Une colonne par bit : flèche haut, chiffre, flèche bas. Les deux
+           flèches font 44 px (cible tactile) et le chiffre reste lisible de
+           loin : c'est la seule chose que l'élève ait à lire. */
+        .atelier-bits {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: .45rem;
+            margin: .6rem 0;
+        }
+
+        .atelier-bit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .25rem;
+        }
+
+        .atelier-fleche {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            min-width: 44px;
+            min-height: 44px;
+            background: #fff;
+            border: 2px solid #dce3ed;
+            border-radius: 9px;
+            color: var(--couleur-texte);
+            font: inherit;
+            font-size: .95rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+        }
+
+        .atelier-fleche:hover {
+            border-color: #2e74b5;
+            background: #eaf1f8;
+        }
+
+        .atelier-fleche:focus-visible {
+            outline: 3px solid #1a4f7a;
+            outline-offset: 2px;
+        }
+
+        .atelier-fleche:disabled {
+            opacity: .5;
+            cursor: default;
+        }
+
+        .atelier-bit-case {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            min-height: 48px;
+            border: 2px solid #b9c8d8;
+            border-radius: 9px;
+            background: #f4f8fc;
+            color: var(--couleur-texte);
+            font-size: 1.45rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            transition: background .2s, border-color .2s, color .2s;
+        }
+
+        .atelier-bit-case.allume {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            color: #1b3d1e;
+        }
+
+        .atelier-bit-poids {
+            font-size: .72rem;
+            color: var(--couleur-texte-leger);
+            font-variant-numeric: tabular-nums;
+        }
+
         .atelier-drone-cadre {
             display: flex;
             justify-content: center;
@@ -4341,7 +4421,7 @@
         :where(html[data-theme="sombre"]) .probleme-ouvert,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 4){background-color:#2a2550}
         :where(html[data-theme="sombre"]) .compteur-selection,:where(html[data-theme="sombre"]) .atelier-carte h4,:where(html[data-theme="sombre"]) .atelier-compteur,:where(html[data-theme="sombre"]) .rotors-nez,:where(html[data-theme="sombre"]) .atelier-verdict,:where(html[data-theme="sombre"]) .env-catalogue .env-mesure,:where(html[data-theme="sombre"]) .env-table caption,:where(html[data-theme="sombre"]) .env-note-2 .env-mot,:where(html[data-theme="sombre"]) .atelier-mesure,:where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd}
         :where(html[data-theme="sombre"]) .choix-contrainte,:where(html[data-theme="sombre"]) .curseur-contrainte select,:where(html[data-theme="sombre"]) .tuile-deplacer,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea,:where(html[data-theme="sombre"]) .bilan-n4-resultat textarea:focus,:where(html[data-theme="sombre"]) .comparateur-outils select{border:2px solid #3a4a63;background-color:#1c2534}
-        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .schema-lien:focus-visible,:where(html[data-theme="sombre"]) .montage-composant:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
+        :where(html[data-theme="sombre"]) .choix-contrainte:focus-visible,:where(html[data-theme="sombre"]) .noeud-reseau:focus-visible,:where(html[data-theme="sombre"]) .atelier-jeton:focus-visible,:where(html[data-theme="sombre"]) .atelier-option:focus-visible,:where(html[data-theme="sombre"]) .rotor-btn:focus-visible,:where(html[data-theme="sombre"]) .reseau-appareil:focus-visible,:where(html[data-theme="sombre"]) .schema-lien:focus-visible,:where(html[data-theme="sombre"]) .montage-composant:focus-visible,:where(html[data-theme="sombre"]) .atelier-fleche:focus-visible,:where(html[data-theme="sombre"]) .env-interacteur:focus-visible{outline:3px solid #5f9bd8}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="juste"] .choix-contrainte,:where(html[data-theme="sombre"]) .etape-selection-explication,:where(html[data-theme="sombre"]) .solution-personnelle,:where(html[data-theme="sombre"]) .cablage-bilan.succes{background-color:#142c21}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="faux"] .choix-contrainte,:where(html[data-theme="sombre"]) .cablage-bilan.echec,:where(html[data-theme="sombre"]) .puzzle-slot.faux,:where(html[data-theme="sombre"]) .puzzle-bilan.echec{background-color:#2b1a1c}
         :where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-contrainte{border-color:#f59e0b;background-color:#2c2415}
@@ -4370,9 +4450,9 @@
         :where(html[data-theme="sombre"]) .progression-actuelle{background:linear-gradient(90deg, var(--couleur-primaire-fond), var(--couleur-secondaire-fond))}
         :where(html[data-theme="sombre"]) .ateliers-n2{border-top:2px dashed #2b3a52}
         :where(html[data-theme="sombre"]) .atelier-carte{background:#1c2534;border:1px solid #2b3a52;border-left:5px solid #3b82f6}
-        :where(html[data-theme="sombre"]) .atelier-jeton,:where(html[data-theme="sombre"]) .atelier-option,:where(html[data-theme="sombre"]) .reseau-appareil,:where(html[data-theme="sombre"]) .montage-composant,:where(html[data-theme="sombre"]) .montage-machine,:where(html[data-theme="sombre"]) .env-interacteur{background:#1c2534;border:2px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .atelier-jeton,:where(html[data-theme="sombre"]) .atelier-option,:where(html[data-theme="sombre"]) .reseau-appareil,:where(html[data-theme="sombre"]) .montage-composant,:where(html[data-theme="sombre"]) .montage-machine,:where(html[data-theme="sombre"]) .atelier-fleche,:where(html[data-theme="sombre"]) .env-interacteur{background:#1c2534;border:2px solid #2b3a52}
         :where(html[data-theme="sombre"]) .atelier-jeton:hover,:where(html[data-theme="sombre"]) .atelier-option:hover,:where(html[data-theme="sombre"]) .reseau-appareil:hover,:where(html[data-theme="sombre"]) .montage-composant:hover,:where(html[data-theme="sombre"]) .rotor-btn:hover,:where(html[data-theme="sombre"]) .env-interacteur:hover{border-color:#3b82f6}
-        :where(html[data-theme="sombre"]) .atelier-jeton.choisi,:where(html[data-theme="sombre"]) .atelier-option.choisi,:where(html[data-theme="sombre"]) .reseau-appareil.choisi,:where(html[data-theme="sombre"]) .montage-composant.choisi,:where(html[data-theme="sombre"]) .env-interacteur.choisi{border-color:#3b82f6;background:#1a2740}
+        :where(html[data-theme="sombre"]) .atelier-jeton.choisi,:where(html[data-theme="sombre"]) .atelier-option.choisi,:where(html[data-theme="sombre"]) .reseau-appareil.choisi,:where(html[data-theme="sombre"]) .montage-composant.choisi,:where(html[data-theme="sombre"]) .atelier-fleche:hover,:where(html[data-theme="sombre"]) .env-interacteur.choisi{border-color:#3b82f6;background:#1a2740}
         :where(html[data-theme="sombre"]) .atelier-jeton.apparie,:where(html[data-theme="sombre"]) .atelier-option.correcte,:where(html[data-theme="sombre"]) .reseau-appareil.relie,:where(html[data-theme="sombre"]) .rotor-btn.anti-couple{border-color:#22c55e;background:#16301f}
         :where(html[data-theme="sombre"]) .atelier-jeton.erreur,:where(html[data-theme="sombre"]) .atelier-option.erreur,:where(html[data-theme="sombre"]) .atelier-option.fausse,:where(html[data-theme="sombre"]) .reseau-appareil.erreur,:where(html[data-theme="sombre"]) .rotor-btn.mauvais-sens{border-color:#ef4444;background:#2b1a1c}
         :where(html[data-theme="sombre"]) .atelier-retour.succes{background:#16301f;color:#86efac}
@@ -4394,8 +4474,9 @@
         :where(html[data-theme="sombre"]) .montage-reserve{background:#111a27;border:2px dashed #55657f}
         :where(html[data-theme="sombre"]) .montage-etape.echec,:where(html[data-theme="sombre"]) .env-note-0 .env-mot,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.mauvaise .statut-action,:where(html[data-theme="sombre"]) .bilan-verdict[data-niveau="alerte"]{color:#fca5a5}
         :where(html[data-theme="sombre"]) .atelier-slot{border:2px dashed #3a4a63;color:#b6c4d6}
-        :where(html[data-theme="sombre"]) .atelier-slot.rempli{border-color:#22c55e;background:#16301f;color:#86efac}
+        :where(html[data-theme="sombre"]) .atelier-slot.rempli,:where(html[data-theme="sombre"]) .atelier-bit-case.allume{border-color:#22c55e;background:#16301f;color:#86efac}
         :where(html[data-theme="sombre"]) .atelier-marqueur{color:#9ecbfd;background:#1a2740}
+        :where(html[data-theme="sombre"]) .atelier-bit-case{border:2px solid #3a4a63;background:#16202e}
         :where(html[data-theme="sombre"]) .atelier-drone-cadre,:where(html[data-theme="sombre"]) .atelier-formule,:where(html[data-theme="sombre"]) .env-table thead th,:where(html[data-theme="sombre"]) .atelier.curseurs,:where(html[data-theme="sombre"]) .ost-fermer,:where(html[data-theme="sombre"]) .ost-modele:hover{background:#16202e}
         :where(html[data-theme="sombre"]) .rotor-btn{border:3px solid #3a4a63;background:#1c2534;color:#9ecbfd}
         :where(html[data-theme="sombre"]) .atelier-jauge-cadre{background:#26334a}
@@ -5160,6 +5241,15 @@
                             data-min="40"
                             placeholder="Ex. : j'ai placé un hub Zigbee par pièce car les capteurs sont sur batterie et le Zigbee est basse consommation. La box relie les deux hubs au cloud pour le pilotage à distance depuis le smartphone. Mon schéma respecte la norme CE…"
                             aria-label="Solutions imaginées"></textarea>
+                    </div>
+                    <div class="etape-conception">
+                        <h4>Étape 4 : Concevoir l'interface de pilotage des objets connectés</h4>
+                        <p>Imaginez l'interface de pilotage des objets connectés : le smartphone ou la tablette sur lequel l'usager appuie pour allumer, éteindre ou programmer les objets. Décrivez ce qu'il voit à l'écran (boutons, voyants, messages) et ce que chaque action déclenche sur votre schéma. Expliquez aussi comment l'interface prévient l'usager en cas de panne d'un objet ou d'un hub.</p>
+                        <textarea id="solution-choisie"
+                            data-conception-texte
+                            data-min="40"
+                            placeholder="Ex. : une page « Salon » avec un bouton pour l'ampoule, un voyant qui signale une présence détectée, un message d'alerte quand le hub est débranché. Appuyer sur le bouton de l'ampoule envoie l'ordre au cloud, puis à la box Wi-Fi, au hub Zigbee et enfin à l'ampoule…"
+                            aria-label="Description de l'interface de pilotage des objets connectés"></textarea>
                     </div>
                     <!-- ETAPES-CONCEPTION-N4 : FIN -->
 
@@ -7865,6 +7955,60 @@
                 atelierAfficherExplication(carte);
             } else {
                 atelierRetour(carte, 'La chaîne n\'est pas finie : ' + etat.rang + ' maillon(s) placé(s) sur ' + slots.length + '.', 'info');
+            }
+        }
+
+        // ── Type « bits » : écrire un mot binaire, un bit à la fois ────────
+        // Aucun indice visuel : la page n'affiche jamais la valeur décimale du
+        // mot en cours, ne marque pas les bits faux et ne dit pas où l'on en
+        // est. Seul le bouton de vérification rend la valeur du mot — c'est
+        // l'élève qui fait la conversion, pas l'interface.
+        function atelierBitChiffrer(bouton, chiffre) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            if (contexte.etat.verrouille) return;
+            const colonne = bouton.closest ? bouton.closest('.atelier-bit') : null;
+            if (!colonne) return;
+            const boite = colonne.querySelector('.atelier-bit-case');
+            if (!boite) return;
+            const valeur = chiffre === '1' ? '1' : '0';
+            boite.textContent = valeur;
+            boite.classList.toggle('allume', valeur === '1');
+            // Le verdict précédent portait sur un autre mot : il est effacé,
+            // sinon il resterait à l'écran comme une réponse juste ou fausse.
+            atelierRetour(carte, '', '');
+        }
+
+        function atelierMotBits(carte) {
+            const boites = carte.querySelectorAll('.atelier-bit-case');
+            const chiffres = [];
+            let valeur = 0;
+            boites.forEach(function (boite) {
+                const bit = boite.textContent.trim() === '1' ? '1' : '0';
+                chiffres.push(bit);
+                if (bit === '1') valeur += parseInt(boite.getAttribute('data-poids'), 10) || 0;
+            });
+            return { mot: chiffres.join(''), valeur: valeur, nombre: boites.length };
+        }
+
+        function atelierVerifierBits(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const etat = contexte.etat;
+            const cible = parseInt(carte.getAttribute('data-cible'), 10);
+            const mot = atelierMotBits(carte);
+            if (mot.valeur === cible) {
+                etat.verrouille = true;
+                carte.querySelectorAll('.atelier-fleche').forEach(function (fleche) {
+                    fleche.disabled = true;
+                });
+                atelierRetour(carte, '🎉 Le mot ' + mot.mot + ' vaut bien ' + cible + '.', 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, '❌ Le mot ' + mot.mot + ' vaut ' + mot.valeur +
+                    ', pas ' + cible + '. Change les bits et réessaie.', 'echec');
             }
         }
 
