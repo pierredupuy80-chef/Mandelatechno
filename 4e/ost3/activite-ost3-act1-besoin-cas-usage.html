@@ -5420,6 +5420,400 @@
 
 
 
+<section class="uml-diagrammes" data-uml-n4="1">
+                    <h3>📊 Modéliser le besoin avant de concevoir</h3>
+        <p class="uml-intro">Avant de choisir une solution, on modélise le besoin avec deux outils de représentation (fiche OST2b) : le diagramme de cas d'utilisation, qui montre QUI fait QUOI sur le système, et le diagramme de séquence, qui montre l'ORDRE des échanges. Trace chaque diagramme, puis vérifie-le : une solution ne se choisit bien qu'une fois le besoin bien modélisé.</p>
+
+                    <article class="uml-exercice" id="uml-cas-atelier"
+                             data-conception-atelier="1" data-atelier-valide="0"
+                             data-conception-consigne="Termine le diagramme de cas d'utilisation, puis vérifie-le avant de finaliser la conception.">
+                        <h4>🟦 Tracer le diagramme de cas d'utilisation</h4>
+                        <p class="uml-consigne">Clique un acteur (à gauche), puis un cas d'usage (dans le cadre) pour tracer l'association qui les relie. Clique une association déjà tracée pour la retirer.</p>
+                        <div class="uml-cas-plateau" id="uml-cas-plateau"></div>
+                        <div class="uml-actions">
+                            <button type="button" onclick="umlCasVerifier()">Vérifier mon diagramme</button>
+                            <button type="button" onclick="umlCasEffacer()">Effacer les associations</button>
+                        </div>
+                        <p class="uml-retour" id="uml-cas-retour" aria-live="polite"></p>
+                        <p class="uml-explication cache" id="uml-cas-explication">L'habitant est l'usager qui commande le système : il réalise les cas d'usage « Allumer l'éclairage à distance » et « Régler l'intensité ». Le capteur de présence est un autre objet (interacteur de la fiche OST2a) qui réalise « Détecter une présence ». Chaque association relie un acteur au cas d'usage qu'il déclenche.</p>
+                    </article>
+
+                    <article class="uml-exercice" id="uml-seq-atelier"
+                             data-conception-atelier="1" data-atelier-valide="0"
+                             data-conception-consigne="Termine le diagramme de séquence, puis vérifie-le avant de finaliser la conception.">
+                        <h4>🟩 Tracer le diagramme de séquence</h4>
+                        <p class="uml-consigne">Remets les messages dans l'ordre chronologique avec les boutons ▲ et ▼ : le premier échange en haut, le dernier en bas. Les flèches entre les lignes de vie se tracent automatiquement selon l'ordre choisi.</p>
+                        <div class="uml-seq-plateau" id="uml-seq-plateau"></div>
+                        <div class="uml-actions">
+                            <button type="button" onclick="umlSeqVerifier()">Vérifier le diagramme de séquence</button>
+                        </div>
+                        <p class="uml-retour" id="uml-seq-retour" aria-live="polite"></p>
+                        <p class="uml-explication cache" id="uml-seq-explication">Chronologie : l'usager appuie sur l'application (1), l'application envoie l'ordre à la box en Wi-Fi (2), la box le transmet à l'ampoule (3), l'ampoule s'allume et l'usager voit la lumière (4). Le trait de vie de chaque interacteur descend, et chaque flèche relie l'émetteur au destinataire dans le bon ordre.</p>
+                    </article>
+
+                    <script type="application/json" id="uml-cas-donnees">{"acteurs": [{"cle": "habitant", "nom": "Habitant", "icone": "👤"}, {"cle": "capteur", "nom": "Capteur de présence", "icone": "📡"}], "cas": [{"cle": "allumer", "nom": "Allumer l'éclairage à distance"}, {"cle": "regler", "nom": "Régler l'intensité"}, {"cle": "detecter", "nom": "Détecter une présence"}], "associations": [{"acteur": "habitant", "cas": "allumer"}, {"acteur": "habitant", "cas": "regler"}, {"acteur": "capteur", "cas": "detecter"}]}</script>
+                    <script type="application/json" id="uml-seq-donnees">{"lignesVie": [{"cle": "usager", "nom": "Usager"}, {"cle": "application", "nom": "Application (smartphone)"}, {"cle": "box", "nom": "Box Wi-Fi"}, {"cle": "ampoule", "nom": "Ampoule LED"}], "messages": [{"cle": "m4", "depuis": "ampoule", "vers": "usager", "texte": "La lumière s'allume", "ordre": 4}, {"cle": "m2", "depuis": "application", "vers": "box", "texte": "Envoie l'ordre en Wi-Fi", "ordre": 2}, {"cle": "m1", "depuis": "usager", "vers": "application", "texte": "Appuie sur « allumer »", "ordre": 1}, {"cle": "m3", "depuis": "box", "vers": "ampoule", "texte": "Transmet l'ordre", "ordre": 3}]}</script>
+                    <style>.uml-diagrammes { margin: var(--espacement-lg) 0; }
+.uml-diagrammes .uml-intro { margin-bottom: var(--espacement-md); color: var(--couleur-texte-leger); }
+.uml-exercice { padding: var(--espacement-md); border: 2px solid #cbd5e1; border-radius: var(--rayon-bordure); background-color: var(--couleur-fond); margin-bottom: var(--espacement-lg); }
+.uml-exercice h4 { color: var(--couleur-secondaire); margin-bottom: var(--espacement-sm); }
+.uml-consigne { margin-bottom: var(--espacement-sm); color: var(--couleur-texte-leger); font-size: .95rem; }
+.uml-cas-plateau { position: relative; min-height: 300px; background: #ffffff; border: 2px solid #64748b; border-radius: var(--rayon-bordure); overflow: hidden; padding: var(--espacement-sm); }
+.uml-cas-frontiere { float: left; width: 60%; min-height: 260px; border: 2px dashed var(--couleur-secondaire); border-radius: var(--rayon-bordure); padding: var(--espacement-sm); box-sizing: border-box; }
+.uml-cas-frontiere-titre { font-size: .8rem; color: var(--couleur-texte-leger); margin: 0 0 var(--espacement-sm); text-align: center; }
+.uml-cas-acteurs { float: left; width: 38%; padding-left: var(--espacement-sm); box-sizing: border-box; }
+.uml-noeud { display: block; cursor: pointer; border: 2px solid #334155; background: #ffffff; color: var(--couleur-texte); font-size: .9rem; }
+.uml-noeud:focus { outline: 3px solid var(--couleur-primaire); }
+.uml-noeud.selectionne { outline: 3px solid var(--couleur-secondaire); border-color: var(--couleur-secondaire); }
+.uml-cas { width: 88%; margin: 10px auto; padding: 10px; border-radius: 999px; text-align: center; }
+.uml-acteur { width: 100%; margin: 10px 0; padding: 10px; border-radius: var(--rayon-bordure); text-align: left; }
+.uml-cas-fils { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.uml-fil { stroke: #334155; stroke-width: 3; pointer-events: stroke; cursor: pointer; fill: none; }
+.uml-fil.juste { stroke: var(--couleur-succes); }
+.uml-fil.faux { stroke: var(--couleur-alerte); stroke-dasharray: 8 6; }
+.uml-actions { margin-top: var(--espacement-sm); display: flex; flex-wrap: wrap; gap: var(--espacement-sm); }
+.uml-actions button { padding: 10px 14px; cursor: pointer; border-radius: var(--rayon-bordure); border: 2px solid var(--couleur-primaire); background: #ffffff; color: var(--couleur-primaire); font-weight: 600; min-height: 44px; }
+.uml-retour { margin-top: var(--espacement-sm); font-weight: 600; min-height: 1.4em; }
+.uml-retour.succes { color: var(--couleur-succes); }
+.uml-retour.echec { color: var(--couleur-alerte); }
+.uml-explication { margin-top: var(--espacement-sm); padding: var(--espacement-sm); border-left: 4px solid var(--couleur-info); background: #ffffff; color: var(--couleur-texte); }
+.uml-explication.cache { display: none; }
+.uml-seq-plateau { position: relative; background: #ffffff; border: 2px solid #64748b; border-radius: var(--rayon-bordure); overflow: hidden; padding: var(--espacement-sm); }
+.uml-seq-tetes { display: flex; gap: 4px; margin-bottom: var(--espacement-sm); }
+.uml-seq-tete { flex: 1; text-align: center; font-weight: 700; font-size: .82rem; padding: 4px; border-bottom: 2px solid #334155; min-height: 44px; display: flex; align-items: flex-end; justify-content: center; color: var(--couleur-texte); }
+.uml-seq-liste { position: relative; z-index: 1; }
+.uml-seq-tuile { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; margin: 8px 0; border: 2px solid #334155; border-radius: var(--rayon-bordure); background: #f8fafc; color: var(--couleur-texte); }
+.uml-seq-libelle { flex: 1; font-size: .9rem; }
+.uml-seq-nav { display: flex; flex-direction: column; gap: 2px; }
+.uml-seq-btn { width: 44px; height: 26px; cursor: pointer; border: 1px solid #64748b; background: #ffffff; border-radius: 4px; font-size: .8rem; color: var(--couleur-texte); }
+.uml-seq-fils { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.uml-seq-fleche { stroke: var(--couleur-primaire); stroke-width: 3; fill: none; }
+</style>
+                    <script>
+(function () {
+    'use strict';
+    function $(id) { return document.getElementById(id); }
+    function echapper(s) {
+        return String(s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function lireDonnees(id) {
+        var el = $(id);
+        if (!el) return null;
+        try { return JSON.parse(el.textContent || '{}'); } catch (e) { return null; }
+    }
+
+    /* ─────────── CAS D'UTILISATION ─────────── */
+    var CAS = { liens: [], selection: null, valide: false };
+    window.umlCasValiderAtelier = function (ok) {
+        var atelier = $('uml-cas-atelier');
+        if (atelier) atelier.setAttribute('data-atelier-valide', ok ? '1' : '0');
+        CAS.valide = ok;
+    };
+    window.umlCasRelier = function (acteurCle, casCle) {
+        var deja = CAS.liens.some(function (l) { return l.acteur === acteurCle && l.cas === casCle; });
+        if (deja) return;
+        CAS.liens.push({ acteur: acteurCle, cas: casCle });
+        umlCasValiderAtelier(false);
+        umlCasMajSelection();
+        umlCasDessiner();
+    };
+    window.umlCasEffacer = function () {
+        CAS.liens = [];
+        CAS.selection = null;
+        umlCasValiderAtelier(false);
+        umlCasMajSelection();
+        umlCasDessiner();
+        var r = $('uml-cas-retour'); if (r) { r.textContent = ''; r.className = 'uml-retour'; }
+        var e = $('uml-cas-explication'); if (e) e.classList.add('cache');
+    };
+    function umlCasMajSelection() {
+        var noeuds = document.querySelectorAll('#uml-cas-plateau .uml-noeud');
+        for (var i = 0; i < noeuds.length; i++) {
+            var n = noeuds[i];
+            var cle = n.getAttribute('data-cle');
+            var actif = !!(CAS.selection && CAS.selection.cle === cle);
+            n.setAttribute('aria-pressed', String(actif));
+            if (actif) n.classList.add('selectionne'); else n.classList.remove('selectionne');
+        }
+    }
+    function umlCasClic(cle, role) {
+        var sel = CAS.selection;
+        if (sel && sel.cle !== cle && sel.role !== role) {
+            var acteurCle = (role === 'acteur') ? cle : sel.cle;
+            var casCle = (role === 'cas') ? cle : sel.cle;
+            umlCasRelier(acteurCle, casCle);
+            CAS.selection = null;
+            umlCasMajSelection();
+            return;
+        }
+        CAS.selection = (sel && sel.cle === cle) ? null : { cle: cle, role: role };
+        umlCasMajSelection();
+    }
+    window.umlCasVerifier = function () {
+        var d = lireDonnees('uml-cas-donnees');
+        if (!d) return;
+        var attendues = (d.associations || []).map(function (a) { return a.acteur + '|' + a.cas; }).sort();
+        var traces = CAS.liens.map(function (l) { return l.acteur + '|' + l.cas; }).sort();
+        var ok = attendues.length === traces.length &&
+                 attendues.every(function (x, i) { return x === traces[i]; });
+        var retour = $('uml-cas-retour');
+        if (ok) {
+            if (retour) { retour.textContent = '✅ Diagramme de cas d\'utilisation correct.'; retour.className = 'uml-retour succes'; }
+        } else {
+            var manquantes = attendues.filter(function (x) { return traces.indexOf(x) < 0; });
+            var trop = traces.filter(function (x) { return attendues.indexOf(x) < 0; });
+            var msg = '❌ Pas encore.';
+            if (manquantes.length) msg += ' ' + manquantes.length + ' association(s) manquante(s).';
+            if (trop.length) msg += ' ' + trop.length + ' association(s) en trop.';
+            if (retour) { retour.textContent = msg; retour.className = 'uml-retour echec'; }
+        }
+        umlCasValiderAtelier(ok);
+        var expl = $('uml-cas-explication');
+        if (expl) { if (ok) expl.classList.remove('cache'); else expl.classList.add('cache'); }
+        umlCasDessiner();
+    };
+    function umlCasDessiner() {
+        var svg = $('uml-cas-fils');
+        if (!svg) return;
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        var plateau = $('uml-cas-plateau');
+        if (!plateau) return;
+        var pr = plateau.getBoundingClientRect();
+        var d = lireDonnees('uml-cas-donnees');
+        if (!d) return;
+        var attendues = (d.associations || []).map(function (a) { return a.acteur + '|' + a.cas; });
+        CAS.liens.forEach(function (l) {
+            var a = $('uml-cas-acteur-' + l.acteur);
+            var c = $('uml-cas-' + l.cas);
+            if (!a || !c) return;
+            var ra = a.getBoundingClientRect();
+            var rc = c.getBoundingClientRect();
+            var x1 = ra.right - pr.left;
+            var y1 = ra.top - pr.top + ra.height / 2;
+            var x2 = rc.left - pr.left;
+            var y2 = rc.top - pr.top + rc.height / 2;
+            var ligne = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            ligne.setAttribute('x1', x1); ligne.setAttribute('y1', y1);
+            ligne.setAttribute('x2', x2); ligne.setAttribute('y2', y2);
+            var cle = l.acteur + '|' + l.cas;
+            var juste = attendues.indexOf(cle) >= 0;
+            ligne.setAttribute('class', 'uml-fil' + (juste ? ' juste' : ' faux'));
+            ligne.setAttribute('data-lien', cle);
+            ligne.addEventListener('click', function (cleAttr) {
+                return function () {
+                    CAS.liens = CAS.liens.filter(function (x) { return (x.acteur + '|' + x.cas) !== cleAttr; });
+                    umlCasValiderAtelier(false);
+                    var r = $('uml-cas-retour'); if (r) { r.textContent = ''; r.className = 'uml-retour'; }
+                    var e = $('uml-cas-explication'); if (e) e.classList.add('cache');
+                    umlCasDessiner();
+                };
+            }(cle));
+            svg.appendChild(ligne);
+        });
+    }
+    function reinitialiserCas() {
+        var plateau = $('uml-cas-plateau');
+        if (!plateau) return;
+        var d = lireDonnees('uml-cas-donnees');
+        if (!d) return;
+        plateau.innerHTML = '';
+        CAS.liens = [];
+        CAS.selection = null;
+        var frontiere = document.createElement('div');
+        frontiere.className = 'uml-cas-frontiere';
+        var titreF = document.createElement('p');
+        titreF.className = 'uml-cas-frontiere-titre';
+        titreF.textContent = 'Système : éclairage connecté';
+        frontiere.appendChild(titreF);
+        (d.cas || []).forEach(function (c) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'uml-noeud uml-cas';
+            b.id = 'uml-cas-' + c.cle;
+            b.setAttribute('data-cle', c.cle);
+            b.setAttribute('data-role', 'cas');
+            b.setAttribute('aria-pressed', 'false');
+            b.textContent = c.nom;
+            b.addEventListener('click', function (cle) { return function () { umlCasClic(cle, 'cas'); }; }(c.cle));
+            frontiere.appendChild(b);
+        });
+        plateau.appendChild(frontiere);
+        var acteurs = document.createElement('div');
+        acteurs.className = 'uml-cas-acteurs';
+        (d.acteurs || []).forEach(function (a) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'uml-noeud uml-acteur';
+            b.id = 'uml-cas-acteur-' + a.cle;
+            b.setAttribute('data-cle', a.cle);
+            b.setAttribute('data-role', 'acteur');
+            b.setAttribute('aria-pressed', 'false');
+            b.textContent = (a.icone || '👤') + ' ' + a.nom;
+            b.addEventListener('click', function (cle) { return function () { umlCasClic(cle, 'acteur'); }; }(a.cle));
+            acteurs.appendChild(b);
+        });
+        plateau.appendChild(acteurs);
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'uml-cas-fils');
+        svg.setAttribute('id', 'uml-cas-fils');
+        svg.setAttribute('aria-hidden', 'true');
+        plateau.appendChild(svg);
+        umlCasMajSelection();
+        umlCasDessiner();
+    }
+
+    /* ─────────── DIAGRAMME DE SÉQUENCE ─────────── */
+    var SEQ = { ordre: [] };
+    function umlSeqNom(d, cle) {
+        var lv = (d.lignesVie || []).filter(function (x) { return x.cle === cle; });
+        return lv.length ? lv[0].nom : cle;
+    }
+    window.umlSeqValiderAtelier = function (ok) {
+        var atelier = $('uml-seq-atelier');
+        if (atelier) atelier.setAttribute('data-atelier-valide', ok ? '1' : '0');
+    };
+    window.umlSeqVerifier = function () {
+        var d = lireDonnees('uml-seq-donnees');
+        if (!d) return;
+        var attendu = (d.messages || []).slice().sort(function (a, b) { return a.ordre - b.ordre; })
+            .map(function (m) { return m.cle; });
+        var actuel = SEQ.ordre;
+        var ok = attendu.length === actuel.length &&
+                 attendu.every(function (c, i) { return c === actuel[i]; });
+        var retour = $('uml-seq-retour');
+        if (ok) {
+            if (retour) { retour.textContent = '✅ Diagramme de séquence correct : les messages sont dans l\'ordre chronologique.'; retour.className = 'uml-retour succes'; }
+        } else {
+            if (retour) { retour.textContent = '❌ L\'ordre des messages n\'est pas encore chronologique : replace-les du premier au dernier échange.'; retour.className = 'uml-retour echec'; }
+        }
+        umlSeqValiderAtelier(ok);
+        var expl = $('uml-seq-explication');
+        if (expl) { if (ok) expl.classList.remove('cache'); else expl.classList.add('cache'); }
+    };
+    function umlSeqDeplacer(cle, direction) {
+        var i = SEQ.ordre.indexOf(cle);
+        if (i < 0) return;
+        var j = i + direction;
+        if (j < 0 || j >= SEQ.ordre.length) return;
+        var tmp = SEQ.ordre[i]; SEQ.ordre[i] = SEQ.ordre[j]; SEQ.ordre[j] = tmp;
+        umlSeqValiderAtelier(false);
+        var r = $('uml-seq-retour'); if (r) { r.textContent = ''; r.className = 'uml-retour'; }
+        var e = $('uml-seq-explication'); if (e) e.classList.add('cache');
+        umlSeqRendre();
+    }
+    function umlSeqRendre() {
+        var liste = $('uml-seq-liste');
+        if (!liste) return;
+        SEQ.ordre.forEach(function (cle) {
+            var tuile = $('uml-seq-tuile-' + cle);
+            if (tuile) liste.appendChild(tuile);
+        });
+        umlSeqDessiner();
+    }
+    function umlSeqDessiner() {
+        var svg = $('uml-seq-fils');
+        if (!svg) return;
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        var plateau = $('uml-seq-plateau');
+        if (!plateau) return;
+        var pr = plateau.getBoundingClientRect();
+        var d = lireDonnees('uml-seq-donnees');
+        if (!d) return;
+        function centreX(cle) {
+            var tete = $('uml-seq-tete-' + cle);
+            if (!tete) return 0;
+            var r = tete.getBoundingClientRect();
+            return r.left - pr.left + r.width / 2;
+        }
+        SEQ.ordre.forEach(function (cle) {
+            var m = (d.messages || []).filter(function (x) { return x.cle === cle; })[0];
+            if (!m) return;
+            var tuile = $('uml-seq-tuile-' + cle);
+            if (!tuile) return;
+            var rt = tuile.getBoundingClientRect();
+            var y = rt.top - pr.top + rt.height / 2;
+            var ligne = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            ligne.setAttribute('x1', centreX(m.depuis));
+            ligne.setAttribute('y1', y);
+            ligne.setAttribute('x2', centreX(m.vers));
+            ligne.setAttribute('y2', y);
+            ligne.setAttribute('class', 'uml-seq-fleche');
+            svg.appendChild(ligne);
+        });
+    }
+    function reinitialiserSeq() {
+        var plateau = $('uml-seq-plateau');
+        if (!plateau) return;
+        var d = lireDonnees('uml-seq-donnees');
+        if (!d) return;
+        plateau.innerHTML = '';
+        SEQ.ordre = [];
+        var tetes = document.createElement('div');
+        tetes.className = 'uml-seq-tetes';
+        (d.lignesVie || []).forEach(function (lv) {
+            var t = document.createElement('div');
+            t.className = 'uml-seq-tete';
+            t.id = 'uml-seq-tete-' + lv.cle;
+            t.textContent = lv.nom;
+            tetes.appendChild(t);
+        });
+        plateau.appendChild(tetes);
+        var liste = document.createElement('div');
+        liste.className = 'uml-seq-liste';
+        liste.id = 'uml-seq-liste';
+        (d.messages || []).forEach(function (m) {
+            SEQ.ordre.push(m.cle);
+            var tuile = document.createElement('div');
+            tuile.className = 'uml-seq-tuile';
+            tuile.id = 'uml-seq-tuile-' + m.cle;
+            tuile.setAttribute('data-cle', m.cle);
+            tuile.setAttribute('data-depuis', m.depuis);
+            tuile.setAttribute('data-vers', m.vers);
+            tuile.setAttribute('data-ordre', String(m.ordre));
+            var libelle = document.createElement('span');
+            libelle.className = 'uml-seq-libelle';
+            libelle.textContent = umlSeqNom(d, m.depuis) + ' → ' + umlSeqNom(d, m.vers) + ' : ' + m.texte;
+            var nav = document.createElement('span');
+            nav.className = 'uml-seq-nav';
+            var btnHaut = document.createElement('button');
+            btnHaut.type = 'button'; btnHaut.className = 'uml-seq-btn';
+            btnHaut.setAttribute('data-action', 'monter');
+            btnHaut.setAttribute('aria-label', 'Monter ce message');
+            btnHaut.textContent = '▲';
+            btnHaut.addEventListener('click', function (cle) { return function () { umlSeqDeplacer(cle, -1); }; }(m.cle));
+            var btnBas = document.createElement('button');
+            btnBas.type = 'button'; btnBas.className = 'uml-seq-btn';
+            btnBas.setAttribute('data-action', 'descendre');
+            btnBas.setAttribute('aria-label', 'Descendre ce message');
+            btnBas.textContent = '▼';
+            btnBas.addEventListener('click', function (cle) { return function () { umlSeqDeplacer(cle, 1); }; }(m.cle));
+            nav.appendChild(btnHaut); nav.appendChild(btnBas);
+            tuile.appendChild(libelle); tuile.appendChild(nav);
+            liste.appendChild(tuile);
+        });
+        plateau.appendChild(liste);
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'uml-seq-fils');
+        svg.setAttribute('id', 'uml-seq-fils');
+        svg.setAttribute('aria-hidden', 'true');
+        plateau.appendChild(svg);
+        umlSeqDessiner();
+    }
+
+    /* ─────────── initialisation ─────────── */
+    if ($('uml-cas-plateau')) reinitialiserCas();
+    if ($('uml-seq-plateau')) reinitialiserSeq();
+    window.addEventListener('resize', function () {
+        if ($('uml-cas-plateau')) umlCasDessiner();
+        if ($('uml-seq-plateau')) umlSeqDessiner();
+    });
+})();
+</script>
+                </section>
+
+
                     <button class="bouton-action marge-haut" onclick="finaliserConception()">
                         Finaliser ma conception
                     </button>
