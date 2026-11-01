@@ -1962,6 +1962,41 @@
         }
 
         /* ============================================
+           ATELIER DE TRAÇAGE DU N2 (n2.ateliers : type "tracage")
+           Le geste est celui de l'atelier de câblage du N4 — poser des
+           composants, tendre des fils — mais TOUT se fait au clic : il n'y a
+           pas de glisser-déposer, donc pas de `touch-action: none` à hériter.
+           Sans cette règle, le schéma bloquerait le défilement de la page au
+           doigt sur un écran de téléphone.
+           ============================================ */
+
+        .atelier-tracage .cablage-zone {
+            touch-action: auto;
+        }
+
+        .atelier-tracage .noeud-reseau {
+            cursor: pointer;
+        }
+
+        .atelier-tracage .noeud-reseau .reseau-role {
+            font-size: 0.62rem;
+            line-height: 1.1;
+            font-weight: 400;
+        }
+
+        /* La couleur du rôle n'est écrite QUE pour le mode clair : la feuille
+           sombre du gabarit la donne en #b6c4d6 avec `:where()`, donc sans
+           spécificité — une règle non gardée la battrait, et le rôle
+           deviendrait illisible sur le fond sombre. */
+        html:not([data-theme="sombre"]) .atelier-tracage .noeud-reseau .reseau-role {
+            color: #475569;
+        }
+
+        .atelier-tracage .atelier-compteur {
+            margin-top: var(--espacement-sm);
+        }
+
+        /* ============================================
            FICHES DE SYNTHÈSE - CONCLUSION
            ============================================ */
         
@@ -5277,45 +5312,57 @@
                         <p class="atelier-explication cache" data-role="explication">Chaque interacteur joue un rôle différent (fiche OST2a) : l'usager commande, l'autre objet transmet, l'actionneur exécute, l'élément de l'environnement est mesuré et la donnée est utilisée pour décider. C'est en identifiant ces quatre familles que l'on explique le fonctionnement du système, jamais en regardant l'ampoule seule. Le SMS du voisin, lui, n'agit pas sur le système : il n'est qu'un signalement d'usager.</p>
                     </article>
 
-                    <article class="atelier-carte" data-ost-bloc="n2-atelier-trajet-cas-usage" data-type="liaison" data-atelier="trajet-cas-usage" data-obligatoire="1" data-liens="[{&quot;de&quot;: &quot;habitant&quot;, &quot;vers&quot;: &quot;application&quot;, &quot;pourquoi&quot;: &quot;M. Machin appuie sur « éteindre » dans l'application : son geste devient une donnée numérique. C'est l'acquisition de la chaîne d'information.&quot;}, {&quot;de&quot;: &quot;application&quot;, &quot;vers&quot;: &quot;box&quot;, &quot;pourquoi&quot;: &quot;L'ordre numérique quitte le smartphone et entre sur le réseau Wi-Fi de la box : c'est la transmission de la donnée, d'un autre objet à un autre.&quot;}, {&quot;de&quot;: &quot;box&quot;, &quot;vers&quot;: &quot;ampoule&quot;, &quot;pourquoi&quot;: &quot;La box remet l'ordre à l'ampoule par le Wi-Fi ; l'ampoule le traite puis convertit l'énergie électrique en lumière. Le cas d'usage est réalisé.&quot;}]" data-messages="{&quot;selection&quot;: &quot;{nom} est choisi. Clique maintenant l'élément avec lequel il échange pendant le cas d'usage.&quot;, &quot;annulation&quot;: &quot;Sélection annulée.&quot;, &quot;refus&quot;: &quot;❌ {a} et {b} n'échangent pas directement : repense au trajet de l'ordre, de l'habitant jusqu'à l'ampoule.&quot;, &quot;dejaRelies&quot;: &quot;Ces deux appareils sont déjà reliés par un fil.&quot;, &quot;liaison&quot;: &quot;✅ Échange établi : {a} ↔ {b}. Il reste {reste} échange(s) à trouver.&quot;, &quot;complet&quot;: &quot;🎉 Le cas d'usage est complet : {total} échanges établis.&quot;, &quot;verifierComplet&quot;: &quot;🎉 Trajet complet : les {total} échanges sont établis.&quot;, &quot;incomplet&quot;: &quot;Le trajet n'est pas encore complet : {faits} échange(s) sur {total}. Clique deux éléments pour établir l'échange suivant.&quot;, &quot;verrouille&quot;: &quot;Tous les échanges sont établis : clique « Vérifier les échanges ».&quot;, &quot;compteurComplet&quot;: &quot;Tous les échanges sont établis.&quot;, &quot;aucunFil&quot;: &quot;aucun échange&quot;, &quot;unFil&quot;: &quot;{n} échange&quot;, &quot;desFils&quot;: &quot;{n} échanges&quot;}" aria-labelledby="atelier-titre-trajet-cas-usage">
-                        <h3 id="atelier-titre-trajet-cas-usage">🔗 Relie les interacteurs du cas d'usage « allumer à distance »</h3>
-                        <p class="atelier-consigne">Clique un élément, puis celui avec lequel il échange réellement pendant le cas d'usage. Chaque échange juste s'inscrit avec sa raison ; un échange impossible est refusé tout de suite.</p>
-                        <div class="atelier-reseau" role="group" aria-label="Interacteurs du cas d'usage">
-                            <button type="button" class="reseau-appareil" data-appareil="habitant" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
-                                <span class="reseau-icone" aria-hidden="true">👨‍💼</span>
-                                <span class="reseau-nom">M. Machin (usager)</span>
+                    <article class="atelier-carte atelier-tracage" data-ost-bloc="n2-atelier-trajet-cas-usage" data-type="tracage" data-atelier="trajet-cas-usage" data-obligatoire="1" data-tracage="{&quot;noms&quot;: {&quot;habitant&quot;: &quot;M. Machin (usager)&quot;, &quot;application&quot;: &quot;Application Tapo (smartphone)&quot;, &quot;box&quot;: &quot;Box internet (Wi-Fi)&quot;, &quot;ampoule&quot;: &quot;Ampoule LED connectée&quot;, &quot;television&quot;: &quot;Télévision connectée du salon&quot;, &quot;imprimante&quot;: &quot;Imprimante du bureau&quot;}, &quot;liens&quot;: [{&quot;de&quot;: &quot;habitant&quot;, &quot;vers&quot;: &quot;application&quot;, &quot;pourquoi&quot;: &quot;M. Machin appuie sur « éteindre » dans l'application : son geste devient une donnée numérique. C'est l'acquisition de la chaîne d'information.&quot;}, {&quot;de&quot;: &quot;application&quot;, &quot;vers&quot;: &quot;box&quot;, &quot;pourquoi&quot;: &quot;L'ordre numérique quitte le smartphone et entre sur le réseau Wi-Fi de la box : c'est la transmission de la donnée, d'un autre objet à un autre.&quot;}, {&quot;de&quot;: &quot;box&quot;, &quot;vers&quot;: &quot;ampoule&quot;, &quot;pourquoi&quot;: &quot;La box remet l'ordre à l'ampoule par le Wi-Fi ; l'ampoule le traite puis convertit l'énergie électrique en lumière. Le cas d'usage est réalisé.&quot;}], &quot;raisons&quot;: {&quot;television&quot;: &quot;Elle est bien connectée, mais l'ordre « éteindre les lampes » ne passe pas par elle : elle n'échange rien dans ce cas d'usage.&quot;, &quot;imprimante&quot;: &quot;Elle n'a aucun rôle dans l'éclairage : le cas d'usage ne passe ni par elle, ni par le Wi-Fi de la maison.&quot;}}" data-messages="{&quot;pose&quot;: &quot;{nom} est posé sur le schéma. Clique-le, puis clique un autre composant pour tendre un fil entre eux.&quot;, &quot;selection&quot;: &quot;{nom} est choisi. Clique maintenant le composant avec lequel il échange pendant le cas d'usage.&quot;, &quot;annulation&quot;: &quot;Sélection annulée.&quot;, &quot;rangement&quot;: &quot;{nom} est retourné dans la réserve, avec ses fils.&quot;, &quot;relier&quot;: &quot;Fil tendu entre {a} et {b}.&quot;, &quot;dejaRelies&quot;: &quot;Un fil relie déjà {a} et {b}.&quot;, &quot;supprimer&quot;: &quot;Fil supprimé.&quot;, &quot;effacer&quot;: &quot;Tous les fils ont été effacés : les composants restent posés.&quot;, &quot;rangerTout&quot;: &quot;Tous les composants sont retournés dans la réserve.&quot;, &quot;verrouille&quot;: &quot;Schéma validé : clique « {bouton} ».&quot;, &quot;compteur&quot;: &quot;{fils} fil(s) tendu(s) · {poses} composant(s) posé(s) sur {total}.&quot;, &quot;succes&quot;: &quot;🎉 Schéma validé : tous les composants du cas d'usage sont posés et tous les échanges sont tracés.&quot;, &quot;echec&quot;: &quot;Le schéma n'est pas encore bon : {n} point(s) à corriger.&quot;, &quot;manqueComposants&quot;: &quot;Il reste {n} composant(s) du cas d'usage dans la réserve ({noms}) : clique-les pour les poser sur le schéma.&quot;, &quot;composantsOk&quot;: &quot;Tous les composants du cas d'usage sont posés sur le schéma.&quot;, &quot;intrus&quot;: &quot;{nom} ne fait pas partie du cas d'usage : il doit rester dans la réserve.&quot;, &quot;manqueFil&quot;: &quot;Il manque un fil entre {a} et {b}.&quot;, &quot;filEnTrop&quot;: &quot;{a} et {b} n'échangent pas directement pendant ce cas d'usage : ce fil en trop brouille le trajet.&quot;, &quot;aucunFil&quot;: &quot;Aucun fil n'est encore tracé entre les composants posés.&quot;, &quot;rangerIndication&quot;: &quot;Clique un composant de la réserve pour le poser ici, puis clique deux composants posés pour les relier par un fil.&quot;}" aria-labelledby="atelier-titre-trajet-cas-usage">
+                        <h3 id="atelier-titre-trajet-cas-usage">🔗 Trace le trajet du cas d'usage « allumer à distance »</h3>
+                        <p class="atelier-consigne">Le salon de M. Machin est resté allumé. Pose sur le schéma les composants qui participent vraiment à l'allumage à distance, puis tends un fil entre ceux qui échangent réellement pendant le cas d'usage. Deux composants de la réserve n'ont rien à faire dans ce trajet.</p>
+                        <p class="cablage-aide">Clique un composant de la réserve pour le poser sur le schéma ; clique-le à nouveau pour le renvoyer dans la réserve. Pour tendre un fil, clique un composant posé, puis un autre ; clique un fil pour le retirer. Au clavier : Tab passe d'un composant à l'autre, Entrée choisit, pose ou relie.</p>
+                        <h4>Composants à poser</h4>
+                        <div class="cablage-reserve" data-role="reserve" role="group" aria-label="Composants à poser sur le schéma">
+                            <button type="button" class="noeud-reseau" data-piece="habitant" data-nom="M. Machin (usager)" aria-pressed="false" onclick="tracageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">👨‍💼</span>
+                                <span class="noeud-nom">M. Machin (usager)</span>
                                 <span class="reseau-role">commande à distance</span>
-                                <span class="reseau-compteur" data-role="fils-appareil">aucun échange</span>
                             </button>
-                            <button type="button" class="reseau-appareil" data-appareil="application" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
-                                <span class="reseau-icone" aria-hidden="true">📱</span>
-                                <span class="reseau-nom">Application Tapo (smartphone)</span>
+                            <button type="button" class="noeud-reseau" data-piece="application" data-nom="Application Tapo (smartphone)" aria-pressed="false" onclick="tracageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">📱</span>
+                                <span class="noeud-nom">Application Tapo (smartphone)</span>
                                 <span class="reseau-role">acquiert l'ordre</span>
-                                <span class="reseau-compteur" data-role="fils-appareil">aucun échange</span>
                             </button>
-                            <button type="button" class="reseau-appareil" data-appareil="box" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
-                                <span class="reseau-icone" aria-hidden="true">📶</span>
-                                <span class="reseau-nom">Box internet (Wi-Fi)</span>
+                            <button type="button" class="noeud-reseau" data-piece="box" data-nom="Box internet (Wi-Fi)" aria-pressed="false" onclick="tracageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">📶</span>
+                                <span class="noeud-nom">Box internet (Wi-Fi)</span>
                                 <span class="reseau-role">transmet la donnée</span>
-                                <span class="reseau-compteur" data-role="fils-appareil">aucun échange</span>
                             </button>
-                            <button type="button" class="reseau-appareil" data-appareil="ampoule" aria-pressed="false" onclick="reseauChoisirAppareil(this)">
-                                <span class="reseau-icone" aria-hidden="true">💡</span>
-                                <span class="reseau-nom">Ampoule LED connectée</span>
+                            <button type="button" class="noeud-reseau" data-piece="ampoule" data-nom="Ampoule LED connectée" aria-pressed="false" onclick="tracageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💡</span>
+                                <span class="noeud-nom">Ampoule LED connectée</span>
                                 <span class="reseau-role">exécute et éclaire</span>
-                                <span class="reseau-compteur" data-role="fils-appareil">aucun échange</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-piece="television" data-nom="Télévision connectée du salon" aria-pressed="false" data-intrus="1" onclick="tracageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">📺</span>
+                                <span class="noeud-nom">Télévision connectée du salon</span>
+                                <span class="reseau-role">regarde la télévision</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-piece="imprimante" data-nom="Imprimante du bureau" aria-pressed="false" data-intrus="1" onclick="tracageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🖨️</span>
+                                <span class="noeud-nom">Imprimante du bureau</span>
+                                <span class="reseau-role">imprime des documents</span>
                             </button>
                         </div>
-                        <p class="atelier-compteur" data-role="compteur">0 / 3 liaison(s) établie(s).</p>
-                        <div class="atelier-fils-cadre">
-                            <h4>Les échanges du cas d'usage, l'un après l'autre</h4>
-                            <ol class="atelier-fils" data-role="fils"><li class="atelier-fils-vide">Aucun échange pour l'instant : clique deux éléments pour les relier.</li></ol>
+                        <h4>Le schéma du cas d'usage</h4>
+                        <div class="cablage-zone atelier-tracage-zone" data-role="zone" role="group" aria-label="Schéma à compléter : pose les composants et relie-les">
+                            <svg class="cablage-fils" data-role="fils" role="group" aria-label="Fils du schéma" focusable="false"></svg>
+                            <p class="cablage-indication" data-role="indication">Pose ici les composants du cas d'usage, puis tends un fil entre ceux qui échangent.</p>
                         </div>
-                        <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="reseauVerifier(this)">Vérifier les échanges</button>
+                        <p class="atelier-compteur" data-role="compteur">0 fil(s) tendu(s) · 0 composant(s) posé(s) sur 6.</p>
+                        <div class="cablage-actions">
+                            <button type="button" class="bouton-action" onclick="tracageVerifier(this)">Vérifier mon schéma</button>
+                            <button type="button" class="bouton-action secondaire" onclick="tracageEffacerFils(this)">Effacer tous les fils</button>
+                            <button type="button" class="bouton-action secondaire" onclick="tracageToutRanger(this)">Tout remettre dans la réserve</button>
                         </div>
                         <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">Le cas d'usage « allumer (ou éteindre) à distance » suit toujours le même trajet : l'usager, puis l'acquisition par l'application, puis la transmission par la box, enfin l'exécution par l'ampoule. Aucun raccourci n'existe : l'habitant n'agit pas directement sur l'ampoule, et l'application n'éclaire rien. C'est exactement ce trajet que représente le diagramme de séquence de la fiche OST2b.</p>
+                        <div class="cablage-bilan cache" data-role="bilan" aria-live="polite"></div>
+                        <p class="atelier-explication cache" data-role="explication">Le cas d'usage « allumer (ou éteindre) à distance » suit toujours le même trajet : l'usager, puis l'acquisition par l'application, puis la transmission par la box, enfin l'exécution par l'ampoule. Aucun raccourci n'existe : l'habitant n'agit pas directement sur l'ampoule, et l'application n'éclaire rien. La télévision et l'imprimante sont pourtant connectées elles aussi : si elles ne figurent pas sur ce schéma, c'est qu'aucun échange du cas d'usage ne les traverse. C'est exactement ce trajet que représente le diagramme de séquence de la fiche OST2b.</p>
                     </article>
                     </div>
 
@@ -5955,6 +6002,29 @@
 .uml-seq-btn { width: 44px; height: 26px; cursor: pointer; border: 1px solid #64748b; background: #ffffff; border-radius: 4px; font-size: .8rem; color: var(--couleur-texte); }
 .uml-seq-fils { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 .uml-seq-fleche { stroke: var(--couleur-primaire); stroke-width: 3; fill: none; }
+/* Mode sombre : ce bloc est autoportant (son style vit dans la page, pas dans
+   la feuille du gabarit). Sans ces règles, ses fonds blancs restaient blancs
+   sous le thème sombre, et le texte clair du gabarit s'y lisait à 1,2:1.
+   `:where()` garde une spécificité nulle côté thème : les règles ci-dessus,
+   écrites pour le mode clair, restent seules en clair. */
+:where(html[data-theme="sombre"]) .uml-exercice,
+:where(html[data-theme="sombre"]) .uml-cas-plateau,
+:where(html[data-theme="sombre"]) .uml-seq-plateau,
+:where(html[data-theme="sombre"]) .uml-explication,
+:where(html[data-theme="sombre"]) .uml-seq-tuile,
+:where(html[data-theme="sombre"]) .uml-noeud,
+:where(html[data-theme="sombre"]) .uml-actions button,
+:where(html[data-theme="sombre"]) .uml-seq-btn {
+    background-color: #1c2534;
+    border-color: #2b3a52;
+}
+:where(html[data-theme="sombre"]) .uml-fil,
+:where(html[data-theme="sombre"]) .uml-seq-fleche { stroke: #9ecbfd; }
+:where(html[data-theme="sombre"]) .uml-seq-tete { border-bottom-color: #55657f; }
+:where(html[data-theme="sombre"]) .uml-exercice h4 { color: #c4b5fd; }
+:where(html[data-theme="sombre"]) .uml-actions button { color: #8ab4f8; }
+:where(html[data-theme="sombre"]) .uml-retour.succes { color: #86efac; }
+:where(html[data-theme="sombre"]) .uml-retour.echec { color: #fca5a5; }
 </style>
                     <script>
 (function () {
@@ -11562,6 +11632,530 @@
 
 
         // ══════════════════════════════════════════════════════════════════
+        //  ATELIER DE TRAÇAGE DU N2 (n2.ateliers[].type = "tracage")
+        //
+        //  Données : `data-tracage` (composants, fils attendus, raisons des
+        //  intrus) et `data-messages` (les phrases du moteur), posés par
+        //  personnaliser.py. Ce moteur ne connaît que le DOM :
+        //    .noeud-reseau[data-piece]        les composants (réserve puis schéma)
+        //    [data-role="reserve"]            la réserve
+        //    [data-role="zone"]               le schéma
+        //    [data-role="fils"]               le calque SVG des fils
+        //
+        //  C'est le geste de l'atelier de câblage du N4, ramené au N2 : l'élève
+        //  CHOISIT ses composants (la réserve peut en contenir de trop, marqués
+        //  `intrus`), les pose sur le schéma, puis TEND UN FIL entre ceux qui
+        //  communiquent réellement. Le schéma se dessine au fur et à mesure.
+        //
+        //  Tout se fait au CLIC (jamais au glisser-déposer) : au doigt le geste
+        //  ferait défiler la page, et au clavier il n'existe pas. Poser,
+        //  sélectionner, relier, ranger et retirer un fil passent donc par de
+        //  vrais <button> ou par des <g tabindex="0"> avec Entrée.
+        //
+        //  Toute modification annule une vérification précédente : l'élève ne
+        //  peut pas valider, puis casser son schéma sans que l'atelier le
+        //  sache — l'atelier obligatoire se refermerait à tort.
+        // ══════════════════════════════════════════════════════════════════
+
+        const TRACAGE_SVG_NS = 'http://www.w3.org/2000/svg';
+
+        function tracageCarte(depuis) {
+            return (depuis && depuis.closest) ? depuis.closest('.atelier-tracage') : null;
+        }
+
+        function tracageEtat(carte) {
+            if (!carte.__tracage) {
+                let donnees = {};
+                let messages = {};
+                try {
+                    donnees = JSON.parse(carte.getAttribute('data-tracage') || '{}') || {};
+                } catch (erreur) { donnees = {}; }
+                try {
+                    messages = JSON.parse(carte.getAttribute('data-messages') || '{}') || {};
+                } catch (erreur) { messages = {}; }
+                carte.__tracage = {
+                    liens: donnees.liens || [],   // fils attendus, avec leur raison
+                    noms: donnees.noms || {},
+                    raisons: donnees.raisons || {},
+                    messages: messages,
+                    fils: [],        // fils tendus par l'élève : {a, b, etat}
+                    selection: null, // composant choisi pour tendre un fil
+                    valide: false
+                };
+            }
+            return carte.__tracage;
+        }
+
+        function tracagePhrase(carte, cle, valeurs) {
+            const texte = tracageEtat(carte).messages[cle];
+            if (typeof texte !== 'string') return '';
+            let rendu = texte;
+            Object.keys(valeurs || {}).forEach(function (nom) {
+                rendu = rendu.split('{' + nom + '}').join(String(valeurs[nom]));
+            });
+            return rendu;
+        }
+
+        function tracageZone(carte) { return carte.querySelector('[data-role="zone"]'); }
+        function tracageReserve(carte) { return carte.querySelector('[data-role="reserve"]'); }
+        function tracageSvg(carte) { return carte.querySelector('[data-role="fils"]'); }
+        function tracageBilan(carte) { return carte.querySelector('[data-role="bilan"]'); }
+
+        function tracagePieces(carte) {
+            return Array.prototype.slice.call(carte.querySelectorAll('.noeud-reseau'));
+        }
+
+        function tracagePiece(carte, cle) {
+            return carte.querySelector('.noeud-reseau[data-piece="' + cle + '"]');
+        }
+
+        function tracageNom(carte, cle) {
+            const piece = tracagePiece(carte, cle);
+            const nom = piece ? piece.querySelector('.noeud-nom') : null;
+            if (nom) return nom.textContent.trim();
+            const noms = tracageEtat(carte).noms || {};
+            return noms[cle] || cle;
+        }
+
+        function tracageEstIntrus(piece) {
+            return !!piece && piece.getAttribute('data-intrus') === '1';
+        }
+
+        function tracageSurPlateau(carte, piece) {
+            return !!piece && piece.parentElement === tracageZone(carte);
+        }
+
+        function tracageClePaire(fil) {
+            return [fil.a, fil.b].sort().join('|');
+        }
+
+        // Première case libre d'une grille : un composant posé au clic doit
+        // donner un schéma lisible, sans superposition.
+        function tracagePositionLibre(carte) {
+            const zone = tracageZone(carte);
+            const largeur = 104;
+            const hauteur = 78;
+            const marge = 8;
+            const colonnes = Math.max(1, Math.floor((zone.clientWidth - marge) / largeur));
+            const occupees = {};
+            tracagePieces(carte).forEach(function (piece) {
+                if (!tracageSurPlateau(carte, piece)) return;
+                occupees[(parseInt(piece.style.left, 10) || 0) + ':' +
+                         (parseInt(piece.style.top, 10) || 0)] = true;
+            });
+            for (let ligne = 0; ligne < 12; ligne += 1) {
+                for (let colonne = 0; colonne < colonnes; colonne += 1) {
+                    const x = marge + colonne * largeur;
+                    const y = marge + ligne * hauteur;
+                    if (!occupees[x + ':' + y]) return { x: x, y: y };
+                }
+            }
+            return { x: marge, y: marge };
+        }
+
+        function tracageRafraichir(carte) {
+            const reserve = tracageReserve(carte);
+            if (reserve) {
+                const reste = reserve.querySelectorAll('.noeud-reseau').length;
+                reserve.classList.toggle('vide', reste === 0);
+            }
+            const indication = carte.querySelector('[data-role="indication"]');
+            if (indication) {
+                const pose = tracagePieces(carte).some(function (piece) {
+                    return tracageSurPlateau(carte, piece);
+                });
+                indication.classList.toggle('cache', pose);
+            }
+            const etat = tracageEtat(carte);
+            const zoneCompteur = carte.querySelector('[data-role="compteur"]');
+            if (zoneCompteur) {
+                const poses = tracagePieces(carte).filter(function (piece) {
+                    return tracageSurPlateau(carte, piece);
+                }).length;
+                zoneCompteur.textContent = tracagePhrase(carte, 'compteur', {
+                    fils: etat.fils.length,
+                    poses: poses,
+                    total: tracagePieces(carte).length
+                });
+            }
+            tracageTracerFils(carte);
+        }
+
+        function tracagePoser(carte, piece) {
+            const zone = tracageZone(carte);
+            if (!zone || !piece) return;
+            const place = tracagePositionLibre(carte);
+            if (piece.parentElement !== zone) zone.appendChild(piece);
+            piece.classList.add('sur-plateau');
+            piece.style.left = place.x + 'px';
+            piece.style.top = place.y + 'px';
+            piece.setAttribute('aria-pressed', 'false');
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+        }
+
+        function tracageRanger(carte, piece) {
+            const reserve = tracageReserve(carte);
+            if (!reserve || !piece) return;
+            const cle = piece.getAttribute('data-piece');
+            const etat = tracageEtat(carte);
+            etat.fils = etat.fils.filter(function (fil) {
+                return fil.a !== cle && fil.b !== cle;
+            });
+            piece.classList.remove('sur-plateau', 'selectionne');
+            piece.style.left = '';
+            piece.style.top = '';
+            piece.setAttribute('aria-pressed', 'false');
+            if (etat.selection === piece) etat.selection = null;
+            reserve.appendChild(piece);
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+        }
+
+        function tracageSelectionner(carte, piece) {
+            const etat = tracageEtat(carte);
+            if (etat.selection === piece) return;
+            if (etat.selection) {
+                etat.selection.classList.remove('selectionne');
+                etat.selection.setAttribute('aria-pressed', 'false');
+            }
+            etat.selection = piece;
+            piece.classList.add('selectionne');
+            piece.setAttribute('aria-pressed', 'true');
+        }
+
+        function tracageDeselectionner(carte) {
+            const etat = tracageEtat(carte);
+            if (!etat.selection) return;
+            etat.selection.classList.remove('selectionne');
+            etat.selection.setAttribute('aria-pressed', 'false');
+            etat.selection = null;
+        }
+
+        // Un seul chemin pour le clic et pour la touche Entrée : ce sont de
+        // vrais <button>, le clavier passe donc par ici aussi.
+        function tracageChoisir(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte || !bouton) return;
+            const etat = tracageEtat(carte);
+            const cle = bouton.getAttribute('data-piece');
+
+            // 1. Un composant de la réserve se pose sur le schéma.
+            if (!tracageSurPlateau(carte, bouton)) {
+                tracagePoser(carte, bouton);
+                atelierRetour(carte, tracagePhrase(carte, 'pose', {
+                    nom: tracageNom(carte, cle)
+                }), 'info');
+                return;
+            }
+
+            // 2. Un second clic sur le composant déjà choisi le renvoie dans la
+            //    réserve : c'est ainsi qu'on retire un intrus posé par erreur.
+            if (etat.selection === bouton) {
+                tracageRanger(carte, bouton);
+                atelierRetour(carte, tracagePhrase(carte, 'rangement', {
+                    nom: tracageNom(carte, cle)
+                }), 'info');
+                return;
+            }
+
+            // 3. Aucun composant choisi : celui-ci attend son fil.
+            if (!etat.selection) {
+                tracageSelectionner(carte, bouton);
+                atelierRetour(carte, tracagePhrase(carte, 'selection', {
+                    nom: tracageNom(carte, cle)
+                }), 'info');
+                return;
+            }
+
+            // 4. Deux composants choisis : on tend le fil.
+            tracageRelier(carte, etat.selection, bouton);
+        }
+
+        function tracageRelier(carte, pieceA, pieceB) {
+            const etat = tracageEtat(carte);
+            const a = pieceA ? pieceA.getAttribute('data-piece') : null;
+            const b = pieceB ? pieceB.getAttribute('data-piece') : null;
+            tracageDeselectionner(carte);
+            if (!a || !b || a === b) return;
+
+            const cle = tracageClePaire({ a: a, b: b });
+            const deja = etat.fils.some(function (fil) {
+                return tracageClePaire(fil) === cle;
+            });
+            if (deja) {
+                atelierRetour(carte, tracagePhrase(carte, 'dejaRelies', {
+                    a: tracageNom(carte, a), b: tracageNom(carte, b)
+                }), 'info');
+                return;
+            }
+
+            etat.fils.push({ a: a, b: b, etat: '' });
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'relier', {
+                a: tracageNom(carte, a), b: tracageNom(carte, b)
+            }), 'info');
+        }
+
+        function tracageSupprimerFil(carte, index) {
+            const etat = tracageEtat(carte);
+            if (!etat.fils[index]) return;
+            etat.fils.splice(index, 1);
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'supprimer', {}), 'info');
+        }
+
+        // `offsetLeft`/`offsetTop` sont déjà mesurés depuis le parent positionné
+        // (le schéma, en `position: relative`) : retrancher la position du
+        // schéma décalait tous les fils vers la gauche et le haut.
+        function tracageCentre(carte, piece) {
+            return {
+                x: piece.offsetLeft + piece.offsetWidth / 2,
+                y: piece.offsetTop + piece.offsetHeight / 2
+            };
+        }
+
+        function tracageTracerFils(carte) {
+            const svg = tracageSvg(carte);
+            if (!svg) return;
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+            const etat = tracageEtat(carte);
+
+            etat.fils.forEach(function (fil, index) {
+                const pieceA = tracagePiece(carte, fil.a);
+                const pieceB = tracagePiece(carte, fil.b);
+                if (!pieceA || !pieceB) return;
+                if (!tracageSurPlateau(carte, pieceA) ||
+                    !tracageSurPlateau(carte, pieceB)) return;
+                const a = tracageCentre(carte, pieceA);
+                const b = tracageCentre(carte, pieceB);
+
+                const groupe = document.createElementNS(TRACAGE_SVG_NS, 'g');
+                groupe.setAttribute('class', 'fil-reseau' + (fil.etat ? ' ' + fil.etat : ''));
+                groupe.setAttribute('tabindex', '0');
+                groupe.setAttribute('role', 'button');
+                groupe.setAttribute('data-fil', String(index));
+                groupe.setAttribute('aria-label', 'Fil entre ' +
+                    tracageNom(carte, fil.a) + ' et ' + tracageNom(carte, fil.b) +
+                    ' : touche Entrée pour supprimer ce fil');
+
+                ['fil-cible', 'fil-trait'].forEach(function (classe) {
+                    const ligne = document.createElementNS(TRACAGE_SVG_NS, 'line');
+                    ligne.setAttribute('class', classe);
+                    ligne.setAttribute('x1', Math.round(a.x));
+                    ligne.setAttribute('y1', Math.round(a.y));
+                    ligne.setAttribute('x2', Math.round(b.x));
+                    ligne.setAttribute('y2', Math.round(b.y));
+                    groupe.appendChild(ligne);
+                });
+
+                groupe.addEventListener('click', function (evenement) {
+                    evenement.stopPropagation();
+                    tracageSupprimerFil(carte, index);
+                });
+                groupe.addEventListener('keydown', function (evenement) {
+                    if (evenement.key === 'Enter' || evenement.key === ' ' ||
+                        evenement.key === 'Spacebar') {
+                        evenement.preventDefault();
+                        evenement.stopPropagation();
+                        tracageSupprimerFil(carte, index);
+                    }
+                });
+
+                svg.appendChild(groupe);
+            });
+        }
+
+        // Toute modification du schéma annule la vérification : sans cela,
+        // l'atelier obligatoire resterait « terminé » sur un schéma cassé.
+        function tracageInvalider(carte) {
+            const etat = tracageEtat(carte);
+            etat.valide = false;
+            etat.fils.forEach(function (fil) { fil.etat = ''; });
+            const bilan = tracageBilan(carte);
+            if (bilan) {
+                bilan.className = 'cablage-bilan cache';
+                bilan.textContent = '';
+            }
+            const explication = carte.querySelector('[data-role="explication"]');
+            if (explication) explication.classList.add('cache');
+            if (carte.getAttribute('data-termine') === '1') {
+                carte.removeAttribute('data-termine');
+                if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+            }
+        }
+
+        function tracageAjouterListe(bilan, titre, messages) {
+            if (!messages.length) return;
+            const sousTitre = document.createElement('p');
+            sousTitre.textContent = titre;
+            bilan.appendChild(sousTitre);
+            const liste = document.createElement('ul');
+            messages.forEach(function (message) {
+                const item = document.createElement('li');
+                item.textContent = message;
+                liste.appendChild(item);
+            });
+            bilan.appendChild(liste);
+        }
+
+        function tracageVerifier(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte) return;
+            const etat = tracageEtat(carte);
+            const pieces = tracagePieces(carte);
+            const erreurs = [];
+            const justes = [];
+
+            // 1. Tous les composants du cas d'usage sont-ils posés ?
+            const absents = pieces.filter(function (piece) {
+                return !tracageEstIntrus(piece) && !tracageSurPlateau(carte, piece);
+            });
+            if (absents.length) {
+                erreurs.push(tracagePhrase(carte, 'manqueComposants', {
+                    n: absents.length,
+                    noms: absents.map(function (piece) {
+                        return tracageNom(carte, piece.getAttribute('data-piece'));
+                    }).join(', ')
+                }));
+            } else {
+                justes.push(tracagePhrase(carte, 'composantsOk', {}));
+            }
+
+            // 2. Un intrus posé sur le schéma n'appartient pas au cas d'usage.
+            const intrusPoses = pieces.filter(function (piece) {
+                return tracageEstIntrus(piece) && tracageSurPlateau(carte, piece);
+            });
+            intrusPoses.forEach(function (piece) {
+                const cle = piece.getAttribute('data-piece');
+                const raison = (etat.raisons || {})[cle] || '';
+                erreurs.push(tracagePhrase(carte, 'intrus', {
+                    nom: tracageNom(carte, cle)
+                }) + (raison ? ' ' + raison : ''));
+            });
+
+            // 3. Chaque fil attendu est-il tendu, et aucun fil en trop ?
+            // Les fils de l'élève portent `a`/`b`, les fils attendus `de`/`vers` :
+            // la clé de comparaison est la même paire triée, quel que soit le
+            // sens dans lequel le fil a été tendu.
+            const attendus = {};
+            etat.liens.forEach(function (lien) {
+                attendus[tracageClePaire({ a: lien.de, b: lien.vers })] = lien;
+            });
+            const tendus = {};
+            etat.fils.forEach(function (fil) {
+                tendus[tracageClePaire(fil)] = fil;
+            });
+            etat.liens.forEach(function (lien) {
+                if (!tendus[tracageClePaire({ a: lien.de, b: lien.vers })]) {
+                    erreurs.push(tracagePhrase(carte, 'manqueFil', {
+                        a: tracageNom(carte, lien.de),
+                        b: tracageNom(carte, lien.vers)
+                    }) + ' ' + lien.pourquoi);
+                }
+            });
+            let justesFils = 0;
+            etat.fils.forEach(function (fil) {
+                const cle = tracageClePaire(fil);
+                if (attendus[cle]) {
+                    justesFils += 1;
+                    return;
+                }
+                erreurs.push(tracagePhrase(carte, 'filEnTrop', {
+                    a: tracageNom(carte, fil.a), b: tracageNom(carte, fil.b)
+                }));
+            });
+            if (etat.fils.length && justesFils === etat.fils.length) {
+                justes.push('Les ' + etat.fils.length + ' fil(s) tendus relient bien '
+                    + 'les composants qui échangent.');
+            } else if (!etat.fils.length) {
+                erreurs.push(tracagePhrase(carte, 'aucunFil', {}));
+            }
+
+            // 4. Les fils se colorent selon le verdict : l'élève voit lequel
+            //    corriger, pas seulement qu'il y a une erreur.
+            const reussi = erreurs.length === 0;
+            etat.fils.forEach(function (fil) {
+                fil.etat = attendus[tracageClePaire(fil)] ? 'juste' : 'faux';
+            });
+            tracageTracerFils(carte);
+            etat.valide = reussi;
+
+            const bilan = tracageBilan(carte);
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'cablage-bilan ' + (reussi ? 'succes' : 'echec');
+                const titre = document.createElement('p');
+                titre.textContent = reussi
+                    ? tracagePhrase(carte, 'succes', {})
+                    : tracagePhrase(carte, 'echec', { n: erreurs.length });
+                bilan.appendChild(titre);
+                if (!reussi) {
+                    tracageAjouterListe(bilan, 'À corriger :', erreurs);
+                    tracageAjouterListe(bilan, 'Déjà juste :', justes);
+                }
+            }
+
+            if (reussi) {
+                atelierRetour(carte, tracagePhrase(carte, 'succes', {}), 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, tracagePhrase(carte, 'echec', { n: erreurs.length }),
+                    'echec');
+            }
+            tracageRafraichir(carte);
+        }
+
+        function tracageEffacerFils(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte) return;
+            tracageEtat(carte).fils = [];
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'effacer', {}), 'info');
+        }
+
+        function tracageToutRanger(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte) return;
+            tracageEtat(carte).fils = [];
+            tracagePieces(carte).slice().reverse().forEach(function (piece) {
+                if (tracageSurPlateau(carte, piece)) tracageRanger(carte, piece);
+            });
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'rangerTout', {}), 'info');
+        }
+
+        // « Recommencer » restaure le balisage d'origine de chaque atelier
+        // (reinitialiserAteliers) : il ne reste ici qu'à refaire l'état interne
+        // et à redessiner, car les fils sont dessinés, pas écrits dans la page.
+        function tracageReinitialiser() {
+            document.querySelectorAll('.atelier-tracage').forEach(function (carte) {
+                delete carte.__tracage;
+                tracageDeselectionner(carte);
+                tracageRafraichir(carte);
+            });
+        }
+
+        function tracageInitialiser() {
+            const cartes = document.querySelectorAll('.atelier-tracage');
+            if (!cartes.length) return;
+            cartes.forEach(function (carte) {
+                tracageEtat(carte);
+                tracageRafraichir(carte);
+            });
+            window.addEventListener('resize', function () {
+                document.querySelectorAll('.atelier-tracage').forEach(function (carte) {
+                    tracageTracerFils(carte);
+                });
+            });
+        }
+
+
+        // ══════════════════════════════════════════════════════════════════
         //  PUZZLE DE COMPLÉTION DU BONUS (bonus.puzzle)
         //
         //  Données : `bonus.puzzle` de la configuration JSON. Le balisage est
@@ -13234,6 +13828,7 @@
                 delete entree.bloc.__atelier;
                 delete entree.bloc.__reseau;
                 delete entree.bloc.__schema;
+                delete entree.bloc.__tracage;
                 entree.bloc.__schemaSignature = null;
                 entree.bloc.innerHTML = entree.html;
             });
@@ -13269,10 +13864,17 @@
             if (typeof schemaReinitialiser === 'function') {
                 schemaReinitialiser();
             }
+            // Ateliers de traçage du N2 : les fils sont DESSINÉS, pas écrits
+            // dans la page ; la restauration du balisage les efface. On remet
+            // donc l'état interne à zéro et on redessine (c'est-à-dire : rien).
+            if (typeof tracageReinitialiser === 'function') {
+                tracageReinitialiser();
+            }
             mettreAJourSuiteN2();
         }
 
         cablageInitialiser();
+        tracageInitialiser();
         puzzleInitialiser();
         livraisonInitialiser();
         schemaInitialiser();
