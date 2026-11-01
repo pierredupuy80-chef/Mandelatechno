@@ -1962,6 +1962,41 @@
         }
 
         /* ============================================
+           ATELIER DE TRAÇAGE DU N2 (n2.ateliers : type "tracage")
+           Le geste est celui de l'atelier de câblage du N4 — poser des
+           composants, tendre des fils — mais TOUT se fait au clic : il n'y a
+           pas de glisser-déposer, donc pas de `touch-action: none` à hériter.
+           Sans cette règle, le schéma bloquerait le défilement de la page au
+           doigt sur un écran de téléphone.
+           ============================================ */
+
+        .atelier-tracage .cablage-zone {
+            touch-action: auto;
+        }
+
+        .atelier-tracage .noeud-reseau {
+            cursor: pointer;
+        }
+
+        .atelier-tracage .noeud-reseau .reseau-role {
+            font-size: 0.62rem;
+            line-height: 1.1;
+            font-weight: 400;
+        }
+
+        /* La couleur du rôle n'est écrite QUE pour le mode clair : la feuille
+           sombre du gabarit la donne en #b6c4d6 avec `:where()`, donc sans
+           spécificité — une règle non gardée la battrait, et le rôle
+           deviendrait illisible sur le fond sombre. */
+        html:not([data-theme="sombre"]) .atelier-tracage .noeud-reseau .reseau-role {
+            color: #475569;
+        }
+
+        .atelier-tracage .atelier-compteur {
+            margin-top: var(--espacement-sm);
+        }
+
+        /* ============================================
            FICHES DE SYNTHÈSE - CONCLUSION
            ============================================ */
         
@@ -4085,6 +4120,24 @@
             width: 48%;
         }
 
+        /* Tableau de la rubrique « pour approfondir » du bonus (bonus.aprofon-
+           dir) : `.env-table` a été dessiné pour un tableau à DEUX colonnes
+           (capteur / efficacité) et force la dernière à 48 %, ce qui étouffe
+           la première dès qu'il y en a trois. On rend les colonnes égales.
+           Et comme ce tableau est du texte à lire — pas une grille de
+           mesures —, on remonte la taille des cellules sous 480 px : à
+           .85rem, un téléphone affiche du 11,9 px, illisible pour un élève. */
+        [data-ost-id="bonus-aprofondir"] .env-table thead th:last-child,
+        [data-ost-id="bonus-aprofondir"] .env-table tbody td:last-child {
+            width: auto;
+        }
+
+        @media (max-width: 480px) {
+            [data-ost-id="bonus-aprofondir"] .env-table {
+                font-size: 1rem;
+            }
+        }
+
         .env-jauge {
             font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
             letter-spacing: .04em;
@@ -5036,18 +5089,18 @@
                     <h3>Vidéos à regarder</h3>
                     <div class="ressources-video">
                         <article class="carte-video" data-ost-id="n1-video-1">
-                            <h4>Vidéo 1 : La domotique et la maison connectée</h4>
+                            <h4>Vidéo 1 : Maison connectée : qui contrôle qui ?</h4>
                             <iframe 
-                                src="https://tube-sciences-technologies.apps.education.fr/videos/embed/823d6c82-4be1-470d-830f-e81b4dd5c2f5" 
-                                title="Vidéo pédagogique 1 : La domotique et la maison connectée"
+                                src="https://www.youtube.com/embed/_4O7Flecliw" 
+                                title="Vidéo pédagogique 1 : Maison connectée : qui contrôle qui ?"
                                 width="100%" 
                                 height="315" 
                                 frameborder="0" 
                                 allowfullscreen
                                 loading="lazy">
                             </iframe>
-                            <p class="texte-secondaire marge-haut">Durée estimée : 6 minutes</p>
-                            <p class="texte-secondaire">Présentation des systèmes domotiques appliqués à l'éclairage et à la gestion énergétique de l'habitat</p>
+                            <p class="texte-secondaire marge-haut">Durée estimée : 5 min 54 s</p>
+                            <p class="texte-secondaire">L'Esprit Sorcier : à quoi sert la domotique, qui collecte les données de la maison, et ce que cela change pour ceux qui l'habitent</p>
                         </article>
 
                         <article class="carte-video marge-haut" data-ost-id="n1-video-2">
@@ -5911,7 +5964,7 @@
 
                 <div class="carte-contenu">
                     <h2>🎮 Défi ludique</h2>
-                    <p>Mettez vos connaissances à l'épreuve avec ces jeux éducatifs en ligne :</p>
+                    <p>Mettez vos connaissances à l'épreuve avec ce jeu éducatif en ligne :</p>
 
 
 
@@ -5920,36 +5973,48 @@
                     <div class="jeux-bonus">
                         
                     <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-1">
-                        <h3>Simulateur PhET : Efficacité énergétique de la maison</h3>
-                        <p>Expérimentez virtuellement avec l'isolation, l'éclairage et le chauffage pour comprendre les transferts d'énergie et optimiser la consommation</p>
-                        <a href="https://phet.colorado.edu/fr/simulations/house-energy-simulation" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                        <h3>DomoScratch : programme les scénarios de la maison</h3>
+                        <p>Les capteurs sont à gauche, les actionneurs à droite : à toi d'écrire les programmes qui ouvrent les volets à 7 h, allument selon la météo et l'occupation des pièces, et réagissent aux incidents. Projet de Techmania, jouable sans compte.</p>
+                        <a href="https://scratch.mit.edu/projects/86171321/" class="bouton-action" target="_blank" rel="noopener noreferrer">
                             Jouer maintenant →
                         </a>
                         <p class="texte-secondaire marge-haut">Durée : 15 minutes</p>
-                    </article>
-
-                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-2">
-                        <h3>Scratch : Programme ton éclairage intelligent</h3>
-                        <p>Crée un programme simulant un système d'éclairage avec détection de présence et variation automatique selon l'heure</p>
-                        <a href="https://scratch.mit.edu/projects/editor/" class="bouton-action" target="_blank" rel="noopener noreferrer">
-                            Jouer maintenant →
-                        </a>
-                        <p class="texte-secondaire marge-haut">Durée : 20 minutes</p>
-                    </article>
-
-                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-3">
-                        <h3>LearningApps : Quiz Domotique et Développement Durable</h3>
-                        <p>Test interactif sur les économies d'énergie, les objets connectés et l'impact environnemental de la domotique</p>
-                        <a href="https://learningapps.org/" class="bouton-action" target="_blank" rel="noopener noreferrer">
-                            Jouer maintenant →
-                        </a>
-                        <p class="texte-secondaire marge-haut">Durée : 10 minutes</p>
                     </article>
                     </div>
 
                     <div class="info-block marge-haut">
                         <p><strong>🏆 Bravo !</strong> Vous avez complété l'intégralité de l'activité. Continuez à explorer et à apprendre !</p>
                     </div>
+
+                    <div class="carte-contenu marge-haut" data-ost-id="bonus-aprofondir">
+                        <h2>Pour approfondir : les protocoles de la maison connectée</h2>
+                        <p class="texte-secondaire">Deux compléments, à lire après le jeu. D'abord un tableau qui résume les protocoles que l'on rencontre dans une maison connectée — c'est le « langage » que parlent les objets entre eux. Ensuite, quelques lignes sur une question de société : faut-il préférer des protocoles ouverts ?</p>
+                    <div class="marge-haut" data-ost-id="bonus-aprofondir-1">
+                        <h3>1. Les protocoles en un tableau</h3>
+                        <table class="env-table">
+                            <caption>Ordres de grandeur : Zigbee jusqu'à 250 kbit/s, Z-Wave 868 MHz et environ 100 kbit/s, KNX filaire à 9 600 bit/s. Portée et débit dépendent des murs, du nombre d'objets et de la version du protocole.</caption>
+                            <thead>
+                                <tr><th scope="col">Protocole</th><th scope="col">Ce qu'il apporte</th><th scope="col">Ce qu'il impose</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Wi-Fi</strong> — radio 2,4 / 5 GHz</td><td>Déjà présent dans toutes les maisons : l'objet se connecte directement au routeur, sans boîtier intermédiaire, et il est joignable depuis Internet.</td><td>Gros consommateur d'énergie : peu adapté aux objets sur pile, et il encombre le réseau dès que les objets se multiplient.</td></tr>
+                                <tr><td><strong>Bluetooth (BLE)</strong> — radio 2,4 GHz</td><td>Très économe : une pile tient des mois. Le téléphone s'y connecte aussitôt, sans installation.</td><td>Portée d'une seule pièce et peu d'appareils à la fois : ce n'est pas un réseau de maison.</td></tr>
+                                <tr><td><strong>Zigbee</strong> — radio 2,4 GHz, en maillage</td><td>Économe. Chaque objet alimenté relaie le signal des autres : plus il y a d'objets, plus le réseau est solide.</td><td>Il faut une passerelle pour relier la maison à Internet, et tous les objets ne se comprennent pas entre marques.</td></tr>
+                                <tr><td><strong>Z-Wave</strong> — radio 868 MHz, en maillage</td><td>Une fréquence que le Wi-Fi n'utilise pas : moins de brouillage, donc des ordres plus fiables.</td><td>Technologie d'origine industrielle, avec des appareils certifiés par une alliance : le choix est plus étroit et souvent plus cher.</td></tr>
+                                <tr><td><strong>Thread + Matter</strong> — radio en maillage, avec adresse IP</td><td>Chaque objet possède sa propre adresse IP (Thread), et Matter sert de langage commun : des marques différentes se comprennent enfin.</td><td>Standard récent : beaucoup d'objets vendus aujourd'hui ne sont pas encore compatibles, et il faut souvent un boîtier « frontière ».</td></tr>
+                                <tr><td><strong>KNX</strong> — filaire, paire torsadée</td><td>Norme ouverte et très fiable : l'installation fonctionne pendant des décennies, sans dépendre d'un fabricant ni d'un abonnement.</td><td>Cher et lourd à poser (il faut tirer des câbles) : réservé au neuf, aux grands bâtiments et aux projets professionnels.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="marge-haut" data-ost-id="bonus-aprofondir-2">
+                        <h3>2. Pourquoi préférer un protocole ouvert ?</h3>
+                        <p class="marge-haut">Un protocole, c'est le <strong>mode d'emploi du dialogue</strong> entre deux appareils : quel signal, quelles règles, quels messages. Un protocole <strong>ouvert</strong> est un mode d'emploi <strong>public</strong> : n'importe quel fabricant peut le lire, le respecter et fabriquer des appareils compatibles, sans demander l'autorisation à un concurrent. Le Wi-Fi, la famille des protocoles IP, KNX ou Matter sont dans ce cas ; d'autres protocoles restent fermés et n'obéissent qu'aux appareils autorisés par leur propriétaire.</p>
+                        <p class="marge-haut">Ce que cela change dans une maison est très concret. Un protocole ouvert permet de <strong>choisir ses appareils chez plusieurs marques</strong> (donc de comparer les prix), de <strong>garder son installation longtemps</strong>, et de <strong>remplacer un seul élément</strong> au lieu de tout changer. Si un fabricant disparaît ou ferme son service, la lampe continue de fonctionner : elle parle toujours le même langage. Le logement reste utilisable quand on le revend.</p>
+                        <p class="marge-haut">Le piège du protocole fermé est ailleurs : un objet qui n'obéit que par l'application et le serveur de son fabricant devient un <strong>objet mort</strong> le jour où ce serveur s'arrête — parfois au bout de deux ou trois ans. C'est une forme d'<strong>obsolescence programmée</strong>, et cela pèse sur le développement durable : on jette un appareil qui fonctionne encore très bien.</p>
+                        <p class="marge-haut">Une nuance à connaître : ouvert ne veut pas dire gratuit ni parfait. Les normes sont souvent vendues, la certification se paie, et un protocole ouvert peut être mal appliqué. Trois indices restent fiables : la <strong>spécification est publique</strong>, <strong>plusieurs fabricants</strong> proposent des appareils compatibles, et l'objet <strong>fonctionne sans dépendre d'un seul serveur</strong>. C'est la question à poser avant d'acheter : « et si l'application du fabricant disparaît ? »</p>
+                    </div>
+                    </div>
+
 
                     <button class="bouton-action secondaire marge-haut" onclick="recommencerActivite()">
                         🔄 Recommencer l'activité
@@ -5985,7 +6050,7 @@
         // sortie (et refuse de produire si elle est introuvable). Pour
         // reverrouiller une activité déjà générée avant la classe :
         //     python3 mode-developpement.py desactiver ACTIVITE.html
-        const MODE_DEVELOPPEMENT = true;
+        const MODE_DEVELOPPEMENT = false;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -11028,6 +11093,530 @@
 
 
         // ══════════════════════════════════════════════════════════════════
+        //  ATELIER DE TRAÇAGE DU N2 (n2.ateliers[].type = "tracage")
+        //
+        //  Données : `data-tracage` (composants, fils attendus, raisons des
+        //  intrus) et `data-messages` (les phrases du moteur), posés par
+        //  personnaliser.py. Ce moteur ne connaît que le DOM :
+        //    .noeud-reseau[data-piece]        les composants (réserve puis schéma)
+        //    [data-role="reserve"]            la réserve
+        //    [data-role="zone"]               le schéma
+        //    [data-role="fils"]               le calque SVG des fils
+        //
+        //  C'est le geste de l'atelier de câblage du N4, ramené au N2 : l'élève
+        //  CHOISIT ses composants (la réserve peut en contenir de trop, marqués
+        //  `intrus`), les pose sur le schéma, puis TEND UN FIL entre ceux qui
+        //  communiquent réellement. Le schéma se dessine au fur et à mesure.
+        //
+        //  Tout se fait au CLIC (jamais au glisser-déposer) : au doigt le geste
+        //  ferait défiler la page, et au clavier il n'existe pas. Poser,
+        //  sélectionner, relier, ranger et retirer un fil passent donc par de
+        //  vrais <button> ou par des <g tabindex="0"> avec Entrée.
+        //
+        //  Toute modification annule une vérification précédente : l'élève ne
+        //  peut pas valider, puis casser son schéma sans que l'atelier le
+        //  sache — l'atelier obligatoire se refermerait à tort.
+        // ══════════════════════════════════════════════════════════════════
+
+        const TRACAGE_SVG_NS = 'http://www.w3.org/2000/svg';
+
+        function tracageCarte(depuis) {
+            return (depuis && depuis.closest) ? depuis.closest('.atelier-tracage') : null;
+        }
+
+        function tracageEtat(carte) {
+            if (!carte.__tracage) {
+                let donnees = {};
+                let messages = {};
+                try {
+                    donnees = JSON.parse(carte.getAttribute('data-tracage') || '{}') || {};
+                } catch (erreur) { donnees = {}; }
+                try {
+                    messages = JSON.parse(carte.getAttribute('data-messages') || '{}') || {};
+                } catch (erreur) { messages = {}; }
+                carte.__tracage = {
+                    liens: donnees.liens || [],   // fils attendus, avec leur raison
+                    noms: donnees.noms || {},
+                    raisons: donnees.raisons || {},
+                    messages: messages,
+                    fils: [],        // fils tendus par l'élève : {a, b, etat}
+                    selection: null, // composant choisi pour tendre un fil
+                    valide: false
+                };
+            }
+            return carte.__tracage;
+        }
+
+        function tracagePhrase(carte, cle, valeurs) {
+            const texte = tracageEtat(carte).messages[cle];
+            if (typeof texte !== 'string') return '';
+            let rendu = texte;
+            Object.keys(valeurs || {}).forEach(function (nom) {
+                rendu = rendu.split('{' + nom + '}').join(String(valeurs[nom]));
+            });
+            return rendu;
+        }
+
+        function tracageZone(carte) { return carte.querySelector('[data-role="zone"]'); }
+        function tracageReserve(carte) { return carte.querySelector('[data-role="reserve"]'); }
+        function tracageSvg(carte) { return carte.querySelector('[data-role="fils"]'); }
+        function tracageBilan(carte) { return carte.querySelector('[data-role="bilan"]'); }
+
+        function tracagePieces(carte) {
+            return Array.prototype.slice.call(carte.querySelectorAll('.noeud-reseau'));
+        }
+
+        function tracagePiece(carte, cle) {
+            return carte.querySelector('.noeud-reseau[data-piece="' + cle + '"]');
+        }
+
+        function tracageNom(carte, cle) {
+            const piece = tracagePiece(carte, cle);
+            const nom = piece ? piece.querySelector('.noeud-nom') : null;
+            if (nom) return nom.textContent.trim();
+            const noms = tracageEtat(carte).noms || {};
+            return noms[cle] || cle;
+        }
+
+        function tracageEstIntrus(piece) {
+            return !!piece && piece.getAttribute('data-intrus') === '1';
+        }
+
+        function tracageSurPlateau(carte, piece) {
+            return !!piece && piece.parentElement === tracageZone(carte);
+        }
+
+        function tracageClePaire(fil) {
+            return [fil.a, fil.b].sort().join('|');
+        }
+
+        // Première case libre d'une grille : un composant posé au clic doit
+        // donner un schéma lisible, sans superposition.
+        function tracagePositionLibre(carte) {
+            const zone = tracageZone(carte);
+            const largeur = 104;
+            const hauteur = 78;
+            const marge = 8;
+            const colonnes = Math.max(1, Math.floor((zone.clientWidth - marge) / largeur));
+            const occupees = {};
+            tracagePieces(carte).forEach(function (piece) {
+                if (!tracageSurPlateau(carte, piece)) return;
+                occupees[(parseInt(piece.style.left, 10) || 0) + ':' +
+                         (parseInt(piece.style.top, 10) || 0)] = true;
+            });
+            for (let ligne = 0; ligne < 12; ligne += 1) {
+                for (let colonne = 0; colonne < colonnes; colonne += 1) {
+                    const x = marge + colonne * largeur;
+                    const y = marge + ligne * hauteur;
+                    if (!occupees[x + ':' + y]) return { x: x, y: y };
+                }
+            }
+            return { x: marge, y: marge };
+        }
+
+        function tracageRafraichir(carte) {
+            const reserve = tracageReserve(carte);
+            if (reserve) {
+                const reste = reserve.querySelectorAll('.noeud-reseau').length;
+                reserve.classList.toggle('vide', reste === 0);
+            }
+            const indication = carte.querySelector('[data-role="indication"]');
+            if (indication) {
+                const pose = tracagePieces(carte).some(function (piece) {
+                    return tracageSurPlateau(carte, piece);
+                });
+                indication.classList.toggle('cache', pose);
+            }
+            const etat = tracageEtat(carte);
+            const zoneCompteur = carte.querySelector('[data-role="compteur"]');
+            if (zoneCompteur) {
+                const poses = tracagePieces(carte).filter(function (piece) {
+                    return tracageSurPlateau(carte, piece);
+                }).length;
+                zoneCompteur.textContent = tracagePhrase(carte, 'compteur', {
+                    fils: etat.fils.length,
+                    poses: poses,
+                    total: tracagePieces(carte).length
+                });
+            }
+            tracageTracerFils(carte);
+        }
+
+        function tracagePoser(carte, piece) {
+            const zone = tracageZone(carte);
+            if (!zone || !piece) return;
+            const place = tracagePositionLibre(carte);
+            if (piece.parentElement !== zone) zone.appendChild(piece);
+            piece.classList.add('sur-plateau');
+            piece.style.left = place.x + 'px';
+            piece.style.top = place.y + 'px';
+            piece.setAttribute('aria-pressed', 'false');
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+        }
+
+        function tracageRanger(carte, piece) {
+            const reserve = tracageReserve(carte);
+            if (!reserve || !piece) return;
+            const cle = piece.getAttribute('data-piece');
+            const etat = tracageEtat(carte);
+            etat.fils = etat.fils.filter(function (fil) {
+                return fil.a !== cle && fil.b !== cle;
+            });
+            piece.classList.remove('sur-plateau', 'selectionne');
+            piece.style.left = '';
+            piece.style.top = '';
+            piece.setAttribute('aria-pressed', 'false');
+            if (etat.selection === piece) etat.selection = null;
+            reserve.appendChild(piece);
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+        }
+
+        function tracageSelectionner(carte, piece) {
+            const etat = tracageEtat(carte);
+            if (etat.selection === piece) return;
+            if (etat.selection) {
+                etat.selection.classList.remove('selectionne');
+                etat.selection.setAttribute('aria-pressed', 'false');
+            }
+            etat.selection = piece;
+            piece.classList.add('selectionne');
+            piece.setAttribute('aria-pressed', 'true');
+        }
+
+        function tracageDeselectionner(carte) {
+            const etat = tracageEtat(carte);
+            if (!etat.selection) return;
+            etat.selection.classList.remove('selectionne');
+            etat.selection.setAttribute('aria-pressed', 'false');
+            etat.selection = null;
+        }
+
+        // Un seul chemin pour le clic et pour la touche Entrée : ce sont de
+        // vrais <button>, le clavier passe donc par ici aussi.
+        function tracageChoisir(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte || !bouton) return;
+            const etat = tracageEtat(carte);
+            const cle = bouton.getAttribute('data-piece');
+
+            // 1. Un composant de la réserve se pose sur le schéma.
+            if (!tracageSurPlateau(carte, bouton)) {
+                tracagePoser(carte, bouton);
+                atelierRetour(carte, tracagePhrase(carte, 'pose', {
+                    nom: tracageNom(carte, cle)
+                }), 'info');
+                return;
+            }
+
+            // 2. Un second clic sur le composant déjà choisi le renvoie dans la
+            //    réserve : c'est ainsi qu'on retire un intrus posé par erreur.
+            if (etat.selection === bouton) {
+                tracageRanger(carte, bouton);
+                atelierRetour(carte, tracagePhrase(carte, 'rangement', {
+                    nom: tracageNom(carte, cle)
+                }), 'info');
+                return;
+            }
+
+            // 3. Aucun composant choisi : celui-ci attend son fil.
+            if (!etat.selection) {
+                tracageSelectionner(carte, bouton);
+                atelierRetour(carte, tracagePhrase(carte, 'selection', {
+                    nom: tracageNom(carte, cle)
+                }), 'info');
+                return;
+            }
+
+            // 4. Deux composants choisis : on tend le fil.
+            tracageRelier(carte, etat.selection, bouton);
+        }
+
+        function tracageRelier(carte, pieceA, pieceB) {
+            const etat = tracageEtat(carte);
+            const a = pieceA ? pieceA.getAttribute('data-piece') : null;
+            const b = pieceB ? pieceB.getAttribute('data-piece') : null;
+            tracageDeselectionner(carte);
+            if (!a || !b || a === b) return;
+
+            const cle = tracageClePaire({ a: a, b: b });
+            const deja = etat.fils.some(function (fil) {
+                return tracageClePaire(fil) === cle;
+            });
+            if (deja) {
+                atelierRetour(carte, tracagePhrase(carte, 'dejaRelies', {
+                    a: tracageNom(carte, a), b: tracageNom(carte, b)
+                }), 'info');
+                return;
+            }
+
+            etat.fils.push({ a: a, b: b, etat: '' });
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'relier', {
+                a: tracageNom(carte, a), b: tracageNom(carte, b)
+            }), 'info');
+        }
+
+        function tracageSupprimerFil(carte, index) {
+            const etat = tracageEtat(carte);
+            if (!etat.fils[index]) return;
+            etat.fils.splice(index, 1);
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'supprimer', {}), 'info');
+        }
+
+        // `offsetLeft`/`offsetTop` sont déjà mesurés depuis le parent positionné
+        // (le schéma, en `position: relative`) : retrancher la position du
+        // schéma décalait tous les fils vers la gauche et le haut.
+        function tracageCentre(carte, piece) {
+            return {
+                x: piece.offsetLeft + piece.offsetWidth / 2,
+                y: piece.offsetTop + piece.offsetHeight / 2
+            };
+        }
+
+        function tracageTracerFils(carte) {
+            const svg = tracageSvg(carte);
+            if (!svg) return;
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+            const etat = tracageEtat(carte);
+
+            etat.fils.forEach(function (fil, index) {
+                const pieceA = tracagePiece(carte, fil.a);
+                const pieceB = tracagePiece(carte, fil.b);
+                if (!pieceA || !pieceB) return;
+                if (!tracageSurPlateau(carte, pieceA) ||
+                    !tracageSurPlateau(carte, pieceB)) return;
+                const a = tracageCentre(carte, pieceA);
+                const b = tracageCentre(carte, pieceB);
+
+                const groupe = document.createElementNS(TRACAGE_SVG_NS, 'g');
+                groupe.setAttribute('class', 'fil-reseau' + (fil.etat ? ' ' + fil.etat : ''));
+                groupe.setAttribute('tabindex', '0');
+                groupe.setAttribute('role', 'button');
+                groupe.setAttribute('data-fil', String(index));
+                groupe.setAttribute('aria-label', 'Fil entre ' +
+                    tracageNom(carte, fil.a) + ' et ' + tracageNom(carte, fil.b) +
+                    ' : touche Entrée pour supprimer ce fil');
+
+                ['fil-cible', 'fil-trait'].forEach(function (classe) {
+                    const ligne = document.createElementNS(TRACAGE_SVG_NS, 'line');
+                    ligne.setAttribute('class', classe);
+                    ligne.setAttribute('x1', Math.round(a.x));
+                    ligne.setAttribute('y1', Math.round(a.y));
+                    ligne.setAttribute('x2', Math.round(b.x));
+                    ligne.setAttribute('y2', Math.round(b.y));
+                    groupe.appendChild(ligne);
+                });
+
+                groupe.addEventListener('click', function (evenement) {
+                    evenement.stopPropagation();
+                    tracageSupprimerFil(carte, index);
+                });
+                groupe.addEventListener('keydown', function (evenement) {
+                    if (evenement.key === 'Enter' || evenement.key === ' ' ||
+                        evenement.key === 'Spacebar') {
+                        evenement.preventDefault();
+                        evenement.stopPropagation();
+                        tracageSupprimerFil(carte, index);
+                    }
+                });
+
+                svg.appendChild(groupe);
+            });
+        }
+
+        // Toute modification du schéma annule la vérification : sans cela,
+        // l'atelier obligatoire resterait « terminé » sur un schéma cassé.
+        function tracageInvalider(carte) {
+            const etat = tracageEtat(carte);
+            etat.valide = false;
+            etat.fils.forEach(function (fil) { fil.etat = ''; });
+            const bilan = tracageBilan(carte);
+            if (bilan) {
+                bilan.className = 'cablage-bilan cache';
+                bilan.textContent = '';
+            }
+            const explication = carte.querySelector('[data-role="explication"]');
+            if (explication) explication.classList.add('cache');
+            if (carte.getAttribute('data-termine') === '1') {
+                carte.removeAttribute('data-termine');
+                if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+            }
+        }
+
+        function tracageAjouterListe(bilan, titre, messages) {
+            if (!messages.length) return;
+            const sousTitre = document.createElement('p');
+            sousTitre.textContent = titre;
+            bilan.appendChild(sousTitre);
+            const liste = document.createElement('ul');
+            messages.forEach(function (message) {
+                const item = document.createElement('li');
+                item.textContent = message;
+                liste.appendChild(item);
+            });
+            bilan.appendChild(liste);
+        }
+
+        function tracageVerifier(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte) return;
+            const etat = tracageEtat(carte);
+            const pieces = tracagePieces(carte);
+            const erreurs = [];
+            const justes = [];
+
+            // 1. Tous les composants du cas d'usage sont-ils posés ?
+            const absents = pieces.filter(function (piece) {
+                return !tracageEstIntrus(piece) && !tracageSurPlateau(carte, piece);
+            });
+            if (absents.length) {
+                erreurs.push(tracagePhrase(carte, 'manqueComposants', {
+                    n: absents.length,
+                    noms: absents.map(function (piece) {
+                        return tracageNom(carte, piece.getAttribute('data-piece'));
+                    }).join(', ')
+                }));
+            } else {
+                justes.push(tracagePhrase(carte, 'composantsOk', {}));
+            }
+
+            // 2. Un intrus posé sur le schéma n'appartient pas au cas d'usage.
+            const intrusPoses = pieces.filter(function (piece) {
+                return tracageEstIntrus(piece) && tracageSurPlateau(carte, piece);
+            });
+            intrusPoses.forEach(function (piece) {
+                const cle = piece.getAttribute('data-piece');
+                const raison = (etat.raisons || {})[cle] || '';
+                erreurs.push(tracagePhrase(carte, 'intrus', {
+                    nom: tracageNom(carte, cle)
+                }) + (raison ? ' ' + raison : ''));
+            });
+
+            // 3. Chaque fil attendu est-il tendu, et aucun fil en trop ?
+            // Les fils de l'élève portent `a`/`b`, les fils attendus `de`/`vers` :
+            // la clé de comparaison est la même paire triée, quel que soit le
+            // sens dans lequel le fil a été tendu.
+            const attendus = {};
+            etat.liens.forEach(function (lien) {
+                attendus[tracageClePaire({ a: lien.de, b: lien.vers })] = lien;
+            });
+            const tendus = {};
+            etat.fils.forEach(function (fil) {
+                tendus[tracageClePaire(fil)] = fil;
+            });
+            etat.liens.forEach(function (lien) {
+                if (!tendus[tracageClePaire({ a: lien.de, b: lien.vers })]) {
+                    erreurs.push(tracagePhrase(carte, 'manqueFil', {
+                        a: tracageNom(carte, lien.de),
+                        b: tracageNom(carte, lien.vers)
+                    }) + ' ' + lien.pourquoi);
+                }
+            });
+            let justesFils = 0;
+            etat.fils.forEach(function (fil) {
+                const cle = tracageClePaire(fil);
+                if (attendus[cle]) {
+                    justesFils += 1;
+                    return;
+                }
+                erreurs.push(tracagePhrase(carte, 'filEnTrop', {
+                    a: tracageNom(carte, fil.a), b: tracageNom(carte, fil.b)
+                }));
+            });
+            if (etat.fils.length && justesFils === etat.fils.length) {
+                justes.push('Les ' + etat.fils.length + ' fil(s) tendus relient bien '
+                    + 'les composants qui échangent.');
+            } else if (!etat.fils.length) {
+                erreurs.push(tracagePhrase(carte, 'aucunFil', {}));
+            }
+
+            // 4. Les fils se colorent selon le verdict : l'élève voit lequel
+            //    corriger, pas seulement qu'il y a une erreur.
+            const reussi = erreurs.length === 0;
+            etat.fils.forEach(function (fil) {
+                fil.etat = attendus[tracageClePaire(fil)] ? 'juste' : 'faux';
+            });
+            tracageTracerFils(carte);
+            etat.valide = reussi;
+
+            const bilan = tracageBilan(carte);
+            if (bilan) {
+                bilan.textContent = '';
+                bilan.className = 'cablage-bilan ' + (reussi ? 'succes' : 'echec');
+                const titre = document.createElement('p');
+                titre.textContent = reussi
+                    ? tracagePhrase(carte, 'succes', {})
+                    : tracagePhrase(carte, 'echec', { n: erreurs.length });
+                bilan.appendChild(titre);
+                if (!reussi) {
+                    tracageAjouterListe(bilan, 'À corriger :', erreurs);
+                    tracageAjouterListe(bilan, 'Déjà juste :', justes);
+                }
+            }
+
+            if (reussi) {
+                atelierRetour(carte, tracagePhrase(carte, 'succes', {}), 'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte, tracagePhrase(carte, 'echec', { n: erreurs.length }),
+                    'echec');
+            }
+            tracageRafraichir(carte);
+        }
+
+        function tracageEffacerFils(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte) return;
+            tracageEtat(carte).fils = [];
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'effacer', {}), 'info');
+        }
+
+        function tracageToutRanger(bouton) {
+            const carte = tracageCarte(bouton);
+            if (!carte) return;
+            tracageEtat(carte).fils = [];
+            tracagePieces(carte).slice().reverse().forEach(function (piece) {
+                if (tracageSurPlateau(carte, piece)) tracageRanger(carte, piece);
+            });
+            tracageInvalider(carte);
+            tracageRafraichir(carte);
+            atelierRetour(carte, tracagePhrase(carte, 'rangerTout', {}), 'info');
+        }
+
+        // « Recommencer » restaure le balisage d'origine de chaque atelier
+        // (reinitialiserAteliers) : il ne reste ici qu'à refaire l'état interne
+        // et à redessiner, car les fils sont dessinés, pas écrits dans la page.
+        function tracageReinitialiser() {
+            document.querySelectorAll('.atelier-tracage').forEach(function (carte) {
+                delete carte.__tracage;
+                tracageDeselectionner(carte);
+                tracageRafraichir(carte);
+            });
+        }
+
+        function tracageInitialiser() {
+            const cartes = document.querySelectorAll('.atelier-tracage');
+            if (!cartes.length) return;
+            cartes.forEach(function (carte) {
+                tracageEtat(carte);
+                tracageRafraichir(carte);
+            });
+            window.addEventListener('resize', function () {
+                document.querySelectorAll('.atelier-tracage').forEach(function (carte) {
+                    tracageTracerFils(carte);
+                });
+            });
+        }
+
+
+        // ══════════════════════════════════════════════════════════════════
         //  PUZZLE DE COMPLÉTION DU BONUS (bonus.puzzle)
         //
         //  Données : `bonus.puzzle` de la configuration JSON. Le balisage est
@@ -12700,6 +13289,7 @@
                 delete entree.bloc.__atelier;
                 delete entree.bloc.__reseau;
                 delete entree.bloc.__schema;
+                delete entree.bloc.__tracage;
                 entree.bloc.__schemaSignature = null;
                 entree.bloc.innerHTML = entree.html;
             });
@@ -12735,10 +13325,17 @@
             if (typeof schemaReinitialiser === 'function') {
                 schemaReinitialiser();
             }
+            // Ateliers de traçage du N2 : les fils sont DESSINÉS, pas écrits
+            // dans la page ; la restauration du balisage les efface. On remet
+            // donc l'état interne à zéro et on redessine (c'est-à-dire : rien).
+            if (typeof tracageReinitialiser === 'function') {
+                tracageReinitialiser();
+            }
             mettreAJourSuiteN2();
         }
 
         cablageInitialiser();
+        tracageInitialiser();
         puzzleInitialiser();
         livraisonInitialiser();
         schemaInitialiser();
