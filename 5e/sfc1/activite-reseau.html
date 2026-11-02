@@ -3875,6 +3875,103 @@
             </button>
         </header>
 
+<!-- SAUVEGARDE-GREFFE:DEBUT (Greffé par _outils/template-activite/greffer_sauvegarde.py depuis index.html (bloc SAUVEGARDE) : NE PAS ÉDITER ICI — modifier le template, puis `--extraire` et regreffer.) -->
+<style id="ost-style-sauvegarde">
+.sauvegarde-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espacement-sm);
+    margin: 0 0 var(--espacement-md) 0;
+    padding: var(--espacement-sm) var(--espacement-md);
+    background: var(--couleur-fond);
+    border: 1px solid #dce3ed;
+    border-radius: var(--rayon-bordure);
+}
+html[data-theme="sombre"] .sauvegarde-bar {
+    background: #1c2534;
+    border-color: #2b3a52;
+}
+.sauvegarde-intitule {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--couleur-texte-leger);
+    margin-right: auto;
+}
+.sauvegarde-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacement-sm);
+}
+.bouton-sauvegarde {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+    border: 2px solid var(--couleur-primaire);
+    border-radius: var(--rayon-bordure);
+    background: #ffffff;
+    color: #1d4ed8;
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    line-height: 1.2;
+    cursor: pointer;
+}
+html[data-theme="sombre"] .bouton-sauvegarde {
+    background: #1c2534;
+    color: var(--couleur-primaire);
+}
+.bouton-sauvegarde:hover,
+.bouton-sauvegarde:focus-visible {
+    background: var(--couleur-primaire-fond);
+    color: #ffffff;
+    border-color: var(--couleur-primaire-fond);
+}
+html[data-theme="sombre"] .bouton-sauvegarde:hover,
+html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
+    color: #ffffff;
+}
+.sauvegarde-statut {
+    flex-basis: 100%;
+    min-height: 1.4rem;
+    font-size: 0.9rem;
+    color: var(--couleur-texte-leger);
+}
+.sauvegarde-statut.succes {
+    color: var(--couleur-succes);
+    font-weight: 600;
+}
+.sauvegarde-statut.echec {
+    color: var(--couleur-alerte);
+    font-weight: 600;
+}
+</style>
+     Barre « Ma progression » : sauvegarde par fichier (export) et
+     reprise (import). Dans le flux, entre l'en-tête et la barre de
+     progression — visible sur tous les onglets, atteignable au clavier
+     comme les autres commandes. recopiée sur les activités déjà
+     générées par _outils/template-activite/greffer_sauvegarde.py. -->
+<div class="sauvegarde-bar" data-ost-bloc="sauvegarde-progression">
+    <span class="sauvegarde-intitule" id="sauvegarde-intitule">Ma progression</span>
+    <div class="sauvegarde-actions" role="group" aria-labelledby="sauvegarde-intitule">
+        <button type="button" class="bouton-sauvegarde" id="sauvegarde-exporter"
+                aria-label="Sauvegarder ma progression dans un fichier">
+            💾 Sauvegarder
+        </button>
+        <button type="button" class="bouton-sauvegarde" id="sauvegarde-importer"
+                aria-label="Reprendre ma progression depuis un fichier">
+            📂 Reprendre
+        </button>
+        <input type="file" id="sauvegarde-fichier" accept=".json,application/json"
+               aria-label="Fichier de progression à reprendre" hidden>
+    </div>
+    <span class="sauvegarde-statut" id="sauvegarde-statut" role="status" aria-live="polite"></span>
+</div>
+<!-- SAUVEGARDE-GREFFE:FIN -->
+
+
         <script>
             // ============================================
             // OPTION « MODE SOMBRE » DE L'EN-TÊTE
@@ -10278,5 +10375,1391 @@ function animerRouteur(btn) {
     })();
     // ==== PANNEAU-DEV:FIN ====
     </script>
+<!-- SAUVEGARDE-GREFFE-JS:DEBUT (Greffé par _outils/template-activite/greffer_sauvegarde.py depuis index.html (bloc SAUVEGARDE) : NE PAS ÉDITER ICI — modifier le template, puis `--extraire` et regreffer.) -->
+<script id="ost-script-sauvegarde">
+// ============================================================
+// SAUVEGARDE / REPRISE DE LA PROGRESSION (export / import)
+// ============================================================
+// L'élève télécharge sa progression dans un fichier JSON (bouton
+// « Sauvegarder ») et la retrouve sur n'importe quel poste en important ce
+// fichier (bouton « Reprendre »). Rien ne part sur Internet : le fichier
+// reste entre les mains de l'élève.
+//
+// L'état capturé couvre tout ce qui fait la progression d'un parcours :
+//   • les niveaux déverrouillés et validés, l'onglet affiché ;
+//   • les quiz N1/N2 : réponses cochées, verdicts et résultats ;
+//   • la chaîne du N2 explorée (tuiles visitées) ;
+//   • les ateliers du N2 (association, ordre, environnement, choix,
+//     erreur-schema — et les autres types dans la mesure de leur état) ;
+//   • le N3 : objets explorés, diagnostic et solution rédigés, plan
+//     d'action à choix multiple, simulateur ;
+//   • le N4 : champs rédigés, contraintes figées, classement, modèle
+//     retenu, étapes de sélection, bilan, câblage ;
+//   • le N2 « animation » (routeur) et les interactions interacteur-élément.
+//
+// Le code lit et réécrit les structures du moteur (niveauxDebloques,
+// elementsVisites, …) : il vit donc à côté de lui, dans le même document.
+// Définition unique entre les deux marqueurs SAUVEGARDE:JS — recopiée
+// sur les activités déjà générées par
+// _outils/template-activite/greffer_sauvegarde.py.
+(function () {
+  'use strict';
+
+  var FORMAT_NOM = 'progression-activite';
+  var FORMAT_VERSION = 1;
+  var TAILLE_MAX = 2 * 1024 * 1024; // 2 Mio : une progression est un petit JSON
+
+  var boutonExporter = null;
+  var boutonImporter = null;
+  var champFichier = null;
+  var statut = null;
+
+  // ---------------------------------------------------------------
+  // Utilitaires
+  // ---------------------------------------------------------------
+  function $(selecteur, racine) {
+return (racine || document).querySelector(selecteur);
+  }
+
+  function $$(selecteur, racine) {
+return Array.prototype.slice.call((racine || document).querySelectorAll(selecteur));
+  }
+
+  function titreActivite() {
+var h = document.getElementById('titre-activite');
+return h ? String(h.textContent || '').trim() : '';
+  }
+
+  function annoncer(message, classe) {
+if (!statut) return;
+statut.textContent = message;
+statut.className = 'sauvegarde-statut' + (classe ? ' ' + classe : '');
+  }
+
+  function texteEtClasse(element) {
+if (!element) return null;
+return { texte: String(element.textContent || ''), classe: String(element.className || '') };
+  }
+
+  function slug(nom) {
+return String(nom || 'activite').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'activite';
+  }
+
+  function dateFichier() {
+var d = new Date();
+function deux(n) { return n < 10 ? '0' + n : String(n); }
+return d.getFullYear() + '-' + deux(d.getMonth() + 1) + '-' + deux(d.getDate()) +
+    '_' + deux(d.getHours()) + deux(d.getMinutes());
+  }
+
+  // ---------------------------------------------------------------
+  // CAPTURE — niveaux, quiz, chaîne
+  // ---------------------------------------------------------------
+  function capturerNiveaux() {
+return $$('.bouton-onglet').map(function (b) {
+    return {
+        niveau: b.getAttribute('data-niveau'),
+        debloque: !b.classList.contains('verrouille'),
+        valide: b.classList.contains('valide')
+    };
+});
+  }
+
+  function capturerQuiz() {
+var resultat = {};
+['n1', 'n2'].forEach(function (niveau) {
+    var formulaire = document.getElementById('quiz-' + niveau);
+    if (!formulaire) return;
+    var questions = [];
+    $$('.question-quiz', formulaire).forEach(function (question) {
+        var selectionnee = question.querySelector('.option-reponse.selectionnee');
+        var correcte = question.querySelector('.option-reponse.correcte');
+        var incorrecte = question.querySelector('.option-reponse.incorrecte');
+        var feedback = question.querySelector('.feedback-reponse');
+        questions.push({
+            selection: selectionnee ? selectionnee.getAttribute('data-value') : '',
+            correcte: correcte ? correcte.getAttribute('data-value') : '',
+            incorrecte: incorrecte ? incorrecte.getAttribute('data-value') : '',
+            feedback: feedback ? {
+                html: feedback.innerHTML,
+                classe: feedback.className
+            } : null
+        });
+    });
+    var resultatDiv = document.getElementById('resultat-quiz-' + niveau);
+    var message = document.getElementById('message-resultat-' + niveau);
+    var boutonSuite = document.getElementById('bouton-suite-' + niveau);
+    resultat[niveau] = {
+        questions: questions,
+        resultatVisible: !!resultatDiv && resultatDiv.style.display === 'block',
+        message: message ? { html: message.innerHTML, couleur: message.style.color || '' } : null,
+        suiteVisible: !!boutonSuite && !boutonSuite.classList.contains('cache')
+    };
+});
+return resultat;
+  }
+
+  function capturerChaine() {
+if (typeof elementsVisites === 'undefined') return null;
+var tuiles = $$('.element-chaine');
+if (!tuiles.length) return null;
+return {
+    total: tuiles.length,
+    tuiles: tuiles.map(function (t) {
+        return { visite: elementsVisites.has(t), revele: t.classList.contains('revele') };
+    })
+};
+  }
+
+  // ---------------------------------------------------------------
+  // CAPTURE — ateliers du N2
+  // ---------------------------------------------------------------
+  function capturerQuestionsChoix(carte) {
+return $$('.atelier-question', carte).map(function (question) {
+    var choisie = question.querySelector('.atelier-option.choisi');
+    return {
+        choisie: choisie ? choisie.getAttribute('data-valeur') : '',
+        marques: $$('.atelier-option', question).map(function (option) {
+            return {
+                valeur: option.getAttribute('data-valeur'),
+                correcte: option.classList.contains('correcte'),
+                fausse: option.classList.contains('fausse'),
+                checked: option.getAttribute('aria-checked') === 'true'
+            };
+        }),
+        retour: texteEtClasse(question.querySelector('[data-role="retour"]'))
+    };
+});
+  }
+
+  function capturerAteliers() {
+var cartes = $$('.atelier-carte');
+if (!cartes.length) return [];
+return cartes.map(function (carte, index) {
+    var type = carte.getAttribute('data-type') || '';
+    var explication = carte.querySelector('[data-role="explication"]');
+    var etat = {
+        index: index,
+        type: type,
+        atelier: carte.getAttribute('data-atelier'),
+        termine: carte.getAttribute('data-termine') === '1',
+        retour: texteEtClasse(carte.querySelector('[data-role="retour-atelier"]')),
+        explicationVisible: !!explication && !explication.classList.contains('cache')
+    };
+    if (type === 'association') {
+        etat.jetons = $$('.atelier-jeton', carte).map(function (jeton) {
+            return {
+                cote: jeton.getAttribute('data-cote'),
+                paire: jeton.getAttribute('data-paire'),
+                apparie: jeton.classList.contains('apparie'),
+                choisi: jeton.classList.contains('choisi'),
+                pressed: jeton.getAttribute('aria-pressed') === 'true',
+                inactif: !!jeton.disabled
+            };
+        });
+    } else if (type === 'ordre') {
+        etat.slots = $$('.atelier-slot', carte).map(function (slot, indexSlot) {
+            var rempli = slot.classList.contains('rempli');
+            var texte = '';
+            if (rempli) {
+                $$('span', slot).forEach(function (s) {
+                    if (!s.classList.contains('atelier-marqueur')) texte = s.textContent;
+                });
+            }
+            return { rang: indexSlot, rempli: rempli, texte: texte };
+        });
+        etat.maillonsCache = $$('.atelier-jeton[data-rang]', carte)
+            .filter(function (m) { return m.classList.contains('cache'); })
+            .map(function (m) { return m.getAttribute('data-rang'); });
+    } else if (type === 'environnement') {
+        var choisie = carte.querySelector('.env-interacteur.choisi');
+        etat.interacteur = choisie ? choisie.getAttribute('data-interacteur') : '';
+        etat.questions = capturerQuestionsChoix(carte);
+    } else if (type === 'erreur-schema') {
+        if (carte.__schema) {
+            etat.schema = {
+                examinees: Object.keys(carte.__schema.examinees || {}),
+                trouvees: Object.keys(carte.__schema.trouvees || {}),
+                fausses: carte.__schema.fausses || 0,
+                verrouille: !!carte.__schema.verrouille
+            };
+        }
+    } else {
+        // Filet : un type non couvert garde son état interne et ses
+        // questions de choix, quand il en a. Jamais bloquant : le
+        // fichier reste importable, l'essentiel du parcours est rétabli.
+        if (carte.__atelier) etat.interne = JSON.parse(JSON.stringify(carte.__atelier));
+        etat.questions = capturerQuestionsChoix(carte);
+    }
+    return etat;
+});
+  }
+
+  // ---------------------------------------------------------------
+  // CAPTURE — N3 (objets, diagnostic, plan d'action, simulateur)
+  // ---------------------------------------------------------------
+  function capturerObjetsN3() {
+var objets = $$('.objet-explorable');
+if (!objets.length) return null;
+return {
+    total: objets.length,
+    objets: objets.map(function (objet) {
+        return {
+            explore: objet.classList.contains('explore'),
+            vus: objet.hasAttribute('data-objets-vus')
+        };
+    })
+};
+  }
+
+  function capturerQcm() {
+var conteneur = document.getElementById('qcm-correctif');
+if (!conteneur || typeof qcmCorrectif === 'undefined') return null;
+var compteur = document.getElementById('compteur-selection');
+var messageQcm = document.getElementById('message-qcm-correctif');
+var messagePlan = document.getElementById('message-plan-action');
+return {
+    maximum: conteneur.getAttribute('data-maximum') || '',
+    selection: Array.from(qcmCorrectif.selection || []),
+    verifie: !!qcmCorrectif.verifie,
+    compteur: compteur ? compteur.textContent : '',
+    messageQcm: messageQcm ? messageQcm.textContent : '',
+    messagePlan: messagePlan ? messagePlan.textContent : '',
+    actions: $$('.action-corrective', conteneur).map(function (action) {
+        var statutAction = action.querySelector('.statut-action');
+        var explicationAction = action.parentNode
+            ? action.parentNode.querySelector('.explication-action') : null;
+        return {
+            id: action.getAttribute('data-action'),
+            selectionnee: action.classList.contains('selectionnee'),
+            bonne: action.classList.contains('bonne'),
+            mauvaise: action.classList.contains('mauvaise'),
+            oubliee: action.classList.contains('oubliee'),
+            checked: action.getAttribute('aria-checked') === 'true',
+            statut: statutAction ? statutAction.textContent : '',
+            explicationVisible: !!explicationAction && !explicationAction.hidden
+        };
+    })
+};
+  }
+
+  function capturerSimulateur() {
+var racine = document.getElementById('simulateur-n3');
+if (!racine) return null;
+return {
+    valide: racine.getAttribute('data-simulateur-valide') === '1',
+    termine: racine.getAttribute('data-termine') === '1',
+    curseurs: $$('input[type="range"][data-param]', racine).map(function (c) {
+        return { param: c.getAttribute('data-param'), valeur: c.value };
+    }),
+    explicationVisible: (function () {
+        var e = document.getElementById('simulateur-explication');
+        return !!e && !e.hidden;
+    })()
+};
+  }
+
+  function capturerN3() {
+var resultat = {};
+var objets = capturerObjetsN3();
+if (objets) resultat.objets = objets;
+var champs = [];
+['diagnostic-eleve', 'solution-eleve'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) champs.push({ id: id, valeur: el.value });
+});
+if (champs.length) resultat.champs = champs;
+var feedback = document.getElementById('feedback-diagnostic');
+if (feedback) resultat.feedbackVisible = feedback.style.display === 'block';
+var qcm = capturerQcm();
+if (qcm) resultat.qcm = qcm;
+var simulateur = capturerSimulateur();
+if (simulateur) resultat.simulateur = simulateur;
+return resultat;
+  }
+
+  // ---------------------------------------------------------------
+  // CAPTURE — N4 (champs, conception guidée, sélections, bilan, câblage)
+  // ---------------------------------------------------------------
+  function capturerChampsN4() {
+var racine = document.getElementById('contenu-n4-probleme');
+if (!racine) return [];
+var resultat = [];
+var controle = 'textarea, input:not([type="file"]):not([type="hidden"])' +
+    ':not([type="checkbox"]):not([type="radio"]), select';
+$$(controle, racine).forEach(function (el, index) {
+    resultat.push({
+        chemin: el.id ? ('id:' + el.id) : ('index:' + index),
+        valeur: el.value
+    });
+});
+return resultat;
+  }
+
+  function capturerGuideN4() {
+var zone = document.getElementById('conception-guidee');
+if (!zone) return null;
+var reglages = zone.querySelector('.reglages-contraintes[data-figer="1"]');
+var tuiles = document.getElementById('tuiles-contraintes');
+var choisi = zone.querySelector('.modele-ost.choisi');
+var tri = document.getElementById('tri-comparateur');
+var listeRecap = document.getElementById('contraintes-recap-liste');
+var recap = document.getElementById('contraintes-recap');
+var etapeComparateur = document.getElementById('etape-comparateur');
+return {
+    fige: !!reglages && reglages.getAttribute('data-fige') === '1',
+    modele: choisi ? (choisi.getAttribute('data-nom') || '') : '',
+    tri: tri ? tri.value : '',
+    classement: tuiles
+        ? $$('.tuile-contrainte', tuiles).map(function (t) {
+            return t.getAttribute('data-nom') || '';
+        })
+        : null,
+    recapHtml: listeRecap ? listeRecap.innerHTML : '',
+    recapVisible: !!recap && !recap.hidden,
+    comparateurOuvert: !etapeComparateur || !etapeComparateur.classList.contains('cache')
+};
+  }
+
+  function capturerSelectionsN4() {
+return $$('#contenu-n4-probleme [data-conception-selection]').map(function (conteneur) {
+    var compteur = conteneur.querySelector('.compteur-selection');
+    var retour = conteneur.querySelector('.etape-selection-retour');
+    var globale = conteneur.querySelector('.etape-selection-explication');
+    var items = [];
+    $$('.choix-item', conteneur).forEach(function (item) {
+        var bouton = item.querySelector('.choix-contrainte');
+        if (!bouton) return;
+        var explication = item.querySelector('.choix-explication');
+        items.push({
+            essentielle: bouton.getAttribute('data-essentielle') === '1',
+            pressed: bouton.getAttribute('aria-pressed') === 'true',
+            etat: item.getAttribute('data-etat') || '',
+            explication: explication
+                ? { texte: explication.textContent, cache: explication.classList.contains('cache') }
+                : null
+        });
+    });
+    return {
+        maximum: conteneur.getAttribute('data-maximum') || '',
+        termine: conteneur.getAttribute('data-termine') === '1',
+        items: items,
+        compteur: compteur ? compteur.textContent : '',
+        retour: texteEtClasse(retour),
+        globaleCache: !globale || globale.classList.contains('cache')
+    };
+});
+  }
+
+  function capturerDimensionnement() {
+var racine = document.getElementById('dimensionnement');
+if (!racine || typeof dimensionnement === 'undefined') return null;
+return {
+    choix: JSON.parse(JSON.stringify(dimensionnement.choix || {})),
+    termine: racine.getAttribute('data-atelier-valide') === '1'
+};
+  }
+
+  function capturerCablage() {
+var atelier = document.getElementById('cablage-atelier');
+if (!atelier || typeof CABLAGE === 'undefined') return null;
+var zone = document.getElementById('cablage-zone');
+var retour = document.getElementById('cablage-retour');
+var bilan = document.getElementById('cablage-bilan');
+var indication = document.getElementById('cablage-indication');
+return {
+    valide: !!CABLAGE.valide,
+    fils: (CABLAGE.fils || []).map(function (fil) {
+        return { a: fil.a, b: fil.b, etat: fil.etat || '' };
+    }),
+    noeuds: $$('.noeud-reseau', atelier).map(function (noeud) {
+        var surPlateau = zone && noeud.parentElement === zone;
+        return {
+            id: noeud.getAttribute('data-noeud'),
+            surPlateau: !!surPlateau,
+            x: surPlateau ? (noeud.style.left || '') : '',
+            y: surPlateau ? (noeud.style.top || '') : ''
+        };
+    }),
+    retour: texteEtClasse(retour),
+    bilanVisible: !!bilan && !bilan.hidden,
+    indicationCache: !!indication && indication.classList.contains('cache')
+};
+  }
+
+  function capturerRouteur() {
+var groupe = document.getElementById('aroute-scenarios');
+if (!groupe) return null;
+var selection = groupe.querySelector('.aroute-scenario.selectionne');
+var legende = document.getElementById('aroute-legende');
+return {
+    scenario: selection ? selection.getAttribute('data-scenario') : '',
+    legende: legende ? legende.textContent : ''
+};
+  }
+
+  function capturerInteractions() {
+var interacteur = '';
+var element = '';
+$$('.inter-bouton[data-interacteur]').forEach(function (b) {
+    if (b.classList.contains('selectionne')) interacteur = b.getAttribute('data-interacteur') || '';
+});
+$$('.inter-bouton[data-element]').forEach(function (b) {
+    if (b.classList.contains('selectionne')) element = b.getAttribute('data-element') || '';
+});
+if (!interacteur && !element) return null;
+var resultat = document.getElementById('inter-resultat');
+return {
+    interacteur: interacteur,
+    element: element,
+    resultatHtml: resultat ? resultat.innerHTML : '',
+    resultatClasse: resultat ? resultat.className : ''
+};
+  }
+
+  function capturerEtat() {
+var etat = {
+    niveaux: capturerNiveaux(),
+    active: (function () {
+        var actif = document.querySelector('.bouton-onglet.actif');
+        return actif ? actif.getAttribute('data-niveau') : 'n1-intro';
+    })(),
+    quiz: capturerQuiz(),
+    chaine: capturerChaine(),
+    ateliers: capturerAteliers(),
+    n3: capturerN3(),
+    n4: (function () {
+        var resultat = {};
+        var champs = capturerChampsN4();
+        if (champs.length) resultat.champs = champs;
+        var guide = capturerGuideN4();
+        if (guide) resultat.guide = guide;
+        var selections = capturerSelectionsN4();
+        if (selections.length) resultat.selections = selections;
+        var dimensionnement = capturerDimensionnement();
+        if (dimensionnement) resultat.dimensionnement = dimensionnement;
+        var bilanTexte = document.getElementById('bilan-n4-texte');
+        var bilanResultat = document.getElementById('bilan-n4-resultat');
+        var bilanEtat = document.getElementById('bilan-n4-etat');
+        var confirmation = document.getElementById('confirmation-conception');
+        if (bilanTexte) resultat.bilanTexte = bilanTexte.value;
+        if (bilanResultat) resultat.bilanVisible = !bilanResultat.hidden;
+        if (bilanEtat) resultat.bilanMessage = bilanEtat.textContent;
+        if (confirmation) resultat.confirmationVisible = confirmation.style.display === 'block';
+        return resultat;
+    })(),
+    cablage: capturerCablage(),
+    routeur: capturerRouteur(),
+    interactions: capturerInteractions()
+};
+return etat;
+  }
+
+  // ---------------------------------------------------------------
+  // RESTAURATION — niveaux, quiz, chaîne, ateliers
+  // ---------------------------------------------------------------
+  function niveauDe(niveauId) {
+return String(niveauId || '').split('-')[0];
+  }
+
+  function reinitialiserComplet() {
+// La page repart de zéro, comme le fait « Recommencer l'activité »,
+// sans confirmation ni défilement : l'état sauvegardé est ensuite
+// appliqué par-dessus.
+if (typeof niveauxDebloques !== 'undefined') {
+    niveauxDebloques.length = 0;
+    niveauxDebloques.push('n1-intro');
+}
+if (typeof niveauxValides !== 'undefined') niveauxValides.clear();
+if (typeof elementsVisites !== 'undefined') elementsVisites.clear();
+if (typeof objetsExplores !== 'undefined') objetsExplores = 0;
+
+document.querySelectorAll('.objet-explorable[data-objets-vus]').forEach(function (objet) {
+    objet.removeAttribute('data-objets-vus');
+    objet.classList.remove('explore');
+    objet.setAttribute('aria-expanded', 'false');
+});
+
+document.querySelectorAll('textarea').forEach(function (zone) { zone.value = ''; });
+document.querySelectorAll('select').forEach(function (zone) { zone.value = ''; });
+
+document.querySelectorAll('.option-reponse').forEach(function (option) {
+    option.classList.remove('correcte', 'incorrecte', 'selectionnee');
+    option.setAttribute('aria-checked', 'false');
+});
+document.querySelectorAll('.feedback-reponse').forEach(function (feedback) {
+    feedback.classList.remove('visible', 'correct', 'incorrect');
+    feedback.innerHTML = '';
+});
+
+document.querySelectorAll('.element-chaine').forEach(function (element, index) {
+    element.classList.remove('revele', 'visite');
+    var zoneDetails = document.getElementById('details-chaine');
+    var info = (zoneDetails && zoneDetails.querySelector(
+        '.info-element[data-pour-tuile="' + index + '"]')) ||
+        element.querySelector('.info-element');
+    if (info && element.querySelector('.info-element') !== info) {
+        element.appendChild(info);
+    }
+});
+var boutonSuiteN2 = document.getElementById('bouton-suite-n2-intro');
+if (boutonSuiteN2) boutonSuiteN2.disabled = true;
+
+if (document.getElementById('cablage-atelier') &&
+    typeof cablageReinitialiser === 'function') {
+    cablageReinitialiser();
+}
+if (typeof reinitialiserAteliers === 'function') {
+    try { reinitialiserAteliers(); } catch (erreur) { /* page sans ateliers */ }
+}
+if (typeof n4ReinitialiserConception === 'function') n4ReinitialiserConception();
+if (typeof n4ReinitialiserSelections === 'function') n4ReinitialiserSelections();
+if (typeof n3ReinitialiserQCMCorrectif === 'function') n3ReinitialiserQCMCorrectif();
+if (document.getElementById('dimensionnement') &&
+    typeof n4ReinitialiserDimensionnement === 'function') {
+    n4ReinitialiserDimensionnement();
+}
+
+// Animation du routeur et interactions : état d'origine.
+if (typeof window.__AROUTE !== 'undefined' && window.__AROUTE) {
+    if (window.__AROUTE.minuteur) {
+        clearInterval(window.__AROUTE.minuteur);
+        window.__AROUTE.minuteur = null;
+    }
+    window.__AROUTE.scenario = null;
+    window.__AROUTE.index = 0;
+    window.__AROUTE.chemin = [];
+}
+var groupeScenarios = document.getElementById('aroute-scenarios');
+if (groupeScenarios) {
+    groupeScenarios.querySelectorAll('.aroute-scenario').forEach(function (b, index) {
+        b.classList.remove('selectionne');
+        b.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+    });
+}
+if (typeof window.__interSel !== 'undefined' && window.__interSel) {
+    window.__interSel.interacteur = null;
+    window.__interSel.element = null;
+}
+document.querySelectorAll('.inter-bouton.selectionne').forEach(function (b) {
+    b.classList.remove('selectionne');
+});
+var interResultat = document.getElementById('inter-resultat');
+if (interResultat) {
+    interResultat.innerHTML = '';
+    interResultat.className = '';
+}
+
+document.querySelectorAll('.bouton-onglet').forEach(function (bouton, index) {
+    if (index === 0) {
+        bouton.classList.remove('verrouille', 'valide');
+        bouton.disabled = false;
+    } else {
+        bouton.classList.add('verrouille');
+        bouton.classList.remove('valide');
+        bouton.disabled = true;
+    }
+});
+document.querySelectorAll('[id^="resultat-quiz-"]').forEach(function (div) {
+    div.style.display = 'none';
+});
+var feedbackDiagnostic = document.getElementById('feedback-diagnostic');
+if (feedbackDiagnostic) feedbackDiagnostic.style.display = 'none';
+var confirmation = document.getElementById('confirmation-conception');
+if (confirmation) confirmation.style.display = 'none';
+// Le tri du comparateur repart à « par défaut ».
+var tri = document.getElementById('tri-comparateur');
+if (tri) tri.value = '';
+if (typeof n4TrierModeles === 'function') n4TrierModeles();
+  }
+
+  function restaurerNiveaux(niveaux) {
+if (!niveaux || !Array.isArray(niveaux) || typeof niveauxDebloques === 'undefined') return;
+niveauxDebloques.length = 0;
+niveauxDebloques.push('n1-intro');
+if (typeof niveauxValides !== 'undefined') niveauxValides.clear();
+niveaux.forEach(function (info) {
+    var bouton = document.querySelector('.bouton-onglet[data-niveau="' + info.niveau + '"]');
+    if (!bouton) return;
+    if (info.debloque) {
+        bouton.classList.remove('verrouille');
+        bouton.disabled = false;
+        if (!niveauxDebloques.includes(info.niveau)) niveauxDebloques.push(info.niveau);
+    }
+    if (info.valide) {
+        bouton.classList.add('valide');
+        if (typeof niveauxValides !== 'undefined') niveauxValides.add(niveauDe(info.niveau));
+    }
+});
+  }
+
+  function restaurerQuiz(quiz) {
+if (!quiz) return;
+Object.keys(quiz).forEach(function (niveau) {
+    var bloc = quiz[niveau];
+    var formulaire = document.getElementById('quiz-' + niveau);
+    if (!formulaire || !bloc) return;
+    var questions = $$('.question-quiz', formulaire);
+    $$('.option-reponse', formulaire).forEach(function (option) {
+        option.classList.remove('selectionnee', 'correcte', 'incorrecte');
+        option.setAttribute('aria-checked', 'false');
+    });
+    (bloc.questions || []).forEach(function (etatQuestion, index) {
+        var question = questions[index];
+        if (!question) return;
+        if (etatQuestion.selection) {
+            var option = question.querySelector(
+                '.option-reponse[data-value="' + etatQuestion.selection + '"]');
+            if (option) {
+                option.classList.add('selectionnee');
+                option.setAttribute('aria-checked', 'true');
+            }
+        }
+        if (etatQuestion.correcte) {
+            var bonne = question.querySelector(
+                '.option-reponse[data-value="' + etatQuestion.correcte + '"]');
+            if (bonne) bonne.classList.add('correcte');
+        }
+        if (etatQuestion.incorrecte) {
+            var fausse = question.querySelector(
+                '.option-reponse[data-value="' + etatQuestion.incorrecte + '"]');
+            if (fausse) fausse.classList.add('incorrecte');
+        }
+        var feedback = question.querySelector('.feedback-reponse');
+        if (feedback) {
+            if (etatQuestion.feedback) {
+                feedback.innerHTML = etatQuestion.feedback.html;
+                feedback.className = etatQuestion.feedback.classe;
+            } else {
+                feedback.innerHTML = '';
+                feedback.className = 'feedback-reponse';
+            }
+        }
+    });
+    var resultatDiv = document.getElementById('resultat-quiz-' + niveau);
+    var message = document.getElementById('message-resultat-' + niveau);
+    var boutonSuite = document.getElementById('bouton-suite-' + niveau);
+    if (resultatDiv) resultatDiv.style.display = bloc.resultatVisible ? 'block' : 'none';
+    if (message && bloc.message) {
+        message.innerHTML = bloc.message.html;
+        message.style.color = bloc.message.couleur || '';
+    }
+    if (boutonSuite) boutonSuite.classList.toggle('cache', !bloc.suiteVisible);
+});
+  }
+
+  function restaurerChaine(etat) {
+if (!etat || typeof elementsVisites === 'undefined') return;
+var tuiles = $$('.element-chaine');
+if (tuiles.length !== etat.total) return; // la structure a changé : on n'applique pas
+tuiles.forEach(function (tuile, index) {
+    tuile.classList.remove('revele', 'visite');
+    var zoneDetails = document.getElementById('details-chaine');
+    var info = (zoneDetails && zoneDetails.querySelector(
+        '.info-element[data-pour-tuile="' + index + '"]')) ||
+        tuile.querySelector('.info-element');
+    if (info && tuile.querySelector('.info-element') !== info) tuile.appendChild(info);
+});
+elementsVisites.clear();
+etat.tuiles.forEach(function (tuile, index) {
+    if (tuile.visite) elementsVisites.add(tuiles[index]);
+});
+etat.tuiles.forEach(function (tuile, index) {
+    if (tuile.revele && typeof revelerElement === 'function') revelerElement(tuiles[index]);
+});
+if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+  }
+
+  // ---------------------------------------------------------------
+  // RESTAURATION — ateliers
+  // ---------------------------------------------------------------
+  function restaurerQuestionsChoix(carte, questions) {
+(questions || []).forEach(function (q, index) {
+    var liste = carte.querySelectorAll('.atelier-question');
+    var question = liste[index];
+    if (!question) return;
+    question.querySelectorAll('.atelier-option').forEach(function (option) {
+        option.classList.remove('choisi', 'correcte', 'fausse');
+        option.setAttribute('aria-checked', 'false');
+    });
+    (q.marques || []).forEach(function (marque) {
+        var option = question.querySelector(
+            '.atelier-option[data-valeur="' + marque.valeur + '"]');
+        if (!option) return;
+        if (marque.correcte) option.classList.add('correcte');
+        if (marque.fausse) option.classList.add('fausse');
+        if (marque.checked) option.setAttribute('aria-checked', 'true');
+    });
+    if (q.choisie) {
+        var choisie = question.querySelector(
+            '.atelier-option[data-valeur="' + q.choisie + '"]');
+        if (choisie) {
+            choisie.classList.add('choisi');
+            choisie.setAttribute('aria-checked', 'true');
+        }
+    }
+    var retour = question.querySelector('[data-role="retour"]');
+    if (retour && q.retour) {
+        retour.textContent = q.retour.texte;
+        retour.className = q.retour.classe;
+    }
+});
+  }
+
+  function restaurerAteliers(ateliers) {
+if (!Array.isArray(ateliers)) return;
+ateliers.forEach(function (etat) {
+    var carte = null;
+    if (etat.index !== undefined) {
+        var liste = $$('.atelier-carte');
+        if (etat.index < liste.length) carte = liste[etat.index];
+    }
+    if (!carte && etat.atelier) {
+        carte = document.querySelector('.atelier-carte[data-atelier="' + etat.atelier + '"]');
+    }
+    if (!carte) return;
+    appliquerEtatAtelier(carte, etat);
+});
+  }
+
+  function appliquerEtatAtelier(carte, etat) {
+var type = etat.type || carte.getAttribute('data-type') || '';
+
+var retour = carte.querySelector('[data-role="retour-atelier"]');
+if (retour && etat.retour) {
+    retour.textContent = etat.retour.texte;
+    retour.className = etat.retour.classe;
+}
+var explication = carte.querySelector('[data-role="explication"]');
+if (explication) explication.classList.toggle('cache', !etat.explicationVisible);
+if (etat.termine) carte.setAttribute('data-termine', '1');
+else carte.removeAttribute('data-termine');
+
+if (type === 'association') {
+    var pairesTrouvees = 0;
+    (etat.jetons || []).forEach(function (jeton) {
+        var j = carte.querySelector('.atelier-jeton[data-cote="' + jeton.cote +
+            '"][data-paire="' + jeton.paire + '"]');
+        if (!j) return;
+        j.classList.toggle('apparie', !!jeton.apparie);
+        j.classList.toggle('choisi', !!jeton.choisi);
+        j.setAttribute('aria-pressed', jeton.pressed ? 'true' : 'false');
+        j.disabled = !!jeton.inactif;
+        if (jeton.apparie) pairesTrouvees += 1;
+    });
+    pairesTrouvees = Math.floor(pairesTrouvees / 2);
+    var total = carte.querySelectorAll('.atelier-jeton[data-cote="constituant"]').length;
+    carte.__atelier = {
+        attente: null,
+        paires: pairesTrouvees,
+        total: total,
+        rang: 0,
+        verrouille: etat.termine || pairesTrouvees >= total
+    };
+    if (typeof atelierCompteur === 'function') atelierCompteur(carte);
+} else if (type === 'ordre') {
+    $$('.atelier-slot', carte).forEach(function (slot) {
+        slot.classList.remove('rempli');
+        var marqueur = slot.querySelector('.atelier-marqueur');
+        $$('span', slot).forEach(function (s) {
+            if (s !== marqueur) s.parentNode.removeChild(s);
+        });
+    });
+    $$('.atelier-jeton[data-rang]', carte).forEach(function (maillon) {
+        maillon.classList.remove('cache');
+    });
+    var rangs = 0;
+    (etat.slots || []).forEach(function (slotEtat, index) {
+        var slot = carte.querySelector('.atelier-slot[data-slot="' + index + '"]');
+        if (!slot || !slotEtat.rempli || !slotEtat.texte) return;
+        var texte = document.createElement('span');
+        texte.textContent = slotEtat.texte;
+        slot.appendChild(texte);
+        slot.classList.add('rempli');
+        var maillon = carte.querySelector('.atelier-jeton[data-rang="' + index + '"]');
+        if (maillon) maillon.classList.add('cache');
+        rangs += 1;
+    });
+    var slotsTotaux = carte.querySelectorAll('.atelier-slot').length;
+    carte.__atelier = {
+        attente: null,
+        paires: rangs,
+        total: slotsTotaux,
+        rang: rangs,
+        verrouille: etat.termine || rangs >= slotsTotaux
+    };
+    if (typeof atelierCompteur === 'function') atelierCompteur(carte);
+} else if (type === 'environnement') {
+    if (etat.interacteur) {
+        var boutonEnv = carte.querySelector(
+            '.env-interacteur[data-interacteur="' + etat.interacteur + '"]');
+        if (boutonEnv) {
+            carte.querySelectorAll('.env-interacteur').forEach(function (autre) {
+                autre.classList.remove('choisi');
+                autre.setAttribute('aria-pressed', 'false');
+            });
+            boutonEnv.classList.add('choisi');
+            boutonEnv.setAttribute('aria-pressed', 'true');
+            if (typeof atelierChoisirInteracteur === 'function') {
+                try { atelierChoisirInteracteur(boutonEnv); } catch (erreur) { /* rendu manuel déjà fait */ }
+            }
+        }
+    }
+    restaurerQuestionsChoix(carte, etat.questions);
+} else if (type === 'erreur-schema') {
+    if (etat.schema) {
+        var totalFausses = etat.schema.fausses || 0;
+        carte.__schema = {
+            examinees: {},
+            trouvees: {},
+            fausses: totalFausses,
+            verrouille: !!etat.schema.verrouille
+        };
+        (etat.schema.examinees || []).forEach(function (cle) {
+            if (cle !== undefined && cle !== null) carte.__schema.examinees[cle] = true;
+        });
+        (etat.schema.trouvees || []).forEach(function (cle) {
+            if (cle !== undefined && cle !== null) carte.__schema.trouvees[cle] = true;
+        });
+        if (typeof schemaCompteur === 'function') schemaCompteur(carte);
+        if (typeof schemaTracer === 'function') {
+            try { schemaTracer(carte); } catch (erreur) { /* tracé reporté au rafraîchissement */ }
+        }
+    }
+} else {
+    // Filet générique : état interne et questions de choix.
+    if (etat.interne) carte.__atelier = etat.interne;
+    restaurerQuestionsChoix(carte, etat.questions);
+}
+
+if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+  }
+
+  // ---------------------------------------------------------------
+  // RESTAURATION — N3
+  // ---------------------------------------------------------------
+  function restaurerN3(etat) {
+if (!etat) return;
+if (etat.objets) {
+    var objets = $$('.objet-explorable');
+    var compteur = 0;
+    etat.objets.objets.forEach(function (o, index) {
+        var el = objets[index];
+        if (!el) return;
+        el.classList.toggle('explore', !!o.explore);
+        if (o.vus) {
+            el.setAttribute('data-objets-vus', 'oui');
+            compteur += 1;
+        } else {
+            el.removeAttribute('data-objets-vus');
+        }
+        el.setAttribute('aria-expanded', o.explore ? 'true' : 'false');
+    });
+    if (typeof objetsExplores !== 'undefined') objetsExplores = compteur;
+}
+(etat.champs || []).forEach(function (champ) {
+    var el = document.getElementById(champ.id);
+    if (el) el.value = champ.valeur;
+});
+var feedback = document.getElementById('feedback-diagnostic');
+if (feedback) feedback.style.display = etat.feedbackVisible ? 'block' : 'none';
+if (etat.qcm) restaurerQcm(etat.qcm);
+if (etat.simulateur) restaurerSimulateur(etat.simulateur);
+  }
+
+  function restaurerQcm(etat) {
+if (!etat || typeof qcmCorrectif === 'undefined' || !qcmCorrectif) return;
+var conteneur = document.getElementById('qcm-correctif');
+if (!conteneur) return;
+qcmCorrectif.selection.clear();
+(etat.selection || []).forEach(function (id) { qcmCorrectif.selection.add(id); });
+qcmCorrectif.verifie = !!etat.verifie;
+(etat.actions || []).forEach(function (actionEtat) {
+    var action = conteneur.querySelector(
+        '.action-corrective[data-action="' + actionEtat.id + '"]');
+    if (!action) return;
+    action.classList.toggle('selectionnee', !!actionEtat.selectionnee);
+    action.classList.toggle('bonne', !!actionEtat.bonne);
+    action.classList.toggle('mauvaise', !!actionEtat.mauvaise);
+    action.classList.toggle('oubliee', !!actionEtat.oubliee);
+    action.setAttribute('aria-checked', actionEtat.checked ? 'true' : 'false');
+    var statutAction = action.querySelector('.statut-action');
+    if (statutAction) statutAction.textContent = actionEtat.statut || '';
+    var explication = action.parentNode
+        ? action.parentNode.querySelector('.explication-action') : null;
+    if (explication) explication.hidden = !actionEtat.explicationVisible;
+});
+var compteur = document.getElementById('compteur-selection');
+if (compteur && etat.compteur) compteur.textContent = etat.compteur;
+var messageQcm = document.getElementById('message-qcm-correctif');
+if (messageQcm && etat.messageQcm !== undefined) messageQcm.textContent = etat.messageQcm;
+var messagePlan = document.getElementById('message-plan-action');
+if (messagePlan && etat.messagePlan !== undefined) messagePlan.textContent = etat.messagePlan;
+  }
+
+  function restaurerSimulateur(etat) {
+var racine = document.getElementById('simulateur-n3');
+if (!racine) return;
+(etat.curseurs || []).forEach(function (curseur) {
+    var el = racine.querySelector('input[type="range"][data-param="' +
+        curseur.param + '"]');
+    if (el) el.value = curseur.valeur;
+});
+racine.setAttribute('data-simulateur-valide', etat.valide ? '1' : '0');
+racine.setAttribute('data-termine', etat.termine ? '1' : '0');
+var explication = document.getElementById('simulateur-explication');
+if (explication) explication.hidden = !etat.explicationVisible;
+if (typeof n3RafraichirSimulateur === 'function') {
+    try { n3RafraichirSimulateur(); } catch (erreur) { /* rendu manuel */ }
+}
+  }
+
+  // ---------------------------------------------------------------
+  // RESTAURATION — N4
+  // ---------------------------------------------------------------
+  function restaurerChampsN4(champs) {
+(champs || []).forEach(function (champ) {
+    if (!champ.chemin) return;
+    if (champ.chemin.indexOf('id:') === 0) {
+        var el = document.getElementById(champ.chemin.slice(3));
+        if (el) el.value = champ.valeur;
+    } else if (champ.chemin.indexOf('index:') === 0) {
+        // Retrouvé par position dans la même liste de contrôles.
+        var controles = $$('#contenu-n4-probleme textarea, ' +
+            '#contenu-n4-probleme input:not([type="file"]):not([type="hidden"])' +
+            ':not([type="checkbox"]):not([type="radio"]), ' +
+            '#contenu-n4-probleme select');
+        var cible = controles[parseInt(champ.chemin.slice(6), 10) || 0];
+        if (cible) cible.value = champ.valeur;
+    }
+});
+  }
+
+  function restaurerGuide(etat) {
+if (!etat) return;
+var zone = document.getElementById('conception-guidee');
+if (!zone) return;
+
+// Ordre des tuiles d'un classement (étape 2 en mode « classement »).
+if (etat.classement && etat.classement.length) {
+    var liste = document.getElementById('tuiles-contraintes');
+    if (liste) {
+        var parNom = {};
+        Array.prototype.slice.call(
+            liste.querySelectorAll('.tuile-contrainte')
+        ).forEach(function (tuile) {
+            parNom[tuile.getAttribute('data-nom') || ''] = tuile;
+        });
+        etat.classement.forEach(function (nom) {
+            if (parNom[nom]) liste.appendChild(parNom[nom]);
+        });
+        if (typeof n4RenumeroterTuiles === 'function') n4RenumeroterTuiles();
+    }
+}
+
+var reglages = zone.querySelector('.reglages-contraintes[data-figer="1"]');
+var estFige = reglages && reglages.getAttribute('data-fige') === '1';
+if (reglages && etat.fige && !estFige) {
+    var boutonFiger = document.getElementById('bouton-figer-contraintes');
+    if (typeof n4FigerContraintes === 'function') {
+        try { n4FigerContraintes(boutonFiger); } catch (erreur) { /* laissé tel quel */ }
+    }
+} else if (reglages && !etat.fige && estFige) {
+    var boutonDefiger = document.getElementById('bouton-figer-contraintes');
+    if (typeof n4FigerContraintes === 'function') {
+        try { n4FigerContraintes(boutonDefiger); } catch (erreur) { /* idem */ }
+    }
+}
+// Le récapitulatif figé est restauré tel quel : il a été produit par le
+// moteur au moment de la sauvegarde.
+var listeRecap = document.getElementById('contraintes-recap-liste');
+if (listeRecap && etat.recapHtml !== undefined) listeRecap.innerHTML = etat.recapHtml;
+var recap = document.getElementById('contraintes-recap');
+if (recap) recap.hidden = !etat.recapVisible;
+var etapeComparateur = document.getElementById('etape-comparateur');
+if (etapeComparateur) etapeComparateur.classList.toggle('cache', !etat.comparateurOuvert);
+
+// Modèle retenu dans le comparateur.
+if (etat.modele) {
+    var carte = zone.querySelector('.modele-ost[data-nom="' + etat.modele + '"]');
+    if (carte && typeof n4ChoisirModele === 'function') n4ChoisirModele(carte);
+}
+  }
+
+  function restaurerSelections(selections) {
+if (!Array.isArray(selections)) return;
+// Les états sont portés par le DOM (presses, marques, compteurs,
+// retours) : on les relit position par position, ce qui reste fiable
+// quel que soit le contenu des propositions.
+$$('#contenu-n4-probleme [data-conception-selection]')
+    .forEach(function (conteneur, index) {
+        var sauvegarde = selections[index];
+        if (!sauvegarde) return;
+        var items = conteneur.querySelectorAll('.choix-item');
+        (sauvegarde.items || []).forEach(function (itemEtat, itemIndex) {
+            var item = items[itemIndex];
+            if (!item) return;
+            var bouton = item.querySelector('.choix-contrainte');
+            if (!bouton) return;
+            bouton.setAttribute('aria-pressed', itemEtat.pressed ? 'true' : 'false');
+            if (itemEtat.etat) item.setAttribute('data-etat', itemEtat.etat);
+            else item.removeAttribute('data-etat');
+            var explication = item.querySelector('.choix-explication');
+            if (explication && itemEtat.explication) {
+                explication.textContent = itemEtat.explication.texte;
+                explication.classList.toggle('cache', itemEtat.explication.cache);
+            }
+        });
+        if (sauvegarde.termine) conteneur.setAttribute('data-termine', '1');
+        else conteneur.removeAttribute('data-termine');
+        var compteur = conteneur.querySelector('.compteur-selection');
+        if (compteur && sauvegarde.compteur) compteur.textContent = sauvegarde.compteur;
+        var retour = conteneur.querySelector('.etape-selection-retour');
+        if (retour && sauvegarde.retour) {
+            retour.textContent = sauvegarde.retour.texte;
+            retour.className = sauvegarde.retour.classe;
+        }
+        var globale = conteneur.querySelector('.etape-selection-explication');
+        if (globale) globale.classList.toggle('cache', !!sauvegarde.globaleCache);
+    });
+  }
+
+  function restaurerDimensionnement(etat) {
+var racine = document.getElementById('dimensionnement');
+if (!racine || !etat || typeof dimensionnement === 'undefined') return;
+dimensionnement.choix = etat.choix || {};
+racine.querySelectorAll('.emplacement[data-zone]').forEach(function (emplacement) {
+    var zone = emplacement.getAttribute('data-zone');
+    var choix = dimensionnement.choix[zone];
+    emplacement.classList.toggle('complet', !!choix);
+    var sortie = emplacement.querySelector('.choix-zone');
+    if (sortie) {
+        sortie.textContent = choix ? (choix.nom || choix.id || 'choisi') :
+            (emplacement.getAttribute('data-zone-vide') || '— cliquer —');
+    }
+});
+racine.setAttribute('data-atelier-valide', etat.terminé ? '1' : '0');
+if (typeof n4RafraichirDimensionnement === 'function') n4RafraichirDimensionnement();
+  }
+
+  function restaurerN4(etat) {
+if (!etat) return;
+restaurerChampsN4(etat.champs);
+restaurerGuide(etat.guide);
+restaurerSelections(etat.selections);
+restaurerDimensionnement(etat.dimensionnement);
+var bilanTexte = document.getElementById('bilan-n4-texte');
+if (bilanTexte && etat.bilanTexte !== undefined) bilanTexte.value = etat.bilanTexte;
+var bilanResultat = document.getElementById('bilan-n4-resultat');
+if (bilanResultat && etat.bilanVisible !== undefined) bilanResultat.hidden = !etat.bilanVisible;
+var bilanEtat = document.getElementById('bilan-n4-etat');
+if (bilanEtat && etat.bilanMessage !== undefined) bilanEtat.textContent = etat.bilanMessage;
+var confirmation = document.getElementById('confirmation-conception');
+if (confirmation && etat.confirmationVisible !== undefined) {
+    confirmation.style.display = etat.confirmationVisible ? 'block' : 'none';
+}
+if (typeof n4MettreAJourContraintes === 'function') n4MettreAJourContraintes();
+if (typeof n4TrierModeles === 'function') n4TrierModeles();
+  }
+
+  // ---------------------------------------------------------------
+  // RESTAURATION — câblage, routeur, interactions
+  // ---------------------------------------------------------------
+  function restaurerCablage(etat) {
+if (!etat) return;
+var atelier = document.getElementById('cablage-atelier');
+if (!atelier || typeof CABLAGE === 'undefined') return;
+var zone = document.getElementById('cablage-zone');
+var reserve = document.getElementById('cablage-reserve');
+
+// 1. Replacer chaque équipement (plateau ou réserve).
+(etat.noeuds || []).forEach(function (noeudEtat) {
+    var noeud = atelier.querySelector('.noeud-reseau[data-noeud="' +
+        noeudEtat.id + '"]');
+    if (!noeud) return;
+    if (noeudEtat.surPlateau && zone) {
+        zone.appendChild(noeud);
+        if (noeudEtat.x) noeud.style.left = noeudEtat.x;
+        if (noeudEtat.y) noeud.style.top = noeudEtat.y;
+    } else if (reserve) {
+        reserve.appendChild(noeud);
+    }
+});
+
+// 2. Fils et validité.
+CABLAGE.fils = (etat.fils || []).map(function (fil) {
+    return { a: fil.a, b: fil.b, etat: fil.etat || '' };
+});
+CABLAGE.valide = !!etat.valide;
+CABLAGE.selection = null;
+CABLAGE.glisse = null;
+
+// 3. Le dessin se refait depuis l'état (aucune donnée en dur).
+if (typeof cablageTracerFils === 'function') cablageTracerFils();
+if (typeof cablageReserveVide === 'function') cablageReserveVide();
+if (typeof cablageAfficherIndication === 'function') {
+    if (etat.indicationCache) {
+        var indication = document.getElementById('cablage-indication');
+        if (indication) indication.classList.add('cache');
+    } else {
+        cablageAfficherIndication();
+    }
+}
+var retour = document.getElementById('cablage-retour');
+if (retour && etat.retour) {
+    retour.textContent = etat.retour.texte;
+    retour.className = etat.retour.classe;
+}
+var bilan = document.getElementById('cablage-bilan');
+if (bilan && etat.bilanVisible !== undefined) bilan.hidden = !etat.bilanVisible;
+  }
+
+  function restaurerRouteur(etat) {
+if (!etat || !etat.scenario) return;
+var groupe = document.getElementById('aroute-scenarios');
+if (!groupe) return;
+var bouton = groupe.querySelector('.aroute-scenario[data-scenario="' +
+    etat.scenario + '"]');
+if (!bouton) return;
+if (typeof choisirScenarioRouteur === 'function') {
+    try { choisirScenarioRouteur(bouton); } catch (erreur) { /* rendu manuel */ }
+} else {
+    groupe.querySelectorAll('.aroute-scenario').forEach(function (b) {
+        b.classList.remove('selectionne');
+        b.setAttribute('aria-pressed', 'false');
+    });
+    bouton.classList.add('selectionne');
+    bouton.setAttribute('aria-pressed', 'true');
+}
+var legende = document.getElementById('aroute-legende');
+if (legende && etat.legende !== undefined) legende.textContent = etat.legende;
+  }
+
+  function restaurerInteractions(etat) {
+if (!etat) return;
+if (etat.interacteur) {
+    var boutonInter = document.querySelector(
+        '.inter-bouton[data-interacteur="' + etat.interacteur + '"]');
+    if (boutonInter) {
+        document.querySelectorAll('.inter-bouton[data-interacteur]')
+            .forEach(function (b) { b.classList.remove('selectionne'); });
+        boutonInter.classList.add('selectionne');
+    }
+}
+if (etat.element) {
+    var boutonElement = document.querySelector(
+        '.inter-bouton[data-element="' + etat.element + '"]');
+    if (boutonElement) {
+        document.querySelectorAll('.inter-bouton[data-element]')
+            .forEach(function (b) { b.classList.remove('selectionne'); });
+        boutonElement.classList.add('selectionne');
+    }
+}
+if (typeof window.__interSel !== 'undefined' && window.__interSel) {
+    window.__interSel.interacteur = etat.interacteur || null;
+    window.__interSel.element = etat.element || null;
+}
+var resultat = document.getElementById('inter-resultat');
+if (resultat && etat.resultatHtml !== undefined) {
+    resultat.innerHTML = etat.resultatHtml;
+    resultat.className = etat.resultatClasse || '';
+}
+  }
+
+  // ---------------------------------------------------------------
+  // APPLICATION COMPLÈTE
+  // ---------------------------------------------------------------
+  function appliquerEtat(donnees) {
+var e = donnees.etat || {};
+reinitialiserComplet();
+restaurerNiveaux(e.niveaux);
+restaurerQuiz(e.quiz || {});
+restaurerChaine(e.chaine);
+restaurerAteliers(e.ateliers);
+restaurerN3(e.n3);
+restaurerRouteur(e.routeur);
+restaurerInteractions(e.interactions);
+restaurerCablage(e.cablage);
+restaurerN4(e.n4);
+
+// Rafraîchissements du moteur : les compteurs et les tracés se
+// resynchronisent depuis l'état restauré.
+if (typeof mettreAJourProgression === 'function') mettreAJourProgression();
+if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+if (typeof schemaTracerTout === 'function') {
+    try { schemaTracerTout(); } catch (erreur) { /* onglet masqué */ }
+}
+
+// Onglet affiché : celui de la sauvegarde, s'il est accessible.
+var actif = e.active || 'n1-intro';
+if (typeof changerOnglet === 'function') {
+    var bouton = document.querySelector('.bouton-onglet[data-niveau="' + actif + '"]');
+    if (bouton && !bouton.classList.contains('verrouille')) {
+        changerOnglet(actif);
+    } else {
+        changerOnglet('n1-intro');
+    }
+}
+  }
+
+  // ---------------------------------------------------------------
+  // VALIDATION du fichier importé
+  // ---------------------------------------------------------------
+  function validerDonnees(donnees) {
+if (!donnees || typeof donnees !== 'object') {
+    return 'Ce fichier ne contient pas de progression exploitable.';
+}
+if (donnees.format !== FORMAT_NOM) {
+    return 'Ce fichier n\'est pas un fichier de progression d\'activité.';
+}
+if (donnees.version !== FORMAT_VERSION) {
+    return 'Ce fichier de progression vient d\'une version trop récente ' +
+        'pour cette activité : mets à jour la page, puis recommence.';
+}
+return '';
+  }
+
+  // ---------------------------------------------------------------
+  // EXPORT / IMPORT
+  // ---------------------------------------------------------------
+  function exporter() {
+var donnees;
+try {
+    donnees = {
+        format: FORMAT_NOM,
+        version: FORMAT_VERSION,
+        activite: titreActivite(),
+        sauvegardeLe: new Date().toISOString(),
+        etat: capturerEtat()
+    };
+} catch (erreur) {
+    annoncer('La sauvegarde a échoué : ' + (erreur && erreur.message ?
+        erreur.message : 'erreur inattendue.'), 'echec');
+    return;
+}
+var texte = JSON.stringify(donnees, null, 1);
+var nom = 'progression-' + slug(titreActivite()) + '-' + dateFichier() + '.json';
+var blob = new Blob([texte], { type: 'application/json' });
+var url = null;
+try { url = URL.createObjectURL(blob); } catch (erreur) { url = null; }
+var a = document.createElement('a');
+a.href = url;
+a.download = nom;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+if (url) {
+    setTimeout(function () {
+        try { URL.revokeObjectURL(url); } catch (erreur) { /* déjà nettoyé */ }
+    }, 1000);
+}
+annoncer('✅ Progression sauvegardée dans « ' + nom +
+    ' ». Garde ce fichier : il te permet de reprendre sur un autre poste.', 'succes');
+  }
+
+  function importer() {
+if (!champFichier || !champFichier.files || !champFichier.files.length) return;
+var fichier = champFichier.files[0];
+if (fichier.size > TAILLE_MAX) {
+    annoncer('Ce fichier est trop volumineux pour être une progression.', 'echec');
+    return;
+}
+var lecteur = new FileReader();
+lecteur.onload = function () {
+    var donnees;
+    try {
+        donnees = JSON.parse(String(lecteur.result));
+    } catch (erreur) {
+        annoncer('Fichier illisible : ce n\'est pas une progression valide.', 'echec');
+        champFichier.value = '';
+        return;
+    }
+    var defaut = validerDonnees(donnees);
+    if (defaut) {
+        annoncer(defaut, 'echec');
+        champFichier.value = '';
+        return;
+    }
+    var averti = false;
+    if (donnees.activite && titreActivite() && donnees.activite !== titreActivite()) {
+        averti = true;
+        annoncer('⚠ Cette sauvegarde vient d\'une autre activité (' +
+            donnees.activite + '). On applique ce qui correspond.', '');
+    }
+    try {
+        appliquerEtat(donnees);
+    } catch (erreur) {
+        annoncer('La reprise a rencontré un problème (' +
+            (erreur && erreur.message ? erreur.message : 'erreur inattendue') +
+            '). Recommence, ou reprends depuis le début.', 'echec');
+        champFichier.value = '';
+        return;
+    }
+    if (!averti) {
+        annoncer('✅ Progression reprise : tu retrouves ton travail là où tu l\'avais laissé.', 'succes');
+    }
+    champFichier.value = '';
+};
+lecteur.onerror = function () {
+    annoncer('Impossible de lire ce fichier.', 'echec');
+    champFichier.value = '';
+};
+lecteur.readAsText(fichier);
+  }
+
+  // ---------------------------------------------------------------
+  // BRANCHEMENT DE LA BARRE
+  // ---------------------------------------------------------------
+  function initialiser() {
+boutonExporter = document.getElementById('sauvegarde-exporter');
+boutonImporter = document.getElementById('sauvegarde-importer');
+champFichier = document.getElementById('sauvegarde-fichier');
+statut = document.getElementById('sauvegarde-statut');
+if (!boutonExporter || !boutonImporter || !champFichier) return;
+boutonExporter.addEventListener('click', exporter);
+boutonImporter.addEventListener('click', function () {
+    if (champFichier) champFichier.click();
+});
+champFichier.addEventListener('change', importer);
+annoncer('', '');
+  }
+
+// Porte de vérification : le contrôle automatique (verifier_sauvegarde.py)
+  // rejoue l'élève à travers cette API — capturer, exporter, importer,
+  // appliquer. Elle ne fait rien de plus que les deux boutons, mais sans
+  // passer par un fichier ; jamais utilisée par l'élève.
+  try {
+window.__sauvegardeProgression = {
+    capturer: capturerEtat,
+    appliquer: appliquerEtat,
+    exporter: function () {
+        return {
+            format: FORMAT_NOM,
+            version: FORMAT_VERSION,
+            activite: titreActivite(),
+            sauvegardeLe: new Date().toISOString(),
+            etat: capturerEtat()
+        };
+    },
+    importer: function (donnees) {
+        var defaut = validerDonnees(donnees);
+        if (defaut) throw new Error(defaut);
+        appliquerEtat(donnees);
+        return true;
+    }
+};
+  } catch (erreur) { /* environnement sans window : la page vit sans l'API */ }
+
+  if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', initialiser);
+  } else {
+initialiser();
+  }
+})();
+
+</script>
+<!-- SAUVEGARDE-GREFFE-JS:FIN -->
 </body>
 </html>
