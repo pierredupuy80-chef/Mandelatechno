@@ -5196,7 +5196,11 @@ background: #16202e;
 }
 
 .glossaire-intro {
-    color: var(--couleur-texte-leger);
+    /* 4,46:1 mesuré avec --couleur-texte-leger sur #f4f8fc : sous le
+       seuil AA de 4,5:1. Ce gris d'un demi-ton plus dense donne
+       5,1:1 ; sa traduction sombre est écrite plus bas, car une page
+       greffée n'a pas le bloc engendré par mode_sombre.py. */
+    color: #5c6b80;
     font-size: 0.92rem;
     margin-bottom: var(--espacement-sm);
 }
@@ -5233,6 +5237,10 @@ html[data-theme="sombre"] .glossaire {
 html[data-theme="sombre"] .glossaire-entree {
     background: #1c2534;
     border-color: #2b3a52;
+}
+
+html[data-theme="sombre"] .glossaire-intro {
+    color: #a9b8cc;
 }
 </style>
 <!-- GLOSSAIRE-GREFFE-CSS:FIN -->
