@@ -3850,6 +3850,63 @@
 }
 </style>
 <!-- RETOUR-ACCUEIL-CSS:FIN -->
+<!-- GLOSSAIRE-GREFFE-CSS:DEBUT (Greffé par _outils/template-activite/greffer_glossaire.py depuis index.html (bloc GLOSSAIRE) : NE PAS ÉDITER ICI — modifier le template ou n1.glossaire, puis `--extraire` et regreffer.) -->
+<style id="ost-style-glossaire">
+.glossaire {
+    background: #f4f8fc;
+    border: 1px solid #dbeafe;
+    border-left: 5px solid var(--couleur-primaire);
+    border-radius: var(--rayon-bordure);
+    padding: var(--espacement-md);
+}
+
+.glossaire-titre {
+    color: var(--couleur-primaire);
+    font-size: 1.05rem;
+    margin-bottom: var(--espacement-xs);
+}
+
+.glossaire-intro {
+    color: var(--couleur-texte-leger);
+    font-size: 0.92rem;
+    margin-bottom: var(--espacement-sm);
+}
+
+.glossaire-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: var(--espacement-sm);
+}
+
+.glossaire-entree {
+    background: white;
+    border: 1px solid #dce3ed;
+    border-radius: var(--rayon-bordure);
+    padding: 0.5rem 0.7rem;
+}
+
+.glossaire-entree dt {
+    color: var(--couleur-primaire);
+    font-weight: 700;
+}
+
+.glossaire-entree dd {
+    color: var(--couleur-texte);
+    font-size: 0.95rem;
+    margin: 0.15rem 0 0;
+}
+
+html[data-theme="sombre"] .glossaire {
+    background: #16202e;
+    border-color: #2f4b7a;
+}
+
+html[data-theme="sombre"] .glossaire-entree {
+    background: #1c2534;
+    border-color: #2b3a52;
+}
+</style>
+<!-- GLOSSAIRE-GREFFE-CSS:FIN -->
 </head>
 <body>
 <!-- RETOUR-ACCUEIL:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
@@ -4100,6 +4157,63 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                             <p class="texte-secondaire">Le rôle de chaque composant d'un réseau local : terminal, carte réseau, liaisons, commutateur, routeur, serveur.</p>
                         </article>
                     </div>
+
+                    <!-- GLOSSAIRE-GREFFE:DEBUT (Greffé par _outils/template-activite/greffer_glossaire.py depuis index.html (bloc GLOSSAIRE) : NE PAS ÉDITER ICI — modifier le template ou n1.glossaire, puis `--extraire` et regreffer.) -->
+                    <div class="glossaire marge-haut" data-ost-id="n1-glossaire" role="region" aria-labelledby="titre-glossaire-n1">
+                        <h3 class="glossaire-titre" id="titre-glossaire-n1">📖 Glossaire — le vocabulaire de l'activité</h3>
+                        <p class="glossaire-intro">Les mots employés dans cette activité, avec leur définition. Relis-les avant de répondre au quiz.</p>
+                        <dl class="glossaire-liste">
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-1">
+                                <dt>Réseau informatique</dt>
+                                <dd>Un ensemble de composants connectés entre eux pour échanger des informations et partager du matériel (fichiers, imprimantes).</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-2">
+                                <dt>Réseau local (LAN)</dt>
+                                <dd>L'ensemble des composants connectés entre eux dans un même lieu, comme le collège ou la maison. Pour y accéder, il faut être présent dans ce lieu et disposer d'un code d'accès.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-3">
+                                <dt>Réseau mondial (Internet)</dt>
+                                <dd>L'immense réseau qui relie des milliards de réseaux locaux à travers le monde.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-4">
+                                <dt>Terminal</dt>
+                                <dd>L'appareil avec lequel l'utilisateur accède au réseau : ordinateur, tablette ou smartphone. Il émet et reçoit les données.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-5">
+                                <dt>Carte réseau</dt>
+                                <dd>Composant du terminal qui le relie au réseau : elle met les données en forme pour le support de transmission.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-6">
+                                <dt>Liaison filaire</dt>
+                                <dd>Connexion par câble, par exemple un câble Ethernet, entre deux composants du réseau.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-7">
+                                <dt>Liaison non filaire</dt>
+                                <dd>Connexion sans câble, par ondes Wi-Fi, entre deux composants du réseau.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-8">
+                                <dt>Commutateur (switch)</dt>
+                                <dd>Composant qui relie entre eux les appareils d'un même réseau local et aiguille les données vers le bon appareil. Il ne relie pas le réseau à Internet.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-9">
+                                <dt>Routeur (modem routeur)</dt>
+                                <dd>Composant qui relie le réseau local au réseau mondial Internet, choisit la route que prennent les données et diffuse souvent le Wi-Fi.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-10">
+                                <dt>Serveur</dt>
+                                <dd>Ordinateur qui rend un service aux autres appareils du réseau (stocker des fichiers, afficher un site) et qui répond à leurs demandes.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-11">
+                                <dt>Poste client</dt>
+                                <dd>Terminal qui demande un service au serveur : c'est lui qui envoie la demande et reçoit la réponse.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-12">
+                                <dt>Périphérique partagé</dt>
+                                <dd>Appareil, comme une imprimante ou un scanner, mis à la disposition de tous les postes par l'intermédiaire du réseau.</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <!-- GLOSSAIRE-GREFFE:FIN -->
 
                     <div class="info-block marge-haut">
                         <p><strong>Consigne :</strong> Regardez attentivement les vidéos ci-dessus. Prenez des notes si nécessaire. Lorsque vous vous sentez prêt, passez à l'onglet suivant pour tester vos connaissances.</p>
