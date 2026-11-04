@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Quickies 5e : 3 pastilles de 8 à 15 minutes pour la classe de technologie.">
+<title>Quickies 5e — Technologie au collège</title>
+<script>
+/* Identifiant de publication : la page se déclare sous son propre chemin publié.
+   Il est lu par inventorier_activites.py et ost_resoudre.py (panneau « Corriger »). */
+const ACTIVITE_PUBLICATION = "5e/quickies/index.html";
+</script>
+<style>
+:root{
+  --bleu:#1e4e79; --bleu2:#2b6cb0; --bleuf:#eef4fb;
+  --bord:#cddbe9; --gris:#5a6b7b; --texte:#16232e;
+  --orange:#b45309; --orange-f:#fff7ed; --vert:#0b6b4f; --vert-f:#f0faf5;
+  --rouge:#b03a2e; --rouge-f:#fdf3f2;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:#f6f9fc; color:var(--texte);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:17px; line-height:1.55;
+}
+header.site{background:linear-gradient(160deg,#1e4e79,#2b6cb0); color:#fff; padding:22px 16px 26px}
+header.site .contenu, nav.sommaire, main, footer{max-width:1000px; margin:0 auto}
+header.site p.yeux{margin:0 0 4px; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; opacity:.85}
+header.site h1{margin:0 0 8px; font-size:clamp(1.5rem,5vw,2.1rem); line-height:1.15}
+header.site p{margin:0; max-width:62ch; opacity:.95}
+header.site .niveau-marque{
+  display:inline-block; margin-left:6px; padding:0 12px; border-radius:10px;
+  background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.5);
+  font-size:.8em; vertical-align:middle;
+}
+.liste-quickies{list-style:none; padding:0; margin:10px 0 0;
+  display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.liste-quickies li{margin:0}
+.liste-quickies a{
+  display:flex; justify-content:space-between; gap:10px; align-items:center;
+  min-height:44px; padding:10px 14px; border-radius:10px; text-decoration:none;
+  background:#fff; border:2px solid var(--bord); color:var(--bleu); font-weight:700;
+}
+.liste-quickies a:hover,.liste-quickies a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+.liste-quickies .duree{font-weight:400; font-size:.85em; color:var(--gris); white-space:nowrap}
+nav.sommaire a.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+
+nav.sommaire{
+  position:sticky; top:0; z-index:40;
+  display:flex; gap:8px; flex-wrap:wrap;
+  background:rgba(255,255,255,.97); border-bottom:1px solid var(--bord);
+  box-shadow:0 1px 6px rgba(30,78,121,.08); padding:10px 14px;
+}
+nav.sommaire a{
+  flex:1 1 auto; min-height:44px; display:flex; align-items:center; justify-content:center;
+  background:#fff; border:2px solid var(--bord); border-radius:12px;
+  color:var(--bleu); text-decoration:none; font-weight:700; padding:8px 14px;
+}
+nav.sommaire a:hover,nav.sommaire a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+
+main{padding:20px 14px 48px}
+.intro{background:#fff; border:1px solid var(--bord); border-radius:16px; padding:20px; margin:0 0 22px}
+.intro h2{margin:0 0 10px; color:var(--bleu); font-size:1.2rem}
+.intro ul{margin:10px 0 0; padding-left:22px}
+.intro li{margin-bottom:6px}
+
+h2.niveau-titre{
+  margin:34px 0 14px; padding:12px 16px; border-radius:12px; color:#fff;
+  background:var(--bleu); font-size:clamp(1.15rem,4vw,1.4rem);
+  scroll-margin-top:76px;
+}
+h2.niveau-titre .compte{font-weight:400; font-size:.85em; opacity:.9}
+
+.quickie{
+  background:#fff; border:1px solid var(--bord); border-radius:16px;
+  padding:18px; margin:0 0 20px; scroll-margin-top:80px;
+}
+.q-tete{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:start}
+.q-num{
+  grid-row:1 / span 2; margin:0; width:44px; height:44px; border-radius:10px;
+  background:var(--bleu); color:#fff; font-weight:700; display:flex;
+  align-items:center; justify-content:center; font-size:.9rem;
+}
+.q-tete h3{margin:0; font-size:clamp(1.1rem,3.6vw,1.35rem); color:var(--bleu)}
+.q-meta{margin:6px 0 0; display:flex; gap:6px; flex-wrap:wrap}
+.badge{
+  display:inline-block; padding:2px 9px; border-radius:999px; font-size:.78rem;
+  font-weight:700; background:var(--bleuf); color:var(--bleu); border:1px solid var(--bord);
+}
+.badge-code{background:var(--bleu); color:#fff; border-color:var(--bleu)}
+.badge-neutre{background:#f2f5f8; color:var(--gris)}
+.q-appel{margin:12px 0 0; color:var(--gris); font-size:.98rem}
+.q-bo{
+  margin:10px 0 0; padding:10px 12px; background:var(--bleuf); border-radius:10px;
+  font-size:.9rem; color:var(--bleu);
+}
+blockquote{margin:14px 0; padding:12px 16px; border-left:5px solid var(--bleu2);
+  background:#f9fbfe; border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+.accroche{font-size:1.08rem; border-left-color:var(--vert); background:var(--vert-f)}
+
+.schema-bloc{margin:16px 0; border:1px solid var(--bord); border-radius:12px; overflow:hidden}
+.schema-barre{display:flex; gap:8px; flex-wrap:wrap; padding:8px; background:var(--bleuf);
+  border-bottom:1px solid var(--bord)}
+.schema-barre button{
+  min-height:44px; padding:8px 16px; border-radius:10px; border:2px solid var(--bord);
+  background:#fff; color:var(--bleu); font:inherit; font-weight:700; cursor:pointer;
+}
+.schema-barre button.actif{background:var(--bleu); color:#fff; border-color:var(--bleu)}
+.schema-barre button.plein{margin-left:auto}
+.schema-vue{background:#fff; padding:8px}
+.schema-svg{display:block; width:100%; height:auto}
+
+.schema-bloc.en-plein{
+  position:fixed; inset:0; z-index:200; margin:0; border-radius:0;
+  background:#fff; display:flex; flex-direction:column;
+}
+.schema-bloc.en-plein .schema-vue:not([hidden]){flex:1; display:flex; align-items:center}
+.schema-bloc.en-plein .schema-svg{max-height:calc(100vh - 80px); width:100%}
+
+.q-section{margin:16px 0 0}
+.q-section h4{margin:0 0 8px; font-size:1rem; color:var(--bleu)}
+.q-section p{margin:0 0 10px}
+.s-attention{background:var(--orange-f); border-left:5px solid var(--orange);
+  border-radius:0 10px 10px 0; padding:10px 14px}
+.s-attention h4{color:var(--orange)}
+.s-verifier{background:#fff; border:2px dashed var(--orange); border-radius:10px; padding:10px 14px}
+.s-verifier h4{color:var(--orange)}
+.s-question{background:var(--bleuf); border-radius:10px; padding:10px 14px}
+.s-sortie{background:var(--vert-f); border-left:5px solid var(--vert);
+  border-radius:0 10px 10px 0; padding:10px 14px}
+.s-sortie h4{color:var(--vert)}
+
+.tab-enveloppe{overflow-x:auto; margin:10px 0}
+table{border-collapse:collapse; width:100%; font-size:.94rem}
+th,td{border:1px solid var(--bord); padding:7px 10px; text-align:left; vertical-align:top}
+th{background:var(--bleuf); color:var(--bleu)}
+tbody tr:nth-child(even){background:#fafcfe}
+code{background:#f0f4f8; border:1px solid var(--bord); border-radius:4px;
+  padding:0 4px; font-size:.9em}
+.a-verifier{color:var(--orange); font-weight:700}
+ul,ol{margin:8px 0 10px; padding-left:22px}
+li{margin-bottom:5px}
+
+footer{padding:0 14px 40px; color:var(--gris); font-size:.9rem}
+.mention-rgpd{
+  background:var(--bleuf); border:1px solid var(--bord); border-radius:10px;
+  max-width:1000px; margin:0 auto 26px; padding:12px 16px; color:var(--bleu); font-size:.87rem;
+}
+
+@media (max-width:420px){
+  body{font-size:16px}
+  .q-tete{grid-template-columns:1fr}
+  .q-num{width:auto; height:auto; display:inline-block; padding:2px 10px; margin-bottom:6px}
+}
+@media print{
+  nav.sommaire, .schema-barre{display:none}
+  .quickie{break-inside:avoid; border:1px solid #999}
+  .schema-vue[hidden]{display:block}
+  .schema-vue[data-vue-bloc="vide"]{display:none}
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
+<style id="retour-accueil-style">
+/* ── RETOUR À L'ACCUEIL DU SITE ───────────────────────────────────── */
+/* Un lien simple, posé EN TÊTE DE PAGE, dans le flux — jamais
+   flottant. C'est une mesure qui l'a décidé : un bouton flottant
+   finissait toujours par recouvrir un contrôle. En bas à gauche, les
+   flèches du jeu de réseau et les commandes du diaporama ; en haut à
+   droite, l'option d'affichage et le lien du jeu ; en haut à gauche,
+   le titre de l'activité. On ne cache jamais ce que l'élève doit
+   cliquer : le retour reste donc à sa place, et il défile avec la
+   page. C'est aussi la convention déjà suivie par les pages de jeu
+   (« ← Toutes les activités »).
+   Le `!important` est volontaire : le module est posé sur des pages
+   dont nous ne maîtrisons pas le CSS. Sans lui, la règle sombre d'une
+   page ancienne réécrivait la couleur du texte et le lien tombait à
+   4,1:1 (mesuré sur tp-ia.html). */
+.retour-accueil {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin: 8px 12px 12px;
+    padding: 9px 16px;
+    border: 2px solid #ffffff !important;
+    border-radius: 999px;
+    background: #1f4e79 !important;
+    color: #ffffff !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+.retour-accueil:hover,
+.retour-accueil:focus-visible {
+    background: #2a6fb0 !important;
+}
+
+/* Double anneau : blanc au contact du bouton, bleu foncé au large. Sur
+   une page claire c'est l'anneau bleu qui se voit, sur une page sombre
+   c'est l'anneau blanc — le focus reste visible dans les deux modes. */
+.retour-accueil:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px #1f4e79, 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* Une page imprimée ne renvoie nulle part : le bouton n'a rien à y
+   faire, et il prendrait la place d'une consigne. */
+@media print {
+    .retour-accueil {
+        display: none;
+    }
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:FIN -->
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+/* Modèles de commentaire : des phrases génériques à compléter, jamais un
+   niveau ni un identifiant figé — le panneau les déduit déjà de l'onglet
+   et de l'élément sélectionnés. */
+.ost-modeles{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.ost-modele{min-height:32px;padding:0 10px;border:1px dashed #c7d2e3;border-radius:999px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.ost-modele:hover{background:#f1f5f9}
+.ost-modeles-legende{margin:0;font-size:11px;color:#64748b}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer,:where(html[data-theme="sombre"]) .ost-modele:hover{background:#16202e}
+:where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-modele{background:#1c2534;color:#cbd5e1}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
+</head>
+<body id="haut">
+<!-- RETOUR-ACCUEIL:DEBUT (module unique du site, recopié par _outils/template-activite/greffer_retour_accueil.py) -->
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Retour à l’accueil</a>
+<!-- RETOUR-ACCUEIL:FIN -->
+
+<header class="site">
+  <div class="contenu">
+    <p class="yeux">Mandelatechno · cycle 4</p>
+    <h1>Quickies <span class="niveau-marque">5e</span></h1>
+    <p>3 pastilles de 8 à 15 minutes, à faire en classe entière, sans matériel.
+       Un schéma à projeter, deux versions : à compléter et corrigé.</p>
+  </div>
+</header>
+
+<nav class="sommaire" aria-label="Changer de niveau">
+<a href="../../4e/quickies/index.html">4e · 8</a><a href="#haut" class="actif" aria-current="page">5e · 3</a><a href="../../3e/quickies/index.html">3e · 4</a>
+</nav>
+
+<main>
+  <div class="intro">
+    <h2>Comment s'en servir</h2>
+    <p>Chaque quickie tient seul&nbsp;: une accroche, un schéma à compléter au tableau
+       (un élève tient le feutre, la classe dicte), un déroulé minuté, deux ou trois
+       questions et une question de sortie.</p>
+    <ul>
+      <li>La <strong>durée annoncée est du temps de contenu</strong>&nbsp;: comptez trois minutes de plus.</li>
+      <li>Le schéma s'affiche en deux versions&nbsp;: <strong>À compléter</strong> (les cases sont vides)
+          et <strong>Corrigé</strong>. Le bouton <strong>Plein écran</strong> agrandit le schéma pour la projection.</li>
+      <li>Les passages marqués <span class="a-verifier">⏳</span> sont des ordres de grandeur
+          <strong>non encore vérifiés</strong>&nbsp;: leur source est indiquée en bas de chaque fiche.</li>
+      <li>La partie <strong>À ne pas dire</strong> est pour vous&nbsp;: elle corrige les erreurs
+          classiques, celles qu'on répète sans le savoir.</li>
+    </ul>
+    <h2>Les 3 quickies de 5e</h2>
+    <ul class="liste-quickies"><li><a href="#q-le-cafe-et-le-wi-fi">Le café et le Wi-Fi <span class="duree">8 min</span></a></li><li><a href="#q-qui-regarde">Qui regarde ? <span class="duree">15 min</span></a></li><li><a href="#q-le-fichier-perdu">Le fichier perdu <span class="duree">10 min</span></a></li></ul>
+  </div>
+
+<article class="quickie"  id="q-le-cafe-et-le-wi-fi" data-ost-id="q-le-cafe-et-le-wi-fi" data-pastille="N3">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">N3</p>
+<h3>Le café et le Wi-Fi</h3>
+<p class="q-meta"><span class="badge">8 min</span><span class="badge badge-code">N3 · 5e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Le micro-ondes et le Wi-Fi partagent une bande : alors qui fait ramer le réseau ?</p>
+<p class="q-bo"><code>SFC17</code> (5e) — « Identifier les composants qui constituent un réseau local (terminaux, commutateurs, liaisons filaires et sans fil (WiFi)) et sa topologie. »</p>
+</header>
+<blockquote class="accroche"><p>« Le Wi-Fi et votre four à micro-ondes travaillent dans la même bande de fréquences, autour de 2,4 GHz <span class="a-verifier" title="Chiffre non vérifié">⏳</span>. Alors pourquoi cela ne pose-t-il pas de problème en permanence ? »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N3 — La bande des 2,4 GHz</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N3 — La bande des 2,4 GHz</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les canaux, situer le four, expliquer la gêne entre voisins</text>
+<text x="800" y="165" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">La bande des 2,4 GHz (de 2 400 à 2 483 MHz ⏳)</text>
+<line x1="220" y1="470" x2="1380" y2="470" stroke="#24557a" stroke-width="6"/>
+<line x1="220.0" y1="456" x2="220.0" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="220.0" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2400</text>
+<line x1="499.51807228915663" y1="456" x2="499.51807228915663" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="499.51807228915663" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2420</text>
+<line x1="779.0361445783133" y1="456" x2="779.0361445783133" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="779.0361445783133" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2440</text>
+<line x1="1058.55421686747" y1="456" x2="1058.55421686747" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="1058.55421686747" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2460</text>
+<line x1="1338.0722891566265" y1="456" x2="1338.0722891566265" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="1338.0722891566265" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2480</text>
+<rect x="282.71084337349396" y="280" width="210" height="68" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="3"/>
+<text x="387.71084337349396" y="324" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">① ………</text>
+<line x1="387.71084337349396" y1="352" x2="387.71084337349396" y2="460" stroke="#1f5f9e" stroke-width="3" stroke-dasharray="6 5"/>
+<rect x="632.1084337349398" y="280" width="210" height="68" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="3"/>
+<text x="737.1084337349398" y="324" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">② ………</text>
+<line x1="737.1084337349398" y1="352" x2="737.1084337349398" y2="460" stroke="#1f5f9e" stroke-width="3" stroke-dasharray="6 5"/>
+<rect x="981.5060240963855" y="280" width="210" height="68" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="3"/>
+<text x="1086.5060240963855" y="324" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">③ ………</text>
+<line x1="1086.5060240963855" y1="352" x2="1086.5060240963855" y2="460" stroke="#1f5f9e" stroke-width="3" stroke-dasharray="6 5"/>
+<line x1="918.7951807228916" y1="620" x2="918.7951807228916" y2="490" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar-chaud)"/>
+<text x="918.7951807228916" y="666" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#b03a2e">④ ……… MHz</text>
+<rect x="220" y="690" width="1160" height="150" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="250" y="740" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="700" fill="#0b6b4f">⑤ ………</text>
+<text x="250" y="790" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#b03a2e">……</text>
+<text x="250" y="826" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#b03a2e">……</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N3 — La bande des 2,4 GHz</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N3 — La bande des 2,4 GHz</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les canaux, situer le four, expliquer la gêne entre voisins</text>
+<text x="800" y="165" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">La bande des 2,4 GHz (de 2 400 à 2 483 MHz ⏳)</text>
+<line x1="220" y1="470" x2="1380" y2="470" stroke="#24557a" stroke-width="6"/>
+<line x1="220.0" y1="456" x2="220.0" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="220.0" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2400</text>
+<line x1="499.51807228915663" y1="456" x2="499.51807228915663" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="499.51807228915663" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2420</text>
+<line x1="779.0361445783133" y1="456" x2="779.0361445783133" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="779.0361445783133" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2440</text>
+<line x1="1058.55421686747" y1="456" x2="1058.55421686747" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="1058.55421686747" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2460</text>
+<line x1="1338.0722891566265" y1="456" x2="1338.0722891566265" y2="484" stroke="#24557a" stroke-width="3"/>
+<text x="1338.0722891566265" y="524" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">2480</text>
+<rect x="282.71084337349396" y="280" width="210" height="68" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="3"/>
+<text x="387.71084337349396" y="324" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">canal 1</text>
+<line x1="387.71084337349396" y1="352" x2="387.71084337349396" y2="460" stroke="#1f5f9e" stroke-width="3" stroke-dasharray="6 5"/>
+<rect x="632.1084337349398" y="280" width="210" height="68" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="3"/>
+<text x="737.1084337349398" y="324" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">canal 6</text>
+<line x1="737.1084337349398" y1="352" x2="737.1084337349398" y2="460" stroke="#1f5f9e" stroke-width="3" stroke-dasharray="6 5"/>
+<rect x="981.5060240963855" y="280" width="210" height="68" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="3"/>
+<text x="1086.5060240963855" y="324" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">canal 11</text>
+<line x1="1086.5060240963855" y1="352" x2="1086.5060240963855" y2="460" stroke="#1f5f9e" stroke-width="3" stroke-dasharray="6 5"/>
+<line x1="918.7951807228916" y1="620" x2="918.7951807228916" y2="490" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar-chaud)"/>
+<text x="918.7951807228916" y="666" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#b03a2e">④ 2 450 MHz : four à micro-ondes ⏳</text>
+<rect x="220" y="690" width="1160" height="150" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="250" y="740" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="700" fill="#0b6b4f">⑤ Pourquoi les voisins se gênent :</text>
+<text x="250" y="786" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">sur une même fréquence, les appareils ne peuvent pas parler</text>
+<text x="250" y="822" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">en même temps : ils attendent leur tour.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/n3-bande-2-4-ghz-a-completer.svg</code></strong> : une bande de fréquences graduée de 2 400 à 2 483 MHz, <strong>cinq trous</strong> (trois canaux, la fréquence du four, la conclusion). Vous pouvez le tracer : une flèche horizontale graduée, trois rectangles au-dessus.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche, puis <strong>vote à main levée</strong> : « le réseau rame quand on chauffe le café : vrai ou faux ? »</td><td>Vote</td></tr><tr><td>2-4 min</td><td>Montrez la bande graduée ; faites placer le four (④)</td><td>Propose l'emplacement</td></tr><tr><td>4-6 min</td><td>Faites nommer les trois canaux (①②③) et expliquer pourquoi ils sont espacés</td><td>Observe, explique</td></tr><tr><td>6-8 min</td><td>Faites écrire la conclusion (⑤) : la vraie cause, ce sont les voisins</td><td>Conclut</td></tr></tbody></table></div>
+<p>Le vote de départ n'est pas décoratif : la majorité répond « vrai ». C'est un <strong>mythe très répandu</strong>, et le mesurer en direct rend l'explication mémorable.</p>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un four à micro-ondes émet à 2 450 MHz <span class="a-verifier" title="Chiffre non vérifié">⏳</span> : c'est <strong>à l'intérieur</strong> de la bande du Wi-Fi, du côté du canal 9. Mais un four <strong>en bon état est blindé</strong> : il ne laisse rien sortir. Donc, normalement, aucun problème. Les vrais coupables sont ailleurs : un four ancien ou abîmé, un appareil non conforme, et surtout les <strong>voisins</strong> — tout le quartier occupe la même bande. Sur une même fréquence, les appareils ne peuvent pas parler en même temps : ils attendent leur tour. »</p></blockquote>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Pourquoi deux appartements voisins se gênent-ils, alors qu'ils ne sont pas dans la même pièce ? » — les murs arrêtent mal les ondes radio, et surtout tout le monde utilise la même bande.</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Pourquoi le Wi-Fi 5 GHz traverse-t-il moins bien les murs ? » → plus la fréquence est haute, plus l'onde est absorbée par la matière — mais la bande est plus large, donc plus de débit quand on est près. C'est un compromis, comme partout en technologie.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Écrivez « 2 400 — 2 483 MHz » <span class="a-verifier" title="Chiffre non vérifié">⏳</span> au tableau et faites seulement placer 2 450 : l'élève n'a plus qu'à comparer deux nombres.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Le Wi-Fi et le micro-ondes utilisent <strong>exactement</strong> la même fréquence » → ce n'est pas exact : le Wi-Fi occupe une <strong>bande</strong> autour de 2,4 GHz, le four une fréquence précise à l'intérieur de cette bande. La nuance est petite à l'écrit, importante à l'oral.</li><li>« C'est pour ça que le réseau rame quand on chauffe le café » → c'est le mythe qu'on vient de démonter. Ne le réintroduisez pas par une phrase maladroite.</li><li>« Le Wi-Fi, c'est de la lumière » → ce sont des ondes radio, comme la lumière, mais on ne le dit pas ainsi à des 5e sans créer une confusion sur la vue.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Pourquoi le Wi-Fi passe-t-il mal à travers un mur épais, et très mal à travers un aquarium ? » — l'eau absorbe ces ondes, c'est d'ailleurs le principe du four.</p>
+</section>
+<section class="q-section s-verifier">
+<h4>Chiffres à vérifier avant la classe</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Grandeur</th><th>Valeur utilisée dans la pastille <span class="a-verifier" title="Chiffre non vérifié">⏳</span></th><th>Source à ouvrir</th><th>Statut</th></tr></thead><tbody><tr><td>bornes de la bande 2,4 GHz</td><td><strong>2 400 à 2 483 MHz</strong></td><td>ANFR (Agence nationale des fréquences)</td><td><strong>non vérifié</strong></td></tr><tr><td>fréquences des canaux 1 / 6 / 11</td><td><strong>2 412 / 2 437 / 2 462 MHz</strong></td><td>ANFR</td><td><strong>non vérifié</strong></td></tr><tr><td>fréquence du four à micro-ondes</td><td><strong>2 450 MHz</strong></td><td>ANFR</td><td><strong>non vérifié</strong></td></tr></tbody></table></div>
+<p>Si vous n'avez pas ouvert la source, gardez les <strong>ordres</strong> (« au début de la bande, au milieu, à la fin ») et effacez les graduations du schéma : le raisonnement sur les canaux et les voisins tient sans les chiffres.</p>
+</section>
+</article>
+<article class="quickie"  id="q-qui-regarde" data-ost-id="q-qui-regarde" data-pastille="N5">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">N5</p>
+<h3>Qui regarde ?</h3>
+<p class="q-meta"><span class="badge">15 min</span><span class="badge badge-code">N5 · 5e</span><span class="badge badge-neutre">débat encadré</span></p>
+<p class="q-appel">Ce qu'un établissement peut voir d'une connexion — et ce qu'il ne peut pas.</p>
+<p class="q-bo"><code>OST16</code> (5e) — « Appréhender la responsabilité de chacun dans les dérives (cyberviolence, atteinte à la vie privée, aux données personnelles, usurpation d'identité). » · <code>OST15</code> (5e) — « Identifier les règles permettant de sécuriser un environnement numérique (base de la cybersécurité) et les règles de respect de la propriété intellectuelle. »</p>
+</header>
+<blockquote class="accroche"><p>« Le réseau du collège filtre des adresses. Est-ce de la surveillance, ou une protection ? Et de toute façon : qui décide de ce qui est filtré ? »</p></blockquote>
+<section class="q-section s-note">
+<h4>Trois précautions avant de commencer — dans cet ordre</h4>
+<ol><li><strong>Vérifiez votre cadre avant de parler, et ne l'affirmez pas de mémoire.</strong> Demandez au référent numérique ou au chef d'établissement <strong>quel texte encadre le filtrage</strong> dans votre collège (charte d'usage, règlement intérieur, politique académique). Je ne peux pas vous certifier ici qu'il s'agit d'une « obligation légale ». Ce que vous pouvez dire sans risque : <strong>« il existe un cadre, et je vais vous dire lequel »</strong> — puis vous le dites, parce que vous l'avez vérifié.</li><li><strong>Aucun incident réel.</strong> Pas de cas d'élève, pas de site cité, pas d'anecdote de salle des profs. Le sujet devient une affaire disciplinaire en trois secondes.</li><li><strong>Sécurisez la lecture des phrases.</strong> Vous ne lisez pas des cahiers au hasard : vous <strong>passez dans les rangs pendant l'écriture</strong>, vous repérez trois ou quatre phrases utilisables, et vous ne lisez que celles-là. Une phrase qui signale un fait grave ne se lit pas à voix haute : elle déclenche la conduite à tenir du point suivant.</li></ol>
+<p>grave (harcèlement, contenu illicite, atteinte à un camarade), votre rôle n'est pas de débattre : <em>« ce que tu me dis est important. On en reparle à la fin du cours, pas devant tout le monde. »</em> Puis vous accueillez, vous rassurez, vous notez pour vous, et vous transmettez selon la procédure de l'établissement.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche + le cadre (celui que vous avez vérifié)</td><td>Écoute</td></tr><tr><td>2-6 min</td><td>Deux colonnes au tableau : « ce que l'établissement peut voir » / « ce qu'il ne peut pas voir ». Un élève écrit, la classe dicte</td><td>Propose, trie</td></tr><tr><td>6-10 min</td><td>Question de discussion. Chacun écrit <strong>une phrase</strong> sur son cahier</td><td>Écrit</td></tr><tr><td>10-14 min</td><td>Vous passez dans les rangs, puis vous lisez 3 ou 4 phrases choisies, sans nommer</td><td>Réagit</td></tr><tr><td>14-15 min</td><td>Concluez par les trois règles ci-dessous</td><td>Note</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-note">
+<h4>La clé de correction des deux colonnes</h4>
+<p>C'est le cœur de la pastille, et c'est à vous d'arbitrer — voici la réponse, <strong>à recouper avec votre référent numérique</strong> :</p>
+<div class="tab-enveloppe"><table><thead><tr><th>Ce que l'établissement peut généralement voir</th><th>Ce qu'il ne voit généralement pas</th></tr></thead><tbody><tr><td>les <strong>sites</strong> demandés par un poste, à travers le filtrage (nom de domaine)</td><td>le <strong>contenu</strong> d'un document non enregistré, d'un brouillon</td></tr><tr><td>les <strong>horaires</strong> de connexion et le <strong>volume</strong> échangé</td><td>les messages d'une messagerie chiffrée de bout en bout</td></tr><tr><td>le <strong>compte</strong> utilisé pour se connecter au réseau pédagogique</td><td>ce qui se passe sur le <strong>réseau personnel</strong> de l'élève (4G)</td></tr><tr><td>les <strong>fichiers</strong> déposés dans l'espace de l'établissement</td><td>l'écran d'un appareil personnel non connecté</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un réseau d'établissement, ce n'est pas un réseau privé : il est administré par quelqu'un, pour le compte de tous. Ce qui compte, ce ne sont pas les outils, ce sont les</p>
+<p>règle qui ne répond pas à ces trois questions est une règle abusive, même si elle est bien intentionnée. »</p></blockquote>
+</section>
+<section class="q-section s-tableau">
+<h4>Les trois règles de responsabilité à écrire au tableau</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Règle</th><th>Formulation pour les élèves</th></tr></thead><tbody><tr><td><strong>Information</strong></td><td>on doit te dire ce qui est contrôlé et pourquoi</td></tr><tr><td><strong>Proportion</strong></td><td>on ne contrôle que ce qui est nécessaire au fonctionnement</td></tr><tr><td><strong>Respect des personnes</strong></td><td>un contenu personnel n'est pas un sujet de discussion collective</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Citez une chose que l'établissement peut voir sur ta connexion, et une qu'il ne peut pas voir. »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Un filtre qui bloque trop, est-ce un problème ? » → oui : il empêche le travail, il pousse à contourner, et il déplace le problème au lieu de l'éduquer. C'est un vrai débat professionnel, et il est légitime de le poser aux élèves.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez les deux colonnes déjà tracées et <strong>deux exemples placés</strong> (un dans chaque colonne). La tâche devient de compléter, ce qui est plus facile que de produire.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Tout ce que tu fais est enregistré » → ni vrai, ni utile. Cela crée une méfiance qui bloque ensuite toute demande d'aide.</li><li>« Le filtrage, c'est obligatoire » → <span class="a-verifier" title="Chiffre non vérifié">⏳</span> <strong>à vérifier dans votre établissement</strong> avant de l'affirmer (précaution 1).</li><li>« C'est pour votre bien » → une formule qui coupe le débat au lieu de l'ouvrir.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« À qui pourrais-tu signaler une publication qui te vise, dans ce collège ? » — faites nommer <strong>des personnes réelles et accessibles</strong> (professeur, CPE, infirmière, référent numérique). C'est la seule question de cette pastille qui a une utilité immédiate.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Sujet sensible</h4>
+<p>Le harcèlement en ligne peut être vécu par un élève de la classe, y compris au moment où vous en parlez. Vos protections : <strong>écrit plutôt qu'oral, phrases choisies par vous, aucun nom, aucun témoignage sollicité.</strong> Si vous n'êtes pas à l'aise avec ce sujet, ne faites pas cette pastille : c'est la seule du lot dans ce cas.</p>
+</section>
+</article>
+<article class="quickie"  id="q-le-fichier-perdu" data-ost-id="q-le-fichier-perdu" data-pastille="N7">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">N7</p>
+<h3>Le fichier perdu</h3>
+<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">N7 · 5e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Un fichier, c'est une adresse : le retrouver, c'est suivre un chemin.</p>
+<p class="q-bo"><code>OST14</code> (5e) — « Recenser des données, les identifier, les classer, les représenter, les stocker dans des fichiers, les retrouver dans une arborescence. »</p>
+</header>
+<blockquote class="accroche"><p>« Vous cherchez "exposé SVT" et vous ne le trouvez pas. Le fichier existe pourtant. Le problème n'est pas l'ordinateur : c'est le chemin. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N7 — Un fichier, c'est une adresse</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N7 — Un fichier, c'est une adresse</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les sept dossiers, puis écrire un chemin complet</text>
+<text x="800" y="158" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Retrouver un fichier, c'est suivre un chemin</text>
+<rect x="640" y="196" width="320" height="76" rx="14" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="4"/>
+<text x="800" y="244" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#0b6b4f">Mon espace</text>
+<line x1="800" y1="276" x2="800" y2="300" stroke="#24557a" stroke-width="3"/>
+<line x1="360" y1="300" x2="1240" y2="300" stroke="#24557a" stroke-width="3"/>
+<rect x="200" y="340" width="320" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="360" y="378" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">① ………</text>
+<line x1="360" y1="300" x2="360" y2="336" stroke="#24557a" stroke-width="3"/>
+<rect x="640" y="340" width="320" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="800" y="378" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">② ………</text>
+<line x1="800" y1="300" x2="800" y2="336" stroke="#24557a" stroke-width="3"/>
+<rect x="1080" y="340" width="320" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1240" y="378" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">③ ………</text>
+<line x1="1240" y1="300" x2="1240" y2="336" stroke="#24557a" stroke-width="3"/>
+<line x1="360" y1="420" x2="360" y2="440" stroke="#24557a" stroke-width="3"/>
+<line x1="800" y1="420" x2="800" y2="440" stroke="#24557a" stroke-width="3"/>
+<line x1="1130" y1="420" x2="1130" y2="440" stroke="#24557a" stroke-width="3"/>
+<line x1="360" y1="440" x2="1130" y2="440" stroke="#24557a" stroke-width="3"/>
+<rect x="60" y="480" width="260" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="190" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">④ ………</text>
+<line x1="190" y1="440" x2="190" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="370" y="480" width="260" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="500" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑤ ………</text>
+<line x1="500" y1="440" x2="500" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="680" y="480" width="260" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="810" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑥ ………</text>
+<line x1="810" y1="440" x2="810" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="1000" y="480" width="260" height="76" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1130" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑦ ………</text>
+<line x1="1130" y1="440" x2="1130" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="60" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="190" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">expose-svt.odt</text>
+<line x1="190" y1="562" x2="190" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="370" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="500" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">fiche-lecture.odt</text>
+<line x1="500" y1="562" x2="500" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="680" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="810" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">plage.jpg</text>
+<line x1="810" y1="562" x2="810" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="1000" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1130" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">partition.pdf</text>
+<line x1="1130" y1="562" x2="1130" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="160" y="706" width="1280" height="92" rx="14" fill="#fbfdff" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="200" y="764" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑧ Le chemin complet du fichier « expose-svt.odt » : ………………………</text>
+<text x="800" y="842" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#4a6076">Un chemin, c'est un dossier, puis un dossier, puis un dossier, puis le fichier.</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N7 — Un fichier, c'est une adresse</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N7 — Un fichier, c'est une adresse</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les sept dossiers, puis écrire un chemin complet</text>
+<text x="800" y="158" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Retrouver un fichier, c'est suivre un chemin</text>
+<rect x="640" y="196" width="320" height="76" rx="14" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="4"/>
+<text x="800" y="244" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#0b6b4f">Mon espace</text>
+<line x1="800" y1="276" x2="800" y2="300" stroke="#24557a" stroke-width="3"/>
+<line x1="360" y1="300" x2="1240" y2="300" stroke="#24557a" stroke-width="3"/>
+<rect x="200" y="340" width="320" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="360" y="378" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">Travail</text>
+<line x1="360" y1="300" x2="360" y2="336" stroke="#24557a" stroke-width="3"/>
+<rect x="640" y="340" width="320" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="800" y="378" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">Photos</text>
+<line x1="800" y1="300" x2="800" y2="336" stroke="#24557a" stroke-width="3"/>
+<rect x="1080" y="340" width="320" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1240" y="378" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">Musique</text>
+<line x1="1240" y1="300" x2="1240" y2="336" stroke="#24557a" stroke-width="3"/>
+<line x1="360" y1="420" x2="360" y2="440" stroke="#24557a" stroke-width="3"/>
+<line x1="800" y1="420" x2="800" y2="440" stroke="#24557a" stroke-width="3"/>
+<line x1="1130" y1="420" x2="1130" y2="440" stroke="#24557a" stroke-width="3"/>
+<line x1="360" y1="440" x2="1130" y2="440" stroke="#24557a" stroke-width="3"/>
+<rect x="60" y="480" width="260" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="190" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">Technologie</text>
+<line x1="190" y1="440" x2="190" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="370" y="480" width="260" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="500" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">Français</text>
+<line x1="500" y1="440" x2="500" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="680" y="480" width="260" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="810" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">Vacances 2026</text>
+<line x1="810" y1="440" x2="810" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="1000" y="480" width="260" height="76" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1130" y="518" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">Albums</text>
+<line x1="1130" y1="440" x2="1130" y2="476" stroke="#24557a" stroke-width="3"/>
+<rect x="60" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="190" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">expose-svt.odt</text>
+<line x1="190" y1="562" x2="190" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="370" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="500" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">fiche-lecture.odt</text>
+<line x1="500" y1="562" x2="500" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="680" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="810" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">plage.jpg</text>
+<line x1="810" y1="562" x2="810" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="1000" y="600" width="260" height="66" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1130" y="643" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">partition.pdf</text>
+<line x1="1130" y1="562" x2="1130" y2="596" stroke="#24557a" stroke-width="3"/>
+<rect x="160" y="706" width="1280" height="92" rx="14" fill="#fbfdff" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="200" y="764" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑧ Mon espace / Travail / Technologie / expose-svt.odt</text>
+<text x="800" y="842" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#4a6076">Un chemin, c'est un dossier, puis un dossier, puis un dossier, puis le fichier.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/n7-arborescence-a-completer.svg</code></strong> : <strong>sept dossiers</strong> à nommer, puis un <strong>chemin complet</strong> à écrire (huit trous). Tracez-le au tableau si besoin : trois rectangles en haut, quatre en dessous, quatre fichiers en bas.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche, projetez le schéma</td><td>Observe</td></tr><tr><td>2-6 min</td><td>Faites nommer les dossiers par la classe, un élève écrit</td><td>Dicte, corrige</td></tr><tr><td>6-8 min</td><td>Faites écrire le chemin complet du fichier « expose-svt »</td><td>Dicte le chemin</td></tr><tr><td>8-10 min</td><td>Donnez les trois règles de nommage et appliquez-les <strong>à un nom dicté à voix haute</strong></td><td>Applique</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un fichier a une adresse, comme une maison : un disque, un dossier, un sous-dossier, puis le nom du fichier. Si l'adresse est mal construite, le facteur — c'est-à-dire vous dans six mois — ne trouve plus rien. Ranger, ce n'est pas être maniaque : c'est rendre un fichier <strong>retrouvable sans le chercher</strong>. »</p></blockquote>
+</section>
+<section class="q-section s-tableau">
+<h4>Les trois règles de nommage à écrire au tableau</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Règle</th><th>Mauvais</th><th>Bon</th></tr></thead><tbody><tr><td>pas d'espace, pas d'accent</td><td><code>exposé SVT final(2).odt</code></td><td><code>expose-svt.odt</code></td></tr><tr><td>une date au début, au format AAAA-MM-JJ</td><td><code>novembre</code></td><td><code>2026-11-03-expose-svt.odt</code></td></tr><tr><td>un nom qui dit le contenu, pas l'humeur</td><td><code>truc final vrai.odt</code></td><td><code>expose-svt-cellule.odt</code></td></tr></tbody></table></div>
+<p>dicté à voix haute, ou à un nom que les élèves savent avoir sur leur espace.)*</p>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Écris en entier le chemin du fichier "plage.jpg". »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Deux élèves rangent le même fichier à deux endroits différents : lequel des deux retrouvera l'autre ? » → celui qui a suivi une règle, pas celui qui a suivi son humeur. D'où l'intérêt d'une règle commune de classe.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez le début du chemin (<code>Mon espace / Travail / …</code>) : l'élève n'a plus qu'à finir.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Rangez vos fichiers » → sans critère, c'est un reproche, pas une consigne. Le critère est : <strong>retrouver sans chercher</strong>.</li><li>« Il faut toujours tout ranger » → non : il y a des dossiers de travail en vrac, et c'est normal. Ce qui compte, c'est de savoir <strong>où est ce qu'on garde</strong>.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Comment ranger pour qu'un autre retrouve tes fichiers sans que tu sois là ? » — c'est la question qui transforme le rangement en compétence.</p>
+</section>
+</article>
+</main>
+
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni
+adresse, ni compte, ne conserve rien et n'envoie rien sur Internet.</footer>
+<footer>
+  <p>Quickies — Technologie au collège, cycle 4. Contenus issus des fiches de préparation
+     des pastilles&nbsp;; les schémas sont des dessins techniques, sans image externe.</p>
+</footer>
+
+<script>
+(function () {
+  // Onglets de version du schéma + plein écran. Aucune mémoire : rien n'est
+  // conservé d'une visite à l'autre, et rien ne quitte la page.
+  document.querySelectorAll('.schema-bloc').forEach(function (bloc) {
+    var onglets = bloc.querySelectorAll('.onglet');
+    var vues = bloc.querySelectorAll('.schema-vue');
+    function montrer(vue) {
+      onglets.forEach(function (b) {
+        var actif = b.dataset.vue === vue;
+        b.classList.toggle('actif', actif);
+        b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+      });
+      vues.forEach(function (v) {
+        if (v.dataset.vueBloc === vue) { v.removeAttribute('hidden'); }
+        else { v.setAttribute('hidden', ''); }
+      });
+    }
+    onglets.forEach(function (b) {
+      b.addEventListener('click', function () { montrer(b.dataset.vue); });
+    });
+    var plein = bloc.querySelector('.plein');
+    if (plein) {
+      plein.addEventListener('click', function () {
+        var actif = bloc.classList.toggle('en-plein');
+        plein.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        plein.textContent = actif ? '⤡ Réduire' : '⤢ Plein écran';
+        document.body.style.overflow = actif ? 'hidden' : '';
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && bloc.classList.contains('en-plein')) { plein.click(); }
+      });
+    }
+  });
+})();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Modèles de commentaire : des phrases génériques, à compléter par le
+// professeur. Elles ne nomment NI niveau NI identifiant — le panneau les
+// déduit déjà de l'onglet et de l'élément sélectionnés. C'est ce qui
+// remplace les exemples figés, qui désignaient toujours un autre niveau
+// que celui qu'on corrigeait.
+var MODELES_COMMENTAIRE = [
+    {libelle: 'énoncé pas clair', texte: "L'énoncé n'est pas clair : reformule-le plus simplement, sans jargon."},
+    {libelle: 'pas ce que je veux', texte: "Ça ne correspond pas à ce que je veux : <ce que j'attends, en une phrase>."},
+    {libelle: 'élève bloqué', texte: "L'élève est bloqué ici : il devrait pouvoir <ce qu'il doit réussir à faire>."},
+    {libelle: 'trop long', texte: "C'est trop long et illisible : raccourcis ce texte, l'essentiel seul compte."},
+    {libelle: 'à retirer', texte: "Retire ce texte : il n'apporte rien à l'élève."},
+    {libelle: 'ajouter des choix', texte: "Ajoute <nombre> propositions de plus, du même niveau de difficulté."}
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    // Un modèle remplit un commentaire vide, s'ajoute à la suite sinon :
+    // rien de ce qui est déjà écrit n'est effacé.
+    var rangeeModeles = document.createElement('div');
+    rangeeModeles.className = 'ost-modeles';
+    rangeeModeles.setAttribute('role', 'group');
+    rangeeModeles.setAttribute('aria-label', 'Modèles de commentaire');
+    MODELES_COMMENTAIRE.forEach(function (modele) {
+        var bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'ost-modele';
+        bouton.textContent = modele.libelle;
+        bouton.title = 'Insère « ' + modele.texte + ' » — à compléter.';
+        bouton.addEventListener('click', function () {
+            var actuel = zoneCommentaire.value.trim();
+            zoneCommentaire.value = actuel === '' ? modele.texte : actuel + ' ' + modele.texte;
+            zoneCommentaire.dispatchEvent(new Event('input'));
+            zoneCommentaire.focus();
+        });
+        rangeeModeles.appendChild(bouton);
+    });
+    blocCom.appendChild(rangeeModeles);
+    var legendeModeles = document.createElement('p');
+    legendeModeles.className = 'ost-modeles-legende';
+    legendeModeles.textContent = "Un modèle s'ajoute au commentaire : complétez les <…> avant de copier le prompt.";
+    blocCom.appendChild(legendeModeles);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+</body>
+</html>

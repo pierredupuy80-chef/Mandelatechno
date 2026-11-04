@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Quickies 4e : 8 pastilles de 8 à 15 minutes pour la classe de technologie.">
+<title>Quickies 4e — Technologie au collège</title>
+<script>
+/* Identifiant de publication : la page se déclare sous son propre chemin publié.
+   Il est lu par inventorier_activites.py et ost_resoudre.py (panneau « Corriger »). */
+const ACTIVITE_PUBLICATION = "4e/quickies/index.html";
+</script>
+<style>
+:root{
+  --bleu:#1e4e79; --bleu2:#2b6cb0; --bleuf:#eef4fb;
+  --bord:#cddbe9; --gris:#5a6b7b; --texte:#16232e;
+  --orange:#b45309; --orange-f:#fff7ed; --vert:#0b6b4f; --vert-f:#f0faf5;
+  --rouge:#b03a2e; --rouge-f:#fdf3f2;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:#f6f9fc; color:var(--texte);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:17px; line-height:1.55;
+}
+header.site{background:linear-gradient(160deg,#1e4e79,#2b6cb0); color:#fff; padding:22px 16px 26px}
+header.site .contenu, nav.sommaire, main, footer{max-width:1000px; margin:0 auto}
+header.site p.yeux{margin:0 0 4px; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; opacity:.85}
+header.site h1{margin:0 0 8px; font-size:clamp(1.5rem,5vw,2.1rem); line-height:1.15}
+header.site p{margin:0; max-width:62ch; opacity:.95}
+header.site .niveau-marque{
+  display:inline-block; margin-left:6px; padding:0 12px; border-radius:10px;
+  background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.5);
+  font-size:.8em; vertical-align:middle;
+}
+.liste-quickies{list-style:none; padding:0; margin:10px 0 0;
+  display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.liste-quickies li{margin:0}
+.liste-quickies a{
+  display:flex; justify-content:space-between; gap:10px; align-items:center;
+  min-height:44px; padding:10px 14px; border-radius:10px; text-decoration:none;
+  background:#fff; border:2px solid var(--bord); color:var(--bleu); font-weight:700;
+}
+.liste-quickies a:hover,.liste-quickies a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+.liste-quickies .duree{font-weight:400; font-size:.85em; color:var(--gris); white-space:nowrap}
+nav.sommaire a.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+
+nav.sommaire{
+  position:sticky; top:0; z-index:40;
+  display:flex; gap:8px; flex-wrap:wrap;
+  background:rgba(255,255,255,.97); border-bottom:1px solid var(--bord);
+  box-shadow:0 1px 6px rgba(30,78,121,.08); padding:10px 14px;
+}
+nav.sommaire a{
+  flex:1 1 auto; min-height:44px; display:flex; align-items:center; justify-content:center;
+  background:#fff; border:2px solid var(--bord); border-radius:12px;
+  color:var(--bleu); text-decoration:none; font-weight:700; padding:8px 14px;
+}
+nav.sommaire a:hover,nav.sommaire a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+
+main{padding:20px 14px 48px}
+.intro{background:#fff; border:1px solid var(--bord); border-radius:16px; padding:20px; margin:0 0 22px}
+.intro h2{margin:0 0 10px; color:var(--bleu); font-size:1.2rem}
+.intro ul{margin:10px 0 0; padding-left:22px}
+.intro li{margin-bottom:6px}
+
+h2.niveau-titre{
+  margin:34px 0 14px; padding:12px 16px; border-radius:12px; color:#fff;
+  background:var(--bleu); font-size:clamp(1.15rem,4vw,1.4rem);
+  scroll-margin-top:76px;
+}
+h2.niveau-titre .compte{font-weight:400; font-size:.85em; opacity:.9}
+
+.quickie{
+  background:#fff; border:1px solid var(--bord); border-radius:16px;
+  padding:18px; margin:0 0 20px; scroll-margin-top:80px;
+}
+.q-tete{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:start}
+.q-num{
+  grid-row:1 / span 2; margin:0; width:44px; height:44px; border-radius:10px;
+  background:var(--bleu); color:#fff; font-weight:700; display:flex;
+  align-items:center; justify-content:center; font-size:.9rem;
+}
+.q-tete h3{margin:0; font-size:clamp(1.1rem,3.6vw,1.35rem); color:var(--bleu)}
+.q-meta{margin:6px 0 0; display:flex; gap:6px; flex-wrap:wrap}
+.badge{
+  display:inline-block; padding:2px 9px; border-radius:999px; font-size:.78rem;
+  font-weight:700; background:var(--bleuf); color:var(--bleu); border:1px solid var(--bord);
+}
+.badge-code{background:var(--bleu); color:#fff; border-color:var(--bleu)}
+.badge-neutre{background:#f2f5f8; color:var(--gris)}
+.q-appel{margin:12px 0 0; color:var(--gris); font-size:.98rem}
+.q-bo{
+  margin:10px 0 0; padding:10px 12px; background:var(--bleuf); border-radius:10px;
+  font-size:.9rem; color:var(--bleu);
+}
+blockquote{margin:14px 0; padding:12px 16px; border-left:5px solid var(--bleu2);
+  background:#f9fbfe; border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+.accroche{font-size:1.08rem; border-left-color:var(--vert); background:var(--vert-f)}
+
+.schema-bloc{margin:16px 0; border:1px solid var(--bord); border-radius:12px; overflow:hidden}
+.schema-barre{display:flex; gap:8px; flex-wrap:wrap; padding:8px; background:var(--bleuf);
+  border-bottom:1px solid var(--bord)}
+.schema-barre button{
+  min-height:44px; padding:8px 16px; border-radius:10px; border:2px solid var(--bord);
+  background:#fff; color:var(--bleu); font:inherit; font-weight:700; cursor:pointer;
+}
+.schema-barre button.actif{background:var(--bleu); color:#fff; border-color:var(--bleu)}
+.schema-barre button.plein{margin-left:auto}
+.schema-vue{background:#fff; padding:8px}
+.schema-svg{display:block; width:100%; height:auto}
+
+.schema-bloc.en-plein{
+  position:fixed; inset:0; z-index:200; margin:0; border-radius:0;
+  background:#fff; display:flex; flex-direction:column;
+}
+.schema-bloc.en-plein .schema-vue:not([hidden]){flex:1; display:flex; align-items:center}
+.schema-bloc.en-plein .schema-svg{max-height:calc(100vh - 80px); width:100%}
+
+.q-section{margin:16px 0 0}
+.q-section h4{margin:0 0 8px; font-size:1rem; color:var(--bleu)}
+.q-section p{margin:0 0 10px}
+.s-attention{background:var(--orange-f); border-left:5px solid var(--orange);
+  border-radius:0 10px 10px 0; padding:10px 14px}
+.s-attention h4{color:var(--orange)}
+.s-verifier{background:#fff; border:2px dashed var(--orange); border-radius:10px; padding:10px 14px}
+.s-verifier h4{color:var(--orange)}
+.s-question{background:var(--bleuf); border-radius:10px; padding:10px 14px}
+.s-sortie{background:var(--vert-f); border-left:5px solid var(--vert);
+  border-radius:0 10px 10px 0; padding:10px 14px}
+.s-sortie h4{color:var(--vert)}
+
+.tab-enveloppe{overflow-x:auto; margin:10px 0}
+table{border-collapse:collapse; width:100%; font-size:.94rem}
+th,td{border:1px solid var(--bord); padding:7px 10px; text-align:left; vertical-align:top}
+th{background:var(--bleuf); color:var(--bleu)}
+tbody tr:nth-child(even){background:#fafcfe}
+code{background:#f0f4f8; border:1px solid var(--bord); border-radius:4px;
+  padding:0 4px; font-size:.9em}
+.a-verifier{color:var(--orange); font-weight:700}
+ul,ol{margin:8px 0 10px; padding-left:22px}
+li{margin-bottom:5px}
+
+footer{padding:0 14px 40px; color:var(--gris); font-size:.9rem}
+.mention-rgpd{
+  background:var(--bleuf); border:1px solid var(--bord); border-radius:10px;
+  max-width:1000px; margin:0 auto 26px; padding:12px 16px; color:var(--bleu); font-size:.87rem;
+}
+
+@media (max-width:420px){
+  body{font-size:16px}
+  .q-tete{grid-template-columns:1fr}
+  .q-num{width:auto; height:auto; display:inline-block; padding:2px 10px; margin-bottom:6px}
+}
+@media print{
+  nav.sommaire, .schema-barre{display:none}
+  .quickie{break-inside:avoid; border:1px solid #999}
+  .schema-vue[hidden]{display:block}
+  .schema-vue[data-vue-bloc="vide"]{display:none}
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
+<style id="retour-accueil-style">
+/* ── RETOUR À L'ACCUEIL DU SITE ───────────────────────────────────── */
+/* Un lien simple, posé EN TÊTE DE PAGE, dans le flux — jamais
+   flottant. C'est une mesure qui l'a décidé : un bouton flottant
+   finissait toujours par recouvrir un contrôle. En bas à gauche, les
+   flèches du jeu de réseau et les commandes du diaporama ; en haut à
+   droite, l'option d'affichage et le lien du jeu ; en haut à gauche,
+   le titre de l'activité. On ne cache jamais ce que l'élève doit
+   cliquer : le retour reste donc à sa place, et il défile avec la
+   page. C'est aussi la convention déjà suivie par les pages de jeu
+   (« ← Toutes les activités »).
+   Le `!important` est volontaire : le module est posé sur des pages
+   dont nous ne maîtrisons pas le CSS. Sans lui, la règle sombre d'une
+   page ancienne réécrivait la couleur du texte et le lien tombait à
+   4,1:1 (mesuré sur tp-ia.html). */
+.retour-accueil {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin: 8px 12px 12px;
+    padding: 9px 16px;
+    border: 2px solid #ffffff !important;
+    border-radius: 999px;
+    background: #1f4e79 !important;
+    color: #ffffff !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+.retour-accueil:hover,
+.retour-accueil:focus-visible {
+    background: #2a6fb0 !important;
+}
+
+/* Double anneau : blanc au contact du bouton, bleu foncé au large. Sur
+   une page claire c'est l'anneau bleu qui se voit, sur une page sombre
+   c'est l'anneau blanc — le focus reste visible dans les deux modes. */
+.retour-accueil:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px #1f4e79, 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* Une page imprimée ne renvoie nulle part : le bouton n'a rien à y
+   faire, et il prendrait la place d'une consigne. */
+@media print {
+    .retour-accueil {
+        display: none;
+    }
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:FIN -->
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+/* Modèles de commentaire : des phrases génériques à compléter, jamais un
+   niveau ni un identifiant figé — le panneau les déduit déjà de l'onglet
+   et de l'élément sélectionnés. */
+.ost-modeles{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.ost-modele{min-height:32px;padding:0 10px;border:1px dashed #c7d2e3;border-radius:999px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.ost-modele:hover{background:#f1f5f9}
+.ost-modeles-legende{margin:0;font-size:11px;color:#64748b}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer,:where(html[data-theme="sombre"]) .ost-modele:hover{background:#16202e}
+:where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-modele{background:#1c2534;color:#cbd5e1}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
+</head>
+<body id="haut">
+<!-- RETOUR-ACCUEIL:DEBUT (module unique du site, recopié par _outils/template-activite/greffer_retour_accueil.py) -->
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Retour à l’accueil</a>
+<!-- RETOUR-ACCUEIL:FIN -->
+
+<header class="site">
+  <div class="contenu">
+    <p class="yeux">Mandelatechno · cycle 4</p>
+    <h1>Quickies <span class="niveau-marque">4e</span></h1>
+    <p>8 pastilles de 8 à 15 minutes, à faire en classe entière, sans matériel.
+       Un schéma à projeter, deux versions : à compléter et corrigé.</p>
+  </div>
+</header>
+
+<nav class="sommaire" aria-label="Changer de niveau">
+<a href="#haut" class="actif" aria-current="page">4e · 8</a><a href="../../5e/quickies/index.html">5e · 3</a><a href="../../3e/quickies/index.html">3e · 4</a>
+</nav>
+
+<main>
+  <div class="intro">
+    <h2>Comment s'en servir</h2>
+    <p>Chaque quickie tient seul&nbsp;: une accroche, un schéma à compléter au tableau
+       (un élève tient le feutre, la classe dicte), un déroulé minuté, deux ou trois
+       questions et une question de sortie.</p>
+    <ul>
+      <li>La <strong>durée annoncée est du temps de contenu</strong>&nbsp;: comptez trois minutes de plus.</li>
+      <li>Le schéma s'affiche en deux versions&nbsp;: <strong>À compléter</strong> (les cases sont vides)
+          et <strong>Corrigé</strong>. Le bouton <strong>Plein écran</strong> agrandit le schéma pour la projection.</li>
+      <li>Les passages marqués <span class="a-verifier">⏳</span> sont des ordres de grandeur
+          <strong>non encore vérifiés</strong>&nbsp;: leur source est indiquée en bas de chaque fiche.</li>
+      <li>La partie <strong>À ne pas dire</strong> est pour vous&nbsp;: elle corrige les erreurs
+          classiques, celles qu'on répète sans le savoir.</li>
+    </ul>
+    <h2>Les 8 quickies de 4e</h2>
+    <ul class="liste-quickies"><li><a href="#q-un-degre-de-trop">Un degré de trop <span class="duree">8 min</span></a></li><li><a href="#q-l-ampoule-bavarde">L&#x27;ampoule bavarde <span class="duree">15 min</span></a></li><li><a href="#q-trois-chemins-de-chaleur">Trois chemins de chaleur <span class="duree">8 min</span></a></li><li><a href="#q-la-maison-qui-veille">La maison qui veille <span class="duree">15 min</span></a></li><li><a href="#q-pourquoi-ca-vole">Pourquoi ça vole <span class="duree">10 min</span></a></li><li><a href="#q-la-toupie">La toupie <span class="duree">8 min</span></a></li><li><a href="#q-retour-maison">Retour maison <span class="duree">10 min</span></a></li><li><a href="#q-un-kilo-deux-energies">Un kilo, deux énergies <span class="duree">8 min</span></a></li></ul>
+  </div>
+
+<article class="quickie"  id="q-un-degre-de-trop" data-ost-id="q-un-degre-de-trop" data-pastille="D1">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">D1</p>
+<h3>Un degré de trop</h3>
+<p class="q-meta"><span class="badge">8 min</span><span class="badge badge-code">D1 · 4e</span><span class="badge badge-neutre">aucun matériel</span></p>
+<p class="q-appel">Ce que coûte vraiment un degré de chauffage — et pourquoi l'ADEME en parle.</p>
+<p class="q-bo"><code>OST32</code> (4e) — « Comparer qualitativement et/ou quantitativement (incidences environnementales, bilan carbone, efficacité énergétique) plusieurs OST répondant au même besoin et arrêter un choix. »</p>
+</header>
+<blockquote class="accroche"><p>« Baisser le chauffage d'un seul degré ne se sent presque pas dans la pièce — et pourtant ça se voit sur la facture. Combien, à votre avis ? »</p></blockquote>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<ol><li>la <strong>surface de la salle</strong> (m²) ;</li><li>la <strong>consommation annuelle de chauffage</strong> de la salle ou du bâtiment, <strong>en kWh</strong> — c'est le seul nombre qui entre dans la formule ci-dessous (à demander à l'intendance ou au gestionnaire) ;</li><li>à défaut, <strong>un exemple traité d'avance</strong> : <em>« une salle de 80 m² consomme de l'ordre de 8 000 kWh de chauffage par an ; 7 % de 8 000 = 560 kWh par an <span class="a-verifier" title="Chiffre non vérifié">⏳</span>. »</em></li></ol>
+<p>Sans le deuxième nombre, prenez l'exemple ci-dessus et annoncez-le <strong>comme un exemple</strong>, pas comme une mesure du collège.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Posez l'accroche, écrivez « 1 °C = ? % » au tableau</td><td>Réfléchit en silence</td></tr><tr><td>1-3 min</td><td>Faites voter <strong>par paliers</strong> : « qui dit moins de 1 % ? entre 1 et 5 ? entre 5 et 10 ? plus de 10 ? »</td><td>Lève la main à chaque palier</td></tr><tr><td>3-5 min</td><td>Donnez le chiffre <span class="a-verifier" title="Chiffre non vérifié">⏳</span> et écrivez-le</td><td>Note le chiffre</td></tr><tr><td>5-8 min</td><td>Faites calculer sur la salle : consommation, économie annuelle, économie sur 10 ans</td><td>Calcule, propose le résultat, corrige ses voisins</td></tr></tbody></table></div>
+<p>Le vote <strong>par paliers</strong> est ce qui fait la différence avec un simple « qui sait ? » : il oblige chaque élève à se positionner, y compris celui qui n'a aucune idée — et il montre que la classe sous-estime systématiquement l'effet d'un seul degré.</p>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un degré, ce n'est pas une sensation, c'est un pourcentage. L'ADEME — l'agence de l'État pour la maîtrise de l'énergie — <strong>public un ordre de grandeur</strong> que nous allons vérifier <span class="a-verifier" title="Chiffre non vérifié">⏳</span>. Et ce pourcentage ne porte pas sur la facture totale : il porte sur la <strong>consommation de chauffage</strong> seulement. C'est une distinction que beaucoup d'adultes confondent. »</p></blockquote>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Si on baisse de 1 °C, on économise 7 % <span class="a-verifier" title="Chiffre non vérifié">⏳</span> de quoi exactement ? »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Et si on baisse de 2 °C, est-ce qu'on économise 14 % ? » → <strong>Non</strong> : moins que le double (l'économie n'est pas linéaire), et surtout on descend sous le seuil de confort et on risque l'humidité. C'est le moment de dire que l'efficacité a une limite.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Écrivez la formule au tableau avant de faire calculer : <code>économie = consommation de chauffage × 7 ÷ 100</code> <span class="a-verifier" title="Chiffre non vérifié">⏳</span>. L'élève en difficulté n'a plus qu'à remplacer deux nombres.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« 7 % de la facture totale » → c'est <strong>7 % de la consommation de chauffage</strong>.</li><li>« 19 °C est une obligation partout » → <span class="a-verifier" title="Chiffre non vérifié">⏳</span> les règles de température de consigne dépendent du type de bâtiment et du moment de la journée. Je ne peux pas les certifier sans source ouverte : <strong>dites « la consigne recommandée est d'environ 19 °C dans une pièce occupée », et vérifiez avant.</strong></li><li>« Baisser le chauffage la nuit, c'est gratuit » → non : une remise en chauffe coûte, c'est un compromis. La domotique est justement ce qui permet de le calculer.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Pourquoi le collège baisse-t-il le chauffage la nuit et le week-end ? » — à faire dire en une phrase, avec le mot <em>consommation</em> dedans.</p>
+</section>
+<section class="q-section s-verifier">
+<h4>Chiffres à vérifier avant la classe</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Chiffre</th><th>Source à ouvrir</th><th>Statut</th></tr></thead><tbody><tr><td>gain d'environ 7 % par degré</td><td><code>ademe.fr</code>, rubrique particuliers → énergie → chauffage</td><td><strong>non vérifié</strong> (outil web indisponible)</td></tr><tr><td>température de consigne recommandée</td><td>même page ADEME</td><td><strong>non vérifié</strong></td></tr></tbody></table></div>
+</section>
+</article>
+<article class="quickie"  id="q-l-ampoule-bavarde" data-ost-id="q-l-ampoule-bavarde" data-pastille="D3">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">D3</p>
+<h3>L&#x27;ampoule bavarde</h3>
+<p class="q-meta"><span class="badge">15 min</span><span class="badge badge-code">D3 · 4e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Un objet connecté n'est pas une ampoule : c'est un ordinateur qui prend des notes.</p>
+<p class="q-bo"><code>OST14</code> (4e) — « Identifier et appliquer les règles pour un usage raisonné des objets communicants et des environnements numériques (propriété intellectuelle, identité numérique, témoins de connexion, géolocalisation). »</p>
+</header>
+<blockquote class="accroche"><p>« Une ampoule connectée, ce n'est pas une ampoule : c'est un petit ordinateur avec une ampoule autour. Et cet ordinateur peut renseigner l'heure à laquelle la maison se réveille et s'éteint. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>D3 — Chaîne de l'allumage à distance</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">D3 — Chaîne de l'allumage à distance</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Enchaîner les quatre maillons, puis nommer ce que le système enregistre</text>
+<text x="800" y="172" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#0b6b4f">Allumer une ampoule connectée depuis son téléphone</text>
+<rect x="90" y="232" width="250" height="130" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="215" y="297" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">① ………</text>
+<line x1="344" y1="297" x2="402" y2="297" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="410" y="232" width="250" height="130" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="535" y="297" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">② ………</text>
+<line x1="664" y1="297" x2="722" y2="297" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="730" y="232" width="250" height="130" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="855" y="297" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">③ ………</text>
+<line x1="984" y1="297" x2="1042" y2="297" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1050" y="232" width="250" height="130" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1175" y="297" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">④ ………</text>
+<text x="800" y="420" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">→ Le chemin de l'information : acquérir → traiter → transmettre → agir</text>
+<rect x="90" y="470" width="1420" height="300" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="120" y="520" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#b03a2e">Ce que ce système peut savoir de vous :</text>
+<text x="150" y="582" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• ………</text>
+<text x="150" y="632" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• ………</text>
+<text x="150" y="682" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• ………</text>
+<text x="150" y="732" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• ………</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>D3 — Chaîne de l'allumage à distance</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">D3 — Chaîne de l'allumage à distance</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Enchaîner les quatre maillons, puis nommer ce que le système enregistre</text>
+<text x="800" y="172" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#0b6b4f">Allumer une ampoule connectée depuis son téléphone</text>
+<rect x="90" y="232" width="250" height="130" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="215" y="281" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">① Geste</text>
+<text x="215" y="314" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">de l'usager</text>
+<line x1="344" y1="297" x2="402" y2="297" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="410" y="232" width="250" height="130" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="535" y="281" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">② Application</text>
+<text x="535" y="314" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">du téléphone</text>
+<line x1="664" y1="297" x2="722" y2="297" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="730" y="232" width="250" height="130" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="855" y="281" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">③ Box</text>
+<text x="855" y="314" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">(Internet)</text>
+<line x1="984" y1="297" x2="1042" y2="297" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1050" y="232" width="250" height="130" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1175" y="281" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">④ Ampoule :</text>
+<text x="1175" y="314" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">module + LED</text>
+<text x="800" y="420" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">→ Le chemin de l'information : acquérir → traiter → transmettre → agir</text>
+<rect x="90" y="470" width="1420" height="300" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="120" y="520" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#b03a2e">Ce que ce système peut savoir de vous :</text>
+<text x="150" y="582" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• à quelle heure la maison se lève</text>
+<text x="150" y="632" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• si la pièce est occupée</text>
+<text x="150" y="682" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• ce que vous consommez</text>
+<text x="150" y="732" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">• quand vous êtes absent</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/d3-chaine-ampoule-a-completer.svg</code></strong> projeté (ou recopié au tableau au feutre). Une feuille de brouillon pour chaque élève n'est pas nécessaire : on écrit sur le cahier.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche, puis projetez le schéma à compléter (ou tracez-le : 4 cases + le panneau du bas, 3 min avant la sonnerie)</td><td>Observe</td></tr><tr><td>2-4 min</td><td>« Quels sont les quatre maillons, du geste jusqu'à la lumière ? » — un élève vient au tableau</td><td>Dicte, corrige, argumente</td></tr><tr><td>4-8 min</td><td>Faites compléter <strong>le panneau du bas</strong> : ce que le système peut savoir</td><td>Propose : heures, présence, consommation, absences</td></tr><tr><td>8-13 min</td><td>Question de discussion. Chacun écrit <strong>une phrase</strong> sur son cahier</td><td>Écrit sa phrase</td></tr><tr><td>13-15 min</td><td>Vous passez dans les rangs, vous <strong>choisissez</strong> 3 ou 4 phrases, vous les lisez sans nommer</td><td>Écoute, complète sa phrase</td></tr></tbody></table></div>
+<p>publique sur un sujet qui touche sa famille. La phrase sur cahier, lue anonymement, donne la même matière sans exposition. Ne nommez jamais l'auteur d'une phrase lue.</p>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Les maillons, vous les connaissez : le geste, l'application, la box, l'ampoule. Ce qui est nouveau, c'est ce que l'ensemble fabrique en même temps : des <strong>traces</strong>. L'heure à laquelle vous allumez. Si la pièce est occupée. Combien vous consommez. Ce ne sont pas des données volées : ce sont des données produites par le fonctionnement normal. La question n'est pas « est-ce légal » — c'est encadré — mais « est-ce que je le savais, et est-ce que j'ai le choix ». »</p></blockquote>
+</section>
+<section class="q-section s-tableau">
+<h4>Le vocabulaire à poser (et à écrire au tableau)</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition à donner</th></tr></thead><tbody><tr><td><strong>témoin de connexion</strong> (cookie)</td><td>un petit fichier déposé par un site dans votre navigateur pour vous reconnaître quand vous revenez</td></tr><tr><td><strong>géolocalisation</strong></td><td>la position d'un appareil, obtenue par le GPS ou par les antennes à proximité</td></tr><tr><td><strong>identité numérique</strong></td><td>ce qu'on peut savoir de vous à partir de vos traces en ligne</td></tr><tr><td><strong>usage raisonné</strong></td><td>choisir ce qu'on connecte, ce qu'on autorise, et ce qu'on refuse</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Citez deux choses que cette installation peut apprendre sur une famille sans que personne ne les lui ait dites. »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Une caméra et un capteur de présence : lequel est le plus intrusif ? » → la réponse n'est pas technique : un capteur peut détecter la présence sans image, mais il peut aussi être relié à d'autres données. Faites chercher avant de trancher.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez les trois premières lignes du panneau du bas (heures / présence / consommation) : l'élève n'a plus qu'à trouver un exemple pour chacune.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« C'est illégal » → non : c'est <strong>encadré</strong> (consentement, information, droit d'accès et de suppression). Dire « illégal » fait perdre la nuance la plus importante.</li><li>« Les objets connectés nous espionnent » → c'est un jugement, pas un fait. Dites ce qui est enregistré, par qui, et pendant combien de temps.</li><li>Ne demandez <strong>jamais</strong> qui a un objet connecté à la maison.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Comment garder le confort sans donner ses horaires ? » — écoutez les propositions (compte séparé, objet non connecté, programmation locale) et notez-en deux au tableau.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Sujet sensible</h4>
+<p>Les horaires de lever et de coucher touchent les familles en garde alternée, les parents qui travaillent de nuit, les foyers. <strong>Aucun exemple personnel.</strong> Si un élève commence à raconter sa situation, remerciez, reformulez en exemple fictif et poursuivez.</p>
+</section>
+<section class="q-section s-verifier">
+<h4>À vérifier avant la classe</h4>
+<p>Les obligations exactes du RGPD sur les objets connectés (information, consentement) : la fiche CNIL correspondante est en cours de vérification. Le tableau ci-dessus décrit des principes sûrs ; les <strong>articles</strong> précis, non — ne les citez pas de mémoire.</p>
+</section>
+</article>
+<article class="quickie"  id="q-trois-chemins-de-chaleur" data-ost-id="q-trois-chemins-de-chaleur" data-pastille="D4">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">D4</p>
+<h3>Trois chemins de chaleur</h3>
+<p class="q-meta"><span class="badge">8 min</span><span class="badge badge-code">D4 · 4e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Conduction, convection, rayonnement : pourquoi un radiant et un convecteur diffèrent.</p>
+<p class="q-bo"><code>SFC12</code> (4e) — « Repérer les transformations d'énergie et les flux d'énergie au sein de l'OST. »</p>
+</header>
+<blockquote class="accroche"><p>« Un radiateur chauffe une pièce de plusieurs façons à la fois. En nommer trois, c'est comprendre pourquoi un radiant et un convecteur ne donnent pas le même confort — ni la même facture. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>D4 — Les trois modes de transfert de la chaleur</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">D4 — Les trois modes de transfert de la chaleur</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les trois chemins par lesquels la chaleur arrive jusqu'à vous</text>
+<rect x="120" y="180" width="1000" height="620" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<text x="620" y="165" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#4a6076">Une pièce chauffée par un radiateur</text>
+<rect x="200" y="560" width="300" height="190" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="350" y="640" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="32" font-weight="700" fill="#b03a2e">RADIATEUR</text>
+<text x="350" y="690" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#b03a2e">chaud</text>
+<line x1="510" y1="600" x2="900" y2="600" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar)"/>
+<text x="705" y="585" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#b03a2e">① ………</text>
+<text x="705" y="645" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">sans support, sans contact</text>
+<line x1="400" y1="545" x2="400" y2="330" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar-chaud)"/>
+<line x1="560" y1="545" x2="560" y2="330" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar-chaud)"/>
+<line x1="1010" y1="300" x2="1010" y2="545" stroke="#1f5f9e" stroke-width="5" marker-end="url(#ar-froid)"/>
+<text x="690" y="300" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#b03a2e">② ………</text>
+<text x="690" y="262" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">l'air chaud monte</text>
+<text x="1090" y="410" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">l'air refroidi redescend</text>
+<line x1="200" y1="812" x2="1000" y2="812" stroke="#0b6b4f" stroke-width="5" marker-end="url(#ar-vert)"/>
+<text x="600" y="852" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#0b6b4f">③ ………</text>
+<rect x="1160" y="180" width="340" height="620" rx="14" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="3"/>
+<text x="1330" y="232" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#0b6b4f">Ce que ça change</text>
+<text x="1185" y="271" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">Un radiant chauffe</text>
+<text x="1185" y="304" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">SURTOUT les surfaces</text>
+<text x="1185" y="337" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">et les personnes</text>
+<text x="1185" y="370" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">(et un peu l'air).</text>
+<text x="1185" y="487" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">Un convecteur chauffe</text>
+<text x="1185" y="520" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">SURTOUT l'air,</text>
+<text x="1185" y="553" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">donc la pièce entière.</text>
+<text x="1185" y="720" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Même énergie,</text>
+<text x="1185" y="762" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">confort différent.</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>D4 — Les trois modes de transfert de la chaleur</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">D4 — Les trois modes de transfert de la chaleur</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les trois chemins par lesquels la chaleur arrive jusqu'à vous</text>
+<rect x="120" y="180" width="1000" height="620" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<text x="620" y="165" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#4a6076">Une pièce chauffée par un radiateur</text>
+<rect x="200" y="560" width="300" height="190" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="350" y="640" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="32" font-weight="700" fill="#b03a2e">RADIATEUR</text>
+<text x="350" y="690" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#b03a2e">chaud</text>
+<line x1="510" y1="600" x2="900" y2="600" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar)"/>
+<text x="705" y="585" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#b03a2e">① par rayonnement</text>
+<text x="705" y="645" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">sans support, sans contact</text>
+<line x1="400" y1="545" x2="400" y2="330" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar-chaud)"/>
+<line x1="560" y1="545" x2="560" y2="330" stroke="#b03a2e" stroke-width="5" marker-end="url(#ar-chaud)"/>
+<line x1="1010" y1="300" x2="1010" y2="545" stroke="#1f5f9e" stroke-width="5" marker-end="url(#ar-froid)"/>
+<text x="690" y="300" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#b03a2e">② par convection</text>
+<text x="690" y="262" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">l'air chaud monte</text>
+<text x="1090" y="410" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">l'air refroidi redescend</text>
+<line x1="200" y1="812" x2="1000" y2="812" stroke="#0b6b4f" stroke-width="5" marker-end="url(#ar-vert)"/>
+<text x="600" y="852" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#0b6b4f">③ par conduction (dans la matière, de proche en proche)</text>
+<rect x="1160" y="180" width="340" height="620" rx="14" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="3"/>
+<text x="1330" y="232" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#0b6b4f">Ce que ça change</text>
+<text x="1185" y="271" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">Un radiant chauffe</text>
+<text x="1185" y="304" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">SURTOUT les surfaces</text>
+<text x="1185" y="337" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">et les personnes</text>
+<text x="1185" y="370" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">(et un peu l'air).</text>
+<text x="1185" y="487" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">Un convecteur chauffe</text>
+<text x="1185" y="520" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">SURTOUT l'air,</text>
+<text x="1185" y="553" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">donc la pièce entière.</text>
+<text x="1185" y="720" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Même énergie,</text>
+<text x="1185" y="762" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">confort différent.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/d4-transfert-thermique-a-completer.svg</code></strong> (trois flèches à nommer). Aucun matériel : la cuillère dans le café et le radiateur de la salle d'à côté suffisent comme exemples mentaux — ils sont dans la tête de tous les élèves.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Accroche. « Vous êtes assis à trois mètres du radiateur : comment la chaleur arrive-t-elle jusqu'à vous ? »</td><td>Réfléchit 30 s en silence</td></tr><tr><td>1-3 min</td><td>Un élève vient au tableau et propose un chemin (une flèche)</td><td>Propose, discute</td></tr><tr><td>3-6 min</td><td>Faites nommer les trois flèches du schéma</td><td>Dicte les noms</td></tr><tr><td>6-8 min</td><td>Faites conclure : radiant ou convecteur, même énergie, confort différent</td><td>Conclut</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Trois mots, trois chemins. <strong>Conduction</strong> : la chaleur se transmet dans la matière, de proche en proche, sans que la matière se déplace — la cuillère dans le café chaud.</p>
+<p>froid descend. <strong>Rayonnement</strong> : la chaleur traverse l'air sans le chauffer et sans support — vous sentez la chaleur du radiateur sur votre visage, à distance, sans le toucher. »</p></blockquote>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Par lequel des trois chemins la chaleur arrive-t-elle sur votre main quand vous la approchez d'un radiateur sans le toucher ? »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Pourquoi chauffe-t-on mal une pièce au plafond de six mètres ? » → la convection fait monter l'air chaud, qui reste là-haut : on chauffe le plafond. C'est le même raisonnement que la mezzanine et le ventilateur de plafond.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez les mots dans le désordre au tableau (conduction, convection, rayonnement) : la tâche devient de les placer, pas de les trouver.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Un radiateur rayonnant ne chauffe pas l'air » → <strong>faux</strong> : il le chauffe aussi, mais moins, et surtout il chauffe les surfaces et les personnes directement.</li><li>« La chaleur monte » → c'est <strong>l'air chaud</strong> qui monte, pas la chaleur. La nuance paraît mince ; elle explique pourquoi un radiateur placé au sol chauffe mieux qu'un radiateur au plafond.</li><li>Ne demandez pas à quelle température les élèves chauffent chez eux (précarité énergétique, situations familiales).</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Pourquoi chauffe-t-on plus vite une petite pièce qu'un préau ? » — attendez le mot</p>
+</section>
+</article>
+<article class="quickie"  id="q-la-maison-qui-veille" data-ost-id="q-la-maison-qui-veille" data-pastille="D7">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">D7</p>
+<h3>La maison qui veille</h3>
+<p class="q-meta"><span class="badge">15 min</span><span class="badge badge-code">D7 · 4e</span><span class="badge badge-neutre">tableau à trois colonnes</span></p>
+<p class="q-appel">Le détecteur de chute sauve des vies — et mesure votre intimité.</p>
+<p class="q-bo"><code>OST22</code> (4e) — « Repérer et expliquer les contraintes, exigences prises en compte (sécurité, incidences environnementales, formes et fonctions, ergonomie, qualité, fiabilité) pour répondre aux attentes des utilisateurs. »</p>
+</header>
+<blockquote class="accroche"><p>« Une maison qui appelle les secours quand une personne tombe : c'est peut-être la plus belle idée de la domotique. Le même équipement peut aussi être celui qui sait tout de vos habitudes. »</p></blockquote>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<blockquote><p>de bain : l'appareil prévient un proche si personne ne se relève après un délai de quelques dizaines de secondes. Il enregistre aussi l'heure de chaque passage, et il coûte un abonnement mensuel.*</p></blockquote>
+<p>Aucun chiffre de marché ni de délai : ils ne sont pas vérifiés et n'apportent rien au raisonnement.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Lisez le cas fictif, écrivez-le au tableau</td><td>Écoute</td></tr><tr><td>2-4 min</td><td>Tracez <strong>trois colonnes</strong> au tableau : <em>Mme R.</em> / <em>sa fille</em> / <em>l'installateur</em></td><td>Propose ce que chacun veut</td></tr><tr><td>4-9 min</td><td>Un élève écrit dans les colonnes, la classe dicte : que demande chacun ?</td><td>Dicte, argumente, corrige</td></tr><tr><td>9-13 min</td><td>« Quel compromis tient en une phrase ? » — un élève l'écrit au tableau</td><td>Propose, discute la formulation</td></tr><tr><td>13-15 min</td><td>Chacun écrit <strong>sa</strong> phrase de compromis sur son cahier ; vous en choisissez trois en passant dans les rangs, puis vous les lisez</td><td>Écrit, écoute</td></tr></tbody></table></div>
+<p>tombé. Les colonnes donnent exactement le même raisonnement, avec zéro exposition. Si un élève propose de jouer un rôle, acceptez-le <strong>pour un seul rôle</strong> et sur un temps court — ne le proposez jamais vous-même.</p>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Ce n'est pas un problème de technologie : c'est un problème de compromis. La sécurité demande de savoir ; la dignité demande de ne pas tout savoir. Les deux exigences sont dans le programme : sécurité et ergonomie. Aucune des deux ne gagne toute seule. »</p></blockquote>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Citez une information que l'appareil doit connaître pour fonctionner, et une information dont il n'a pas besoin. »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Qui doit décider : la personne âgée, sa famille qui paie, ou le fabricant qui a conçu l'appareil ? » → faites chercher, ne tranchez pas.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Écrivez <strong>une phrase de départ au bas de chaque colonne</strong> : <em>Mme R. « je veux rester chez moi »</em> · <em>sa fille « je ne peux pas venir tous les jours »</em> · <em>l'installateur « mon appareil peut faire plus, si vous acceptez »</em>. Il ne reste qu'à compléter les colonnes — et l'élève en difficulté entre dans le raisonnement par le bas.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« C'est du flicage » → c'est un jugement de valeur avant le débat. Laissez-le venir des élèves, s'il vient.</li><li>« La technologie va remplacer la famille » → hors sujet et culpabilisant.</li><li><strong>Ne demandez jamais</strong> si un élève a un grand-parent équipé, ni s'il est déjà tombé. Le cas fictif existe exactement pour éviter cette question.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Qui doit décider du compromis : l'utilisateur, le fabricant ou la loi ? » — acceptez les trois réponses si elles sont justifiées : c'est un débat, pas un QCM.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Sujet sensible — trois précautions</h4>
+<ol><li><strong>On ne parle que de Mme R.</strong> Le cas fictif est la protection : aucun exemple personnel n'est demandé, aucun témoignage sollicité.</li><li><strong>Phrase de conduite à tenir, préparée avant la séance</strong> : si un élève raconte une chute dans sa famille, <em>« ce que tu dis est important ; on en reparle à la fin du cours, pas devant tout le monde »</em> — puis vous l'écoutez <strong>seul</strong>, et la classe ne commente pas.</li><li><strong>La phrase de compromis s'écrit sur le cahier</strong>, elle n'est pas dite par son auteur : c'est ce qui permet à un élève concerné de participer sans se livrer.</li></ol>
+</section>
+</article>
+<article class="quickie"  id="q-pourquoi-ca-vole" data-ost-id="q-pourquoi-ca-vole" data-pastille="R1">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">R1</p>
+<h3>Pourquoi ça vole</h3>
+<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">R1 · 4e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">L'hélice pousse l'air vers le bas, l'air pousse le drone vers le haut.</p>
+<p class="q-bo"><code>SFC1</code> (4e) — « Décrire et caractériser l'organisation interne d'un objet ou d'un système technique et ses échanges avec son environnement. »</p>
+</header>
+<blockquote class="accroche"><p>« L'activité vous a dit que l'hélice "crée la portance". Elle ne vous a pas dit <strong>comment</strong>. C'est ça, la question du jour. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R1 — Pourquoi un drone vole</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R1 — Pourquoi un drone vole</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Placer les forces dans le bon ordre et écrire la condition de vol</text>
+<rect x="560" y="330" width="420" height="90" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="4"/>
+<text x="770" y="385" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="32" font-weight="700" fill="#12314a">DRONE</text>
+<line x1="580" y1="400" x2="790" y2="400" stroke="#24557a" stroke-width="10"/>
+<line x1="920" y1="400" x2="1130" y2="400" stroke="#24557a" stroke-width="10"/>
+<text x="770" y="300" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">hélices</text>
+<line x1="770" y1="445" x2="770" y2="620" stroke="#1f5f9e" stroke-width="6" marker-end="url(#ar-froid)"/>
+<text x="1000" y="560" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#1f5f9e">① ………</text>
+<text x="1000" y="600" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#1f5f9e">② ………</text>
+<line x1="770" y1="320" x2="770" y2="175" stroke="#0b6b4f" stroke-width="6" marker-end="url(#ar-vert)"/>
+<text x="1000" y="200" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#0b6b4f">③ ………</text>
+<text x="1000" y="240" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#0b6b4f">④ ………</text>
+<line x1="620" y1="430" x2="620" y2="620" stroke="#b03a2e" stroke-width="6" marker-end="url(#ar-chaud)"/>
+<text x="300" y="570" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#b03a2e">⑤ ………</text>
+<line x1="985" y1="375" x2="1190" y2="375" stroke="#24557a" stroke-width="6" marker-end="url(#ar)"/>
+<text x="1250" y="340" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">⑥ ………</text>
+<text x="1250" y="380" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">elle freine le drone</text>
+<line x1="560" y1="730" x2="360" y2="730" stroke="#24557a" stroke-width="6" marker-end="url(#ar)"/>
+<text x="430" y="782" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">déplacement</text>
+<rect x="120" y="812" width="1360" height="68" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="856" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#0b6b4f">⑦ Le drone monte quand ………………… > …………………</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R1 — Pourquoi un drone vole</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R1 — Pourquoi un drone vole</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Placer les forces dans le bon ordre et écrire la condition de vol</text>
+<rect x="560" y="330" width="420" height="90" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="4"/>
+<text x="770" y="385" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="32" font-weight="700" fill="#12314a">DRONE</text>
+<line x1="580" y1="400" x2="790" y2="400" stroke="#24557a" stroke-width="10"/>
+<line x1="920" y1="400" x2="1130" y2="400" stroke="#24557a" stroke-width="10"/>
+<text x="770" y="300" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">hélices</text>
+<line x1="770" y1="445" x2="770" y2="620" stroke="#1f5f9e" stroke-width="6" marker-end="url(#ar-froid)"/>
+<text x="1000" y="560" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#1f5f9e">① l'air est accéléré</text>
+<text x="1000" y="600" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#1f5f9e">    vers le bas</text>
+<line x1="770" y1="320" x2="770" y2="175" stroke="#0b6b4f" stroke-width="6" marker-end="url(#ar-vert)"/>
+<text x="1000" y="200" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#0b6b4f">③ la RÉACTION</text>
+<text x="1000" y="240" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#0b6b4f">    (portance, vers le haut)</text>
+<line x1="620" y1="430" x2="620" y2="620" stroke="#b03a2e" stroke-width="6" marker-end="url(#ar-chaud)"/>
+<text x="300" y="570" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#b03a2e">⑤ le POIDS</text>
+<line x1="985" y1="375" x2="1190" y2="375" stroke="#24557a" stroke-width="6" marker-end="url(#ar)"/>
+<text x="1250" y="340" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">⑥ la TRAÎNÉE</text>
+<text x="1250" y="380" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">elle freine le drone</text>
+<line x1="560" y1="730" x2="360" y2="730" stroke="#24557a" stroke-width="6" marker-end="url(#ar)"/>
+<text x="430" y="782" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">déplacement</text>
+<rect x="120" y="812" width="1360" height="68" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="856" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#0b6b4f">⑦ Le drone monte quand la portance est plus grande que le poids.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/r1-portance-a-completer.svg</code></strong> : <strong>six</strong> libellés à trouver, plus la condition de vol à écrire (case ⑦). Rien d'autre — ni sèche-cheveux, ni balle de ping-pong. Si vous tracez au tableau : un rectangle (le drone), deux traits (les hélices), quatre flèches. C'est trois minutes avant la sonnerie.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Accroche. Écrivez au tableau : « Pourquoi ça monte ? »</td><td>Réfléchit 30 s en silence</td></tr><tr><td>1-3 min</td><td>Recueillez 3 réponses <strong>sans les juger</strong>, écrivez-les</td><td>Propose, écoute</td></tr><tr><td>3-7 min</td><td>Un élève complète le schéma : <strong>d'abord la flèche de l'air vers le bas</strong>, puis celle de la réaction</td><td>Dicte, corrige</td></tr><tr><td>7-10 min</td><td>Concluez sur la condition de vol et faites-la écrire dans la case du bas</td><td>Conclut, note</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« L'hélice prend de l'air et l'accélère <strong>vers le bas</strong>. L'air, lui, n'aime pas être poussé : il réagit et pousse l'hélice <strong>vers le haut</strong>, avec la même force. C'est la troisième loi de Newton : <em>à toute action correspond une réaction</em> <strong>égale</strong> et opposée. Le mot <em>égale</em> compte — et il y a une deuxième précision à donner : <strong>les deux forces ne s'exercent pas sur le même objet</strong>. L'une s'exerce sur l'air, l'autre sur l'hélice. C'est exactement pour cela que le drone peut monter : deux forces qui s'appliqueraient au même objet s'annuleraient. Le drone monte quand la réaction — la <strong>poussée</strong> — dépasse son poids. »</p></blockquote>
+</section>
+<section class="q-section s-attention">
+<h4>Le mot juste, à dire explicitement</h4>
+<blockquote><p>« On parle ici de <strong>portance</strong> parce que c'est le mot employé dans votre activité. Les physiciens réservent plutôt le mot <em>portance</em> à l'<strong>aile</strong> d'un avion, et appellent</p>
+<p>avec deux noms selon l'objet. »</p></blockquote>
+<p>Cette phrase vous protège : le vocabulaire de l'activité n'est pas faux, il est plus large que celui des physiciens.</p>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Que fait l'hélice à l'air, et que fait l'air à l'hélice ? »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Pourquoi les pales d'un hélicoptère doivent-elles tourner beaucoup plus vite sur Mars que sur Terre ? » → l'atmosphère y est environ cent fois moins dense <span class="a-verifier" title="Chiffre non vérifié">⏳</span> : il y a très peu d'air à accélérer, donc très peu de réaction. Il faut des pales plus grandes et plus rapides pour arracher la même portance.</p>
+<p>⚠️ <strong>Ne posez pas la question sous la forme « un hélicoptère pourrait-il voler sur Mars ? »</strong> : la réponse est oui. Le petit hélicoptère de la NASA, <em>Ingenuity</em>, a volé une soixantaine de fois sur Mars entre 2021 et 2024. Un élève qui suit l'actualité démonterait la question — et il aurait raison.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez la première flèche du schéma (l'air vers le bas) et demandez seulement la seconde (la réaction vers le haut). L'élève en difficulté n'a plus qu'une déduction à faire.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Le drone monte parce qu'il y a moins de pression au-dessus de l'hélice » → cette explication (effet Bernoulli) décrit bien une <strong>aile</strong>, mal une hélice, et elle est incomplète. Elle n'est pas fausse, elle est insuffisante : restez sur l'air accéléré vers le bas.</li><li>« Il y a quatre forces : poids, portance, traînée et poussée » → la poussée <strong>horizontale</strong> et la portance <strong>verticale</strong> ne sont pas deux forces du même plan : dites « le poids, la portance, la traînée », et traitez la poussée horizontale à part (elle vient de l'inclinaison du drone).</li><li>Ne faites pas de démonstration avec votre propre matériel : un sèche-cheveux qui tient une balle illustre la pression de l'air autour d'une balle, <strong>pas</strong> la réaction d'une hélice. Le schéma est plus honnête que la démonstration.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« En une phrase : pourquoi le drone monte-t-il ? » — cherchez le mot <em>réaction</em> ou le mot</p>
+</section>
+</article>
+<article class="quickie"  id="q-la-toupie" data-ost-id="q-la-toupie" data-pastille="R2">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">R2</p>
+<h3>La toupie</h3>
+<p class="q-meta"><span class="badge">8 min</span><span class="badge badge-code">R2 · 4e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Deux hélices dans un sens, deux dans l'autre : sans cela, le drone tourne sur lui-même.</p>
+<p class="q-bo"><code>SFC1</code> (4e) — « Décrire et caractériser l'organisation interne d'un objet ou d'un système technique et ses échanges avec son environnement. »</p>
+</header>
+<blockquote class="accroche"><p>« Sur un drone à quatre hélices, deux tournent dans un sens et deux dans l'autre. Ce n'est pas un détail de construction : sans cela, le drone tourne sur lui-même et le pilote perd le cap. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R2 — Deux hélices dans un sens, deux dans l'autre</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R2 — Deux hélices dans un sens, deux dans l'autre</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Vue de dessus : nommer les deux sens et expliquer le cap</text>
+<circle cx="600" cy="520" r="290" fill="#fbfdff" stroke="#24557a" stroke-width="4"/>
+<circle cx="600" cy="520" r="70" fill="#eef4ff" stroke="#24557a" stroke-width="4"/>
+<text x="600" y="530" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">châssis</text>
+<circle cx="435" cy="355" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M403,335 A38,38 0 1,1 422,319" fill="none" stroke="#b03a2e" stroke-width="10" marker-end="url(#ar-chaud)"/>
+<circle cx="765" cy="355" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M797,335 A38,38 0 1,0 778,319" fill="none" stroke="#1f5f9e" stroke-width="10" marker-end="url(#ar-froid)"/>
+<circle cx="765" cy="685" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M733,665 A38,38 0 1,1 752,649" fill="none" stroke="#b03a2e" stroke-width="10" marker-end="url(#ar-chaud)"/>
+<circle cx="435" cy="685" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M467,665 A38,38 0 1,0 448,649" fill="none" stroke="#1f5f9e" stroke-width="10" marker-end="url(#ar-froid)"/>
+<text x="1120" y="250" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#b03a2e">① ………</text>
+<text x="1120" y="288" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">② ………</text>
+<text x="1120" y="352" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">③ ………</text>
+<text x="1120" y="390" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">④ ………</text>
+<text x="1150" y="470" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Les deux se compensent :</text>
+<text x="1150" y="506" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">le drone garde son cap.</text>
+<text x="1120" y="578" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#0b6b4f">⑤ ………</text>
+<text x="1120" y="618" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">une paire accélère,</text>
+<text x="1120" y="654" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">l'autre ralentit.</text>
+<rect x="120" y="812" width="1360" height="68" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="856" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">L'hélice entraîne l'air en rotation ; l'air exerce sur elle un couple opposé, transmis au châssis.</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R2 — Deux hélices dans un sens, deux dans l'autre</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R2 — Deux hélices dans un sens, deux dans l'autre</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Vue de dessus : nommer les deux sens et expliquer le cap</text>
+<circle cx="600" cy="520" r="290" fill="#fbfdff" stroke="#24557a" stroke-width="4"/>
+<circle cx="600" cy="520" r="70" fill="#eef4ff" stroke="#24557a" stroke-width="4"/>
+<text x="600" y="530" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">châssis</text>
+<circle cx="435" cy="355" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M403,335 A38,38 0 1,1 422,319" fill="none" stroke="#b03a2e" stroke-width="10" marker-end="url(#ar-chaud)"/>
+<circle cx="765" cy="355" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M797,335 A38,38 0 1,0 778,319" fill="none" stroke="#1f5f9e" stroke-width="10" marker-end="url(#ar-froid)"/>
+<circle cx="765" cy="685" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M733,665 A38,38 0 1,1 752,649" fill="none" stroke="#b03a2e" stroke-width="10" marker-end="url(#ar-chaud)"/>
+<circle cx="435" cy="685" r="60" fill="#ffffff" stroke="#24557a" stroke-width="4"/>
+<path d="M467,665 A38,38 0 1,0 448,649" fill="none" stroke="#1f5f9e" stroke-width="10" marker-end="url(#ar-froid)"/>
+<text x="1120" y="250" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#b03a2e">① deux hélices tournent</text>
+<text x="1120" y="288" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">    dans le sens horaire</text>
+<text x="1120" y="352" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#1f5f9e">③ deux hélices tournent</text>
+<text x="1120" y="390" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">    dans le sens antihoraire</text>
+<text x="1150" y="470" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Les deux se compensent :</text>
+<text x="1150" y="506" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">le drone garde son cap.</text>
+<text x="1120" y="578" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#0b6b4f">⑤ pour TOURNER :</text>
+<text x="1120" y="618" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">une paire accélère,</text>
+<text x="1120" y="654" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">l'autre ralentit.</text>
+<rect x="120" y="812" width="1360" height="68" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="856" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">L'hélice entraîne l'air en rotation ; l'air exerce sur elle un couple opposé, transmis au châssis.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/r2-couple-reaction-a-completer.svg</code></strong> : vue de dessus, quatre hélices, cinq libellés à trouver. Aucun objet à apporter.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Accroche. Écrivez : « Et si les quatre tournaient dans le même sens ? »</td><td>Réfléchit en silence</td></tr><tr><td>1-3 min</td><td>Recueillez deux ou trois hypothèses</td><td>Propose</td></tr><tr><td>3-6 min</td><td>Un élève complète les deux sens sur le schéma, puis explique le cap</td><td>Complète, argumente</td></tr><tr><td>6-8 min</td><td>Faites dire comment on <strong>tourne</strong> volontairement</td><td>Conclut</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« L'hélice ne fait pas que pousser l'air vers le bas : en tournant, elle l'entraîne aussi <strong>en rotation</strong>. Et l'air, en réaction, exerce sur l'hélice un couple de sens inverse : un <strong>couple de réaction</strong>. Ce couple ne reste pas dans l'hélice — il se transmet au <strong>châssis</strong>, et le drone tend donc à tourner sur lui-même dans le sens opposé aux hélices. Avec quatre hélices, deux tournent dans un sens et deux dans l'autre : les couples s'annulent, le drone garde son cap. Pour tourner volontairement, on accélère une paire et on ralentit l'autre. »</p></blockquote>
+</section>
+<section class="q-section s-attention">
+<h4>La précision qui fait toute la pastille</h4>
+<p>Le mot <strong>couple</strong> désigne une rotation, pas une poussée. Ne dites pas « l'hélice pousse l'air dans un sens » : l'hélice pousse l'air <strong>vers le bas</strong> (c'est la poussée de R1) et l'entraîne <strong>en rotation</strong>. Ce sont deux effets différents du même mouvement.</p>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Que se passe-t-il si les quatre hélices tournent dans le même sens ? »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Un hélicoptère n'a pourtant qu'une hélice principale : comment fait-il ? » → un <strong>rotor de queue</strong> pousse latéralement pour compenser, sinon l'appareil tournerait sur lui-même. Écrivez « rotor anticouple » au tableau au moment où vous le donnez.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Proposez l'image du <strong>tourniquet d'arrosage</strong> : l'eau sort en tournant, et le bras du tourniquet tourne dans l'autre sens. ⚠️ Ce n'est <strong>pas</strong> l'image du nageur qui pousse l'eau : celle-là illustre l'action-réaction <em>en ligne</em>, pas un couple.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Sans hélices contrarotatives, le drone ne pourrait pas avancer » → <strong>faux</strong> : il pourrait se déplacer, mais il tournoierait sur lui-même sans qu'on puisse contrôler son cap. C'est le contrôle de l'orientation qui est perdu, pas le mouvement.</li><li>« Le drone ne tourne jamais sur lui-même » → c'est justement ce qu'il fait <strong>exprès</strong> pour changer de direction.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« En une phrase : à quoi sert la paire d'hélices qui tourne dans l'autre sens ? »</p>
+</section>
+</article>
+<article class="quickie"  id="q-retour-maison" data-ost-id="q-retour-maison" data-pastille="R6">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">R6</p>
+<h3>Retour maison</h3>
+<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">R6 · 4e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Écrire l'algorithme qui ramène le drone quand il perd le signal.</p>
+<p class="q-bo"><code>CCRI31</code> (4e) — « Modifier un algorithme permettant de répondre au besoin ou au problème posé. »</p>
+</header>
+<blockquote class="accroche"><p>« Votre drone est au loin, il perd le signal. Il ne tombe pas : il monte un peu, fait demi-tour et revient au point de départ. Quelqu'un l'a programmé pour ça — et ce quelqu'un, ce sera vous. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R6 — Le programme « retour maison »</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R6 — Le programme « retour maison »</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Les deux tests sont donnés : écrire les actions</text>
+<text x="800" y="148" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Programme « retour maison » — les deux tests sont donnés, les quatre actions sont à écrire</text>
+<rect x="120" y="200" width="320" height="84" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="280" y="242" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#12314a">① ………</text>
+<polygon points="810,170 1000,242 810,315 620,242" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="810" y="242" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">② signal perdu ?</text>
+<rect x="1130" y="200" width="320" height="84" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1290" y="242" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#12314a">③ ………</text>
+<polygon points="810,470 1000,542 810,615 620,542" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="810" y="526" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">④ batterie</text>
+<text x="810" y="558" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">suffisante ?</text>
+<rect x="1130" y="640" width="320" height="84" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1290" y="682" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑤ ………</text>
+<rect x="240" y="660" width="320" height="84" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="400" y="702" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑥ ………</text>
+<line x1="444" y1="242" x2="614" y2="242" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1004" y1="242" x2="1124" y2="242" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="1064" y="224" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#0b6b4f">oui</text>
+<line x1="810" y1="315" x2="810" y2="400" stroke="#24557a" stroke-width="3"/>
+<line x1="810" y1="400" x2="280" y2="400" stroke="#24557a" stroke-width="3"/>
+<line x1="280" y1="400" x2="280" y2="288" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="836" y="360" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">non</text>
+<line x1="1290" y1="284" x2="1290" y2="542" stroke="#24557a" stroke-width="3"/>
+<line x1="1290" y1="542" x2="1006" y2="542" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="810" y1="615" x2="810" y2="682" stroke="#24557a" stroke-width="3"/>
+<line x1="810" y1="682" x2="1124" y2="682" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="960" y="664" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#0b6b4f">oui</text>
+<line x1="620" y1="542" x2="400" y2="542" stroke="#24557a" stroke-width="3"/>
+<line x1="400" y1="542" x2="400" y2="656" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="430" y="600" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">non</text>
+<text x="800" y="862" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#4a6076">→ Le programme décide à la place du pilote : c'est la sécurité qui l'a décidé.</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R6 — Le programme « retour maison »</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R6 — Le programme « retour maison »</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Les deux tests sont donnés : écrire les actions</text>
+<text x="800" y="148" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Programme « retour maison » — les deux tests sont donnés, les quatre actions sont à écrire</text>
+<rect x="120" y="200" width="320" height="84" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="280" y="242" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#12314a">① continuer le vol</text>
+<polygon points="810,170 1000,242 810,315 620,242" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="810" y="242" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">② signal perdu ?</text>
+<rect x="1130" y="200" width="320" height="84" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1290" y="242" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="27" font-weight="600" fill="#12314a">③ monter à 50 m</text>
+<polygon points="810,470 1000,542 810,615 620,542" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="810" y="526" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">④ batterie</text>
+<text x="810" y="558" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">suffisante ?</text>
+<rect x="1130" y="640" width="320" height="84" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1290" y="666" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑤ rentrer au point</text>
+<text x="1290" y="699" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">de départ</text>
+<rect x="240" y="660" width="320" height="84" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="400" y="686" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑥ atterrir</text>
+<text x="400" y="719" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">sur place</text>
+<line x1="444" y1="242" x2="614" y2="242" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1004" y1="242" x2="1124" y2="242" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="1064" y="224" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#0b6b4f">oui</text>
+<line x1="810" y1="315" x2="810" y2="400" stroke="#24557a" stroke-width="3"/>
+<line x1="810" y1="400" x2="280" y2="400" stroke="#24557a" stroke-width="3"/>
+<line x1="280" y1="400" x2="280" y2="288" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="836" y="360" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">non</text>
+<line x1="1290" y1="284" x2="1290" y2="542" stroke="#24557a" stroke-width="3"/>
+<line x1="1290" y1="542" x2="1006" y2="542" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="810" y1="615" x2="810" y2="682" stroke="#24557a" stroke-width="3"/>
+<line x1="810" y1="682" x2="1124" y2="682" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="960" y="664" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#0b6b4f">oui</text>
+<line x1="620" y1="542" x2="400" y2="542" stroke="#24557a" stroke-width="3"/>
+<line x1="400" y1="542" x2="400" y2="656" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="430" y="600" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#b03a2e">non</text>
+<text x="800" y="862" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#4a6076">→ Le programme décide à la place du pilote : c'est la sécurité qui l'a décidé.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/r6-algorithme-retour-a-completer.svg</code></strong> : un algorithme où <strong>les deux tests sont donnés</strong> (les losanges sont remplis) et où <strong>quatre actions sont à écrire</strong>, en français, pas en code. C'est volontaire : on travaille la logique, pas la syntaxe, et cela fonctionne même si la salle informatique n'est pas disponible.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche, projetez le schéma : les losanges sont remplis, les cases vides</td><td>Observe, lit</td></tr><tr><td>2-5 min</td><td>Un élève complète la première action et la branche « oui » du premier test</td><td>Dicte, discute</td></tr><tr><td>5-8 min</td><td>Un second élève complète la branche « non » du second test et la fin</td><td>Dicte, corrige</td></tr><tr><td>8-10 min</td><td>Faites relire l'algorithme à voix haute comme une recette, <strong>y compris la boucle</strong></td><td>Relit, repère les trous</td></tr></tbody></table></div>
+<p>lire comme une recette est un algorithme faux. Faites-le lire par un élève qui n'a pas complété le schéma — il trouvera les oublis mieux que l'auteur.</p>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un algorithme, c'est une suite d'instructions qu'on peut suivre sans réfléchir. Deux formes seulement, ici : une <strong>action</strong> (ce qu'on fait) et un <strong>test</strong> (une question à laquelle on ne peut répondre que oui ou non). Si vous écrivez un test auquel on peut répondre "peut-être", ce n'est pas un test : c'est une action déguisée. »</p></blockquote>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Que fait le drone en premier quand il perd le signal : il rentre, ou il monte ? »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Regardez la flèche "non" du premier test : où va-t-elle ? » → elle <strong>reboucle</strong> sur l'état initial : si le signal n'est pas perdu, on continue le vol. C'est cette boucle qui distingue un algorithme d'une simple liste d'étapes — et c'est ce que les élèves oublient le plus souvent d'écrire.</p>
+<p>second test ne couvre pas ce cas : il faudrait une surveillance pendant le retour.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez les deux questions des losanges et laissez seulement les actions à trouver. C'est la partie qui demande le moins de vocabulaire.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Le drone rentre tout seul grâce à l'intelligence artificielle » → <strong>faux</strong> : c'est un programme à deux tests et une boucle, que vous venez d'écrire au tableau en dix minutes. Dire « IA » ici ferait perdre tout l'intérêt de l'exercice.</li><li>Ne mélangez pas l'algorithme et le code : si un élève propose « if (signal == 0) », notez l'idée, mais gardez l'écriture en français. Le code viendra en 3e.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Que doit faire le drone si la batterie est presque vide avant d'arriver ? » — attendez « atterrir » et non « rentrer plus vite ».</p>
+</section>
+</article>
+<article class="quickie"  id="q-un-kilo-deux-energies" data-ost-id="q-un-kilo-deux-energies" data-pastille="R7">
+<header class="q-tete">
+<p class="q-num" aria-hidden="true">R7</p>
+<h3>Un kilo, deux énergies</h3>
+<p class="q-meta"><span class="badge">8 min</span><span class="badge badge-code">R7 · 4e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="q-appel">Essence contre batterie : le rapport qui explique vingt minutes de vol.</p>
+<p class="q-bo"><code>SFC12</code> (4e) — « Repérer les transformations d'énergie et les flux d'énergie au sein de l'OST. »</p>
+</header>
+<blockquote class="accroche"><p>« Un litre d'essence, pour moins d'un kilo, contient l'énergie de plusieurs dizaines de kilos de batterie <span class="a-verifier" title="Chiffre non vérifié">⏳</span>. C'est ce rapport — et pas la chimie — qui explique pourquoi un petit drone tient une vingtaine de minutes <span class="a-verifier" title="Chiffre non vérifié">⏳</span> et qu'un avion traverse un océan. »</p></blockquote>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R7 — L'énergie contenue dans 1 kg</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R7 — L'énergie contenue dans 1 kg</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Comparer l'essence et la batterie, puis conclure</text>
+<text x="800" y="150" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Énergie contenue dans 1 kilogramme</text>
+<line x1="250" y1="700" x2="1350" y2="700" stroke="#24557a" stroke-width="4"/>
+<line x1="250" y1="700" x2="250" y2="235" stroke="#24557a" stroke-width="4"/>
+<rect x="430" y="255" width="220" height="445" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="540" y="229" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#b03a2e">① ……… kWh</text>
+<text x="540" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg d'essence</text>
+<text x="540" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">soit environ 1,3 litre</text>
+<rect x="900" y="676" width="220" height="24" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="4"/>
+<text x="1010" y="650" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#1f5f9e">② ……… kWh</text>
+<text x="1010" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg de batterie</text>
+<text x="1010" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">(barre tronquée : hors échelle)</text>
+<rect x="120" y="792" width="1360" height="88" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="828" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">③ Conclusion : …………………………………………………………………</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R7 — L'énergie contenue dans 1 kg</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R7 — L'énergie contenue dans 1 kg</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Comparer l'essence et la batterie, puis conclure</text>
+<text x="800" y="150" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Énergie contenue dans 1 kilogramme</text>
+<line x1="250" y1="700" x2="1350" y2="700" stroke="#24557a" stroke-width="4"/>
+<line x1="250" y1="700" x2="250" y2="235" stroke="#24557a" stroke-width="4"/>
+<rect x="430" y="255" width="220" height="445" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="540" y="229" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#b03a2e">① ≈ 9 à 12 kWh ⏳</text>
+<text x="540" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg d'essence</text>
+<text x="540" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">soit environ 1,3 litre</text>
+<rect x="900" y="676" width="220" height="24" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="4"/>
+<text x="1010" y="650" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#1f5f9e">② ≈ 0,2 kWh ⏳</text>
+<text x="1010" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg de batterie</text>
+<text x="1010" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">(barre tronquée : hors échelle)</text>
+<rect x="120" y="792" width="1360" height="88" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="828" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">③ Rapport des énergies STOCKÉES : plusieurs dizaines,</text>
+<text x="800" y="860" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">    mais le moteur thermique en perd les trois quarts.</text>
+</svg></div>
+</div>
+<section class="q-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/r7-energie-par-kilo-a-completer.svg</code></strong> : deux barres, deux valeurs à placer, une conclusion à écrire. <strong>Aucune calculatrice</strong> : les ordres de grandeur (≈ 9 à 12 kWh/kg contre ≈ 0,2 kWh/kg <span class="a-verifier" title="Chiffre non vérifié">⏳</span>) donnent un rapport de plusieurs dizaines, qui se trouve de tête. Notez au passage qu'un rapport n'a pas d'unité : c'est un nombre.</p>
+</section>
+<section class="q-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Accroche. « Un kilo d'essence, un kilo de batterie : combien de fois plus ? »</td><td>Réfléchit, propose</td></tr><tr><td>1-3 min</td><td>Écrivez les deux ordres de grandeur <span class="a-verifier" title="Chiffre non vérifié">⏳</span> dans les cases</td><td>Note</td></tr><tr><td>3-6 min</td><td>Faites calculer le rapport, puis faites conclure sur l'autonomie d'un drone</td><td>Calcule, conclut</td></tr><tr><td>6-8 min</td><td>Retournez la question : pourquoi si peu de drones à essence ?</td><td>Cherche</td></tr></tbody></table></div>
+</section>
+<section class="q-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« L'essence stocke énormément d'énergie dans très peu de masse. La batterie, beaucoup moins. C'est la raison principale pour laquelle un drone électrique vole quelques dizaines de minutes quand un avion thermique traverse un océan. Mais attention : ce n'est pas toute l'histoire — on y revient tout de suite. »</p></blockquote>
+</section>
+<section class="q-section s-note">
+<h4>La nuance qui fait la valeur de la pastille</h4>
+<blockquote><p>« Comparer les énergies stockées ne suffit pas : il faut comparer le <strong>travail utile</strong>. Un moteur thermique perd la plus grande partie de son énergie en chaleur ; un moteur électrique en perd très peu. L'écart réel est donc plus petit que le rapport des masses — mais il reste très important. »</p></blockquote>
+</section>
+<section class="q-section s-question">
+<h4>Question socle</h4>
+<p>« Pourquoi un drone à batterie ne peut-il pas voler aussi longtemps qu'un avion ? »</p>
+</section>
+<section class="q-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Alors pourquoi n'y a-t-il pas des drones à essence partout ? » → <strong>il en existe</strong>, ils sont rares : masse du moteur, vibrations, odeur, et surtout sécurité (carburant à bord d'un engin qui peut tomber). C'est un vrai compromis d'ingénierie, pas un oubli des fabricants.</p>
+</section>
+<section class="q-section s-question">
+<h4>Étayage</h4>
+<p>Donnez les deux valeurs à recopier, et faites seulement la division. Le raisonnement physique vient après : il n'est pas nécessaire pour entrer dans la pastille.</p>
+</section>
+<section class="q-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Il n'existe pas de drone à essence » → faux (voir ci-dessus).</li><li>« La batterie, c'est nul » → ce serait passer à côté du rendement, qui est justement l'avantage de la batterie. Les deux grandeurs comptent.</li><li>Ne donnez pas de valeur au chiffre près avant d'avoir ouvert la source : les ordres de grandeur sont dans le tableau ci-dessous, marqués <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li></ul>
+</section>
+<section class="q-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Qu'est-ce qui compte le plus pour l'autonomie : la quantité d'énergie ou la façon de la convertir ? » — les deux, et c'est la bonne réponse.</p>
+</section>
+<section class="q-section s-verifier">
+<h4>Chiffres à vérifier avant la classe</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Grandeur</th><th>Ordre de grandeur à utiliser <span class="a-verifier" title="Chiffre non vérifié">⏳</span></th><th>Source à ouvrir</th><th>Statut</th></tr></thead><tbody><tr><td>énergie par kilo de l'essence</td><td><strong>≈ 9 à 12 kWh/kg</strong></td><td>ADEME / IFPEN (pouvoir calorifique)</td><td><strong>non vérifié</strong></td></tr><tr><td>énergie par kilo d'une batterie lithium</td><td><strong>≈ 0,2 kWh/kg</strong></td><td>ADEME / fiche technique batterie</td><td><strong>non vérifié</strong></td></tr><tr><td>durée de vol typique d'un drone de loisir</td><td><strong>≈ 20 min</strong></td><td>notice constructeur, DGAC</td><td><strong>non vérifié</strong></td></tr><tr><td>rendement d'un moteur thermique / électrique</td><td><strong>≈ 25-30 % / ≈ 85-90 %</strong></td><td>ADEME, éduscol</td><td><strong>non vérifié</strong></td></tr></tbody></table></div>
+<p>Ces quatre valeurs sont celles du schéma corrigé. Si vous ne les avez pas vérifiées, faites la pastille avec <strong>une seule</strong> des deux barres (l'essence seule) : le raisonnement sur le rendement tient sans le rapport exact.</p>
+</section>
+</article>
+</main>
+
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni
+adresse, ni compte, ne conserve rien et n'envoie rien sur Internet.</footer>
+<footer>
+  <p>Quickies — Technologie au collège, cycle 4. Contenus issus des fiches de préparation
+     des pastilles&nbsp;; les schémas sont des dessins techniques, sans image externe.</p>
+</footer>
+
+<script>
+(function () {
+  // Onglets de version du schéma + plein écran. Aucune mémoire : rien n'est
+  // conservé d'une visite à l'autre, et rien ne quitte la page.
+  document.querySelectorAll('.schema-bloc').forEach(function (bloc) {
+    var onglets = bloc.querySelectorAll('.onglet');
+    var vues = bloc.querySelectorAll('.schema-vue');
+    function montrer(vue) {
+      onglets.forEach(function (b) {
+        var actif = b.dataset.vue === vue;
+        b.classList.toggle('actif', actif);
+        b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+      });
+      vues.forEach(function (v) {
+        if (v.dataset.vueBloc === vue) { v.removeAttribute('hidden'); }
+        else { v.setAttribute('hidden', ''); }
+      });
+    }
+    onglets.forEach(function (b) {
+      b.addEventListener('click', function () { montrer(b.dataset.vue); });
+    });
+    var plein = bloc.querySelector('.plein');
+    if (plein) {
+      plein.addEventListener('click', function () {
+        var actif = bloc.classList.toggle('en-plein');
+        plein.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        plein.textContent = actif ? '⤡ Réduire' : '⤢ Plein écran';
+        document.body.style.overflow = actif ? 'hidden' : '';
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && bloc.classList.contains('en-plein')) { plein.click(); }
+      });
+    }
+  });
+})();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Modèles de commentaire : des phrases génériques, à compléter par le
+// professeur. Elles ne nomment NI niveau NI identifiant — le panneau les
+// déduit déjà de l'onglet et de l'élément sélectionnés. C'est ce qui
+// remplace les exemples figés, qui désignaient toujours un autre niveau
+// que celui qu'on corrigeait.
+var MODELES_COMMENTAIRE = [
+    {libelle: 'énoncé pas clair', texte: "L'énoncé n'est pas clair : reformule-le plus simplement, sans jargon."},
+    {libelle: 'pas ce que je veux', texte: "Ça ne correspond pas à ce que je veux : <ce que j'attends, en une phrase>."},
+    {libelle: 'élève bloqué', texte: "L'élève est bloqué ici : il devrait pouvoir <ce qu'il doit réussir à faire>."},
+    {libelle: 'trop long', texte: "C'est trop long et illisible : raccourcis ce texte, l'essentiel seul compte."},
+    {libelle: 'à retirer', texte: "Retire ce texte : il n'apporte rien à l'élève."},
+    {libelle: 'ajouter des choix', texte: "Ajoute <nombre> propositions de plus, du même niveau de difficulté."}
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    // Un modèle remplit un commentaire vide, s'ajoute à la suite sinon :
+    // rien de ce qui est déjà écrit n'est effacé.
+    var rangeeModeles = document.createElement('div');
+    rangeeModeles.className = 'ost-modeles';
+    rangeeModeles.setAttribute('role', 'group');
+    rangeeModeles.setAttribute('aria-label', 'Modèles de commentaire');
+    MODELES_COMMENTAIRE.forEach(function (modele) {
+        var bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'ost-modele';
+        bouton.textContent = modele.libelle;
+        bouton.title = 'Insère « ' + modele.texte + ' » — à compléter.';
+        bouton.addEventListener('click', function () {
+            var actuel = zoneCommentaire.value.trim();
+            zoneCommentaire.value = actuel === '' ? modele.texte : actuel + ' ' + modele.texte;
+            zoneCommentaire.dispatchEvent(new Event('input'));
+            zoneCommentaire.focus();
+        });
+        rangeeModeles.appendChild(bouton);
+    });
+    blocCom.appendChild(rangeeModeles);
+    var legendeModeles = document.createElement('p');
+    legendeModeles.className = 'ost-modeles-legende';
+    legendeModeles.textContent = "Un modèle s'ajoute au commentaire : complétez les <…> avant de copier le prompt.";
+    blocCom.appendChild(legendeModeles);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+</body>
+</html>

@@ -11,6 +11,9 @@ utilisées sur ordinateur, tablette et téléphone.
 
 ```
 index.html                          page d'accueil : les 21 pages, sommaire par niveau
+4e/quickies/index.html              Quickies 4e — 8 pastilles de 8 à 15 min
+5e/quickies/index.html              Quickies 5e — 3 pastilles
+3e/quickies/index.html              Quickies 3e — 4 pastilles
 .nojekyll                           demande à GitHub de servir les fichiers tels quels
 
 3e/revision-ost1/                   Réviser l'évaluation — séquences 1a et 2a
@@ -53,6 +56,34 @@ index.html                          page d'accueil : les 21 pages, sommaire par 
 Une convention de nommage simple : `Niveau/ostN/` pour un objet et système technique,
 `Niveau/tp-*/` pour un travail pratique. Le numéro suit celui de la séquence d'origine, ce qui
 permet de retrouver le dossier de préparation correspondant.
+
+### Les pages « Quickies »
+
+Trois pages, une par niveau, sous `Niveau/quickies/index.html` : elles suivent donc la
+convention de nommage comme les autres activités, et leur identifiant de publication est
+leur propre chemin (`4e/quickies/index.html`, …).
+
+L'accueil y mène par un quatrième onglet, **⚡ Quickies**, placé au même rang que 3e, 4e et
+5e : il ouvre une section `#quickies` qui présente les trois pages (8 pastilles en 4e,
+3 en 5e, 4 en 3e). Chaque page propose un sélecteur de niveau pour passer aux deux autres,
+et le bouton « Retour à l'accueil » du module canonique.
+
+| Ce qu'on y trouve | Détail |
+|---|---|
+| Une accroche par pastille | la phrase à dire, mise en avant |
+| Le schéma en deux versions | *À compléter* / *Corrigé*, bouton **Plein écran** (Échap pour sortir) |
+| Un déroulé minuté | en classe entière, sans matériel |
+| Les questions | socle, approfondissement, étayage, question de sortie |
+| « À ne pas dire » | les erreurs classiques à éviter |
+| Les valeurs ⏳ | ordres de grandeur non encore vérifiés, avec la source à ouvrir |
+
+Aucune ressource externe, aucun formulaire, aucun stockage. Cibles tactiles de 45 px ; aucun
+débordement horizontal mesuré à 320, 390 et 1280 px. Vérifié : `inventorier_activites.py`
+donne **37/37 pages conformes**, et `verifier_panneau_dev.py` passe ses **43 contrôles** sur
+chacune des trois pages.
+
+Les trois pages sont **générées**, jamais écrites à la main : voir
+`prof/pastilles/pages/generer_quickies.py`.
 
 Chaque application est un **fichier HTML autonome** : le style, le code, les images et même les
 données et les sons sont inclus dans le fichier. Aucune bibliothèque externe n'est téléchargée,
