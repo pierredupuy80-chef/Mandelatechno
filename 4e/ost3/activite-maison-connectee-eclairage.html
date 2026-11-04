@@ -496,6 +496,47 @@
             color: var(--couleur-texte);
         }
 
+        /* EXPLICATION-MASQUEE:CSS-DEBUT
+           L'explication d'une question n'est pas imposée : après une erreur,
+           l'élève voit d'abord SA proposition marquée (et elle seule), cherche
+           ce qui cloche, puis demande l'explication s'il en a besoin. Le volet
+           est un <details> natif : clavier, lecteur d'écran et sauvegarde de la
+           progression (innerHTML) fonctionnent sans JavaScript. */
+        details.explication-masquee {
+            margin-top: var(--espacement-xs);
+            font-size: 0.875rem;
+        }
+
+        details.explication-masquee summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--couleur-primaire);
+            min-height: var(--hauteur-cible-min);
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-xs);
+        }
+
+        details.explication-masquee summary:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        details.explication-masquee .explication {
+            display: block;
+            margin-top: var(--espacement-xs);
+            padding-top: var(--espacement-xs);
+            border-top: 1px solid currentColor;
+            color: var(--couleur-texte);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        details.explication-masquee .explication strong {
+            color: var(--couleur-texte);
+        }
+        /* EXPLICATION-MASQUEE:CSS-FIN */
+
         /* ============================================
            CHAÎNE INTERACTIVE - NIVEAU N2
            ============================================ */
@@ -585,6 +626,288 @@
         .fleuve-chaine {
             font-size: 1.5rem;
             color: var(--couleur-texte-leger);
+        }
+
+        /* ============================================
+           CHAÎNE EN ÉTOILE — SCHÉMA RADIAL DU N2
+           ============================================ */
+        /* Le gabarit aligne par défaut les constituants en file indienne : le
+           contrôleur y ressemble à un maillon de plus, et rien ne dit qu'il
+           est le centre du système. Cette variante — activée quand
+           `n2.chaine.disposition` vaut « etoile » — place le contrôleur au
+           centre, les autres constituants autour de lui, et trace des liens
+           dont le sens porte le trajet de l'information.
+
+           Le balisage est produit par personnaliser.py ; les tuiles gardent la
+           classe `element-chaine`, donc la visite, la sauvegarde de la
+           progression et les contrôles automatiques continuent de fonctionner
+           à l'identique. La géométrie est exprimée en POURCENTAGES du cadre,
+           avec un rapport 4/3 fixe : les nœuds et les liens restent donc
+           solidaires à toutes les largeurs, et la hauteur des tuiles est elle
+           aussi un pourcentage (26 % / 34 %) — c'est ce qui permet aux liens
+           de s'arrêter pile sur le bord de la tuile, quelle que soit la
+           largeur de l'écran. */
+        .chaine-etoile {
+            position: relative;
+            display: block;
+            width: 100%;
+            max-width: 700px;
+            aspect-ratio: 1 / 1;      /* cadre 720 × 720 : géométrie connue */
+            min-height: 420px;        /* repli si aspect-ratio n'est pas admis */
+            margin: var(--espacement-lg) auto;
+            padding: 0;
+            background-color: #f8fafc;
+            border-radius: var(--rayon-bordure);
+            overflow: hidden;
+        }
+
+        .ce-liens {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ce-lien {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-dasharray: 4 3;
+            animation: ce-flux 1.8s linear infinite;
+        }
+
+        .ce-lien[data-type="information"] { stroke: #2e74b5; }
+        .ce-lien[data-type="commande"] { stroke: #e07b00; }
+        .ce-lien[data-type="energie"] { stroke: #2e7d32; }
+        .ce-lien[data-type="humain"] { stroke: #7c3aed; stroke-dasharray: 1.5 3; }
+
+        /* Les pointes de flèche sont peintes par CSS (et non par un attribut
+           `fill`) : c'est ce qui permet au mode sombre de les éclaircir avec
+           le reste de la feuille. */
+        .ce-fleche-information path { fill: #2e74b5; }
+        .ce-fleche-commande path { fill: #e07b00; }
+        .ce-fleche-energie path { fill: #2e7d32; }
+        .ce-fleche-humain path { fill: #7c3aed; }
+
+        /* Le trajet de l'information : les tirets défilent du départ vers
+           l'arrivée du lien, ce qui donne le SENS sans texte. */
+        @keyframes ce-flux {
+            from { stroke-dashoffset: 7; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .ce-noeud {
+            position: absolute;
+            left: var(--ce-x, 50%);
+            top: var(--ce-y, 50%);
+            width: 25%;
+            height: 17%;
+            min-width: 0;
+            min-height: var(--hauteur-cible-min);
+            padding: var(--espacement-sm);
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            flex-direction: column;
+            gap: .2rem;
+            font-size: .82rem;
+            line-height: 1.25;
+        }
+
+        .chaine-etoile .ce-noeud:hover,
+        .chaine-etoile .ce-noeud:focus-visible {
+            transform: translate(-50%, -50%) scale(1.04);
+        }
+
+        .chaine-etoile .ce-noeud.revele,
+        .ce-noeud.ce-actif {
+            transform: translate(-50%, -50%);
+        }
+
+        .ce-texte {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .15rem;
+        }
+
+        .ce-icone {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .ce-nom {
+            font-weight: 600;
+        }
+
+        .ce-role {
+            font-size: .7rem;
+            font-style: normal;
+            color: #3a6ea5;
+            background-color: #eaf1f8;
+            padding: .1rem .4rem;
+            border-radius: 6px;
+        }
+
+        .ce-num {
+            position: absolute;
+            top: -.55rem;
+            left: -.55rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background-color: #1d4ed8;
+            color: #ffffff;
+            font-size: .78rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Le contrôleur : plus gros, aplat de couleur, halo — c'est le centre
+           du système, et cela doit se voir avant toute lecture. */
+        .ce-noeud.ce-centre {
+            width: 30%;
+            height: 23%;
+            z-index: 2;
+            font-size: .95rem;
+            background-color: var(--couleur-primaire);
+            color: #ffffff;
+            border-width: 3px;
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 6px #dbeafe, var(--ombre-moyenne);
+        }
+
+        .ce-noeud.ce-centre .ce-role {
+            background-color: #ffffff;
+            color: #1d4ed8;
+        }
+
+        .ce-noeud.ce-centre .ce-num {
+            background-color: #ffffff;
+            color: #1d4ed8;
+        }
+
+        /* L'acteur humain : cadre en pointillés, teinte distincte — un
+           interacteur possible, pas un maillon obligatoire de la chaîne. */
+        .ce-noeud.ce-acteur {
+            border-style: dashed;
+            border-color: #7c3aed;
+            background-color: #f5f3ff;
+        }
+
+        .ce-noeud.ce-acteur .ce-role {
+            background-color: #ede9fe;
+            color: #5b21b6;
+        }
+
+        /* Étape mise en avant pendant la visite guidée du trajet. */
+        .ce-noeud.ce-actif {
+            border-color: #b45309;
+            box-shadow: 0 0 0 5px #f0b400, var(--ombre-moyenne);
+        }
+
+        .ce-lien.ce-actif {
+            stroke-width: 4;
+            animation-duration: .6s;
+        }
+
+        /* Commandes et légende du schéma (sous le cadre, hors de la liste). */
+        .ce-commandes {
+            margin-top: var(--espacement-md);
+        }
+
+        .ce-legende-couleurs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .35rem 1rem;
+            margin: var(--espacement-sm) 0 0;
+            font-size: .8rem;
+            color: #475569;
+        }
+
+        .ce-legende-couleurs span {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+        }
+
+        .ce-legende-couleurs i {
+            display: inline-block;
+            width: 26px;
+            height: 0;
+            border-top: 3px dashed #2e74b5;
+        }
+
+        .ce-legende-couleurs i[data-type="commande"] { border-top-color: #e07b00; }
+        .ce-legende-couleurs i[data-type="energie"] { border-top-color: #2e7d32; }
+        .ce-legende-couleurs i[data-type="humain"] { border-top-color: #7c3aed; }
+
+        .ce-legende {
+            min-height: 1.6rem;
+            margin: var(--espacement-sm) 0 0;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        /* Sous 780 px, un schéma radial ne tient plus : les tuiles repassent
+           en colonne, dans l'ordre de lecture de la chaîne, et les liens
+           disparaissent (les libellés de rôle portent alors l'enchaînement). */
+        @media (max-width: 780px) {
+            .chaine-etoile {
+                aspect-ratio: auto;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                gap: var(--espacement-sm);
+                padding: var(--espacement-md);
+            }
+
+            .ce-liens {
+                display: none;
+            }
+
+            .ce-noeud,
+            .ce-noeud.ce-centre {
+                position: static;
+                width: 100%;
+                height: auto;
+                transform: none;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                text-align: left;
+                font-size: .85rem;
+            }
+
+            .chaine-etoile .ce-noeud:hover,
+            .chaine-etoile .ce-noeud:focus-visible {
+                transform: none;
+            }
+
+            .ce-texte {
+                align-items: flex-start;
+            }
+
+            .ce-num {
+                position: static;
+                flex: 0 0 auto;
+            }
+        }
+
+        /* Les animations ne sont jamais indispensables : qui les a coupées
+           garde le schéma, les couleurs et les flèches. */
+        @media (prefers-reduced-motion: reduce) {
+            .ce-lien {
+                animation: none;
+            }
+
+            .ce-noeud,
+            .ce-lien {
+                transition: none;
+            }
         }
 
         /* ============================================
@@ -4202,6 +4525,89 @@
         }
 
         /* ============================================
+           N1 — GLOSSAIRE DU VOCABULAIRE
+           ============================================
+           Un glossaire par activité, dans la partie N1 : les mots employés
+           par l'activité (vocabulaire des fiches de synthèse) avec leur
+           définition. C'est la référence que l'élève garde sous les yeux en
+           répondant au quiz de N1.
+
+           Le bloc HTML est produit par « personnaliser.py » depuis
+           `n1.glossaire` ; les règles ci-dessous sont la SEULE définition de
+           son style (les activités déjà publiées la reçoivent par
+           `greffer_glossaire.py`, qui l'extrait d'entre les marqueurs).
+
+           Deux règles sombres sont écrites à la main : elles rendent la
+           feuille autonome, car une page greffée n'a pas le bloc généré par
+           `mode_sombre.py`. `mode_sombre.py` les laisse telles quelles (il
+           ne traduit jamais une règle déjà préfixée par data-theme) et
+           traduit les règles claires pour les activités de la chaîne.
+           ============================================ */
+        /* GLOSSAIRE:CSS-DEBUT */
+        .glossaire {
+            background: #f4f8fc;
+            border: 1px solid #dbeafe;
+            border-left: 5px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            padding: var(--espacement-md);
+        }
+
+        .glossaire-titre {
+            color: var(--couleur-primaire);
+            font-size: 1.05rem;
+            margin-bottom: var(--espacement-xs);
+        }
+
+        .glossaire-intro {
+            /* 4,46:1 mesuré avec --couleur-texte-leger sur #f4f8fc : sous le
+               seuil AA de 4,5:1. Ce gris d'un demi-ton plus dense donne
+               5,1:1 ; sa traduction sombre est écrite plus bas, car une page
+               greffée n'a pas le bloc engendré par mode_sombre.py. */
+            color: #5c6b80;
+            font-size: 0.92rem;
+            margin-bottom: var(--espacement-sm);
+        }
+
+        .glossaire-liste {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: var(--espacement-sm);
+        }
+
+        .glossaire-entree {
+            background: white;
+            border: 1px solid #dce3ed;
+            border-radius: var(--rayon-bordure);
+            padding: 0.5rem 0.7rem;
+        }
+
+        .glossaire-entree dt {
+            color: var(--couleur-primaire);
+            font-weight: 700;
+        }
+
+        .glossaire-entree dd {
+            color: var(--couleur-texte);
+            font-size: 0.95rem;
+            margin: 0.15rem 0 0;
+        }
+
+        html[data-theme="sombre"] .glossaire {
+            background: #16202e;
+            border-color: #2f4b7a;
+        }
+
+        html[data-theme="sombre"] .glossaire-entree {
+            background: #1c2534;
+            border-color: #2b3a52;
+        }
+
+        html[data-theme="sombre"] .glossaire-intro {
+            color: #a9b8cc;
+        }
+        /* GLOSSAIRE:CSS-FIN */
+
+        /* ============================================
            N3 — QCM CORRECTIF (n3.qcmCorrectif)
            ============================================
            L'élève retient N actions parmi une liste longue où la plupart sont
@@ -4762,7 +5168,7 @@
         :where(html[data-theme="sombre"]) .bouton-onglet:hover,:where(html[data-theme="sombre"]) .bouton-action.secondaire:hover{background-color:#38465c}
         :where(html[data-theme="sombre"]) .bouton-onglet.actif,:where(html[data-theme="sombre"]) .bouton-action,:where(html[data-theme="sombre"]) .element-chaine:hover,:where(html[data-theme="sombre"]) .cadre-reponse .numero-cadre,:where(html[data-theme="sombre"]) .tuile-rang{background-color:var(--couleur-primaire-fond)}
         :where(html[data-theme="sombre"]) .bouton-onglet.valide,:where(html[data-theme="sombre"]) .bouton-action.succes{background-color:var(--couleur-succes-fond)}
-        :where(html[data-theme="sombre"]) .carte-contenu,:where(html[data-theme="sombre"]) .atelier-question,:where(html[data-theme="sombre"]) .env-catalogue li{background:#1c2534;border:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .carte-contenu,:where(html[data-theme="sombre"]) .atelier-question,:where(html[data-theme="sombre"]) .env-catalogue li,:where(html[data-theme="sombre"]) .glossaire-entree{background:#1c2534;border:1px solid #2b3a52}
         :where(html[data-theme="sombre"]) .bouton-action:disabled{background-color:#4a5872}
         :where(html[data-theme="sombre"]) .question-quiz{background-color:#16202e}
         :where(html[data-theme="sombre"]) .option-reponse{background-color:#1c2534;border:2px solid #2b3a52}
@@ -4770,9 +5176,28 @@
         :where(html[data-theme="sombre"]) .option-reponse.selectionnee,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 1){background-color:#1c2c4a}
         :where(html[data-theme="sombre"]) .option-reponse.correcte,:where(html[data-theme="sombre"]) .feedback-reponse.correct,:where(html[data-theme="sombre"]) .objet-explorable.explore,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 2){background-color:#17452f}
         :where(html[data-theme="sombre"]) .option-reponse.incorrecte,:where(html[data-theme="sombre"]) .feedback-reponse.incorrect{background-color:#3a1e20}
-        :where(html[data-theme="sombre"]) .chaine-interactive{background-color:#111a27}
+        :where(html[data-theme="sombre"]) .chaine-interactive,:where(html[data-theme="sombre"]) .chaine-etoile{background-color:#111a27}
         :where(html[data-theme="sombre"]) .element-chaine,:where(html[data-theme="sombre"]) .info-element,:where(html[data-theme="sombre"]) .etape-conception,:where(html[data-theme="sombre"]) .cablage-bilan,:where(html[data-theme="sombre"]) .point-cle{background-color:#1c2534}
         :where(html[data-theme="sombre"]) .element-chaine.revele{background-color:var(--couleur-secondaire-fond)}
+        :where(html[data-theme="sombre"]) .ce-lien[data-type="information"],:where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait,:where(html[data-theme="sombre"]) .schema-cable .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol-focus .schema-trait{stroke:#9ecbfd}
+        :where(html[data-theme="sombre"]) .ce-lien[data-type="commande"]{stroke:#fcd34d}
+        :where(html[data-theme="sombre"]) .ce-lien[data-type="energie"]{stroke:#86efac}
+        :where(html[data-theme="sombre"]) .ce-lien[data-type="humain"]{stroke:#c4b5fd}
+        :where(html[data-theme="sombre"]) .ce-fleche-information path{fill:#9ecbfd}
+        :where(html[data-theme="sombre"]) .ce-fleche-commande path{fill:#fcd34d}
+        :where(html[data-theme="sombre"]) .ce-fleche-energie path{fill:#86efac}
+        :where(html[data-theme="sombre"]) .ce-fleche-humain path{fill:#c4b5fd}
+        :where(html[data-theme="sombre"]) .ce-role{color:#9ecbfd;background-color:#1a2740}
+        :where(html[data-theme="sombre"]) .ce-noeud.ce-centre{background-color:var(--couleur-primaire-fond);border-color:#3b82f6;box-shadow:0 0 0 6px #2f4b7a, var(--ombre-moyenne)}
+        :where(html[data-theme="sombre"]) .ce-noeud.ce-centre .ce-role,:where(html[data-theme="sombre"]) .ce-noeud.ce-centre .ce-num{background-color:#1c2534;color:#8ab4f8}
+        :where(html[data-theme="sombre"]) .ce-noeud.ce-acteur{border-color:#a78bfa;background-color:#231f3d}
+        :where(html[data-theme="sombre"]) .ce-noeud.ce-acteur .ce-role{background-color:#2a2550;color:#c4b5fd}
+        :where(html[data-theme="sombre"]) .ce-noeud.ce-actif{border-color:#f59e0b}
+        :where(html[data-theme="sombre"]) .ce-legende-couleurs,:where(html[data-theme="sombre"]) .cablage-aide,:where(html[data-theme="sombre"]) .cablage-reserve.vide::after,:where(html[data-theme="sombre"]) .cablage-indication,:where(html[data-theme="sombre"]) .cablage-retour.info,:where(html[data-theme="sombre"]) .puzzle-aide,:where(html[data-theme="sombre"]) .puzzle-reserve.vide::after{color:#cbd5e1}
+        :where(html[data-theme="sombre"]) .ce-legende-couleurs i{border-top:3px dashed #3b82f6}
+        :where(html[data-theme="sombre"]) .ce-legende-couleurs i[data-type="energie"]{border-top-color:#22c55e}
+        :where(html[data-theme="sombre"]) .ce-legende-couleurs i[data-type="humain"]{border-top-color:#a78bfa}
+        :where(html[data-theme="sombre"]) .ce-legende,:where(html[data-theme="sombre"]) .reseau-compteur,:where(html[data-theme="sombre"]) .atelier-fils li strong,:where(html[data-theme="sombre"]) .env-note-3 .env-mot{color:#86efac}
         :where(html[data-theme="sombre"]) .enigme-conteneur,:where(html[data-theme="sombre"]) .modele-valeurs tbody tr:nth-child(6n + 6){background-color:#332a13}
         :where(html[data-theme="sombre"]) .enigme-conteneur h3,:where(html[data-theme="sombre"]) .choix-item[data-etat="manquante"] .choix-marque::after,:where(html[data-theme="sombre"]) .env-note-1 .env-mot,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .case-action::after,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.oubliee .statut-action{color:#fcd34d}
         :where(html[data-theme="sombre"]) .objet-explorable{background-color:#1c2534;border:2px dashed #3a4a63}
@@ -4794,10 +5219,8 @@
         :where(html[data-theme="sombre"]) .modele-alerte{background-color:#2b1a1c;color:#fca5a5}
         :where(html[data-theme="sombre"]) .comparateur-choix{background-color:#132a20;border:2px solid #2f6b4d}
         :where(html[data-theme="sombre"]) .cablage-n4,:where(html[data-theme="sombre"]) .puzzle-bonus{border:2px solid #3a4a63;background-color:#16202e}
-        :where(html[data-theme="sombre"]) .cablage-aide,:where(html[data-theme="sombre"]) .cablage-reserve.vide::after,:where(html[data-theme="sombre"]) .cablage-indication,:where(html[data-theme="sombre"]) .cablage-retour.info,:where(html[data-theme="sombre"]) .puzzle-aide,:where(html[data-theme="sombre"]) .puzzle-reserve.vide::after{color:#cbd5e1}
         :where(html[data-theme="sombre"]) .cablage-reserve,:where(html[data-theme="sombre"]) .puzzle-reserve{border:2px dashed #55657f;background-color:#27334a}
         :where(html[data-theme="sombre"]) .cablage-zone,:where(html[data-theme="sombre"]) .puzzle-piece{background-color:#1c2534;border:2px solid #55657f}
-        :where(html[data-theme="sombre"]) .fil-reseau:focus .fil-trait,:where(html[data-theme="sombre"]) .schema-cable .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol .schema-trait,:where(html[data-theme="sombre"]) .schema-cable.survol-focus .schema-trait{stroke:#9ecbfd}
         :where(html[data-theme="sombre"]) .noeud-reseau,:where(html[data-theme="sombre"]) .puzzle-plateau[data-layout="schema"] .puzzle-fond{border:2px solid #55657f;background-color:#1c2534}
         :where(html[data-theme="sombre"]) .noeud-reseau[data-type="internet"]{background-color:#10333c;background-image:radial-gradient(circle at 50% 32%, #1c2534 0%, #10333c 72%)}
         :where(html[data-theme="sombre"]) .cablage-explication{border-top:1px solid #3a4a63}
@@ -4821,7 +5244,6 @@
         :where(html[data-theme="sombre"]) .atelier-retour.info{background:#1a2740;color:#9ecbfd}
         :where(html[data-theme="sombre"]) .atelier-explication{background:#2c2415}
         :where(html[data-theme="sombre"]) .reseau-role,:where(html[data-theme="sombre"]) .atelier-fils-vide,:where(html[data-theme="sombre"]) .schema-aide,:where(html[data-theme="sombre"]) .montage-aide,:where(html[data-theme="sombre"]) .montage-legende,:where(html[data-theme="sombre"]) .montage-reserve-vide,:where(html[data-theme="sombre"]) .rotor-nom,:where(html[data-theme="sombre"]) .env-legende{color:#b6c4d6}
-        :where(html[data-theme="sombre"]) .reseau-compteur,:where(html[data-theme="sombre"]) .atelier-fils li strong,:where(html[data-theme="sombre"]) .env-note-3 .env-mot{color:#86efac}
         :where(html[data-theme="sombre"]) .atelier-fils-cadre,:where(html[data-theme="sombre"]) .schema-cables{border:1px solid #2b3a52;background:#1c2534}
         :where(html[data-theme="sombre"]) .schema-cadre{background:#16202e;border:2px solid #2b3a52}
         :where(html[data-theme="sombre"]) .schema-noeud{background:#1c2534;border:2px solid #3b82f6}
@@ -4843,6 +5265,8 @@
         :where(html[data-theme="sombre"]) .atelier-jauge-cadre{background:#26334a}
         :where(html[data-theme="sombre"]) .atelier-legende li,:where(html[data-theme="sombre"]) .env-effet,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective:hover,:where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.selectionnee,:where(html[data-theme="sombre"]) .atelier.schema-emplacements .emplacement:hover,:where(html[data-theme="sombre"]) .choix-emplacement .option-composant:hover{background:#1a2740}
         :where(html[data-theme="sombre"]) .env-table th,:where(html[data-theme="sombre"]) .env-table td{border-bottom:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) .glossaire{background:#16202e;border:1px solid #2f4b7a}
+        :where(html[data-theme="sombre"]) .glossaire-intro,:where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after,:where(html[data-theme="sombre"]) .indice-decouvert{color:#a9b8cc}
         :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective{border:2px solid #3a4a63;background:#1c2534}
         :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.bonne,:where(html[data-theme="sombre"]) .atelier.schema-emplacements .emplacement.complet,:where(html[data-theme="sombre"]) .choix-emplacement .option-composant.choisie{background:#132a20}
         :where(html[data-theme="sombre"]) .qcm-correctif .action-corrective.mauvaise{background:#2b1a1c}
@@ -4855,15 +5279,15 @@
         :where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
         :where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
         :where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
-        :where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+        :where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section,:where(html[data-theme="sombre"]) .sauvegarde-bar{border:1px solid #2b3a52}
         :where(html[data-theme="sombre"]) .ost-modele{background:#1c2534;color:#cbd5e1}
-        :where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after,:where(html[data-theme="sombre"]) .indice-decouvert{color:#a9b8cc}
         :where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
         :where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
         :where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
         :where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
         :where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
         :where(html[data-theme="sombre"]) .activite-bonus,:where(html[data-theme="sombre"]) .activite-bonus h3{color:#fde68a}
+        :where(html[data-theme="sombre"]) .bouton-sauvegarde{background:#1c2534;color:#8ab4f8}
         html[data-theme="sombre"] .bloc-animation{background:#16202e;border:1px solid #2b3a52}
         html[data-theme="sombre"] .cf-etape,html[data-theme="sombre"] .inter-bouton,html[data-theme="sombre"] .aroute-scenario,html[data-theme="sombre"] .aroute-noeud{background:#1c2534;border:2px solid #2b3a52}
         html[data-theme="sombre"] .cf-etape:hover,html[data-theme="sombre"] .inter-bouton:hover,html[data-theme="sombre"] .aroute-scenario:hover{border-color:#3b82f6}
@@ -4954,73 +5378,92 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
+        /* ============================================
+           SAUVEGARDE / REPRISE DE LA PROGRESSION
+           ============================================
+           Deux boutons dans le flux de la page (jamais flottants) : l'élève
+           télécharge sa progression dans un fichier JSON (bouton
+           « Sauvegarder »), et la retrouve plus tard sur n'importe quel poste
+           en important ce fichier (bouton « Reprendre »). Le choix du fichier
+           reste invisible : le bouton ouvre le sélecteur, rien d'autre ne
+           change à l'interface. Définition unique entre les marqueurs
+           SAUVEGARDE:CSS — recopiée sur les activités déjà générées
+           par _outils/template-activite/greffer_sauvegarde.py.
+           ============================================ */
+        /* SAUVEGARDE:CSS-DEBUT */
+        .sauvegarde-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--espacement-sm);
+            margin: 0 0 var(--espacement-md) 0;
+            padding: var(--espacement-sm) var(--espacement-md);
+            background: var(--couleur-fond);
+            border: 1px solid #dce3ed;
+            border-radius: var(--rayon-bordure);
+        }
+        html[data-theme="sombre"] .sauvegarde-bar {
+            background: #1c2534;
+            border-color: #2b3a52;
+        }
+        .sauvegarde-intitule {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--couleur-texte-leger);
+            margin-right: auto;
+        }
+        .sauvegarde-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--espacement-sm);
+        }
+        .bouton-sauvegarde {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            min-height: 44px;
+            padding: 0.5rem 0.9rem;
+            border: 2px solid var(--couleur-primaire);
+            border-radius: var(--rayon-bordure);
+            background: #ffffff;
+            color: #1d4ed8;
+            font: inherit;
+            font-weight: 600;
+            font-size: 0.92rem;
+            line-height: 1.2;
+            cursor: pointer;
+        }
+        html[data-theme="sombre"] .bouton-sauvegarde {
+            background: #1c2534;
+            color: var(--couleur-primaire);
+        }
+        .bouton-sauvegarde:hover,
+        .bouton-sauvegarde:focus-visible {
+            background: var(--couleur-primaire-fond);
+            color: #ffffff;
+            border-color: var(--couleur-primaire-fond);
+        }
+        html[data-theme="sombre"] .bouton-sauvegarde:hover,
+        html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
+            color: #ffffff;
+        }
+        .sauvegarde-statut {
+            flex-basis: 100%;
+            min-height: 1.4rem;
+            font-size: 0.9rem;
+            color: var(--couleur-texte-leger);
+        }
+        .sauvegarde-statut.succes {
+            color: var(--couleur-succes);
+            font-weight: 600;
+        }
+        .sauvegarde-statut.echec {
+            color: var(--couleur-alerte);
+            font-weight: 600;
+        }
+        /* SAUVEGARDE:CSS-FIN */
 
     </style>
-<!-- GLOSSAIRE-GREFFE-CSS:DEBUT (Greffé par _outils/template-activite/greffer_glossaire.py depuis index.html (bloc GLOSSAIRE) : NE PAS ÉDITER ICI — modifier le template ou n1.glossaire, puis `--extraire` et regreffer.) -->
-<style id="ost-style-glossaire">
-.glossaire {
-    background: #f4f8fc;
-    border: 1px solid #dbeafe;
-    border-left: 5px solid var(--couleur-primaire);
-    border-radius: var(--rayon-bordure);
-    padding: var(--espacement-md);
-}
-
-.glossaire-titre {
-    color: var(--couleur-primaire);
-    font-size: 1.05rem;
-    margin-bottom: var(--espacement-xs);
-}
-
-.glossaire-intro {
-    /* 4,46:1 mesuré avec --couleur-texte-leger sur #f4f8fc : sous le
-       seuil AA de 4,5:1. Ce gris d'un demi-ton plus dense donne
-       5,1:1 ; sa traduction sombre est écrite plus bas, car une page
-       greffée n'a pas le bloc engendré par mode_sombre.py. */
-    color: #5c6b80;
-    font-size: 0.92rem;
-    margin-bottom: var(--espacement-sm);
-}
-
-.glossaire-liste {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: var(--espacement-sm);
-}
-
-.glossaire-entree {
-    background: white;
-    border: 1px solid #dce3ed;
-    border-radius: var(--rayon-bordure);
-    padding: 0.5rem 0.7rem;
-}
-
-.glossaire-entree dt {
-    color: var(--couleur-primaire);
-    font-weight: 700;
-}
-
-.glossaire-entree dd {
-    color: var(--couleur-texte);
-    font-size: 0.95rem;
-    margin: 0.15rem 0 0;
-}
-
-html[data-theme="sombre"] .glossaire {
-    background: #16202e;
-    border-color: #2f4b7a;
-}
-
-html[data-theme="sombre"] .glossaire-entree {
-    background: #1c2534;
-    border-color: #2b3a52;
-}
-
-html[data-theme="sombre"] .glossaire-intro {
-    color: #a9b8cc;
-}
-</style>
-<!-- GLOSSAIRE-GREFFE-CSS:FIN -->
 </head>
 <body>
     <!-- Skip link pour accessibilité -->
@@ -5096,6 +5539,30 @@ html[data-theme="sombre"] .glossaire-intro {
                 refleter();
             })();
         </script>
+
+        <!-- SAUVEGARDE:UI-DEBUT
+             Barre « Ma progression » : sauvegarde par fichier (export) et
+             reprise (import). Dans le flux, entre l'en-tête et la barre de
+             progression — visible sur tous les onglets, atteignable au clavier
+             comme les autres commandes. recopiée sur les activités déjà
+             générées par _outils/template-activite/greffer_sauvegarde.py. -->
+        <div class="sauvegarde-bar" data-ost-bloc="sauvegarde-progression">
+            <span class="sauvegarde-intitule" id="sauvegarde-intitule">Ma progression</span>
+            <div class="sauvegarde-actions" role="group" aria-labelledby="sauvegarde-intitule">
+                <button type="button" class="bouton-sauvegarde" id="sauvegarde-exporter"
+                        aria-label="Sauvegarder ma progression dans un fichier">
+                    💾 Sauvegarder
+                </button>
+                <button type="button" class="bouton-sauvegarde" id="sauvegarde-importer"
+                        aria-label="Reprendre ma progression depuis un fichier">
+                    📂 Reprendre
+                </button>
+                <input type="file" id="sauvegarde-fichier" accept=".json,application/json"
+                       aria-label="Fichier de progression à reprendre" hidden>
+            </div>
+            <span class="sauvegarde-statut" id="sauvegarde-statut" role="status" aria-live="polite"></span>
+        </div>
+        <!-- SAUVEGARDE:UI-FIN -->
 
         <!-- Barre de progression -->
         <nav aria-label="Progression de l'activité">
@@ -5184,7 +5651,6 @@ html[data-theme="sombre"] .glossaire-intro {
                         </article>
                     </div>
 
-                    <!-- GLOSSAIRE-GREFFE:DEBUT (Greffé par _outils/template-activite/greffer_glossaire.py depuis index.html (bloc GLOSSAIRE) : NE PAS ÉDITER ICI — modifier le template ou n1.glossaire, puis `--extraire` et regreffer.) -->
                     <div class="glossaire marge-haut" data-ost-id="n1-glossaire" role="region" aria-labelledby="titre-glossaire-n1">
                         <h3 class="glossaire-titre" id="titre-glossaire-n1">📖 Glossaire — le vocabulaire de l'activité</h3>
                         <p class="glossaire-intro">Les mots employés dans cette activité, avec leur définition. Relis-les avant de répondre au quiz.</p>
@@ -5239,7 +5705,6 @@ html[data-theme="sombre"] .glossaire-intro {
                             </div>
                         </dl>
                     </div>
-                    <!-- GLOSSAIRE-GREFFE:FIN -->
 
                     <div class="info-block marge-haut">
                         <p><strong>Consigne :</strong> Regardez attentivement les vidéos ci-dessus. Prenez des notes si nécessaire. Lorsque vous vous sentez prêt, passez à l'onglet suivant pour tester vos connaissances.</p>
@@ -5310,12 +5775,12 @@ html[data-theme="sombre"] .glossaire-intro {
                             <div class="feedback-reponse" role="alert"></div>
                         </div>
 
-                        <div class="question-quiz" data-ost-id="n1-quiz-q4" data-question="4" data-explication="Les protocoles de communication sans fil (Wi-Fi, Zigbee, Z-Wave) permettent le contrôle distant et l'intégration dans un réseau domotique.">
+                        <div class="question-quiz" data-ost-id="n1-quiz-q4" data-question="4" data-explication="Les protocoles sans fil (Wi-Fi, Zigbee, Z-Wave) relient la lampe au réseau de la maison : on la commande depuis n'importe où, même à l'extérieur. Un interrupteur ou un câble ne commandent que sur place.">
                             <p>4. Quelle technologie permet de contrôler l'éclairage à distance via smartphone ?</p>
                             <div class="options-reponse" role="radiogroup">
                                 
                                 <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n1-quiz-q4-opta">
-                                    <span>La connexion Bluetooth uniquement</span>
+                                    <span>Un interrupteur manuel fixé au mur de la pièce</span>
                                 </div>
                                 <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n1-quiz-q4-optb">
                                     <span>Les protocoles sans fil comme Wi-Fi, Zigbee ou Z-Wave</span>
@@ -5362,53 +5827,96 @@ html[data-theme="sombre"] .glossaire-intro {
             <section id="contenu-n2-intro" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-intro">
                 <div class="carte-contenu">
                     <h2>Niveau 2 : Explorer en détail</h2>
-                    <p>Cliquez sur chaque élément de la chaîne ci-dessous pour découvrir son rôle et ses caractéristiques.</p>
+                    <p>Le contrôleur domotique central occupe le centre du schéma : toutes les informations passent par lui. Cliquez sur une tuile pour lire son rôle, puis lancez « Voir le trajet de l'information » pour suivre, pas à pas, ce qui se passe quand quelqu'un entre dans le salon.</p>
 
-                    <h3>Chaîne de fonctionnement</h3>
-                    <div class="chaine-interactive" role="list" aria-label="Chaîne d'éléments interactifs">
+                    <h3>Schéma en étoile : qui décide, qui exécute ?</h3>
+                    <div class="chaine-interactive chaine-etoile" data-legende-fin="Trajet terminé : présence détectée, décision du contrôleur, ordre du variateur, lumière de la LED. L'acteur humain, lui, peut toujours reprendre la main." role="list" aria-label="Schéma en étoile : qui décide, qui exécute ? — éléments interactifs">
 
-                        <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e1"
-                             aria-label="Capteurs (mouvement, luminosité) : Cliquer pour plus d'informations" 
-                             onclick="revelerElement(this)">
-                            Capteurs (mouvement, luminosité)
+                        <svg class="ce-liens" viewBox="0 0 720 720"
+                             preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                            <defs><marker id="ce-fleche-information" class="ce-fleche-information" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 z"></path></marker><marker id="ce-fleche-commande" class="ce-fleche-commande" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 z"></path></marker><marker id="ce-fleche-energie" class="ce-fleche-energie" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 z"></path></marker><marker id="ce-fleche-humain" class="ce-fleche-humain" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 z"></path></marker>
+                            </defs>
+                        <path class="ce-lien" data-type="information" d="M360.0,158.2 L360.0,270.2" marker-end="url(#ce-fleche-information)" data-ordre="2" data-legende="L'information circule du capteur vers le contrôleur : ce sont les mesures de présence et de luminosité."></path>
+                        <path class="ce-lien" data-type="commande" d="M475.0,360.0 L518.6,360.0" marker-end="url(#ce-fleche-commande)" data-ordre="3" data-legende="Le contrôleur envoie un ordre de commande à l'actionneur."></path>
+                        <path class="ce-lien" data-type="energie" d="M612.2,428.2 Q602.8,616.5 457.0,624.6" marker-end="url(#ce-fleche-energie)" data-ordre="4" data-legende="L'actionneur laisse passer l'énergie réglée jusqu'au luminaire."></path>
+                        <path class="ce-lien" data-type="humain" d="M107.8,291.8 Q117.2,103.5 263.0,95.4" marker-end="url(#ce-fleche-humain)" data-legende="La présence de l'acteur humain est exactement ce que le détecteur capte : sans lui, aucune détection."></path>
+                        <path class="ce-lien" data-type="humain" d="M201.4,360.0 L245.0,360.0" marker-end="url(#ce-fleche-humain)" data-legende="L'acteur humain peut aussi commander directement — interrupteur mural, télécommande, application — et lire l'état du système." marker-start="url(#ce-fleche-humain)"></path>
+                        </svg>
+                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e1" data-ordre="1" data-legende="1. Les capteurs acquièrent l'information : le détecteur de mouvement repère la présence, la sonde mesure la lumière déjà présente." style="--ce-x:50%;--ce-y:12.5%" aria-label="Capteurs (mouvement, luminosité) : Cliquer pour plus d'informations" onclick="revelerElement(this)">
+                            <span class="ce-num" aria-hidden="true">1</span>
+                            <span class="ce-icone" aria-hidden="true">📡</span>
+                            <span class="ce-texte">
+                                <span class="ce-nom">Capteurs</span>
+                                <span class="ce-role">acquérir l'information</span>
+                            </span>
                             <div class="info-element">
                                 <strong>Description détaillée :</strong>
-                                <p>Mesurent la présence humaine et l'intensité lumineuse ambiante. Détecteurs infrarouges passifs (PIR) pour le mouvement, photorésistances pour la luminosité. Portée : 5-10 mètres.</p>
+                                <p>Mesurent la présence humaine et l'intensité lumineuse ambiante. Détecteur infrarouge passif (PIR) pour le mouvement, photorésistance pour la luminosité. Portée : 5 à 10 mètres. Un capteur ne décide de rien : il transmet une mesure au contrôleur.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
-
-                        <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e2"
-                             aria-label="Contrôleur domotique central : Cliquer pour plus d'informations" 
-                             onclick="revelerElement(this)">
-                            Contrôleur domotique central
+                        <div class="element-chaine ce-noeud ce-centre" role="listitem" tabindex="0" data-ost-id="n2-chaine-e2" data-ordre="2" data-legende="2. Le contrôleur domotique central traite l'information : il compare la mesure à la consigne programmée, puis décide de la commande à envoyer." style="--ce-x:50%;--ce-y:50%" aria-label="Contrôleur domotique central : Cliquer pour plus d'informations" onclick="revelerElement(this)">
+                            <span class="ce-num" aria-hidden="true">2</span>
+                            <span class="ce-icone" aria-hidden="true">🧠</span>
+                            <span class="ce-texte">
+                                <span class="ce-nom">Contrôleur domotique</span>
+                                <span class="ce-role">traiter et décider</span>
+                            </span>
                             <div class="info-element">
                                 <strong>Description détaillée :</strong>
-                                <p>Traite les informations des capteurs et exécute les scénarios programmés. Compare les mesures aux consignes définies. Peut intégrer des algorithmes d'apprentissage des habitudes.</p>
+                                <p>Cerveau du système : il reçoit les mesures des capteurs, les traite, les compare aux consignes définies et décide de l'ordre à envoyer. Il peut intégrer des algorithmes d'apprentissage des habitudes et gérer plusieurs scénarios (jour, nuit, absence). Toutes les informations passent par lui.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
-
-                        <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e3"
-                             aria-label="Actionneurs (variateurs, relais) : Cliquer pour plus d'informations" 
-                             onclick="revelerElement(this)">
-                            Actionneurs (variateurs, relais)
+                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e3" data-ordre="3" data-legende="3. Le variateur reçoit l'ordre du contrôleur et règle l'intensité lumineuse : c'est l'actionneur qui exécute." style="--ce-x:85.5%;--ce-y:50%" aria-label="Actionneurs (variateurs, relais) : Cliquer pour plus d'informations" onclick="revelerElement(this)">
+                            <span class="ce-num" aria-hidden="true">3</span>
+                            <span class="ce-icone" aria-hidden="true">🔌</span>
+                            <span class="ce-texte">
+                                <span class="ce-nom">Actionneurs</span>
+                                <span class="ce-role">exécuter la commande</span>
+                            </span>
                             <div class="info-element">
                                 <strong>Description détaillée :</strong>
-                                <p>Exécutent les commandes : ajustent l'intensité lumineuse ou allument/éteignent les circuits. Consommation électrique minimale pour la commande.</p>
+                                <p>Exécutent les commandes : ajustent l'intensité lumineuse ou allument et éteignent les circuits. Le relais travaille en tout ou rien, le variateur règle progressivement. Ils agissent sur la partie puissance du circuit et ne décident jamais seuls. Consommation électrique minimale pour la commande.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
-
-                        <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e4"
-                             aria-label="Sources lumineuses LED connectées : Cliquer pour plus d'informations" 
-                             onclick="revelerElement(this)">
-                            Sources lumineuses LED connectées
+                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e4" data-ordre="4" data-legende="4. La LED convertit l'énergie électrique reçue en lumière : le salon est éclairé." style="--ce-x:50%;--ce-y:87.5%" aria-label="Sources lumineuses LED connectées : Cliquer pour plus d'informations" onclick="revelerElement(this)">
+                            <span class="ce-num" aria-hidden="true">4</span>
+                            <span class="ce-icone" aria-hidden="true">💡</span>
+                            <span class="ce-texte">
+                                <span class="ce-nom">Luminaires LED</span>
+                                <span class="ce-role">convertir l'énergie en lumière</span>
+                            </span>
                             <div class="info-element">
                                 <strong>Description détaillée :</strong>
-                                <p>Ampoules LED intelligentes ou luminaires pilotables. Faible consommation, longue durée de vie (25 000-50 000 heures). Pilotage individuel ou par zone.</p>
+                                <p>Ampoules LED intelligentes ou luminaires pilotables. Elles convertissent l'énergie électrique en lumière avec un rendement élevé et peu de chaleur : faible consommation, longue durée de vie (25 000 à 50 000 heures). Pilotage individuel ou par zone.</p>
                             </div>
                         </div>
+                        <div class="element-chaine ce-noeud ce-acteur" role="listitem" tabindex="0" data-ost-id="n2-chaine-acteur" data-legende="L'acteur humain n'est pas un maillon de la chaîne : sa présence est détectée, et il peut reprendre la main quand il veut." style="--ce-x:14.5%;--ce-y:50%" aria-label="L'acteur humain : Cliquer pour plus d'informations" onclick="revelerElement(this)">
+                            <span class="ce-icone" aria-hidden="true">🧑</span>
+                            <span class="ce-texte">
+                                <span class="ce-nom">L'acteur humain</span>
+                                <span class="ce-role">présence et consignes</span>
+                            </span>
+                            <div class="info-element">
+                                <strong>Description détaillée :</strong>
+                                <p>Celui qui vit dans la pièce. Sa présence est l'événement que le capteur détecte, et il peut aussi reprendre la main à tout moment : interrupteur mural, télécommande, application sur le téléphone, consigne de scénario. Il n'est donc pas un maillon de la chaîne : il agit SUR elle, en amont (présence, choix, programmation) comme en aval (réglage, correction). C'est pourquoi le schéma le place à part, en pointillés.</p>
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div class="ce-commandes">
+                        <button type="button" class="bouton-action"
+                                onclick="animerFluxEtoile()">
+                            ▶️ Voir le trajet de l'information
+                        </button>
+                        <p class="ce-legende" id="legende-etoile" role="status"
+                           aria-live="polite"></p>
+                        <p class="ce-legende-couleurs" aria-label="Légende des liens">
+                            <span><i data-type="information" aria-hidden="true"></i> information (mesure)</span>
+                            <span><i data-type="commande" aria-hidden="true"></i> ordre de commande</span>
+                            <span><i data-type="energie" aria-hidden="true"></i> énergie</span>
+                            <span><i data-type="humain" aria-hidden="true"></i> action humaine (possible)</span>
+                        </p>
                     </div>
 
                     <div class="details-chaine" id="details-chaine"
@@ -5559,7 +6067,7 @@ html[data-theme="sombre"] .glossaire-intro {
                                     <span>Le système ne peut plus adapter l'intensité selon la lumière naturelle</span>
                                 </div>
                                 <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n2-quiz-q4-optc">
-                                    <span>Toutes les lumières s'éteignent immédiatement</span>
+                                    <span>Le capteur de mouvement cesse aussi de détecter les personnes</span>
                                 </div>
                             </div>
                             <div class="feedback-reponse" role="alert"></div>
@@ -6329,9 +6837,15 @@ html[data-theme="sombre"] .glossaire-intro {
             return div.innerHTML;
         }
 
-        // Retour affiché sous une question : verdict + explication.
-        // L'explication est affichée SYSTÉMATIQUEMENT, que la réponse soit juste
-        // ou fausse : c'est le bouton « Vérifier mes réponses » qui l'apporte.
+        // MOTEUR-QUIZ:DEBUT-PARTIE2
+        // Retour affiché sous une question : le verdict, puis l'explication —
+        // que l'élève demande lui-même (volet « Voir l'explication »).
+        //
+        // Règle de la classe : après une erreur, on ne montre QUE les mauvaises
+        // réponses. Jamais la bonne. L'explication donne le raisonnement, pas
+        // l'étiquette de l'option : l'élève réfléchit à son erreur, corrige, et
+        // revérifie. L'explication reste toujours accessible (RGAA, et c'est là
+        // que l'apprentissage se produit) mais elle n'est plus imposée.
         function construireFeedback(question, verdict) {
             let explication = question.getAttribute('data-explication') || '';
             if (!explication) {
@@ -6341,8 +6855,10 @@ html[data-theme="sombre"] .glossaire-intro {
 
             let html = echapperHtml(verdict);
             if (explication) {
-                html += '<span class="explication"><strong>Explication :</strong> ' +
-                        echapperHtml(explication) + '</span>';
+                html += '<details class="explication-masquee">' +
+                        '<summary>Voir l\u2019explication</summary>' +
+                        '<span class="explication"><strong>Explication :</strong> ' +
+                        echapperHtml(explication) + '</span></details>';
             }
             return html;
         }
@@ -6394,13 +6910,12 @@ html[data-theme="sombre"] .glossaire-intro {
                     feedback.innerHTML = construireFeedback(question, '\u2705 Correct ! Bien jou\u00e9.');
                     feedback.className = 'feedback-reponse visible correct';
                 } else {
+                    // On ne montre QUE la mauvaise réponse : la proposition de
+                    // l'élève est marquée, la bonne ne l'est pas. Il cherche ce
+                    // qui cloche, corrige, et revérifie — c'est là qu'il
+                    // apprend. L'explication reste offerte, jamais imposée.
                     optionChoisie.classList.add('incorrecte');
-                    // Montrer la bonne réponse
-                    const bonneOption = question.querySelector(`.option-reponse[data-value="${bonneReponse}"]`);
-                    if (bonneOption) {
-                        bonneOption.classList.add('correcte');
-                    }
-                    feedback.innerHTML = construireFeedback(question, '\u274c Incorrect. La bonne r\u00e9ponse est surlign\u00e9e en vert.');
+                    feedback.innerHTML = construireFeedback(question, '\u274c R\u00e9ponse fausse. Ta proposition est surlign\u00e9e en rouge : cherche pourquoi elle ne convient pas, puis corrige ta r\u00e9ponse.');
                     feedback.className = 'feedback-reponse visible incorrect';
                 }
             });
@@ -6422,7 +6937,7 @@ html[data-theme="sombre"] .glossaire-intro {
                 messageResultat.style.color = 'var(--couleur-succes)';
                 boutonSuite.classList.remove('cache');
             } else {
-                messageResultat.innerHTML = `<strong>📊 Score :</strong> ${score}/${questions.length}. Vous devez obtenir toutes les bonnes réponses pour continuer. Réessayez !`;
+                messageResultat.innerHTML = `<strong>📊 Score :</strong> ${score}/${questions.length}. Les réponses fausses sont marquées en rouge : corrige-les, puis vérifie à nouveau.`;
                 messageResultat.style.color = 'var(--couleur-alerte)';
                 boutonSuite.classList.add('cache');
             }
@@ -6554,6 +7069,97 @@ html[data-theme="sombre"] .glossaire-intro {
         }
 
         // ============================================
+        // CHAÎNE EN ÉTOILE N2 — visite guidée du trajet de l'information
+        // ============================================
+        // Le schéma en étoile (n2.chaine.disposition = « etoile ») montre le
+        // contrôleur au centre et le trajet de l'information sur les liens.
+        // Ce bouton rejoue ce trajet pas à pas, dans l'ordre déclaré par la
+        // configuration : rien ne défile tout seul, l'élève déclenche et
+        // arrête quand il veut — même règle que pour les autres animations du
+        // N2. Sans schéma en étoile dans la page, ces fonctions ne font rien.
+        let jetonEtoile = 0;
+
+        function arreterFluxEtoile() {
+            jetonEtoile += 1;
+            document.querySelectorAll('.chaine-etoile .ce-actif').forEach(function (element) {
+                element.classList.remove('ce-actif');
+            });
+        }
+
+        function animerFluxEtoile() {
+            const etoile = document.querySelector('.chaine-etoile');
+            if (!etoile) return;
+            arreterFluxEtoile();
+            const jeton = jetonEtoile;
+            const legende = document.getElementById('legende-etoile');
+            const noeuds = Array.prototype.slice.call(
+                etoile.querySelectorAll('.ce-noeud[data-ordre]'));
+            const liens = Array.prototype.slice.call(
+                etoile.querySelectorAll('.ce-lien[data-ordre]'));
+            noeuds.sort(function (a, b) {
+                return Number(a.getAttribute('data-ordre')) -
+                       Number(b.getAttribute('data-ordre'));
+            });
+            if (!noeuds.length) return;
+
+            // La séquence : une tuile, puis le ou les liens qui mènent à la
+            // tuile suivante. L'ordre vient du balisage, pas d'une table
+            // recopiée ici : la configuration reste la seule source.
+            const pas = [];
+            noeuds.forEach(function (noeud) {
+                pas.push({
+                    element: noeud,
+                    texte: noeud.getAttribute('data-legende') || ''
+                });
+                const suivant = Number(noeud.getAttribute('data-ordre')) + 1;
+                liens.forEach(function (lien) {
+                    if (Number(lien.getAttribute('data-ordre')) === suivant) {
+                        pas.push({
+                            element: lien,
+                            texte: lien.getAttribute('data-legende') || ''
+                        });
+                    }
+                });
+            });
+
+            // Mouvement réduit : on montre le trajet d'un coup, en toutes
+            // lettres, plutôt que d'imposer une animation à qui l'a coupée.
+            const reduit = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduit) {
+                pas.forEach(function (etape) { etape.element.classList.add('ce-actif'); });
+                if (legende) {
+                    legende.textContent = 'Trajet complet : ' + noeuds.map(function (noeud) {
+                        return (noeud.querySelector('.ce-nom') || noeud).textContent.trim();
+                    }).join(' → ') + '.';
+                }
+                return;
+            }
+
+            const duree = 900;
+            pas.forEach(function (etape, index) {
+                window.setTimeout(function () {
+                    if (jeton !== jetonEtoile) return;
+                    pas.forEach(function (autre) {
+                        if (autre.element !== etape.element) {
+                            autre.element.classList.remove('ce-actif');
+                        }
+                    });
+                    etape.element.classList.add('ce-actif');
+                    if (legende) legende.textContent = etape.texte;
+                }, index * duree);
+            });
+            window.setTimeout(function () {
+                if (jeton !== jetonEtoile) return;
+                arreterFluxEtoile();
+                if (legende) {
+                    legende.textContent = etoile.getAttribute('data-legende-fin') ||
+                        'Trajet terminé.';
+                }
+            }, pas.length * duree + 400);
+        }
+
+        // ============================================
         // PROBLÉMATIQUE N3 — diagnostic puis proposition de solution
         // ============================================
         
@@ -6636,11 +7242,13 @@ html[data-theme="sombre"] .glossaire-intro {
         // `data-correcte` : rien n'est écrit en dur ici, et le nombre d'actions
         // comme le nombre de bonnes réponses viennent de la configuration.
         //
-        // Après vérification, une action porte TOUJOURS une marque textuelle en
-        // plus de sa couleur (« juste », « fausse », « oubliée ») : la couleur
-        // seule ne dirait rien à un élève daltonien. Chaque action porte aussi
-        // son explication, rendue dans un <details> pour ne pas noyer la page
-        // quand la liste en compte vingt.
+        // Après vérification, l'élève ne voit QUE ses propres choix : ce qu'il a
+        // retenu et qui est inefficace porte une marque textuelle en plus de sa
+        // couleur (« juste », « inefficace ») — la couleur seule ne dirait rien
+        // à un élève daltonien. Une action efficace qu'il a OUBLIÉE n'est jamais
+        // désignée : c'est à lui de la retrouver en relisant les indices du N3.
+        // Chaque action porte aussi son explication, rendue dans un <details>
+        // pour ne pas noyer la page quand la liste en compte vingt.
 
         const qcmCorrectif = {
             conteneur: null,
@@ -6757,7 +7365,6 @@ html[data-theme="sombre"] .glossaire-intro {
 
             let justes = 0;
             let fausses = 0;
-            let oubliees = 0;
 
             actions.forEach(function (action) {
                 const correcte = action.getAttribute('data-correcte') === '1';
@@ -6768,14 +7375,13 @@ html[data-theme="sombre"] .glossaire-intro {
                 const explication = n3ExplicationDe(action);
                 if (explication) explication.hidden = false;
 
+                // Seules les actions RETENUES par l'élève sont marquées. Une
+                // action efficace oubliée garde une ligne neutre : la désigner
+                // reviendrait à donner la solution.
                 if (correcte && retenue) {
                     action.classList.add('bonne');
                     if (statut) statut.textContent = '✓ retenue, et juste';
                     justes++;
-                } else if (correcte) {
-                    action.classList.add('oubliee');
-                    if (statut) statut.textContent = '! oubliée : cette action était efficace';
-                    oubliees++;
                 } else if (retenue) {
                     action.classList.add('mauvaise');
                     if (statut) statut.textContent = '✗ retenue, mais inefficace';
@@ -6799,9 +7405,9 @@ html[data-theme="sombre"] .glossaire-intro {
                 } else {
                     verdict.innerHTML = '<strong>📊 Plan d\'action incomplet :</strong> ' +
                         justes + ' action(s) efficace(s) retenue(s) sur ' + totalCorrectes +
-                        ', ' + fausses + ' action(s) inefficace(s) retenue(s), ' +
-                        oubliees + ' action(s) efficace(s) oubliée(s). ' +
-                        'Corrigez votre plan, puis soumettez à nouveau.';
+                        ', ' + fausses + ' action(s) inefficace(s) retenue(s). ' +
+                        'Retirez celles qui sont marquées « inefficace », cherchez celles ' +
+                        'qui manquent, puis soumettez à nouveau.';
                     verdict.style.color = 'var(--couleur-alerte)';
                 }
             }
@@ -6809,8 +7415,8 @@ html[data-theme="sombre"] .glossaire-intro {
             if (!reussi) {
                 n3MessageQCM(qcmCorrectif.selection.size < totalCorrectes
                     ? 'Il manque ' + (totalCorrectes - qcmCorrectif.selection.size) +
-                      ' action(s) efficace(s) : les actions marquées « oubliée » sont celles à retenir.'
-                    : 'Retirez les actions marquées « inefficace » et gardez celles marquées « juste ».');
+                      ' action(s) efficace(s) : relisez les indices de l\'énigme, puis retenez-les.'
+                    : 'Retirez les actions marquées « inefficace », puis soumettez à nouveau.');
             } else {
                 n3MessageQCM('');
             }
@@ -9225,6 +9831,21 @@ html[data-theme="sombre"] .glossaire-intro {
         }
 
         // ── Types « commandes » et « environnement » : choix unique par question ──
+
+        // Retour d'une question d'atelier : le verdict, puis l'explication que
+        // l'élève ouvre lui-même. Même règle que pour les quiz : on ne désigne
+        // jamais la bonne réponse, on ne marque que la proposition de l'élève.
+        function atelierRetourExplication(verdict, explication) {
+            let html = echapperHtml(verdict);
+            if (explication) {
+                html += '<details class="explication-masquee">' +
+                        '<summary>Voir l\u2019explication</summary>' +
+                        '<span class="explication"><strong>Explication :</strong> ' +
+                        echapperHtml(explication) + '</span></details>';
+            }
+            return html;
+        }
+
         function atelierChoisirOption(bouton) {
             const contexte = atelierContexte(bouton);
             if (!contexte) return;
@@ -9264,23 +9885,31 @@ html[data-theme="sombre"] .glossaire-intro {
                 const choisie = question.querySelector('.atelier-option.choisi');
                 question.querySelectorAll('.atelier-option').forEach(function (option) {
                     option.classList.remove('correcte', 'fausse');
-                    if (option.getAttribute('data-valeur') === bonne) option.classList.add('correcte');
                 });
-                if (choisie && choisie.getAttribute('data-valeur') === bonne) {
+                const juste = !!choisie && choisie.getAttribute('data-valeur') === bonne;
+                if (juste) {
+                    choisie.classList.add('correcte');
                     justes += 1;
                 } else if (choisie) {
+                    // Seule la proposition de l'élève est marquée. La bonne
+                    // réponse n'est jamais désignée : il doit la retrouver en
+                    // relisant la question, sinon il n'apprend rien.
                     choisie.classList.add('fausse');
                 }
                 const retour = question.querySelector('[data-role="retour"]');
                 if (retour) {
-                    retour.textContent = 'Explication : ' + (question.getAttribute('data-explication') || '');
+                    retour.innerHTML = atelierRetourExplication(
+                        juste ? '✅ Proposition juste.'
+                              : '❌ Proposition fausse : cherche laquelle convient, puis vérifie à nouveau.',
+                        question.getAttribute('data-explication') || '');
                     retour.className = 'atelier-retour info';
                 }
             });
 
             atelierRetour(carte,
                 'Résultat : ' + justes + ' / ' + total + ' réponse(s) juste(s).' +
-                (justes === total ? ' 🎉 Toutes les réponses sont bonnes.' : ' Relis l\'explication de chaque réponse.'),
+                (justes === total ? ' 🎉 Toutes les réponses sont bonnes.'
+                                  : ' Reprends les questions marquées en rouge, puis vérifie à nouveau.'),
                 justes === total ? 'succes' : 'echec');
             atelierAfficherExplication(carte);
         }
@@ -9496,12 +10125,15 @@ html[data-theme="sombre"] .glossaire-intro {
             const bonne = carte.getAttribute('data-bonne');
             const choisie = carte.querySelector('.atelier-option.choisi');
 
+            // La batterie attendue n'est jamais désignée : si l'élève s'est
+            // trompé, seule SA batterie est marquée, et il compare lui-même
+            // l'autonomie calculée à la durée de la mission.
             carte.querySelectorAll('.atelier-option').forEach(function (option) {
                 option.classList.remove('correcte', 'fausse');
-                if (option.getAttribute('data-batterie') === bonne) option.classList.add('correcte');
             });
             const ok = !!choisie && choisie.getAttribute('data-batterie') === bonne;
-            if (choisie && !ok) choisie.classList.add('fausse');
+            if (ok) choisie.classList.add('correcte');
+            else if (choisie) choisie.classList.add('fausse');
 
             atelierRetour(carte,
                 ok ? '🎉 La batterie retenue couvre la mission sans être inutilement lourde.'
@@ -14214,5 +14846,1403 @@ html[data-theme="sombre"] .glossaire-intro {
     })();
     // ==== PANNEAU-DEV:FIN ====
     </script>
+    <script>
+// ==== SAUVEGARDE:JS-DEBUT ====
+// ============================================================
+// SAUVEGARDE / REPRISE DE LA PROGRESSION (export / import)
+// ============================================================
+// L'élève télécharge sa progression dans un fichier JSON (bouton
+// « Sauvegarder ») et la retrouve sur n'importe quel poste en important ce
+// fichier (bouton « Reprendre »). Rien ne part sur Internet : le fichier
+// reste entre les mains de l'élève.
+//
+// L'état capturé couvre tout ce qui fait la progression d'un parcours :
+//   • les niveaux déverrouillés et validés, l'onglet affiché ;
+//   • les quiz N1/N2 : réponses cochées, verdicts et résultats ;
+//   • la chaîne du N2 explorée (tuiles visitées) ;
+//   • les ateliers du N2 (association, ordre, environnement, choix,
+//     erreur-schema — et les autres types dans la mesure de leur état) ;
+//   • le N3 : objets explorés, diagnostic et solution rédigés, plan
+//     d'action à choix multiple, simulateur ;
+//   • le N4 : champs rédigés, contraintes figées, classement, modèle
+//     retenu, étapes de sélection, bilan, câblage ;
+//   • le N2 « animation » (routeur) et les interactions interacteur-élément.
+//
+// Le code lit et réécrit les structures du moteur (niveauxDebloques,
+// elementsVisites, …) : il vit donc à côté de lui, dans le même document.
+// Définition unique entre les deux marqueurs SAUVEGARDE:JS — recopiée
+// sur les activités déjà générées par
+// _outils/template-activite/greffer_sauvegarde.py.
+(function () {
+    'use strict';
+
+    var FORMAT_NOM = 'progression-activite';
+    var FORMAT_VERSION = 1;
+    var TAILLE_MAX = 2 * 1024 * 1024; // 2 Mio : une progression est un petit JSON
+
+    var boutonExporter = null;
+    var boutonImporter = null;
+    var champFichier = null;
+    var statut = null;
+
+    // ---------------------------------------------------------------
+    // Utilitaires
+    // ---------------------------------------------------------------
+    function $(selecteur, racine) {
+        return (racine || document).querySelector(selecteur);
+    }
+
+    function $$(selecteur, racine) {
+        return Array.prototype.slice.call((racine || document).querySelectorAll(selecteur));
+    }
+
+    function titreActivite() {
+        var h = document.getElementById('titre-activite');
+        return h ? String(h.textContent || '').trim() : '';
+    }
+
+    function annoncer(message, classe) {
+        if (!statut) return;
+        statut.textContent = message;
+        statut.className = 'sauvegarde-statut' + (classe ? ' ' + classe : '');
+    }
+
+    function texteEtClasse(element) {
+        if (!element) return null;
+        // `html` conserve le volet « Voir l'explication » (un <details>) : une
+        // restauration au textContent l'aplatirait en texte suivi.
+        return {
+            texte: String(element.textContent || ''),
+            classe: String(element.className || ''),
+            html: String(element.innerHTML || '')
+        };
+    }
+
+    function slug(nom) {
+        return String(nom || 'activite').toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'activite';
+    }
+
+    function dateFichier() {
+        var d = new Date();
+        function deux(n) { return n < 10 ? '0' + n : String(n); }
+        return d.getFullYear() + '-' + deux(d.getMonth() + 1) + '-' + deux(d.getDate()) +
+            '_' + deux(d.getHours()) + deux(d.getMinutes());
+    }
+
+    // ---------------------------------------------------------------
+    // CAPTURE — niveaux, quiz, chaîne
+    // ---------------------------------------------------------------
+    function capturerNiveaux() {
+        return $$('.bouton-onglet').map(function (b) {
+            return {
+                niveau: b.getAttribute('data-niveau'),
+                debloque: !b.classList.contains('verrouille'),
+                valide: b.classList.contains('valide')
+            };
+        });
+    }
+
+    function capturerQuiz() {
+        var resultat = {};
+        ['n1', 'n2'].forEach(function (niveau) {
+            var formulaire = document.getElementById('quiz-' + niveau);
+            if (!formulaire) return;
+            var questions = [];
+            $$('.question-quiz', formulaire).forEach(function (question) {
+                var selectionnee = question.querySelector('.option-reponse.selectionnee');
+                var correcte = question.querySelector('.option-reponse.correcte');
+                var incorrecte = question.querySelector('.option-reponse.incorrecte');
+                var feedback = question.querySelector('.feedback-reponse');
+                questions.push({
+                    selection: selectionnee ? selectionnee.getAttribute('data-value') : '',
+                    correcte: correcte ? correcte.getAttribute('data-value') : '',
+                    incorrecte: incorrecte ? incorrecte.getAttribute('data-value') : '',
+                    feedback: feedback ? {
+                        html: feedback.innerHTML,
+                        classe: feedback.className
+                    } : null
+                });
+            });
+            var resultatDiv = document.getElementById('resultat-quiz-' + niveau);
+            var message = document.getElementById('message-resultat-' + niveau);
+            var boutonSuite = document.getElementById('bouton-suite-' + niveau);
+            resultat[niveau] = {
+                questions: questions,
+                resultatVisible: !!resultatDiv && resultatDiv.style.display === 'block',
+                message: message ? { html: message.innerHTML, couleur: message.style.color || '' } : null,
+                suiteVisible: !!boutonSuite && !boutonSuite.classList.contains('cache')
+            };
+        });
+        return resultat;
+    }
+
+    function capturerChaine() {
+        if (typeof elementsVisites === 'undefined') return null;
+        var tuiles = $$('.element-chaine');
+        if (!tuiles.length) return null;
+        return {
+            total: tuiles.length,
+            tuiles: tuiles.map(function (t) {
+                return { visite: elementsVisites.has(t), revele: t.classList.contains('revele') };
+            })
+        };
+    }
+
+    // ---------------------------------------------------------------
+    // CAPTURE — ateliers du N2
+    // ---------------------------------------------------------------
+    function capturerQuestionsChoix(carte) {
+        return $$('.atelier-question', carte).map(function (question) {
+            var choisie = question.querySelector('.atelier-option.choisi');
+            return {
+                choisie: choisie ? choisie.getAttribute('data-valeur') : '',
+                marques: $$('.atelier-option', question).map(function (option) {
+                    return {
+                        valeur: option.getAttribute('data-valeur'),
+                        correcte: option.classList.contains('correcte'),
+                        fausse: option.classList.contains('fausse'),
+                        checked: option.getAttribute('aria-checked') === 'true'
+                    };
+                }),
+                retour: texteEtClasse(question.querySelector('[data-role="retour"]'))
+            };
+        });
+    }
+
+    function capturerAteliers() {
+        var cartes = $$('.atelier-carte');
+        if (!cartes.length) return [];
+        return cartes.map(function (carte, index) {
+            var type = carte.getAttribute('data-type') || '';
+            var explication = carte.querySelector('[data-role="explication"]');
+            var etat = {
+                index: index,
+                type: type,
+                atelier: carte.getAttribute('data-atelier'),
+                termine: carte.getAttribute('data-termine') === '1',
+                retour: texteEtClasse(carte.querySelector('[data-role="retour-atelier"]')),
+                explicationVisible: !!explication && !explication.classList.contains('cache')
+            };
+            if (type === 'association') {
+                etat.jetons = $$('.atelier-jeton', carte).map(function (jeton) {
+                    return {
+                        cote: jeton.getAttribute('data-cote'),
+                        paire: jeton.getAttribute('data-paire'),
+                        apparie: jeton.classList.contains('apparie'),
+                        choisi: jeton.classList.contains('choisi'),
+                        pressed: jeton.getAttribute('aria-pressed') === 'true',
+                        inactif: !!jeton.disabled
+                    };
+                });
+            } else if (type === 'ordre') {
+                etat.slots = $$('.atelier-slot', carte).map(function (slot, indexSlot) {
+                    var rempli = slot.classList.contains('rempli');
+                    var texte = '';
+                    if (rempli) {
+                        $$('span', slot).forEach(function (s) {
+                            if (!s.classList.contains('atelier-marqueur')) texte = s.textContent;
+                        });
+                    }
+                    return { rang: indexSlot, rempli: rempli, texte: texte };
+                });
+                etat.maillonsCache = $$('.atelier-jeton[data-rang]', carte)
+                    .filter(function (m) { return m.classList.contains('cache'); })
+                    .map(function (m) { return m.getAttribute('data-rang'); });
+            } else if (type === 'environnement') {
+                var choisie = carte.querySelector('.env-interacteur.choisi');
+                etat.interacteur = choisie ? choisie.getAttribute('data-interacteur') : '';
+                etat.questions = capturerQuestionsChoix(carte);
+            } else if (type === 'erreur-schema') {
+                if (carte.__schema) {
+                    etat.schema = {
+                        examinees: Object.keys(carte.__schema.examinees || {}),
+                        trouvees: Object.keys(carte.__schema.trouvees || {}),
+                        fausses: carte.__schema.fausses || 0,
+                        verrouille: !!carte.__schema.verrouille
+                    };
+                }
+            } else {
+                // Filet : un type non couvert garde son état interne et ses
+                // questions de choix, quand il en a. Jamais bloquant : le
+                // fichier reste importable, l'essentiel du parcours est rétabli.
+                if (carte.__atelier) etat.interne = JSON.parse(JSON.stringify(carte.__atelier));
+                etat.questions = capturerQuestionsChoix(carte);
+            }
+            return etat;
+        });
+    }
+
+    // ---------------------------------------------------------------
+    // CAPTURE — N3 (objets, diagnostic, plan d'action, simulateur)
+    // ---------------------------------------------------------------
+    function capturerObjetsN3() {
+        var objets = $$('.objet-explorable');
+        if (!objets.length) return null;
+        return {
+            total: objets.length,
+            objets: objets.map(function (objet) {
+                return {
+                    explore: objet.classList.contains('explore'),
+                    vus: objet.hasAttribute('data-objets-vus')
+                };
+            })
+        };
+    }
+
+    function capturerQcm() {
+        var conteneur = document.getElementById('qcm-correctif');
+        if (!conteneur || typeof qcmCorrectif === 'undefined') return null;
+        var compteur = document.getElementById('compteur-selection');
+        var messageQcm = document.getElementById('message-qcm-correctif');
+        var messagePlan = document.getElementById('message-plan-action');
+        return {
+            maximum: conteneur.getAttribute('data-maximum') || '',
+            selection: Array.from(qcmCorrectif.selection || []),
+            verifie: !!qcmCorrectif.verifie,
+            compteur: compteur ? compteur.textContent : '',
+            messageQcm: messageQcm ? messageQcm.textContent : '',
+            messagePlan: messagePlan ? messagePlan.textContent : '',
+            actions: $$('.action-corrective', conteneur).map(function (action) {
+                var statutAction = action.querySelector('.statut-action');
+                var explicationAction = action.parentNode
+                    ? action.parentNode.querySelector('.explication-action') : null;
+                return {
+                    id: action.getAttribute('data-action'),
+                    selectionnee: action.classList.contains('selectionnee'),
+                    bonne: action.classList.contains('bonne'),
+                    mauvaise: action.classList.contains('mauvaise'),
+                    oubliee: action.classList.contains('oubliee'),
+                    checked: action.getAttribute('aria-checked') === 'true',
+                    statut: statutAction ? statutAction.textContent : '',
+                    explicationVisible: !!explicationAction && !explicationAction.hidden
+                };
+            })
+        };
+    }
+
+    function capturerSimulateur() {
+        var racine = document.getElementById('simulateur-n3');
+        if (!racine) return null;
+        return {
+            valide: racine.getAttribute('data-simulateur-valide') === '1',
+            termine: racine.getAttribute('data-termine') === '1',
+            curseurs: $$('input[type="range"][data-param]', racine).map(function (c) {
+                return { param: c.getAttribute('data-param'), valeur: c.value };
+            }),
+            explicationVisible: (function () {
+                var e = document.getElementById('simulateur-explication');
+                return !!e && !e.hidden;
+            })()
+        };
+    }
+
+    function capturerN3() {
+        var resultat = {};
+        var objets = capturerObjetsN3();
+        if (objets) resultat.objets = objets;
+        var champs = [];
+        ['diagnostic-eleve', 'solution-eleve'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) champs.push({ id: id, valeur: el.value });
+        });
+        if (champs.length) resultat.champs = champs;
+        var feedback = document.getElementById('feedback-diagnostic');
+        if (feedback) resultat.feedbackVisible = feedback.style.display === 'block';
+        var qcm = capturerQcm();
+        if (qcm) resultat.qcm = qcm;
+        var simulateur = capturerSimulateur();
+        if (simulateur) resultat.simulateur = simulateur;
+        return resultat;
+    }
+
+    // ---------------------------------------------------------------
+    // CAPTURE — N4 (champs, conception guidée, sélections, bilan, câblage)
+    // ---------------------------------------------------------------
+    function capturerChampsN4() {
+        var racine = document.getElementById('contenu-n4-probleme');
+        if (!racine) return [];
+        var resultat = [];
+        var controle = 'textarea, input:not([type="file"]):not([type="hidden"])' +
+            ':not([type="checkbox"]):not([type="radio"]), select';
+        $$(controle, racine).forEach(function (el, index) {
+            resultat.push({
+                chemin: el.id ? ('id:' + el.id) : ('index:' + index),
+                valeur: el.value
+            });
+        });
+        return resultat;
+    }
+
+    function capturerGuideN4() {
+        var zone = document.getElementById('conception-guidee');
+        if (!zone) return null;
+        var reglages = zone.querySelector('.reglages-contraintes[data-figer="1"]');
+        var tuiles = document.getElementById('tuiles-contraintes');
+        var choisi = zone.querySelector('.modele-ost.choisi');
+        var tri = document.getElementById('tri-comparateur');
+        var listeRecap = document.getElementById('contraintes-recap-liste');
+        var recap = document.getElementById('contraintes-recap');
+        var etapeComparateur = document.getElementById('etape-comparateur');
+        return {
+            fige: !!reglages && reglages.getAttribute('data-fige') === '1',
+            modele: choisi ? (choisi.getAttribute('data-nom') || '') : '',
+            tri: tri ? tri.value : '',
+            classement: tuiles
+                ? $$('.tuile-contrainte', tuiles).map(function (t) {
+                    return t.getAttribute('data-nom') || '';
+                })
+                : null,
+            recapHtml: listeRecap ? listeRecap.innerHTML : '',
+            recapVisible: !!recap && !recap.hidden,
+            comparateurOuvert: !etapeComparateur || !etapeComparateur.classList.contains('cache')
+        };
+    }
+
+    function capturerSelectionsN4() {
+        return $$('#contenu-n4-probleme [data-conception-selection]').map(function (conteneur) {
+            var compteur = conteneur.querySelector('.compteur-selection');
+            var retour = conteneur.querySelector('.etape-selection-retour');
+            var globale = conteneur.querySelector('.etape-selection-explication');
+            var items = [];
+            $$('.choix-item', conteneur).forEach(function (item) {
+                var bouton = item.querySelector('.choix-contrainte');
+                if (!bouton) return;
+                var explication = item.querySelector('.choix-explication');
+                items.push({
+                    essentielle: bouton.getAttribute('data-essentielle') === '1',
+                    pressed: bouton.getAttribute('aria-pressed') === 'true',
+                    etat: item.getAttribute('data-etat') || '',
+                    explication: explication
+                        ? { texte: explication.textContent, cache: explication.classList.contains('cache') }
+                        : null
+                });
+            });
+            return {
+                maximum: conteneur.getAttribute('data-maximum') || '',
+                termine: conteneur.getAttribute('data-termine') === '1',
+                items: items,
+                compteur: compteur ? compteur.textContent : '',
+                retour: texteEtClasse(retour),
+                globaleCache: !globale || globale.classList.contains('cache')
+            };
+        });
+    }
+
+    function capturerDimensionnement() {
+        var racine = document.getElementById('dimensionnement');
+        if (!racine || typeof dimensionnement === 'undefined') return null;
+        return {
+            choix: JSON.parse(JSON.stringify(dimensionnement.choix || {})),
+            termine: racine.getAttribute('data-atelier-valide') === '1'
+        };
+    }
+
+    function capturerCablage() {
+        var atelier = document.getElementById('cablage-atelier');
+        if (!atelier || typeof CABLAGE === 'undefined') return null;
+        var zone = document.getElementById('cablage-zone');
+        var retour = document.getElementById('cablage-retour');
+        var bilan = document.getElementById('cablage-bilan');
+        var indication = document.getElementById('cablage-indication');
+        return {
+            valide: !!CABLAGE.valide,
+            fils: (CABLAGE.fils || []).map(function (fil) {
+                return { a: fil.a, b: fil.b, etat: fil.etat || '' };
+            }),
+            noeuds: $$('.noeud-reseau', atelier).map(function (noeud) {
+                var surPlateau = zone && noeud.parentElement === zone;
+                return {
+                    id: noeud.getAttribute('data-noeud'),
+                    surPlateau: !!surPlateau,
+                    x: surPlateau ? (noeud.style.left || '') : '',
+                    y: surPlateau ? (noeud.style.top || '') : ''
+                };
+            }),
+            retour: texteEtClasse(retour),
+            bilanVisible: !!bilan && !bilan.hidden,
+            indicationCache: !!indication && indication.classList.contains('cache')
+        };
+    }
+
+    function capturerRouteur() {
+        var groupe = document.getElementById('aroute-scenarios');
+        if (!groupe) return null;
+        var selection = groupe.querySelector('.aroute-scenario.selectionne');
+        var legende = document.getElementById('aroute-legende');
+        return {
+            scenario: selection ? selection.getAttribute('data-scenario') : '',
+            legende: legende ? legende.textContent : ''
+        };
+    }
+
+    function capturerInteractions() {
+        var interacteur = '';
+        var element = '';
+        $$('.inter-bouton[data-interacteur]').forEach(function (b) {
+            if (b.classList.contains('selectionne')) interacteur = b.getAttribute('data-interacteur') || '';
+        });
+        $$('.inter-bouton[data-element]').forEach(function (b) {
+            if (b.classList.contains('selectionne')) element = b.getAttribute('data-element') || '';
+        });
+        if (!interacteur && !element) return null;
+        var resultat = document.getElementById('inter-resultat');
+        return {
+            interacteur: interacteur,
+            element: element,
+            resultatHtml: resultat ? resultat.innerHTML : '',
+            resultatClasse: resultat ? resultat.className : ''
+        };
+    }
+
+    function capturerEtat() {
+        var etat = {
+            niveaux: capturerNiveaux(),
+            active: (function () {
+                var actif = document.querySelector('.bouton-onglet.actif');
+                return actif ? actif.getAttribute('data-niveau') : 'n1-intro';
+            })(),
+            quiz: capturerQuiz(),
+            chaine: capturerChaine(),
+            ateliers: capturerAteliers(),
+            n3: capturerN3(),
+            n4: (function () {
+                var resultat = {};
+                var champs = capturerChampsN4();
+                if (champs.length) resultat.champs = champs;
+                var guide = capturerGuideN4();
+                if (guide) resultat.guide = guide;
+                var selections = capturerSelectionsN4();
+                if (selections.length) resultat.selections = selections;
+                var dimensionnement = capturerDimensionnement();
+                if (dimensionnement) resultat.dimensionnement = dimensionnement;
+                var bilanTexte = document.getElementById('bilan-n4-texte');
+                var bilanResultat = document.getElementById('bilan-n4-resultat');
+                var bilanEtat = document.getElementById('bilan-n4-etat');
+                var confirmation = document.getElementById('confirmation-conception');
+                if (bilanTexte) resultat.bilanTexte = bilanTexte.value;
+                if (bilanResultat) resultat.bilanVisible = !bilanResultat.hidden;
+                if (bilanEtat) resultat.bilanMessage = bilanEtat.textContent;
+                if (confirmation) resultat.confirmationVisible = confirmation.style.display === 'block';
+                return resultat;
+            })(),
+            cablage: capturerCablage(),
+            routeur: capturerRouteur(),
+            interactions: capturerInteractions()
+        };
+        return etat;
+    }
+
+    // ---------------------------------------------------------------
+    // RESTAURATION — niveaux, quiz, chaîne, ateliers
+    // ---------------------------------------------------------------
+    function niveauDe(niveauId) {
+        return String(niveauId || '').split('-')[0];
+    }
+
+    function reinitialiserComplet() {
+        // La page repart de zéro, comme le fait « Recommencer l'activité »,
+        // sans confirmation ni défilement : l'état sauvegardé est ensuite
+        // appliqué par-dessus.
+        if (typeof niveauxDebloques !== 'undefined') {
+            niveauxDebloques.length = 0;
+            niveauxDebloques.push('n1-intro');
+        }
+        if (typeof niveauxValides !== 'undefined') niveauxValides.clear();
+        if (typeof elementsVisites !== 'undefined') elementsVisites.clear();
+        if (typeof objetsExplores !== 'undefined') objetsExplores = 0;
+
+        document.querySelectorAll('.objet-explorable[data-objets-vus]').forEach(function (objet) {
+            objet.removeAttribute('data-objets-vus');
+            objet.classList.remove('explore');
+            objet.setAttribute('aria-expanded', 'false');
+        });
+
+        document.querySelectorAll('textarea').forEach(function (zone) { zone.value = ''; });
+        document.querySelectorAll('select').forEach(function (zone) { zone.value = ''; });
+
+        document.querySelectorAll('.option-reponse').forEach(function (option) {
+            option.classList.remove('correcte', 'incorrecte', 'selectionnee');
+            option.setAttribute('aria-checked', 'false');
+        });
+        document.querySelectorAll('.feedback-reponse').forEach(function (feedback) {
+            feedback.classList.remove('visible', 'correct', 'incorrect');
+            feedback.innerHTML = '';
+        });
+
+        document.querySelectorAll('.element-chaine').forEach(function (element, index) {
+            element.classList.remove('revele', 'visite');
+            var zoneDetails = document.getElementById('details-chaine');
+            var info = (zoneDetails && zoneDetails.querySelector(
+                '.info-element[data-pour-tuile="' + index + '"]')) ||
+                element.querySelector('.info-element');
+            if (info && element.querySelector('.info-element') !== info) {
+                element.appendChild(info);
+            }
+        });
+        var boutonSuiteN2 = document.getElementById('bouton-suite-n2-intro');
+        if (boutonSuiteN2) boutonSuiteN2.disabled = true;
+
+        if (document.getElementById('cablage-atelier') &&
+            typeof cablageReinitialiser === 'function') {
+            cablageReinitialiser();
+        }
+        if (typeof reinitialiserAteliers === 'function') {
+            try { reinitialiserAteliers(); } catch (erreur) { /* page sans ateliers */ }
+        }
+        if (typeof n4ReinitialiserConception === 'function') n4ReinitialiserConception();
+        if (typeof n4ReinitialiserSelections === 'function') n4ReinitialiserSelections();
+        if (typeof n3ReinitialiserQCMCorrectif === 'function') n3ReinitialiserQCMCorrectif();
+        if (document.getElementById('dimensionnement') &&
+            typeof n4ReinitialiserDimensionnement === 'function') {
+            n4ReinitialiserDimensionnement();
+        }
+
+        // Animation du routeur et interactions : état d'origine.
+        if (typeof window.__AROUTE !== 'undefined' && window.__AROUTE) {
+            if (window.__AROUTE.minuteur) {
+                clearInterval(window.__AROUTE.minuteur);
+                window.__AROUTE.minuteur = null;
+            }
+            window.__AROUTE.scenario = null;
+            window.__AROUTE.index = 0;
+            window.__AROUTE.chemin = [];
+        }
+        var groupeScenarios = document.getElementById('aroute-scenarios');
+        if (groupeScenarios) {
+            groupeScenarios.querySelectorAll('.aroute-scenario').forEach(function (b, index) {
+                b.classList.remove('selectionne');
+                b.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+            });
+        }
+        if (typeof window.__interSel !== 'undefined' && window.__interSel) {
+            window.__interSel.interacteur = null;
+            window.__interSel.element = null;
+        }
+        document.querySelectorAll('.inter-bouton.selectionne').forEach(function (b) {
+            b.classList.remove('selectionne');
+        });
+        var interResultat = document.getElementById('inter-resultat');
+        if (interResultat) {
+            interResultat.innerHTML = '';
+            interResultat.className = '';
+        }
+
+        document.querySelectorAll('.bouton-onglet').forEach(function (bouton, index) {
+            if (index === 0) {
+                bouton.classList.remove('verrouille', 'valide');
+                bouton.disabled = false;
+            } else {
+                bouton.classList.add('verrouille');
+                bouton.classList.remove('valide');
+                bouton.disabled = true;
+            }
+        });
+        document.querySelectorAll('[id^="resultat-quiz-"]').forEach(function (div) {
+            div.style.display = 'none';
+        });
+        var feedbackDiagnostic = document.getElementById('feedback-diagnostic');
+        if (feedbackDiagnostic) feedbackDiagnostic.style.display = 'none';
+        var confirmation = document.getElementById('confirmation-conception');
+        if (confirmation) confirmation.style.display = 'none';
+        // Le tri du comparateur repart à « par défaut ».
+        var tri = document.getElementById('tri-comparateur');
+        if (tri) tri.value = '';
+        if (typeof n4TrierModeles === 'function') n4TrierModeles();
+    }
+
+    function restaurerNiveaux(niveaux) {
+        if (!niveaux || !Array.isArray(niveaux) || typeof niveauxDebloques === 'undefined') return;
+        niveauxDebloques.length = 0;
+        niveauxDebloques.push('n1-intro');
+        if (typeof niveauxValides !== 'undefined') niveauxValides.clear();
+        niveaux.forEach(function (info) {
+            var bouton = document.querySelector('.bouton-onglet[data-niveau="' + info.niveau + '"]');
+            if (!bouton) return;
+            if (info.debloque) {
+                bouton.classList.remove('verrouille');
+                bouton.disabled = false;
+                if (!niveauxDebloques.includes(info.niveau)) niveauxDebloques.push(info.niveau);
+            }
+            if (info.valide) {
+                bouton.classList.add('valide');
+                if (typeof niveauxValides !== 'undefined') niveauxValides.add(niveauDe(info.niveau));
+            }
+        });
+    }
+
+    function restaurerQuiz(quiz) {
+        if (!quiz) return;
+        Object.keys(quiz).forEach(function (niveau) {
+            var bloc = quiz[niveau];
+            var formulaire = document.getElementById('quiz-' + niveau);
+            if (!formulaire || !bloc) return;
+            var questions = $$('.question-quiz', formulaire);
+            $$('.option-reponse', formulaire).forEach(function (option) {
+                option.classList.remove('selectionnee', 'correcte', 'incorrecte');
+                option.setAttribute('aria-checked', 'false');
+            });
+            (bloc.questions || []).forEach(function (etatQuestion, index) {
+                var question = questions[index];
+                if (!question) return;
+                if (etatQuestion.selection) {
+                    var option = question.querySelector(
+                        '.option-reponse[data-value="' + etatQuestion.selection + '"]');
+                    if (option) {
+                        option.classList.add('selectionnee');
+                        option.setAttribute('aria-checked', 'true');
+                    }
+                }
+                if (etatQuestion.correcte) {
+                    var bonne = question.querySelector(
+                        '.option-reponse[data-value="' + etatQuestion.correcte + '"]');
+                    if (bonne) bonne.classList.add('correcte');
+                }
+                if (etatQuestion.incorrecte) {
+                    var fausse = question.querySelector(
+                        '.option-reponse[data-value="' + etatQuestion.incorrecte + '"]');
+                    if (fausse) fausse.classList.add('incorrecte');
+                }
+                var feedback = question.querySelector('.feedback-reponse');
+                if (feedback) {
+                    if (etatQuestion.feedback) {
+                        feedback.innerHTML = etatQuestion.feedback.html;
+                        feedback.className = etatQuestion.feedback.classe;
+                    } else {
+                        feedback.innerHTML = '';
+                        feedback.className = 'feedback-reponse';
+                    }
+                }
+            });
+            var resultatDiv = document.getElementById('resultat-quiz-' + niveau);
+            var message = document.getElementById('message-resultat-' + niveau);
+            var boutonSuite = document.getElementById('bouton-suite-' + niveau);
+            if (resultatDiv) resultatDiv.style.display = bloc.resultatVisible ? 'block' : 'none';
+            if (message && bloc.message) {
+                message.innerHTML = bloc.message.html;
+                message.style.color = bloc.message.couleur || '';
+            }
+            if (boutonSuite) boutonSuite.classList.toggle('cache', !bloc.suiteVisible);
+        });
+    }
+
+    function restaurerChaine(etat) {
+        if (!etat || typeof elementsVisites === 'undefined') return;
+        var tuiles = $$('.element-chaine');
+        if (tuiles.length !== etat.total) return; // la structure a changé : on n'applique pas
+        tuiles.forEach(function (tuile, index) {
+            tuile.classList.remove('revele', 'visite');
+            var zoneDetails = document.getElementById('details-chaine');
+            var info = (zoneDetails && zoneDetails.querySelector(
+                '.info-element[data-pour-tuile="' + index + '"]')) ||
+                tuile.querySelector('.info-element');
+            if (info && tuile.querySelector('.info-element') !== info) tuile.appendChild(info);
+        });
+        elementsVisites.clear();
+        etat.tuiles.forEach(function (tuile, index) {
+            if (tuile.visite) elementsVisites.add(tuiles[index]);
+        });
+        etat.tuiles.forEach(function (tuile, index) {
+            if (tuile.revele && typeof revelerElement === 'function') revelerElement(tuiles[index]);
+        });
+        if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+    }
+
+    // ---------------------------------------------------------------
+    // RESTAURATION — ateliers
+    // ---------------------------------------------------------------
+    function restaurerQuestionsChoix(carte, questions) {
+        (questions || []).forEach(function (q, index) {
+            var liste = carte.querySelectorAll('.atelier-question');
+            var question = liste[index];
+            if (!question) return;
+            question.querySelectorAll('.atelier-option').forEach(function (option) {
+                option.classList.remove('choisi', 'correcte', 'fausse');
+                option.setAttribute('aria-checked', 'false');
+            });
+            (q.marques || []).forEach(function (marque) {
+                var option = question.querySelector(
+                    '.atelier-option[data-valeur="' + marque.valeur + '"]');
+                if (!option) return;
+                if (marque.correcte) option.classList.add('correcte');
+                if (marque.fausse) option.classList.add('fausse');
+                if (marque.checked) option.setAttribute('aria-checked', 'true');
+            });
+            if (q.choisie) {
+                var choisie = question.querySelector(
+                    '.atelier-option[data-valeur="' + q.choisie + '"]');
+                if (choisie) {
+                    choisie.classList.add('choisi');
+                    choisie.setAttribute('aria-checked', 'true');
+                }
+            }
+            var retour = question.querySelector('[data-role="retour"]');
+            if (retour && q.retour) {
+                // `html` d'abord (le volet « Voir l'explication » survit tel
+                // quel) ; `texte` pour les fichiers exportés avant ce champ.
+                if (typeof q.retour.html === 'string' && q.retour.html) {
+                    retour.innerHTML = q.retour.html;
+                } else {
+                    retour.textContent = q.retour.texte;
+                }
+                retour.className = q.retour.classe;
+            }
+        });
+    }
+
+    function restaurerAteliers(ateliers) {
+        if (!Array.isArray(ateliers)) return;
+        ateliers.forEach(function (etat) {
+            var carte = null;
+            if (etat.index !== undefined) {
+                var liste = $$('.atelier-carte');
+                if (etat.index < liste.length) carte = liste[etat.index];
+            }
+            if (!carte && etat.atelier) {
+                carte = document.querySelector('.atelier-carte[data-atelier="' + etat.atelier + '"]');
+            }
+            if (!carte) return;
+            appliquerEtatAtelier(carte, etat);
+        });
+    }
+
+    function appliquerEtatAtelier(carte, etat) {
+        var type = etat.type || carte.getAttribute('data-type') || '';
+
+        var retour = carte.querySelector('[data-role="retour-atelier"]');
+        if (retour && etat.retour) {
+            retour.textContent = etat.retour.texte;
+            retour.className = etat.retour.classe;
+        }
+        var explication = carte.querySelector('[data-role="explication"]');
+        if (explication) explication.classList.toggle('cache', !etat.explicationVisible);
+        if (etat.termine) carte.setAttribute('data-termine', '1');
+        else carte.removeAttribute('data-termine');
+
+        if (type === 'association') {
+            var pairesTrouvees = 0;
+            (etat.jetons || []).forEach(function (jeton) {
+                var j = carte.querySelector('.atelier-jeton[data-cote="' + jeton.cote +
+                    '"][data-paire="' + jeton.paire + '"]');
+                if (!j) return;
+                j.classList.toggle('apparie', !!jeton.apparie);
+                j.classList.toggle('choisi', !!jeton.choisi);
+                j.setAttribute('aria-pressed', jeton.pressed ? 'true' : 'false');
+                j.disabled = !!jeton.inactif;
+                if (jeton.apparie) pairesTrouvees += 1;
+            });
+            pairesTrouvees = Math.floor(pairesTrouvees / 2);
+            var total = carte.querySelectorAll('.atelier-jeton[data-cote="constituant"]').length;
+            carte.__atelier = {
+                attente: null,
+                paires: pairesTrouvees,
+                total: total,
+                rang: 0,
+                verrouille: etat.termine || pairesTrouvees >= total
+            };
+            if (typeof atelierCompteur === 'function') atelierCompteur(carte);
+        } else if (type === 'ordre') {
+            $$('.atelier-slot', carte).forEach(function (slot) {
+                slot.classList.remove('rempli');
+                var marqueur = slot.querySelector('.atelier-marqueur');
+                $$('span', slot).forEach(function (s) {
+                    if (s !== marqueur) s.parentNode.removeChild(s);
+                });
+            });
+            $$('.atelier-jeton[data-rang]', carte).forEach(function (maillon) {
+                maillon.classList.remove('cache');
+            });
+            var rangs = 0;
+            (etat.slots || []).forEach(function (slotEtat, index) {
+                var slot = carte.querySelector('.atelier-slot[data-slot="' + index + '"]');
+                if (!slot || !slotEtat.rempli || !slotEtat.texte) return;
+                var texte = document.createElement('span');
+                texte.textContent = slotEtat.texte;
+                slot.appendChild(texte);
+                slot.classList.add('rempli');
+                var maillon = carte.querySelector('.atelier-jeton[data-rang="' + index + '"]');
+                if (maillon) maillon.classList.add('cache');
+                rangs += 1;
+            });
+            var slotsTotaux = carte.querySelectorAll('.atelier-slot').length;
+            carte.__atelier = {
+                attente: null,
+                paires: rangs,
+                total: slotsTotaux,
+                rang: rangs,
+                verrouille: etat.termine || rangs >= slotsTotaux
+            };
+            if (typeof atelierCompteur === 'function') atelierCompteur(carte);
+        } else if (type === 'environnement') {
+            if (etat.interacteur) {
+                var boutonEnv = carte.querySelector(
+                    '.env-interacteur[data-interacteur="' + etat.interacteur + '"]');
+                if (boutonEnv) {
+                    carte.querySelectorAll('.env-interacteur').forEach(function (autre) {
+                        autre.classList.remove('choisi');
+                        autre.setAttribute('aria-pressed', 'false');
+                    });
+                    boutonEnv.classList.add('choisi');
+                    boutonEnv.setAttribute('aria-pressed', 'true');
+                    if (typeof atelierChoisirInteracteur === 'function') {
+                        try { atelierChoisirInteracteur(boutonEnv); } catch (erreur) { /* rendu manuel déjà fait */ }
+                    }
+                }
+            }
+            restaurerQuestionsChoix(carte, etat.questions);
+        } else if (type === 'erreur-schema') {
+            if (etat.schema) {
+                var totalFausses = etat.schema.fausses || 0;
+                carte.__schema = {
+                    examinees: {},
+                    trouvees: {},
+                    fausses: totalFausses,
+                    verrouille: !!etat.schema.verrouille
+                };
+                (etat.schema.examinees || []).forEach(function (cle) {
+                    if (cle !== undefined && cle !== null) carte.__schema.examinees[cle] = true;
+                });
+                (etat.schema.trouvees || []).forEach(function (cle) {
+                    if (cle !== undefined && cle !== null) carte.__schema.trouvees[cle] = true;
+                });
+                if (typeof schemaCompteur === 'function') schemaCompteur(carte);
+                if (typeof schemaTracer === 'function') {
+                    try { schemaTracer(carte); } catch (erreur) { /* tracé reporté au rafraîchissement */ }
+                }
+            }
+        } else {
+            // Filet générique : état interne et questions de choix.
+            if (etat.interne) carte.__atelier = etat.interne;
+            restaurerQuestionsChoix(carte, etat.questions);
+        }
+
+        if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+    }
+
+    // ---------------------------------------------------------------
+    // RESTAURATION — N3
+    // ---------------------------------------------------------------
+    function restaurerN3(etat) {
+        if (!etat) return;
+        if (etat.objets) {
+            var objets = $$('.objet-explorable');
+            var compteur = 0;
+            etat.objets.objets.forEach(function (o, index) {
+                var el = objets[index];
+                if (!el) return;
+                el.classList.toggle('explore', !!o.explore);
+                if (o.vus) {
+                    el.setAttribute('data-objets-vus', 'oui');
+                    compteur += 1;
+                } else {
+                    el.removeAttribute('data-objets-vus');
+                }
+                el.setAttribute('aria-expanded', o.explore ? 'true' : 'false');
+            });
+            if (typeof objetsExplores !== 'undefined') objetsExplores = compteur;
+        }
+        (etat.champs || []).forEach(function (champ) {
+            var el = document.getElementById(champ.id);
+            if (el) el.value = champ.valeur;
+        });
+        var feedback = document.getElementById('feedback-diagnostic');
+        if (feedback) feedback.style.display = etat.feedbackVisible ? 'block' : 'none';
+        if (etat.qcm) restaurerQcm(etat.qcm);
+        if (etat.simulateur) restaurerSimulateur(etat.simulateur);
+    }
+
+    function restaurerQcm(etat) {
+        if (!etat || typeof qcmCorrectif === 'undefined' || !qcmCorrectif) return;
+        var conteneur = document.getElementById('qcm-correctif');
+        if (!conteneur) return;
+        qcmCorrectif.selection.clear();
+        (etat.selection || []).forEach(function (id) { qcmCorrectif.selection.add(id); });
+        qcmCorrectif.verifie = !!etat.verifie;
+        (etat.actions || []).forEach(function (actionEtat) {
+            var action = conteneur.querySelector(
+                '.action-corrective[data-action="' + actionEtat.id + '"]');
+            if (!action) return;
+            action.classList.toggle('selectionnee', !!actionEtat.selectionnee);
+            action.classList.toggle('bonne', !!actionEtat.bonne);
+            action.classList.toggle('mauvaise', !!actionEtat.mauvaise);
+            action.classList.toggle('oubliee', !!actionEtat.oubliee);
+            action.setAttribute('aria-checked', actionEtat.checked ? 'true' : 'false');
+            var statutAction = action.querySelector('.statut-action');
+            if (statutAction) statutAction.textContent = actionEtat.statut || '';
+            var explication = action.parentNode
+                ? action.parentNode.querySelector('.explication-action') : null;
+            if (explication) explication.hidden = !actionEtat.explicationVisible;
+        });
+        var compteur = document.getElementById('compteur-selection');
+        if (compteur && etat.compteur) compteur.textContent = etat.compteur;
+        var messageQcm = document.getElementById('message-qcm-correctif');
+        if (messageQcm && etat.messageQcm !== undefined) messageQcm.textContent = etat.messageQcm;
+        var messagePlan = document.getElementById('message-plan-action');
+        if (messagePlan && etat.messagePlan !== undefined) messagePlan.textContent = etat.messagePlan;
+    }
+
+    function restaurerSimulateur(etat) {
+        var racine = document.getElementById('simulateur-n3');
+        if (!racine) return;
+        (etat.curseurs || []).forEach(function (curseur) {
+            var el = racine.querySelector('input[type="range"][data-param="' +
+                curseur.param + '"]');
+            if (el) el.value = curseur.valeur;
+        });
+        racine.setAttribute('data-simulateur-valide', etat.valide ? '1' : '0');
+        racine.setAttribute('data-termine', etat.termine ? '1' : '0');
+        var explication = document.getElementById('simulateur-explication');
+        if (explication) explication.hidden = !etat.explicationVisible;
+        if (typeof n3RafraichirSimulateur === 'function') {
+            try { n3RafraichirSimulateur(); } catch (erreur) { /* rendu manuel */ }
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // RESTAURATION — N4
+    // ---------------------------------------------------------------
+    function restaurerChampsN4(champs) {
+        (champs || []).forEach(function (champ) {
+            if (!champ.chemin) return;
+            if (champ.chemin.indexOf('id:') === 0) {
+                var el = document.getElementById(champ.chemin.slice(3));
+                if (el) el.value = champ.valeur;
+            } else if (champ.chemin.indexOf('index:') === 0) {
+                // Retrouvé par position dans la même liste de contrôles.
+                var controles = $$('#contenu-n4-probleme textarea, ' +
+                    '#contenu-n4-probleme input:not([type="file"]):not([type="hidden"])' +
+                    ':not([type="checkbox"]):not([type="radio"]), ' +
+                    '#contenu-n4-probleme select');
+                var cible = controles[parseInt(champ.chemin.slice(6), 10) || 0];
+                if (cible) cible.value = champ.valeur;
+            }
+        });
+    }
+
+    function restaurerGuide(etat) {
+        if (!etat) return;
+        var zone = document.getElementById('conception-guidee');
+        if (!zone) return;
+
+        // Ordre des tuiles d'un classement (étape 2 en mode « classement »).
+        if (etat.classement && etat.classement.length) {
+            var liste = document.getElementById('tuiles-contraintes');
+            if (liste) {
+                var parNom = {};
+                Array.prototype.slice.call(
+                    liste.querySelectorAll('.tuile-contrainte')
+                ).forEach(function (tuile) {
+                    parNom[tuile.getAttribute('data-nom') || ''] = tuile;
+                });
+                etat.classement.forEach(function (nom) {
+                    if (parNom[nom]) liste.appendChild(parNom[nom]);
+                });
+                if (typeof n4RenumeroterTuiles === 'function') n4RenumeroterTuiles();
+            }
+        }
+
+        var reglages = zone.querySelector('.reglages-contraintes[data-figer="1"]');
+        var estFige = reglages && reglages.getAttribute('data-fige') === '1';
+        if (reglages && etat.fige && !estFige) {
+            var boutonFiger = document.getElementById('bouton-figer-contraintes');
+            if (typeof n4FigerContraintes === 'function') {
+                try { n4FigerContraintes(boutonFiger); } catch (erreur) { /* laissé tel quel */ }
+            }
+        } else if (reglages && !etat.fige && estFige) {
+            var boutonDefiger = document.getElementById('bouton-figer-contraintes');
+            if (typeof n4FigerContraintes === 'function') {
+                try { n4FigerContraintes(boutonDefiger); } catch (erreur) { /* idem */ }
+            }
+        }
+        // Le récapitulatif figé est restauré tel quel : il a été produit par le
+        // moteur au moment de la sauvegarde.
+        var listeRecap = document.getElementById('contraintes-recap-liste');
+        if (listeRecap && etat.recapHtml !== undefined) listeRecap.innerHTML = etat.recapHtml;
+        var recap = document.getElementById('contraintes-recap');
+        if (recap) recap.hidden = !etat.recapVisible;
+        var etapeComparateur = document.getElementById('etape-comparateur');
+        if (etapeComparateur) etapeComparateur.classList.toggle('cache', !etat.comparateurOuvert);
+
+        // Modèle retenu dans le comparateur.
+        if (etat.modele) {
+            var carte = zone.querySelector('.modele-ost[data-nom="' + etat.modele + '"]');
+            if (carte && typeof n4ChoisirModele === 'function') n4ChoisirModele(carte);
+        }
+    }
+
+    function restaurerSelections(selections) {
+        if (!Array.isArray(selections)) return;
+        // Les états sont portés par le DOM (presses, marques, compteurs,
+        // retours) : on les relit position par position, ce qui reste fiable
+        // quel que soit le contenu des propositions.
+        $$('#contenu-n4-probleme [data-conception-selection]')
+            .forEach(function (conteneur, index) {
+                var sauvegarde = selections[index];
+                if (!sauvegarde) return;
+                var items = conteneur.querySelectorAll('.choix-item');
+                (sauvegarde.items || []).forEach(function (itemEtat, itemIndex) {
+                    var item = items[itemIndex];
+                    if (!item) return;
+                    var bouton = item.querySelector('.choix-contrainte');
+                    if (!bouton) return;
+                    bouton.setAttribute('aria-pressed', itemEtat.pressed ? 'true' : 'false');
+                    if (itemEtat.etat) item.setAttribute('data-etat', itemEtat.etat);
+                    else item.removeAttribute('data-etat');
+                    var explication = item.querySelector('.choix-explication');
+                    if (explication && itemEtat.explication) {
+                        explication.textContent = itemEtat.explication.texte;
+                        explication.classList.toggle('cache', itemEtat.explication.cache);
+                    }
+                });
+                if (sauvegarde.termine) conteneur.setAttribute('data-termine', '1');
+                else conteneur.removeAttribute('data-termine');
+                var compteur = conteneur.querySelector('.compteur-selection');
+                if (compteur && sauvegarde.compteur) compteur.textContent = sauvegarde.compteur;
+                var retour = conteneur.querySelector('.etape-selection-retour');
+                if (retour && sauvegarde.retour) {
+                    retour.textContent = sauvegarde.retour.texte;
+                    retour.className = sauvegarde.retour.classe;
+                }
+                var globale = conteneur.querySelector('.etape-selection-explication');
+                if (globale) globale.classList.toggle('cache', !!sauvegarde.globaleCache);
+            });
+    }
+
+    function restaurerDimensionnement(etat) {
+        var racine = document.getElementById('dimensionnement');
+        if (!racine || !etat || typeof dimensionnement === 'undefined') return;
+        dimensionnement.choix = etat.choix || {};
+        racine.querySelectorAll('.emplacement[data-zone]').forEach(function (emplacement) {
+            var zone = emplacement.getAttribute('data-zone');
+            var choix = dimensionnement.choix[zone];
+            emplacement.classList.toggle('complet', !!choix);
+            var sortie = emplacement.querySelector('.choix-zone');
+            if (sortie) {
+                sortie.textContent = choix ? (choix.nom || choix.id || 'choisi') :
+                    (emplacement.getAttribute('data-zone-vide') || '— cliquer —');
+            }
+        });
+        racine.setAttribute('data-atelier-valide', etat.terminé ? '1' : '0');
+        if (typeof n4RafraichirDimensionnement === 'function') n4RafraichirDimensionnement();
+    }
+
+    function restaurerN4(etat) {
+        if (!etat) return;
+        restaurerChampsN4(etat.champs);
+        restaurerGuide(etat.guide);
+        restaurerSelections(etat.selections);
+        restaurerDimensionnement(etat.dimensionnement);
+        var bilanTexte = document.getElementById('bilan-n4-texte');
+        if (bilanTexte && etat.bilanTexte !== undefined) bilanTexte.value = etat.bilanTexte;
+        var bilanResultat = document.getElementById('bilan-n4-resultat');
+        if (bilanResultat && etat.bilanVisible !== undefined) bilanResultat.hidden = !etat.bilanVisible;
+        var bilanEtat = document.getElementById('bilan-n4-etat');
+        if (bilanEtat && etat.bilanMessage !== undefined) bilanEtat.textContent = etat.bilanMessage;
+        var confirmation = document.getElementById('confirmation-conception');
+        if (confirmation && etat.confirmationVisible !== undefined) {
+            confirmation.style.display = etat.confirmationVisible ? 'block' : 'none';
+        }
+        if (typeof n4MettreAJourContraintes === 'function') n4MettreAJourContraintes();
+        if (typeof n4TrierModeles === 'function') n4TrierModeles();
+    }
+
+    // ---------------------------------------------------------------
+    // RESTAURATION — câblage, routeur, interactions
+    // ---------------------------------------------------------------
+    function restaurerCablage(etat) {
+        if (!etat) return;
+        var atelier = document.getElementById('cablage-atelier');
+        if (!atelier || typeof CABLAGE === 'undefined') return;
+        var zone = document.getElementById('cablage-zone');
+        var reserve = document.getElementById('cablage-reserve');
+
+        // 1. Replacer chaque équipement (plateau ou réserve).
+        (etat.noeuds || []).forEach(function (noeudEtat) {
+            var noeud = atelier.querySelector('.noeud-reseau[data-noeud="' +
+                noeudEtat.id + '"]');
+            if (!noeud) return;
+            if (noeudEtat.surPlateau && zone) {
+                zone.appendChild(noeud);
+                if (noeudEtat.x) noeud.style.left = noeudEtat.x;
+                if (noeudEtat.y) noeud.style.top = noeudEtat.y;
+            } else if (reserve) {
+                reserve.appendChild(noeud);
+            }
+        });
+
+        // 2. Fils et validité.
+        CABLAGE.fils = (etat.fils || []).map(function (fil) {
+            return { a: fil.a, b: fil.b, etat: fil.etat || '' };
+        });
+        CABLAGE.valide = !!etat.valide;
+        CABLAGE.selection = null;
+        CABLAGE.glisse = null;
+
+        // 3. Le dessin se refait depuis l'état (aucune donnée en dur).
+        if (typeof cablageTracerFils === 'function') cablageTracerFils();
+        if (typeof cablageReserveVide === 'function') cablageReserveVide();
+        if (typeof cablageAfficherIndication === 'function') {
+            if (etat.indicationCache) {
+                var indication = document.getElementById('cablage-indication');
+                if (indication) indication.classList.add('cache');
+            } else {
+                cablageAfficherIndication();
+            }
+        }
+        var retour = document.getElementById('cablage-retour');
+        if (retour && etat.retour) {
+            retour.textContent = etat.retour.texte;
+            retour.className = etat.retour.classe;
+        }
+        var bilan = document.getElementById('cablage-bilan');
+        if (bilan && etat.bilanVisible !== undefined) bilan.hidden = !etat.bilanVisible;
+    }
+
+    function restaurerRouteur(etat) {
+        if (!etat || !etat.scenario) return;
+        var groupe = document.getElementById('aroute-scenarios');
+        if (!groupe) return;
+        var bouton = groupe.querySelector('.aroute-scenario[data-scenario="' +
+            etat.scenario + '"]');
+        if (!bouton) return;
+        if (typeof choisirScenarioRouteur === 'function') {
+            try { choisirScenarioRouteur(bouton); } catch (erreur) { /* rendu manuel */ }
+        } else {
+            groupe.querySelectorAll('.aroute-scenario').forEach(function (b) {
+                b.classList.remove('selectionne');
+                b.setAttribute('aria-pressed', 'false');
+            });
+            bouton.classList.add('selectionne');
+            bouton.setAttribute('aria-pressed', 'true');
+        }
+        var legende = document.getElementById('aroute-legende');
+        if (legende && etat.legende !== undefined) legende.textContent = etat.legende;
+    }
+
+    function restaurerInteractions(etat) {
+        if (!etat) return;
+        if (etat.interacteur) {
+            var boutonInter = document.querySelector(
+                '.inter-bouton[data-interacteur="' + etat.interacteur + '"]');
+            if (boutonInter) {
+                document.querySelectorAll('.inter-bouton[data-interacteur]')
+                    .forEach(function (b) { b.classList.remove('selectionne'); });
+                boutonInter.classList.add('selectionne');
+            }
+        }
+        if (etat.element) {
+            var boutonElement = document.querySelector(
+                '.inter-bouton[data-element="' + etat.element + '"]');
+            if (boutonElement) {
+                document.querySelectorAll('.inter-bouton[data-element]')
+                    .forEach(function (b) { b.classList.remove('selectionne'); });
+                boutonElement.classList.add('selectionne');
+            }
+        }
+        if (typeof window.__interSel !== 'undefined' && window.__interSel) {
+            window.__interSel.interacteur = etat.interacteur || null;
+            window.__interSel.element = etat.element || null;
+        }
+        var resultat = document.getElementById('inter-resultat');
+        if (resultat && etat.resultatHtml !== undefined) {
+            resultat.innerHTML = etat.resultatHtml;
+            resultat.className = etat.resultatClasse || '';
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // APPLICATION COMPLÈTE
+    // ---------------------------------------------------------------
+    function appliquerEtat(donnees) {
+        var e = donnees.etat || {};
+        reinitialiserComplet();
+        restaurerNiveaux(e.niveaux);
+        restaurerQuiz(e.quiz || {});
+        restaurerChaine(e.chaine);
+        restaurerAteliers(e.ateliers);
+        restaurerN3(e.n3);
+        restaurerRouteur(e.routeur);
+        restaurerInteractions(e.interactions);
+        restaurerCablage(e.cablage);
+        restaurerN4(e.n4);
+
+        // Rafraîchissements du moteur : les compteurs et les tracés se
+        // resynchronisent depuis l'état restauré.
+        if (typeof mettreAJourProgression === 'function') mettreAJourProgression();
+        if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
+        if (typeof schemaTracerTout === 'function') {
+            try { schemaTracerTout(); } catch (erreur) { /* onglet masqué */ }
+        }
+
+        // Onglet affiché : celui de la sauvegarde, s'il est accessible.
+        var actif = e.active || 'n1-intro';
+        if (typeof changerOnglet === 'function') {
+            var bouton = document.querySelector('.bouton-onglet[data-niveau="' + actif + '"]');
+            if (bouton && !bouton.classList.contains('verrouille')) {
+                changerOnglet(actif);
+            } else {
+                changerOnglet('n1-intro');
+            }
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // VALIDATION du fichier importé
+    // ---------------------------------------------------------------
+    function validerDonnees(donnees) {
+        if (!donnees || typeof donnees !== 'object') {
+            return 'Ce fichier ne contient pas de progression exploitable.';
+        }
+        if (donnees.format !== FORMAT_NOM) {
+            return 'Ce fichier n\'est pas un fichier de progression d\'activité.';
+        }
+        if (donnees.version !== FORMAT_VERSION) {
+            return 'Ce fichier de progression vient d\'une version trop récente ' +
+                'pour cette activité : mets à jour la page, puis recommence.';
+        }
+        return '';
+    }
+
+    // ---------------------------------------------------------------
+    // EXPORT / IMPORT
+    // ---------------------------------------------------------------
+    function exporter() {
+        var donnees;
+        try {
+            donnees = {
+                format: FORMAT_NOM,
+                version: FORMAT_VERSION,
+                activite: titreActivite(),
+                sauvegardeLe: new Date().toISOString(),
+                etat: capturerEtat()
+            };
+        } catch (erreur) {
+            annoncer('La sauvegarde a échoué : ' + (erreur && erreur.message ?
+                erreur.message : 'erreur inattendue.'), 'echec');
+            return;
+        }
+        var texte = JSON.stringify(donnees, null, 1);
+        var nom = 'progression-' + slug(titreActivite()) + '-' + dateFichier() + '.json';
+        var blob = new Blob([texte], { type: 'application/json' });
+        var url = null;
+        try { url = URL.createObjectURL(blob); } catch (erreur) { url = null; }
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = nom;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        if (url) {
+            setTimeout(function () {
+                try { URL.revokeObjectURL(url); } catch (erreur) { /* déjà nettoyé */ }
+            }, 1000);
+        }
+        annoncer('✅ Progression sauvegardée dans « ' + nom +
+            ' ». Garde ce fichier : il te permet de reprendre sur un autre poste.', 'succes');
+    }
+
+    function importer() {
+        if (!champFichier || !champFichier.files || !champFichier.files.length) return;
+        var fichier = champFichier.files[0];
+        if (fichier.size > TAILLE_MAX) {
+            annoncer('Ce fichier est trop volumineux pour être une progression.', 'echec');
+            return;
+        }
+        var lecteur = new FileReader();
+        lecteur.onload = function () {
+            var donnees;
+            try {
+                donnees = JSON.parse(String(lecteur.result));
+            } catch (erreur) {
+                annoncer('Fichier illisible : ce n\'est pas une progression valide.', 'echec');
+                champFichier.value = '';
+                return;
+            }
+            var defaut = validerDonnees(donnees);
+            if (defaut) {
+                annoncer(defaut, 'echec');
+                champFichier.value = '';
+                return;
+            }
+            var averti = false;
+            if (donnees.activite && titreActivite() && donnees.activite !== titreActivite()) {
+                averti = true;
+                annoncer('⚠ Cette sauvegarde vient d\'une autre activité (' +
+                    donnees.activite + '). On applique ce qui correspond.', '');
+            }
+            try {
+                appliquerEtat(donnees);
+            } catch (erreur) {
+                annoncer('La reprise a rencontré un problème (' +
+                    (erreur && erreur.message ? erreur.message : 'erreur inattendue') +
+                    '). Recommence, ou reprends depuis le début.', 'echec');
+                champFichier.value = '';
+                return;
+            }
+            if (!averti) {
+                annoncer('✅ Progression reprise : tu retrouves ton travail là où tu l\'avais laissé.', 'succes');
+            }
+            champFichier.value = '';
+        };
+        lecteur.onerror = function () {
+            annoncer('Impossible de lire ce fichier.', 'echec');
+            champFichier.value = '';
+        };
+        lecteur.readAsText(fichier);
+    }
+
+    // ---------------------------------------------------------------
+    // BRANCHEMENT DE LA BARRE
+    // ---------------------------------------------------------------
+    function initialiser() {
+        boutonExporter = document.getElementById('sauvegarde-exporter');
+        boutonImporter = document.getElementById('sauvegarde-importer');
+        champFichier = document.getElementById('sauvegarde-fichier');
+        statut = document.getElementById('sauvegarde-statut');
+        if (!boutonExporter || !boutonImporter || !champFichier) return;
+        boutonExporter.addEventListener('click', exporter);
+        boutonImporter.addEventListener('click', function () {
+            if (champFichier) champFichier.click();
+        });
+        champFichier.addEventListener('change', importer);
+        annoncer('', '');
+    }
+
+// Porte de vérification : le contrôle automatique (verifier_sauvegarde.py)
+    // rejoue l'élève à travers cette API — capturer, exporter, importer,
+    // appliquer. Elle ne fait rien de plus que les deux boutons, mais sans
+    // passer par un fichier ; jamais utilisée par l'élève.
+    try {
+        window.__sauvegardeProgression = {
+            capturer: capturerEtat,
+            appliquer: appliquerEtat,
+            exporter: function () {
+                return {
+                    format: FORMAT_NOM,
+                    version: FORMAT_VERSION,
+                    activite: titreActivite(),
+                    sauvegardeLe: new Date().toISOString(),
+                    etat: capturerEtat()
+                };
+            },
+            importer: function (donnees) {
+                var defaut = validerDonnees(donnees);
+                if (defaut) throw new Error(defaut);
+                appliquerEtat(donnees);
+                return true;
+            }
+        };
+    } catch (erreur) { /* environnement sans window : la page vit sans l'API */ }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initialiser);
+    } else {
+        initialiser();
+    }
+})();
+// ==== SAUVEGARDE:JS-FIN ====
+    </script>
+
 </body>
 </html>
