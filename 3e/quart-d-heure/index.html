@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="description" content="Quickies 3e : 4 pastilles de 8 à 15 minutes pour la classe de technologie.">
-<title>Quickies 3e — Technologie au collège</title>
+<meta name="description" content="Le quart d'heure techno 3e : 4 pastilles de 10 minutes pour la classe de technologie.">
+<title>Le quart d'heure techno 3e — Technologie au collège</title>
 <script>
 /* Identifiant de publication : la page se déclare sous son propre chemin publié.
    Il est lu par inventorier_activites.py et ost_resoudre.py (panneau « Corriger »). */
-const ACTIVITE_PUBLICATION = "3e/quickies/index.html";
+const ACTIVITE_PUBLICATION = "3e/quart-d-heure/index.html";
 </script>
 <style>
 :root{
@@ -34,16 +34,16 @@ header.site .niveau-marque{
   background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.5);
   font-size:.8em; vertical-align:middle;
 }
-.liste-quickies{list-style:none; padding:0; margin:10px 0 0;
+.liste-pastilles{list-style:none; padding:0; margin:10px 0 0;
   display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.liste-quickies li{margin:0}
-.liste-quickies a{
+.liste-pastilles li{margin:0}
+.liste-pastilles a{
   display:flex; justify-content:space-between; gap:10px; align-items:center;
   min-height:44px; padding:10px 14px; border-radius:10px; text-decoration:none;
   background:#fff; border:2px solid var(--bord); color:var(--bleu); font-weight:700;
 }
-.liste-quickies a:hover,.liste-quickies a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
-.liste-quickies .duree{font-weight:400; font-size:.85em; color:var(--gris); white-space:nowrap}
+.liste-pastilles a:hover,.liste-pastilles a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+.liste-pastilles .duree{font-weight:400; font-size:.85em; color:var(--gris); white-space:nowrap}
 nav.sommaire a.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
 
 nav.sommaire{
@@ -72,26 +72,27 @@ h2.niveau-titre{
 }
 h2.niveau-titre .compte{font-weight:400; font-size:.85em; opacity:.9}
 
-.quickie{
+.pastille{
   background:#fff; border:1px solid var(--bord); border-radius:16px;
   padding:18px; margin:0 0 20px; scroll-margin-top:80px;
 }
-.q-tete{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:start}
-.q-num{
+.p-tete{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:start}
+.p-num{
   grid-row:1 / span 2; margin:0; width:44px; height:44px; border-radius:10px;
   background:var(--bleu); color:#fff; font-weight:700; display:flex;
   align-items:center; justify-content:center; font-size:.9rem;
 }
-.q-tete h3{margin:0; font-size:clamp(1.1rem,3.6vw,1.35rem); color:var(--bleu)}
-.q-meta{margin:6px 0 0; display:flex; gap:6px; flex-wrap:wrap}
+.p-tete h3{margin:0; font-size:clamp(1.1rem,3.6vw,1.35rem); color:var(--bleu)}
+.p-tete .p-appel, .p-tete .p-bo{grid-column:1 / -1}
+.p-meta{margin:6px 0 0; display:flex; gap:6px; flex-wrap:wrap}
 .badge{
   display:inline-block; padding:2px 9px; border-radius:999px; font-size:.78rem;
   font-weight:700; background:var(--bleuf); color:var(--bleu); border:1px solid var(--bord);
 }
 .badge-code{background:var(--bleu); color:#fff; border-color:var(--bleu)}
 .badge-neutre{background:#f2f5f8; color:var(--gris)}
-.q-appel{margin:12px 0 0; color:var(--gris); font-size:.98rem}
-.q-bo{
+.p-appel{margin:12px 0 0; color:var(--gris); font-size:.98rem}
+.p-bo{
   margin:10px 0 0; padding:10px 12px; background:var(--bleuf); border-radius:10px;
   font-size:.9rem; color:var(--bleu);
 }
@@ -119,9 +120,9 @@ blockquote p{margin:0}
 .schema-bloc.en-plein .schema-vue:not([hidden]){flex:1; display:flex; align-items:center}
 .schema-bloc.en-plein .schema-svg{max-height:calc(100vh - 80px); width:100%}
 
-.q-section{margin:16px 0 0}
-.q-section h4{margin:0 0 8px; font-size:1rem; color:var(--bleu)}
-.q-section p{margin:0 0 10px}
+.p-section{margin:16px 0 0}
+.p-section h4{margin:0 0 8px; font-size:1rem; color:var(--bleu)}
+.p-section p{margin:0 0 10px}
 .s-attention{background:var(--orange-f); border-left:5px solid var(--orange);
   border-radius:0 10px 10px 0; padding:10px 14px}
 .s-attention h4{color:var(--orange)}
@@ -131,6 +132,15 @@ blockquote p{margin:0}
 .s-sortie{background:var(--vert-f); border-left:5px solid var(--vert);
   border-radius:0 10px 10px 0; padding:10px 14px}
 .s-sortie h4{color:var(--vert)}
+.s-cours{background:#f7fbff; border:2px solid var(--bord); border-radius:12px; padding:14px 16px}
+.s-cours h4{color:var(--bleu); font-size:1.06rem}
+.s-cours p:last-child{margin-bottom:0}
+.s-consigne{background:#fff; border-left:5px solid var(--vert); border-radius:0 10px 10px 0;
+  padding:10px 14px}
+.s-consigne h4{color:var(--vert)}
+.s-retenir{background:var(--vert-f); border:2px solid var(--vert); border-radius:12px; padding:12px 16px}
+.s-retenir h4{color:var(--vert)}
+.s-retenir p:last-child{margin-bottom:0}
 
 .tab-enveloppe{overflow-x:auto; margin:10px 0}
 table{border-collapse:collapse; width:100%; font-size:.94rem}
@@ -151,12 +161,12 @@ footer{padding:0 14px 40px; color:var(--gris); font-size:.9rem}
 
 @media (max-width:420px){
   body{font-size:16px}
-  .q-tete{grid-template-columns:1fr}
-  .q-num{width:auto; height:auto; display:inline-block; padding:2px 10px; margin-bottom:6px}
+  .p-tete{grid-template-columns:1fr}
+  .p-num{width:auto; height:auto; display:inline-block; padding:2px 10px; margin-bottom:6px}
 }
 @media print{
   nav.sommaire, .schema-barre{display:none}
-  .quickie{break-inside:avoid; border:1px solid #999}
+  .pastille{break-inside:avoid; border:1px solid #999}
   .schema-vue[hidden]{display:block}
   .schema-vue[data-vue-bloc="vide"]{display:none}
 }
@@ -295,20 +305,20 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 <header class="site">
   <div class="contenu">
     <p class="yeux">Mandelatechno · cycle 4</p>
-    <h1>Quickies <span class="niveau-marque">3e</span></h1>
-    <p>4 pastilles de 8 à 15 minutes, à faire en classe entière, sans matériel.
+    <h1>Le quart d'heure techno <span class="niveau-marque">3e</span></h1>
+    <p>4 pastilles de 10 minutes, à faire en classe entière, sans matériel.
        Un schéma à projeter, deux versions : à compléter et corrigé.</p>
   </div>
 </header>
 
 <nav class="sommaire" aria-label="Changer de niveau">
-<a href="../../4e/quickies/index.html">4e · 8</a><a href="../../5e/quickies/index.html">5e · 3</a><a href="#haut" class="actif" aria-current="page">3e · 4</a>
+<a href="../../4e/quart-d-heure/index.html">4e · 8</a><a href="../../5e/quart-d-heure/index.html">5e · 4</a><a href="#haut" class="actif" aria-current="page">3e · 4</a>
 </nav>
 
 <main>
   <div class="intro">
     <h2>Comment s'en servir</h2>
-    <p>Chaque quickie tient seul&nbsp;: une accroche, un schéma à compléter au tableau
+    <p>Chaque pastille tient seule&nbsp;: une accroche, un schéma à compléter au tableau
        (un élève tient le feutre, la classe dicte), un déroulé minuté, deux ou trois
        questions et une question de sortie.</p>
     <ul>
@@ -317,20 +327,20 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
           et <strong>Corrigé</strong>. Le bouton <strong>Plein écran</strong> agrandit le schéma pour la projection.</li>
       <li>Les passages marqués <span class="a-verifier">⏳</span> sont des ordres de grandeur
           <strong>non encore vérifiés</strong>&nbsp;: leur source est indiquée en bas de chaque fiche.</li>
-      <li>La partie <strong>À ne pas dire</strong> est pour vous&nbsp;: elle corrige les erreurs
+      <li>La partie <strong>Ne dites pas</strong> est pour vous&nbsp;: elle corrige les erreurs
           classiques, celles qu'on répète sans le savoir.</li>
     </ul>
-    <h2>Les 4 quickies de 3e</h2>
-    <ul class="liste-quickies"><li><a href="#q-seau-ou-tuyau">Seau ou tuyau <span class="duree">10 min</span></a></li><li><a href="#q-la-note-cachee">La note cachée <span class="duree">10 min</span></a></li><li><a href="#q-l-effort-invisible">L&#x27;effort invisible <span class="duree">10 min</span></a></li><li><a href="#q-le-velo-qui-parle">Le vélo qui parle <span class="duree">10 min</span></a></li></ul>
+    <h2>Les 4 pastilles de 3e</h2>
+    <ul class="liste-pastilles"><li><a href="#p-seau-ou-tuyau">Seau ou tuyau <span class="duree">10 min</span></a></li><li><a href="#p-la-note-cachee">La note cachée <span class="duree">10 min</span></a></li><li><a href="#p-l-effort-invisible">L&#x27;effort invisible <span class="duree">10 min</span></a></li><li><a href="#p-le-velo-qui-parle">Le vélo qui parle <span class="duree">10 min</span></a></li></ul>
   </div>
 
-<article class="quickie"  id="q-seau-ou-tuyau" data-ost-id="q-seau-ou-tuyau" data-pastille="V2">
-<header class="q-tete">
-<p class="q-num" aria-hidden="true">V2</p>
+<article class="pastille"  id="p-seau-ou-tuyau" data-ost-id="p-seau-ou-tuyau" data-pastille="V2">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">V2</p>
 <h3>Seau ou tuyau</h3>
-<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">V2 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
-<p class="q-appel">500 Wh, c'est un réservoir ; 500 W, c'est un robinet. La confusion à corriger.</p>
-<p class="q-bo"><code>SFC14</code> (3e) — « Associer des grandeurs analogiques issues d'un OST à des données exploitables. » · <code>OST34</code> (3e) — « Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d'un OST. »</p>
+<p class="p-meta"><span class="badge">10 min</span><span class="badge badge-code">V2 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="p-appel">500 Wh, c'est un réservoir ; 500 W, c'est un robinet. La confusion à corriger.</p>
+<p class="p-bo"><code>SFC14</code> (3e) — « Associer des grandeurs analogiques issues d'un OST à des données exploitables. » · <code>OST34</code> (3e) — « Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d'un OST. »</p>
 </header>
 <blockquote class="accroche"><p>« 500 Wh, c'est un réservoir. 500 W, c'est un robinet. Confondre les deux, c'est confondre un seau et un tuyau. »</p></blockquote>
 <div class="schema-bloc">
@@ -390,48 +400,47 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 <text x="200" y="842" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#12314a">③ Durée = capacité ÷ puissance = 500 Wh ÷ 250 W = 2 h</text>
 </svg></div>
 </div>
-<section class="q-section s-prepa">
+<section class="p-section s-prepa">
 <h4>À préparer</h4>
-<p>Le schéma <strong><code>schemas/v2-wh-et-w-a-completer.svg</code></strong> : le réservoir, le robinet, une boîte « temps » au milieu, et trois trous (deux grandeurs à nommer, une division à écrire). C'est</p>
-<p>dix minutes.</p>
+<p>Le schéma <strong><code>schemas/v2-wh-et-w-a-completer.svg</code></strong> : le réservoir, le robinet, une boîte « temps » au milieu, et trois trous (deux grandeurs à nommer, une division à écrire). C'est <strong>la</strong> confusion la plus répandue chez les élèves — et chez les adultes. Elle mérite ses dix minutes.</p>
 </section>
-<section class="q-section s-deroule">
+<section class="p-section s-deroule">
 <h4>Déroulé minuté</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche. Écrivez au tableau : « 500 Wh / 250 W »</td><td>Réfléchit</td></tr><tr><td>2-5 min</td><td>Un élève vient nommer les deux grandeurs sur le schéma (①②)</td><td>Dicte : capacité, puissance</td></tr><tr><td>5-7 min</td><td>Faites écrire la division et calculer la durée (③)</td><td>Calcule : 2 h</td></tr><tr><td>7-8 min</td><td>Retournez : « et en montée, est-ce que ça dure 2 h ? »</td><td>Cherche, conclut</td></tr><tr><td>8-10 min</td><td><strong>Protocole</strong> : comment vérifier les 500 Wh et les 250 W annoncés sur la fiche produit ?</td><td>Propose une mesure</td></tr></tbody></table></div>
-<p>fait que calculer et le code ne serait pas tenu. Elle tient en deux minutes, à l'oral, et elle prépare la question d'approfondissement.</p>
+<p><strong>L'étape du protocole est ce qui justifie le code <code>OST34</code></strong> : sans elle, la pastille ne fait que calculer et le code ne serait pas tenu. Elle tient en deux minutes, à l'oral, et elle prépare la question d'approfondissement.</p>
 </section>
-<section class="q-section s-dire">
+<section class="p-section s-dire">
 <h4>Le texte à dire</h4>
 <blockquote><p>« <strong>Wh</strong>, c'est une quantité d'énergie : combien d'eau dans le réservoir. <strong>W</strong>, c'est un débit d'énergie : combien d'eau par seconde au robinet. Les deux nombres sont écrits sur la même fiche produit, avec la même police, et ils se ressemblent — c'est pour cela que tout le monde les confond. Pour connaître la durée, on divise : le réservoir par le robinet. »</p></blockquote>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question socle</h4>
 <p>« 500 Wh avec un moteur de 250 W : combien de temps ? »</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question d'approfondissement</h4>
 <p>« Pourquoi la durée réelle est-elle plus courte que 2 h ? » → plusieurs raisons à faire trouver : le moteur ne consomme 250 W qu'en pointe, la batterie n'est jamais vidée à 100 % (pour la protéger), le froid réduit la capacité disponible, et l'autonomie se compte en pratique en kilomètres, pas en heures. C'est le passage de la fiche produit au <strong>protocole de mesure</strong> : mesurer, ne pas supposer.</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Étayage</h4>
 <p>Écrivez la formule entièrement au tableau (<code>durée = capacité ÷ puissance</code>) et laissez seulement le calcul. L'élève en difficulté manipule des nombres, pas des concepts.</p>
 </section>
-<section class="q-section s-attention">
+<section class="p-section s-attention">
 <h4>Ne dites pas</h4>
 <ul><li>« Le moteur fait 500 W » en parlant de la capacité → c'est la confusion qu'on corrige.</li><li>« 250 W, c'est 250 W par heure » → non : un watt est <strong>déjà</strong> un débit d'énergie (un joule par seconde). Le wattheure est une quantité. Cette précision sauve la moitié du malentendu.</li><li>Ne dites pas que la durée de 2 h est « l'autonomie » : c'est une <strong>durée théorique à puissance maximale</strong>, valable seulement sur le papier.</li></ul>
 </section>
-<section class="q-section s-sortie">
+<section class="p-section s-sortie">
 <h4>Question de sortie</h4>
 <p>« Pourquoi la batterie se vide-t-elle plus vite en montée ? » — attendez « le robinet s'ouvre en grand ».</p>
 </section>
 </article>
-<article class="quickie"  id="q-la-note-cachee" data-ost-id="q-la-note-cachee" data-pastille="V4">
-<header class="q-tete">
-<p class="q-num" aria-hidden="true">V4</p>
+<article class="pastille"  id="p-la-note-cachee" data-ost-id="p-la-note-cachee" data-pastille="V4">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">V4</p>
 <h3>La note cachée</h3>
-<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">V4 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
-<p class="q-appel">Ce que dit vraiment un 8/10 sur l'indice de réparabilité.</p>
-<p class="q-bo"><code>OST33</code> (3e) — « Évaluer les OST selon des exigences ou des critères identifiés. »</p>
+<p class="p-meta"><span class="badge">10 min</span><span class="badge badge-code">V4 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="p-appel">Ce que dit vraiment un 8/10 sur l'indice de réparabilité.</p>
+<p class="p-bo"><code>OST33</code> (3e) — « Évaluer les OST selon des exigences ou des critères identifiés. »</p>
 </header>
 <blockquote class="accroche"><p>« Un 8/10 ne veut pas dire que vous saurez le réparer. Il dit cinq choses très précises <span class="a-verifier" title="Chiffre non vérifié">⏳</span> — et la cinquième est celle dont personne ne parle. »</p></blockquote>
 <div class="schema-bloc">
@@ -488,55 +497,55 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 <text x="800" y="748" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Deux appareils notés 8/10 se réparent-ils de la même façon ?</text>
 </svg></div>
 </div>
-<section class="q-section s-prepa">
+<section class="p-section s-prepa">
 <h4>À préparer</h4>
 <p>Le schéma <strong><code>schemas/v4-indice-reparabilite-a-completer.svg</code></strong> : <strong>cinq cases vides</strong> à nommer et une conclusion. <strong>Les indices ne sont que sur le corrigé</strong> (« notice et pièces disponibles » → Documentation technique). C'est voulu : si les indices étaient sur la version projetée, la pastille se ferait en trente secondes.</p>
 <p>⚠️ <strong>Le schéma ne donne pas les pondérations exactes</strong>, volontairement : elles dépendent de la catégorie de produit, et je n'ai pas pu ouvrir la source officielle. La pastille porte sur le <strong>principe</strong> de la moyenne pondérée, pas sur des pourcentages à retenir.</p>
 </section>
-<section class="q-section s-deroule">
+<section class="p-section s-deroule">
 <h4>Déroulé minuté</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche, projetez le schéma (cinq cases vides)</td><td>Observe</td></tr><tr><td>2-7 min</td><td>Faites nommer les cinq critères, un élève écrit. Le 5e est le plus dur : laissez chercher</td><td>Propose, argumente</td></tr><tr><td>7-9 min</td><td>Faites expliquer « moyenne pondérée » sur un exemple simple</td><td>Explique à sa façon</td></tr><tr><td>9-10 min</td><td>Application : deux produits à 8/10 sont-ils réparables pareil ?</td><td>Argumente</td></tr></tbody></table></div>
 </section>
-<section class="q-section s-dire">
+<section class="p-section s-dire">
 <h4>Le texte à dire</h4>
 <blockquote><p>« L'indice de réparabilité note cinq choses <span class="a-verifier" title="Chiffre non vérifié">⏳</span> : la documentation disponible, la facilité à démonter, la disponibilité des pièces détachées, leur prix, et un cinquième critère propre à chaque catégorie de produit. La note finale n'est pas la moyenne des cinq : c'est une <strong>moyenne pondérée</strong>, où certains critères comptent plus que d'autres — et ces poids ne sont pas les mêmes selon qu'il s'agit d'une trottinette ou d'un lave-linge. D'où la réponse à la question : deux appareils à 8/10 ne se réparent pas forcément de la même façon. »</p></blockquote>
 </section>
-<section class="q-section s-tableau">
+<section class="p-section s-tableau">
 <h4>Le vocabulaire à écrire au tableau</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition à donner</th></tr></thead><tbody><tr><td><strong>indice de réparabilité</strong></td><td>note sur 10 qui mesure la facilité à réparer un produit <span class="a-verifier" title="Chiffre non vérifié">⏳</span></td></tr><tr><td><strong>moyenne pondérée</strong></td><td>moyenne où chaque note compte plus ou moins selon son importance</td></tr><tr><td><strong>pièce détachée</strong></td><td>pièce vendue séparément pour remplacer celle qui est cassée</td></tr><tr><td><strong>obsolescence</strong></td><td>le fait qu'un produit devienne inutilisable ou non réparable</td></tr></tbody></table></div>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question socle</h4>
 <p>« Citez deux des cinq critères de l'indice <span class="a-verifier" title="Chiffre non vérifié">⏳</span>. »</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question d'approfondissement</h4>
 <p>« Un appareil à 9/10 dont la pièce coûte 80 % du prix du produit : bonne affaire ? » → c'est précisément pourquoi le critère « prix des pièces » existe. Bonne note, mauvais usage : l'indice n'est pas une garantie.</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Étayage</h4>
 <p>Donnez trois des cinq critères et faites trouver les deux autres. Trouver est plus facile que produire — et les indices du corrigé vous donnent les formulations à souffler.</p>
 </section>
-<section class="q-section s-attention">
+<section class="p-section s-attention">
 <h4>Ne dites pas</h4>
 <ul><li>« L'indice de réparabilité a été remplacé par l'indice de durabilité » → <span class="a-verifier" title="Chiffre non vérifié">⏳</span> c'est en train de se faire, produit par produit, et <strong>je n'ai pas pu vérifier l'état exact</strong>. Dites plutôt : <em>« la règle évolue en ce moment : un indice de durabilité est en train d'étendre le principe à la durée de vie. On vérifie ensemble la prochaine fois. »</em> — et vérifiez.</li><li>Ne donnez aucun pourcentage de pondération de mémoire (voir ci-dessus).</li><li>« Un bon indice, c'est un produit durable » → non : c'est un produit <strong>réparable</strong>. La durabilité est justement le critère qui manquait.</li></ul>
 </section>
-<section class="q-section s-sortie">
+<section class="p-section s-sortie">
 <h4>Question de sortie</h4>
 <p>« Un indice élevé garantit-il une longue vie ? » — non, et c'est la nuance à retenir. Faites formuler la réponse en une phrase par un élève : c'est un entraînement à l'oral du brevet.</p>
 </section>
-<section class="q-section s-verifier">
+<section class="p-section s-verifier">
 <h4>À vérifier avant la classe</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Élément</th><th>Source à ouvrir</th><th>Statut</th></tr></thead><tbody><tr><td>les cinq critères de l'indice</td><td><code>ecologie.gouv.fr</code> — page « Indice de durabilité »</td><td><strong>non vérifié</strong></td></tr><tr><td>leurs pondérations, par catégorie de produit</td><td>même page</td><td><strong>non vérifié</strong></td></tr><tr><td>date et périmètre du remplacement par l'indice de durabilité</td><td>même page + <code>info.gouv.fr</code></td><td><strong>non vérifié</strong></td></tr></tbody></table></div>
 </section>
 </article>
-<article class="quickie"  id="q-l-effort-invisible" data-ost-id="q-l-effort-invisible" data-pastille="V6">
-<header class="q-tete">
-<p class="q-num" aria-hidden="true">V6</p>
+<article class="pastille"  id="p-l-effort-invisible" data-ost-id="p-l-effort-invisible" data-pastille="V6">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">V6</p>
 <h3>L&#x27;effort invisible</h3>
-<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">V6 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
-<p class="q-appel">Le capteur de couple ne mesure pas la force : il mesure une déformation.</p>
-<p class="q-bo"><code>SFC14</code> (3e) — « Associer des grandeurs analogiques issues d'un OST à des données exploitables. »</p>
+<p class="p-meta"><span class="badge">10 min</span><span class="badge badge-code">V6 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="p-appel">Le capteur de couple ne mesure pas la force : il mesure une déformation.</p>
+<p class="p-bo"><code>SFC14</code> (3e) — « Associer des grandeurs analogiques issues d'un OST à des données exploitables. »</p>
 </header>
 <blockquote class="accroche"><p>« Le capteur de couple ne mesure pas votre effort. Il mesure la déformation d'un morceau de métal que personne ne voit ni ne sent. »</p></blockquote>
 <div class="schema-bloc">
@@ -607,52 +616,52 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 <text x="160" y="796" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#4a6076">L'assistance suit la cadence d'un côté, l'effort de l'autre : d'où le ressenti.</text>
 </svg></div>
 </div>
-<section class="q-section s-prepa">
+<section class="p-section s-prepa">
 <h4>À préparer</h4>
 <p>Le schéma <strong><code>schemas/v6-couple-vers-donnee-a-completer.svg</code></strong> : cinq étapes à nommer, du geste jusqu'à l'affichage.</p>
 <p>⚠️ <strong>Ce que la pastille ne fait pas</strong>, volontairement : elle ne redemande pas « pourquoi l'assistance au couple est plus naturelle que celle au détecteur de rotation ». <strong>Le quiz de l'activité pose déjà cette question, mot pour mot.</strong> La pastille apporte ce que l'activité ne fait pas : la <strong>chaîne</strong> déformation → jauge → signal → conversion → donnée.</p>
 </section>
-<section class="q-section s-deroule">
+<section class="p-section s-deroule">
 <h4>Déroulé minuté</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche. « Par quel chemin l'effort devient-il un nombre ? »</td><td>Réfléchit</td></tr><tr><td>2-7 min</td><td>Un élève complète les cinq cases</td><td>Dicte, corrige</td></tr><tr><td>7-9 min</td><td>Faites nommer le type de signal à l'étape ③ : analogique, puis numérique</td><td>Argumente</td></tr><tr><td>9-10 min</td><td>Faites conclure sur ce que l'application peut calculer ensuite</td><td>Conclut</td></tr></tbody></table></div>
 </section>
-<section class="q-section s-dire">
+<section class="p-section s-dire">
 <h4>Le texte à dire</h4>
 <blockquote><p>« Le pédalier se déforme très légèrement quand vous appuyez. Une jauge collée dessus transforme cette déformation en signal électrique — un signal <strong>analogique</strong>, qui varie en continu. Un convertisseur le transforme en <strong>donnée numérique</strong>, que l'application peut afficher. Cinq étapes, et à chacune l'information change de forme : c'est la chaîne d'information. »</p></blockquote>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question socle</h4>
 <p>« Le capteur mesure-t-il directement la force que vous exercez ? »</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question d'approfondissement</h4>
 <p>« Trouve un moment où le capteur de couple et le détecteur de rotation ne donnent pas du tout la même information. » → une montée lente et forte (peu de tours, gros effort) et une descente rapide et légère (beaucoup de tours, effort faible). Le premier renseigne l'<strong>effort</strong>, le second la <strong>cadence</strong> — et ce sont deux grandeurs différentes, pas deux versions de la même.</p>
 </section>
-<section class="q-section s-tableau">
+<section class="p-section s-tableau">
 <h4>La distinction à écrire au tableau</h4>
 <div class="tab-enveloppe"><table><thead><tr><th></th><th>détecteur de rotation</th><th>capteur de couple</th></tr></thead><tbody><tr><td>ce qu'il renseigne</td><td>la <strong>cadence</strong> : combien de tours par minute</td><td>l'<strong>effort</strong> : la déformation du pédalier</td></tr><tr><td>grandeur physique</td><td>une fréquence de rotation</td><td>un couple (une force × une distance)</td></tr><tr><td>ce que ça change</td><td>l'assistance suit la vitesse de pédalage</td><td>l'assistance suit l'effort fourni</td></tr></tbody></table></div>
 <p>⚠️ Ne dites pas que le détecteur de rotation est « tout ou rien » : il <strong>compte</strong> des tours, donc il fournit une valeur qui varie (tours par minute). L'activité le dit d'ailleurs elle-même : « il compte les tours de manivelle ».</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Étayage</h4>
 <p>Donnez les deux premières cases (le geste, la déformation) et laissez les trois suivantes : la partie difficile est le début, pas la fin.</p>
 </section>
-<section class="q-section s-attention">
+<section class="p-section s-attention">
 <h4>Ne dites pas</h4>
 <ul><li>« Le capteur mesure l'effort » → il mesure une déformation, <strong>puis</strong> on la convertit. Toute la pastille tient dans cette nuance.</li><li>Ne faites pas marcher des élèves pour « montrer » un couple : ce n'est pas une mesure, et cela met des corps en scène. L'image mentale suffit — l'élastique tendu entre deux doigts, si vous voulez un objet, illustre la déformation sans mesurer le couple.</li></ul>
 </section>
-<section class="q-section s-sortie">
+<section class="p-section s-sortie">
 <h4>Question de sortie</h4>
 <p>« Quelles sont les deux informations différentes que les deux capteurs fournissent ? » — « la cadence » contre « l'effort ».</p>
 </section>
 </article>
-<article class="quickie"  id="q-le-velo-qui-parle" data-ost-id="q-le-velo-qui-parle" data-pastille="V7">
-<header class="q-tete">
-<p class="q-num" aria-hidden="true">V7</p>
+<article class="pastille"  id="p-le-velo-qui-parle" data-ost-id="p-le-velo-qui-parle" data-pastille="V7">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">V7</p>
 <h3>Le vélo qui parle</h3>
-<p class="q-meta"><span class="badge">10 min</span><span class="badge badge-code">V7 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
-<p class="q-appel">Un trajet de location rangé en table de données — et ce qu'on peut en déduire.</p>
-<p class="q-bo"><code>SFC15</code> (3e) — « Représenter sous forme de données les informations de diverses natures utilisées par un OST. » · <code>OST13</code> (3e) — « Exprimer dans un argumentaire court l'incidence d'un OST sur la société. »</p>
+<p class="p-meta"><span class="badge">10 min</span><span class="badge badge-code">V7 · 3e</span><span class="badge badge-neutre">schéma à compléter</span></p>
+<p class="p-appel">Un trajet de location rangé en table de données — et ce qu'on peut en déduire.</p>
+<p class="p-bo"><code>SFC15</code> (3e) — « Représenter sous forme de données les informations de diverses natures utilisées par un OST. » · <code>OST13</code> (3e) — « Exprimer dans un argumentaire court l'incidence d'un OST sur la société. »</p>
 </header>
 <blockquote class="accroche"><p>« Votre vélo sait à quelle heure vous avez roulé, combien de kilomètres vous avez faits et combien d'énergie vous avez dépensé. Ces données ont une valeur — et pas seulement pour vous. »</p></blockquote>
 <div class="schema-bloc">
@@ -767,48 +776,46 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 <text x="200" y="858" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#0b6b4f">⑦ Ex. : heure de lever, trajet habituel, vitesse en zone 30, durée de la location.</text>
 </svg></div>
 </div>
-<section class="q-section s-prepa">
+<section class="p-section s-prepa">
 <h4>À préparer</h4>
-<p>Le schéma <strong><code>schemas/v7-table-de-donnees-a-completer.svg</code></strong> : une table à cinq colonnes,</p>
-<p>trouver. C'est le bon sens du travail : reconnaître une donnée à partir de ce qu'elle contient.</p>
-<p>31 Wh en 39 min donnent 48 W de moyenne. Un élève de 3e peut le vérifier — et c'est ce qu'on lui propose de faire. <strong>Le trajet est inventé</strong> (vélo de location n° 417) : il n'y a ni coordonnées réelles, ni sortie de téléphone, ni trajet d'élève.</p>
+<p>Le schéma <strong><code>schemas/v7-table-de-donnees-a-completer.svg</code></strong> : une table à cinq colonnes, <strong>déjà remplie de trois lignes</strong> — les lignes sont fournies, seules les <strong>colonnes</strong> sont à trouver. C'est le bon sens du travail : reconnaître une donnée à partir de ce qu'elle contient.</p>
+<p><strong>Les données sont cohérentes entre elles</strong>, exprès : 3,0 km en 13 min font bien 14 km/h, et 31 Wh en 39 min donnent 48 W de moyenne. Un élève de 3e peut le vérifier — et c'est ce qu'on lui propose de faire. <strong>Le trajet est inventé</strong> (vélo de location n° 417) : il n'y a ni coordonnées réelles, ni sortie de téléphone, ni trajet d'élève.</p>
 </section>
-<section class="q-section s-deroule">
+<section class="p-section s-deroule">
 <h4>Déroulé minuté</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-2 min</td><td>Accroche, projetez la table avec les colonnes vides</td><td>Observe les lignes</td></tr><tr><td>2-6 min</td><td>Faites nommer les colonnes, une par une, en justifiant par le contenu des lignes</td><td>Dicte, justifie</td></tr><tr><td>6-8 min</td><td>Faites préciser le <strong>type</strong> et l'<strong>unité</strong> de chaque colonne</td><td>Précise</td></tr><tr><td>8-10 min</td><td>Question finale : que peut-on déduire, et qui pourrait le faire ?</td><td>Argumente</td></tr></tbody></table></div>
 </section>
-<section class="q-section s-dire">
+<section class="p-section s-dire">
 <h4>Le texte à dire</h4>
 <blockquote><p>« Une donnée n'est pas une information : "8 h 15" tout seul ne veut rien dire. C'est "heure de départ, 8 h 15" qui devient une information. Une table de données, c'est un tableau où chaque <strong>colonne</strong> a un nom, un <strong>type</strong> et une <strong>unité</strong> — et c'est cela qui la rend exploitable, par vous comme par celui qui la reçoit. »</p></blockquote>
 </section>
-<section class="q-section s-tableau">
+<section class="p-section s-tableau">
 <h4>Le vocabulaire à écrire au tableau</h4>
 <div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition à donner</th></tr></thead><tbody><tr><td><strong>donnée</strong></td><td>une valeur seule, sans interprétation</td></tr><tr><td><strong>colonne / champ</strong></td><td>une information de même nature, sur toute la hauteur du tableau</td></tr><tr><td><strong>type</strong></td><td>nombre, texte, date : ce que la valeur peut être</td></tr><tr><td><strong>unité</strong></td><td>ce à quoi le nombre se rapporte (km/h, Wh, km)</td></tr></tbody></table></div>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question socle</h4>
 <p>« Quelle est l'unité de la colonne "vitesse" ? Et celle de la colonne "énergie" ? »</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Question d'approfondissement</h4>
 <p>« Ces données permettent-elles de savoir que la personne a pris un sens interdit ? » → oui, si la position et la vitesse sont assez précises. C'est exactement le moment de faire le lien avec la pastille D3 (domotique, 4e) et avec le RGPD : <strong>une donnée technique devient une donnée personnelle dès qu'elle permet de reconnaître quelqu'un</strong>.</p>
 </section>
-<section class="q-section s-question">
+<section class="p-section s-question">
 <h4>Étayage</h4>
 <p>Donnez trois noms de colonnes sur cinq : l'élève n'a plus qu'à trouver les deux dernières et à remplir les types.</p>
 </section>
-<section class="q-section s-attention">
+<section class="p-section s-attention">
 <h4>Ne dites pas</h4>
 <ul><li>« Ces données sont anonymes » → elles ne le sont pas si elles permettent de reconnaître quelqu'un, et un trajet domicile-collège le permet presque toujours.</li><li>Ne demandez jamais à un élève s'il utilise un vélo ou une trottinette en libre-service : c'est une information sur le budget de sa famille.</li></ul>
 </section>
-<section class="q-section s-sortie">
+<section class="p-section s-sortie">
 <h4>Question de sortie</h4>
 <p>« Faut-il accepter de donner ses trajets pour un service gratuit ? » — laissez la question ouverte, mais exigez une <strong>justification</strong> : c'est l'entraînement à l'argumentaire de l'oral du brevet.</p>
 </section>
-<section class="q-section s-attention">
+<section class="p-section s-attention">
 <h4>Sujet sensible</h4>
-<p>Phrase de conduite à tenir si un élève commence à raconter un trajet réel :</p>
-<p>classe sache où tu passes. »* — et vous poursuivez sur l'exemple fictif.</p>
+<p>Phrase de conduite à tenir si un élève commence à raconter un trajet réel : <em>« ce que tu dis est intéressant, mais on reste sur le vélo 417 : je ne veux pas que la classe sache où tu passes. »</em> — et vous poursuivez sur l'exemple fictif.</p>
 </section>
 </article>
 </main>
@@ -816,7 +823,7 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 <footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni
 adresse, ni compte, ne conserve rien et n'envoie rien sur Internet.</footer>
 <footer>
-  <p>Quickies — Technologie au collège, cycle 4. Contenus issus des fiches de préparation
+  <p>Le quart d'heure techno — Technologie au collège, cycle 4. Contenus issus des fiches de préparation
      des pastilles&nbsp;; les schémas sont des dessins techniques, sans image externe.</p>
 </footer>
 

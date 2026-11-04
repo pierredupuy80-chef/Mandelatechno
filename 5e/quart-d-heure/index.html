@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="Le quart d'heure techno 5e : 4 pastilles de 15 minutes pour la classe de technologie.">
+<title>Le quart d'heure techno 5e — Technologie au collège</title>
+<script>
+/* Identifiant de publication : la page se déclare sous son propre chemin publié.
+   Il est lu par inventorier_activites.py et ost_resoudre.py (panneau « Corriger »). */
+const ACTIVITE_PUBLICATION = "5e/quart-d-heure/index.html";
+</script>
+<style>
+:root{
+  --bleu:#1e4e79; --bleu2:#2b6cb0; --bleuf:#eef4fb;
+  --bord:#cddbe9; --gris:#5a6b7b; --texte:#16232e;
+  --orange:#b45309; --orange-f:#fff7ed; --vert:#0b6b4f; --vert-f:#f0faf5;
+  --rouge:#b03a2e; --rouge-f:#fdf3f2;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:#f6f9fc; color:var(--texte);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:17px; line-height:1.55;
+}
+header.site{background:linear-gradient(160deg,#1e4e79,#2b6cb0); color:#fff; padding:22px 16px 26px}
+header.site .contenu, nav.sommaire, main, footer{max-width:1000px; margin:0 auto}
+header.site p.yeux{margin:0 0 4px; font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; opacity:.85}
+header.site h1{margin:0 0 8px; font-size:clamp(1.5rem,5vw,2.1rem); line-height:1.15}
+header.site p{margin:0; max-width:62ch; opacity:.95}
+header.site .niveau-marque{
+  display:inline-block; margin-left:6px; padding:0 12px; border-radius:10px;
+  background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.5);
+  font-size:.8em; vertical-align:middle;
+}
+.liste-pastilles{list-style:none; padding:0; margin:10px 0 0;
+  display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.liste-pastilles li{margin:0}
+.liste-pastilles a{
+  display:flex; justify-content:space-between; gap:10px; align-items:center;
+  min-height:44px; padding:10px 14px; border-radius:10px; text-decoration:none;
+  background:#fff; border:2px solid var(--bord); color:var(--bleu); font-weight:700;
+}
+.liste-pastilles a:hover,.liste-pastilles a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+.liste-pastilles .duree{font-weight:400; font-size:.85em; color:var(--gris); white-space:nowrap}
+nav.sommaire a.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
+
+nav.sommaire{
+  position:sticky; top:0; z-index:40;
+  display:flex; gap:8px; flex-wrap:wrap;
+  background:rgba(255,255,255,.97); border-bottom:1px solid var(--bord);
+  box-shadow:0 1px 6px rgba(30,78,121,.08); padding:10px 14px;
+}
+nav.sommaire a{
+  flex:1 1 auto; min-height:44px; display:flex; align-items:center; justify-content:center;
+  background:#fff; border:2px solid var(--bord); border-radius:12px;
+  color:var(--bleu); text-decoration:none; font-weight:700; padding:8px 14px;
+}
+nav.sommaire a:hover,nav.sommaire a:focus-visible{background:var(--bleuf); border-color:var(--bleu2)}
+
+main{padding:20px 14px 48px}
+.intro{background:#fff; border:1px solid var(--bord); border-radius:16px; padding:20px; margin:0 0 22px}
+.intro h2{margin:0 0 10px; color:var(--bleu); font-size:1.2rem}
+.intro ul{margin:10px 0 0; padding-left:22px}
+.intro li{margin-bottom:6px}
+
+h2.niveau-titre{
+  margin:34px 0 14px; padding:12px 16px; border-radius:12px; color:#fff;
+  background:var(--bleu); font-size:clamp(1.15rem,4vw,1.4rem);
+  scroll-margin-top:76px;
+}
+h2.niveau-titre .compte{font-weight:400; font-size:.85em; opacity:.9}
+
+.pastille{
+  background:#fff; border:1px solid var(--bord); border-radius:16px;
+  padding:18px; margin:0 0 20px; scroll-margin-top:80px;
+}
+.p-tete{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:start}
+.p-num{
+  grid-row:1 / span 2; margin:0; width:44px; height:44px; border-radius:10px;
+  background:var(--bleu); color:#fff; font-weight:700; display:flex;
+  align-items:center; justify-content:center; font-size:.9rem;
+}
+.p-tete h3{margin:0; font-size:clamp(1.1rem,3.6vw,1.35rem); color:var(--bleu)}
+.p-tete .p-appel, .p-tete .p-bo{grid-column:1 / -1}
+.p-meta{margin:6px 0 0; display:flex; gap:6px; flex-wrap:wrap}
+.badge{
+  display:inline-block; padding:2px 9px; border-radius:999px; font-size:.78rem;
+  font-weight:700; background:var(--bleuf); color:var(--bleu); border:1px solid var(--bord);
+}
+.badge-code{background:var(--bleu); color:#fff; border-color:var(--bleu)}
+.badge-neutre{background:#f2f5f8; color:var(--gris)}
+.p-appel{margin:12px 0 0; color:var(--gris); font-size:.98rem}
+.p-bo{
+  margin:10px 0 0; padding:10px 12px; background:var(--bleuf); border-radius:10px;
+  font-size:.9rem; color:var(--bleu);
+}
+blockquote{margin:14px 0; padding:12px 16px; border-left:5px solid var(--bleu2);
+  background:#f9fbfe; border-radius:0 10px 10px 0}
+blockquote p{margin:0}
+.accroche{font-size:1.08rem; border-left-color:var(--vert); background:var(--vert-f)}
+
+.schema-bloc{margin:16px 0; border:1px solid var(--bord); border-radius:12px; overflow:hidden}
+.schema-barre{display:flex; gap:8px; flex-wrap:wrap; padding:8px; background:var(--bleuf);
+  border-bottom:1px solid var(--bord)}
+.schema-barre button{
+  min-height:44px; padding:8px 16px; border-radius:10px; border:2px solid var(--bord);
+  background:#fff; color:var(--bleu); font:inherit; font-weight:700; cursor:pointer;
+}
+.schema-barre button.actif{background:var(--bleu); color:#fff; border-color:var(--bleu)}
+.schema-barre button.plein{margin-left:auto}
+.schema-vue{background:#fff; padding:8px}
+.schema-svg{display:block; width:100%; height:auto}
+
+.schema-bloc.en-plein{
+  position:fixed; inset:0; z-index:200; margin:0; border-radius:0;
+  background:#fff; display:flex; flex-direction:column;
+}
+.schema-bloc.en-plein .schema-vue:not([hidden]){flex:1; display:flex; align-items:center}
+.schema-bloc.en-plein .schema-svg{max-height:calc(100vh - 80px); width:100%}
+
+.p-section{margin:16px 0 0}
+.p-section h4{margin:0 0 8px; font-size:1rem; color:var(--bleu)}
+.p-section p{margin:0 0 10px}
+.s-attention{background:var(--orange-f); border-left:5px solid var(--orange);
+  border-radius:0 10px 10px 0; padding:10px 14px}
+.s-attention h4{color:var(--orange)}
+.s-verifier{background:#fff; border:2px dashed var(--orange); border-radius:10px; padding:10px 14px}
+.s-verifier h4{color:var(--orange)}
+.s-question{background:var(--bleuf); border-radius:10px; padding:10px 14px}
+.s-sortie{background:var(--vert-f); border-left:5px solid var(--vert);
+  border-radius:0 10px 10px 0; padding:10px 14px}
+.s-sortie h4{color:var(--vert)}
+.s-cours{background:#f7fbff; border:2px solid var(--bord); border-radius:12px; padding:14px 16px}
+.s-cours h4{color:var(--bleu); font-size:1.06rem}
+.s-cours p:last-child{margin-bottom:0}
+.s-consigne{background:#fff; border-left:5px solid var(--vert); border-radius:0 10px 10px 0;
+  padding:10px 14px}
+.s-consigne h4{color:var(--vert)}
+.s-retenir{background:var(--vert-f); border:2px solid var(--vert); border-radius:12px; padding:12px 16px}
+.s-retenir h4{color:var(--vert)}
+.s-retenir p:last-child{margin-bottom:0}
+
+.tab-enveloppe{overflow-x:auto; margin:10px 0}
+table{border-collapse:collapse; width:100%; font-size:.94rem}
+th,td{border:1px solid var(--bord); padding:7px 10px; text-align:left; vertical-align:top}
+th{background:var(--bleuf); color:var(--bleu)}
+tbody tr:nth-child(even){background:#fafcfe}
+code{background:#f0f4f8; border:1px solid var(--bord); border-radius:4px;
+  padding:0 4px; font-size:.9em}
+.a-verifier{color:var(--orange); font-weight:700}
+ul,ol{margin:8px 0 10px; padding-left:22px}
+li{margin-bottom:5px}
+
+footer{padding:0 14px 40px; color:var(--gris); font-size:.9rem}
+.mention-rgpd{
+  background:var(--bleuf); border:1px solid var(--bord); border-radius:10px;
+  max-width:1000px; margin:0 auto 26px; padding:12px 16px; color:var(--bleu); font-size:.87rem;
+}
+
+@media (max-width:420px){
+  body{font-size:16px}
+  .p-tete{grid-template-columns:1fr}
+  .p-num{width:auto; height:auto; display:inline-block; padding:2px 10px; margin-bottom:6px}
+}
+@media print{
+  nav.sommaire, .schema-barre{display:none}
+  .pastille{break-inside:avoid; border:1px solid #999}
+  .schema-vue[hidden]{display:block}
+  .schema-vue[data-vue-bloc="vide"]{display:none}
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
+<style id="retour-accueil-style">
+/* ── RETOUR À L'ACCUEIL DU SITE ───────────────────────────────────── */
+/* Un lien simple, posé EN TÊTE DE PAGE, dans le flux — jamais
+   flottant. C'est une mesure qui l'a décidé : un bouton flottant
+   finissait toujours par recouvrir un contrôle. En bas à gauche, les
+   flèches du jeu de réseau et les commandes du diaporama ; en haut à
+   droite, l'option d'affichage et le lien du jeu ; en haut à gauche,
+   le titre de l'activité. On ne cache jamais ce que l'élève doit
+   cliquer : le retour reste donc à sa place, et il défile avec la
+   page. C'est aussi la convention déjà suivie par les pages de jeu
+   (« ← Toutes les activités »).
+   Le `!important` est volontaire : le module est posé sur des pages
+   dont nous ne maîtrisons pas le CSS. Sans lui, la règle sombre d'une
+   page ancienne réécrivait la couleur du texte et le lien tombait à
+   4,1:1 (mesuré sur tp-ia.html). */
+.retour-accueil {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin: 8px 12px 12px;
+    padding: 9px 16px;
+    border: 2px solid #ffffff !important;
+    border-radius: 999px;
+    background: #1f4e79 !important;
+    color: #ffffff !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+.retour-accueil:hover,
+.retour-accueil:focus-visible {
+    background: #2a6fb0 !important;
+}
+
+/* Double anneau : blanc au contact du bouton, bleu foncé au large. Sur
+   une page claire c'est l'anneau bleu qui se voit, sur une page sombre
+   c'est l'anneau blanc — le focus reste visible dans les deux modes. */
+.retour-accueil:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px #1f4e79, 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* Une page imprimée ne renvoie nulle part : le bouton n'a rien à y
+   faire, et il prendrait la place d'une consigne. */
+@media print {
+    .retour-accueil {
+        display: none;
+    }
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:FIN -->
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+/* Modèles de commentaire : des phrases génériques à compléter, jamais un
+   niveau ni un identifiant figé — le panneau les déduit déjà de l'onglet
+   et de l'élément sélectionnés. */
+.ost-modeles{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.ost-modele{min-height:32px;padding:0 10px;border:1px dashed #c7d2e3;border-radius:999px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.ost-modele:hover{background:#f1f5f9}
+.ost-modeles-legende{margin:0;font-size:11px;color:#64748b}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer,:where(html[data-theme="sombre"]) .ost-modele:hover{background:#16202e}
+:where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-modele{background:#1c2534;color:#cbd5e1}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
+</head>
+<body id="haut">
+<!-- RETOUR-ACCUEIL:DEBUT (module unique du site, recopié par _outils/template-activite/greffer_retour_accueil.py) -->
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Retour à l’accueil</a>
+<!-- RETOUR-ACCUEIL:FIN -->
+
+<header class="site">
+  <div class="contenu">
+    <p class="yeux">Mandelatechno · cycle 4</p>
+    <h1>Le quart d'heure techno <span class="niveau-marque">5e</span></h1>
+    <p>4 pastilles de 15 minutes, à faire en classe entière, sans matériel.
+       Un mini-cours de 5 minutes, un schéma à projeter en deux versions&nbsp;:
+       à compléter et corrigé.</p>
+  </div>
+</header>
+
+<nav class="sommaire" aria-label="Changer de niveau">
+<a href="../../4e/quart-d-heure/index.html">4e · 8</a><a href="#haut" class="actif" aria-current="page">5e · 4</a><a href="../../3e/quart-d-heure/index.html">3e · 4</a>
+</nav>
+
+<main>
+  <div class="intro">
+    <h2>Comment s'en servir</h2>
+    <p>Chaque pastille tient seule&nbsp;: une accroche, un <strong>mini-cours de cinq minutes</strong>
+       (à lire ou à projeter), puis un schéma à compléter au tableau
+       (un élève tient le feutre, la classe dicte), un déroulé minuté, deux ou trois
+       questions et une question de sortie.</p>
+    <ul>
+      <li>La <strong>durée annoncée est du temps de contenu</strong>&nbsp;: comptez trois minutes de plus.</li>
+      <li>Le <strong>mini-cours</strong> donne les mots et l'analogie&nbsp;: il prépare chaque
+          trou du schéma. La <strong>consigne, étape par étape</strong> dit exactement ce que
+          la classe doit écrire, dans l'ordre des numéros du schéma.</li>
+      <li>Le schéma s'affiche en deux versions&nbsp;: <strong>À compléter</strong> (les cases sont vides)
+          et <strong>Corrigé</strong>. Le bouton <strong>Plein écran</strong> agrandit le schéma pour la projection.</li>
+      <li>La partie <strong>Ne dites pas</strong> est pour vous&nbsp;: elle corrige les erreurs
+          classiques, celles qu'on répète sans le savoir.</li>
+    </ul>
+    <h2>Les 4 pastilles de 5e</h2>
+    <ul class="liste-pastilles"><li><a href="#p-dans-la-box">Dans la box <span class="duree">15 min</span></a></li><li><a href="#p-deux-adresses">Deux adresses <span class="duree">15 min</span></a></li><li><a href="#p-la-table-de-routage">La table de routage <span class="duree">15 min</span></a></li><li><a href="#p-le-fichier-perdu">Le fichier perdu <span class="duree">15 min</span></a></li></ul>
+  </div>
+
+<article class="pastille"  id="p-dans-la-box" data-ost-id="p-dans-la-box" data-pastille="N1">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">N1</p>
+<h3>Dans la box</h3>
+<p class="p-meta"><span class="badge">15 min</span><span class="badge badge-code">N1 · 5e</span><span class="badge badge-neutre">mini-cours + schéma à compléter</span></p>
+<p class="p-appel">Un modem, un routeur, un commutateur, un point d'accès, un serveur : la box est un petit réseau.</p>
+<p class="p-bo"><code>SFC17</code> (5e) — « Identifier les composants qui constituent un réseau local (terminaux, commutateurs, liaisons filaires et sans fil (WiFi)) et sa topologie. »</p>
+</header>
+<blockquote class="accroche"><p>« Vous débranchez la box : plus d'Internet sur l'ordinateur, plus de Wi-Fi sur le téléphone, plus de replay sur la télévision. Une seule petite boîte fait donc plusieurs métiers à la fois. Lesquels ? »</p></blockquote>
+<section class="p-section s-cours">
+<h4>Le mini-cours</h4>
+<p><strong>La situation.</strong> La box est posée près de la prise de la ligne. Elle clignote. Tant qu'elle fonctionne, personne n'y pense ; dès qu'on la débranche, tout s'arrête. Une seule boîte, plusieurs services : c'est ce qui la rend mystérieuse.</p>
+<p><strong>Idée 1 — la box est un petit ordinateur.</strong> Elle a un processeur, de la mémoire et un programme. Mais elle ne sert pas à écrire un texte : elle fait circuler des données entre la maison et Internet. Ce n'est pas un objet magique, c'est un ordinateur spécialisé dans une seule tâche : les échanges.</p>
+<p><strong>Idée 2 — trois métiers tournés vers la ligne.</strong> Le <strong>modem</strong> traduit le signal qui arrive par la ligne, fibre ou ADSL (la ligne téléphonique), pour que la box le comprenne. Le <strong>routeur</strong> choisit par où envoyer chaque <strong>paquet</strong> de données — un paquet est un petit morceau d'information qui porte l'adresse de sa destination ; nous y reviendrons. Le <strong>pare-feu</strong> filtre ce qui entre et ce qui sort, comme un portier à l'entrée d'un immeuble.</p>
+<p><strong>Idée 3 — trois métiers tournés vers les appareils.</strong> Le <strong>commutateur</strong> (on dit aussi switch) relie les prises Ethernet où l'on branche un câble. Le <strong>point d'accès Wi-Fi</strong> fait le même travail, mais sans câble. Le <strong>serveur DHCP</strong> distribue une adresse IP à chaque appareil qui se connecte ; nous y reviendrons. Dans le cours de technologie, ces appareils s'appellent des <strong>terminaux</strong> : le PC, la TV, le téléphone.</p>
+<p><strong>Un exemple, d'Internet jusqu'au téléphone.</strong> Un site envoie une vidéo : elle arrive par la ligne, le modem la traduit, le routeur choisit la sortie vers le Wi-Fi, le pare-feu vérifie, le point d'accès Wi-Fi l'envoie au téléphone. Le serveur DHCP avait donné son adresse au téléphone au moment de la connexion. Six fonctions, un seul trajet.</p>
+<p><strong>La topologie.</strong> L'ensemble des appareils reliés à la box forme le <strong>réseau local</strong>. La topologie, c'est la forme de ce réseau : ici, tous les appareils passent par la box, on dit que le réseau est en <strong>étoile</strong>. Personne ne relie directement le PC à la TV : tout passe par le centre.</p>
+<p><strong>L'analogie.</strong> Imaginez le standard téléphonique d'un petit immeuble. Une personne à la loge reçoit la ligne extérieure (le modem), décide si l'appel sort de l'immeuble ou reste à l'intérieur (le routeur), relie les postes intérieurs (le commutateur), gère les combinés sans fil (le point d'accès Wi-Fi), attribue un numéro de chambre à chaque nouveau locataire (le serveur DHCP) et refuse les visiteurs indésirables (le pare-feu). Une seule personne, six gestes.</p>
+<p><strong>Pourquoi six fonctions dans une seule boîte ?</strong> Parce que c'est plus simple à installer et à utiliser. Le revers, c'est que tout tombe ensemble quand la box tombe en panne : on ne sait plus si le problème vient de la ligne, du Wi-Fi ou des adresses.</p>
+<p><strong>Ce que la box ne fait pas.</strong> Elle ne fabrique pas le contenu : elle ne remplace ni le site web, ni le serveur de la messagerie, ni la télévision. Elle transporte et elle dirige. Elle sert de pont entre les appareils de la maison et le reste du monde : c'est ce rôle que la classe résumera en ⑦. C'est déjà un très gros travail, mais ce n'est pas le même métier.</p>
+<p><strong>Les mots à retenir.</strong></p>
+<div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition en une phrase</th></tr></thead><tbody><tr><td><strong>modem</strong></td><td>il traduit le signal de la ligne (fibre ou ADSL) pour que la box le comprenne</td></tr><tr><td><strong>routeur</strong></td><td>il choisit par où envoyer chaque paquet de données</td></tr><tr><td><strong>commutateur</strong> (switch)</td><td>il relie les prises Ethernet et fait circuler les données entre les appareils câblés</td></tr><tr><td><strong>point d'accès Wi-Fi</strong></td><td>il relie les appareils sans fil, comme le commutateur le fait avec des câbles</td></tr><tr><td><strong>serveur DHCP</strong></td><td>il distribue une adresse IP à chaque appareil qui se connecte</td></tr><tr><td><strong>pare-feu</strong></td><td>il filtre les données qui entrent et qui sortent</td></tr></tbody></table></div>
+<p><strong>La transition.</strong> Vous allez maintenant nommer ces six fonctions sur le schéma : Internet est à gauche, la ligne entre dans la box, et les appareils de la maison sont en dessous.</p>
+</section>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N1 — Dans la box</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N1 — Dans la box</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les six fonctions de la box, puis compléter la phrase de conclusion</text>
+<rect x="560" y="150" width="850" height="445" rx="20" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="580" y="188" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="700" fill="#0b6b4f">LA BOX — vue de l'intérieur</text>
+<rect x="50" y="215" width="250" height="110" rx="14" fill="#e8f2fb" stroke="#1f5f9e" stroke-width="3"/>
+<text x="175" y="258" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#1f5f9e">Internet</text>
+<text x="175" y="292" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">le réseau mondial</text>
+<text x="455" y="225" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#4a6076">la ligne</text>
+<text x="455" y="256" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#4a6076">fibre / ADSL</text>
+<line x1="308" y1="270" x2="637" y2="270" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="645" y="215" width="200" height="110" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="745" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">① ………</text>
+<rect x="885" y="215" width="200" height="110" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="985" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">② ………</text>
+<rect x="1125" y="215" width="200" height="110" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1225" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">③ ………</text>
+<line x1="853" y1="270" x2="877" y2="270" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1093" y1="270" x2="1117" y2="270" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="860" y="410" width="250" height="110" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="985" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">④ ………</text>
+<rect x="1140" y="410" width="250" height="110" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1265" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑤ ………</text>
+<rect x="580" y="410" width="250" height="110" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="705" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑥ ………</text>
+<line x1="1225" y1="325" x2="1225" y2="355" stroke="#24557a" stroke-width="3"/>
+<line x1="985" y1="355" x2="1265" y2="355" stroke="#24557a" stroke-width="3"/>
+<line x1="985" y1="355" x2="985" y2="406" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1265" y1="355" x2="1265" y2="406" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="935" y1="325" x2="935" y2="385" stroke="#24557a" stroke-width="3"/>
+<line x1="705" y1="385" x2="935" y2="385" stroke="#24557a" stroke-width="3"/>
+<line x1="705" y1="385" x2="705" y2="406" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="578" y1="465" x2="548" y2="465" stroke="#24557a" stroke-width="4" marker-end="url(#ar)" stroke-dasharray="8 6"/>
+<rect x="300" y="410" width="240" height="110" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="420" y="450" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">une adresse IP</text>
+<text x="420" y="481" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">par appareil</text>
+<rect x="700" y="655" width="200" height="105" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="800" y="707" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">PC</text>
+<rect x="930" y="655" width="200" height="105" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1030" y="707" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">TV</text>
+<rect x="1145" y="655" width="240" height="105" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1265" y="707" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">téléphone</text>
+<line x1="985" y1="520" x2="985" y2="600" stroke="#24557a" stroke-width="3"/>
+<line x1="800" y1="600" x2="1030" y2="600" stroke="#24557a" stroke-width="3"/>
+<line x1="800" y1="600" x2="800" y2="651" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1030" y1="600" x2="1030" y2="651" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="915" y="640" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">câbles Ethernet</text>
+<line x1="1265" y1="520" x2="1265" y2="651" stroke="#24557a" stroke-width="4" marker-end="url(#ar)" stroke-dasharray="8 6"/>
+<text x="1105" y="562" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">sans fil (Wi-Fi)</text>
+<rect x="170" y="800" width="1260" height="74" rx="14" fill="#fbfdff" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="800" y="842" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">⑦ La box relie ……………………… à ………………………</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N1 — Dans la box</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N1 — Dans la box</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Nommer les six fonctions de la box, puis compléter la phrase de conclusion</text>
+<rect x="560" y="150" width="850" height="445" rx="20" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="580" y="188" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="700" fill="#0b6b4f">LA BOX — vue de l'intérieur</text>
+<rect x="50" y="215" width="250" height="110" rx="14" fill="#e8f2fb" stroke="#1f5f9e" stroke-width="3"/>
+<text x="175" y="258" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#1f5f9e">Internet</text>
+<text x="175" y="292" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">le réseau mondial</text>
+<text x="455" y="225" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#4a6076">la ligne</text>
+<text x="455" y="256" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#4a6076">fibre / ADSL</text>
+<line x1="308" y1="270" x2="637" y2="270" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="645" y="215" width="200" height="110" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="745" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">① modem</text>
+<rect x="885" y="215" width="200" height="110" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="985" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">② routeur</text>
+<rect x="1125" y="215" width="200" height="110" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1225" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="600" fill="#12314a">③ pare-feu</text>
+<line x1="853" y1="270" x2="877" y2="270" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1093" y1="270" x2="1117" y2="270" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="860" y="410" width="250" height="110" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="985" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">④ commutateur</text>
+<rect x="1140" y="410" width="250" height="110" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1265" y="450" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑤ point d'accès</text>
+<text x="1265" y="481" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Wi-Fi</text>
+<rect x="580" y="410" width="250" height="110" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="705" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑥ serveur DHCP</text>
+<line x1="1225" y1="325" x2="1225" y2="355" stroke="#24557a" stroke-width="3"/>
+<line x1="985" y1="355" x2="1265" y2="355" stroke="#24557a" stroke-width="3"/>
+<line x1="985" y1="355" x2="985" y2="406" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1265" y1="355" x2="1265" y2="406" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="935" y1="325" x2="935" y2="385" stroke="#24557a" stroke-width="3"/>
+<line x1="705" y1="385" x2="935" y2="385" stroke="#24557a" stroke-width="3"/>
+<line x1="705" y1="385" x2="705" y2="406" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="578" y1="465" x2="548" y2="465" stroke="#24557a" stroke-width="4" marker-end="url(#ar)" stroke-dasharray="8 6"/>
+<rect x="300" y="410" width="240" height="110" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="420" y="450" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">une adresse IP</text>
+<text x="420" y="481" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">par appareil</text>
+<rect x="700" y="655" width="200" height="105" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="800" y="707" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">PC</text>
+<rect x="930" y="655" width="200" height="105" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1030" y="707" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">TV</text>
+<rect x="1145" y="655" width="240" height="105" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1265" y="707" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">téléphone</text>
+<line x1="985" y1="520" x2="985" y2="600" stroke="#24557a" stroke-width="3"/>
+<line x1="800" y1="600" x2="1030" y2="600" stroke="#24557a" stroke-width="3"/>
+<line x1="800" y1="600" x2="800" y2="651" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<line x1="1030" y1="600" x2="1030" y2="651" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<text x="915" y="640" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">câbles Ethernet</text>
+<line x1="1265" y1="520" x2="1265" y2="651" stroke="#24557a" stroke-width="4" marker-end="url(#ar)" stroke-dasharray="8 6"/>
+<text x="1105" y="562" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">sans fil (Wi-Fi)</text>
+<rect x="170" y="800" width="1260" height="74" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="800" y="842" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">⑦ La box relie le réseau local à Internet.</text>
+</svg></div>
+</div>
+<section class="p-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/n1-box-a-completer.svg</code></strong> : à projeter, ou à recopier au tableau au feutre (comptez 4 min avant la séance pour le tracé). <strong>Sept trous</strong> : six fonctions (① à ⑥) et une phrase à compléter (⑦). Les éléments déjà écrits sont Internet, la ligne fibre ou ADSL, le PC, la TV et le téléphone. Le corrigé est dans <code>schemas/n1-box-corrige.svg</code>.</p>
+<p>Le schéma a <strong>deux étages</strong>. En haut, la chaîne qui part d'Internet et entre dans la box par la ligne : le modem, puis le routeur, puis le pare-feu. En bas, les branches qui desservent les appareils : le commutateur et le Wi-Fi sont alimentés par le pare-feu ; le serveur DHCP est relié au routeur.</p>
+<p>Si vous recopiez au tableau : une boîte « Internet » à gauche, la ligne, puis les trois cases de la chaîne ; en dessous, le serveur DHCP, le commutateur (PC, TV) et le Wi-Fi (téléphone).</p>
+<p>Le schéma est volontairement simple : des cases, des flèches, aucun dessin technique. C'est ce qui permet de le recopier au feutre sans le projeter, et de le corriger en direct.</p>
+</section>
+<section class="p-section s-consigne">
+<h4>La consigne, étape par étape</h4>
+<p>Un élève tient le feutre, la classe dicte, vous arbitrez. On complète les trous dans l'ordre des numéros, de ① à ⑦.</p>
+<ol><li>Repérez Internet à gauche et la ligne qui entre dans la box. Dans la case ①, écrivez la fonction qui <strong>traduit le signal</strong> de cette ligne.</li><li>Dans la case ②, écrivez la fonction qui <strong>choisit par où envoyer</strong> chaque paquet.</li><li>Dans la case ③, écrivez la fonction qui <strong>filtre</strong> ce qui entre et ce qui sort.</li><li>En bas, la case ④ correspond aux prises Ethernet où sont branchés le PC et la TV. Écrivez la fonction qui <strong>relie ces prises</strong>.</li><li>Dans la case ⑤, écrivez la fonction qui <strong>relie le téléphone sans câble</strong>.</li><li>Dans la case ⑥, écrivez la fonction qui <strong>distribue une adresse IP</strong> à chaque appareil.</li><li>Complétez la phrase ⑦ : « La box relie … à … ». Écrivez les deux ensembles que la box met en relation.</li></ol>
+<p>Quand les sept trous sont remplis, faites relire la phrase ⑦ à voix haute par la classe : elle résume la pastille entière.</p>
+<p>Si la classe est bloquée sur une case, donnez son <strong>étage</strong> et son <strong>voisin</strong> : « c'est dans la chaîne du haut, entre le modem et le pare-feu ». L'élève retrouve la fonction par déduction, sans la recevoir.</p>
+</section>
+<section class="p-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Lisez l'accroche et posez la question : « quels métiers fait la box ? »</td><td>Réfléchit 30 s en silence</td></tr><tr><td>1-5 min</td><td>Mini-cours : les six fonctions au tableau, puis l'analogie du standard</td><td>Écoute, note les six mots</td></tr><tr><td>5-7 min</td><td>Projetez le schéma ; un élève vient compléter ① à ③</td><td>Dicte, corrige, argumente</td></tr><tr><td>7-10 min</td><td>Poursuivez ④ à ⑥ ; la classe arbitre chaque proposition</td><td>Dicte, corrige ses voisins</td></tr><tr><td>10-12 min</td><td>Faites compléter la phrase ⑦ par un second élève</td><td>Propose la phrase, la discute</td></tr><tr><td>12-14 min</td><td>Question socle : trois fonctions à citer</td><td>Répond, vérifie ses mots</td></tr><tr><td>14-15 min</td><td>Question de sortie ; notez deux catégories d'appareils au tableau</td><td>Répond, note</td></tr></tbody></table></div>
+</section>
+<section class="p-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« La box n'est pas un objet magique : c'est un petit ordinateur qui fait six métiers à la fois. Le modem traduit le signal de la ligne, le routeur choisit le chemin, le pare-feu filtre ; le commutateur, le Wi-Fi et le DHCP s'occupent des appareils de la maison. Une seule boîte, six fonctions distinctes : c'est pour cela qu'on ne peut pas dire “la box, c'est Internet”. »</p></blockquote>
+</section>
+<section class="p-section s-question">
+<h4>Question socle</h4>
+<p>« Citez trois fonctions de la box. »</p>
+<p>Réponse attendue : trois mots exacts parmi les six du mini-cours (par exemple modem, routeur, commutateur). Toute réponse exacte compte ; on ne demande pas les six.</p>
+<p>Si la classe ne trouve que deux mots, écrivez le troisième au tableau et faites-le relire par un élève : c'est le vocabulaire qui doit rester, pas la performance.</p>
+</section>
+<section class="p-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Pourquoi y a-t-il à la fois un modem et un routeur dans la box ? » → le modem traduit le signal de la ligne ; le routeur, lui, lit des adresses et choisit un chemin. Ce sont deux métiers différents, réunis dans la même boîte pour simplifier l'installation. Si on les séparait, il faudrait deux appareils et un câble de plus.</p>
+<p>C'est la même logique que dans un téléphone : l'écran, la batterie et l'antenne sont dans un seul objet, mais ce sont trois fonctions différentes. Réunir ne veut pas dire confondre.</p>
+</section>
+<section class="p-section s-question">
+<h4>Étayage</h4>
+<p>Écrivez au tableau les six mots dans le désordre : pare-feu, DHCP, commutateur, modem, Wi-Fi, routeur. L'élève n'a plus qu'à les associer aux cases, sans les chercher dans sa mémoire.</p>
+<p>Si un élève propose « box » à la place d'une fonction, renvoyez-le au mini-cours : on cherche un <strong>métier</strong>, pas l'objet. La différence entre le tout et ses parties est exactement ce que la pastille travaille.</p>
+<p>Les six mots sont ceux du tableau « Les mots à retenir » : laissez-le affiché pendant le schéma, c'est un étayage suffisant.</p>
+</section>
+<section class="p-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« La box, c'est Internet » → non : la box <strong>relie</strong> le réseau local à Internet. Internet est le réseau mondial ; la box est l'appareil qui s'y branche.</li><li>« Le Wi-Fi, c'est Internet » → le Wi-Fi est une <strong>liaison sans fil</strong> entre un appareil et la box. Sans abonnement Internet, le Wi-Fi peut très bien relier deux appareils de la maison.</li><li>« Modem et routeur, c'est pareil » → le modem parle à la ligne, le routeur choisit le chemin. Ce sont deux fonctions distinctes, même si elles sont dans la même boîte.</li><li>« La box, c'est le réseau » → la box est un <strong>composant</strong> du réseau local, pas le réseau entier : le réseau, c'est la box <strong>et</strong> les appareils reliés à elle.</li><li>« La box protège tout » → le pare-feu filtre, mais il ne remplace ni un antivirus ni la prudence. On ne promet pas une sécurité totale avec une case de schéma.</li><li>« La box choisit le chemin le plus court » → non : elle applique une règle, la plus précise (nous y reviendrons dans une autre pastille). Le « plus court » n'est pas ce qu'elle calcule.</li></ul>
+</section>
+<section class="p-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Dans une maison, quels appareils sont reliés par un câble et lesquels par Wi-Fi ? » — attendez des catégories d'appareils, pas des marques : un ordinateur fixe et une télévision sont souvent câblés, un téléphone et une tablette passent par le Wi-Fi. Ne demandez ni modèle ni opérateur.</p>
+<p>Écoutez les catégories et notez-en deux au tableau : « câblé » et « sans fil ». C'est le vocabulaire du programme, et il servira au schéma suivant.</p>
+</section>
+<section class="p-section s-retenir">
+<h4>À retenir</h4>
+<ul><li>La box est un petit ordinateur qui réunit six fonctions : modem, routeur, commutateur, point d'accès Wi-Fi, serveur DHCP et pare-feu.</li><li>Le modem traduit le signal de la ligne ; le routeur choisit le chemin ; le commutateur et le Wi-Fi relient les appareils.</li><li>La box relie le réseau local à Internet : elle n'est pas Internet.</li><li>Dans un réseau en étoile, tous les appareils passent par la box.</li><li>Les appareils reliés s'appellent des terminaux : PC, TV, téléphone.</li></ul>
+</section>
+</article>
+<article class="pastille"  id="p-deux-adresses" data-ost-id="p-deux-adresses" data-pastille="N2">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">N2</p>
+<h3>Deux adresses</h3>
+<p class="p-meta"><span class="badge">15 min</span><span class="badge badge-code">N2 · 5e</span><span class="badge badge-neutre">mini-cours + schéma à compléter</span></p>
+<p class="p-appel">La MAC ne change pas, l'IP change : qui la donne, et pourquoi ?</p>
+<p class="p-bo"><code>SFC18</code> (5e) — « Justifier la nécessité d’identifier les terminaux pour communiquer sur un réseau local (activité débranchée et vérification par un outil de simulation). »</p>
+</header>
+<blockquote class="accroche"><p>« Deux téléphones identiques, du même modèle, sont connectés au même Wi-Fi. Un message part vers l'un des deux. Comment la box sait-elle lequel doit le recevoir ? »</p></blockquote>
+<section class="p-section s-cours">
+<h4>Le mini-cours</h4>
+<p><strong>La situation.</strong> Dans une maison, plusieurs appareils sont connectés à la même box : un téléphone, une tablette, un ordinateur, une télévision. Ils se ressemblent parfois, et pourtant chacun reçoit ses propres messages. Il faut donc que la box puisse les distinguer.</p>
+<p><strong>Idée 1 — deux adresses, deux rôles.</strong> Pour communiquer sur un réseau local, un appareil est identifié par <strong>deux adresses</strong>. Elles ne servent pas à la même chose : l'une dit <strong>quel appareil</strong> c'est, l'autre dit <strong>où il est</strong> sur le réseau à ce moment-là.</p>
+<p><strong>Idée 2 — l'adresse MAC.</strong> Elle est gravée dans la carte réseau <strong>par le fabricant</strong>, à la fabrication de l'appareil. Elle est unique et, en principe, ne change pas quand l'appareil se déplace. Elle s'écrit en six groupes de deux caractères séparés par deux-points, par exemple <code>3A:7F:22:0B:9C:14</code>. C'est le <strong>numéro de série</strong> de la carte réseau.</p>
+<p><strong>Idée 3 — l'adresse IP.</strong> Elle est attribuée à la connexion au réseau. Elle s'écrit en quatre nombres séparés par des points, par exemple <code>192.168.1.42</code>. Elle change quand l'appareil change de réseau. C'est le <strong>numéro de chambre d'hôtel</strong> : il dépend de l'hôtel où l'on est, et il change d'un séjour à l'autre.</p>
+<p><strong>Un exemple, deux téléphones.</strong> Le téléphone A, dont la MAC est <code>3A:7F:22:0B:9C:14</code>, reçoit l'adresse IP <code>192.168.1.50</code>. Le téléphone B, dont la MAC est <code>B2:11:4C:8D:07:3F</code>, reçoit <code>192.168.1.51</code>. La box sait que le message pour <code>.50</code> va au téléphone A, et que le message pour <code>.51</code> va au téléphone B.</p>
+<p><strong>Idée 4 — qui donne l'adresse IP ?</strong> Le <strong>serveur DHCP</strong>, dans la box. Il prête une adresse pour un temps limité, appelé le <strong>bail</strong>. À la fin du bail, l'adresse peut être reprise ou rendue. Deux appareils du même réseau ne peuvent pas avoir la même adresse IP en même temps : sinon, la box ne saurait plus à qui envoyer.</p>
+<p><strong>Le bail, en pratique.</strong> Quand un appareil se déconnecte, son adresse peut être rendue et donnée à un autre. C'est pour cela que l'adresse d'un téléphone n'est pas une carte d'identité : elle indique une place à un moment donné, pas une personne.</p>
+<p><strong>Une réserve d'adresses.</strong> Le serveur DHCP garde une réserve d'adresses pour la maison. Il en prête une, la reprend à la fin du bail, puis la redonne. C'est pour cela que deux appareils ne peuvent pas se voir attribuer la même adresse en même temps.</p>
+<p><strong>Les deux images, ensemble.</strong> La MAC est la <strong>plaque du véhicule</strong> : elle ne change pas, elle identifie l'appareil. L'adresse IP est la <strong>place de parking</strong> attribuée pour un temps : elle dépend du réseau et elle est prêtée. On ne confond pas la plaque et la place.</p>
+<p><strong>Les mots à retenir.</strong></p>
+<div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition en une phrase</th></tr></thead><tbody><tr><td><strong>adresse MAC</strong></td><td>une adresse gravée dans la carte réseau, unique, qui ne change pas</td></tr><tr><td><strong>adresse IP</strong></td><td>une adresse attribuée à la connexion au réseau, qui peut changer</td></tr><tr><td><strong>serveur DHCP</strong></td><td>le serveur de la box qui distribue les adresses IP</td></tr><tr><td><strong>bail</strong></td><td>la durée pendant laquelle une adresse IP est prêtée à un appareil</td></tr><tr><td><strong>terminal</strong></td><td>un appareil relié au réseau : PC, téléphone, imprimante, télévision</td></tr></tbody></table></div>
+<p><strong>La transition.</strong> Vous allez classer quatre adresses, puis compléter deux phrases : qui fabrique la MAC, qui donne l'IP, et ce qui se passe si deux appareils ont la même IP.</p>
+</section>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N2 — Deux adresses</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N2 — Deux adresses</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Dire qui fabrique la MAC et qui donne l'IP, puis classer quatre adresses</text>
+<rect x="90" y="150" width="640" height="195" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="120" y="192" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#b03a2e">L'adresse MAC</text>
+<text x="120" y="226" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">6 groupes séparés par « : »</text>
+<text x="120" y="269" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">① la MAC est fabriquée par …………</text>
+<text x="120" y="301" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">……………………………………</text>
+<rect x="870" y="150" width="640" height="195" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="900" y="192" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#1f5f9e">L'adresse IP</text>
+<text x="900" y="226" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">4 nombres séparés par « . »</text>
+<text x="900" y="269" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">② l'adresse IP est donnée par ………</text>
+<text x="900" y="301" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">……………………………………</text>
+<text x="800" y="392" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#0b6b4f">Classez ces quatre adresses : MAC ou IP ?</text>
+<rect x="100" y="420" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="290" y="474" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">192.168.1.20</text>
+<line x1="488" y1="465" x2="524" y2="465" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="532" y="420" width="188" height="90" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="626" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">③ ………</text>
+<rect x="880" y="420" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1070" y="474" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">00:1A:2B:3C:4D:5E</text>
+<line x1="1268" y1="465" x2="1304" y2="465" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1312" y="420" width="188" height="90" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1406" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">④ ………</text>
+<rect x="100" y="540" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="290" y="594" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">192.168.1.1</text>
+<line x1="488" y1="585" x2="524" y2="585" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="532" y="540" width="188" height="90" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="626" y="585" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑤ ………</text>
+<rect x="880" y="540" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1070" y="594" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">A4:5E:60:1B:22:07</text>
+<line x1="1268" y1="585" x2="1304" y2="585" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1312" y="540" width="188" height="90" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1406" y="585" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑥ ………</text>
+<rect x="90" y="680" width="1420" height="120" rx="14" fill="#fbfdff" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="120" y="722" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑦ si deux appareils ont la même IP, ……………………………………………………………</text>
+<text x="800" y="846" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Indice : MAC = 6 groupes de 2 caractères avec « : » ; IP = 4 nombres avec « . ».</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N2 — Deux adresses</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N2 — Deux adresses</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Dire qui fabrique la MAC et qui donne l'IP, puis classer quatre adresses</text>
+<rect x="90" y="150" width="640" height="195" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="120" y="192" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#b03a2e">L'adresse MAC</text>
+<text x="120" y="226" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">6 groupes séparés par « : »</text>
+<text x="120" y="269" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">① la MAC est fabriquée par</text>
+<text x="120" y="301" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">le fabricant de la carte réseau.</text>
+<rect x="870" y="150" width="640" height="195" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="900" y="192" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#1f5f9e">L'adresse IP</text>
+<text x="900" y="226" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">4 nombres séparés par « . »</text>
+<text x="900" y="269" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">② l'adresse IP est donnée par</text>
+<text x="900" y="301" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">la box, par le serveur DHCP.</text>
+<text x="800" y="392" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#0b6b4f">Classez ces quatre adresses : MAC ou IP ?</text>
+<rect x="100" y="420" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="290" y="474" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">192.168.1.20</text>
+<line x1="488" y1="465" x2="524" y2="465" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="532" y="420" width="188" height="90" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="626" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">③ IP</text>
+<rect x="880" y="420" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1070" y="474" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">00:1A:2B:3C:4D:5E</text>
+<line x1="1268" y1="465" x2="1304" y2="465" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1312" y="420" width="188" height="90" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1406" y="465" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">④ MAC</text>
+<rect x="100" y="540" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="290" y="594" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">192.168.1.1</text>
+<line x1="488" y1="585" x2="524" y2="585" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="532" y="540" width="188" height="90" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="626" y="585" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑤ IP</text>
+<rect x="880" y="540" width="380" height="90" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="1070" y="594" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">A4:5E:60:1B:22:07</text>
+<line x1="1268" y1="585" x2="1304" y2="585" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1312" y="540" width="188" height="90" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1406" y="585" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑥ MAC</text>
+<rect x="90" y="680" width="1420" height="120" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="120" y="722" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">⑦ si deux appareils ont la même IP, la box ne sait plus à qui envoyer :</text>
+<text x="120" y="766" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="600" fill="#12314a">   l'un des deux ne communique plus.</text>
+<text x="800" y="846" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Indice : MAC = 6 groupes de 2 caractères avec « : » ; IP = 4 nombres avec « . ».</text>
+</svg></div>
+</div>
+<section class="p-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/n2-deux-adresses-a-completer.svg</code></strong> : deux phrases à compléter (① et ②), quatre adresses à classer (③ à ⑥) et une phrase de conclusion (⑦). Le corrigé est dans <code>schemas/n2-deux-adresses-corrige.svg</code>.</p>
+<p>Les quatre adresses du schéma sont des <strong>exemples</strong>, pas des mesures : <code>192.168.1.20</code>, <code>00:1A:2B:3C:4D:5E</code>, <code>192.168.1.1</code> et <code>A4:5E:60:1B:22:07</code>. Aucune ne décrit un appareil réel de la classe.</p>
+<p>Il n'y a rien à tracer au tableau si vous projetez : le schéma tient sur deux colonnes, les phrases à gauche et les adresses à droite. Si vous recopiez, écrivez les quatre adresses en vrac et laissez la classe les trier.</p>
+<p>Le schéma ne demande aucun calcul : on lit un séparateur, on le nomme, et c'est fini. C'est un exercice de reconnaissance, pas de mémoire.</p>
+<p><strong>Couverture du libellé <code>SFC18</code>.</strong> La pastille fait l'<strong>activité débranchée</strong> prévue par le programme ; la « vérification par un outil de simulation » que cite aussi le libellé reste à faire en classe, sur un simulateur de réseau. La pastille ne la remplace pas : elle la prépare.</p>
+</section>
+<section class="p-section s-consigne">
+<h4>La consigne, étape par étape</h4>
+<p>On complète les trous dans l'ordre, de ① à ⑦. Les deux premières phrases sont à compléter ; les quatre cases suivantes demandent de classer une adresse.</p>
+<ol><li>Complétez la phrase ① : « la MAC est fabriquée par … ».</li><li>Complétez la phrase ② : « l'adresse IP est donnée par … ».</li><li>Lisez l'adresse ③ <code>192.168.1.20</code>. Regardez son séparateur, puis écrivez dans la case si c'est une <strong>MAC</strong> ou une <strong>IP</strong>.</li><li>Même travail pour l'adresse ④ <code>00:1A:2B:3C:4D:5E</code>.</li><li>Même travail pour l'adresse ⑤ <code>192.168.1.1</code>.</li><li>Même travail pour l'adresse ⑥ <code>A4:5E:60:1B:22:07</code>.</li><li>Complétez la phrase ⑦ : « Si deux appareils ont la même IP, … ».</li></ol>
+<p>Quand une case est fausse, ne corrigez pas vous-même : demandez à la classe de compter les groupes et de regarder le séparateur. La correction par les pairs est plus efficace ici qu'une réponse donnée.</p>
+<p>Les adresses sont écrites sur le schéma : elles ne sont pas à recopier de mémoire. Si un élève hésite, faites-lui entourer le séparateur au feutre avant de répondre.</p>
+</section>
+<section class="p-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Lisez l'accroche, laissez 30 s de réflexion silencieuse</td><td>Réfléchit</td></tr><tr><td>1-5 min</td><td>Mini-cours : les deux adresses, le DHCP, l'analogie plaque et place</td><td>Écoute, note les définitions</td></tr><tr><td>5-7 min</td><td>Faites compléter les phrases ① et ②</td><td>Dicte, discute le rôle de chacun</td></tr><tr><td>7-10 min</td><td>Faites classer les deux premières adresses ③ et ④</td><td>Compare les séparateurs</td></tr><tr><td>10-12 min</td><td>Faites classer les deux suivantes ⑤ et ⑥ ; la classe valide</td><td>Corrige, argumente</td></tr><tr><td>12-14 min</td><td>Faites compléter la phrase ⑦</td><td>Propose l'effet d'un doublon</td></tr><tr><td>14-15 min</td><td>Question de sortie et retour sur le bail</td><td>Répond, note</td></tr></tbody></table></div>
+</section>
+<section class="p-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un appareil qui communique a deux adresses, et elles ne servent pas à la même chose. La MAC est gravée dans la carte réseau : elle dit quel appareil c'est, et elle ne change pas. L'adresse IP est prêtée par la box, pour un temps limité : elle dit où l'appareil se trouve sur le réseau, et elle change quand on change de réseau. »</p></blockquote>
+</section>
+<section class="p-section s-question">
+<h4>Question socle</h4>
+<p>« Quelle adresse change quand on passe du Wi-Fi de la maison à celui du collège ? »</p>
+<p>Réponse attendue : l'adresse <strong>IP</strong>. La MAC, elle, reste la même : elle est dans la carte réseau de l'appareil.</p>
+<p>Si un élève répond « la MAC », faites-lui relire le mini-cours : la MAC est gravée <strong>dans la carte</strong>, elle ne dépend pas du réseau où l'on se trouve. C'est l'IP qui est prêtée par le réseau.</p>
+</section>
+<section class="p-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Pourquoi un site web n'a-t-il pas besoin de connaître votre MAC ? » → la MAC ne sert qu'<strong>à l'intérieur</strong> du réseau local, pour que la box remette le paquet au bon appareil. Au-delà, on utilise l'adresse IP. Le site web ne voit pas votre téléphone : il voit la box, qui fait le relais.</p>
+<p>C'est une bonne occasion de rappeler qu'une adresse n'est pas une identité : la MAC dit quel appareil, l'IP dit où il est. Ni l'une ni l'autre ne dit qui est la personne derrière l'écran.</p>
+</section>
+<section class="p-section s-question">
+<h4>Étayage</h4>
+<p>Écrivez les deux formats au tableau : MAC = six groupes séparés par <code>:</code> ; IP = quatre nombres séparés par <code>.</code>. L'élève n'a plus qu'à compter les groupes et à regarder le séparateur, sans se souvenir de la définition.</p>
+<p>Pour la phrase ⑦, donnez le début : « la box ne sait plus… ». L'élève termine avec ses mots ; vous reformulez ensuite avec le vocabulaire du mini-cours.</p>
+<p>Pour la phrase ②, acceptez « par la box » et reformulez en « par le serveur DHCP de la box » : c'est le mot du programme qui doit rester au tableau.</p>
+</section>
+<section class="p-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« L'IP est fixe » → non : elle est prêtée par le DHCP pour un temps limité (le bail) ; elle peut changer.</li><li>« La MAC est le nom de l'ordinateur » → non : le nom est choisi par l'utilisateur ; la MAC est gravée par le fabricant.</li><li>« Le DHCP crée Internet » → non : le DHCP distribue des adresses <strong>à l'intérieur</strong> du réseau local. Internet existe sans lui.</li><li>« Une IP, c'est un numéro de téléphone » → l'image est tentante mais fausse : un numéro de téléphone identifie une ligne ; une IP identifie une connexion à un réseau et change quand on change de réseau.</li><li>« La MAC sert à aller sur Internet » → non : elle sert à l'intérieur du réseau local, pour remettre le paquet au bon appareil.</li><li>« La MAC et l'IP, c'est la même chose en plus court » → non : l'une identifie l'appareil, l'autre la connexion. Confondre les deux rend incompréhensible le rôle de la box.</li></ul>
+</section>
+<section class="p-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Pourquoi la box ne donne-t-elle pas toujours la même IP au même téléphone ? » → parce que l'adresse est prêtée pour un bail ; à la fin, elle peut être reprise ou rendue. Ce n'est pas garanti, et c'est pour cela qu'on ne fixe pas une adresse à la main sans raison.</p>
+<p>Écoutez les réponses et retenez-en une : « l'adresse est prêtée, pas donnée ». C'est la phrase qui distingue l'IP de la MAC.</p>
+<p>C'est aussi l'occasion de distinguer <strong>prêtée</strong> et <strong>fixe</strong> : une adresse fixe se décide à la main, une adresse prêtée se demande à la box.</p>
+</section>
+<section class="p-section s-retenir">
+<h4>À retenir</h4>
+<ul><li>Un appareil sur un réseau local a deux adresses : la MAC, gravée et unique, et l'IP, prêtée par la box.</li><li>Le serveur DHCP de la box distribue les adresses IP pour un temps limité, le bail.</li><li>Deux appareils ne peuvent pas avoir la même IP sur le même réseau.</li><li>La MAC ne sert qu'à l'intérieur du réseau local ; au-delà, c'est l'IP qui compte.</li><li>Une adresse n'est pas une identité : elle dit quel appareil ou quelle place, pas qui est la personne.</li></ul>
+</section>
+</article>
+<article class="pastille"  id="p-la-table-de-routage" data-ost-id="p-la-table-de-routage" data-pastille="N3">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">N3</p>
+<h3>La table de routage</h3>
+<p class="p-meta"><span class="badge">15 min</span><span class="badge badge-code">N3 · 5e</span><span class="badge badge-neutre">mini-cours + schéma à compléter</span><span class="badge badge-neutre">ouverture 3e</span></p>
+<p class="p-appel">Comment la box choisit le chemin, ligne par ligne.</p>
+<p class="p-bo"><code>SFC17</code> (5e) — « Identifier les composants qui constituent un réseau local (terminaux, commutateurs, liaisons filaires et sans fil (WiFi)) et sa topologie. »  <strong>Ouverture assumée vers la 3e</strong> : <code>SFC18</code> (3e) — « Justifier la nécessité d’un protocole de routage pour faire communiquer plusieurs réseaux ». En 5e, on apprend seulement à <strong>lire</strong> une table de routage ; en 3e, on apprendra à faire communiquer plusieurs réseaux.</p>
+</header>
+<blockquote class="accroche"><p>« La box reçoit un paquet pour <code>8.8.8.8</code> et un autre pour l'imprimante du salon. Elle ne se trompe jamais. Comment fait-elle pour choisir le bon chemin ? »</p></blockquote>
+<section class="p-section s-cours">
+<h4>Le mini-cours</h4>
+<p><strong>La situation.</strong> Votre box reçoit des paquets toute la journée. Certains viennent d'Internet et vont vers votre ordinateur ; d'autres partent de votre téléphone vers un site. Un <strong>paquet</strong> est un petit morceau de données qui porte l'adresse de sa destination.</p>
+<p><strong>Idée 1 — le routeur ne devine pas.</strong> Il lit une <strong>table de routage</strong> : une liste de règles écrites comme des phrases « si la destination ressemble à…, alors envoyer vers… ». Il compare la destination à chaque règle et retient <strong>la plus précise</strong>, celle qui décrit la destination le plus exactement. Puis il obéit.</p>
+<p><strong>L'analogie.</strong> Imaginez le tableau des départs d'une gare. Une ligne dit : « pour Lyon-Part-Dieu, quai 7 ». Une autre dit : « pour la région lyonnaise, guichet 3 », et une dernière : « pour toutes les autres destinations, guichet 1 ». Le voyageur prend la ligne la plus précise — « Lyon-Part-Dieu » plutôt que « la région lyonnaise ». Le routeur fait de même avec les paquets.</p>
+<p><strong>Idée 2 — trois règles suffisent presque toujours.</strong> Si la destination commence par <code>192.168.1.</code>, elle est dans le réseau local : on envoie directement à l'appareil. Si la destination est <code>192.168.1.1</code>, c'est la box elle-même : elle garde le paquet. Pour tout le reste, on envoie à la <strong>passerelle</strong>, c'est-à-dire au routeur du fournisseur, par la ligne.</p>
+<p><strong>Un exemple de lecture.</strong> Le paquet pour <code>192.168.1.33</code> ne correspond qu'à la ligne 1 : action « envoyer directement », sortie « réseau local ». Un paquet pour l'adresse de la box correspond à deux lignes (il commence par <code>192.168.1.</code> <strong>et</strong> c'est l'adresse de la box) : la règle la plus précise est celle qui la désigne, et la box garde le paquet. Le paquet pour <code>1.1.1.1</code> ne correspond qu'à la ligne 3, « tout le reste » : il part vers la passerelle.</p>
+<p><strong>Idée 3 — la route par défaut.</strong> La dernière ligne s'appelle la <strong>route par défaut</strong>. Elle évite d'écrire une ligne pour chaque site du monde : c'est la ligne « tout le reste ». Sans elle, la table serait impossible à écrire.</p>
+<p><strong>Ce que la table ne dit pas.</strong> Elle ne dit pas où se trouve le site : elle dit seulement par quelle porte sortir. Le reste du chemin est décidé par les routeurs suivants, un par un. Chacun ne connaît que son morceau de réseau.</p>
+<p><strong>Pourquoi une ligne pour la box elle-même ?</strong> Sans elle, l'adresse de la box serait traitée comme celle d'un appareil du réseau local, et le paquet serait envoyé sur le réseau au lieu de rester dans la box. La ligne 2 dit simplement : cette adresse, c'est moi.</p>
+<p><strong>L'ordre des lignes n'est qu'une convention.</strong> Les lignes sont écrites dans un ordre lisible, mais ce qui décide, c'est la <strong>précision</strong> de la règle, pas sa position dans le tableau. La route par défaut est la plus générale : elle est mise en dernier pour la lecture, pas parce qu'elle passe après les autres.</p>
+<p><strong>Idée 4 — lire de gauche à droite.</strong> On lit une table de routage comme un tableau : la <strong>destination</strong>, l'<strong>action</strong>, la <strong>sortie</strong>. C'est tout. On n'a pas besoin de connaître le fonctionnement d'Internet pour lire trois lignes.</p>
+<p><strong>L'ouverture vers la 3e.</strong> Cette table est un attendu de 3e (<code>SFC18</code>) : en 3e, on apprend à justifier la nécessité d'un protocole de routage pour faire communiquer plusieurs réseaux. En 5e, on apprend seulement à <strong>lire</strong> une table, pas à la configurer. C'est déjà beaucoup : c'est ce qui explique pourquoi la box ne se trompe pas.</p>
+<p><strong>Les mots à retenir.</strong></p>
+<div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition en une phrase</th></tr></thead><tbody><tr><td><strong>routeur</strong></td><td>l'appareil qui choisit par où envoyer chaque paquet</td></tr><tr><td><strong>table de routage</strong></td><td>la liste des règles « si la destination ressemble à…, alors envoyer… »</td></tr><tr><td><strong>passerelle</strong></td><td>la porte de sortie du réseau local, par laquelle partent les paquets vers Internet</td></tr><tr><td><strong>route par défaut</strong></td><td>la dernière ligne de la table, qui traite tout ce qui n'est pas dans le réseau local</td></tr><tr><td><strong>réseau local</strong></td><td>l'ensemble des appareils reliés à la même box, chez vous</td></tr></tbody></table></div>
+<p><strong>La transition.</strong> Vous allez lire la table du schéma et choisir, pour chaque paquet, la ligne qui le concerne.</p>
+</section>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N3 — La table de routage</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N3 — La table de routage</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Lire la table et choisir la bonne ligne pour chaque paquet</text>
+<text x="120" y="140" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Le trajet d'un paquet, de la box jusqu'à Internet</text>
+<rect x="250" y="154" width="240" height="106" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="370" y="192" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">PC</text>
+<text x="370" y="230" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">192.168.1.20</text>
+<line x1="498" y1="207" x2="632" y2="207" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="640" y="154" width="260" height="106" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="770" y="192" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">la box</text>
+<text x="770" y="230" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">192.168.1.1</text>
+<text x="1005" y="155" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">la ligne</text>
+<text x="1005" y="186" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">fibre / ADSL</text>
+<line x1="908" y1="207" x2="1102" y2="207" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1110" y="154" width="260" height="106" rx="14" fill="#e8f2fb" stroke="#1f5f9e" stroke-width="3"/>
+<text x="1240" y="192" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#1f5f9e">Internet</text>
+<text x="1240" y="230" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">le réseau mondial</text>
+<rect x="90" y="300" width="100" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Ligne</text>
+<rect x="190" y="300" width="440" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Destination</text>
+<rect x="630" y="300" width="480" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="870" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Action</text>
+<rect x="1110" y="300" width="400" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="1310" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Sortie</text>
+<rect x="90" y="356" width="100" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="405" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#12314a">1</text>
+<rect x="190" y="356" width="440" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="405" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">commence par 192.168.1.</text>
+<rect x="630" y="356" width="480" height="80" rx="0" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="870" y="396" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">① ………</text>
+<rect x="1110" y="356" width="400" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1310" y="405" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">le réseau local</text>
+<rect x="90" y="436" width="100" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="485" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#12314a">2</text>
+<rect x="190" y="436" width="440" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="461" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">192.168.1.1</text>
+<text x="410" y="492" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">(la box)</text>
+<rect x="630" y="436" width="480" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="870" y="485" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">la box elle-même</text>
+<rect x="1110" y="436" width="400" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1310" y="485" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">—</text>
+<rect x="90" y="516" width="100" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="565" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#12314a">3</text>
+<rect x="190" y="516" width="440" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="565" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">tout le reste</text>
+<rect x="630" y="516" width="480" height="80" rx="0" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="870" y="556" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">② ………</text>
+<rect x="1110" y="516" width="400" height="80" rx="0" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1310" y="556" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">③ ………</text>
+<rect x="90" y="620" width="1420" height="96" rx="14" fill="#fbfdff" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="120" y="655" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">④ à quoi sert la ligne 3 ? …………………………………………………………………………………………</text>
+<text x="800" y="744" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Pour chaque paquet, écrivez le numéro de la ligne utilisée :</text>
+<rect x="100" y="762" width="440" height="104" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="320" y="799" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑤ paquet vers 192.168.1.20</text>
+<text x="320" y="830" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">→ ligne ………</text>
+<rect x="580" y="762" width="440" height="104" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="800" y="799" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑥ paquet vers 192.168.1.1</text>
+<text x="800" y="830" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">→ ligne ………</text>
+<rect x="1060" y="762" width="440" height="104" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1280" y="799" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑦ paquet vers 8.8.8.8</text>
+<text x="1280" y="830" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">→ ligne ………</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N3 — La table de routage</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N3 — La table de routage</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Lire la table et choisir la bonne ligne pour chaque paquet</text>
+<text x="120" y="140" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Le trajet d'un paquet, de la box jusqu'à Internet</text>
+<rect x="250" y="154" width="240" height="106" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="3"/>
+<text x="370" y="192" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">PC</text>
+<text x="370" y="230" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">192.168.1.20</text>
+<line x1="498" y1="207" x2="632" y2="207" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="640" y="154" width="260" height="106" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="770" y="192" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">la box</text>
+<text x="770" y="230" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">192.168.1.1</text>
+<text x="1005" y="155" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">la ligne</text>
+<text x="1005" y="186" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">fibre / ADSL</text>
+<line x1="908" y1="207" x2="1102" y2="207" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="1110" y="154" width="260" height="106" rx="14" fill="#e8f2fb" stroke="#1f5f9e" stroke-width="3"/>
+<text x="1240" y="192" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#1f5f9e">Internet</text>
+<text x="1240" y="230" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#1f5f9e">le réseau mondial</text>
+<rect x="90" y="300" width="100" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Ligne</text>
+<rect x="190" y="300" width="440" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Destination</text>
+<rect x="630" y="300" width="480" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="870" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Action</text>
+<rect x="1110" y="300" width="400" height="56" rx="0" fill="#f5fbf7" stroke="#24557a" stroke-width="2"/>
+<text x="1310" y="338" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="700" fill="#0b6b4f">Sortie</text>
+<rect x="90" y="356" width="100" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="405" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#12314a">1</text>
+<rect x="190" y="356" width="440" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="405" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">commence par 192.168.1.</text>
+<rect x="630" y="356" width="480" height="80" rx="0" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="870" y="380" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">① envoyer directement</text>
+<text x="870" y="412" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">sur le réseau local</text>
+<rect x="1110" y="356" width="400" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1310" y="405" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">le réseau local</text>
+<rect x="90" y="436" width="100" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="485" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#12314a">2</text>
+<rect x="190" y="436" width="440" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="461" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">192.168.1.1</text>
+<text x="410" y="492" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">(la box)</text>
+<rect x="630" y="436" width="480" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="870" y="485" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">la box elle-même</text>
+<rect x="1110" y="436" width="400" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1310" y="485" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="400" fill="#12314a">—</text>
+<rect x="90" y="516" width="100" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="140" y="565" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="400" fill="#12314a">3</text>
+<rect x="190" y="516" width="440" height="80" rx="0" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="410" y="565" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#12314a">tout le reste</text>
+<rect x="630" y="516" width="480" height="80" rx="0" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="870" y="540" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">② envoyer à la passerelle</text>
+<text x="870" y="572" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">(le routeur du fournisseur)</text>
+<rect x="1110" y="516" width="400" height="80" rx="0" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1310" y="556" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">③ la ligne fibre / ADSL</text>
+<rect x="90" y="620" width="1420" height="96" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="3"/>
+<text x="120" y="655" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">④ c'est la route par défaut : tout ce qui n'est pas dans le réseau local</text>
+<text x="120" y="693" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#12314a">   part vers Internet, par la ligne fibre / ADSL.</text>
+<text x="800" y="744" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Pour chaque paquet, écrivez le numéro de la ligne utilisée :</text>
+<rect x="100" y="762" width="440" height="104" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="320" y="799" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑤ paquet vers 192.168.1.20</text>
+<text x="320" y="830" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">→ ligne 1</text>
+<rect x="580" y="762" width="440" height="104" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="800" y="799" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑥ paquet vers 192.168.1.1</text>
+<text x="800" y="830" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">→ ligne 2</text>
+<rect x="1060" y="762" width="440" height="104" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1280" y="799" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑦ paquet vers 8.8.8.8</text>
+<text x="1280" y="830" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">→ ligne 3</text>
+</svg></div>
+</div>
+<section class="p-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/n3-table-routage-a-completer.svg</code></strong> : le petit réseau PC — box — Internet, la table à trois lignes et trois paquets à aiguiller. <strong>Sept trous</strong> : trois dans la table (①, ②, ③), une question sur la ligne 3 (④), et le numéro de ligne choisi pour chacun des trois paquets (⑤, ⑥, ⑦). Les libellés déjà écrits sont les en-têtes du tableau, les destinations, la sortie de la ligne 1 et la ligne 2. Le corrigé est dans <code>schemas/n3-table-routage-corrige.svg</code>.</p>
+<p>Les trois paquets du bas sont les questions : on écrit seulement le <strong>numéro de la ligne</strong>, pas l'action. C'est volontaire : on vérifie que l'élève sait lire une table, pas qu'il récite un texte.</p>
+<p>Aucun calcul n'est demandé, aucune adresse n'est à retenir par cœur : les destinations sont écrites sur le schéma. Le petit réseau dessiné (PC <code>192.168.1.20</code>, box <code>192.168.1.1</code>, Internet) sert à voir d'où partent les paquets, pas à être complété.</p>
+</section>
+<section class="p-section s-consigne">
+<h4>La consigne, étape par étape</h4>
+<p>On compare chaque destination aux trois règles — la plus précise l'emporte — puis on aiguille les paquets. Les trous se complètent dans l'ordre, de ① à ⑦.</p>
+<ol><li>Ligne 1 : la destination est « commence par <code>192.168.1.</code> ». Écrivez en ① l'action : que fait le routeur pour un appareil du réseau local ?</li><li>Ligne 3 : la destination est « tout le reste ». Écrivez en ② l'action : à qui le routeur envoie-t-il ce paquet ?</li><li>Toujours ligne 3, complétez ③ : par quelle <strong>sortie</strong> le paquet part-il ?</li><li>Répondez à la question ④ : à quoi sert cette ligne 3 ? Donnez son nom et une phrase qui dit à quoi elle sert.</li><li>Premier paquet ⑤, destiné à <code>192.168.1.20</code> : écrivez le numéro de la ligne qui le concerne.</li><li>Deuxième paquet ⑥, destiné à <code>192.168.1.1</code> : écrivez le numéro de la ligne.</li><li>Troisième paquet ⑦, destiné à <code>8.8.8.8</code> : écrivez le numéro de la ligne.</li></ol>
+<p>Si un élève se trompe, ne donnez pas la réponse : demandez-lui de comparer la destination aux trois règles et de garder la plus précise. L'erreur vient presque toujours d'une règle trop générale appliquée trop tôt.</p>
+<p>Pour les paquets ⑤ à ⑦, on écrit <strong>un numéro</strong>, pas une phrase. Si un élève écrit l'action au lieu du numéro, faites-lui relire la consigne : c'est la ligne qu'on demande.</p>
+</section>
+<section class="p-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Lisez l'accroche, laissez 30 s de réflexion silencieuse</td><td>Réfléchit</td></tr><tr><td>1-5 min</td><td>Mini-cours : la table, l'analogie de la gare, les trois règles</td><td>Écoute, note les mots</td></tr><tr><td>5-7 min</td><td>Projetez le schéma ; faites compléter la table ① et ②</td><td>Dicte, discute les actions</td></tr><tr><td>7-8 min</td><td>Faites compléter ③ et ④</td><td>Propose la sortie, nomme la ligne</td></tr><tr><td>8-12 min</td><td>Faites aiguiller les trois paquets ⑤ à ⑦ ; un élève écrit, la classe valide</td><td>Cherche la ligne, corrige</td></tr><tr><td>12-14 min</td><td>Question socle, puis un paquet surprise au tableau</td><td>Répond, applique la règle</td></tr><tr><td>14-15 min</td><td>Question de sortie et rappel de l'ouverture vers la 3e</td><td>Répond, note</td></tr></tbody></table></div>
+</section>
+<section class="p-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un routeur ne devine pas : il lit une table de routage et applique la règle la plus précise qui correspond. Trois règles suffisent pour une maison : le réseau local, la box elle-même, et tout le reste. La dernière ligne s'appelle la route par défaut ; sans elle, il faudrait une ligne pour chaque site du monde. »</p></blockquote>
+</section>
+<section class="p-section s-question">
+<h4>Question socle</h4>
+<p>« Vers quelle ligne part un paquet destiné à <code>192.168.1.30</code> ? »</p>
+<p>Réponse attendue : la <strong>ligne 1</strong>. L'adresse commence par <code>192.168.1.</code>, donc l'appareil est dans le réseau local : on lui envoie directement le paquet.</p>
+<p>Faites justifier la réponse par la <strong>règle la plus précise qui correspond</strong>, pas par « c'est une adresse de la maison ». C'est le raisonnement de la table qu'on évalue.</p>
+<p>Faites écrire le numéro de ligne au tableau avant de valider : c'est le geste qui fixe la règle.</p>
+</section>
+<section class="p-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Pourquoi la ligne 3 est-elle indispensable ? » → sans elle, il faudrait une ligne pour chaque site du monde : c'est impossible. La route par défaut dit « tout le reste part par la passerelle », et elle rend la table utilisable. C'est elle qui relie la maison à Internet.</p>
+<p>On peut le formuler autrement : la table ne décrit pas Internet, elle décrit <strong>la porte de sortie</strong> vers Internet. C'est pour cela qu'elle tient en trois lignes.</p>
+</section>
+<section class="p-section s-question">
+<h4>Étayage</h4>
+<p>Écrivez les trois destinations au tableau : <code>192.168.1.30</code>, <code>192.168.1.1</code>, <code>8.8.8.8</code>. Ne faites choisir que le <strong>numéro de ligne</strong> : l'élève compare les adresses, sans avoir à formuler l'action.</p>
+<p>Pour la question ④, donnez le début de la réponse : « cette ligne sert à… ». L'élève complète avec « sortir », « aller sur Internet » ou « passer par la passerelle » ; vous reformulez ensuite en <strong>route par défaut</strong>.</p>
+<p>Pour le trou ①, acceptez d'abord « envoyer dans la maison », puis faites préciser « envoyer directement sur le réseau local » : c'est la formulation exacte du schéma (l'appareil est dans le réseau local).</p>
+</section>
+<section class="p-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« La box connaît tous les sites du monde » → non : elle connaît sa table et une route par défaut. C'est très différent, et c'est ce qui rend le réseau possible.</li><li>« La table de routage est dans Internet » → chaque routeur a la sienne ; la box a la sienne, et elle est beaucoup plus courte que celle d'un routeur d'opérateur.</li><li>« <code>192.168.…</code> est une adresse publique » → non : <code>192.168.…</code> est une adresse <strong>privée</strong>, réservée au réseau local. C'est pour cela que la ligne 1 peut exister sans gêner personne.</li><li>« En 5e, on configure la table » → non : on la <strong>lit</strong>. La configuration et le protocole de routage sont au programme de 3e (<code>SFC18</code>).</li><li>« Le routeur choisit le chemin le plus court » → non : il applique la règle la plus précise qui correspond. Le « plus court » n'est pas ce qu'il calcule en lisant cette table.</li></ul>
+</section>
+<section class="p-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Sans route par défaut, que se passerait-il pour un site web ? » → le paquet ne saurait pas par où sortir : il n'irait nulle part. Seul le réseau local continuerait à fonctionner.</p>
+<p>Écoutez la formulation : « il n'y a pas de porte de sortie » est une bonne réponse. C'est exactement le rôle de la ligne 3.</p>
+</section>
+<section class="p-section s-retenir">
+<h4>À retenir</h4>
+<ul><li>Le routeur ne devine pas : il lit une table de routage et applique la règle la plus précise qui correspond.</li><li>Trois règles suffisent souvent : le réseau local, la box elle-même, et tout le reste.</li><li>La dernière ligne est la route par défaut ; elle évite d'écrire une règle pour chaque site du monde.</li><li>En 5e, on apprend à lire la table ; en 3e, on apprendra à justifier un protocole de routage (<code>SFC18</code>).</li></ul>
+</section>
+</article>
+<article class="pastille"  id="p-le-fichier-perdu" data-ost-id="p-le-fichier-perdu" data-pastille="N4">
+<header class="p-tete">
+<p class="p-num" aria-hidden="true">N4</p>
+<h3>Le fichier perdu</h3>
+<p class="p-meta"><span class="badge">15 min</span><span class="badge badge-code">N4 · 5e</span><span class="badge badge-neutre">mini-cours + schéma à compléter</span></p>
+<p class="p-appel">Un fichier, c'est une adresse : le retrouver, c'est suivre un chemin.</p>
+<p class="p-bo"><code>OST14</code> (5e) — « Recenser des données, les identifier, les classer, les représenter, les stocker dans des fichiers, les retrouver dans une arborescence. »</p>
+</header>
+<blockquote class="accroche"><p>« Vous cherchez "exposé SVT" dans la recherche de l'ordinateur : rien ne sort. Le fichier existe pourtant. Le problème n'est pas l'ordinateur, c'est le chemin. »</p></blockquote>
+<section class="p-section s-cours">
+<h4>Le mini-cours</h4>
+<p><strong>La situation.</strong> Un fichier peut exister et rester introuvable. La recherche ne le trouve pas parce que son nom ne contient pas les mots cherchés, ou parce qu'on ne sait pas dans quel dossier il est rangé. Chercher au hasard prend plus de temps que ranger une fois.</p>
+<p><strong>Idée 1 — un nom et une place.</strong> Un fichier a deux choses : un <strong>nom</strong> et une <strong>place</strong>. Sa place complète s'appelle son <strong>chemin</strong>. Le chemin se lit du plus grand au plus petit, et il se termine par le nom du fichier : <code>Mon espace / Travail / Français / fiche-lecture.odt</code>.</p>
+<p><strong>L'analogie.</strong> C'est une <strong>adresse postale</strong> : le pays, la ville, la rue, le numéro. On ne dit pas « la maison » : on dit où elle est. Le chemin fait la même chose pour un fichier : il dit dans quel dossier, puis dans quel sous-dossier, il faut aller.</p>
+<p><strong>Un exemple de lecture.</strong> <code>Mon espace / Travail / Français / fiche-lecture.odt</code> se lit : dans <code>Mon espace</code>, le dossier <code>Travail</code> ; dans <code>Travail</code>, le dossier <code>Français</code> ; dans <code>Français</code>, le fichier <code>fiche-lecture.odt</code>. On part toujours de la racine et on descend, branche par branche.</p>
+<p><strong>Idée 2 — une arborescence.</strong> L'ensemble des dossiers forme une <strong>arborescence</strong> : un tronc, des branches, des feuilles. Chaque fichier a <strong>une seule</strong> place. S'il est copié ailleurs, c'est une autre copie, pas le même fichier.</p>
+<p><strong>Idée 3 — trois règles de nommage.</strong> D'abord, dans le nom du <strong>fichier</strong>, pas d'espace ni d'accent (les noms de dossiers, comme <code>Mon espace</code> ou <code>Vacances 2026</code>, sont donnés ici : on ne les renomme pas). Ensuite, une date au format <code>AAAA-MM-JJ</code> au début. Enfin, un nom qui dit le contenu, pas l'humeur : <code>expose-svt-cellule.odt</code>, jamais <code>final(2).odt</code>. L'extension s'écrit en minuscules (<code>.jpg</code>, pas <code>.JPG</code>). Avec la date au début, un compte rendu de TP daté du 17 septembre 2026 devient <code>2026-09-17-compte-rendu-tp.odt</code> ; une photo de classe du 2 juin 2026 devient <code>2026-06-02-photo-classe.jpg</code>.</p>
+<p><strong>Le nom d'un dossier est un panneau.</strong> Un dossier <code>divers</code> ou <code>trucs</code> ne dit rien ; un dossier <code>Technologie</code> dit tout de suite où chercher. Le nom d'un dossier est un panneau indicateur pour celui qui cherche, y compris pour vous dans six mois.</p>
+<p><strong>Pourquoi ces règles ?</strong> Elles servent à deux choses : retrouver sans chercher, et partager un lien sans le casser. Un nom avec un espace ou un accent peut casser un lien ; un nom comme <code>final(2)</code> ne dit rien six mois plus tard.</p>
+<p><strong>Renommer n'est pas ranger.</strong> Renommer un fichier ne le déplace pas. Les deux gestes sont différents : le nom dit ce que c'est, la place dit où il est. Un bon rangement fait les deux, dans cet ordre si possible.</p>
+<p><strong>Les mots à retenir.</strong></p>
+<div class="tab-enveloppe"><table><thead><tr><th>Terme</th><th>Définition en une phrase</th></tr></thead><tbody><tr><td><strong>fichier</strong></td><td>un contenu enregistré sous un nom : texte, image, son, vidéo</td></tr><tr><td><strong>dossier</strong></td><td>un contenant qui regroupe des fichiers ou d'autres dossiers</td></tr><tr><td><strong>arborescence</strong></td><td>l'ensemble des dossiers, organisés du plus grand au plus petit</td></tr><tr><td><strong>chemin</strong></td><td>la suite des dossiers, puis le nom, qui mène à un fichier</td></tr><tr><td><strong>extension</strong></td><td>la fin du nom (<code>.odt</code>, <code>.jpg</code>, <code>.pdf</code>) qui indique le type de fichier</td></tr></tbody></table></div>
+<p><strong>La transition.</strong> Vous allez écrire trois chemins complets, puis renommer deux fichiers selon ces règles.</p>
+</section>
+<div class="schema-bloc">
+<div class="schema-barre" role="group" aria-label="Version du schéma">
+<button type="button" class="onglet actif" data-vue="vide" aria-pressed="true">À compléter</button>
+<button type="button" class="onglet" data-vue="corrige" aria-pressed="false">Corrigé</button>
+<button type="button" class="plein" aria-pressed="false">⤢ Plein écran</button>
+</div>
+<div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N4 — Un fichier, c'est une adresse</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N4 — Un fichier, c'est une adresse</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">L'arbre est donné : écrire trois chemins, puis renommer deux fichiers</text>
+<rect x="680" y="136" width="240" height="52" rx="14" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="4"/>
+<text x="800" y="170" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#0b6b4f">Mon espace</text>
+<line x1="800" y1="188" x2="800" y2="212" stroke="#24557a" stroke-width="3"/>
+<line x1="340" y1="212" x2="1230" y2="212" stroke="#24557a" stroke-width="3"/>
+<line x1="340" y1="212" x2="340" y2="238" stroke="#24557a" stroke-width="3"/>
+<rect x="245" y="238" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="340" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Travail</text>
+<line x1="840" y1="212" x2="840" y2="238" stroke="#24557a" stroke-width="3"/>
+<rect x="745" y="238" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="840" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Photos</text>
+<line x1="1230" y1="212" x2="1230" y2="238" stroke="#24557a" stroke-width="3"/>
+<rect x="1135" y="238" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1230" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Musique</text>
+<line x1="340" y1="288" x2="340" y2="308" stroke="#24557a" stroke-width="3"/>
+<line x1="190" y1="308" x2="490" y2="308" stroke="#24557a" stroke-width="3"/>
+<line x1="190" y1="308" x2="190" y2="334" stroke="#24557a" stroke-width="3"/>
+<line x1="490" y1="308" x2="490" y2="334" stroke="#24557a" stroke-width="3"/>
+<line x1="840" y1="288" x2="840" y2="334" stroke="#24557a" stroke-width="3"/>
+<rect x="95" y="334" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="190" y="366" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Technologie</text>
+<rect x="395" y="334" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="490" y="366" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Français</text>
+<rect x="720" y="334" width="240" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="840" y="366" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Vacances 2026</text>
+<line x1="190" y1="384" x2="190" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="55" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="190" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">expose-svt.odt</text>
+<line x1="490" y1="384" x2="490" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="355" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="490" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">fiche-lecture.odt</text>
+<line x1="840" y1="384" x2="840" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="705" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="840" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">plage.jpg</text>
+<line x1="1230" y1="288" x2="1230" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="1095" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1230" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">partition.pdf</text>
+<rect x="90" y="480" width="1420" height="122" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2"/>
+<text x="120" y="504" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="700" fill="#0b6b4f">TÂCHE 1 — Écrire le chemin complet</text>
+<text x="120" y="534" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">① expose-svt.odt  →  ……………………………………………………………………………………</text>
+<text x="120" y="564" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">② plage.jpg  →  ……………………………………………………………………………………………</text>
+<text x="120" y="594" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">③ partition.pdf  →  ………………………………………………………………………………………</text>
+<rect x="90" y="614" width="1420" height="272" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2"/>
+<text x="120" y="640" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="700" fill="#0b6b4f">TÂCHE 2 — Renommer deux fichiers</text>
+<text x="120" y="674" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Fichiers reçus, pas encore rangés — à renommer</text>
+<rect x="110" y="688" width="430" height="68" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="325" y="710" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">exposé SVT final(2).odt</text>
+<text x="325" y="741" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">cellule — 2026-11-03</text>
+<line x1="548" y1="722" x2="580" y2="722" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="588" y="688" width="882" height="68" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1029" y="722" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">④ nouveau nom : ………………………………………………………………</text>
+<rect x="110" y="768" width="430" height="68" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="325" y="790" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">photo plage.JPG</text>
+<text x="325" y="821" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">vacances — 2026-08-15</text>
+<line x1="548" y1="802" x2="580" y2="802" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="588" y="768" width="882" height="68" rx="14" fill="#fff6d5" stroke="#b03a2e" stroke-width="3" stroke-dasharray="10 7"/>
+<text x="1029" y="802" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑤ nouveau nom : ………………………………………………………………</text>
+<text x="800" y="862" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Plusieurs noms sont valables dès qu'ils respectent les trois règles.</text>
+</svg></div>
+<div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>N4 — Un fichier, c'est une adresse</title>
+<defs><marker  id="ar" data-ost-id="ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="ar-chaud" data-ost-id="ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="ar-froid" data-ost-id="ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="ar-vert" data-ost-id="ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">N4 — Un fichier, c'est une adresse</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">L'arbre est donné : écrire trois chemins, puis renommer deux fichiers</text>
+<rect x="680" y="136" width="240" height="52" rx="14" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="4"/>
+<text x="800" y="170" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#0b6b4f">Mon espace</text>
+<line x1="800" y1="188" x2="800" y2="212" stroke="#24557a" stroke-width="3"/>
+<line x1="340" y1="212" x2="1230" y2="212" stroke="#24557a" stroke-width="3"/>
+<line x1="340" y1="212" x2="340" y2="238" stroke="#24557a" stroke-width="3"/>
+<rect x="245" y="238" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="340" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Travail</text>
+<line x1="840" y1="212" x2="840" y2="238" stroke="#24557a" stroke-width="3"/>
+<rect x="745" y="238" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="840" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Photos</text>
+<line x1="1230" y1="212" x2="1230" y2="238" stroke="#24557a" stroke-width="3"/>
+<rect x="1135" y="238" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1230" y="270" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Musique</text>
+<line x1="340" y1="288" x2="340" y2="308" stroke="#24557a" stroke-width="3"/>
+<line x1="190" y1="308" x2="490" y2="308" stroke="#24557a" stroke-width="3"/>
+<line x1="190" y1="308" x2="190" y2="334" stroke="#24557a" stroke-width="3"/>
+<line x1="490" y1="308" x2="490" y2="334" stroke="#24557a" stroke-width="3"/>
+<line x1="840" y1="288" x2="840" y2="334" stroke="#24557a" stroke-width="3"/>
+<rect x="95" y="334" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="190" y="366" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Technologie</text>
+<rect x="395" y="334" width="190" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="490" y="366" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Français</text>
+<rect x="720" y="334" width="240" height="50" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="840" y="366" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">Vacances 2026</text>
+<line x1="190" y1="384" x2="190" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="55" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="190" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">expose-svt.odt</text>
+<line x1="490" y1="384" x2="490" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="355" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="490" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">fiche-lecture.odt</text>
+<line x1="840" y1="384" x2="840" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="705" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="840" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">plage.jpg</text>
+<line x1="1230" y1="288" x2="1230" y2="422" stroke="#24557a" stroke-width="3"/>
+<rect x="1095" y="422" width="270" height="50" rx="8" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="1230" y="454" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">partition.pdf</text>
+<rect x="90" y="480" width="1420" height="122" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2"/>
+<text x="120" y="504" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="700" fill="#0b6b4f">TÂCHE 1 — Écrire le chemin complet</text>
+<text x="120" y="534" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">① expose-svt.odt  →  Mon espace / Travail / Technologie / expose-svt.odt</text>
+<text x="120" y="564" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">② plage.jpg  →  Mon espace / Photos / Vacances 2026 / plage.jpg</text>
+<text x="120" y="594" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">③ partition.pdf  →  Mon espace / Musique / partition.pdf</text>
+<rect x="90" y="614" width="1420" height="272" rx="14" fill="#fbfdff" stroke="#24557a" stroke-width="2"/>
+<text x="120" y="640" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="700" fill="#0b6b4f">TÂCHE 2 — Renommer deux fichiers</text>
+<text x="120" y="674" text-anchor="start" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Fichiers reçus, pas encore rangés — à renommer</text>
+<rect x="110" y="688" width="430" height="68" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="325" y="710" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">exposé SVT final(2).odt</text>
+<text x="325" y="741" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">cellule — 2026-11-03</text>
+<line x1="548" y1="722" x2="580" y2="722" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="588" y="688" width="882" height="68" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1029" y="722" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">④ 2026-11-03-expose-svt-cellule.odt</text>
+<rect x="110" y="768" width="430" height="68" rx="14" fill="#ffffff" stroke="#24557a" stroke-width="2"/>
+<text x="325" y="790" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">photo plage.JPG</text>
+<text x="325" y="821" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#12314a">vacances — 2026-08-15</text>
+<line x1="548" y1="802" x2="580" y2="802" stroke="#24557a" stroke-width="4" marker-end="url(#ar)"/>
+<rect x="588" y="768" width="882" height="68" rx="14" fill="#eef4ff" stroke="#24557a" stroke-width="3"/>
+<text x="1029" y="802" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="600" fill="#12314a">⑤ 2026-08-15-plage.jpg</text>
+<text x="800" y="862" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">Plusieurs noms sont valables dès qu'ils respectent les trois règles.</text>
+</svg></div>
+</div>
+<section class="p-section s-prepa">
+<h4>À préparer</h4>
+<p>Le schéma <strong><code>schemas/n4-arborescence-a-completer.svg</code></strong> : un arbre déjà nommé (Mon espace, Travail, Technologie, Français, Photos, Vacances 2026, Musique) et quatre fichiers (<code>expose-svt.odt</code>, <code>fiche-lecture.odt</code>, <code>plage.jpg</code>, <code>partition.pdf</code>). <strong>Cinq trous, en deux tâches séparées</strong> : la tâche 1 (① à ③) demande d'écrire trois chemins complets ; la tâche 2 (④ et ⑤) demande de renommer deux fichiers <strong>reçus, qui ne sont pas encore rangés dans l'arbre</strong>. Le corrigé est dans <code>schemas/n4-arborescence-corrige.svg</code> ; il donne <strong>une</strong> proposition valable — plusieurs noms respectent les règles, dès lors qu'ils les respectent toutes.</p>
+<p>Le schéma se lit en deux temps, et il faut le dire à la classe : le cadre « <strong>TÂCHE 1 — Écrire le chemin complet</strong> » (① à ③), puis le cadre « <strong>TÂCHE 2 — Renommer deux fichiers</strong> » (④ et ⑤). D'abord on <strong>écrit</strong> un chemin (on part de la racine et on descend), ensuite on <strong>renomme</strong> (on applique les trois règles). Ce ne sont pas deux exercices de la même nature.</p>
+<p><code>fiche-lecture.odt</code> est présent dans l'arbre mais n'est pas demandé : il sert à montrer que tous les fichiers ont une place, pas seulement ceux de l'exercice.</p>
+</section>
+<section class="p-section s-consigne">
+<h4>La consigne, étape par étape</h4>
+<p>Deux tâches, dans l'ordre. On numérote les réponses comme les trous et on écrit les chemins avec des barres obliques (<code>/</code>) entre les dossiers ; les espaces autour des barres ne comptent pas.</p>
+<ol><li><strong>Tâche 1, trou ①.</strong> Partez de <code>Mon espace</code>, descendez branche par branche jusqu'à <code>expose-svt.odt</code>, et écrivez son chemin complet.</li><li><strong>Tâche 1, trou ②.</strong> Cherchez <code>plage.jpg</code> dans l'arbre, puis écrivez son chemin complet, de <code>Mon espace</code> jusqu'au fichier.</li><li><strong>Tâche 1, trou ③.</strong> Même travail pour <code>partition.pdf</code> : écrivez son chemin complet.</li><li><strong>Tâche 2, trou ④.</strong> Lisez l'étiquette du fichier <code>exposé SVT final(2).odt</code> : c'est un exposé sur la cellule, daté du 3 novembre 2026. Renommez-le en appliquant les trois règles : date au début, pas d'espace ni d'accent, nom qui dit le contenu.</li><li><strong>Tâche 2, trou ⑤.</strong> Même travail pour <code>photo plage.JPG</code> : c'est une photo de vacances datée du 15 août 2026. Pensez à écrire l'extension en minuscules.</li></ol>
+<p>Quand les deux tâches sont finies, faites comparer au tableau deux propositions de la classe pour le trou ④. Si elles respectent toutes les deux les trois règles, elles sont toutes les deux acceptables : c'est l'occasion de le dire explicitement.</p>
+</section>
+<section class="p-section s-deroule">
+<h4>Déroulé minuté</h4>
+<div class="tab-enveloppe"><table><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Lisez l'accroche, laissez 30 s de réflexion silencieuse</td><td>Réfléchit</td></tr><tr><td>1-5 min</td><td>Mini-cours : nom et place, chemin, arborescence, les trois règles</td><td>Écoute, note les mots</td></tr><tr><td>5-6 min</td><td>Projetez le schéma et rappelez les deux tâches</td><td>Observe l'arbre</td></tr><tr><td>6-8 min</td><td>Tâche 1 : faites écrire les chemins ① à ③ ; un élève écrit, la classe vérifie</td><td>Dicte, corrige les chemins</td></tr><tr><td>8-12 min</td><td>Tâche 2 : faites renommer les deux fichiers ④ et ⑤</td><td>Applique les trois règles</td></tr><tr><td>12-14 min</td><td>Question socle, puis comparez deux propositions d'élèves au tableau</td><td>Compare, argumente</td></tr><tr><td>14-15 min</td><td>Question de sortie</td><td>Répond, note</td></tr></tbody></table></div>
+</section>
+<section class="p-section s-dire">
+<h4>Le texte à dire</h4>
+<blockquote><p>« Un fichier a un nom et une place ; sa place complète s'appelle son chemin. Le chemin se lit du plus grand au plus petit, comme une adresse postale : le pays, la ville, la rue, le numéro. Ranger, ce n'est pas être maniaque : c'est rendre un fichier retrouvable sans le chercher — et par quelqu'un d'autre que soi. »</p></blockquote>
+</section>
+<section class="p-section s-question">
+<h4>Question socle</h4>
+<p>« Écrivez le chemin complet de <code>plage.jpg</code>. »</p>
+<p>Réponse attendue : <code>Mon espace / Photos / Vacances 2026 / plage.jpg</code>. On vérifie trois choses : le départ (<code>Mon espace</code>), la suite des dossiers dans l'ordre, et le nom du fichier à la fin.</p>
+<p>Si un élève écrit seulement <code>Photos / Vacances 2026 / plage.jpg</code>, il manque la racine : faites-lui remarquer que le chemin doit partir de <code>Mon espace</code>, comme une adresse part du pays.</p>
+</section>
+<section class="p-section s-question">
+<h4>Question d'approfondissement</h4>
+<p>« Deux élèves rangent le même fichier à deux endroits différents : lequel retrouvera l'autre ? » → aucun des deux, s'ils ont suivi des règles différentes. Celui qui a suivi une règle commune retrouvera le fichier de l'autre. D'où l'intérêt d'une convention de classe, et pas d'un rangement « à sa façon ».</p>
+<p>C'est le même raisonnement que pour le nom des fichiers : une règle personnelle ne sert qu'à soi ; une règle commune sert à tous. La question de sortie reprend exactement ce fil.</p>
+</section>
+<section class="p-section s-question">
+<h4>Étayage</h4>
+<p>Donnez le début du chemin : <code>Mon espace / Travail / …</code>. Pour la tâche 2, donnez la date et le thème ; l'élève n'a plus qu'à appliquer les trois règles et à écrire le nom.</p>
+<p>Pour la tâche 2, écrivez les trois règles au tableau sous forme de questions : « y a-t-il un espace ou un accent ? la date est-elle au début ? le nom dit-il le contenu ? ». L'élève vérifie au lieu de se souvenir.</p>
+</section>
+<section class="p-section s-attention">
+<h4>Ne dites pas</h4>
+<ul><li>« Rangez vos fichiers » → sans critère, c'est un reproche, pas une consigne. Le critère est : <strong>retrouver sans chercher</strong>, et partager un lien qui ne casse pas.</li><li>« Il faut toujours tout ranger » → non : un brouillon en vrac est normal. Ce qui compte, c'est de savoir où est ce qu'on garde.</li><li>« Il n'y a qu'un seul bon nom » → non : le corrigé donne <strong>une</strong> proposition ; plusieurs noms respectent les règles dès lors qu'ils les respectent <strong>toutes</strong>.</li><li>« Un dossier par jour, c'est bien ranger » → non : une arborescence utile se construit par thème ou par projet, pas par date de création.</li><li>« Un fichier mal nommé est perdu » → non : il est introuvable par la recherche, mais il existe. Le problème est le nom et la place, pas le fichier.</li></ul>
+</section>
+<section class="p-section s-sortie">
+<h4>Question de sortie</h4>
+<p>« Comment ranger pour qu'un autre retrouve vos fichiers sans que vous soyez là ? » — attendez trois idées : une arborescence commune, des noms qui disent le contenu, et une date au début. C'est la question qui transforme le rangement en compétence.</p>
+<p>Notez les trois idées au tableau sous forme de colonnes : « où », « comment le nommer », « comment dater ». La classe repart avec une règle utilisable, pas avec un conseil.</p>
+</section>
+<section class="p-section s-retenir">
+<h4>À retenir</h4>
+<ul><li>Un fichier a un nom et une place ; sa place complète est son chemin, lu du plus grand au plus petit.</li><li>Tous les dossiers forment une arborescence ; chaque fichier a une seule place.</li><li>Trois règles de nommage : pas d'espace ni d'accent, une date <code>AAAA-MM-JJ</code> au début, un nom qui dit le contenu.</li><li>Renommer ne déplace pas : le nom dit ce que c'est, la place dit où il est.</li></ul>
+</section>
+</article>
+</main>
+
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni
+adresse, ni compte, ne conserve rien et n'envoie rien sur Internet.</footer>
+<footer>
+  <p>Le quart d'heure techno — Technologie au collège, cycle 4. Contenus issus des fiches de préparation
+     des pastilles&nbsp;; les schémas sont des dessins techniques, sans image externe.</p>
+</footer>
+
+<script>
+(function () {
+  // Onglets de version du schéma + plein écran. Aucune mémoire : rien n'est
+  // conservé d'une visite à l'autre, et rien ne quitte la page.
+  document.querySelectorAll('.schema-bloc').forEach(function (bloc) {
+    var onglets = bloc.querySelectorAll('.onglet');
+    var vues = bloc.querySelectorAll('.schema-vue');
+    function montrer(vue) {
+      onglets.forEach(function (b) {
+        var actif = b.dataset.vue === vue;
+        b.classList.toggle('actif', actif);
+        b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+      });
+      vues.forEach(function (v) {
+        if (v.dataset.vueBloc === vue) { v.removeAttribute('hidden'); }
+        else { v.setAttribute('hidden', ''); }
+      });
+    }
+    onglets.forEach(function (b) {
+      b.addEventListener('click', function () { montrer(b.dataset.vue); });
+    });
+    var plein = bloc.querySelector('.plein');
+    if (plein) {
+      plein.addEventListener('click', function () {
+        var actif = bloc.classList.toggle('en-plein');
+        plein.setAttribute('aria-pressed', actif ? 'true' : 'false');
+        plein.textContent = actif ? '⤡ Réduire' : '⤢ Plein écran';
+        document.body.style.overflow = actif ? 'hidden' : '';
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && bloc.classList.contains('en-plein')) { plein.click(); }
+      });
+    }
+  });
+})();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Modèles de commentaire : des phrases génériques, à compléter par le
+// professeur. Elles ne nomment NI niveau NI identifiant — le panneau les
+// déduit déjà de l'onglet et de l'élément sélectionnés. C'est ce qui
+// remplace les exemples figés, qui désignaient toujours un autre niveau
+// que celui qu'on corrigeait.
+var MODELES_COMMENTAIRE = [
+    {libelle: 'énoncé pas clair', texte: "L'énoncé n'est pas clair : reformule-le plus simplement, sans jargon."},
+    {libelle: 'pas ce que je veux', texte: "Ça ne correspond pas à ce que je veux : <ce que j'attends, en une phrase>."},
+    {libelle: 'élève bloqué', texte: "L'élève est bloqué ici : il devrait pouvoir <ce qu'il doit réussir à faire>."},
+    {libelle: 'trop long', texte: "C'est trop long et illisible : raccourcis ce texte, l'essentiel seul compte."},
+    {libelle: 'à retirer', texte: "Retire ce texte : il n'apporte rien à l'élève."},
+    {libelle: 'ajouter des choix', texte: "Ajoute <nombre> propositions de plus, du même niveau de difficulté."}
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    // Un modèle remplit un commentaire vide, s'ajoute à la suite sinon :
+    // rien de ce qui est déjà écrit n'est effacé.
+    var rangeeModeles = document.createElement('div');
+    rangeeModeles.className = 'ost-modeles';
+    rangeeModeles.setAttribute('role', 'group');
+    rangeeModeles.setAttribute('aria-label', 'Modèles de commentaire');
+    MODELES_COMMENTAIRE.forEach(function (modele) {
+        var bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'ost-modele';
+        bouton.textContent = modele.libelle;
+        bouton.title = 'Insère « ' + modele.texte + ' » — à compléter.';
+        bouton.addEventListener('click', function () {
+            var actuel = zoneCommentaire.value.trim();
+            zoneCommentaire.value = actuel === '' ? modele.texte : actuel + ' ' + modele.texte;
+            zoneCommentaire.dispatchEvent(new Event('input'));
+            zoneCommentaire.focus();
+        });
+        rangeeModeles.appendChild(bouton);
+    });
+    blocCom.appendChild(rangeeModeles);
+    var legendeModeles = document.createElement('p');
+    legendeModeles.className = 'ost-modeles-legende';
+    legendeModeles.textContent = "Un modèle s'ajoute au commentaire : complétez les <…> avant de copier le prompt.";
+    blocCom.appendChild(legendeModeles);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+</body>
+</html>
