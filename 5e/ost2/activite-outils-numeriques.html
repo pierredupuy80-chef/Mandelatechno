@@ -6883,7 +6883,7 @@
                                     <span class="mail-piece-refus" aria-hidden="true">⛔</span>
                                 </div>
                                 <p class="mail-statut"><strong>Le message a été envoyé sans la pièce jointe.</strong></p>
-                                <div class="mail-erreur" role="alert">
+                                <div class="mail-erreur" role="note" aria-label="Message d’erreur du webmail">
                                     <p class="mail-erreur-titre">⛔ Pièce jointe refusée</p>
                                     <p>Le fichier « travail_techno.tiff » pèse 10 Mo : il dépasse la limite de 5 Mo par pièce jointe. Son format .tiff ne fait pas partie des formats acceptés (.pdf, .jpg, .png).</p>
                                 </div>
@@ -6924,10 +6924,10 @@
 
                         <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
                             <div class="info-block" id="bloc-diagnostic-attendu">
-                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">Le mail est parti sans la pièce jointe : le fichier « travail_techno.tiff » pèse 10 Mo, alors que le webmail accepte au maximum 5 Mo par pièce jointe, et son format .tiff ne fait pas partie des formats autorisés (.pdf, .jpg, .png). Le webmail a donc refusé la pièce jointe, et M. Diallo a reçu un message vide.</span></p>
+                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">Le mail est parti sans la pièce jointe : le fichier « travail_techno.tiff » pèse 10 Mo, alors que le webmail accepte au maximum 5 Mo par pièce jointe, et son format .tiff ne fait pas partie des formats autorisés (.pdf, .jpg, .png). Le webmail a donc refusé la pièce jointe, et M. Diallo a reçu le message sans le fichier.</span></p>
                             </div>
                             <div class="info-block" id="bloc-solution-attendue">
-                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Leïa doit convertir son travail dans un format accepté : .pdf pour un document, .jpg ou .png pour une image. Elle doit aussi réduire sa taille sous 5 Mo (exporter en qualité raisonnable, compresser l'image ou le PDF), puis joindre à nouveau le fichier et vérifier que la pièce jointe est bien affichée avant d'envoyer. Renommer l'extension .tiff en .pdf ne suffit pas : il faut réenregistrer le fichier dans le bon format avec le logiciel.</span></p>
+                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Leïa doit convertir son travail dans un format accepté : .pdf pour un document, .jpg ou .png pour une image. Elle doit aussi réduire sa taille pour ne pas dépasser 5 Mo (exporter en qualité raisonnable, compresser l'image ou le PDF), puis joindre à nouveau le fichier et vérifier que la pièce jointe est bien affichée avant d'envoyer. Renommer l'extension .tiff en .pdf ne suffit pas : il faut réenregistrer le fichier dans le bon format avec le logiciel.</span></p>
                             </div>
                             <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
                                 Continuer vers la synthèse →
@@ -6938,7 +6938,7 @@
                     <!-- ALLER-PLUS-LOIN-N3 : DEBUT -->
                     <aside class="encart-aller-plus-loin cadre-reponse marge-haut" data-ost-id="n3-aller-plus-loin" aria-labelledby="titre-aller-plus-loin-n3">
                         <h3 id="titre-aller-plus-loin-n3">📚 Pour aller plus loin : le poids et le format d'un fichier</h3>
-                        <p>Le .tiff est un format d'image non compressé : une seule photo peut peser plusieurs dizaines de Mo. Le .jpg compresse l'image et reste lisible partout, pour un poids bien plus faible.</p>
+                        <p>Le .tiff est un format d'image lourd, souvent non compressé : une seule photo peut peser plusieurs dizaines de Mo. Le .jpg compresse l'image et reste lisible partout, pour un poids bien plus faible.</p>
                         <p>Pour réduire le poids d'un fichier sans changer son contenu visible, on baisse la résolution ou la qualité à l'export, ou on compresse le PDF. On vérifie ensuite la taille avant de joindre le fichier : c'est plus sûr que de découvrir le refus au moment de l'envoi.</p>
                     </aside>
                     <!-- ALLER-PLUS-LOIN-N3 : FIN -->
@@ -7001,22 +7001,22 @@
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f3">
-                            <h3>📖 Diagnostiquer et corriger un fichier illisible (N3 - Application)</h3>
+                            <h3>📖 Lire un refus de pièce jointe et corriger l'envoi (N3 - Application)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f3-p1">
-                                    <strong>Diagnostiquer un fichier qui ne s'ouvre pas :</strong>
-                                    <p>Comparer l'extension avec le contenu : une « photo » en .txt de 60 Ko au lieu de 3 Mo a un format qui ne correspond pas.</p>
+                                    <strong>La règle du webmail :</strong>
+                                    <p>Le webmail du collège accepte 5 Mo maximum par pièce jointe et seulement les formats .pdf, .jpg et .png.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f3-p2">
-                                    <strong>Éliminer les fausses pistes :</strong>
-                                    <p>Si les autres fichiers de la clé s'ouvrent, le support n'est pas en cause ; si les autres envois passent, la messagerie non plus.</p>
+                                    <strong>Deux causes pour un même refus :</strong>
+                                    <p>Le fichier de Leïa pèse 10 Mo (trop lourd) et il est au format .tiff (non accepté) : chacune de ces deux raisons suffit à faire refuser la pièce jointe.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f3-p3">
-                                    <strong>Corriger le bon format :</strong>
-                                    <p>Rouvrir le document dans son logiciel et enregistrer à nouveau (« Enregistrer sous ») dans le format adapté au contenu.</p>
+                                    <strong>Convertir, pas renommer :</strong>
+                                    <p>On ne transforme pas un .tiff en .pdf en renommant l'extension : il faut réenregistrer ou exporter le fichier dans un format accepté, puis réduire sa taille pour ne pas dépasser 5 Mo.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f3-p4">
-                                    <strong>Protéger son travail :</strong>
-                                    <p>Enregistrer souvent (Ctrl + S) et garder une copie de sécurité sur un second support : clé USB, disque externe ou cloud.</p>
+                                    <strong>Vérifier avant d'envoyer :</strong>
+                                    <p>Avant l'envoi, on vérifie que la pièce jointe est bien affichée, avec son format et sa taille : un message peut partir sans le fichier.</p>
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f4">
