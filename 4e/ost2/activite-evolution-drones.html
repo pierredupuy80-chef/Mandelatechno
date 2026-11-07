@@ -5120,7 +5120,7 @@ color: #a9b8cc;
 :where(html[data-theme="sombre"]) .vol-banc > legend {
 background: #16202e;
 }
-    </style>
+</style>
 <!-- RETOUR-ACCUEIL-CSS:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
 <style id="retour-accueil-style">
 /* ── RETOUR À L'ACCUEIL DU SITE ───────────────────────────────────── */
@@ -5244,6 +5244,58 @@ html[data-theme="sombre"] .glossaire-intro {
 }
 </style>
 <!-- GLOSSAIRE-GREFFE-CSS:FIN -->
+<!-- EXPLICATION-MASQUEE:DEBUT — Greffé par _outils/template-activite/masquer_bonne_reponse.py depuis index.html (bloc EXPLICATION-MASQUEE:CSS) : NE PAS ÉDITER ICI — modifier le template, puis regreffer. -->
+<style>
+        /* EXPLICATION-MASQUEE:CSS-DEBUT
+           L'explication d'une question n'est pas imposée : après une erreur,
+           l'élève voit d'abord SA proposition marquée (et elle seule), cherche
+           ce qui cloche, puis demande l'explication s'il en a besoin. Le volet
+           est un <details> natif : clavier, lecteur d'écran et sauvegarde de la
+           progression (innerHTML) fonctionnent sans JavaScript. */
+        details.explication-masquee {
+            margin-top: var(--espacement-xs);
+            font-size: 0.875rem;
+        }
+
+        details.explication-masquee summary {
+            cursor: pointer;
+            font-weight: 600;
+            /* Couleur du texte, pas la primaire : posée sur le fond rouge du
+               retour faux (#fee2e2), la primaire ne donne que 4,23:1 — sous le
+               seuil AA de 4,5:1 que mesure verifier_mode_sombre.py. La couleur
+               du texte monte à 12:1, en clair comme en sombre, et le
+               soulignement garde l'affordance du volet. */
+            color: var(--couleur-texte);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+            min-height: var(--hauteur-cible-min);
+            display: flex;
+            align-items: center;
+            gap: var(--espacement-xs);
+        }
+
+        details.explication-masquee summary:focus-visible {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 2px;
+        }
+
+        details.explication-masquee .explication {
+            display: block;
+            margin-top: var(--espacement-xs);
+            padding-top: var(--espacement-xs);
+            border-top: 1px solid currentColor;
+            color: var(--couleur-texte);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        details.explication-masquee .explication strong {
+            color: var(--couleur-texte);
+        }
+        /* EXPLICATION-MASQUEE:CSS-FIN */
+</style>
+<!-- EXPLICATION-MASQUEE:FIN -->
 </head>
 <body>
 <!-- RETOUR-ACCUEIL:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
@@ -5342,6 +5394,7 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
     font-weight: 600;
 }
 </style>
+<!-- SAUVEGARDE:UI-DEBUT
      Barre « Ma progression » : sauvegarde par fichier (export) et
      reprise (import). Dans le flux, entre l'en-tête et la barre de
      progression — visible sur tous les onglets, atteignable au clavier
@@ -6464,6 +6517,15 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                  est forcé par construction : dans chaque terrain, satisfaire
                  les quatre exigences coûte plus que le budget de l'équipe
                  (démonstration : `verifier-compromis.py`). -->
+<!-- N4 — Concevoir un drone de sauvetage (atelier sur mesure)
+                 Refonte du 27/10/2026 à la demande du professeur : la situation
+                 est un drone de sauvetage, l'élève choisit son TERRAIN, dit
+                 pour chaque composant s'il doit être performant ou non, puis
+                 compose son drone. Aucune donnée chiffrée — ni mAh, ni kilos,
+                 ni minutes : des mots, et un budget dit « serré ». Le compromis
+                 est forcé par construction : dans chaque terrain, satisfaire
+                 les quatre exigences coûte plus que le budget de l'équipe
+                 (démonstration : `verifier-compromis.py`). -->
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir le drone de sauvetage de votre terrain</h2>
@@ -6522,7 +6584,7 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                             </button>
                         </div>
 
-                        <h3 class="marge-haut">Étape 2 — exprimez votre besoin en terme de composants.</h3>
+                        <h3 class="marge-haut">Étape 2 — Dire quels composants doivent être performants</h3>
                         <p>Pour chaque composant, dites ce que votre terrain exige. Sur certains terrains, un composant simple suffit ; ailleurs, il ne pardonnera pas l'approximation. Vous pouvez demander plus que nécessaire — mais cela se paie, et l'atelier vous le montrera.</p>
 
                         <div class="grille-demandes">
@@ -6568,7 +6630,7 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                             </div>
                         </div>
 
-                        <h3 class="marge-haut">Étape 3 — Choisissez les pièces de votre drone</h3>
+                        <h3 class="marge-haut">Étape 3 — Composer le drone</h3>
                         <p>Cliquez sur chaque zone du schéma (en pointillé) et choisissez un composant dans la liste qui s'ouvre. Aucun composant n'est le meilleur partout : celui qui gagne sur un point coûte plus cher ou pèse plus lourd.</p>
 
                         <div class="atelier schema-drone" id="schema-drone" role="group" aria-label="Schéma du drone à compléter">
@@ -6607,7 +6669,7 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                         <p id="texte-bilan-mission">Choisissez un terrain, indiquez vos exigences, puis composez le drone : le compromis s'affichera ici.</p>
                     </div>
 
-                    <h3 class="marge-haut">Étape 4 — Vous devez faire un compromis</h3>
+                    <h3 class="marge-haut">Étape 4 — Le compromis que vous acceptez</h3>
                     <p>Votre drone ne peut pas tout faire, et le budget ne suit pas. Nommez ce à quoi vous renoncez, et comment l'équipe de secours s'en accommode : un vol de jour, une batterie de rechange, un relais au sol, un pilote qui connaît le terrain, un second drone plus simple…</p>
                     <textarea
                         id="schema-solution"
@@ -6829,7 +6891,21 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
             <section id="contenu-bonus" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-bonus">
                 <div class="activite-bonus deverrouille">
                     <h3>🎉 Activité Bonus Déverrouillée !</h3>
-                    <p>Félicitations ! Vous avez terminé tous les niveaux. Deux jeux vous attendent pour réinvestir le cours : le <strong>banc d'essai</strong>, où l'on règle le drone puis où on le pose sur cinq cartes accidentées de plus en plus grandes, puis le <strong>colis express</strong>, où l'on pilote le drone de livraison du prof.</p>
+                    <p>Félicitations ! Vous avez terminé tous les niveaux. Une <strong>frise chronologique interactive</strong>, proposée par un autre professeur de technologie, vous attend d'abord pour situer le drone dans l'histoire des objets techniques. Puis deux jeux vous attendent pour réinvestir le cours : le <strong>banc d'essai</strong>, où l'on règle le drone puis où on le pose sur cinq cartes accidentées de plus en plus grandes, puis le <strong>colis express</strong>, où l'on pilote le drone de livraison du prof.</p>
+                </div>
+
+                <div class="carte-contenu marge-haut">
+                    <h2>🌴 Une activité proposée par un confrère</h2>
+                    <p>Cette frise chronologique vient d'un autre professeur de technologie : elle prolonge le travail de la séquence sur l'évolution des objets techniques. Le lien ouvre son site — le contenu reste chez son auteur. À jouer sur un ordinateur : le jeu se manipule à la souris.</p>
+                    <article class="carte-jeu marge-haut">
+                        <h3>ChronoTech — Techno-Flash</h3>
+                        <p>Quatre frises chronologiques à compléter en deux étapes : place les objets techniques sur la frise dans le bon ordre, puis relie chaque évolution à l'invention ou à l'innovation qui l'a provoquée. Le drone y trouve sa place parmi les objets qui ont changé la société.</p>
+                        <p class="texte-secondaire">Activité de <a href="https://www.techno-flash.com/" target="_blank" rel="noopener noreferrer">Paul Benyayer — Techno-Flash, professeur de technologie (académie de Montpellier) — © Techno-Flash.com</a>.</p>
+                        <a href="https://techno-flash.com/jeux/ChronoTech/ChronoTech.html" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Ouvrir l'activité →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 10 à 15 minutes</p>
+                    </article>
                 </div>
 
                 <div class="carte-contenu vol-moteur-v2">
@@ -7308,19 +7384,21 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
         // L'explication est affichée SYSTÉMATIQUEMENT, que la réponse soit juste
         // ou fausse : c'est le bouton « Vérifier mes réponses » qui l'apporte.
         function construireFeedback(question, verdict) {
-            let explication = question.getAttribute('data-explication') || '';
-            if (!explication) {
-                const blocVierge = question.querySelector('.explication-quiz');
-                if (blocVierge) explication = blocVierge.textContent.trim();
-            }
-
-            let html = echapperHtml(verdict);
-            if (explication) {
-                html += '<span class="explication"><strong>Explication :</strong> ' +
-                        echapperHtml(explication) + '</span>';
-            }
-            return html;
-        }
+                    let explication = question.getAttribute('data-explication') || '';
+                    if (!explication) {
+                        const blocVierge = question.querySelector('.explication-quiz');
+                        if (blocVierge) explication = blocVierge.textContent.trim();
+                    }
+        
+                    let html = echapperHtml(verdict);
+                    if (explication) {
+                        html += '<details class="explication-masquee">' +
+                                '<summary>Voir l\u2019explication</summary>' +
+                                '<span class="explication"><strong>Explication :</strong> ' +
+                                echapperHtml(explication) + '</span></details>';
+                    }
+                    return html;
+                }
 
         // Sélection d'une proposition : elle est signalée par la surbrillance
         // (classe .selectionnee) et non plus par un bouton radio. Le rôle
@@ -7340,68 +7418,67 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
         }
 
         function validerQuiz(niveau) {
-            const formulaire = document.getElementById(`quiz-${niveau}`);
-            const questions = formulaire.querySelectorAll('.question-quiz');
-            let score = 0;
-            let toutesRepondues = true;
-
-            questions.forEach((question, index) => {
-                const numeroQuestion = index + 1;
-                const optionChoisie = question.querySelector('.option-reponse.selectionnee');
-                const feedback = question.querySelector('.feedback-reponse');
-
-                if (!optionChoisie) {
-                    toutesRepondues = false;
-                    return;
-                }
-
-                const valeurReponse = optionChoisie.getAttribute('data-value');
-                const bonneReponse = bonnesReponses[niveau][`q${numeroQuestion}`];
-
-                // Réinitialiser les classes
-                question.querySelectorAll('.option-reponse').forEach(option => {
-                    option.classList.remove('correcte', 'incorrecte');
-                });
-
-                if (valeurReponse === bonneReponse) {
-                    score++;
-                    optionChoisie.classList.add('correcte');
-                    feedback.innerHTML = construireFeedback(question, '\u2705 Correct ! Bien jou\u00e9.');
-                    feedback.className = 'feedback-reponse visible correct';
-                } else {
-                    optionChoisie.classList.add('incorrecte');
-                    // Montrer la bonne réponse
-                    const bonneOption = question.querySelector(`.option-reponse[data-value="${bonneReponse}"]`);
-                    if (bonneOption) {
-                        bonneOption.classList.add('correcte');
+                    const formulaire = document.getElementById(`quiz-${niveau}`);
+                    const questions = formulaire.querySelectorAll('.question-quiz');
+                    let score = 0;
+                    let toutesRepondues = true;
+        
+                    questions.forEach((question, index) => {
+                        const numeroQuestion = index + 1;
+                        const optionChoisie = question.querySelector('.option-reponse.selectionnee');
+                        const feedback = question.querySelector('.feedback-reponse');
+        
+                        if (!optionChoisie) {
+                            toutesRepondues = false;
+                            return;
+                        }
+        
+                        const valeurReponse = optionChoisie.getAttribute('data-value');
+                        const bonneReponse = bonnesReponses[niveau][`q${numeroQuestion}`];
+        
+                        // Réinitialiser les classes
+                        question.querySelectorAll('.option-reponse').forEach(option => {
+                            option.classList.remove('correcte', 'incorrecte');
+                        });
+        
+                        if (valeurReponse === bonneReponse) {
+                            score++;
+                            optionChoisie.classList.add('correcte');
+                            feedback.innerHTML = construireFeedback(question, '\u2705 Correct ! Bien jou\u00e9.');
+                            feedback.className = 'feedback-reponse visible correct';
+                        } else {
+                            // On ne montre QUE la mauvaise réponse : la proposition de
+                            // l'élève est marquée, la bonne ne l'est pas. Il cherche ce
+                            // qui cloche, corrige, et revérifie — c'est là qu'il
+                            // apprend. L'explication reste offerte, jamais imposée.
+                            optionChoisie.classList.add('incorrecte');
+                            feedback.innerHTML = construireFeedback(question, '\u274c R\u00e9ponse fausse. Ta proposition est surlign\u00e9e en rouge : cherche pourquoi elle ne convient pas, puis corrige ta r\u00e9ponse.');
+                            feedback.className = 'feedback-reponse visible incorrect';
+                        }
+                    });
+        
+                    if (!toutesRepondues) {
+                        alert('Veuillez répondre à toutes les questions avant de valider.');
+                        return;
                     }
-                    feedback.innerHTML = construireFeedback(question, '\u274c Incorrect. La bonne r\u00e9ponse est surlign\u00e9e en vert.');
-                    feedback.className = 'feedback-reponse visible incorrect';
+        
+                    // Afficher le résultat
+                    const resultatDiv = document.getElementById(`resultat-quiz-${niveau}`);
+                    const messageResultat = document.getElementById(`message-resultat-${niveau}`);
+                    const boutonSuite = document.getElementById(`bouton-suite-${niveau}`);
+                    
+                    resultatDiv.style.display = 'block';
+                    
+                    if (score === questions.length) {
+                        messageResultat.innerHTML = `<strong>🎉 Parfait !</strong> Vous avez obtenu ${score}/${questions.length}. Vous maîtrisez ce niveau !`;
+                        messageResultat.style.color = 'var(--couleur-succes)';
+                        boutonSuite.classList.remove('cache');
+                    } else {
+                        messageResultat.innerHTML = `<strong>📊 Score :</strong> ${score}/${questions.length}. Les réponses fausses sont marquées en rouge : corrige-les, puis vérifie à nouveau.`;
+                        messageResultat.style.color = 'var(--couleur-alerte)';
+                        boutonSuite.classList.add('cache');
+                    }
                 }
-            });
-
-            if (!toutesRepondues) {
-                alert('Veuillez répondre à toutes les questions avant de valider.');
-                return;
-            }
-
-            // Afficher le résultat
-            const resultatDiv = document.getElementById(`resultat-quiz-${niveau}`);
-            const messageResultat = document.getElementById(`message-resultat-${niveau}`);
-            const boutonSuite = document.getElementById(`bouton-suite-${niveau}`);
-            
-            resultatDiv.style.display = 'block';
-            
-            if (score === questions.length) {
-                messageResultat.innerHTML = `<strong>🎉 Parfait !</strong> Vous avez obtenu ${score}/${questions.length}. Vous maîtrisez ce niveau !`;
-                messageResultat.style.color = 'var(--couleur-succes)';
-                boutonSuite.classList.remove('cache');
-            } else {
-                messageResultat.innerHTML = `<strong>📊 Score :</strong> ${score}/${questions.length}. Vous devez obtenir toutes les bonnes réponses pour continuer. Réessayez !`;
-                messageResultat.style.color = 'var(--couleur-alerte)';
-                boutonSuite.classList.add('cache');
-            }
-        }
 
         // ============================================
         // ÉLÉMENTS INTERACTIFS N2
@@ -7691,76 +7768,74 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
         }
 
         function n3VerifierQCMCorrectif() {
-            if (!qcmCorrectif.conteneur) return true;
-
-            const actions = Array.prototype.slice.call(
-                qcmCorrectif.conteneur.querySelectorAll('.action-corrective'));
-            const totalCorrectes = actions.filter(function (action) {
-                return action.getAttribute('data-correcte') === '1';
-            }).length;
-
-            let justes = 0;
-            let fausses = 0;
-            let oubliees = 0;
-
-            actions.forEach(function (action) {
-                const correcte = action.getAttribute('data-correcte') === '1';
-                const retenue = action.classList.contains('selectionnee');
-                action.classList.remove('bonne', 'mauvaise', 'oubliee');
-
-                const statut = action.querySelector('.statut-action');
-                const explication = n3ExplicationDe(action);
-                if (explication) explication.hidden = false;
-
-                if (correcte && retenue) {
-                    action.classList.add('bonne');
-                    if (statut) statut.textContent = '✓ retenue, et juste';
-                    justes++;
-                } else if (correcte) {
-                    action.classList.add('oubliee');
-                    if (statut) statut.textContent = '! oubliée : cette action était efficace';
-                    oubliees++;
-                } else if (retenue) {
-                    action.classList.add('mauvaise');
-                    if (statut) statut.textContent = '✗ retenue, mais inefficace';
-                    fausses++;
-                } else if (statut) {
-                    statut.textContent = '';
+                    if (!qcmCorrectif.conteneur) return true;
+        
+                    const actions = Array.prototype.slice.call(
+                        qcmCorrectif.conteneur.querySelectorAll('.action-corrective'));
+                    const totalCorrectes = actions.filter(function (action) {
+                        return action.getAttribute('data-correcte') === '1';
+                    }).length;
+        
+                    let justes = 0;
+                    let fausses = 0;
+        
+                    actions.forEach(function (action) {
+                        const correcte = action.getAttribute('data-correcte') === '1';
+                        const retenue = action.classList.contains('selectionnee');
+                        action.classList.remove('bonne', 'mauvaise', 'oubliee');
+        
+                        const statut = action.querySelector('.statut-action');
+                        const explication = n3ExplicationDe(action);
+                        if (explication) explication.hidden = false;
+        
+                        // Seules les actions RETENUES par l'élève sont marquées. Une
+                        // action efficace oubliée garde une ligne neutre : la désigner
+                        // reviendrait à donner la solution.
+                        if (correcte && retenue) {
+                            action.classList.add('bonne');
+                            if (statut) statut.textContent = '✓ retenue, et juste';
+                            justes++;
+                        } else if (retenue) {
+                            action.classList.add('mauvaise');
+                            if (statut) statut.textContent = '✗ retenue, mais inefficace';
+                            fausses++;
+                        } else if (statut) {
+                            statut.textContent = '';
+                        }
+                    });
+        
+                    qcmCorrectif.verifie = true;
+                    const reussi = justes === totalCorrectes && fausses === 0 &&
+                        qcmCorrectif.selection.size === totalCorrectes;
+        
+                    const verdict = document.getElementById('message-plan-action');
+                    if (verdict) {
+                        if (reussi) {
+                            verdict.innerHTML = '<strong>🎉 Plan d\'action juste :</strong> les ' +
+                                totalCorrectes + ' actions efficaces sont retenues, et aucune ' +
+                                'action inutile.';
+                            verdict.style.color = 'var(--couleur-succes)';
+                        } else {
+                            verdict.innerHTML = '<strong>📊 Plan d\'action incomplet :</strong> ' +
+                                justes + ' action(s) efficace(s) retenue(s) sur ' + totalCorrectes +
+                                ', ' + fausses + ' action(s) inefficace(s) retenue(s). ' +
+                                'Retirez celles qui sont marquées « inefficace », cherchez celles ' +
+                                'qui manquent, puis soumettez à nouveau.';
+                            verdict.style.color = 'var(--couleur-alerte)';
+                        }
+                    }
+        
+                    if (!reussi) {
+                        n3MessageQCM(qcmCorrectif.selection.size < totalCorrectes
+                            ? 'Il manque ' + (totalCorrectes - qcmCorrectif.selection.size) +
+                              ' action(s) efficace(s) : relisez les indices de l\'énigme, puis retenez-les.'
+                            : 'Retirez les actions marquées « inefficace », puis soumettez à nouveau.');
+                    } else {
+                        n3MessageQCM('');
+                    }
+        
+                    return reussi;
                 }
-            });
-
-            qcmCorrectif.verifie = true;
-            const reussi = justes === totalCorrectes && fausses === 0 &&
-                qcmCorrectif.selection.size === totalCorrectes;
-
-            const verdict = document.getElementById('message-plan-action');
-            if (verdict) {
-                if (reussi) {
-                    verdict.innerHTML = '<strong>🎉 Plan d\'action juste :</strong> les ' +
-                        totalCorrectes + ' actions efficaces sont retenues, et aucune ' +
-                        'action inutile.';
-                    verdict.style.color = 'var(--couleur-succes)';
-                } else {
-                    verdict.innerHTML = '<strong>📊 Plan d\'action incomplet :</strong> ' +
-                        justes + ' action(s) efficace(s) retenue(s) sur ' + totalCorrectes +
-                        ', ' + fausses + ' action(s) inefficace(s) retenue(s), ' +
-                        oubliees + ' action(s) efficace(s) oubliée(s). ' +
-                        'Corrigez votre plan, puis soumettez à nouveau.';
-                    verdict.style.color = 'var(--couleur-alerte)';
-                }
-            }
-
-            if (!reussi) {
-                n3MessageQCM(qcmCorrectif.selection.size < totalCorrectes
-                    ? 'Il manque ' + (totalCorrectes - qcmCorrectif.selection.size) +
-                      ' action(s) efficace(s) : les actions marquées « oubliée » sont celles à retenir.'
-                    : 'Retirez les actions marquées « inefficace » et gardez celles marquées « juste ».');
-            } else {
-                n3MessageQCM('');
-            }
-
-            return reussi;
-        }
 
         // ============================================
         // N4 — ATELIER DE DIMENSIONNEMENT (n4.dimensionnement)
@@ -9511,6 +9586,20 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
         }
 
         // ── Types « commandes » et « environnement » : choix unique par question ──
+        // Retour d'une question d'atelier : le verdict, puis l'explication que
+                // l'élève ouvre lui-même. Même règle que pour les quiz : on ne désigne
+                // jamais la bonne réponse, on ne marque que la proposition de l'élève.
+                function atelierRetourExplication(verdict, explication) {
+                    let html = echapperHtml(verdict);
+                    if (explication) {
+                        html += '<details class="explication-masquee">' +
+                                '<summary>Voir l\u2019explication</summary>' +
+                                '<span class="explication"><strong>Explication :</strong> ' +
+                                echapperHtml(explication) + '</span></details>';
+                    }
+                    return html;
+                }
+
         function atelierChoisirOption(bouton) {
             const contexte = atelierContexte(bouton);
             if (!contexte) return;
@@ -9538,38 +9627,46 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
         }
 
         function atelierVerifierChoix(bouton) {
-            const contexte = atelierContexte(bouton);
-            if (!contexte) return;
-            const carte = contexte.carte;
-            let justes = 0;
-            let total = 0;
-
-            carte.querySelectorAll('.atelier-question').forEach(function (question) {
-                total += 1;
-                const bonne = question.getAttribute('data-bonne');
-                const choisie = question.querySelector('.atelier-option.choisi');
-                question.querySelectorAll('.atelier-option').forEach(function (option) {
-                    option.classList.remove('correcte', 'fausse');
-                    if (option.getAttribute('data-valeur') === bonne) option.classList.add('correcte');
-                });
-                if (choisie && choisie.getAttribute('data-valeur') === bonne) {
-                    justes += 1;
-                } else if (choisie) {
-                    choisie.classList.add('fausse');
+                    const contexte = atelierContexte(bouton);
+                    if (!contexte) return;
+                    const carte = contexte.carte;
+                    let justes = 0;
+                    let total = 0;
+        
+                    carte.querySelectorAll('.atelier-question').forEach(function (question) {
+                        total += 1;
+                        const bonne = question.getAttribute('data-bonne');
+                        const choisie = question.querySelector('.atelier-option.choisi');
+                        question.querySelectorAll('.atelier-option').forEach(function (option) {
+                            option.classList.remove('correcte', 'fausse');
+                        });
+                        const juste = !!choisie && choisie.getAttribute('data-valeur') === bonne;
+                        if (juste) {
+                            choisie.classList.add('correcte');
+                            justes += 1;
+                        } else if (choisie) {
+                            // Seule la proposition de l'élève est marquée. La bonne
+                            // réponse n'est jamais désignée : il doit la retrouver en
+                            // relisant la question, sinon il n'apprend rien.
+                            choisie.classList.add('fausse');
+                        }
+                        const retour = question.querySelector('[data-role="retour"]');
+                        if (retour) {
+                            retour.innerHTML = atelierRetourExplication(
+                                juste ? '✅ Proposition juste.'
+                                      : '❌ Proposition fausse : cherche laquelle convient, puis vérifie à nouveau.',
+                                question.getAttribute('data-explication') || '');
+                            retour.className = 'atelier-retour info';
+                        }
+                    });
+        
+                    atelierRetour(carte,
+                        'Résultat : ' + justes + ' / ' + total + ' réponse(s) juste(s).' +
+                        (justes === total ? ' 🎉 Toutes les réponses sont bonnes.'
+                                          : ' Reprends les questions marquées en rouge, puis vérifie à nouveau.'),
+                        justes === total ? 'succes' : 'echec');
+                    atelierAfficherExplication(carte);
                 }
-                const retour = question.querySelector('[data-role="retour"]');
-                if (retour) {
-                    retour.textContent = 'Explication : ' + (question.getAttribute('data-explication') || '');
-                    retour.className = 'atelier-retour info';
-                }
-            });
-
-            atelierRetour(carte,
-                'Résultat : ' + justes + ' / ' + total + ' réponse(s) juste(s).' +
-                (justes === total ? ' 🎉 Toutes les réponses sont bonnes.' : ' Relis l\'explication de chaque réponse.'),
-                justes === total ? 'succes' : 'echec');
-            atelierAfficherExplication(carte);
-        }
 
         // ── Type « environnement » : interacteurs extérieurs ↔ capteurs ───
         // L'élève clique un interacteur (le vent, la pluie…) et lit la note
@@ -9776,25 +9873,28 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
         }
 
         function atelierVerifierAutonomie(bouton) {
-            const contexte = atelierContexte(bouton);
-            if (!contexte) return;
-            const carte = contexte.carte;
-            const bonne = carte.getAttribute('data-bonne');
-            const choisie = carte.querySelector('.atelier-option.choisi');
-
-            carte.querySelectorAll('.atelier-option').forEach(function (option) {
-                option.classList.remove('correcte', 'fausse');
-                if (option.getAttribute('data-batterie') === bonne) option.classList.add('correcte');
-            });
-            const ok = !!choisie && choisie.getAttribute('data-batterie') === bonne;
-            if (choisie && !ok) choisie.classList.add('fausse');
-
-            atelierRetour(carte,
-                ok ? '🎉 La batterie retenue couvre la mission sans être inutilement lourde.'
-                   : '❌ Cette batterie ne convient pas : compare son autonomie à la durée de la mission et sa masse.',
-                ok ? 'succes' : 'echec');
-            atelierAfficherExplication(carte);
-        }
+                    const contexte = atelierContexte(bouton);
+                    if (!contexte) return;
+                    const carte = contexte.carte;
+                    const bonne = carte.getAttribute('data-bonne');
+                    const choisie = carte.querySelector('.atelier-option.choisi');
+        
+                    // La batterie attendue n'est jamais désignée : si l'élève s'est
+                    // trompé, seule SA batterie est marquée, et il compare lui-même
+                    // l'autonomie calculée à la durée de la mission.
+                    carte.querySelectorAll('.atelier-option').forEach(function (option) {
+                        option.classList.remove('correcte', 'fausse');
+                    });
+                    const ok = !!choisie && choisie.getAttribute('data-batterie') === bonne;
+                    if (ok) choisie.classList.add('correcte');
+                    else if (choisie) choisie.classList.add('fausse');
+        
+                    atelierRetour(carte,
+                        ok ? '🎉 La batterie retenue couvre la mission sans être inutilement lourde.'
+                           : '❌ Cette batterie ne convient pas : compare son autonomie à la durée de la mission et sa masse.',
+                        ok ? 'succes' : 'echec');
+                    atelierAfficherExplication(carte);
+                }
 
         // ── Type « reseau » / « liaison » : relier des éléments entre eux ──
         //    L'élève clique deux appareils : la liaison est vérifiée tout de
@@ -17484,7 +17584,7 @@ if ('gauche' in commandes) vol.touches.gauche = !!commandes.gauche;
 if ('droite' in commandes) vol.touches.droite = !!commandes.droite;
 };
 })();
-    </script>
+</script>
 <!-- SAUVEGARDE-GREFFE-JS:DEBUT (Greffé par _outils/template-activite/greffer_sauvegarde.py depuis index.html (bloc SAUVEGARDE) : NE PAS ÉDITER ICI — modifier le template, puis `--extraire` et regreffer.) -->
 <script id="ost-script-sauvegarde">
 // ============================================================
@@ -17547,9 +17647,15 @@ statut.className = 'sauvegarde-statut' + (classe ? ' ' + classe : '');
   }
 
   function texteEtClasse(element) {
-if (!element) return null;
-return { texte: String(element.textContent || ''), classe: String(element.className || '') };
-  }
+          if (!element) return null;
+          // `html` conserve le volet « Voir l'explication » (un <details>) : une
+          // restauration au textContent l'aplatirait en texte suivi.
+          return {
+              texte: String(element.textContent || ''),
+              classe: String(element.className || ''),
+              html: String(element.innerHTML || '')
+          };
+      }
 
   function slug(nom) {
 return String(nom || 'activite').toLowerCase()
@@ -18186,37 +18292,43 @@ if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
   // RESTAURATION — ateliers
   // ---------------------------------------------------------------
   function restaurerQuestionsChoix(carte, questions) {
-(questions || []).forEach(function (q, index) {
-    var liste = carte.querySelectorAll('.atelier-question');
-    var question = liste[index];
-    if (!question) return;
-    question.querySelectorAll('.atelier-option').forEach(function (option) {
-        option.classList.remove('choisi', 'correcte', 'fausse');
-        option.setAttribute('aria-checked', 'false');
-    });
-    (q.marques || []).forEach(function (marque) {
-        var option = question.querySelector(
-            '.atelier-option[data-valeur="' + marque.valeur + '"]');
-        if (!option) return;
-        if (marque.correcte) option.classList.add('correcte');
-        if (marque.fausse) option.classList.add('fausse');
-        if (marque.checked) option.setAttribute('aria-checked', 'true');
-    });
-    if (q.choisie) {
-        var choisie = question.querySelector(
-            '.atelier-option[data-valeur="' + q.choisie + '"]');
-        if (choisie) {
-            choisie.classList.add('choisi');
-            choisie.setAttribute('aria-checked', 'true');
-        }
-    }
-    var retour = question.querySelector('[data-role="retour"]');
-    if (retour && q.retour) {
-        retour.textContent = q.retour.texte;
-        retour.className = q.retour.classe;
-    }
-});
-  }
+          (questions || []).forEach(function (q, index) {
+              var liste = carte.querySelectorAll('.atelier-question');
+              var question = liste[index];
+              if (!question) return;
+              question.querySelectorAll('.atelier-option').forEach(function (option) {
+                  option.classList.remove('choisi', 'correcte', 'fausse');
+                  option.setAttribute('aria-checked', 'false');
+              });
+              (q.marques || []).forEach(function (marque) {
+                  var option = question.querySelector(
+                      '.atelier-option[data-valeur="' + marque.valeur + '"]');
+                  if (!option) return;
+                  if (marque.correcte) option.classList.add('correcte');
+                  if (marque.fausse) option.classList.add('fausse');
+                  if (marque.checked) option.setAttribute('aria-checked', 'true');
+              });
+              if (q.choisie) {
+                  var choisie = question.querySelector(
+                      '.atelier-option[data-valeur="' + q.choisie + '"]');
+                  if (choisie) {
+                      choisie.classList.add('choisi');
+                      choisie.setAttribute('aria-checked', 'true');
+                  }
+              }
+              var retour = question.querySelector('[data-role="retour"]');
+              if (retour && q.retour) {
+                  // `html` d'abord (le volet « Voir l'explication » survit tel
+                  // quel) ; `texte` pour les fichiers exportés avant ce champ.
+                  if (typeof q.retour.html === 'string' && q.retour.html) {
+                      retour.innerHTML = q.retour.html;
+                  } else {
+                      retour.textContent = q.retour.texte;
+                  }
+                  retour.className = q.retour.classe;
+              }
+          });
+      }
 
   function restaurerAteliers(ateliers) {
 if (!Array.isArray(ateliers)) return;
