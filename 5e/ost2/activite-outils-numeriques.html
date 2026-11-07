@@ -4272,6 +4272,175 @@
             color: #5a6b7d;
         }
 
+        /* ── Type « nommage » : raccourcis clavier et tableau de noms ───────
+           Les couleurs passent par rgba(128,128,128,…) et currentColor : elles
+           restent lisibles sur le fond clair comme sur le fond sombre, sans
+           ajouter une seconde feuille de style. */
+        .atelier-aide-raccourcis {
+            margin: .1rem 0 .5rem;
+            font-size: .88rem;
+            opacity: .85;
+        }
+
+        .atelier-raccourcis {
+            list-style: none;
+            margin: 0 0 .9rem;
+            padding: 0;
+            display: grid;
+            gap: .35rem;
+        }
+
+        .atelier-raccourci {
+            display: grid;
+            grid-template-columns: minmax(7.5rem, auto) minmax(6rem, auto) 1fr;
+            gap: .5rem .7rem;
+            align-items: center;
+            padding: .4rem .6rem;
+            border: 1px solid rgba(128, 128, 128, .3);
+            border-radius: 8px;
+        }
+
+        .atelier-raccourci kbd {
+            font: inherit;
+            font-size: .82rem;
+            font-weight: 700;
+            text-align: center;
+            padding: .25rem .45rem;
+            border: 1px solid rgba(128, 128, 128, .45);
+            border-bottom-width: 2px;
+            border-radius: 6px;
+            background: rgba(128, 128, 128, .12);
+            white-space: nowrap;
+        }
+
+        .atelier-raccourci-action {
+            font-weight: 700;
+        }
+
+        .atelier-raccourci-detail {
+            font-size: .85rem;
+            opacity: .85;
+        }
+
+        .atelier-nommage {
+            overflow-x: auto;
+        }
+
+        .atelier-nommage table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .9rem;
+        }
+
+        .atelier-nommage th,
+        .atelier-nommage td {
+            padding: .5rem .55rem;
+            border-bottom: 1px solid rgba(128, 128, 128, .3);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .atelier-nommage thead th {
+            font-size: .78rem;
+            letter-spacing: .03em;
+            text-transform: uppercase;
+            opacity: .8;
+        }
+
+        .atelier-nommage tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .atelier-nommage .atelier-etiquette {
+            display: block;
+        }
+
+        .atelier-nommage .atelier-champ input {
+            font-size: 1rem;
+            min-width: 12rem;
+        }
+
+        .atelier-nommage .atelier-retour {
+            margin: .3rem 0 0;
+            padding: .3rem .5rem;
+            font-size: .82rem;
+        }
+
+        .atelier-propositions {
+            background: rgba(240, 180, 0, .12);
+            border-left: 5px solid #f0b400;
+            border-radius: 8px;
+            padding: .7rem .9rem;
+            margin-top: .8rem;
+            font-size: .9rem;
+        }
+
+        .atelier-propositions ul {
+            margin: .3rem 0 0;
+            padding-left: 1.2rem;
+        }
+
+        .atelier-propositions li {
+            margin: .2rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .atelier-raccourci {
+                grid-template-columns: 1fr;
+                gap: .15rem;
+            }
+
+            .atelier-raccourci kbd {
+                justify-self: start;
+            }
+
+            .atelier-nommage table,
+            .atelier-nommage thead,
+            .atelier-nommage tbody,
+            .atelier-nommage tr,
+            .atelier-nommage th,
+            .atelier-nommage td {
+                display: block;
+                width: 100%;
+            }
+
+            .atelier-nommage thead {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+                white-space: nowrap;
+            }
+
+            .atelier-nommage tr {
+                border: 1px solid rgba(128, 128, 128, .35);
+                border-radius: 10px;
+                padding: .45rem .55rem;
+                margin-bottom: .7rem;
+            }
+
+            .atelier-nommage td {
+                border: 0;
+                padding: .3rem .1rem;
+            }
+
+            .atelier-nommage td::before {
+                content: attr(data-label);
+                display: block;
+                font-size: .72rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .03em;
+                opacity: .75;
+                margin-bottom: .1rem;
+            }
+
+            .atelier-nommage .atelier-champ input {
+                min-width: 0;
+            }
+        }
+
         .atelier-option.verrouille {
             cursor: default;
             pointer-events: none;
@@ -5824,18 +5993,18 @@
 
                     <form id="quiz-n1" class="quiz-conteneur">
 
-                        <div class="question-quiz" data-ost-id="n1-quiz-q1" data-question="1" data-explication="Le PDF (Portable Document Format) est un format universel créé par Adobe pour partager des documents sans modifier leur mise en page.">
-                            <p>1. Que signifie l'extension .pdf ?</p>
+                        <div class="question-quiz" data-ost-id="n1-quiz-q1" data-question="1" data-explication="Le PDF (Portable Document Format) sert à partager un document dont la mise en page ne change pas : il se lit de la même façon sur tous les appareils, mais on ne le modifie pas facilement.">
+                            <p>1. À quoi sert un fichier .pdf ?</p>
                             <div class="options-reponse" role="radiogroup">
                                 
                                 <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n1-quiz-q1-opta">
-                                    <span>Programme De Fichier</span>
+                                    <span>À garder la même mise en page partout, sans être modifié</span>
                                 </div>
                                 <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n1-quiz-q1-optb">
-                                    <span>Portable Document Format</span>
+                                    <span>À être modifié facilement par plusieurs personnes</span>
                                 </div>
                                 <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n1-quiz-q1-optc">
-                                    <span>Public Data File</span>
+                                    <span>À enregistrer un son ou une vidéo</span>
                                 </div>
                             </div>
                             <div class="feedback-reponse" role="alert"></div>
@@ -6077,204 +6246,140 @@
 
 
                     <div class="ateliers-n2" id="ateliers-n2">
-                        <h3>🔧 Ateliers — bien enregistrer et bien classer</h3>
-                    <p class="texte-secondaire">Trois ateliers pour appliquer la leçon : choisir le bon format au moment d'enregistrer, ranger les fichiers dans les bons dossiers, puis adopter les bons réflexes de sécurité.</p>
+                        <h3>🔧 Ateliers — nommer, ranger et sécuriser ses fichiers</h3>
+                    <p class="texte-secondaire">Trois ateliers pour appliquer la leçon : connaître les raccourcis clavier et nommer ses fichiers, ranger les fichiers dans les bons dossiers, puis adopter les bons réflexes de sécurité.</p>
 
-                    <article class="atelier-carte" data-ost-bloc="n2-atelier-enregistrer-bons-formats" data-type="enregistrement" data-atelier="enregistrer-bons-formats" aria-labelledby="atelier-titre-enregistrer-bons-formats">
-                        <h3 id="atelier-titre-enregistrer-bons-formats">💾 Atelier 1 — Enregistre chaque document dans le bon format</h3>
-                        <p class="atelier-consigne">Pour chaque document ouvert : tape un nom clair (sans point), choisis le format, choisis le dossier, puis « Enregistrer ce fichier ».</p>
-                        <h4>Les formats disponibles</h4>
-                        <ul class="atelier-legende">
-                            <li><strong>🖼️ .jpg — Image JPEG</strong> : Photo comprimée : elle reste légère tout en gardant une bonne qualité, et tous les appareils la lisent.</li>
-                            <li><strong>📑 .pdf — Document PDF</strong> : Document dont la mise en page est figée : il se lit de la même façon partout, sans pouvoir être modifié.</li>
-                            <li><strong>📝 .txt — Texte brut</strong> : Texte seul, sans mise en page ni images : le format le plus léger, ouvert par tous les éditeurs.</li>
-                            <li><strong>📃 .odt — Document de traitement de texte</strong> : Document avec titres, couleurs et images, que l'on peut continuer à modifier dans LibreOffice ou Word.</li>
-                            <li><strong>📊 .csv — Tableau de valeurs</strong> : Tableau de données brutes : les valeurs, séparées par des virgules, se relisent directement dans un tableur.</li>
-                            <li><strong>🎵 .mp3 — Son compressé</strong> : Musique ou voix comprimée : un format audio léger, écoutable sur tout appareil.</li>
-                            <li><strong>🎬 .mp4 — Vidéo</strong> : Images et son réunis dans un seul fichier vidéo, lisible sur tous les lecteurs.</li>
+                    <article class="atelier-carte" data-ost-bloc="n2-atelier-raccourcis-et-noms" data-type="nommage" data-atelier="raccourcis-et-noms" aria-labelledby="atelier-titre-raccourcis-et-noms">
+                        <h3 id="atelier-titre-raccourcis-et-noms">⌨️ Atelier 1 — Les raccourcis clavier et le nom des fichiers</h3>
+                        <p class="atelier-consigne">Lis les raccourcis, puis tape un nom pour chacun des cinq fichiers. N'écris pas l'extension : le format affiché s'en charge.</p>
+                        <h4>Les raccourcis à connaître</h4>
+                        <p class="atelier-aide-raccourcis">Sur un clavier de PC. Sur un Mac, on remplace Ctrl par Cmd (⌘).</p>
+                        <ul class="atelier-raccourcis">
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + C</kbd>
+                                <span class="atelier-raccourci-action">Copier</span>
+                                <span class="atelier-raccourci-detail">Garde la sélection en mémoire, sans l'effacer.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + X</kbd>
+                                <span class="atelier-raccourci-action">Couper</span>
+                                <span class="atelier-raccourci-detail">Retire la sélection pour la déplacer ailleurs.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + V</kbd>
+                                <span class="atelier-raccourci-action">Coller</span>
+                                <span class="atelier-raccourci-detail">Place ce qui a été copié ou coupé à l'endroit du curseur.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + Z</kbd>
+                                <span class="atelier-raccourci-action">Annuler</span>
+                                <span class="atelier-raccourci-detail">Revient en arrière sur la dernière action.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + S</kbd>
+                                <span class="atelier-raccourci-action">Enregistrer</span>
+                                <span class="atelier-raccourci-detail">Écrit le fichier sur le disque sans passer par un menu.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + A</kbd>
+                                <span class="atelier-raccourci-action">Tout sélectionner</span>
+                                <span class="atelier-raccourci-detail">Sélectionne tout le contenu du document ou du dossier.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Ctrl + F</kbd>
+                                <span class="atelier-raccourci-action">Rechercher</span>
+                                <span class="atelier-raccourci-detail">Ouvre la recherche dans le document ouvert.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>F2</kbd>
+                                <span class="atelier-raccourci-action">Renommer</span>
+                                <span class="atelier-raccourci-detail">Renomme le fichier sélectionné, sans l'ouvrir.</span>
+                            </li>
+                            <li class="atelier-raccourci">
+                                <kbd>Suppr</kbd>
+                                <span class="atelier-raccourci-action">Mettre à la corbeille</span>
+                                <span class="atelier-raccourci-detail">Envoie le fichier sélectionné à la corbeille.</span>
+                            </li>
                         </ul>
-                        <div class="atelier-missions">
-                            <div class="atelier-question atelier-enregistrement" data-mission="1" data-format="jpg" data-dossier="images" data-explication="Une photo se conserve dans un format d'image : .jpg comprime la photo pour qu'elle reste légère tout en gardant une bonne qualité, et tous les appareils le lisent. Un format de son ou de texte ne peut pas contenir une image.">
-                                <p class="atelier-enonce"><strong>Mission 1 :</strong> Range la photo de la sortie au musée : c'est celle que tu présentes au concours photo, et tu veux la garder avec tes images.</p>
-                                <p class="atelier-document"><span aria-hidden="true">🖼️</span> Document ouvert : La photo de la sortie au musée, ouverte dans le logiciel de retouche du collège.</p>
-                                <p class="atelier-champ">
-                                    <label for="enreg-nom-enregistrer-bons-formats-1">Nom du fichier</label>
-                                    <input type="text" id="enreg-nom-enregistrer-bons-formats-1" data-role="nom-fichier" autocomplete="off" spellcheck="false" placeholder="ex. sortie_paris" aria-describedby="enreg-retour-enregistrer-bons-formats-1">
-                                </p>
-                                <p class="atelier-etiquette">Format d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Format de la mission 1">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="jpg" onclick="atelierChoisirEnregistrement(this)">🖼️ .jpg — Image JPEG</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="pdf" onclick="atelierChoisirEnregistrement(this)">📑 .pdf — Document PDF</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="txt" onclick="atelierChoisirEnregistrement(this)">📝 .txt — Texte brut</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="odt" onclick="atelierChoisirEnregistrement(this)">📃 .odt — Document de traitement de texte</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="csv" onclick="atelierChoisirEnregistrement(this)">📊 .csv — Tableau de valeurs</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp3" onclick="atelierChoisirEnregistrement(this)">🎵 .mp3 — Son compressé</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp4" onclick="atelierChoisirEnregistrement(this)">🎬 .mp4 — Vidéo</button>
-                                </div>
-                                <p class="atelier-etiquette">Dossier d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Dossier de la mission 1">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="images" onclick="atelierChoisirEnregistrement(this)">🖼️ Images</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="documents" onclick="atelierChoisirEnregistrement(this)">📄 Documents</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="musique" onclick="atelierChoisirEnregistrement(this)">🎵 Sons et musiques</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="videos" onclick="atelierChoisirEnregistrement(this)">🎬 Vidéos</button>
-                                </div>
-                                <div class="atelier-actions">
-                                    <button type="button" class="bouton-action" onclick="atelierEnregistrerFichier(this)">💾 Enregistrer ce fichier</button>
-                                </div>
-                                <p class="atelier-retour" id="enreg-retour-enregistrer-bons-formats-1" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question atelier-enregistrement" data-mission="2" data-format="pdf" data-dossier="documents" data-explication="Un document destiné à être lu sans être modifié se partage en .pdf : la mise en page reste exactement la même chez le destinataire, quel que soit son appareil. Il se range avec les travaux écrits, dans Documents.">
-                                <p class="atelier-enonce"><strong>Mission 2 :</strong> Prépare l'exposé à rendre au professeur : il doit se lire sans rien changer.</p>
-                                <p class="atelier-document"><span aria-hidden="true">📄</span> Document ouvert : L'exposé sur les châteaux forts, terminé dans le traitement de texte.</p>
-                                <p class="atelier-champ">
-                                    <label for="enreg-nom-enregistrer-bons-formats-2">Nom du fichier</label>
-                                    <input type="text" id="enreg-nom-enregistrer-bons-formats-2" data-role="nom-fichier" autocomplete="off" spellcheck="false" placeholder="ex. sortie_paris" aria-describedby="enreg-retour-enregistrer-bons-formats-2">
-                                </p>
-                                <p class="atelier-etiquette">Format d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Format de la mission 2">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="jpg" onclick="atelierChoisirEnregistrement(this)">🖼️ .jpg — Image JPEG</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="pdf" onclick="atelierChoisirEnregistrement(this)">📑 .pdf — Document PDF</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="txt" onclick="atelierChoisirEnregistrement(this)">📝 .txt — Texte brut</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="odt" onclick="atelierChoisirEnregistrement(this)">📃 .odt — Document de traitement de texte</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="csv" onclick="atelierChoisirEnregistrement(this)">📊 .csv — Tableau de valeurs</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp3" onclick="atelierChoisirEnregistrement(this)">🎵 .mp3 — Son compressé</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp4" onclick="atelierChoisirEnregistrement(this)">🎬 .mp4 — Vidéo</button>
-                                </div>
-                                <p class="atelier-etiquette">Dossier d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Dossier de la mission 2">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="images" onclick="atelierChoisirEnregistrement(this)">🖼️ Images</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="documents" onclick="atelierChoisirEnregistrement(this)">📄 Documents</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="musique" onclick="atelierChoisirEnregistrement(this)">🎵 Sons et musiques</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="videos" onclick="atelierChoisirEnregistrement(this)">🎬 Vidéos</button>
-                                </div>
-                                <div class="atelier-actions">
-                                    <button type="button" class="bouton-action" onclick="atelierEnregistrerFichier(this)">💾 Enregistrer ce fichier</button>
-                                </div>
-                                <p class="atelier-retour" id="enreg-retour-enregistrer-bons-formats-2" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question atelier-enregistrement" data-mission="3" data-format="csv" data-dossier="documents" data-explication="Un tableau de mesures est fait de colonnes de valeurs : .csv garde ces données brutes, que le tableur relit directement pour calculer ou tracer un graphique. Avec l'extension .txt, le tableur ne saurait pas qu'il doit séparer les colonnes.">
-                                <p class="atelier-enonce"><strong>Mission 3 :</strong> Conserve le tableau de mesures pour tracer le graphique au prochain cours.</p>
-                                <p class="atelier-document"><span aria-hidden="true">📊</span> Document ouvert : Les températures relevées chaque matin pendant une semaine, dans le tableur.</p>
-                                <p class="atelier-champ">
-                                    <label for="enreg-nom-enregistrer-bons-formats-3">Nom du fichier</label>
-                                    <input type="text" id="enreg-nom-enregistrer-bons-formats-3" data-role="nom-fichier" autocomplete="off" spellcheck="false" placeholder="ex. sortie_paris" aria-describedby="enreg-retour-enregistrer-bons-formats-3">
-                                </p>
-                                <p class="atelier-etiquette">Format d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Format de la mission 3">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="jpg" onclick="atelierChoisirEnregistrement(this)">🖼️ .jpg — Image JPEG</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="pdf" onclick="atelierChoisirEnregistrement(this)">📑 .pdf — Document PDF</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="txt" onclick="atelierChoisirEnregistrement(this)">📝 .txt — Texte brut</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="odt" onclick="atelierChoisirEnregistrement(this)">📃 .odt — Document de traitement de texte</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="csv" onclick="atelierChoisirEnregistrement(this)">📊 .csv — Tableau de valeurs</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp3" onclick="atelierChoisirEnregistrement(this)">🎵 .mp3 — Son compressé</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp4" onclick="atelierChoisirEnregistrement(this)">🎬 .mp4 — Vidéo</button>
-                                </div>
-                                <p class="atelier-etiquette">Dossier d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Dossier de la mission 3">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="images" onclick="atelierChoisirEnregistrement(this)">🖼️ Images</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="documents" onclick="atelierChoisirEnregistrement(this)">📄 Documents</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="musique" onclick="atelierChoisirEnregistrement(this)">🎵 Sons et musiques</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="videos" onclick="atelierChoisirEnregistrement(this)">🎬 Vidéos</button>
-                                </div>
-                                <div class="atelier-actions">
-                                    <button type="button" class="bouton-action" onclick="atelierEnregistrerFichier(this)">💾 Enregistrer ce fichier</button>
-                                </div>
-                                <p class="atelier-retour" id="enreg-retour-enregistrer-bons-formats-3" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question atelier-enregistrement" data-mission="4" data-format="mp3" data-dossier="musique" data-explication="Un enregistrement sonore se conserve dans un format audio : .mp3 comprime le son pour qu'il reste léger et lisible par tous les lecteurs. Les fichiers son se rangent avec la musique.">
-                                <p class="atelier-enonce"><strong>Mission 4 :</strong> Enregistre le podcast pour pouvoir l'écouter sur ton téléphone.</p>
-                                <p class="atelier-document"><span aria-hidden="true">🎙️</span> Document ouvert : Le podcast de deux minutes sur le réchauffement climatique, dans le logiciel d'enregistrement.</p>
-                                <p class="atelier-champ">
-                                    <label for="enreg-nom-enregistrer-bons-formats-4">Nom du fichier</label>
-                                    <input type="text" id="enreg-nom-enregistrer-bons-formats-4" data-role="nom-fichier" autocomplete="off" spellcheck="false" placeholder="ex. sortie_paris" aria-describedby="enreg-retour-enregistrer-bons-formats-4">
-                                </p>
-                                <p class="atelier-etiquette">Format d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Format de la mission 4">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="jpg" onclick="atelierChoisirEnregistrement(this)">🖼️ .jpg — Image JPEG</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="pdf" onclick="atelierChoisirEnregistrement(this)">📑 .pdf — Document PDF</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="txt" onclick="atelierChoisirEnregistrement(this)">📝 .txt — Texte brut</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="odt" onclick="atelierChoisirEnregistrement(this)">📃 .odt — Document de traitement de texte</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="csv" onclick="atelierChoisirEnregistrement(this)">📊 .csv — Tableau de valeurs</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp3" onclick="atelierChoisirEnregistrement(this)">🎵 .mp3 — Son compressé</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp4" onclick="atelierChoisirEnregistrement(this)">🎬 .mp4 — Vidéo</button>
-                                </div>
-                                <p class="atelier-etiquette">Dossier d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Dossier de la mission 4">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="images" onclick="atelierChoisirEnregistrement(this)">🖼️ Images</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="documents" onclick="atelierChoisirEnregistrement(this)">📄 Documents</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="musique" onclick="atelierChoisirEnregistrement(this)">🎵 Sons et musiques</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="videos" onclick="atelierChoisirEnregistrement(this)">🎬 Vidéos</button>
-                                </div>
-                                <div class="atelier-actions">
-                                    <button type="button" class="bouton-action" onclick="atelierEnregistrerFichier(this)">💾 Enregistrer ce fichier</button>
-                                </div>
-                                <p class="atelier-retour" id="enreg-retour-enregistrer-bons-formats-4" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question atelier-enregistrement" data-mission="5" data-format="mp4" data-dossier="videos" data-explication="Une vidéo réunit des images et du son dans un seul fichier : seul un format vidéo comme .mp4 les garde synchronisés et lisibles partout. Les vidéos, lourdes, ont leur dossier dédié.">
-                                <p class="atelier-enonce"><strong>Mission 5 :</strong> Garde la vidéo de la fête du collège sans encombrer ton dossier de travail.</p>
-                                <p class="atelier-document"><span aria-hidden="true">🎬</span> Document ouvert : La vidéo de la fête du collège, montée dans le logiciel de montage.</p>
-                                <p class="atelier-champ">
-                                    <label for="enreg-nom-enregistrer-bons-formats-5">Nom du fichier</label>
-                                    <input type="text" id="enreg-nom-enregistrer-bons-formats-5" data-role="nom-fichier" autocomplete="off" spellcheck="false" placeholder="ex. sortie_paris" aria-describedby="enreg-retour-enregistrer-bons-formats-5">
-                                </p>
-                                <p class="atelier-etiquette">Format d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Format de la mission 5">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="jpg" onclick="atelierChoisirEnregistrement(this)">🖼️ .jpg — Image JPEG</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="pdf" onclick="atelierChoisirEnregistrement(this)">📑 .pdf — Document PDF</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="txt" onclick="atelierChoisirEnregistrement(this)">📝 .txt — Texte brut</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="odt" onclick="atelierChoisirEnregistrement(this)">📃 .odt — Document de traitement de texte</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="csv" onclick="atelierChoisirEnregistrement(this)">📊 .csv — Tableau de valeurs</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp3" onclick="atelierChoisirEnregistrement(this)">🎵 .mp3 — Son compressé</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp4" onclick="atelierChoisirEnregistrement(this)">🎬 .mp4 — Vidéo</button>
-                                </div>
-                                <p class="atelier-etiquette">Dossier d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Dossier de la mission 5">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="images" onclick="atelierChoisirEnregistrement(this)">🖼️ Images</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="documents" onclick="atelierChoisirEnregistrement(this)">📄 Documents</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="musique" onclick="atelierChoisirEnregistrement(this)">🎵 Sons et musiques</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="videos" onclick="atelierChoisirEnregistrement(this)">🎬 Vidéos</button>
-                                </div>
-                                <div class="atelier-actions">
-                                    <button type="button" class="bouton-action" onclick="atelierEnregistrerFichier(this)">💾 Enregistrer ce fichier</button>
-                                </div>
-                                <p class="atelier-retour" id="enreg-retour-enregistrer-bons-formats-5" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
-                            <div class="atelier-question atelier-enregistrement" data-mission="6" data-format="txt" data-dossier="documents" data-explication="Un texte simple, sans titres ni images, se contente du format .txt : très léger, il s'ouvre partout. Dès qu'il faut de la mise en page, on passe à un format de traitement de texte ; pour un partage figé, en .pdf.">
-                                <p class="atelier-enonce"><strong>Mission 6 :</strong> Range la liste du matériel : un texte nu, une ligne par objet, sans aucune mise en page à conserver.</p>
-                                <p class="atelier-document"><span aria-hidden="true">📝</span> Document ouvert : La liste du matériel pour la sortie, tapée dans l'éditeur de texte : une ligne par objet, rien d'autre.</p>
-                                <p class="atelier-champ">
-                                    <label for="enreg-nom-enregistrer-bons-formats-6">Nom du fichier</label>
-                                    <input type="text" id="enreg-nom-enregistrer-bons-formats-6" data-role="nom-fichier" autocomplete="off" spellcheck="false" placeholder="ex. sortie_paris" aria-describedby="enreg-retour-enregistrer-bons-formats-6">
-                                </p>
-                                <p class="atelier-etiquette">Format d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Format de la mission 6">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="jpg" onclick="atelierChoisirEnregistrement(this)">🖼️ .jpg — Image JPEG</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="pdf" onclick="atelierChoisirEnregistrement(this)">📑 .pdf — Document PDF</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="txt" onclick="atelierChoisirEnregistrement(this)">📝 .txt — Texte brut</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="odt" onclick="atelierChoisirEnregistrement(this)">📃 .odt — Document de traitement de texte</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="csv" onclick="atelierChoisirEnregistrement(this)">📊 .csv — Tableau de valeurs</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp3" onclick="atelierChoisirEnregistrement(this)">🎵 .mp3 — Son compressé</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="format" data-valeur="mp4" onclick="atelierChoisirEnregistrement(this)">🎬 .mp4 — Vidéo</button>
-                                </div>
-                                <p class="atelier-etiquette">Dossier d’enregistrement</p>
-                                <div class="atelier-options" role="radiogroup" aria-label="Dossier de la mission 6">
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="images" onclick="atelierChoisirEnregistrement(this)">🖼️ Images</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="documents" onclick="atelierChoisirEnregistrement(this)">📄 Documents</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="musique" onclick="atelierChoisirEnregistrement(this)">🎵 Sons et musiques</button>
-                                    <button type="button" class="atelier-option" role="radio" aria-checked="false" data-role="dossier" data-valeur="videos" onclick="atelierChoisirEnregistrement(this)">🎬 Vidéos</button>
-                                </div>
-                                <div class="atelier-actions">
-                                    <button type="button" class="bouton-action" onclick="atelierEnregistrerFichier(this)">💾 Enregistrer ce fichier</button>
-                                </div>
-                                <p class="atelier-retour" id="enreg-retour-enregistrer-bons-formats-6" data-role="retour" role="status" aria-live="polite"></p>
-                            </div>
+                        <p class="atelier-etiquette">5 fichiers à nommer</p>
+                        <div class="atelier-question atelier-nommage">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Situation</th>
+                                        <th scope="col">Type de fichier et format</th>
+                                        <th scope="col">Nom du fichier</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            <tr class="atelier-nommage-ligne" data-format=".jpg" data-modele="sortie_musee">
+                                <td data-label="Situation">La photo de la sortie au musée.</td>
+                                <td data-label="Type et format"><span class="atelier-etiquette">🖼️ Photo — <strong>.jpg</strong></span></td>
+                                <td data-label="Nom du fichier">
+                                    <div class="atelier-champ">
+                                        <input type="text" class="atelier-nom-champ" id="nommage-raccourcis-et-noms-1" data-role="nom" aria-label="Nom du fichier pour : La photo de la sortie au musée." autocomplete="off" spellcheck="false" placeholder="ex. nom_du_fichier">
+                                    </div>
+                                    <p class="atelier-retour" data-role="retour-nom" role="status" aria-live="polite"></p>
+                                </td>
+                            </tr>
+                            <tr class="atelier-nommage-ligne" data-format=".pdf" data-modele="expose_chateaux_forts">
+                                <td data-label="Situation">L'exposé sur les châteaux forts, à rendre au professeur : il doit se lire sans être modifié.</td>
+                                <td data-label="Type et format"><span class="atelier-etiquette">📄 Document figé — <strong>.pdf</strong></span></td>
+                                <td data-label="Nom du fichier">
+                                    <div class="atelier-champ">
+                                        <input type="text" class="atelier-nom-champ" id="nommage-raccourcis-et-noms-2" data-role="nom" aria-label="Nom du fichier pour : L'exposé sur les châteaux forts, à rendre au professeur : il doit se lire sans être modifié." autocomplete="off" spellcheck="false" placeholder="ex. nom_du_fichier">
+                                    </div>
+                                    <p class="atelier-retour" data-role="retour-nom" role="status" aria-live="polite"></p>
+                                </td>
+                            </tr>
+                            <tr class="atelier-nommage-ligne" data-format=".csv" data-modele="temperatures_semaine">
+                                <td data-label="Situation">Le tableau des températures relevées chaque matin pendant une semaine.</td>
+                                <td data-label="Type et format"><span class="atelier-etiquette">📊 Tableau de valeurs — <strong>.csv</strong></span></td>
+                                <td data-label="Nom du fichier">
+                                    <div class="atelier-champ">
+                                        <input type="text" class="atelier-nom-champ" id="nommage-raccourcis-et-noms-3" data-role="nom" aria-label="Nom du fichier pour : Le tableau des températures relevées chaque matin pendant une semaine." autocomplete="off" spellcheck="false" placeholder="ex. nom_du_fichier">
+                                    </div>
+                                    <p class="atelier-retour" data-role="retour-nom" role="status" aria-live="polite"></p>
+                                </td>
+                            </tr>
+                            <tr class="atelier-nommage-ligne" data-format=".mp3" data-modele="podcast_climat">
+                                <td data-label="Situation">Le podcast de deux minutes sur le réchauffement climatique.</td>
+                                <td data-label="Type et format"><span class="atelier-etiquette">🎵 Son — <strong>.mp3</strong></span></td>
+                                <td data-label="Nom du fichier">
+                                    <div class="atelier-champ">
+                                        <input type="text" class="atelier-nom-champ" id="nommage-raccourcis-et-noms-4" data-role="nom" aria-label="Nom du fichier pour : Le podcast de deux minutes sur le réchauffement climatique." autocomplete="off" spellcheck="false" placeholder="ex. nom_du_fichier">
+                                    </div>
+                                    <p class="atelier-retour" data-role="retour-nom" role="status" aria-live="polite"></p>
+                                </td>
+                            </tr>
+                            <tr class="atelier-nommage-ligne" data-format=".mp4" data-modele="fete_college">
+                                <td data-label="Situation">La vidéo de la fête du collège.</td>
+                                <td data-label="Type et format"><span class="atelier-etiquette">🎬 Vidéo — <strong>.mp4</strong></span></td>
+                                <td data-label="Nom du fichier">
+                                    <div class="atelier-champ">
+                                        <input type="text" class="atelier-nom-champ" id="nommage-raccourcis-et-noms-5" data-role="nom" aria-label="Nom du fichier pour : La vidéo de la fête du collège." autocomplete="off" spellcheck="false" placeholder="ex. nom_du_fichier">
+                                    </div>
+                                    <p class="atelier-retour" data-role="retour-nom" role="status" aria-live="polite"></p>
+                                </td>
+                            </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <p class="atelier-compteur" data-role="compteur">Fichier(s) bien enregistré(s) : 0 / 6.</p>
                         <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierEnregistrement(this)">Vérifier l'atelier</button>
+                            <button type="button" class="bouton-action" onclick="atelierVerifierNommage(this)">Vérifier mes noms</button>
                         </div>
                         <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">Le format se choisit selon le contenu — image, texte, données, son ou vidéo — et le dossier selon la nature du fichier. Renommer l'extension à la main ne convertit jamais le fichier : seul le logiciel, au moment d'enregistrer, écrit le contenu dans le bon format.</p>
+                        <p class="atelier-explication cache" data-role="explication">Un bon nom de fichier décrit ce qu'il contient : on le retrouve sans l'ouvrir, et on évite les doublons. On sépare les mots par un tiret bas (_), on n'écrit pas l'extension — c'est le format qui la pose — et on évite les noms génériques comme img_4567 ou nouveau_document. Plusieurs noms sont possibles pour une même situation.</p>
+                        <div class="atelier-propositions cache" data-role="propositions">
+                            <p class="atelier-etiquette">Propositions de noms — plusieurs réponses sont possibles</p>
+                            <ul>
+                            <li><strong>sortie_musee.jpg</strong> — La photo de la sortie au musée.</li>
+                            <li><strong>expose_chateaux_forts.pdf</strong> — L'exposé sur les châteaux forts, à rendre au professeur : il doit se lire sans être modifié.</li>
+                            <li><strong>temperatures_semaine.csv</strong> — Le tableau des températures relevées chaque matin pendant une semaine.</li>
+                            <li><strong>podcast_climat.mp3</strong> — Le podcast de deux minutes sur le réchauffement climatique.</li>
+                            <li><strong>fete_college.mp4</strong> — La vidéo de la fête du collège.</li>
+                            </ul>
+                        </div>
                     </article>
 
                     <article class="atelier-carte" data-ost-bloc="n2-atelier-organise-les-fichiers" data-type="liaison" data-atelier="organise-les-fichiers" data-liens="[{&quot;de&quot;: &quot;photo-vacances&quot;, &quot;vers&quot;: &quot;images&quot;, &quot;pourquoi&quot;: &quot;L'extension .jpg est celle d'une image : la photo se range avec les autres images.&quot;}, {&quot;de&quot;: &quot;selfie&quot;, &quot;vers&quot;: &quot;images&quot;, &quot;pourquoi&quot;: &quot;L'extension .png est aussi celle d'une image : ce fichier va avec les photos.&quot;}, {&quot;de&quot;: &quot;devoir-maths&quot;, &quot;vers&quot;: &quot;documents&quot;, &quot;pourquoi&quot;: &quot;Un document de traitement de texte (.docx) est un travail écrit : il se range avec les documents.&quot;}, {&quot;de&quot;: &quot;presentation-hist&quot;, &quot;vers&quot;: &quot;documents&quot;, &quot;pourquoi&quot;: &quot;Un .pdf est un document à lire : il va avec les travaux écrits.&quot;}, {&quot;de&quot;: &quot;recette-gateau&quot;, &quot;vers&quot;: &quot;documents&quot;, &quot;pourquoi&quot;: &quot;Un fichier texte (.txt) est un écrit : il se range avec les documents.&quot;}, {&quot;de&quot;: &quot;musique-ete&quot;, &quot;vers&quot;: &quot;musique&quot;, &quot;pourquoi&quot;: &quot;L'extension .mp3 désigne un fichier son : il rejoint la musique.&quot;}, {&quot;de&quot;: &quot;film-anniversaire&quot;, &quot;vers&quot;: &quot;videos&quot;, &quot;pourquoi&quot;: &quot;L'extension .mp4 désigne une vidéo : elle va dans le dossier des vidéos.&quot;}]" data-messages="{&quot;selection&quot;: &quot;{nom} est choisi. Clique maintenant le dossier dans lequel il se range.&quot;, &quot;annulation&quot;: &quot;Sélection annulée.&quot;, &quot;refus&quot;: &quot;❌ {a} ne se range pas dans {b} : regarde son extension, elle dit ce que contient le fichier.&quot;, &quot;dejaRelies&quot;: &quot;Ce fichier est déjà rangé dans ce dossier.&quot;, &quot;liaison&quot;: &quot;✅ Rangé : {a} → {b}. Il reste {reste} fichier(s) à ranger.&quot;, &quot;complet&quot;: &quot;🎉 Tous les fichiers sont rangés : {total} rangements effectués.&quot;, &quot;verifierComplet&quot;: &quot;🎉 Rangement complet : les {total} fichiers sont dans leurs dossiers.&quot;, &quot;incomplet&quot;: &quot;Il reste des fichiers à ranger : {faits} sur {total}. Clique un fichier, puis son dossier.&quot;, &quot;verrouille&quot;: &quot;Tout est déjà rangé : clique « Vérifier mes rangements ».&quot;, &quot;compteurComplet&quot;: &quot;Tous les fichiers sont rangés.&quot;, &quot;aucunFil&quot;: &quot;aucun rangement&quot;, &quot;unFil&quot;: &quot;{n} rangement&quot;, &quot;desFils&quot;: &quot;{n} rangements&quot;}" aria-labelledby="atelier-titre-organise-les-fichiers">
@@ -6722,6 +6827,14 @@
                                     <strong>Ordre de grandeur des tailles :</strong>
                                     <p>Une page de texte pèse quelques ko, une photo quelques Mo, une vidéo peut dépasser le Go : la vidéo est de loin la plus lourde.</p>
                                 </div>
+                                <div class="point-cle" data-ost-id="synthese-f2-p5">
+                                    <strong>Nommer un fichier :</strong>
+                                    <p>Un bon nom décrit ce que contient le fichier (sortie_musee, pas img_4567) : les mots se séparent par un tiret bas, et l'extension ne se tape pas — c'est le format qui la pose.</p>
+                                </div>
+                                <div class="point-cle" data-ost-id="synthese-f2-p6">
+                                    <strong>Les raccourcis clavier :</strong>
+                                    <p>Ctrl + C copie, Ctrl + X coupe, Ctrl + V colle, Ctrl + Z annule, Ctrl + S enregistre, F2 renomme : les mêmes gestes servent dans presque toutes les applications.</p>
+                                </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f3">
                             <h3>📖 Diagnostiquer et corriger un fichier illisible (N3 - Application)</h3>
@@ -7074,7 +7187,7 @@
         // Configuration des bonnes réponses (à adapter selon le contenu)
         const bonnesReponses = {
             'n1': {
-            'q1': 'b',
+            'q1': 'a',
             'q2': 'c',
             'q3': 'b',
             'q4': 'b',
@@ -10442,6 +10555,80 @@
                       + missions.length + '. Reprends les missions sans ✔.',
                 faits === missions.length ? 'succes' : 'echec');
             if (faits === missions.length) atelierAfficherExplication(carte);
+        }
+
+        // ── Type « nommage » : raccourcis clavier et tableau de noms ────────
+        // Le nom n'est PAS corrigé automatiquement : plusieurs noms justes
+        // décrivent une même situation, et c'est le professeur qui juge la
+        // pertinence. Le moteur vérifie seulement que chaque champ est rempli
+        // et que l'extension n'a pas été tapée (la colonne 2 affiche le
+        // format), puis il dévoile une proposition par ligne. Les propositions
+        // arrivent donc APRÈS la saisie, jamais avant.
+        function atelierVerifierNommage(bouton) {
+            const contexte = atelierContexte(bouton);
+            if (!contexte) return;
+            const carte = contexte.carte;
+            const lignes = carte.querySelectorAll('.atelier-nommage-ligne');
+            if (!lignes.length) return;
+
+            let vides = 0;
+            let pointees = 0;
+            let retenus = 0;
+
+            lignes.forEach(function (ligne) {
+                const champ = ligne.querySelector('[data-role="nom"]');
+                const retour = ligne.querySelector('[data-role="retour-nom"]');
+                const format = ligne.getAttribute('data-format') || '';
+                const valeur = champ ? String(champ.value || '').trim() : '';
+
+                if (retour) {
+                    retour.textContent = '';
+                    retour.className = 'atelier-retour';
+                }
+                if (!valeur) {
+                    vides += 1;
+                    if (retour) {
+                        retour.textContent = 'Tape un nom pour ce fichier.';
+                        retour.className = 'atelier-retour info';
+                    }
+                    return;
+                }
+                if (valeur.indexOf('.') !== -1) {
+                    pointees += 1;
+                    if (retour) {
+                        retour.textContent = '❌ Le nom « ' + valeur + ' » contient '
+                            + 'un point : ne tape pas l\u2019extension, le format '
+                            + 'affiché l\u2019ajoute tout seul.';
+                        retour.className = 'atelier-retour echec';
+                    }
+                    return;
+                }
+                retenus += 1;
+                if (retour) {
+                    retour.textContent = '✅ Nom retenu : ' + valeur + format
+                        + '. Vérifie qu\u2019il décrit bien la situation.';
+                    retour.className = 'atelier-retour succes';
+                }
+            });
+
+            if (vides === 0 && pointees === 0) {
+                carte.querySelectorAll('[data-role="nom"]').forEach(function (champ) {
+                    champ.readOnly = true;
+                });
+                const propositions = carte.querySelector('[data-role="propositions"]');
+                if (propositions) propositions.classList.remove('cache');
+                atelierRetour(carte,
+                    '🎉 Les ' + lignes.length + ' noms sont saisis. Compare-les avec '
+                    + 'les propositions : plusieurs noms sont possibles.',
+                    'succes');
+                atelierAfficherExplication(carte);
+            } else {
+                atelierRetour(carte,
+                    'Il reste ' + (vides + pointees) + ' nom(s) à reprendre : '
+                    + vides + ' champ(s) vide(s), ' + pointees
+                    + ' nom(s) avec une extension tapée. Un nom se tape sans point.',
+                    'echec');
+            }
         }
 
         // ── Type « environnement » : interacteurs extérieurs ↔ capteurs ───
