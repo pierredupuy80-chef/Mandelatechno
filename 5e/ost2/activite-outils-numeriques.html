@@ -1218,6 +1218,162 @@
             margin-bottom: var(--espacement-sm);
         }
 
+        /* ── N4 — arborescence de dossiers (n4.arborescence) ────────────────
+           L'élève nomme trois dossiers, un sous-dossier, puis range huit
+           fichiers. Les champs et les listes déroulantes sont volontairement
+           à 16 px : ils ne doivent pas déclencher le zoom iOS. Les fonds sont
+           des gris translucides pour rester lisibles en mode sombre. */
+        .arborescence-n4 {
+            margin-bottom: var(--espacement-lg);
+            padding: var(--espacement-md);
+            background: rgba(128, 128, 128, .06);
+            border-left: 4px solid var(--couleur-secondaire);
+            border-radius: var(--rayon-bordure);
+        }
+
+        .arborescence-n4 h4 {
+            margin: .2rem 0 .4rem;
+            color: var(--couleur-secondaire);
+        }
+
+        .arbre-cadre {
+            margin: .7rem 0 1rem;
+            padding: .6rem;
+            border: 1px solid rgba(128, 128, 128, .35);
+            border-radius: 10px;
+        }
+
+        .arbre-racine {
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .45rem .55rem;
+            border-radius: 8px;
+            background: rgba(128, 128, 128, .12);
+            font-weight: 700;
+        }
+
+        .arbre-niveau-1,
+        .arbre-niveau-2 {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .arbre-niveau-1 {
+            margin-top: .45rem;
+        }
+
+        .arbre-dossier {
+            margin: .45rem 0;
+        }
+
+        .arbre-ligne {
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+        }
+
+        .arbre-icone {
+            flex: 0 0 auto;
+            font-size: 1rem;
+        }
+
+        .arbre-ligne input,
+        .arbre-fichier select {
+            font: inherit;
+            font-size: 16px;
+            color: inherit;
+            background: rgba(128, 128, 128, .08);
+            border: 2px solid rgba(128, 128, 128, .4);
+            border-radius: 8px;
+            padding: .45rem .55rem;
+            min-height: 44px;
+            box-sizing: border-box;
+        }
+
+        .arbre-ligne input {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .arbre-ligne input:focus,
+        .arbre-fichier select:focus {
+            outline: 3px solid var(--couleur-primaire);
+            outline-offset: 1px;
+        }
+
+        .arbre-niveau-2 {
+            margin: .35rem 0 0 1.1rem;
+            padding-left: .7rem;
+            border-left: 2px dashed rgba(128, 128, 128, .4);
+        }
+
+        .arbre-sous-dossier {
+            margin: .3rem 0;
+        }
+
+        .arbre-fichiers {
+            margin-top: .8rem;
+        }
+
+        .arbre-fichiers h4 {
+            margin: .3rem 0 .5rem;
+        }
+
+        .arbre-liste-fichiers {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .arbre-fichier {
+            display: grid;
+            grid-template-columns: auto minmax(11rem, 1fr) minmax(10rem, 15rem);
+            gap: .4rem .6rem;
+            align-items: center;
+            padding: .5rem 0;
+            border-bottom: 1px solid rgba(128, 128, 128, .3);
+        }
+
+        .arbre-fichier:last-child {
+            border-bottom: 0;
+        }
+
+        .arbre-fichier-nom {
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .arbre-fichier-type {
+            font-size: .8rem;
+            opacity: .8;
+            font-weight: 400;
+        }
+
+        .arbre-fichier select {
+            width: 100%;
+        }
+
+        .arbre-actions {
+            margin-top: .7rem;
+        }
+
+        @media (max-width: 600px) {
+            .arbre-fichier {
+                grid-template-columns: 1fr;
+                gap: .2rem;
+            }
+
+            .arbre-fichier-type {
+                display: block;
+            }
+
+            .arbre-fichier select {
+                margin-top: .25rem;
+            }
+        }
+
         /* ============================================
            ÉTAPE N4 À CHOIX MULTIPLE
            (n4.etapes[].type = "selection" : retenir N propositions
@@ -6019,6 +6175,9 @@
                  diagnostic du N3. Avec un N4 déclaré, seuls ces marqueurs sont
                  retirés de la page livrée. Les marqueurs DOIVENT rester
                  appariés, et deux blocs sont attendus (le bouton, la section). -->
+            <button class="bouton-onglet verrouille" data-niveau="n4-probleme" role="tab" aria-selected="false" aria-controls="contenu-n4-probleme" tabindex="-1" disabled>
+                N4 - Problème
+            </button>
             <button class="bouton-onglet verrouille" data-niveau="synthese" role="tab" aria-selected="false" aria-controls="contenu-synthese" tabindex="-1" disabled>
                 Synthèse
             </button>
@@ -6930,7 +7089,7 @@
                                 <p><strong>Solution attendue :</strong> <span id="solution-attendue">Leïa doit convertir son travail dans un format accepté : .pdf pour un document, .jpg ou .png pour une image. Elle doit aussi réduire sa taille pour ne pas dépasser 5 Mo (exporter en qualité raisonnable, compresser l'image ou le PDF), puis joindre à nouveau le fichier et vérifier que la pièce jointe est bien affichée avant d'envoyer. Renommer l'extension .tiff en .pdf ne suffit pas : il faut réenregistrer le fichier dans le bon format avec le logiciel.</span></p>
                             </div>
                             <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
-                                Continuer vers la synthèse →
+                                Continuer vers N4 →
                             </button>
                         </div>
                     </div>
@@ -6945,6 +7104,173 @@
                 </div>
             </section>
 
+            <!-- N4 - Problème ouvert -->
+            <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
+                <div class="carte-contenu">
+                    <h2>Niveau 4 : Concevoir votre solution</h2>
+                    <p>Plusieurs organisations se défendent : il n'y a pas une seule bonne arborescence. Construisez la vôtre, vérifiez qu'elle respecte les règles, puis expliquez vos choix.</p>
+
+                    <div class="probleme-ouvert">
+                        <h3>🎯 Le défi</h3>
+                        <p><strong>Situation :</strong> Le disque de Leïa est en fouillis : ses photos, ses devoirs et ses vidéos sont tous au même endroit. Créez une arborescence de dossiers pour qu'elle retrouve chaque fichier rapidement.</p>
+                    </div>
+
+                    <h3>Construisez votre arborescence</h3>
+
+
+                    <!-- ARBORESCENCE-N4 : DEBUT -->
+
+                        <div class="arborescence-n4" id="arborescence-n4" data-ost-id="n4-arborescence" data-conception-atelier="arborescence" data-atelier-valide="0" data-conception-consigne="Construisez et vérifiez votre arborescence avant de finaliser : nommez les trois dossiers, ajoutez un sous-dossier et rangez tous les fichiers.">
+                            <p>Nommez les trois dossiers, ajoutez au moins un sous-dossier, puis rangez chaque fichier dans le dossier qui lui convient. Plusieurs classements sont possibles.</p>
+                            <div class="arbre-cadre" role="group" aria-label="Arborescence de dossiers à construire">
+                                <div class="arbre-racine">
+                                    <span class="arbre-icone" aria-hidden="true">📁</span>
+                                    <span>Mes documents</span>
+                                </div>
+                                <ul class="arbre-niveau-1">
+                                <li class="arbre-dossier">
+                                    <div class="arbre-ligne">
+                                        <span class="arbre-icone" aria-hidden="true">📁</span>
+                                        <input type="text" id="arbre-dossier-d1" data-arbre-dossier="d1" maxlength="24" placeholder="Nom du dossier (ex. Travail)" aria-label="Nom du dossier 1">
+                                    </div>
+                                    <ul class="arbre-niveau-2">
+                                        <li class="arbre-sous-dossier">
+                                            <div class="arbre-ligne">
+                                                <span class="arbre-icone" aria-hidden="true">↳</span>
+                                                <input type="text" id="arbre-dossier-d1s1" data-arbre-dossier="d1s1" maxlength="24" placeholder="Sous-dossier (facultatif)" aria-label="Nom du sous-dossier du dossier 1">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="arbre-dossier">
+                                    <div class="arbre-ligne">
+                                        <span class="arbre-icone" aria-hidden="true">📁</span>
+                                        <input type="text" id="arbre-dossier-d2" data-arbre-dossier="d2" maxlength="24" placeholder="Nom du dossier (ex. Travail)" aria-label="Nom du dossier 2">
+                                    </div>
+                                    <ul class="arbre-niveau-2">
+                                        <li class="arbre-sous-dossier">
+                                            <div class="arbre-ligne">
+                                                <span class="arbre-icone" aria-hidden="true">↳</span>
+                                                <input type="text" id="arbre-dossier-d2s1" data-arbre-dossier="d2s1" maxlength="24" placeholder="Sous-dossier (facultatif)" aria-label="Nom du sous-dossier du dossier 2">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="arbre-dossier">
+                                    <div class="arbre-ligne">
+                                        <span class="arbre-icone" aria-hidden="true">📁</span>
+                                        <input type="text" id="arbre-dossier-d3" data-arbre-dossier="d3" maxlength="24" placeholder="Nom du dossier (ex. Travail)" aria-label="Nom du dossier 3">
+                                    </div>
+                                    <ul class="arbre-niveau-2">
+                                        <li class="arbre-sous-dossier">
+                                            <div class="arbre-ligne">
+                                                <span class="arbre-icone" aria-hidden="true">↳</span>
+                                                <input type="text" id="arbre-dossier-d3s1" data-arbre-dossier="d3s1" maxlength="24" placeholder="Sous-dossier (facultatif)" aria-label="Nom du sous-dossier du dossier 3">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                </ul>
+                            </div>
+                            <div class="arbre-fichiers">
+                                <h4>Les fichiers à ranger</h4>
+                                <ul class="arbre-liste-fichiers">
+                                <li class="arbre-fichier" data-fichier="photo-musee">
+                                    <span class="arbre-icone" aria-hidden="true">🖼️</span>
+                                    <span class="arbre-fichier-nom">photo_sortie_musee.jpg<span class="arbre-fichier-type">Image</span></span>
+                                    <select id="arbre-cible-photo-musee" data-arbre-cible="photo-musee" aria-label="Dossier du fichier photo_sortie_musee.jpg">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="expose-chateaux">
+                                    <span class="arbre-icone" aria-hidden="true">📄</span>
+                                    <span class="arbre-fichier-nom">expose_chateaux_forts.pdf<span class="arbre-fichier-type">Document</span></span>
+                                    <select id="arbre-cible-expose-chateaux" data-arbre-cible="expose-chateaux" aria-label="Dossier du fichier expose_chateaux_forts.pdf">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="temperatures">
+                                    <span class="arbre-icone" aria-hidden="true">📊</span>
+                                    <span class="arbre-fichier-nom">temperatures_semaine.csv<span class="arbre-fichier-type">Tableur</span></span>
+                                    <select id="arbre-cible-temperatures" data-arbre-cible="temperatures" aria-label="Dossier du fichier temperatures_semaine.csv">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="podcast-climat">
+                                    <span class="arbre-icone" aria-hidden="true">🎵</span>
+                                    <span class="arbre-fichier-nom">podcast_climat.mp3<span class="arbre-fichier-type">Son</span></span>
+                                    <select id="arbre-cible-podcast-climat" data-arbre-cible="podcast-climat" aria-label="Dossier du fichier podcast_climat.mp3">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="video-fete">
+                                    <span class="arbre-icone" aria-hidden="true">🎬</span>
+                                    <span class="arbre-fichier-nom">video_fete_college.mp4<span class="arbre-fichier-type">Vidéo</span></span>
+                                    <select id="arbre-cible-video-fete" data-arbre-cible="video-fete" aria-label="Dossier du fichier video_fete_college.mp4">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="fiche-techno">
+                                    <span class="arbre-icone" aria-hidden="true">📝</span>
+                                    <span class="arbre-fichier-nom">fiche_revision_techno.odt<span class="arbre-fichier-type">Document</span></span>
+                                    <select id="arbre-cible-fiche-techno" data-arbre-cible="fiche-techno" aria-label="Dossier du fichier fiche_revision_techno.odt">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="selfie-anniversaire">
+                                    <span class="arbre-icone" aria-hidden="true">🤳</span>
+                                    <span class="arbre-fichier-nom">selfie_anniversaire.png<span class="arbre-fichier-type">Image</span></span>
+                                    <select id="arbre-cible-selfie-anniversaire" data-arbre-cible="selfie-anniversaire" aria-label="Dossier du fichier selfie_anniversaire.png">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                <li class="arbre-fichier" data-fichier="musique-detente">
+                                    <span class="arbre-icone" aria-hidden="true">🎧</span>
+                                    <span class="arbre-fichier-nom">musique_detente.mp3<span class="arbre-fichier-type">Son</span></span>
+                                    <select id="arbre-cible-musique-detente" data-arbre-cible="musique-detente" aria-label="Dossier du fichier musique_detente.mp3">
+                                        <option value="">— choisir un dossier —</option>
+                                    </select>
+                                </li>
+                                </ul>
+                            </div>
+                            <div class="etape-conception">
+                                <h4>Expliquez votre classement</h4>
+                                <p>Pourquoi votre arborescence permet-elle de retrouver rapidement un fichier ? Appuyez-vous sur vos catégories et vos sous-dossiers.</p>
+                                <textarea id="solution-choisie" data-conception-texte data-min="30" placeholder="J'ai créé un dossier … pour … ; le sous-dossier … sert à …" aria-label="Justification de l'arborescence"></textarea>
+                            </div>
+                            <div class="arbre-actions">
+                                <button type="button" class="bouton-action" onclick="n4VerifierArborescence(this)">Vérifier mon arborescence</button>
+                                <button type="button" class="bouton-action secondaire" onclick="n4ReinitialiserArborescence()">Tout effacer</button>
+                            </div>
+                            <p class="atelier-retour" data-role="retour-arborescence" role="status" aria-live="polite"></p>
+                            <p class="atelier-explication cache" data-role="explication-arborescence">Une arborescence efficace part d'une racine, se divise en dossiers nommés clairement et va au moins jusqu'à un sous-dossier. Chaque fichier a sa place et aucun dossier ne reste vide : c'est ce qui permet de retrouver un document sans fouiller. Il n'y a pas un seul classement juste : ce qui compte est que vos catégories soient compréhensibles et que vous puissiez expliquer votre choix.</p>
+                        </div>
+
+                    <!-- ARBORESCENCE-N4 : FIN -->
+
+
+
+
+
+
+
+
+                    <button class="bouton-action marge-haut" onclick="finaliserConception()">
+                        Finaliser ma conception
+                    </button>
+
+                    <div id="confirmation-conception" class="marge-haut" style="display: none;">
+                        <div class="solution-personnelle">
+                            <h3>✨ Félicitations !</h3>
+                            <p>Vous avez complété tous les niveaux de l'activité. Votre démarche de conception est personnelle et réfléchie. C'est exactement ce qu'on attend d'un esprit ingénieur !</p>
+                            <p>Maintenant, consultez la synthèse de l'activité pour consolider vos apprentissages.</p>
+                        </div>
+                        <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n4')">
+                            Voir la synthèse →
+                        </button>
+                    </div>
+                </div>
+            </section>
 
             <!-- Synthèse - Fiches de cours -->
             <section id="contenu-synthese" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-synthese">
@@ -7020,20 +7346,39 @@
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f4">
-                            <h3>📖 Les réflexes de protection (N4 - Analyse)</h3>
+                            <h3>📖 Construire une arborescence pour retrouver ses fichiers (N4 - Conception)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f4-p1">
+                                    <strong>Une racine et des niveaux :</strong>
+                                    <p>Tous les fichiers partent d'un dossier racine (« Mes documents »), puis se répartissent en dossiers et sous-dossiers : c'est l'arborescence.</p>
+                                </div>
+                                <div class="point-cle" data-ost-id="synthese-f4-p2">
+                                    <strong>Des noms clairs et uniques :</strong>
+                                    <p>Chaque dossier porte un nom court, sans caractère interdit, différent de ses voisins ; un dossier vide ne sert à rien.</p>
+                                </div>
+                                <div class="point-cle" data-ost-id="synthese-f4-p3">
+                                    <strong>Classer par usage ou par type :</strong>
+                                    <p>On peut ranger par catégorie de travail (Travail, Perso) puis par sous-catégorie (Technologie, Photos) : plusieurs organisations se défendent, l'important est de retrouver vite.</p>
+                                </div>
+                                <div class="point-cle" data-ost-id="synthese-f4-p4">
+                                    <strong>Vérifier avant de ranger :</strong>
+                                    <p>On vérifie que chaque fichier a un dossier, qu'aucun dossier n'est vide et que l'arborescence ne dépasse pas les niveaux prévus.</p>
+                                </div>
+                        </div>
+                        <div class="fiche-synthese" data-ost-id="synthese-f5">
+                            <h3>📖 Les réflexes de protection (Pour aller plus loin)</h3>
+                                <div class="point-cle" data-ost-id="synthese-f5-p1">
                                     <strong>Mot de passe fort :</strong>
                                     <p>8 caractères minimum, idéalement 12, en mélangeant majuscules, minuscules, chiffres et symboles ; un mot de passe différent par compte.</p>
                                 </div>
-                                <div class="point-cle" data-ost-id="synthese-f4-p2">
+                                <div class="point-cle" data-ost-id="synthese-f5-p2">
                                     <strong>Données personnelles et phishing :</strong>
                                     <p>Nom, photo, adresse sont des données personnelles ; un message urgent qui réclame des identifiants est une tentative d'hameçonnage : on ne clique pas.</p>
                                 </div>
-                                <div class="point-cle" data-ost-id="synthese-f4-p3">
+                                <div class="point-cle" data-ost-id="synthese-f5-p3">
                                     <strong>Droit à l'image :</strong>
                                     <p>On publie une photo d'une autre personne seulement avec son autorisation explicite.</p>
                                 </div>
-                                <div class="point-cle" data-ost-id="synthese-f4-p4">
+                                <div class="point-cle" data-ost-id="synthese-f5-p4">
                                     <strong>Face au cyberharcèlement :</strong>
                                     <p>Ne pas répondre, conserver les preuves (captures d'écran), signaler le contenu et en parler à un adulte de confiance ; le 3018 est le numéro gratuit dédié.</p>
                                 </div>
@@ -7320,7 +7665,8 @@
             const correspondance = {
                 'n1': 'n2-intro',
                 'n2': 'n3-enigme',
-                'n3': 'synthese'
+                'n3': 'n4-probleme',
+                'n4': 'synthese'
             };
             
             const niveauSuivant = correspondance[niveauPrecedent];
@@ -8551,6 +8897,215 @@
         // guidée (contraintes par curseurs + comparateur de modèles) sont donc
         // validées par le même code : ajouter une étape ne demande pas de
         // modifier cette fonction.
+
+        // ══════════════════════════════════════════════════════════════════
+        //  N4 — ARBORESCENCE DE DOSSIERS (n4.arborescence)
+        //  L'élève nomme trois dossiers, un sous-dossier et range huit
+        //  fichiers. Aucune catégorie n'est « la bonne » : le contrôle porte
+        //  sur les RÈGLES d'une arborescence (noms, niveaux, dossiers vides,
+        //  fichiers rangés). Le résultat est porté par data-atelier-valide,
+        //  que finaliserConception() exige comme les autres ateliers.
+        // ══════════════════════════════════════════════════════════════════
+        const ARBRE_N4_DOSSIERS = ['d1', 'd2', 'd3'];
+        const ARBRE_N4_SOUS = { d1: 'd1s1', d2: 'd2s1', d3: 'd3s1' };
+
+        function n4ArbreZone() {
+            return document.getElementById('arborescence-n4');
+        }
+
+        function n4ArbreChamp(id) {
+            const zone = n4ArbreZone();
+            return zone ? zone.querySelector('[data-arbre-dossier="' + id + '"]') : null;
+        }
+
+        function n4ArbreNom(id) {
+            const champ = n4ArbreChamp(id);
+            return champ ? String(champ.value || '').trim() : '';
+        }
+
+        function n4ArbreDossiers() {
+            const liste = [];
+            ARBRE_N4_DOSSIERS.forEach(function (id) {
+                const nom = n4ArbreNom(id);
+                if (!nom) return;
+                liste.push({ id: id, nom: nom, chemin: nom, niveau: 1, parent: null });
+                const sousId = ARBRE_N4_SOUS[id];
+                const sousNom = n4ArbreNom(sousId);
+                if (sousNom) {
+                    liste.push({
+                        id: sousId, nom: sousNom, chemin: nom + ' / ' + sousNom,
+                        niveau: 2, parent: id
+                    });
+                }
+            });
+            return liste;
+        }
+
+        function n4ArbreRafraichirSelects() {
+            const zone = n4ArbreZone();
+            if (!zone) return;
+            const dossiers = n4ArbreDossiers();
+            zone.querySelectorAll('select[data-arbre-cible]').forEach(function (select) {
+                const valeur = select.value;
+                select.innerHTML = '';
+                const vide = document.createElement('option');
+                vide.value = '';
+                vide.textContent = '— choisir un dossier —';
+                select.appendChild(vide);
+                dossiers.forEach(function (dossier) {
+                    const option = document.createElement('option');
+                    option.value = dossier.id;
+                    option.textContent = (dossier.niveau === 2 ? '↳ ' : '') + dossier.chemin;
+                    select.appendChild(option);
+                });
+                select.value = dossiers.some(function (d) { return d.id === valeur; })
+                    ? valeur : '';
+            });
+        }
+
+        function n4ArbreChangement() {
+            const zone = n4ArbreZone();
+            if (!zone) return;
+            zone.setAttribute('data-atelier-valide', '0');
+            const retour = zone.querySelector('[data-role="retour-arborescence"]');
+            if (retour) {
+                retour.textContent = '';
+                retour.className = 'atelier-retour';
+            }
+            const explication = zone.querySelector('[data-role="explication-arborescence"]');
+            if (explication) explication.classList.add('cache');
+            n4ArbreRafraichirSelects();
+        }
+
+        function n4ArbreNomValide(nom) {
+            return nom.length >= 1 && nom.length <= 24 &&
+                !/[\/\\:*?"<>|]/.test(nom) && nom !== '.' && nom !== '..';
+        }
+
+        function n4VerifierArborescence(bouton) {
+            const zone = n4ArbreZone();
+            if (!zone) return false;
+            const problemes = [];
+            const noms = {};
+            ARBRE_N4_DOSSIERS.forEach(function (id) {
+                noms[id] = n4ArbreNom(id);
+            });
+            const vus = new Set();
+            ARBRE_N4_DOSSIERS.forEach(function (id, index) {
+                const nom = noms[id];
+                if (!nom) {
+                    problemes.push('Nommez le dossier ' + (index + 1) + '.');
+                    return;
+                }
+                if (!n4ArbreNomValide(nom)) {
+                    problemes.push('Le nom « ' + nom + ' » contient un caractère interdit ou dépasse 24 caractères.');
+                }
+                const cle = nom.toLowerCase();
+                if (vus.has(cle)) {
+                    problemes.push('Deux dossiers portent le même nom : « ' + nom + ' ».');
+                }
+                vus.add(cle);
+            });
+
+            let sousDossiers = 0;
+            ARBRE_N4_DOSSIERS.forEach(function (id) {
+                const sousId = ARBRE_N4_SOUS[id];
+                const sousNom = n4ArbreNom(sousId);
+                if (sousNom) {
+                    sousDossiers += 1;
+                    if (!noms[id]) {
+                        problemes.push('Le sous-dossier « ' + sousNom + ' » a besoin d\'un dossier parent nommé.');
+                    }
+                    if (!n4ArbreNomValide(sousNom)) {
+                        problemes.push('Le nom du sous-dossier « ' + sousNom + ' » est invalide.');
+                    }
+                }
+            });
+            if (sousDossiers === 0) {
+                problemes.push('Ajoutez au moins un sous-dossier : l\'arborescence doit avoir deux niveaux.');
+            }
+
+            const affectations = {};
+            let nonRanges = 0;
+            zone.querySelectorAll('select[data-arbre-cible]').forEach(function (select) {
+                const cible = String(select.value || '').trim();
+                if (!cible) {
+                    nonRanges += 1;
+                    return;
+                }
+                affectations[cible] = (affectations[cible] || 0) + 1;
+            });
+            if (nonRanges > 0) {
+                problemes.push('Rangez tous les fichiers : il en reste ' + nonRanges + ' sans dossier.');
+            }
+
+            ARBRE_N4_DOSSIERS.forEach(function (id) {
+                const nom = noms[id];
+                if (!nom) return;
+                const sousId = ARBRE_N4_SOUS[id];
+                const sousNom = n4ArbreNom(sousId);
+                if (sousNom) {
+                    if (!affectations[sousId]) {
+                        problemes.push('Le sous-dossier « ' + sousNom + ' » est vide : rangez-y un fichier.');
+                    }
+                } else if (!affectations[id]) {
+                    problemes.push('Le dossier « ' + nom + ' » est vide : rangez-y un fichier ou ajoutez-lui un sous-dossier.');
+                }
+            });
+
+            const retour = zone.querySelector('[data-role="retour-arborescence"]');
+            const explication = zone.querySelector('[data-role="explication-arborescence"]');
+            if (problemes.length === 0) {
+                zone.setAttribute('data-atelier-valide', '1');
+                if (retour) {
+                    retour.textContent = '✅ Votre arborescence respecte les règles : ' +
+                        ARBRE_N4_DOSSIERS.length + ' dossiers, ' + sousDossiers +
+                        ' sous-dossier(s) et tous les fichiers rangés.';
+                    retour.className = 'atelier-retour succes';
+                }
+                if (explication) explication.classList.remove('cache');
+            } else {
+                zone.setAttribute('data-atelier-valide', '0');
+                if (retour) {
+                    retour.textContent = 'Il reste ' + problemes.length +
+                        ' point(s) à corriger. ' + problemes.slice(0, 2).join(' ');
+                    retour.className = 'atelier-retour echec';
+                }
+            }
+            return problemes.length === 0;
+        }
+
+        function n4InitialiserArborescence() {
+            const zone = n4ArbreZone();
+            if (!zone) return;
+            zone.querySelectorAll('[data-arbre-dossier]').forEach(function (champ) {
+                champ.addEventListener('input', n4ArbreChangement);
+            });
+            zone.querySelectorAll('select[data-arbre-cible]').forEach(function (select) {
+                select.addEventListener('change', n4ArbreChangement);
+            });
+            n4ArbreRafraichirSelects();
+        }
+
+        function n4ReinitialiserArborescence() {
+            const zone = n4ArbreZone();
+            if (!zone) return;
+            zone.querySelectorAll('[data-arbre-dossier]').forEach(function (champ) {
+                champ.value = '';
+            });
+            zone.querySelectorAll('select[data-arbre-cible]').forEach(function (select) {
+                select.value = '';
+            });
+            zone.setAttribute('data-atelier-valide', '0');
+            const retour = zone.querySelector('[data-role="retour-arborescence"]');
+            if (retour) {
+                retour.textContent = '';
+                retour.className = 'atelier-retour';
+            }
+            const explication = zone.querySelector('[data-role="explication-arborescence"]');
+            if (explication) explication.classList.add('cache');
+            n4ArbreRafraichirSelects();
+        }
 
         function finaliserConception() {
             const champs = document.querySelectorAll(
@@ -10110,6 +10665,7 @@
                 // aussi de zéro (ce sont des champs hors formulaire, donc
                 // form.reset() ne les voit pas).
                 n4ReinitialiserConception();
+                n4ReinitialiserArborescence();
 
                 // Étapes à choix multiple : aucune proposition retenue, aucune
                 // marque de vérification. Sans cela, l'élève relancerait
@@ -10212,6 +10768,7 @@
             // si la configuration n'a pas produit son bloc.
             n3InitQCMCorrectif();
             n4InitDimensionnement();
+            n4InitialiserArborescence();
 
             // Étapes N4 de classement et de schéma (n4.etapes[].type) : la
             // renumérotation des tuiles et la relecture des emplacements se
@@ -16393,6 +16950,7 @@
             try { reinitialiserAteliers(); } catch (erreur) { /* page sans ateliers */ }
         }
         if (typeof n4ReinitialiserConception === 'function') n4ReinitialiserConception();
+        if (typeof n4ReinitialiserArborescence === 'function') n4ReinitialiserArborescence();
         if (typeof n4ReinitialiserSelections === 'function') n4ReinitialiserSelections();
         if (typeof n3ReinitialiserQCMCorrectif === 'function') n3ReinitialiserQCMCorrectif();
         if (document.getElementById('dimensionnement') &&
@@ -16804,11 +17362,18 @@
     // RESTAURATION — N4
     // ---------------------------------------------------------------
     function restaurerChampsN4(champs) {
+        var valeursSelect = {};
         (champs || []).forEach(function (champ) {
             if (!champ.chemin) return;
             if (champ.chemin.indexOf('id:') === 0) {
                 var el = document.getElementById(champ.chemin.slice(3));
-                if (el) el.value = champ.valeur;
+                if (el) {
+                    el.value = champ.valeur;
+                    // Les listes de l'arborescence sont reconstruites à partir
+                    // des noms de dossiers : leurs valeurs sont réappliquées
+                    // après le rafraîchissement, plus bas.
+                    if (el.tagName === 'SELECT') valeursSelect[el.id] = champ.valeur;
+                }
             } else if (champ.chemin.indexOf('index:') === 0) {
                 // Retrouvé par position dans la même liste de contrôles.
                 var controles = $$('#contenu-n4-probleme textarea, ' +
@@ -16819,6 +17384,17 @@
                 if (cible) cible.value = champ.valeur;
             }
         });
+        // Arborescence : les options des listes dépendent des noms saisis. On
+        // reconstruit les listes APRÈS la restauration des noms, puis on
+        // réapplique les dossiers choisis pour chaque fichier.
+        if (document.getElementById('arborescence-n4') &&
+            typeof n4ArbreRafraichirSelects === 'function') {
+            n4ArbreRafraichirSelects();
+            Object.keys(valeursSelect).forEach(function (id) {
+                var select = document.getElementById(id);
+                if (select) select.value = valeursSelect[id];
+            });
+        }
     }
 
     function restaurerGuide(etat) {
