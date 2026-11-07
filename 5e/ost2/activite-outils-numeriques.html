@@ -1182,7 +1182,7 @@
         }
 
         /* ── N4 — arborescence de dossiers (n4.arborescence) ────────────────
-           L'élève nomme trois dossiers, un sous-dossier, puis range huit
+           L'élève nomme trois dossiers, au moins deux sous-dossiers, puis range huit
            fichiers. Les champs et les listes déroulantes sont volontairement
            à 16 px : ils ne doivent pas déclencher le zoom iOS. Les fonds sont
            des gris translucides pour rester lisibles en mode sombre. */
@@ -7077,8 +7077,8 @@
 
                     <!-- ARBORESCENCE-N4 : DEBUT -->
 
-                        <div class="arborescence-n4" id="arborescence-n4" data-ost-id="n4-arborescence" data-conception-atelier="arborescence" data-atelier-valide="0" data-conception-consigne="Construisez et vérifiez votre arborescence avant de finaliser : nommez les trois dossiers, ajoutez un sous-dossier et rangez tous les fichiers.">
-                            <p>Nommez les trois dossiers, ajoutez au moins un sous-dossier, puis rangez chaque fichier dans le dossier qui lui convient. Plusieurs classements sont possibles.</p>
+                        <div class="arborescence-n4" id="arborescence-n4" data-ost-id="n4-arborescence" data-conception-atelier="arborescence" data-atelier-valide="0" data-conception-consigne="Construisez et vérifiez votre arborescence avant de finaliser : nommez les trois dossiers, ajoutez au moins deux sous-dossiers et rangez tous les fichiers.">
+                            <p>Nommez les trois dossiers, ajoutez au moins deux sous-dossiers, puis rangez chaque fichier dans le dossier qui lui convient. Plusieurs classements sont possibles.</p>
                             <div class="arbre-cadre" role="group" aria-label="Arborescence de dossiers à construire">
                                 <div class="arbre-racine">
                                     <span class="arbre-icone" aria-hidden="true">📁</span>
@@ -7094,7 +7094,13 @@
                                         <li class="arbre-sous-dossier">
                                             <div class="arbre-ligne">
                                                 <span class="arbre-icone" aria-hidden="true">↳</span>
-                                                <input type="text" id="arbre-dossier-d1s1" data-arbre-dossier="d1s1" maxlength="24" placeholder="Sous-dossier (facultatif)" aria-label="Nom du sous-dossier du dossier 1">
+                                                <input type="text" id="arbre-dossier-d1s1" data-arbre-dossier="d1s1" maxlength="24" placeholder="Sous-dossier 1 (ex. Technologie)" aria-label="Nom du sous-dossier 1 du dossier 1">
+                                            </div>
+                                        </li>
+                                        <li class="arbre-sous-dossier">
+                                            <div class="arbre-ligne">
+                                                <span class="arbre-icone" aria-hidden="true">↳</span>
+                                                <input type="text" id="arbre-dossier-d1s2" data-arbre-dossier="d1s2" maxlength="24" placeholder="Sous-dossier 2 (facultatif)" aria-label="Nom du sous-dossier 2 du dossier 1">
                                             </div>
                                         </li>
                                     </ul>
@@ -7108,7 +7114,13 @@
                                         <li class="arbre-sous-dossier">
                                             <div class="arbre-ligne">
                                                 <span class="arbre-icone" aria-hidden="true">↳</span>
-                                                <input type="text" id="arbre-dossier-d2s1" data-arbre-dossier="d2s1" maxlength="24" placeholder="Sous-dossier (facultatif)" aria-label="Nom du sous-dossier du dossier 2">
+                                                <input type="text" id="arbre-dossier-d2s1" data-arbre-dossier="d2s1" maxlength="24" placeholder="Sous-dossier 1 (ex. Technologie)" aria-label="Nom du sous-dossier 1 du dossier 2">
+                                            </div>
+                                        </li>
+                                        <li class="arbre-sous-dossier">
+                                            <div class="arbre-ligne">
+                                                <span class="arbre-icone" aria-hidden="true">↳</span>
+                                                <input type="text" id="arbre-dossier-d2s2" data-arbre-dossier="d2s2" maxlength="24" placeholder="Sous-dossier 2 (facultatif)" aria-label="Nom du sous-dossier 2 du dossier 2">
                                             </div>
                                         </li>
                                     </ul>
@@ -7122,7 +7134,13 @@
                                         <li class="arbre-sous-dossier">
                                             <div class="arbre-ligne">
                                                 <span class="arbre-icone" aria-hidden="true">↳</span>
-                                                <input type="text" id="arbre-dossier-d3s1" data-arbre-dossier="d3s1" maxlength="24" placeholder="Sous-dossier (facultatif)" aria-label="Nom du sous-dossier du dossier 3">
+                                                <input type="text" id="arbre-dossier-d3s1" data-arbre-dossier="d3s1" maxlength="24" placeholder="Sous-dossier 1 (ex. Technologie)" aria-label="Nom du sous-dossier 1 du dossier 3">
+                                            </div>
+                                        </li>
+                                        <li class="arbre-sous-dossier">
+                                            <div class="arbre-ligne">
+                                                <span class="arbre-icone" aria-hidden="true">↳</span>
+                                                <input type="text" id="arbre-dossier-d3s2" data-arbre-dossier="d3s2" maxlength="24" placeholder="Sous-dossier 2 (facultatif)" aria-label="Nom du sous-dossier 2 du dossier 3">
                                             </div>
                                         </li>
                                     </ul>
@@ -7200,7 +7218,7 @@
                                 <button type="button" class="bouton-action secondaire" onclick="n4ReinitialiserArborescence()">Tout effacer</button>
                             </div>
                             <p class="atelier-retour" data-role="retour-arborescence" role="status" aria-live="polite"></p>
-                            <p class="atelier-explication cache" data-role="explication-arborescence">Une arborescence efficace part d'une racine, se divise en dossiers nommés clairement et va au moins jusqu'à un sous-dossier. Chaque fichier a sa place et aucun dossier ne reste vide : c'est ce qui permet de retrouver un document sans fouiller. Il n'y a pas un seul classement juste : ce qui compte est que vos catégories soient compréhensibles et que vous puissiez expliquer votre choix.</p>
+                            <p class="atelier-explication cache" data-role="explication-arborescence">Une arborescence efficace part d'une racine, se divise en dossiers nommés clairement et comporte au moins deux sous-dossiers. Chaque fichier a sa place et aucun dossier ne reste vide : c'est ce qui permet de retrouver un document sans fouiller. Il n'y a pas un seul classement juste : ce qui compte est que vos catégories soient compréhensibles et que vous puissiez expliquer votre choix.</p>
                         </div>
 
                     <!-- ARBORESCENCE-N4 : FIN -->
@@ -8857,14 +8875,14 @@
 
         // ══════════════════════════════════════════════════════════════════
         //  N4 — ARBORESCENCE DE DOSSIERS (n4.arborescence)
-        //  L'élève nomme trois dossiers, un sous-dossier et range huit
+        //  L'élève nomme trois dossiers, au moins deux sous-dossiers et range huit
         //  fichiers. Aucune catégorie n'est « la bonne » : le contrôle porte
         //  sur les RÈGLES d'une arborescence (noms, niveaux, dossiers vides,
         //  fichiers rangés). Le résultat est porté par data-atelier-valide,
         //  que finaliserConception() exige comme les autres ateliers.
         // ══════════════════════════════════════════════════════════════════
         const ARBRE_N4_DOSSIERS = ['d1', 'd2', 'd3'];
-        const ARBRE_N4_SOUS = { d1: 'd1s1', d2: 'd2s1', d3: 'd3s1' };
+        const ARBRE_N4_SOUS = { d1: ['d1s1', 'd1s2'], d2: ['d2s1', 'd2s2'], d3: ['d3s1', 'd3s2'] };
 
         function n4ArbreZone() {
             return document.getElementById('arborescence-n4');
@@ -8886,14 +8904,14 @@
                 const nom = n4ArbreNom(id);
                 if (!nom) return;
                 liste.push({ id: id, nom: nom, chemin: nom, niveau: 1, parent: null });
-                const sousId = ARBRE_N4_SOUS[id];
-                const sousNom = n4ArbreNom(sousId);
-                if (sousNom) {
+                ARBRE_N4_SOUS[id].forEach(function (sousId) {
+                    const sousNom = n4ArbreNom(sousId);
+                    if (!sousNom) return;
                     liste.push({
                         id: sousId, nom: sousNom, chemin: nom + ' / ' + sousNom,
                         niveau: 2, parent: id
                     });
-                }
+                });
             });
             return liste;
         }
@@ -8966,9 +8984,9 @@
 
             let sousDossiers = 0;
             ARBRE_N4_DOSSIERS.forEach(function (id) {
-                const sousId = ARBRE_N4_SOUS[id];
-                const sousNom = n4ArbreNom(sousId);
-                if (sousNom) {
+                ARBRE_N4_SOUS[id].forEach(function (sousId) {
+                    const sousNom = n4ArbreNom(sousId);
+                    if (!sousNom) return;
                     sousDossiers += 1;
                     if (!noms[id]) {
                         problemes.push('Le sous-dossier « ' + sousNom + ' » a besoin d\'un dossier parent nommé.');
@@ -8976,10 +8994,10 @@
                     if (!n4ArbreNomValide(sousNom)) {
                         problemes.push('Le nom du sous-dossier « ' + sousNom + ' » est invalide.');
                     }
-                }
+                });
             });
-            if (sousDossiers === 0) {
-                problemes.push('Ajoutez au moins un sous-dossier : l\'arborescence doit avoir deux niveaux.');
+            if (sousDossiers < 2) {
+                problemes.push('Ajoutez au moins deux sous-dossiers : l\'arborescence doit avoir deux niveaux.');
             }
 
             const affectations = {};
@@ -8999,12 +9017,16 @@
             ARBRE_N4_DOSSIERS.forEach(function (id) {
                 const nom = noms[id];
                 if (!nom) return;
-                const sousId = ARBRE_N4_SOUS[id];
-                const sousNom = n4ArbreNom(sousId);
-                if (sousNom) {
-                    if (!affectations[sousId]) {
-                        problemes.push('Le sous-dossier « ' + sousNom + ' » est vide : rangez-y un fichier.');
-                    }
+                const sousNommes = ARBRE_N4_SOUS[id].filter(function (sousId) {
+                    return !!n4ArbreNom(sousId);
+                });
+                if (sousNommes.length) {
+                    sousNommes.forEach(function (sousId) {
+                        if (!affectations[sousId]) {
+                            problemes.push('Le sous-dossier « ' + n4ArbreNom(sousId) +
+                                ' » est vide : rangez-y un fichier.');
+                        }
+                    });
                 } else if (!affectations[id]) {
                     problemes.push('Le dossier « ' + nom + ' » est vide : rangez-y un fichier ou ajoutez-lui un sous-dossier.');
                 }
