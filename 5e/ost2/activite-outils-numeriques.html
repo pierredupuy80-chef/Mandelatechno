@@ -985,6 +985,170 @@
             display: block;
         }
 
+        /* ── N3 — capture d'un document fictif (n3.problematique.capture) ──
+           Un faux webmail, en HTML et non en image : il reste lisible au
+           téléphone, zoomable, et ne dépend d'aucun fichier. Les fonds sont
+           des gris translucides (rgba) pour rester lisibles en mode sombre
+           sans seconde feuille de style. */
+        .mail-fictif {
+            grid-column: 1 / -1;
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .mail-fenetre {
+            border: 1px solid rgba(128, 128, 128, .45);
+            border-radius: 12px;
+            background: rgba(128, 128, 128, .06);
+            overflow: hidden;
+        }
+
+        .mail-barre {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .35rem;
+            padding: .45rem .7rem;
+            background: rgba(128, 128, 128, .14);
+            border-bottom: 1px solid rgba(128, 128, 128, .3);
+            font-size: .78rem;
+        }
+
+        .mail-pastille {
+            width: .65rem;
+            height: .65rem;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .mail-pastille-1 { background: #ef4444; }
+        .mail-pastille-2 { background: #f59e0b; }
+        .mail-pastille-3 { background: #22c55e; }
+
+        .mail-titre {
+            margin-left: .35rem;
+            font-weight: 700;
+            opacity: .85;
+        }
+
+        .mail-entete {
+            padding: .7rem .9rem .4rem;
+            border-bottom: 1px solid rgba(128, 128, 128, .3);
+        }
+
+        .mail-entete p {
+            margin: .15rem 0;
+            font-size: .9rem;
+            overflow-wrap: anywhere;
+        }
+
+        .mail-libelle {
+            font-weight: 700;
+            opacity: .8;
+        }
+
+        .mail-corps {
+            padding: .7rem .9rem;
+            font-size: .95rem;
+        }
+
+        .mail-corps p {
+            margin: 0;
+        }
+
+        .mail-piece {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .35rem .55rem;
+            margin: 0 .9rem .7rem;
+            padding: .5rem .6rem;
+            border: 1px solid rgba(128, 128, 128, .35);
+            border-radius: 8px;
+            background: rgba(128, 128, 128, .1);
+            font-size: .9rem;
+        }
+
+        .mail-piece-nom {
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .mail-piece-taille,
+        .mail-piece-format {
+            opacity: .85;
+        }
+
+        .mail-piece-refus {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.6rem;
+            height: 1.6rem;
+            border-radius: 50%;
+            background: #dc2626;
+            color: #fff;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .mail-statut {
+            margin: 0 .9rem .6rem;
+            font-size: .9rem;
+        }
+
+        .mail-erreur {
+            margin: 0 .9rem .7rem;
+            padding: .6rem .7rem;
+            border-left: 5px solid #dc2626;
+            border-radius: 8px;
+            background: rgba(220, 38, 38, .12);
+        }
+
+        .mail-erreur p {
+            margin: .15rem 0;
+            font-size: .9rem;
+        }
+
+        .mail-erreur-titre {
+            font-weight: 700;
+        }
+
+        .mail-regle {
+            margin: 0 .9rem .9rem;
+            padding: .55rem .7rem;
+            border: 1px dashed rgba(128, 128, 128, .45);
+            border-radius: 8px;
+            background: rgba(240, 180, 0, .12);
+            font-size: .85rem;
+        }
+
+        .mail-legende {
+            margin: .45rem 0 0;
+            font-size: .82rem;
+            text-align: center;
+            opacity: .75;
+        }
+
+        @media (max-width: 480px) {
+            .mail-entete,
+            .mail-corps,
+            .mail-piece,
+            .mail-statut,
+            .mail-erreur,
+            .mail-regle {
+                margin-left: .6rem;
+                margin-right: .6rem;
+            }
+
+            .mail-entete,
+            .mail-corps {
+                padding-left: .6rem;
+                padding-right: .6rem;
+            }
+        }
+
         /* Cadres de réponse N3 : deux zones distinctes, numérotées.
            Le diagnostic (ce qui ne va pas) et la proposition de solution (ce
            que l'élève propose) sont deux gestes mentaux différents : les
@@ -6683,53 +6847,53 @@
             <section id="contenu-n3-enigme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n3-enigme">
                 <div class="carte-contenu">
                     <h2>Niveau 3 : Répondre à la problématique</h2>
-                    <p>Explorez les objets ci-dessous pour trouver les indices qui vous permettront de répondre à la problématique.</p>
+                    <p>Observez le mail fictif ci-dessous : il montre ce qui est arrivé au travail de Leïa.</p>
 
                     <div class="enigme-conteneur">
                         <h3>❓ La problématique</h3>
-                        <p><strong>Problématique :</strong> Leïa a envoyé sa photo pour le concours photo du collège, dont les résultats tombent vendredi. M. Diallo, le professeur organisateur, n'arrive pas à ouvrir son fichier : l'ordinateur affiche un message d'erreur. Les autres participants, eux, ont bien envoyé leurs photos, et Leïa est sûre que la sienne est réussie. Explore les quatre pistes pour trouver ce qui ne va pas.</p>
+                        <p><strong>Problématique :</strong> Leïa doit rendre son travail de technologie à M. Diallo par le webmail du collège. Elle a bien envoyé son message, mais le professeur répond qu'il n'a reçu aucun travail. Pourtant, Leïa avait choisi son fichier et vu le message partir. Lisez le mail ci-dessous, puis expliquez ce qui s'est passé et ce que Leïa doit faire.</p>
                     </div>
 
-                    <h3>Zone d'exploration</h3>
-                    <p>Cliquez sur chaque objet pour découvrir des indices :</p>
+                    <h3>Le mail de Leïa</h3>
+                    <p>Observez la pièce jointe et le message d'erreur, puis répondez aux deux questions.</p>
                     
                     <div class="zone-exploration">
 
-                        <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-1" onclick="explorerObjet(this)" 
-                             aria-expanded="false" aria-label="La clé USB de Leïa : Cliquer pour explorer (un second clic replie l'indice)">
-                            <span>🔑</span>
-                            <strong>La clé USB de Leïa</strong>
-                            <div class="indice-decouvert">
-                                Indice : D'autres fichiers de la clé s'ouvrent parfaitement : le diaporama de l'an dernier et les photos du club photo. La clé fonctionne normalement.
+                        <div class="mail-fictif" data-ost-id="n3-capture" role="group" aria-label="Le mail de Leïa">
+                            <div class="mail-fenetre">
+                                <div class="mail-barre" aria-hidden="true">
+                                    <span class="mail-pastille mail-pastille-1"></span>
+                                    <span class="mail-pastille mail-pastille-2"></span>
+                                    <span class="mail-pastille mail-pastille-3"></span>
+                                    <span class="mail-titre">Webmail du collège — Nouveau message</span>
+                                </div>
+                                <div class="mail-entete">
+                                    <p><span class="mail-libelle">De :</span> Leïa Benali &lt;lea.benali@college-jean-moulin.fr&gt;</p>
+                                    <p><span class="mail-libelle">À :</span> M. Diallo &lt;technologie@college-jean-moulin.fr&gt;</p>
+                                    <p><span class="mail-libelle">Objet :</span> Mon travail de technologie — Leïa</p>
+                                </div>
+                                <div class="mail-corps">
+                                    <p>Bonjour Monsieur, voici mon travail de technologie. Leïa</p>
+                                </div>
+                                <div class="mail-piece">
+                                    <span class="mail-piece-icone" aria-hidden="true">📎</span>
+                                    <span class="mail-piece-nom">travail_techno.tiff</span>
+                                    <span class="mail-piece-taille">10 Mo</span>
+                                    <span class="mail-piece-format">.tiff</span>
+                                    <span class="mail-piece-refus" aria-hidden="true">⛔</span>
+                                </div>
+                                <p class="mail-statut"><strong>Le message a été envoyé sans la pièce jointe.</strong></p>
+                                <div class="mail-erreur" role="alert">
+                                    <p class="mail-erreur-titre">⛔ Pièce jointe refusée</p>
+                                    <p>Le fichier « travail_techno.tiff » pèse 10 Mo : il dépasse la limite de 5 Mo par pièce jointe. Son format .tiff ne fait pas partie des formats acceptés (.pdf, .jpg, .png).</p>
+                                </div>
+                                <div class="mail-regle">
+                                    <strong>Règles du webmail :</strong> 5 Mo maximum par pièce jointe. Formats acceptés : .pdf, .jpg, .png.
+                                </div>
                             </div>
+                            <p class="mail-legende">Mail fictif — capture du webmail du collège (document créé pour l'exercice).</p>
                         </div>
 
-                        <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-2" onclick="explorerObjet(this)" 
-                             aria-expanded="false" aria-label="Le fichier envoyé : Cliquer pour explorer (un second clic replie l'indice)">
-                            <span>📄</span>
-                            <strong>Le fichier envoyé</strong>
-                            <div class="indice-decouvert">
-                                Indice : Le fichier reçu s'appelle « photo_concours.txt » et ne pèse que 60 Ko. Or la photo pesait 3 Mo dans le logiciel, et aucun aperçu ne s'affiche nulle part : le contenu ne correspond pas à l'extension.
-                            </div>
-                        </div>
-
-                        <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-3" onclick="explorerObjet(this)" 
-                             aria-expanded="false" aria-label="Le nom du fichier : Cliquer pour explorer (un second clic replie l'indice)">
-                            <span>🏷️</span>
-                            <strong>Le nom du fichier</strong>
-                            <div class="indice-decouvert">
-                                Indice : « photo_concours » est clair, sans espace ni accent : le nom ne pose aucun problème d'ouverture.
-                            </div>
-                        </div>
-
-                        <div class="objet-explorable" tabindex="0" data-ost-id="n3-objet-4" onclick="explorerObjet(this)" 
-                             aria-expanded="false" aria-label="La messagerie du collège : Cliquer pour explorer (un second clic replie l'indice)">
-                            <span>✉️</span>
-                            <strong>La messagerie du collège</strong>
-                            <div class="indice-decouvert">
-                                Indice : Les photos des autres élèves sont arrivées sans problème, et le fichier de Leïa est bien arrivé avec ses 60 Ko. La messagerie transmet correctement.
-                            </div>
-                        </div>
                     </div>
 
                     <div class="solution-enigme marge-haut">
@@ -6738,19 +6902,19 @@
 
                         <div class="cadre-reponse">
                             <h4><span class="numero-cadre" aria-hidden="true">1</span> Mon diagnostic</h4>
-                            <p class="consigne-cadre" id="consigne-diagnostic">Après avoir exploré les quatre objets, indique la cause du problème et l'indice qui la prouve.</p>
+                            <p class="consigne-cadre" id="consigne-diagnostic">Après avoir lu le mail et le message du webmail, indiquez pourquoi le travail de Leïa n'est pas arrivé chez le professeur.</p>
                             <textarea 
                                 id="diagnostic-eleve" 
-                                placeholder="Nomme ce qui ne va pas, et cite l'indice qui te l'a prouvé…"
+                                placeholder="Expliquez ce qui a empêché la pièce jointe d'arriver, en citant la taille et le format…"
                                 aria-label="Votre diagnostic du problème"></textarea>
                         </div>
 
                         <div class="cadre-reponse">
                             <h4><span class="numero-cadre" aria-hidden="true">2</span> Ma proposition de solution</h4>
-                            <p class="consigne-cadre" id="consigne-solution">Propose la correction : que doit faire Leïa pour que sa photo arrive ouvrable vendredi ?</p>
+                            <p class="consigne-cadre" id="consigne-solution">Proposez ce que Leïa doit faire pour que son travail arrive, en respectant les règles du webmail.</p>
                             <textarea 
                                 id="solution-eleve" 
-                                placeholder="Décris ce que Leïa doit refaire, et pourquoi ça marchera…"
+                                placeholder="Décrivez les manipulations (format, taille) et ce que Leïa doit vérifier avant de renvoyer…"
                                 aria-label="Votre proposition de solution"></textarea>
                         </div>
 
@@ -6760,10 +6924,10 @@
 
                         <div id="feedback-diagnostic" class="marge-haut" style="display: none;">
                             <div class="info-block" id="bloc-diagnostic-attendu">
-                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">La photo a été enregistrée dans un mauvais format : le fichier envoyé s'appelle « photo_concours.txt » et ne pèse que 60 Ko, alors que la photo pesait 3 Mo dans le logiciel. L'extension .txt annonce du texte, et aucun logiciel n'arrive à l'ouvrir comme une image : le contenu et l'extension ne correspondent pas.</span></p>
+                                <p><strong>Diagnostic attendu :</strong> <span id="solution-diagnostic">Le mail est parti sans la pièce jointe : le fichier « travail_techno.tiff » pèse 10 Mo, alors que le webmail accepte au maximum 5 Mo par pièce jointe, et son format .tiff ne fait pas partie des formats autorisés (.pdf, .jpg, .png). Le webmail a donc refusé la pièce jointe, et M. Diallo a reçu un message vide.</span></p>
                             </div>
                             <div class="info-block" id="bloc-solution-attendue">
-                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Leïa doit rouvrir sa photo dans son logiciel et l'enregistrer à nouveau (« Enregistrer sous ») dans un format d'image, par exemple .jpg. On ne corrige jamais un mauvais format en renommant l'extension à la main : c'est le logiciel, en enregistrant, qui écrit le contenu dans le bon format. Elle vérifie ensuite la taille (environ 3 Mo) avant de renvoyer le fichier.</span></p>
+                                <p><strong>Solution attendue :</strong> <span id="solution-attendue">Leïa doit convertir son travail dans un format accepté : .pdf pour un document, .jpg ou .png pour une image. Elle doit aussi réduire sa taille sous 5 Mo (exporter en qualité raisonnable, compresser l'image ou le PDF), puis joindre à nouveau le fichier et vérifier que la pièce jointe est bien affichée avant d'envoyer. Renommer l'extension .tiff en .pdf ne suffit pas : il faut réenregistrer le fichier dans le bon format avec le logiciel.</span></p>
                             </div>
                             <button class="bouton-action succes" onclick="debloquerNiveauSuivant('n3')">
                                 Continuer vers la synthèse →
@@ -6773,9 +6937,9 @@
 
                     <!-- ALLER-PLUS-LOIN-N3 : DEBUT -->
                     <aside class="encart-aller-plus-loin cadre-reponse marge-haut" data-ost-id="n3-aller-plus-loin" aria-labelledby="titre-aller-plus-loin-n3">
-                        <h3 id="titre-aller-plus-loin-n3">📚 Pour aller plus loin : les droits d'écriture et de lecture</h3>
-                        <p>Un fichier protégé en lecture seule s'ouvre, mais on ne peut pas enregistrer les modifications : le logiciel propose alors « Enregistrer sous » un autre nom. C'est une protection efficace contre les modifications accidentelles.</p>
-                        <p>Sur un ordinateur partagé, chaque dossier peut autoriser ou refuser l'écriture : une clé USB prêtée en lecture seule garde ses fichiers intacts, quoi que fasse le camarade qui la branche.</p>
+                        <h3 id="titre-aller-plus-loin-n3">📚 Pour aller plus loin : le poids et le format d'un fichier</h3>
+                        <p>Le .tiff est un format d'image non compressé : une seule photo peut peser plusieurs dizaines de Mo. Le .jpg compresse l'image et reste lisible partout, pour un poids bien plus faible.</p>
+                        <p>Pour réduire le poids d'un fichier sans changer son contenu visible, on baisse la résolution ou la qualité à l'export, ou on compresse le PDF. On vérifie ensuite la taille avant de joindre le fichier : c'est plus sûr que de découvrir le refus au moment de l'envoi.</p>
                     </aside>
                     <!-- ALLER-PLUS-LOIN-N3 : FIN -->
                 </div>
