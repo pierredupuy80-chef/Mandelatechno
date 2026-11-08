@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070b11">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Ccircle%20cx='16'%20cy='18'%20r='11'%20fill='none'%20stroke='%238fd0ff'%20stroke-width='3'/%3E%3Cpath%20d='M16%2018V10M16%2018l5%203'%20stroke='%238fd0ff'%20stroke-width='2.5'%20stroke-linecap='round'/%3E%3Cpath%20d='M12%206h8'%20stroke='%238fd0ff'%20stroke-width='3'%20stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="description" content="Chronomètre de classe — compte à rebours à projeter. Réglage discret, affichage plein écran, fonctionne sans connexion.">
+<title>Chronomètre — Mandelatechno</title>
+<style>
+  /* Chronomètre de classe — page du professeur, faite pour le vidéoprojecteur.
+
+     Principe : à l'écran, UNIQUEMENT le décompte, en très gros. Les réglages
+     sont derrière l'engrenage en haut à droite, les commandes dans une barre
+     basse qui s'efface dès que le chronomètre tourne. Aucune phrase d'explication
+     n'est affichée : les seuls mots visibles sont les unités des champs de
+     réglage (« min », « s ») et les durées des pastilles (« 5 min »). */
+
+  :root{
+    --fond:#070b11;
+    --texte:#f4f8fc;
+    --urgent:#ffb020;
+    --rouge:#ff5a5a;
+    --accent:#8fd0ff;
+    --trait:rgba(255,255,255,.14);
+    --surface:rgba(14,21,30,.94);
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html{-webkit-text-size-adjust:100%}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:radial-gradient(120% 90% at 50% 0%, #0d1622 0%, var(--fond) 62%);
+    color:var(--texte);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    overflow:hidden;
+    -webkit-user-select:none; user-select:none;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* ----------------------------- Le décompte ----------------------------- */
+  #scene{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 2vw;
+  }
+  #temps{
+    display:inline-block;
+    font-size:min(30vw,55vh);   /* repli sans JavaScript ; la taille est ensuite
+                                   ajustée à la mesure pour remplir l'écran */
+    line-height:1;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum" 1;
+    letter-spacing:.01em;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:color .25s ease;
+    outline:none;
+  }
+  #temps:focus,#temps:focus-visible{outline:none}
+  #temps.urgent{color:var(--urgent)}
+  #temps.fini{color:var(--rouge); animation:alarme .9s ease-in-out infinite}
+  @keyframes alarme{0%,100%{opacity:1} 50%{opacity:.5}}
+  @media (prefers-reduced-motion: reduce){
+    #temps.fini{animation:none}
+  }
+
+  /* ------------------------------ Les icônes ----------------------------- */
+  button{font:inherit; color:inherit; background:none; border:0; padding:0; margin:0; cursor:pointer}
+  .icone{
+    width:26px; height:26px; flex:none; display:block;
+    fill:none; stroke:currentColor; stroke-width:2;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .icone-remplie{fill:currentColor; stroke:none}
+  button:focus-visible, a:focus-visible{
+    outline:3px solid var(--accent); outline-offset:3px; border-radius:999px;
+  }
+
+  /* --------------------------- Commandes basses -------------------------- */
+  #barre{
+    position:fixed; left:50%; bottom:16px;
+    bottom:max(16px, env(safe-area-inset-bottom));
+    transform:translateX(-50%);
+    z-index:5;
+    display:flex; align-items:center; gap:6px;
+    padding:5px 8px;
+    border-radius:999px;
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.09);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  #barre button{
+    width:50px; height:50px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.78);
+    transition:background .2s ease, color .2s ease, transform .1s ease;
+  }
+  #barre button:hover{background:rgba(255,255,255,.1); color:#fff}
+  #barre button:active{transform:scale(.94)}
+
+  /* L'engrenage des réglages et le retour à l'accueil : volontairement très
+     discrets pour ne pas peser sur la projection. Ils s'effacent avec la barre. */
+  #btn-reglages{
+    position:fixed; top:12px; right:14px;
+    top:max(12px, env(safe-area-inset-top));
+    z-index:6;
+    width:46px; height:46px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.42);
+    transition:opacity .35s ease, color .2s ease, background .2s ease;
+  }
+  #btn-reglages:hover{color:#fff; background:rgba(255,255,255,.08)}
+  .retour{
+    position:fixed; top:12px; left:14px;
+    top:max(12px, env(safe-area-inset-top));
+    z-index:6;
+    width:46px; height:46px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.38); text-decoration:none;
+    transition:opacity .35s ease, color .2s ease, background .2s ease;
+  }
+  .retour:hover{color:#fff; background:rgba(255,255,255,.08)}
+
+  /* Pendant le décompte, tout s'efface après quelques secondes d'inactivité :
+     il ne reste que les chiffres (et le curseur disparaît). */
+  body.barre-masquee #barre,
+  body.barre-masquee #btn-reglages,
+  body.barre-masquee .retour{opacity:0; pointer-events:none}
+  body.barre-masquee #temps,body.barre-masquee{cursor:none}
+
+  /* ------------------------------ Réglages ------------------------------- */
+  #voile{
+    position:fixed; inset:0; z-index:20;
+    background:rgba(3,6,10,.62);
+    -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+  }
+  #panneau{
+    position:fixed; z-index:21;
+    left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(94vw, 560px);
+    max-height:92vh; max-height:92dvh;
+    overflow:auto;
+    padding:16px 18px 18px;
+    border-radius:20px;
+    background:var(--surface);
+    border:1px solid var(--trait);
+    box-shadow:0 18px 60px rgba(0,0,0,.55);
+  }
+  #panneau:focus{outline:none}
+  .entete-panneau{display:flex; justify-content:flex-end; margin:-4px -4px 6px 0}
+  #btn-fermer{
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.6);
+  }
+  #btn-fermer:hover{background:rgba(255,255,255,.1); color:#fff}
+  .presets{display:grid; grid-template-columns:repeat(auto-fill, minmax(76px, 1fr)); gap:8px; margin:0 0 16px}
+  .pastille{
+    min-height:46px; padding:8px 10px;
+    border-radius:12px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    color:var(--texte);
+    font-weight:650; font-size:1rem;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .pastille:hover,.pastille:focus-visible{
+    background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.24);
+  }
+  .pastille.actif{
+    background:rgba(143,208,255,.16);
+    border-color:rgba(143,208,255,.65);
+    color:#dff2ff;
+  }
+  .perso{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+    padding-top:15px; border-top:1px solid var(--trait);
+  }
+  .champ{display:flex; align-items:center; gap:6px}
+  .champ input{
+    width:4.1em; min-height:48px; padding:6px 8px;
+    border-radius:11px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(0,0,0,.3);
+    color:var(--texte);
+    font-size:1.15rem; font-weight:650; text-align:center;
+    font-variant-numeric:tabular-nums;
+    font-family:inherit;
+  }
+  .champ input:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+  .champ input::-webkit-outer-spin-button,
+  .champ input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+  .champ input[type="number"]{-moz-appearance:textfield; appearance:textfield}
+  .champ span{
+    font-size:.82rem; font-weight:700; color:rgba(255,255,255,.55);
+  }
+  .separateur{font-size:1.3rem; font-weight:700; color:rgba(255,255,255,.5)}
+  #btn-valider,#btn-son{
+    width:48px; height:48px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.13);
+    color:var(--texte);
+    transition:background .15s ease, filter .15s ease, opacity .15s ease;
+  }
+  #btn-valider{background:var(--accent); border-color:transparent; color:#04121f}
+  #btn-valider:hover{filter:brightness(1.08)}
+  #btn-son{margin-left:auto}
+  #btn-son:hover{background:rgba(255,255,255,.13)}
+  #btn-son[aria-pressed="false"]{opacity:.55}
+  #btn-son .i-muet{display:none}
+  #btn-son[aria-pressed="false"] .i-son{display:none}
+  #btn-son[aria-pressed="false"] .i-muet{display:block}
+
+  /* Le bouton lecture prend deux visages : lecture (relance comprise) et pause. */
+  #btn-marche .i-pause{display:none}
+  body.en-marche #btn-marche .i-play{display:none}
+  body.en-marche #btn-marche .i-pause{display:block}
+
+  /* Plein écran : l'icône s'inverse. */
+  #btn-plein .i-sortir{display:none}
+  body.plein-ecran #btn-plein .i-plein{display:none}
+  body.plein-ecran #btn-plein .i-sortir{display:block}
+</style>
+</head>
+<body>
+
+<!-- Le décompte. Cliquer dessus met en marche ou en pause. -->
+<main id="scene">
+  <div id="temps" role="timer" aria-live="off" aria-atomic="true" tabindex="-1">05:00</div>
+</main>
+
+<!-- Retour à l'accueil : une flèche seule, discrète, effacée pendant le décompte. -->
+<a class="retour" href="index.html" aria-label="Retour à l'accueil">
+  <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+</a>
+
+<!-- Réglages : l'engrenage ouvre le panneau, que l'on referme par Échap, la croix ou le voile. -->
+<button id="btn-reglages" type="button" aria-label="Réglages du chronomètre"
+        aria-expanded="false" aria-controls="panneau">
+  <svg class="icone" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="3.2"/>
+    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
+  </svg>
+</button>
+
+<!-- Commandes : démarrer/pause, remise à zéro, plein écran. -->
+<div id="barre" role="toolbar" aria-label="Commandes du chronomètre">
+  <button id="btn-marche" type="button" aria-label="Démarrer">
+    <svg class="icone icone-remplie i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+    <svg class="icone icone-remplie i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.8" y="5" width="3.8" height="14" rx="1"/><rect x="13.4" y="5" width="3.8" height="14" rx="1"/></svg>
+  </button>
+  <button id="btn-reset" type="button" aria-label="Remettre à zéro">
+    <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3 9"/><path d="M3 3.5V9h5.5"/></svg>
+  </button>
+  <button id="btn-plein" type="button" aria-label="Plein écran">
+    <svg class="icone i-plein" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+    <svg class="icone i-sortir" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+  </button>
+</div>
+
+<!-- Réglages : durées prêtes à l'emploi, durée libre, bip de fin. -->
+<div id="voile" hidden></div>
+<section id="panneau" role="dialog" aria-modal="true" aria-label="Réglages du chronomètre" tabindex="-1" hidden>
+  <div class="entete-panneau">
+    <button id="btn-fermer" type="button" aria-label="Fermer les réglages">
+      <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="presets" id="presets">
+    <button class="pastille" type="button" data-secondes="30">30 s</button>
+    <button class="pastille" type="button" data-secondes="60">1 min</button>
+    <button class="pastille" type="button" data-secondes="120">2 min</button>
+    <button class="pastille" type="button" data-secondes="180">3 min</button>
+    <button class="pastille" type="button" data-secondes="300">5 min</button>
+    <button class="pastille" type="button" data-secondes="600">10 min</button>
+    <button class="pastille" type="button" data-secondes="900">15 min</button>
+    <button class="pastille" type="button" data-secondes="1200">20 min</button>
+    <button class="pastille" type="button" data-secondes="1800">30 min</button>
+    <button class="pastille" type="button" data-secondes="2700">45 min</button>
+    <button class="pastille" type="button" data-secondes="3600">60 min</button>
+  </div>
+  <div class="perso">
+    <label class="champ">
+      <input id="champ-min" type="number" inputmode="numeric" min="0" max="999" step="1" value="5" aria-label="Minutes">
+      <span>min</span>
+    </label>
+    <span class="separateur" aria-hidden="true">:</span>
+    <label class="champ">
+      <input id="champ-sec" type="number" inputmode="numeric" min="0" max="59" step="1" value="0" aria-label="Secondes">
+      <span>s</span>
+    </label>
+    <button id="btn-valider" type="button" aria-label="Appliquer cette durée">
+      <svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 6.5"/></svg>
+    </button>
+    <button id="btn-son" type="button" aria-pressed="true" aria-label="Couper le bip de fin">
+      <svg class="icone i-son" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6.5 9H3v6h3.5L11 19V5z"/><path d="M15.2 8.8a4.5 4.5 0 0 1 0 6.4"/><path d="M18 6a8.5 8.5 0 0 1 0 12"/></svg>
+      <svg class="icone i-muet" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6.5 9H3v6h3.5L11 19V5z"/><path d="M16 10l5 5M21 10l-5 5"/></svg>
+    </button>
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------------------------- Références ---------------------------- */
+  var elTemps = document.getElementById('temps');
+  var btnMarche = document.getElementById('btn-marche');
+  var btnReset = document.getElementById('btn-reset');
+  var btnPlein = document.getElementById('btn-plein');
+  var btnReglages = document.getElementById('btn-reglages');
+  var panneau = document.getElementById('panneau');
+  var voile = document.getElementById('voile');
+  var btnFermer = document.getElementById('btn-fermer');
+  var btnValider = document.getElementById('btn-valider');
+  var btnSon = document.getElementById('btn-son');
+  var champMin = document.getElementById('champ-min');
+  var champSec = document.getElementById('champ-sec');
+  var pastilles = Array.prototype.slice.call(document.querySelectorAll('.pastille'));
+  // Le fond est rendu inerte pendant l'ouverture des réglages : ni la souris,
+  // ni la tabulation ne doivent atteindre des commandes cachées par le voile.
+  var fondInerte = [
+    document.getElementById('scene'),
+    document.getElementById('barre'),
+    document.getElementById('btn-reglages'),
+    document.querySelector('.retour')
+  ];
+
+  var CLE_DUREE = 'mandelatechno.chrono.duree';
+  var CLE_SON = 'mandelatechno.chrono.son';
+  var DUREE_DEFAUT = 300;      // 5 minutes
+  var DUREE_MAX = 59940;       // 999 minutes
+
+  /* ------------------------------ État -------------------------------- */
+  var duree = lireDuree();     // durée réglée, en secondes
+  var restant = duree * 1000;  // millisecondes restantes quand le chrono est arrêté
+  var fin = 0;                 // instant d'arrivée (Date.now) quand il tourne
+  var enMarche = false;
+  var fini = false;
+  var panneauOuvert = false;
+  var son = lireSon();
+  var horloge = 0;
+  var minuterieMasque = 0;
+  var veille = null;           // verrou d'écran (Wake Lock), pour ne pas laisser
+                               // l'écran s'éteindre pendant la projection
+  var audio = null;
+  var ajustement = 0;
+
+  /* ---------------------------- Stockage ------------------------------ */
+  function lireDuree() {
+    try {
+      var v = parseInt(localStorage.getItem(CLE_DUREE), 10);
+      if (v >= 1 && v <= DUREE_MAX) { return v; }
+    } catch (e) {}
+    return DUREE_DEFAUT;
+  }
+  function ecrireDuree() {
+    try { localStorage.setItem(CLE_DUREE, String(duree)); } catch (e) {}
+  }
+  function lireSon() {
+    try {
+      var v = localStorage.getItem(CLE_SON);
+      if (v === '0') { return false; }
+      if (v === '1') { return true; }
+    } catch (e) {}
+    return true;
+  }
+  function ecrireSon() {
+    try { localStorage.setItem(CLE_SON, son ? '1' : '0'); } catch (e) {}
+  }
+
+  /* --------------------------- Mise en forme -------------------------- */
+  function formater(ms) {
+    var total = Math.ceil(Math.max(0, ms) / 1000);
+    var h = Math.floor(total / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+    function deux(n) { return (n < 10 ? '0' : '') + n; }
+    return h > 0 ? h + ':' + deux(m) + ':' + deux(s) : deux(m) + ':' + deux(s);
+  }
+
+  /* Ajuste la taille des chiffres pour remplir l'écran, quelle que soit la
+     forme du vidéoprojecteur (16:9, 4:3, écran de portable, téléphone). */
+  function ajusterTaille() {
+    var largeurDispo = Math.max(120, window.innerWidth * 0.94);
+    var hauteurDispo = Math.max(120, window.innerHeight * 0.62);
+    elTemps.style.fontSize = '100px';
+    var l = elTemps.offsetWidth || 1;
+    var h = elTemps.offsetHeight || 1;
+    var taille = Math.min(100 * largeurDispo / l, 100 * hauteurDispo / h);
+    taille = Math.max(24, Math.min(taille, 1600));
+    elTemps.style.fontSize = taille.toFixed(1) + 'px';
+  }
+  function planifierAjustement() {
+    if (ajustement) { return; }
+    ajustement = window.requestAnimationFrame(function () {
+      ajustement = 0;
+      ajusterTaille();
+    });
+  }
+
+  /* ------------------------------ Affichage --------------------------- */
+  function afficher(ms) {
+    var texte = formater(ms);
+    if (elTemps.textContent !== texte) {
+      var longueurAvant = elTemps.textContent.length;
+      elTemps.textContent = texte;
+      if (texte.length !== longueurAvant) { planifierAjustement(); }
+    }
+    elTemps.classList.toggle('urgent', ms <= 10000 && ms > 0);
+    elTemps.classList.toggle('fini', fini);
+    document.title = enMarche ? texte + ' · Chronomètre' : 'Chronomètre';
+  }
+
+  function majBoutons() {
+    btnMarche.setAttribute('aria-label', enMarche ? 'Mettre en pause'
+                                         : (fini ? 'Relancer' : 'Démarrer'));
+  }
+
+  /* ------------------------------ La boucle --------------------------- */
+  function maj() {
+    if (!enMarche) { afficher(restant); return; }
+    var ms = Math.max(0, fin - Date.now());
+    if (ms <= 0) { terminer(); return; }
+    afficher(ms);
+  }
+  function lancerHorloge() {
+    arreterHorloge();
+    horloge = window.setInterval(maj, 100);
+    maj();
+  }
+  function arreterHorloge() {
+    if (horloge) { window.clearInterval(horloge); horloge = 0; }
+  }
+
+  /* --------------------------- Marche / pause ------------------------- */
+  function demarrer() {
+    if (fini || restant <= 0) { restant = duree * 1000; fini = false; }
+    if (restant <= 0) { return; }
+    initialiserAudio();
+    fin = Date.now() + restant;
+    enMarche = true;
+    document.body.classList.add('en-marche');
+    document.body.classList.remove('fini');
+    lancerHorloge();
+    demanderVeille();
+    majBoutons();
+    montrerCommandes();
+  }
+  function pause() {
+    if (!enMarche) { return; }
+    restant = Math.max(0, fin - Date.now());
+    enMarche = false;
+    arreterHorloge();
+    libererVeille();
+    document.body.classList.remove('en-marche');
+    if (restant <= 0) { terminer(); return; }
+    afficher(restant);
+    majBoutons();
+    montrerCommandes();
+  }
+  function basculerMarche() {
+    if (enMarche) { pause(); } else { demarrer(); }
+  }
+  function reinitialiser() {
+    enMarche = false;
+    fini = false;
+    restant = duree * 1000;
+    arreterHorloge();
+    libererVeille();
+    document.body.classList.remove('en-marche', 'fini');
+    afficher(restant);
+    majBoutons();
+    montrerCommandes();
+  }
+  function terminer() {
+    enMarche = false;
+    fini = true;
+    restant = 0;
+    arreterHorloge();
+    libererVeille();
+    document.body.classList.remove('en-marche');
+    document.body.classList.add('fini');
+    afficher(0);
+    majBoutons();
+    montrerCommandes();
+    bip(3);
+  }
+
+  /* -------------------------- Réglage de durée ------------------------ */
+  function reglerDuree(secondes) {
+    if (!isFinite(secondes)) { secondes = DUREE_DEFAUT; }
+    duree = Math.max(1, Math.min(DUREE_MAX, Math.round(secondes)));
+    ecrireDuree();
+    reinitialiser();
+    remplirChamps();
+    marquerPastilleActive();
+    fermerPanneau();
+  }
+  function remplirChamps() {
+    champMin.value = String(Math.floor(duree / 60));
+    champSec.value = String(duree % 60);
+  }
+  function appliquerChamps() {
+    var min = parseInt(champMin.value, 10);
+    var sec = parseInt(champSec.value, 10);
+    if (!isFinite(min)) { min = 0; }
+    if (!isFinite(sec)) { sec = 0; }
+    reglerDuree(min * 60 + sec);
+  }
+  function marquerPastilleActive() {
+    pastilles.forEach(function (b) {
+      var actif = parseInt(b.getAttribute('data-secondes'), 10) === duree;
+      b.classList.toggle('actif', actif);
+      b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+    });
+  }
+
+  /* ---------------------------- Les réglages -------------------------- */
+  function rendreFondInerte(oui) {
+    fondInerte.forEach(function (el) {
+      if (!el) { return; }
+      if (oui) {
+        el.setAttribute('inert', '');
+        el.setAttribute('aria-hidden', 'true');
+      } else {
+        el.removeAttribute('inert');
+        el.removeAttribute('aria-hidden');
+      }
+    });
+  }
+  // Le panneau est modal : la tabulation tourne en boucle à l'intérieur.
+  function piegerFocus(e) {
+    var elements = panneau.querySelectorAll('button, input, [tabindex]:not([tabindex="-1"])');
+    var focusables = [];
+    for (var i = 0; i < elements.length; i++) {
+      if (!elements[i].disabled && elements[i].offsetParent !== null) { focusables.push(elements[i]); }
+    }
+    if (!focusables.length) { e.preventDefault(); panneau.focus(); return; }
+    var premier = focusables[0];
+    var dernier = focusables[focusables.length - 1];
+    var actif = document.activeElement;
+    if (actif === panneau || actif === document.body) {
+      e.preventDefault();
+      (e.shiftKey ? dernier : premier).focus();
+      return;
+    }
+    if (e.shiftKey && actif === premier) { e.preventDefault(); dernier.focus(); }
+    else if (!e.shiftKey && actif === dernier) { e.preventDefault(); premier.focus(); }
+  }
+  function ouvrirPanneau() {
+    if (panneauOuvert) { return; }
+    panneauOuvert = true;
+    remplirChamps();
+    marquerPastilleActive();
+    panneau.hidden = false;
+    voile.hidden = false;
+    rendreFondInerte(true);
+    btnReglages.setAttribute('aria-expanded', 'true');
+    montrerCommandes();
+    window.setTimeout(function () {
+      try { panneau.focus({ preventScroll: true }); } catch (e) { panneau.focus(); }
+    }, 0);
+  }
+  function fermerPanneau() {
+    if (!panneauOuvert) { return; }
+    panneauOuvert = false;
+    panneau.hidden = true;
+    voile.hidden = true;
+    rendreFondInerte(false);
+    btnReglages.setAttribute('aria-expanded', 'false');
+    // On rend le focus au décompte plutôt qu'à l'engrenage : la barre d'espace
+    // relance ainsi le chronomètre au lieu de rouvrir les réglages.
+    try { elTemps.focus({ preventScroll: true }); } catch (e) { elTemps.focus(); }
+    montrerCommandes();
+  }
+
+  /* ------------------------ Effacement des commandes ------------------ */
+  function montrerCommandes() {
+    document.body.classList.remove('barre-masquee');
+    if (minuterieMasque) { window.clearTimeout(minuterieMasque); minuterieMasque = 0; }
+    if (enMarche && !panneauOuvert) {
+      minuterieMasque = window.setTimeout(function () {
+        if (enMarche && !panneauOuvert) { document.body.classList.add('barre-masquee'); }
+      }, 2500);
+    }
+  }
+
+  /* ------------------------------ Le son ------------------------------ */
+  function initialiserAudio() {
+    if (!son) { return; }
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) { return; }
+      if (!audio) { audio = new Ctx(); }
+      if (audio.state === 'suspended' && audio.resume) {
+        var p = audio.resume();
+        if (p && p.catch) { p.catch(function () {}); }
+      }
+    } catch (e) {}
+  }
+  function bip(nombre) {
+    if (!son) { return; }
+    initialiserAudio();
+    if (!audio) { return; }
+    try {
+      var debut = audio.currentTime + 0.02;
+      for (var i = 0; i < (nombre || 3); i++) {
+        var t = debut + i * 0.5;
+        var osc = audio.createOscillator();
+        var gain = audio.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, t);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.28, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.34);
+        osc.connect(gain);
+        gain.connect(audio.destination);
+        osc.start(t);
+        osc.stop(t + 0.36);
+      }
+    } catch (e) {}
+  }
+  function syncSon() {
+    btnSon.setAttribute('aria-pressed', son ? 'true' : 'false');
+    btnSon.setAttribute('aria-label', son ? 'Couper le bip de fin' : 'Activer le bip de fin');
+  }
+
+  /* --------------------------- Plein écran ---------------------------- */
+  function enPleinEcran() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function basculerPleinEcran() {
+    try {
+      if (!enPleinEcran()) {
+        var racine = document.documentElement;
+        var p = racine.requestFullscreen ? racine.requestFullscreen()
+              : (racine.webkitRequestFullscreen ? racine.webkitRequestFullscreen() : null);
+        if (p && p.catch) { p.catch(function () {}); }
+      } else {
+        var q = document.exitFullscreen ? document.exitFullscreen()
+              : (document.webkitExitFullscreen ? document.webkitExitFullscreen() : null);
+        if (q && q.catch) { q.catch(function () {}); }
+      }
+    } catch (e) {}
+  }
+  function majPleinEcran() {
+    var plein = enPleinEcran();
+    document.body.classList.toggle('plein-ecran', plein);
+    btnPlein.setAttribute('aria-label', plein ? 'Quitter le plein écran' : 'Plein écran');
+    planifierAjustement();
+  }
+
+  /* ----------------------- Écran maintenu allumé ---------------------- */
+  function demanderVeille() {
+    if (!('wakeLock' in navigator) || veille || document.visibilityState !== 'visible') { return; }
+    try {
+      navigator.wakeLock.request('screen').then(function (v) {
+        veille = v;
+        v.addEventListener('release', function () { veille = null; });
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function libererVeille() {
+    if (veille) { try { veille.release(); } catch (e) {} veille = null; }
+  }
+
+  /* ---------------------------- Événements ---------------------------- */
+  btnMarche.addEventListener('click', basculerMarche);
+  btnReset.addEventListener('click', reinitialiser);
+  btnPlein.addEventListener('click', basculerPleinEcran);
+  btnReglages.addEventListener('click', function () {
+    if (panneauOuvert) { fermerPanneau(); } else { ouvrirPanneau(); }
+  });
+  btnFermer.addEventListener('click', fermerPanneau);
+  voile.addEventListener('click', fermerPanneau);
+  btnValider.addEventListener('click', appliquerChamps);
+  btnSon.addEventListener('click', function () {
+    son = !son;
+    ecrireSon();
+    syncSon();
+    if (son) { initialiserAudio(); bip(1); }
+  });
+  pastilles.forEach(function (b) {
+    b.addEventListener('click', function () {
+      reglerDuree(parseInt(b.getAttribute('data-secondes'), 10));
+    });
+  });
+  elTemps.addEventListener('click', basculerMarche);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) { return; }
+    var touche = e.key;
+    var cible = e.target;
+    var dansChamp = !!(cible && cible.tagName === 'INPUT');
+
+    if (panneauOuvert) {
+      if (touche === 'Tab') { piegerFocus(e); }
+      else if (touche === 'Escape') { e.preventDefault(); fermerPanneau(); }
+      else if (touche === 'Enter' && dansChamp) { e.preventDefault(); appliquerChamps(); }
+      return;
+    }
+    if (e.repeat) { return; }
+    if (touche === ' ' || touche === 'Spacebar' || e.code === 'Space') {
+      // Si le focus est sur un bouton, on laisse le navigateur l'activer :
+      // sinon la barre d'espace ferait deux fois la même action.
+      var surBouton = !!(cible && cible.closest && cible.closest('button, a, [role="button"]'));
+      if (!surBouton) { e.preventDefault(); basculerMarche(); }
+      return;
+    }
+    if (touche === 'r' || touche === 'R') { e.preventDefault(); reinitialiser(); }
+    else if (touche === 'f' || touche === 'F') { e.preventDefault(); basculerPleinEcran(); }
+    else if (touche === 's' || touche === 'S') { e.preventDefault(); ouvrirPanneau(); }
+  });
+
+  document.addEventListener('pointermove', montrerCommandes, { passive: true });
+  document.addEventListener('pointerdown', montrerCommandes, { passive: true });
+  window.addEventListener('resize', planifierAjustement);
+  window.addEventListener('orientationchange', planifierAjustement);
+  document.addEventListener('fullscreenchange', majPleinEcran);
+  document.addEventListener('webkitfullscreenchange', majPleinEcran);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+      maj();
+      if (enMarche) { demanderVeille(); }
+    }
+  });
+
+  /* ---------------------------- Démarrage ----------------------------- */
+  remplirChamps();
+  syncSon();
+  majBoutons();
+  afficher(restant);
+  planifierAjustement();
+  window.addEventListener('load', planifierAjustement);
+})();
+</script>
+</body>
+</html>
