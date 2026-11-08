@@ -129,6 +129,14 @@ summary{cursor:pointer; color:var(--bleu2); font-weight:bold}
 .quiz-feedback.show{display:block}
 .quiz-feedback.correct{background:var(--vertF); color:var(--vert)}
 .quiz-feedback.incorrect{background:#fce4ec; color:var(--rouge)}
+/* Volet « Voir l'explication » : l'explication n'est pas imposée, la bonne
+   réponse n'est jamais désignée — l'élève cherche son erreur, puis réessaie. */
+.quiz-feedback details.explication-masquee{margin-top:6px}
+.quiz-feedback details.explication-masquee summary{cursor:pointer; font-weight:bold;
+  min-height:44px; display:flex; align-items:center; gap:6px; color:var(--bleu2)}
+.quiz-feedback details.explication-masquee summary:focus-visible{outline:3px solid var(--bleu2); outline-offset:2px}
+.quiz-feedback details.explication-masquee .explication{display:block; margin-top:6px;
+  padding-top:6px; border-top:1px solid currentColor; color:#12212e}
 
 /* Association (drag & drop simplifié = clic pour sélectionner) */
 .association-container{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:10px 0}
@@ -1476,26 +1484,32 @@ function initQuiz() {
         var fb = el.querySelector('.quiz-feedback');
         var isCorrect = (val === ans.correct);
 
-        state.quizDone[key] = true;
+        // Une nouvelle tentative efface la marque de la précédente.
+        el.querySelectorAll('.quiz-option').forEach(function(o) {
+          o.classList.remove('wrong-answer');
+        });
+
         if (isCorrect) {
+          state.quizDone[key] = true;
           el.classList.add('correct');
+          el.classList.remove('incorrect');
           opt.classList.add('correct-answer');
           fb.textContent = ans.feedback_ok;
           fb.className = 'quiz-feedback show correct';
+          el.querySelectorAll('.quiz-option').forEach(function(o) { o.style.pointerEvents = 'none'; });
           recalcScoreN1();
           message('✅ Bonne réponse !');
         } else {
+          // On ne montre QUE la mauvaise réponse : la bonne n'est jamais
+          // désignée, et la question reste ouverte — l'élève réessaie.
           el.classList.add('incorrect');
           opt.classList.add('wrong-answer');
-          // Montrer la bonne réponse
-          el.querySelectorAll('.quiz-option').forEach(function(o2) {
-            if (o2.getAttribute('data-value') === ans.correct) o2.classList.add('correct-answer');
-          });
-          fb.textContent = ans.feedback_ko;
+          fb.innerHTML = '<details class="explication-masquee">' +
+            '<summary>Voir l\u2019explication</summary>' +
+            '<span class="explication">' + ans.feedback_ko + '</span></details>';
           fb.className = 'quiz-feedback show incorrect';
-          message('❌ Mauvaise réponse');
+          message('❌ Mauvaise réponse : cherche pourquoi, puis réessaie.');
         }
-        el.querySelectorAll('.quiz-option').forEach(function(o) { o.style.pointerEvents = 'none'; });
         saveState();
       });
     });

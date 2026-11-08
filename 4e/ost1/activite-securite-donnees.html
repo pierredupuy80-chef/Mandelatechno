@@ -379,6 +379,19 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 }
 </style>
 <!-- RETOUR-ACCUEIL-CSS:FIN -->
+<style>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication » : l'explication
+   n'est plus imposée, et la bonne réponse n'est jamais désignée. Une seule
+   définition pour tout le site — ne pas éditer ici. */
+details.explication-masquee{margin-top:6px}
+details.explication-masquee summary{cursor:pointer;font-weight:bold;min-height:44px;
+  display:flex;align-items:center;gap:6px;color:inherit;text-decoration:underline;
+  text-underline-offset:2px}
+details.explication-masquee summary:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+details.explication-masquee .explication{display:block;margin-top:6px;padding-top:6px;
+  border-top:1px solid currentColor;font-weight:normal;line-height:1.5}
+/* EXPLICATION-MASQUEE:FIN */
+</style>
 </head>
 <body>
 <!-- RETOUR-ACCUEIL:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
@@ -703,17 +716,22 @@ window.vpnClue=function(b){
 window.checkVpn=function(){
  const fb=document.getElementById("vpn-fb");
  const btns=document.querySelectorAll("[data-vpn]");
- let trouves=0,manques=0,erreurs=0,h="";
+ let trouves=0,erreurs=0,h="";
  btns.forEach(b=>{
   const j=parseInt(b.getAttribute("data-vpn"),10),c=VPN_INDICES[j];
   const clic=b.classList.contains("selected");
-  b.disabled=true;
+  // Une nouvelle vérification efface les marques de la précédente.
+  b.classList.remove("correct","wrong","manque");
+  b.style.borderColor="";
   if(c.v&&clic){b.classList.add("correct");trouves++;h+="✔ <strong>Indice fiable :</strong> "+c.fb+"<br><br>";}
-  else if(c.v&&!clic){b.classList.add("manque");manques++;h+="🔸 <strong>Indice manqué :</strong> "+c.fb+"<br><br>";}
   else if(!c.v&&clic){b.classList.add("wrong");erreurs++;h+="✘ <strong>Pas un indice :</strong> "+c.fb+"<br><br>";}
+  // Un indice fiable NON choisi n'est jamais désigné : à l'élève de le trouver.
  });
+ // Les indices restent cliquables tant qu'ils ne sont pas tous trouvés.
+ btns.forEach(b=>{b.disabled=(trouves===4);});
  fb.className="info "+(trouves===4?"success":"error");
- fb.innerHTML="<strong>"+trouves+" / 4 indices fiables identifiés</strong>"+(manques?" · "+manques+" oublié(s)":" · aucun oubli")+(erreurs?" · "+erreurs+" choix non pertinent(s)":"")+".<br><br>"+h;
+ fb.innerHTML="<strong>"+trouves+" / 4 indices fiables identifiés</strong>"+(erreurs?" · "+erreurs+" choix non pertinent(s)":"")+".<br><br>"+h+
+  (trouves===4?"":"<em>Il en manque : relis le message, cherche les autres indices fiables, puis vérifie à nouveau.</em>");
  fb.style.display="block";
 };
 
@@ -1069,10 +1087,13 @@ return h;
 }
 
 window.checkInv=function(si,oi){
-if(invDone[si]!==undefined)return;invDone[si]=oi;
+// Seule une bonne réponse ferme la question : une erreur la laisse ouverte.
+if(invDone[si]!==undefined)return;
 const fb=document.getElementById("inv-fb-"+si);
-document.querySelectorAll('[data-s="0"]').forEach(b=>b.disabled=true);
+document.querySelectorAll('[data-s="0"]').forEach(b=>b.classList.remove("correct","wrong"));
 if(oi===4){
+invDone[si]=oi;
+document.querySelectorAll('[data-s="0"]').forEach(b=>b.disabled=true);
 document.querySelector('[data-s="0"][data-o="4"]').classList.add("correct");
 fb.className="info success";fb.innerHTML="✅ <strong>Exact !</strong> Il ne faut JAMAIS répondre à la cyberviolence. Cela aggrave la situation et donne du contenu supplémentaire au harceleur. Les autres actions sont toutes recommandées.";
 }else{
@@ -1096,13 +1117,16 @@ const clues=[true,true,true,true,false];
 let correct=0,total=4;
 clues.forEach((valid,j)=>{
 const btn=document.querySelector('[data-s="1"][data-c="'+j+'"]');
+// Une nouvelle vérification efface les marques de la précédente.
+btn.classList.remove("correct","wrong");
 if(valid&&clueSelected.has(j)){btn.classList.add("correct");correct++;}
 else if(!valid&&clueSelected.has(j)){btn.classList.add("wrong");}
-else if(valid&&!clueSelected.has(j)){btn.style.borderColor="var(--orange)";}
-btn.disabled=true;
+// Un indice fiable NON choisi n'est jamais désigné : à l'élève de le trouver.
 });
+// Les indices restent cliquables tant que les quatre ne sont pas trouvés.
+clues.forEach((valid,j)=>{document.querySelector('[data-s="1"][data-c="'+j+'"]').disabled=(correct===total);});
 fb.className="info "+(correct===total?"success":"");
-fb.innerHTML="<strong>"+correct+" / "+total+"</strong> indices trouvés. "+(correct===total?"🎉 Bravo, vous avez l'œil !":"Les indices manquants sont surlignés en orange. Le logo seul n'est PAS un indice fiable car il est facilement copié.");
+fb.innerHTML="<strong>"+correct+" / "+total+"</strong> indices trouvés. "+(correct===total?"🎉 Bravo, vous avez l'œil !":"Il en manque : relis le message, cherche les autres indices fiables, puis valide à nouveau.");
 fb.style.display="block";
 };
 
@@ -1183,20 +1207,27 @@ function renderQuiz(key,titre,intro){
 
 window.mcqAnswer=function(key,qi,oi){
  const it=QUIZZES[key][qi],st=QSTATE[key];
+ // Seule une bonne réponse ferme la question : une erreur la laisse ouverte.
  if(typeof it.done==="boolean"&&it.done)return;
- it.done=true;
- const btns=document.querySelectorAll('[data-qk="'+key+'"][data-qi="'+qi+'"]');
- btns.forEach(b=>{
-  const j=parseInt(b.getAttribute("data-oi"),10);
-  b.disabled=true;
-  if(j===it.ok)b.classList.add("correct");
-  else if(j===oi)b.classList.add("wrong");
- });
+ const toutes=document.querySelectorAll('[data-qk="'+key+'"][data-qi="'+qi+'"]');
+ toutes.forEach(b=>b.classList.remove("correct","wrong"));
  const fb=document.getElementById("q-"+key+"-"+qi);
  fb.className="info "+(oi===it.ok?"success":"error");
- fb.innerHTML=(oi===it.ok?"✅ <strong>Exact !</strong> ":"❌ <strong>Ce n'est pas la bonne réponse.</strong> ")+it.fb;
+ if(oi===it.ok){
+  it.done=true;
+  toutes.forEach(b=>{b.disabled=true;});
+  document.querySelector('[data-qk="'+key+'"][data-qi="'+qi+'"][data-oi="'+it.ok+'"]').classList.add("correct");
+  fb.innerHTML="✅ <strong>Exact !</strong> "+it.fb;
+  if(!st.tentee||!st.tentee[qi]){st.tentee=st.tentee||{};st.tentee[qi]=1;st.a++;}
+  st.c++;
+ } else {
+  // On ne montre QUE la mauvaise réponse : la bonne n'est jamais désignée.
+  document.querySelector('[data-qk="'+key+'"][data-qi="'+qi+'"][data-oi="'+oi+'"]').classList.add("wrong");
+  fb.innerHTML="❌ <strong>Ce n'est pas la bonne réponse.</strong> Cherche pourquoi, puis essaie une autre proposition."+
+   voletExplication(it.fb);
+  if(!st.tentee||!st.tentee[qi]){st.tentee=st.tentee||{};st.tentee[qi]=1;st.a++;}
+ }
  fb.style.display="block";
- st.a++; if(oi===it.ok)st.c++;
  if(st.a===st.t){
   const s=document.getElementById("score-"+key);
   s.style.display="block";
@@ -2081,5 +2112,18 @@ if (document.readyState === 'loading') {
   })();
 </script>
 <!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+<script>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication ». Le texte vient des
+   données de la page (aucune réponse n'y est ajoutée). Une seule définition
+   pour tout le site — ne pas éditer ici. */
+function voletExplication(html) {
+  if (!html) return '';
+  return '<details class="explication-masquee">' +
+         '<summary>Voir l’explication</summary>' +
+         '<span class="explication"><strong>Explication :</strong> ' + html + '</span>' +
+         '</details>';
+}
+/* EXPLICATION-MASQUEE:FIN */
+</script>
 </body>
 </html>

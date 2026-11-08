@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>R7 · L&#x27;énergie contenue dans un kilo — Approfondissement Drone</title>
+<meta name="description" content="Un kilo d&#x27;essence contient plusieurs dizaines de fois plus d&#x27;énergie qu&#x27;un kilo de batterie ⏳ — mais convertir compte autant que stocker.">
+<style>
+:root{
+  --bleu:#1e4e79; --bleu2:#2b6cb0; --bleuf:#eef4fb;
+  --bord:#cddbe9; --gris:#5a6b7b; --texte:#16232e;
+  --orange:#b45309; --orange-f:#fff7ed; --vert:#0b6b4f; --vert-f:#f0faf5;
+  --rouge:#b03a2e; --rouge-f:#fdf3f2;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#f6f9fc;color:var(--texte);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:17px;line-height:1.55}
+a{color:var(--bleu2)}
+.contenu,main,.sommaire-ateliers,footer.pied-page{max-width:1100px;margin:0 auto}
+header.site{background:linear-gradient(160deg,#1e4e79,#2b6cb0);color:#fff;padding:22px 16px 26px}
+header.site .yeux{margin:0 0 4px;font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;opacity:.88}
+header.site .yeux a{color:#fff}
+header.site h1{margin:0 0 8px;font-size:clamp(1.4rem,5vw,2rem);line-height:1.15}
+header.site .appel{margin:0;max-width:70ch;opacity:.96}
+header.site .badges{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
+header.site .badges span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);
+  border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:700}
+.code-sujet{display:inline-block;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.5);
+  border-radius:10px;padding:0 10px;margin-right:6px;font-size:.8em;vertical-align:middle}
+
+nav.onglets{position:sticky;top:0;z-index:40;display:flex;gap:6px;overflow-x:auto;
+  background:rgba(255,255,255,.97);border-bottom:1px solid var(--bord);
+  box-shadow:0 1px 6px rgba(30,78,121,.08);padding:8px 14px;max-width:1100px;margin:0 auto}
+nav.onglets button{flex:1 0 auto;min-height:48px;min-width:120px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1px;background:#fff;border:2px solid var(--bord);
+  border-radius:12px;color:var(--bleu);font:inherit;cursor:pointer;padding:6px 10px}
+nav.onglets button .libelle{font-weight:800;font-size:.92rem;line-height:1.1}
+nav.onglets button .detail{font-size:.72rem;color:var(--gris);line-height:1.1}
+nav.onglets button:hover,nav.onglets button:focus-visible{background:var(--bleuf);border-color:var(--bleu2)}
+nav.onglets button.actif{background:var(--bleu);border-color:var(--bleu);color:#fff}
+nav.onglets button.actif .detail{color:#dbe6f3}
+
+main{padding:18px 14px 44px}
+.panneau{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px;margin:0 0 18px}
+.panneau[hidden]{display:none}
+.entete-panneau{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin:0 0 12px}
+.entete-panneau h2{margin:2px 0 4px;font-size:clamp(1.1rem,3.6vw,1.35rem);color:var(--bleu)}
+.sur-titre{margin:0;font-size:.78rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--bleu2)}
+.duree{margin:0;color:var(--gris);font-size:.9rem}
+.outils{display:flex;gap:6px;flex-wrap:wrap}
+.outils button,.barre-deck button{min-height:44px;padding:8px 14px;border-radius:10px;border:2px solid var(--bord);
+  background:#fff;color:var(--bleu);font:inherit;font-weight:700;cursor:pointer;font-size:.9rem}
+.outils button:hover,.outils button:focus-visible,.barre-deck button:hover,.barre-deck button:focus-visible{background:var(--bleuf);border-color:var(--bleu2)}
+.outils button.actif,.barre-deck button.actif{background:var(--bleu);border-color:var(--bleu);color:#fff}
+.barre-deck button:disabled{opacity:.4;cursor:default}
+
+/* ---------- diaporama ---------- */
+.scene{max-width:1280px;margin:0 auto}
+.deck{position:relative;width:100%;aspect-ratio:16/9;background:#fff;border:1px solid var(--bord);
+  border-radius:12px;overflow:hidden}
+.slide{position:absolute;left:0;top:0;width:1280px;height:720px;display:none;flex-direction:column;
+  padding:40px 62px 26px;background:#fff;transform-origin:top left}
+.slide.actif{display:flex}
+.slide .sur-titre{margin:0 0 6px;font-size:17px;font-weight:800;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--bleu2)}
+.slide h2{margin:0 0 10px;font-size:40px;line-height:1.2;color:var(--bleu);letter-spacing:-.01em}
+.slide .chapeau{margin:0 0 14px;font-size:25px;line-height:1.28;font-weight:600;color:var(--bleu2)}
+.slide .corps{flex:1;min-height:0;display:flex;gap:34px}
+.slide .corps.pleine,.slide .corps.schema,.slide .corps.citation{flex-direction:column}
+.slide .corps.citation{justify-content:center}
+.slide .corps.deux-colonnes .texte{flex:1.15;min-width:0;display:flex;flex-direction:column}
+.slide .corps.deux-colonnes .visuel{flex:.85;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.slide .puces{list-style:none;margin:0;padding:0}
+.slide .puces li{position:relative;padding-left:28px;margin:0 0 16px;font-size:24px;line-height:1.34;color:#24374f}
+.slide .puces li::before{content:"";position:absolute;left:0;top:11px;width:10px;height:10px;
+  border-radius:50%;background:var(--orange)}
+.slide .encadre{margin-top:14px;padding:14px 18px;border-radius:12px;font-size:21px;line-height:1.35}
+.slide .encadre p{margin:0}
+.encadre-titre{margin:0 0 4px!important;font-size:.78em;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--bleu)}
+.encadre-question{background:var(--bleuf);border-left:6px solid var(--bleu2)}
+.encadre-cle{background:var(--vert-f);border-left:6px solid var(--vert)}
+.encadre-attention{background:var(--orange-f);border-left:6px solid var(--orange)}
+.encadre-sortie{background:var(--vert-f);border-left:6px solid var(--vert)}
+.slide .pied{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--gris);
+  border-top:1px solid var(--bord);padding-top:10px;margin-top:8px}
+.visuel-schema{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.visuel-schema svg{width:100%;height:100%;display:block}
+.legende{margin:6px 0 0;font-size:16px;color:var(--gris);text-align:center}
+.slide blockquote.citation{margin:8px 0 0;padding:20px 26px;border-left:8px solid var(--bleu2);
+  background:#f9fbfe;border-radius:0 14px 14px 0;font-size:30px;line-height:1.3;font-weight:600;
+  color:var(--bleu);font-style:italic}
+.colonnes{display:grid;gap:10px}
+.colonne{border:2px solid var(--bord);border-radius:12px;padding:10px 14px;background:#fbfdff}
+.colonne-titre{margin:0 0 2px;font-weight:800;color:var(--bleu);font-size:19px}
+.colonne p{margin:0;font-size:17px;color:#24374f}
+.chiffre{margin:0;font-size:120px;font-weight:800;color:var(--bleu);line-height:1.3;text-align:center}
+.liste-visuel ul{margin:6px 0 0;padding-left:22px;font-size:20px}
+.liste-titre{margin:0;font-weight:800;color:var(--bleu)}
+.barre-deck{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.barre-deck .compteur{min-width:64px;text-align:center;font-weight:800;color:var(--bleu)}
+.notes-deck{max-width:1280px;margin:10px auto 0;padding:12px 16px;background:var(--bleuf);
+  border:1px solid var(--bord);border-radius:12px;font-size:.95rem;color:#24374f}
+.notes-deck p{margin:0}
+.scene:fullscreen{background:#0d1621;display:flex;flex-direction:column;padding:0;max-width:none}
+.scene:fullscreen .deck{flex:1;aspect-ratio:auto;border:none;border-radius:0;background:#0d1621}
+.scene:fullscreen .barre-deck{margin:0;padding:8px;background:#0d1621}
+.scene:fullscreen .barre-deck .compteur{color:#fff}
+.scene:fullscreen .notes-deck{display:none!important}
+
+/* ---------- ateliers ---------- */
+.consigne{margin:0 0 12px;padding:12px 14px;background:var(--bleuf);border-radius:10px;color:var(--bleu)}
+.table-bloc{overflow-x:auto;border:1px solid var(--bord);border-radius:12px}
+.table-bloc.en-plein{position:fixed;inset:0;z-index:220;background:#fff;border-radius:0;padding:16px;
+  overflow:auto}
+.table-bloc.en-plein .atelier-table{font-size:clamp(18px,2.6vw,30px)}
+.atelier-table{width:100%;border-collapse:collapse;font-size:clamp(14px,2vw,21px)}
+.atelier-table th,.atelier-table td{border:1px solid var(--bord);padding:10px 12px;text-align:left;
+  vertical-align:top}
+.atelier-table th{background:var(--bleuf);color:var(--bleu)}
+.atelier-table tbody tr:nth-child(even){background:#fafcfe}
+.atelier-table td.a-remplir .vide{color:var(--rouge);letter-spacing:.08em;font-weight:700}
+.atelier-table td.a-remplir .reponse{display:none;color:var(--vert);font-weight:700}
+.panneau.corrige .atelier-table td.a-remplir .vide{display:none}
+.panneau.corrige .atelier-table td.a-remplir .reponse{display:inline}
+.etapes-bloc{margin:16px 0 0}
+.etapes-bloc h3{margin:0 0 6px;font-size:1rem;color:var(--bleu)}
+.etapes-bloc ol{margin:0;padding-left:22px}
+.note-atelier{margin:12px 0 0;font-size:.9rem;color:var(--gris)}
+.conduite-table{font-size:clamp(13px,1.8vw,18px)}
+.liste-simple{margin:6px 0 0;padding-left:22px}
+.liste-simple li{margin-bottom:4px}
+
+.schema-bloc{border:1px solid var(--bord);border-radius:12px;overflow:hidden;margin:0 0 12px}
+.schema-barre{display:flex;gap:6px;flex-wrap:wrap;padding:8px;background:var(--bleuf);
+  border-bottom:1px solid var(--bord)}
+.schema-barre button{min-height:44px;padding:8px 14px;border-radius:10px;border:2px solid var(--bord);
+  background:#fff;color:var(--bleu);font:inherit;font-weight:700;cursor:pointer}
+.schema-barre button.actif{background:var(--bleu);color:#fff;border-color:var(--bleu)}
+.schema-vue{background:#fff;padding:8px}
+.schema-svg{display:block;width:100%;height:auto}
+.schema-bloc.en-plein{position:fixed;inset:0;z-index:220;border-radius:0;background:#fff;
+  display:flex;flex-direction:column;margin:0}
+.schema-bloc.en-plein .schema-vue:not([hidden]){flex:1;display:flex;align-items:center}
+.schema-bloc.en-plein .schema-svg{max-height:calc(100vh - 76px);width:100%}
+
+/* ---------- index ---------- */
+.sommaire-ateliers{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;background:rgba(255,255,255,.97);
+  border-bottom:1px solid var(--bord)}
+.sommaire-ateliers a{flex:1 1 auto;min-height:44px;display:flex;align-items:center;justify-content:center;
+  background:#fff;border:2px solid var(--bord);border-radius:12px;color:var(--bleu);
+  text-decoration:none;font-weight:700;padding:8px 12px}
+.sommaire-ateliers a:hover,.sommaire-ateliers a:focus-visible{background:var(--bleuf);border-color:var(--bleu2)}
+.sommaire-ateliers a.actif{background:var(--bleu2);color:#fff;border-color:var(--bleu2)}
+.intro{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:20px;margin:0 0 22px}
+.intro h2{margin:0 0 8px;color:var(--bleu);font-size:1.15rem}
+.intro ul{margin:10px 0 0;padding-left:22px}
+.sujets{display:grid;gap:14px}
+@media (min-width:820px){.sujets{grid-template-columns:1fr 1fr}}
+.sujet-carte{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:18px}
+.sujet-carte h2{margin:2px 0 6px;font-size:1.2rem;color:var(--bleu)}
+.sujet-carte .appel{margin:0 0 10px;color:#33414f}
+.sujet-carte .notion{margin:0 0 8px;padding:8px 10px;background:var(--bleuf);border-radius:8px;
+  font-size:.86rem;color:var(--bleu)}
+.sujet-carte .duree{margin:0 0 10px}
+.liens-sujet{display:flex;gap:6px;flex-wrap:wrap}
+.liens-sujet a{min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  padding:8px 12px;border-radius:10px;border:2px solid var(--bord);background:#fff;
+  color:var(--bleu);text-decoration:none;font-weight:700;font-size:.9rem;flex:1 1 45%}
+.liens-sujet a:hover,.liens-sujet a:focus-visible{background:var(--bleuf);border-color:var(--bleu2)}
+.sujet-carte>.code-sujet{display:inline-block;background:var(--bleu);color:#fff;border-radius:8px;
+  padding:1px 9px;font-size:.8rem;font-weight:800}
+.pied-page{padding:8px 14px 40px;color:var(--gris);font-size:.88rem}
+.pied-page p{margin:0 0 6px}
+.a-verifier{color:var(--orange);font-weight:700}
+code{background:#f0f4f8;border:1px solid var(--bord);border-radius:4px;padding:0 4px;font-size:.9em}
+ul,ol{margin:8px 0 10px;padding-left:22px}
+li{margin-bottom:5px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  main{padding:14px 10px 36px}
+  .panneau{padding:12px;border-radius:12px}
+  nav.onglets{padding:8px}
+  nav.onglets button{min-width:104px}
+  .slide h2{font-size:30px}
+}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  header.site,nav.onglets,.entete-panneau,.barre-deck,.notes-deck,.outils,.pied-page,
+  .consigne,.etapes-bloc,.note-atelier,.sommaire-ateliers,.intro{display:none!important}
+  body{background:#fff;font-size:12pt}
+  main{max-width:none;margin:0;padding:0}
+  .panneau{border:none;border-radius:0;padding:0;margin:0}
+  .panneau[hidden]{display:none!important}
+  .scene{max-width:none}
+  .deck{aspect-ratio:auto;border:none;border-radius:0;overflow:visible}
+  .slide{display:flex!important;position:relative;transform:none!important;
+    width:13.333in;height:7.5in;padding:0.42in 0.62in 0.3in;page-break-after:always;break-after:page}
+  .slide:last-child{page-break-after:auto;break-after:auto}
+  .table-bloc{border:1px solid #999;overflow:visible}
+  .atelier-table{font-size:12pt}
+  .schema-bloc{border:1px solid #999;display:block;page-break-inside:avoid}
+  .schema-bloc.en-plein,.table-bloc.en-plein{position:static}
+  .schema-barre,.schema-vue .legende,#ost-bouton-corriger,.ost-panneau{display:none!important}
+  .schema-vue{display:block;padding:0}
+  .schema-vue[hidden]{display:none!important}
+  .schema-svg{width:100%;height:auto;max-height:7.4in}
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
+<style id="retour-accueil-style">
+/* ── RETOUR À L'ACCUEIL DU SITE ───────────────────────────────────── */
+/* Un lien simple, posé EN TÊTE DE PAGE, dans le flux — jamais
+   flottant. C'est une mesure qui l'a décidé : un bouton flottant
+   finissait toujours par recouvrir un contrôle. En bas à gauche, les
+   flèches du jeu de réseau et les commandes du diaporama ; en haut à
+   droite, l'option d'affichage et le lien du jeu ; en haut à gauche,
+   le titre de l'activité. On ne cache jamais ce que l'élève doit
+   cliquer : le retour reste donc à sa place, et il défile avec la
+   page. C'est aussi la convention déjà suivie par les pages de jeu
+   (« ← Toutes les activités »).
+   Le `!important` est volontaire : le module est posé sur des pages
+   dont nous ne maîtrisons pas le CSS. Sans lui, la règle sombre d'une
+   page ancienne réécrivait la couleur du texte et le lien tombait à
+   4,1:1 (mesuré sur tp-ia.html). */
+.retour-accueil {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin: 8px 12px 12px;
+    padding: 9px 16px;
+    border: 2px solid #ffffff !important;
+    border-radius: 999px;
+    background: #1f4e79 !important;
+    color: #ffffff !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+.retour-accueil:hover,
+.retour-accueil:focus-visible {
+    background: #2a6fb0 !important;
+}
+
+/* Double anneau : blanc au contact du bouton, bleu foncé au large. Sur
+   une page claire c'est l'anneau bleu qui se voit, sur une page sombre
+   c'est l'anneau blanc — le focus reste visible dans les deux modes. */
+.retour-accueil:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px #1f4e79, 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* Une page imprimée ne renvoie nulle part : le bouton n'a rien à y
+   faire, et il prendrait la place d'une consigne. */
+@media print {
+    .retour-accueil {
+        display: none;
+    }
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:FIN -->
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+/* Modèles de commentaire : des phrases génériques à compléter, jamais un
+   niveau ni un identifiant figé — le panneau les déduit déjà de l'onglet
+   et de l'élément sélectionnés. */
+.ost-modeles{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.ost-modele{min-height:32px;padding:0 10px;border:1px dashed #c7d2e3;border-radius:999px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.ost-modele:hover{background:#f1f5f9}
+.ost-modeles-legende{margin:0;font-size:11px;color:#64748b}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer,:where(html[data-theme="sombre"]) .ost-modele:hover{background:#16202e}
+:where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-modele{background:#1c2534;color:#cbd5e1}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
+</head>
+<body>
+<!-- RETOUR-ACCUEIL:DEBUT (module unique du site, recopié par _outils/template-activite/greffer_retour_accueil.py) -->
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Retour à l’accueil</a>
+<!-- RETOUR-ACCUEIL:FIN -->
+<header class="site"><div class="contenu"><p class="yeux">Mandelatechno · 4e · <a href="index.html">Approfondissement Drone</a></p><h1><span class="code-sujet">R7</span> L'énergie contenue dans un kilo</h1><p class="appel">Un kilo d'essence contient plusieurs dizaines de fois plus d'énergie qu'un kilo de batterie <span class="a-verifier" title="Chiffre non vérifié">⏳</span> — mais convertir compte autant que stocker.</p><p class="badges"><span>SFC12</span><span>20 min</span><span>2 présentations · 2 ateliers</span></p></div></header><nav class="onglets" role="tablist" aria-label="Les ressources de ce sujet"><button type="button" role="tab"  id="onglet-p1" data-ost-id="onglet-p1" aria-controls="panneau-p1" aria-selected="true" tabindex="0" data-panneau="p1" class="actif"><span class="libelle">Présentation 1</span><span class="detail">4 diapos · 10 min</span></button><button type="button" role="tab"  id="onglet-p2" data-ost-id="onglet-p2" aria-controls="panneau-p2" aria-selected="false" tabindex="-1" data-panneau="p2" class=""><span class="libelle">Présentation 2</span><span class="detail">4 diapos · 10 min</span></button><button type="button" role="tab"  id="onglet-a1" data-ost-id="onglet-a1" aria-controls="panneau-a1" aria-selected="false" tabindex="-1" data-panneau="a1" class=""><span class="libelle">Atelier 1</span><span class="detail">Tableau · 8 min</span></button><button type="button" role="tab"  id="onglet-a2" data-ost-id="onglet-a2" aria-controls="panneau-a2" aria-selected="false" tabindex="-1" data-panneau="a2" class=""><span class="libelle">Atelier 2</span><span class="detail">Schéma · 10 min</span></button><button type="button" role="tab"  id="onglet-conduite" data-ost-id="onglet-conduite" aria-controls="panneau-conduite" aria-selected="false" tabindex="-1" data-panneau="conduite" class=""><span class="libelle">Conduite</span><span class="detail">20 min</span></button></nav><main><section class="panneau actif"  id="panneau-p1" data-ost-id="panneau-p1" role="tabpanel" aria-labelledby="onglet-p1" tabindex="0"><div class="entete-panneau"><div><p class="sur-titre">Présentation 1 · Partie 1 — comparer deux quantités d'énergie</p><h2>Deux kilos, deux réservoirs</h2><p class="duree">4 diapositives · 10 min</p></div></div><div class="scene" data-scene="1"><div class="deck"><section class="slide actif" aria-label="Un kilo d&#x27;essence, un kilo de batterie"><p class="sur-titre">R7 · SFC12 · 4e</p><h2>Un kilo d'essence, un kilo de batterie</h2><p class="chapeau">Deux réservoirs de même masse, deux quantités d'énergie très différentes.</p><div class="corps citation"><blockquote class="citation">« Un kilo d'essence, un kilo de batterie : combien de fois plus ? »</blockquote><div class="encadre encadre-question"><p class="encadre-titre">La question</p><p>Pourquoi un drone à batterie ne peut-il pas voler aussi longtemps qu'un avion ?</p></div></div><div class="pied"><span>R7 · Drone</span><span>1 / 4</span></div></section><section class="slide" aria-label="Deux barres, deux valeurs à placer"><p class="sur-titre">Le schéma</p><h2>Deux barres, deux valeurs à placer</h2><p class="chapeau">Deux barres à comparer, deux valeurs en kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</p><div class="corps schema"><div class="visuel-schema"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R7 — L'énergie contenue dans 1 kg</title>
+<defs><marker  id="r7-1-1-ar" data-ost-id="r7-1-1-ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="r7-1-1-ar-chaud" data-ost-id="r7-1-1-ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="r7-1-1-ar-froid" data-ost-id="r7-1-1-ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="r7-1-1-ar-vert" data-ost-id="r7-1-1-ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R7 — L'énergie contenue dans 1 kg</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Comparer l'essence et la batterie, puis conclure</text>
+<text x="800" y="150" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Énergie contenue dans 1 kilogramme</text>
+<line x1="250" y1="700" x2="1350" y2="700" stroke="#24557a" stroke-width="4"/>
+<line x1="250" y1="700" x2="250" y2="235" stroke="#24557a" stroke-width="4"/>
+<rect x="430" y="255" width="220" height="445" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="540" y="229" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#b03a2e">① ……… kWh</text>
+<text x="540" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg d'essence</text>
+<text x="540" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">soit environ 1,3 litre</text>
+<rect x="900" y="676" width="220" height="24" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="4"/>
+<text x="1010" y="650" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#1f5f9e">② ……… kWh</text>
+<text x="1010" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg de batterie</text>
+<text x="1010" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">(barre tronquée : hors échelle)</text>
+<rect x="120" y="792" width="1360" height="88" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="828" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">③ Conclusion : …………………………………………………………………</text>
+</svg></div><p class="legende">Un élève écrit les deux valeurs, un autre conclut : la classe dicte, vous arbitrez.</p></div><div class="pied"><span>R7 · Drone</span><span>2 / 4</span></div></section><section class="slide" aria-label="Un rapport de plusieurs dizaines"><p class="sur-titre">Les deux valeurs</p><h2>Un rapport de plusieurs dizaines</h2><div class="corps pleine"><div class="texte"><ul class="puces"><li>1 kg d'essence : ≈ 9 à 12 kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>1 kg de batterie : ≈ 0,2 kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>Le rapport se trouve de tête : plusieurs dizaines.</li><li>Un rapport n'a pas d'unité : c'est un nombre.</li></ul><div class="encadre encadre-chiffre"><p class="encadre-titre">Ordres de grandeur</p><p>≈ 9 à 12 kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span> contre ≈ 0,2 kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span> — valeurs à vérifier avant la classe.</p></div></div></div><div class="pied"><span>R7 · Drone</span><span>3 / 4</span></div></section><section class="slide" aria-label="Deux réservoirs, deux autonomies"><p class="sur-titre">Ce que cela explique</p><h2>Deux réservoirs, deux autonomies</h2><div class="corps pleine"><div class="texte"><ul class="puces"><li>Un drone de loisir vole une vingtaine de minutes <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>Un avion thermique traverse un océan.</li><li>C'est le rapport des énergies par kilo qui décide, pas la chimie.</li><li>Ce n'est pas toute l'histoire : le rendement compte aussi — on y revient juste après.</li></ul><div class="encadre encadre-cle"><p class="encadre-titre">À retenir</p><p>À masse égale, l'essence stocke beaucoup plus d'énergie que la batterie <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</p></div></div></div><div class="pied"><span>R7 · Drone</span><span>4 / 4</span></div></section></div><div class="barre-deck" role="group" aria-label="Navigation du diaporama"><button type="button" data-prec aria-label="Diapositive précédente">←</button><span class="compteur" role="status" aria-live="polite">1 / 4</span><button type="button" data-suiv aria-label="Diapositive suivante">→</button><button type="button" data-notes aria-pressed="false">Notes</button><button type="button" data-plein>⤢ Plein écran</button><button type="button" data-imprimer>Imprimer</button></div></div><div class="notes-deck" hidden><p data-note="1-0" hidden>Posez la question sans donner de chiffre et laissez la classe proposer un ordre de grandeur. Aucune calculatrice aujourd'hui : les valeurs du schéma suffisent.</p><p data-note="1-1" hidden>Projetez le schéma : deux barres, deux cases en kWh, une conclusion. Faites remarquer que la barre de la batterie est tronquée : elle est hors échelle.</p><p data-note="1-2" hidden>Faites écrire les deux valeurs au tableau, puis faites dire le rapport sans calculatrice. Insistez sur la dernière puce : un rapport est un nombre, pas des kilowattheures.</p><p data-note="1-3" hidden>Faites formuler la réponse à la question socle en une phrase. La quatrième puce ouvre la partie 2 : ne la développez pas ici, elle serait reprise juste après.</p></div></section><section class="panneau"  id="panneau-p2" data-ost-id="panneau-p2" role="tabpanel" aria-labelledby="onglet-p2" tabindex="0" hidden><div class="entete-panneau"><div><p class="sur-titre">Présentation 2 · Partie 2 — convertir, nuancer, corriger</p><h2>Ce que le rapport ne dit pas</h2><p class="duree">4 diapositives · 10 min</p></div></div><div class="scene" data-scene="2"><div class="deck"><section class="slide actif" aria-label="Les deux barres et la conclusion"><p class="sur-titre">Le schéma complet</p><h2>Les deux barres et la conclusion</h2><div class="corps schema"><div class="visuel-schema"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R7 — L'énergie contenue dans 1 kg</title>
+<defs><marker  id="r7-2-0-ar" data-ost-id="r7-2-0-ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="r7-2-0-ar-chaud" data-ost-id="r7-2-0-ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="r7-2-0-ar-froid" data-ost-id="r7-2-0-ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="r7-2-0-ar-vert" data-ost-id="r7-2-0-ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R7 — L'énergie contenue dans 1 kg</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Comparer l'essence et la batterie, puis conclure</text>
+<text x="800" y="150" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Énergie contenue dans 1 kilogramme</text>
+<line x1="250" y1="700" x2="1350" y2="700" stroke="#24557a" stroke-width="4"/>
+<line x1="250" y1="700" x2="250" y2="235" stroke="#24557a" stroke-width="4"/>
+<rect x="430" y="255" width="220" height="445" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="540" y="229" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#b03a2e">① ≈ 9 à 12 kWh ⏳</text>
+<text x="540" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg d'essence</text>
+<text x="540" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">soit environ 1,3 litre</text>
+<rect x="900" y="676" width="220" height="24" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="4"/>
+<text x="1010" y="650" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#1f5f9e">② ≈ 0,2 kWh ⏳</text>
+<text x="1010" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg de batterie</text>
+<text x="1010" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">(barre tronquée : hors échelle)</text>
+<rect x="120" y="792" width="1360" height="88" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="828" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">③ Rapport des énergies STOCKÉES : plusieurs dizaines,</text>
+<text x="800" y="860" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">    mais le moteur thermique en perd les trois quarts.</text>
+</svg></div><p class="legende">Le schéma corrigé : les deux valeurs <span class="a-verifier" title="Chiffre non vérifié">⏳</span>, le rapport et la conclusion.</p></div><div class="pied"><span>R7 · Drone</span><span>1 / 4</span></div></section><section class="slide" aria-label="Stocker n&#x27;est pas convertir"><p class="sur-titre">La nuance</p><h2>Stocker n'est pas convertir</h2><div class="corps deux-colonnes"><div class="texte"><ul class="puces"><li>Un moteur thermique perd la plus grande partie de son énergie en chaleur : ≈ 25-30 % de rendement <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>Un moteur électrique en perd très peu : ≈ 85-90 % <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>L'écart réel est plus petit que le rapport des masses — mais il reste très important.</li></ul></div><div class="visuel"><div class="colonnes"><div class="colonne"><p class="colonne-titre">Énergie stockée</p><p>L'essence gagne, et de loin <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</p></div><div class="colonne"><p class="colonne-titre">Énergie utile</p><p>La batterie convertit mieux <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</p></div><div class="colonne"><p class="colonne-titre">Au total</p><p>Les deux grandeurs comptent.</p></div></div></div></div><div class="pied"><span>R7 · Drone</span><span>2 / 4</span></div></section><section class="slide" aria-label="Trois phrases à corriger"><p class="sur-titre">Ce que beaucoup croient</p><h2>Trois phrases à corriger</h2><div class="corps pleine"><div class="texte"><ul class="puces"><li>« Il n'existe pas de drone à essence. » — Faux : il en existe, ils sont rares (masse du moteur, vibrations, odeur, sécurité).</li><li>« La batterie, c'est nul. » — Ce serait passer à côté du rendement, qui est justement son avantage.</li><li>« Le chiffre exact, c'est… » — Aucune valeur au chiffre près avant d'avoir ouvert la source.</li></ul><div class="encadre encadre-attention"><p class="encadre-titre">À ne pas faire</p><p>Ne présentez aucun de ces chiffres <span class="a-verifier" title="Chiffre non vérifié">⏳</span> comme vérifié : si vous ne les avez pas ouverts, ne faites qu'une seule barre.</p></div></div></div><div class="pied"><span>R7 · Drone</span><span>3 / 4</span></div></section><section class="slide" aria-label="Trois phrases pour la sortie"><p class="sur-titre">À retenir</p><h2>Trois phrases pour la sortie</h2><div class="corps pleine"><div class="texte"><ul class="puces"><li>À masse égale, l'essence stocke plusieurs dizaines de fois plus d'énergie <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>Un moteur thermique en perd les trois quarts en chaleur ; un moteur électrique, très peu <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>L'écart réel est plus petit que le rapport des masses, mais il reste très important.</li></ul><div class="encadre encadre-sortie"><p class="encadre-titre">Question de sortie</p><p>Qu'est-ce qui compte le plus pour l'autonomie : la quantité d'énergie ou la façon de la convertir ? — une phrase sur le cahier.</p></div></div></div><div class="pied"><span>R7 · Drone</span><span>4 / 4</span></div></section></div><div class="barre-deck" role="group" aria-label="Navigation du diaporama"><button type="button" data-prec aria-label="Diapositive précédente">←</button><span class="compteur" role="status" aria-live="polite">1 / 4</span><button type="button" data-suiv aria-label="Diapositive suivante">→</button><button type="button" data-notes aria-pressed="false">Notes</button><button type="button" data-plein>⤢ Plein écran</button><button type="button" data-imprimer>Imprimer</button></div></div><div class="notes-deck" hidden><p data-note="2-0" hidden>Faites comparer avec les valeurs écrites en classe. Rappelez que ces quatre valeurs <span class="a-verifier" title="Chiffre non vérifié">⏳</span> ne sont pas vérifiées : la source est à ouvrir avant la séance.</p><p data-note="2-1" hidden>C'est la nuance qui fait la valeur de la pastille : comparer les énergies stockées ne suffit pas, il faut comparer le travail utile. Question d'approfondissement : alors pourquoi si peu de drones à essence ?</p><p data-note="2-2" hidden>Corrigez ces phrases avec « on entend souvent… ». Si un élève demande le chiffre exact, dites qu'il est marqué <span class="a-verifier" title="Chiffre non vérifié">⏳</span> et que la source sera ouverte en classe.</p><p data-note="2-3" hidden>La bonne réponse est « les deux » : c'est le compromis qui décide. Faites justifier par deux élèves qui ne sont pas d'accord, sans trancher à leur place.</p></div></section><section class="panneau"  id="panneau-a1" data-ost-id="panneau-a1" role="tabpanel" aria-labelledby="onglet-a1" tabindex="0" hidden><div class="entete-panneau"><div><p class="sur-titre">Atelier 1 · tableau à compléter</p><h2>Essence contre batterie : ce que cela change</h2><p class="duree">8 min · un élève remplit, la classe dicte</p></div><div class="outils"><button type="button" data-etat="vide" class="actif" aria-pressed="true">À compléter</button><button type="button" data-etat="corrige" aria-pressed="false">Corrigé</button><button type="button" data-plein-bloc aria-pressed="false">⤢ Plein écran</button><button type="button" data-imprimer>Imprimer</button></div></div><p class="consigne">Un élève complète une ligne à la fois : il donne la valeur ou l'explication manquante, en gardant le <span class="a-verifier" title="Chiffre non vérifié">⏳</span> sur les chiffres non vérifiés. La classe dicte, vous arbitrez.</p><div class="table-bloc" role="region" aria-label="Tableau à compléter"><table class="atelier-table"><thead><tr><th>Grandeur</th><th>Essence</th><th>Batterie lithium</th><th>Ce que cela change</th></tr></thead><tbody><tr><td>Énergie par kilo <span class="a-verifier" title="Chiffre non vérifié">⏳</span></td><td>≈ 9 à 12 kWh/kg <span class="a-verifier" title="Chiffre non vérifié">⏳</span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">≈ 0,2 kWh/kg <span class="a-verifier" title="Chiffre non vérifié">⏳</span></span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">l'essence en stocke plusieurs dizaines de fois plus</span></td></tr><tr><td>Rendement du moteur <span class="a-verifier" title="Chiffre non vérifié">⏳</span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">≈ 25-30 % <span class="a-verifier" title="Chiffre non vérifié">⏳</span></span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">≈ 85-90 % <span class="a-verifier" title="Chiffre non vérifié">⏳</span></span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">la batterie convertit mieux son énergie</span></td></tr><tr><td>Durée de vol <span class="a-verifier" title="Chiffre non vérifié">⏳</span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">un avion thermique traverse un océan</span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">≈ 20 min pour un drone de loisir <span class="a-verifier" title="Chiffre non vérifié">⏳</span></span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">l'écart vient du stockage, pas seulement du moteur</span></td></tr><tr><td>Ce qui freine la version essence</td><td class="a-remplir"><span class="vide">………</span><span class="reponse">masse du moteur, vibrations, odeur</span></td><td>rien de tout cela</td><td class="a-remplir"><span class="vide">………</span><span class="reponse">sécurité : pas de carburant à bord d'un engin qui peut tomber</span></td></tr><tr><td>Ce qui décide, au final</td><td class="a-remplir"><span class="vide">………</span><span class="reponse">l'énergie stockée</span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">le rendement de conversion</span></td><td class="a-remplir"><span class="vide">………</span><span class="reponse">les deux : c'est la bonne réponse</span></td></tr></tbody></table></div><div class="etapes-bloc"><h3>La consigne, étape par étape</h3><ol><li>Lisez la première colonne à voix haute.</li><li>Un élève complète la ligne ; la classe corrige.</li><li>Faites redire, à chaque ligne, si l'avantage va à l'essence ou à la batterie.</li><li>Concluez : les deux grandeurs comptent, et c'est le compromis qui décide.</li></ol></div><p class="note-atelier">Les valeurs <span class="a-verifier" title="Chiffre non vérifié">⏳</span> ne sont pas vérifiées : elles restent marquées. Aucun calcul de précision n'est demandé, seulement les ordres de grandeur.</p></section><section class="panneau"  id="panneau-a2" data-ost-id="panneau-a2" role="tabpanel" aria-labelledby="onglet-a2" tabindex="0" hidden><div class="entete-panneau"><div><p class="sur-titre">Atelier 2 · schéma à trous</p><h2>Compléter le schéma de l'énergie par kilo</h2><p class="duree">10 min · un élève tient le feutre, la classe dicte</p></div></div><p class="consigne">Un élève tient le feutre, la classe dicte. On place les deux valeurs dans les cases, puis on écrit la conclusion en une phrase.</p><div class="schema-bloc"><div class="schema-barre" role="group" aria-label="Version du schéma"><button type="button" data-vue="vide" class="actif" aria-pressed="true">À compléter</button><button type="button" data-vue="corrige" aria-pressed="false">Corrigé</button><button type="button" data-plein-bloc aria-pressed="false">⤢ Plein écran</button><button type="button" data-imprimer>Imprimer</button></div><div class="schema-vue" data-vue-bloc="vide"><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R7 — L'énergie contenue dans 1 kg</title>
+<defs><marker  id="r7-atelier-vide-ar" data-ost-id="r7-atelier-vide-ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="r7-atelier-vide-ar-chaud" data-ost-id="r7-atelier-vide-ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="r7-atelier-vide-ar-froid" data-ost-id="r7-atelier-vide-ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="r7-atelier-vide-ar-vert" data-ost-id="r7-atelier-vide-ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R7 — L'énergie contenue dans 1 kg</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Comparer l'essence et la batterie, puis conclure</text>
+<text x="800" y="150" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Énergie contenue dans 1 kilogramme</text>
+<line x1="250" y1="700" x2="1350" y2="700" stroke="#24557a" stroke-width="4"/>
+<line x1="250" y1="700" x2="250" y2="235" stroke="#24557a" stroke-width="4"/>
+<rect x="430" y="255" width="220" height="445" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="540" y="229" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#b03a2e">① ……… kWh</text>
+<text x="540" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg d'essence</text>
+<text x="540" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">soit environ 1,3 litre</text>
+<rect x="900" y="676" width="220" height="24" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="4"/>
+<text x="1010" y="650" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#1f5f9e">② ……… kWh</text>
+<text x="1010" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg de batterie</text>
+<text x="1010" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">(barre tronquée : hors échelle)</text>
+<rect x="120" y="792" width="1360" height="88" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="828" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">③ Conclusion : …………………………………………………………………</text>
+</svg></div><div class="schema-vue" data-vue-bloc="corrige" hidden><svg class="schema-svg" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img">
+<title>R7 — L'énergie contenue dans 1 kg</title>
+<defs><marker  id="r7-atelier-corrige-ar" data-ost-id="r7-atelier-corrige-ar" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#24557a"/></marker><marker  id="r7-atelier-corrige-ar-chaud" data-ost-id="r7-atelier-corrige-ar-chaud" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#b03a2e"/></marker><marker  id="r7-atelier-corrige-ar-froid" data-ost-id="r7-atelier-corrige-ar-froid" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#1f5f9e"/></marker><marker  id="r7-atelier-corrige-ar-vert" data-ost-id="r7-atelier-corrige-ar-vert" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L11,6 L0,11 z" fill="#0b6b4f"/></marker></defs>
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="800" y="62" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="40" font-weight="700" fill="#12314a">R7 — L'énergie contenue dans 1 kg</text>
+<text x="800" y="106" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="26" font-weight="400" fill="#4a6076">Comparer l'essence et la batterie, puis conclure</text>
+<text x="800" y="150" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="30" font-weight="700" fill="#12314a">Énergie contenue dans 1 kilogramme</text>
+<line x1="250" y1="700" x2="1350" y2="700" stroke="#24557a" stroke-width="4"/>
+<line x1="250" y1="700" x2="250" y2="235" stroke="#24557a" stroke-width="4"/>
+<rect x="430" y="255" width="220" height="445" rx="14" fill="#f6d9d2" stroke="#b03a2e" stroke-width="4"/>
+<text x="540" y="229" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#b03a2e">① ≈ 9 à 12 kWh ⏳</text>
+<text x="540" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg d'essence</text>
+<text x="540" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">soit environ 1,3 litre</text>
+<rect x="900" y="676" width="220" height="24" rx="14" fill="#d8e8f6" stroke="#1f5f9e" stroke-width="4"/>
+<text x="1010" y="650" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="29" font-weight="600" fill="#1f5f9e">② ≈ 0,2 kWh ⏳</text>
+<text x="1010" y="746" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="28" font-weight="700" fill="#12314a">1 kg de batterie</text>
+<text x="1010" y="786" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="24" font-weight="400" fill="#4a6076">(barre tronquée : hors échelle)</text>
+<rect x="120" y="792" width="1360" height="88" rx="10" fill="#f5fbf7" stroke="#0b6b4f" stroke-width="2"/>
+<text x="800" y="828" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">③ Rapport des énergies STOCKÉES : plusieurs dizaines,</text>
+<text x="800" y="860" text-anchor="middle" font-family="'DejaVu Sans','Segoe UI',Arial,sans-serif" font-size="25" font-weight="600" fill="#0b6b4f">    mais le moteur thermique en perd les trois quarts.</text>
+</svg></div></div><div class="etapes-bloc"><h3>La consigne, étape par étape</h3><ol><li>① l'énergie d'1 kg d'essence, en kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>② l'énergie d'1 kg de batterie, en kWh <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>③ la conclusion : le rapport, et ce qu'il ne dit pas.</li><li>Rappel : la barre de la batterie est tronquée, elle est hors échelle.</li></ol></div><p class="note-atelier">Deux versions : à compléter et corrigé. Les valeurs restent marquées <span class="a-verifier" title="Chiffre non vérifié">⏳</span> : le fichier source est à ouvrir avant la classe.</p></section><section class="panneau"  id="panneau-conduite" data-ost-id="panneau-conduite" role="tabpanel" aria-labelledby="onglet-conduite" tabindex="0" hidden><div class="entete-panneau"><div><p class="sur-titre">Conduite · 20 minutes</p><h2>Le déroulé, minute par minute</h2><p class="duree">Deux présentations de 4 diapos, puis les deux ateliers.</p></div><div class="outils"><button type="button" data-imprimer>Imprimer</button></div></div><div class="table-bloc"><table class="atelier-table conduite-table"><thead><tr><th>Temps</th><th>Ce que vous faites</th><th>Ce que fait la classe</th></tr></thead><tbody><tr><td>0-1 min</td><td>Posez l'accroche : « un kilo d'essence, un kilo de batterie, combien de fois plus ? »</td><td>Réfléchit, propose.</td></tr><tr><td>1-3 min</td><td>Écrivez les deux ordres de grandeur <span class="a-verifier" title="Chiffre non vérifié">⏳</span> dans les cases du schéma.</td><td>Note les deux valeurs.</td></tr><tr><td>3-6 min</td><td>Faites calculer le rapport, puis faites conclure sur l'autonomie d'un drone.</td><td>Calcule, conclut.</td></tr><tr><td>6-8 min</td><td>Retournez la question : pourquoi si peu de drones à essence ?</td><td>Cherche.</td></tr><tr><td>8-10 min</td><td>Posez la question socle et faites-la formuler en une phrase.</td><td>Répond, reformule.</td></tr><tr><td>10-11 min</td><td>Transition : « le rapport des masses, c'est toute l'histoire ? »</td><td>Écoute.</td></tr><tr><td>11-14 min</td><td>Posez le rendement : moteur thermique ≈ 25-30 % <span class="a-verifier" title="Chiffre non vérifié">⏳</span>, moteur électrique ≈ 85-90 % <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</td><td>Note les deux ordres de grandeur.</td></tr><tr><td>14-16 min</td><td>Faites dire pourquoi l'écart réel est plus petit que le rapport des masses.</td><td>Argumente.</td></tr><tr><td>16-17 min</td><td>Corrigez les trois phrases (pas de drone à essence, batterie nulle, chiffre exact).</td><td>Discute, reformule.</td></tr><tr><td>17-18 min</td><td>Faites dire les trois phrases à retenir, avec les <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</td><td>Les écrit sur le cahier.</td></tr><tr><td>18-19 min</td><td>Rappelez que les quatre valeurs <span class="a-verifier" title="Chiffre non vérifié">⏳</span> sont des ordres de grandeur non vérifiés.</td><td>Écoute, note.</td></tr><tr><td>19-20 min</td><td>Question de sortie : une phrase sur le cahier, deux ou trois lues sans nommer.</td><td>Écrit sa phrase.</td></tr></tbody></table></div><div class="encadre encadre-attention"><p class="encadre-titre">À ne pas dire</p><ul class="liste-simple"><li>« Il n'existe pas de drone à essence » → faux : il en existe, ils sont rares (masse du moteur, vibrations, odeur, sécurité).</li><li>« La batterie, c'est nul » → ce serait passer à côté du rendement, qui est justement l'avantage de la batterie.</li><li>Ne donnez aucune valeur au chiffre près avant d'avoir ouvert la source : les quatre ordres de grandeur restent marqués <span class="a-verifier" title="Chiffre non vérifié">⏳</span>.</li><li>Ne présentez pas le rapport des masses comme le seul facteur : le rendement réduit l'écart — mais il reste très important.</li></ul></div><div class="encadre encadre-sortie"><p class="encadre-titre">Question de sortie</p><p>Qu'est-ce qui compte le plus pour l'autonomie : la quantité d'énergie ou la façon de la convertir ?</p></div></section></main><footer class="pied-page"><p>Les chiffres marqués <span class="a-verifier">⏳</span> sont des ordres de grandeur <strong>non encore vérifiés</strong> : leur source est à ouvrir avant la classe.</p><p>Aucune donnée personnelle : les exemples sont fictifs et écrits d'avance. Cette page ne demande rien et n'enregistre rien.</p></footer>
+<script>
+(function () {
+  'use strict';
+
+  /* ===================== onglets ===================== */
+  var onglets = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var panneaux = Array.prototype.slice.call(document.querySelectorAll('[role="tabpanel"]'));
+
+  function activer(id, focus) {
+    if (!document.getElementById('panneau-' + id)) { return; }
+    onglets.forEach(function (o) {
+      var on = o.getAttribute('data-panneau') === id;
+      o.setAttribute('aria-selected', on ? 'true' : 'false');
+      o.classList.toggle('actif', on);
+      o.tabIndex = on ? 0 : -1;
+      if (on && focus) { o.focus(); }
+    });
+    panneaux.forEach(function (p) {
+      var on = p.id === 'panneau-' + id;
+      p.hidden = !on;
+      p.classList.toggle('actif', on);
+    });
+    try {
+      if (history.replaceState) { history.replaceState(null, '', '#' + id); }
+    } catch (e) { /* file:// */ }
+    dimensionnerTout();
+  }
+
+  onglets.forEach(function (o, i) {
+    o.addEventListener('click', function () { activer(o.getAttribute('data-panneau'), false); });
+    o.addEventListener('keydown', function (e) {
+      var k = e.key, j = -1;
+      if (k === 'ArrowRight' || k === 'ArrowDown') { j = (i + 1) % onglets.length; }
+      else if (k === 'ArrowLeft' || k === 'ArrowUp') { j = (i - 1 + onglets.length) % onglets.length; }
+      else if (k === 'Home') { j = 0; }
+      else if (k === 'End') { j = onglets.length - 1; }
+      if (j >= 0) { e.preventDefault(); activer(onglets[j].getAttribute('data-panneau'), true); }
+    });
+  });
+
+  /* ===================== diaporamas ===================== */
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+
+  function dimensionnerScene(scene) {
+    var deck = scene.querySelector('.deck');
+    if (!deck) { return; }
+    var w = deck.clientWidth, h = deck.clientHeight;
+    if (!w || !h) { return; }
+    var s = Math.min(w / 1280, h / 720);
+    var dx = (w - 1280 * s) / 2, dy = (h - 720 * s) / 2;
+    scene.querySelectorAll('.slide').forEach(function (d) {
+      d.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')';
+    });
+  }
+  function dimensionnerTout() { scenes.forEach(dimensionnerScene); }
+  window.addEventListener('resize', dimensionnerTout);
+  document.addEventListener('fullscreenchange', function () { setTimeout(dimensionnerTout, 60); });
+
+  scenes.forEach(function (scene) {
+    var slides = Array.prototype.slice.call(scene.querySelectorAll('.slide'));
+    var compteur = scene.querySelector('.compteur');
+    var prec = scene.querySelector('[data-prec]');
+    var suiv = scene.querySelector('[data-suiv]');
+    var boutonNotes = scene.querySelector('[data-notes]');
+    var suivant = scene.nextElementSibling;
+    var boiteNotes = (suivant && suivant.classList && suivant.classList.contains('notes-deck'))
+      ? suivant : null;
+    var courant = 0;
+
+    function afficher(n) {
+      courant = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach(function (d, i) {
+        var on = i === courant;
+        d.classList.toggle('actif', on);
+        d.setAttribute('aria-hidden', on ? 'false' : 'true');
+      });
+      if (compteur) { compteur.textContent = (courant + 1) + ' / ' + slides.length; }
+      if (prec) { prec.disabled = courant === 0; }
+      if (suiv) { suiv.disabled = courant === slides.length - 1; }
+      if (boiteNotes) {
+        boiteNotes.querySelectorAll('[data-note]').forEach(function (p) {
+          p.hidden = p.getAttribute('data-note') !==
+            scene.getAttribute('data-scene') + '-' + courant;
+        });
+      }
+      setTimeout(function () { dimensionnerScene(scene); }, 0);
+    }
+
+    if (prec) { prec.addEventListener('click', function () { afficher(courant - 1); }); }
+    if (suiv) { suiv.addEventListener('click', function () { afficher(courant + 1); }); }
+    if (boutonNotes && boiteNotes) {
+      boutonNotes.addEventListener('click', function () {
+        var visible = boiteNotes.hidden;
+        boiteNotes.hidden = !visible;
+        boutonNotes.setAttribute('aria-pressed', visible ? 'true' : 'false');
+        boutonNotes.classList.toggle('actif', visible);
+      });
+    }
+    scene.querySelectorAll('[data-plein]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (document.fullscreenElement) { document.exitFullscreen(); }
+        else if (scene.requestFullscreen) { scene.requestFullscreen(); }
+      });
+    });
+
+    document.addEventListener('keydown', function (e) {
+      var panneau = scene.closest('.panneau');
+      if (!panneau || !panneau.classList.contains('actif')) { return; }
+      if (e.target && e.target.closest && e.target.closest('[role="tab"]')) { return; }
+      var k = e.key;
+      if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') {
+        e.preventDefault(); afficher(courant + 1);
+      } else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') {
+        e.preventDefault(); afficher(courant - 1);
+      } else if (k === 'Home') { e.preventDefault(); afficher(0); }
+      else if (k === 'End') { e.preventDefault(); afficher(slides.length - 1); }
+      else if (k === 'f' || k === 'F') {
+        e.preventDefault();
+        if (document.fullscreenElement) { document.exitFullscreen(); }
+        else if (scene.requestFullscreen) { scene.requestFullscreen(); }
+      } else if (k === 'n' || k === 'N') {
+        if (boutonNotes) { boutonNotes.click(); }
+      } else if (k === 'i' || k === 'I') { e.preventDefault(); window.print(); }
+    });
+
+    afficher(0);
+  });
+
+  /* ===================== ateliers ===================== */
+  document.querySelectorAll('.schema-bloc [data-vue]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var bloc = b.closest('.schema-bloc');
+      bloc.querySelectorAll('[data-vue]').forEach(function (x) {
+        x.classList.toggle('actif', x === b);
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      bloc.querySelectorAll('[data-vue-bloc]').forEach(function (v) {
+        v.hidden = v.getAttribute('data-vue-bloc') !== b.getAttribute('data-vue');
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-etat]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var panneau = b.closest('.panneau');
+      var etat = b.getAttribute('data-etat');
+      panneau.classList.toggle('corrige', etat === 'corrige');
+      panneau.querySelectorAll('[data-etat]').forEach(function (x) {
+        x.classList.toggle('actif', x === b);
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-plein-bloc]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var bloc = b.closest('.schema-bloc, .table-bloc');
+      if (!bloc) { return; }
+      var plein = bloc.classList.toggle('en-plein');
+      b.setAttribute('aria-pressed', plein ? 'true' : 'false');
+    });
+  });
+
+  document.querySelectorAll('[data-imprimer]').forEach(function (b) {
+    if (b.closest('.scene')) { return; }
+    b.addEventListener('click', function () { window.print(); });
+  });
+
+  /* ===================== entrée ===================== */
+  var initial = (location.hash || '').replace('#', '');
+  if (initial && document.getElementById('panneau-' + initial)) {
+    activer(initial, false);
+  } else {
+    activer('p1', false);
+  }
+  window.addEventListener('hashchange', function () {
+    var h = (location.hash || '').replace('#', '');
+    var cible = document.getElementById('panneau-' + h);
+    if (h && cible && cible.hidden) { activer(h, false); }
+  });
+
+  dimensionnerTout();
+})();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const ACTIVITE_PUBLICATION = "4e/approfondissement-drone/r7-l-energie-contenue-dans-un-kilo.html";
+const MODE_DEVELOPPEMENT = true;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Modèles de commentaire : des phrases génériques, à compléter par le
+// professeur. Elles ne nomment NI niveau NI identifiant — le panneau les
+// déduit déjà de l'onglet et de l'élément sélectionnés. C'est ce qui
+// remplace les exemples figés, qui désignaient toujours un autre niveau
+// que celui qu'on corrigeait.
+var MODELES_COMMENTAIRE = [
+    {libelle: 'énoncé pas clair', texte: "L'énoncé n'est pas clair : reformule-le plus simplement, sans jargon."},
+    {libelle: 'pas ce que je veux', texte: "Ça ne correspond pas à ce que je veux : <ce que j'attends, en une phrase>."},
+    {libelle: 'élève bloqué', texte: "L'élève est bloqué ici : il devrait pouvoir <ce qu'il doit réussir à faire>."},
+    {libelle: 'trop long', texte: "C'est trop long et illisible : raccourcis ce texte, l'essentiel seul compte."},
+    {libelle: 'à retirer', texte: "Retire ce texte : il n'apporte rien à l'élève."},
+    {libelle: 'ajouter des choix', texte: "Ajoute <nombre> propositions de plus, du même niveau de difficulté."}
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    // Un modèle remplit un commentaire vide, s'ajoute à la suite sinon :
+    // rien de ce qui est déjà écrit n'est effacé.
+    var rangeeModeles = document.createElement('div');
+    rangeeModeles.className = 'ost-modeles';
+    rangeeModeles.setAttribute('role', 'group');
+    rangeeModeles.setAttribute('aria-label', 'Modèles de commentaire');
+    MODELES_COMMENTAIRE.forEach(function (modele) {
+        var bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'ost-modele';
+        bouton.textContent = modele.libelle;
+        bouton.title = 'Insère « ' + modele.texte + ' » — à compléter.';
+        bouton.addEventListener('click', function () {
+            var actuel = zoneCommentaire.value.trim();
+            zoneCommentaire.value = actuel === '' ? modele.texte : actuel + ' ' + modele.texte;
+            zoneCommentaire.dispatchEvent(new Event('input'));
+            zoneCommentaire.focus();
+        });
+        rangeeModeles.appendChild(bouton);
+    });
+    blocCom.appendChild(rangeeModeles);
+    var legendeModeles = document.createElement('p');
+    legendeModeles.className = 'ost-modeles-legende';
+    legendeModeles.textContent = "Un modèle s'ajoute au commentaire : complétez les <…> avant de copier le prompt.";
+    blocCom.appendChild(legendeModeles);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+</body>
+</html>

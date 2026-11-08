@@ -468,6 +468,19 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 }
 </style>
 <!-- RETOUR-ACCUEIL-CSS:FIN -->
+<style>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication » : l'explication
+   n'est plus imposée, et la bonne réponse n'est jamais désignée. Une seule
+   définition pour tout le site — ne pas éditer ici. */
+details.explication-masquee{margin-top:6px}
+details.explication-masquee summary{cursor:pointer;font-weight:bold;min-height:44px;
+  display:flex;align-items:center;gap:6px;color:inherit;text-decoration:underline;
+  text-underline-offset:2px}
+details.explication-masquee summary:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+details.explication-masquee .explication{display:block;margin-top:6px;padding-top:6px;
+  border-top:1px solid currentColor;font-weight:normal;line-height:1.5}
+/* EXPLICATION-MASQUEE:FIN */
+</style>
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -941,16 +954,20 @@ let quizCorrect = 0;
     div.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
       inp.addEventListener('change', () => {
         const fb = document.getElementById(`qfb-${i}`);
-        if(fb.classList.contains('correct') || fb.classList.contains('wrong')) return;
-        quizAnswered++;
+        // Seule une bonne réponse ferme la question : une erreur la laisse
+        // ouverte, sinon l'élève ne peut pas revenir sur son erreur.
+        if(fb.classList.contains('correct')) return;
         const val = parseInt(inp.value);
+        if(fb.dataset.tentee !== '1') { fb.dataset.tentee = '1'; quizAnswered++; }
         if(val === item.correct) {
           quizCorrect++;
           fb.className = 'quiz-feedback correct';
           fb.innerHTML = `✅ Correct ! ${item.expl}`;
         } else {
+          // On ne montre QUE la mauvaise réponse : la bonne n'est jamais désignée.
           fb.className = 'quiz-feedback wrong';
-          fb.innerHTML = `❌ Incorrect. ${item.expl}`;
+          fb.innerHTML = '❌ Réponse fausse : cherche pourquoi, puis choisis une autre réponse.' +
+            voletExplication(item.expl);
         }
         scores.n1 = quizCorrect;
         document.getElementById('quiz-score').textContent = `Score : ${quizCorrect} / ${quizData.length}`;
@@ -2083,5 +2100,18 @@ if (document.readyState === 'loading') {
   })();
 </script>
 <!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+<script>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication ». Le texte vient des
+   données de la page (aucune réponse n'y est ajoutée). Une seule définition
+   pour tout le site — ne pas éditer ici. */
+function voletExplication(html) {
+  if (!html) return '';
+  return '<details class="explication-masquee">' +
+         '<summary>Voir l’explication</summary>' +
+         '<span class="explication"><strong>Explication :</strong> ' + html + '</span>' +
+         '</details>';
+}
+/* EXPLICATION-MASQUEE:FIN */
+</script>
 </body>
 </html>

@@ -10,10 +10,12 @@ utilisées sur ordinateur, tablette et téléphone.
 ## Ce que contient le dépôt
 
 ```
-index.html                          page d'accueil : les 21 pages, sommaire par niveau
-4e/quart-d-heure/index.html         Le quart d'heure techno 4e — 8 pastilles de 8 à 15 min
-5e/quart-d-heure/index.html         Le quart d'heure techno 5e — 4 pastilles
-3e/quart-d-heure/index.html         Le quart d'heure techno 3e — 4 pastilles
+index.html                          page d'accueil : les 54 pages d'activités, sommaire par niveau
+chronometre.html                    Chronomètre de classe — page du professeur, compte à rebours à projeter
+4e/approfondissement-domotique/     Approfondissement 4e — 4 sujets (2 présentations + 2 ateliers chacun)
+4e/approfondissement-drone/         Approfondissement 4e — 4 sujets
+5e/approfondissement-reseau/        Approfondissement 5e — 4 sujets
+3e/approfondissement-vae/           Approfondissement 3e — 4 sujets
 .nojekyll                           demande à GitHub de servir les fichiers tels quels
 
 3e/revision-ost1/                   Réviser l'évaluation — séquences 1a et 2a
@@ -57,40 +59,73 @@ Une convention de nommage simple : `Niveau/ostN/` pour un objet et système tech
 `Niveau/tp-*/` pour un travail pratique. Le numéro suit celui de la séquence d'origine, ce qui
 permet de retrouver le dossier de préparation correspondant.
 
-### Les pages « Le quart d'heure techno »
+### Les pages « Approfondissement »
 
-Trois pages, une par niveau, sous `Niveau/quart-d-heure/index.html` : elles suivent donc la
-convention de nommage comme les autres activités, et leur identifiant de publication est
-leur propre chemin (`4e/quart-d-heure/index.html`, …).
+Seize sujets, répartis en quatre ateliers, sous
+`Niveau/approfondissement-<atelier>/index.html`. Chaque atelier a sa page d'index,
+et chaque sujet a sa page : deux présentations de 4 diapositives (20 minutes de
+propos) et deux ateliers projetables. L'accueil y mène par l'onglet
+**🔎 Approfondissement**, au même rang que 3e, 4e et 5e : il ouvre une section
+`#approfondissement` qui présente les quatre ateliers. Les pages suivent la
+convention de nommage comme les autres activités, et leur identifiant de
+publication est leur propre chemin
+(`4e/approfondissement-domotique/d3-l-ampoule-bavarde.html`, …).
 
-L'accueil y mène par un quatrième onglet, **⚡ Quart d'heure**, placé au même rang que 3e, 4e et
-5e : il ouvre une section `#quart-d-heure` qui présente les trois pages (8 pastilles en 4e,
-4 en 5e, 4 en 3e). Chaque page propose un sélecteur de niveau pour passer aux deux autres,
-et le bouton « Retour à l'accueil » du module canonique.
-
-| Ce qu'on y trouve | Détail |
+| Onglet d'une page sujet | Contenu |
 |---|---|
-| Une accroche par pastille | la phrase à dire, mise en avant |
-| Un mini-cours de 5 minutes | les mots, l'analogie, ce qu'il faut retenir (5e) |
-| Le schéma en deux versions | *À compléter* / *Corrigé*, bouton **Plein écran** (Échap pour sortir) |
-| La consigne, étape par étape | ce que la classe écrit, dans l'ordre des numéros du schéma |
-| Un déroulé minuté | en classe entière, sans matériel |
-| Les questions | socle, approfondissement, étayage, question de sortie |
-| « À ne pas dire » | les erreurs classiques à éviter |
-| Les valeurs ⏳ | ordres de grandeur non encore vérifiés, avec la source à ouvrir |
+| **Présentation 1** | 4 diapos, « comprendre » — flèches ← →, **F** plein écran, **I** impression PDF, **N** notes |
+| **Présentation 2** | 4 diapos, « appliquer et nuancer » |
+| **Atelier 1** | un tableau à compléter, bouton *À compléter / Corrigé* |
+| **Atelier 2** | un schéma à trous en deux versions (*À compléter / Corrigé*), ou un second tableau |
+| **Conduite** | le déroulé minute par minute, les avertissements « ne dites pas », la question de sortie |
 
-Aucune ressource externe, aucun formulaire, aucun stockage. Cibles tactiles de 44 px ; aucun
-débordement horizontal mesuré à 320, 390 et 1280 px. Vérifié : `inventorier_activites.py`
-donne **37/37 pages conformes**, et `verifier_panneau_dev.py` passe ses **43 contrôles** sur
-chacune des trois pages.
+Les liens directs `#p1`, `#p2`, `#a1`, `#a2`, `#conduite` ouvrent l'onglet
+correspondant. Aucune ressource externe, aucun formulaire, aucun stockage ;
+cibles tactiles de 44 px. Mesuré le 2026-11-07 : **54/54 pages conformes**
+(`inventorier_activites.py`), **43 contrôles** du panneau de développement sur
+chacune des 54 pages, aucun débordement horizontal à 320 / 390 / 412 / 1280 px,
+0 anomalie de diaporama sur les 16 pages sujets.
 
-Les trois pages sont **générées**, jamais écrites à la main : voir
-`prof/pastilles/pages/generer_quart_heure.py`.
+Les pages sont **générées**, jamais écrites à la main : source de vérité dans
+`prof/pastilles/approfondissement/contenu/<code>.json`, générateur
+`prof/pastilles/approfondissement/generer_pages.py`, mode d'emploi
+`prof/pastilles/approfondissement/README.md`.
 
 Chaque application est un **fichier HTML autonome** : le style, le code, les images et même les
 données et les sons sont inclus dans le fichier. Aucune bibliothèque externe n'est téléchargée,
 donc aucune activité ne dépend d'un service tiers pour s'afficher. Seuls les liens vers les
 fiches, vidéos et quiz externes nécessitent une connexion, et uniquement si l'élève clique.
+
+---
+
+### Le chronomètre de classe
+
+Une page à part, **pour le professeur**, ouverte par le bouton **⏱ Chronomètre** en haut de
+l'accueil : `chronometre.html`. Elle ne sert qu'à une chose — afficher un compte à rebours en
+très gros sur le vidéoprojecteur. Adresse directe, à mettre en favori :
+<https://pierredupuy80-chef.github.io/Mandelatechno/chronometre.html>.
+
+- À l'écran, **uniquement les chiffres** : aucun titre, aucune consigne, aucune phrase. Les
+  commandes s'effacent d'elles-mêmes dès que le décompte tourne (elles reviennent au moindre
+  mouvement de souris ou au toucher).
+- **Réglages discrets** : l'engrenage en haut à droite ouvre des durées prêtes à l'emploi
+  (30 s, 1 à 60 min) et une durée libre en minutes/secondes. La dernière durée réglée et le
+  bip de fin sont mémorisés dans le navigateur.
+- **Commandes** : cliquer sur les chiffres ou la barre du bas met en marche / en pause ; la
+  remise à zéro rend la durée réglée ; le plein écran est prévu pour la projection. L'écran
+  est maintenu allumé pendant le décompte (Wake Lock) quand le navigateur le permet.
+- **Clavier** : `Espace` marche/pause, `R` remise à zéro, `F` plein écran, `S` réglages,
+  `Échap` ferme les réglages.
+- Fin de décompte : les chiffres passent au rouge et clignotent, trois bips retentissent
+  (désactivables).
+- **Sans dépendance** : un seul fichier HTML, aucune police ni image externe ; il fonctionne
+  hors connexion une fois chargé.
+- Vérifié dans Chrome à 320 / 390 / 412 / 1280 px et sur un écran de projection 1920 × 1080 :
+  aucun débordement, les chiffres occupent l'essentiel de l'écran.
+
+Le chronomètre n'est pas une activité : il est volontairement absent du registre des activités
+(`inventorier_activites.py`) et ne porte ni panneau de correction ni barre de progression, pour
+rester une page de projection propre.
 
 ---
 
@@ -216,6 +251,9 @@ servent de référence pour mesurer les gains.
   impression n'est proposé aux élèves : un élève qui revient refait l'exercice depuis le
   début, avec le même lien fourni par la messagerie.
 - Aucun cookie, aucun traceur, aucune mesure d'audience n'est utilisé.
+- Le **chronomètre de classe** ne mémorise dans le navigateur que la dernière durée réglée
+  et l'état du bip de fin (`localStorage`) ; aucune donnée personnelle, rien n'est envoyé sur
+  Internet.
 - Les liens vers les fiches, vidéos et quiz externes (Podeduc, Nuage, Google Forms) ne sont
   sollicités que si l'élève clique dessus ; ils nécessitent une connexion.
 

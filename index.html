@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Activités interactives de Technologie au collège (Mandelatechno) — utilisables sur ordinateur, tablette et téléphone, sans connexion.">
 <title>Technologie au collège — activités interactives</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%231e4e79'/%3E%3Cpath%20d='M8%2010h16M16%2010v13M10%2023h12'%20stroke='%23fff'%20stroke-width='3'%20stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
   :root{
     --bleu:#1e4e79;
@@ -35,6 +36,24 @@
   header .yeux{text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; font-weight:700; opacity:.85; margin:0 0 6px}
   header h1{margin:0 0 6px; font-size:clamp(1.35rem,4.8vw,1.85rem); line-height:1.2}
   header p{margin:0; opacity:.94; font-size:clamp(.92rem,3.4vw,1.02rem)}
+  /* Le chronomètre de classe : un outil du professeur, en haut de l'accueil.
+     Il ouvre la page de compte à rebours à projeter (page autonome, sans
+     explication). Discret, il ne prend pas la place des niveaux. */
+  header .entete-haut{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+  header .entete-haut .yeux{margin:0}
+  header .outil-prof{
+    display:inline-flex; align-items:center; gap:6px;
+    margin-left:auto;
+    min-height:40px; padding:7px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.14);
+    border:1.5px solid rgba(255,255,255,.55);
+    color:#fff; text-decoration:none;
+    font-weight:700; font-size:.86rem; letter-spacing:.02em;
+    -webkit-tap-highlight-color:transparent;
+  }
+  header .outil-prof:hover,
+  header .outil-prof:focus-visible{background:rgba(255,255,255,.26); border-color:#fff}
 
   /* Choix de la classe. La liste d'un niveau ne s'affiche que quand sa classe
      est choisie (ancrage #niveau-…). Un panneau d'accueil occupe l'espace
@@ -57,21 +76,29 @@
   }
   nav.sommaire a:hover{background:var(--bleuf); border-color:var(--bleu2)}
   nav.sommaire a.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
-  /* Le quart d'heure techno : même rang que les onglets de niveau, mais reconnaissable.
+  /* Approfondissement : même rang que les onglets de niveau, mais reconnaissable.
      C'est une ancre comme les autres : quand sa section est affichée, il passe
      en « actif » comme les trois niveaux. */
-  nav.sommaire a.lien-quart-heure{
+  nav.sommaire a.lien-approfondissement{
     background:var(--bleu); border-color:var(--bleu); color:#fff;
     flex:0 1 auto; padding:8px 16px;
   }
-  nav.sommaire a.lien-quart-heure:hover,
-  nav.sommaire a.lien-quart-heure:focus-visible{background:#173f63; border-color:#173f63}
-  nav.sommaire a.lien-quart-heure.actif{background:var(--bleu2); border-color:var(--bleu2)}
-  .accueil-intro .classes a.classe-quart-heure{
+  nav.sommaire a.lien-approfondissement:hover,
+  nav.sommaire a.lien-approfondissement:focus-visible{background:#173f63; border-color:#173f63}
+  nav.sommaire a.lien-approfondissement.actif{background:var(--bleu2); border-color:var(--bleu2)}
+  .accueil-intro .classes a.classe-approfondissement{
     background:#173f63; font-size:1rem;
     display:inline-flex; align-items:center; gap:6px;
   }
-  .accueil-intro .classes a.classe-quart-heure:hover{background:var(--bleu)}
+  .accueil-intro .classes a.classe-approfondissement:hover{background:var(--bleu)}
+
+  /* En 320 px, « Approfondissement » ne tient plus à côté des trois niveaux :
+     on resserre les quatre onglets plutôt que de laisser la page déborder. */
+  @media (max-width:380px){
+    nav.sommaire{padding:8px 6px; gap:4px}
+    nav.sommaire a{font-size:.84rem; padding:8px 5px; min-width:44px}
+    nav.sommaire a.lien-approfondissement{font-size:.84rem; padding:8px 8px}
+  }
 
   main{max-width:960px; margin:0 auto; padding:18px 14px 40px}
 
@@ -199,7 +226,10 @@
 
 <header>
   <div class="contenu">
-    <p class="yeux">Mandelatechno · cycle 4</p>
+    <div class="entete-haut">
+      <p class="yeux">Mandelatechno · cycle 4</p>
+      <a class="outil-prof" href="chronometre.html"><span aria-hidden="true">⏱</span> Chronomètre</a>
+    </div>
     <h1>Technologie au collège</h1>
     <p>Activités interactives — à faire en classe ou à la maison</p>
   </div>
@@ -209,7 +239,7 @@
   <a href="#niveau-3e">3<sup>e</sup></a>
   <a href="#niveau-4e">4<sup>e</sup></a>
   <a href="#niveau-5e">5<sup>e</sup></a>
-  <a href="#quart-d-heure" class="lien-quart-heure">⚡ Quart d'heure</a>
+  <a href="#approfondissement" class="lien-approfondissement">🔎 Approfondissement</a>
 </nav>
 
 <main>
@@ -223,7 +253,7 @@
       <a href="#niveau-3e">3<sup>e</sup></a>
       <a href="#niveau-4e">4<sup>e</sup></a>
       <a href="#niveau-5e">5<sup>e</sup></a>
-      <a href="#quart-d-heure" class="classe-quart-heure">⚡ Quart d'heure</a>
+      <a href="#approfondissement" class="classe-approfondissement">🔎 Approfondissement</a>
     </div>
   </div>
 
@@ -650,41 +680,49 @@
   Les activités fonctionnent ensuite sans connexion.
 </section>
 
-<!-- ==================== Le quart d'heure techno ==================== -->
-<section class="niveau" id="quart-d-heure">
-  <h2>⚡ Le quart d'heure techno</h2>
+<!-- ==================== Approfondissement ==================== -->
+<section class="niveau" id="approfondissement">
+  <h2>🔎 Approfondissement</h2>
 
   <div class="sequence">
-    <h3>Des pastilles de 8 à 15 minutes, rangées par niveau</h3>
-    <p class="resume">Un schéma à compléter au tableau, un déroulé minuté, une question de sortie</p>
+    <h3>Deux présentations de 4 diapos et deux ateliers par sujet — 20 minutes de propos</h3>
+    <p class="resume">On projette, on raconte, puis un élève complète un tableau ou un schéma au tableau</p>
     <div class="cartes">
 
       <article class="carte">
-        <h4>⚡ Le quart d'heure techno 4<sup>e</sup></h4>
-        <p>Huit pastilles autour de la domotique et du drone&nbsp;: ce que coûte un degré de
-           chauffage, ce qu'une ampoule connectée retient de vous, par où passe la chaleur,
-           pourquoi un drone vole, l'algorithme du retour maison.</p>
-        <span class="niveaux">8 pastilles · 8 à 15 min</span>
-        <a class="ouvrir" href="4e/quart-d-heure/index.html">Ouvrir le quart d'heure techno 4<sup>e</sup></a>
+        <h4>🏠 Domotique — 4<sup>e</sup></h4>
+        <p>Quatre sujets autour de la maison connectée&nbsp;: ce que coûte un degré de
+           chauffage, ce qu'une ampoule connectée retient de vous, par où passe la
+           chaleur, et ce qu'un détecteur de chute surveille sans le dire.</p>
+        <span class="niveaux">4 sujets · 20 min chacun</span>
+        <a class="ouvrir" href="4e/approfondissement-domotique/index.html">Ouvrir les approfondissements de domotique</a>
       </article>
 
       <article class="carte">
-        <h4>⚡ Le quart d'heure techno 5<sup>e</sup></h4>
-        <p>Quatre pastilles sur le réseau informatique&nbsp;: ce que contient vraiment la box,
-           la différence entre l'adresse MAC et l'adresse IP (et le DHCP), la table de routage
-           qui dit à la box par où envoyer chaque paquet, et le chemin d'un fichier dans une
-           arborescence.</p>
-        <span class="niveaux">4 pastilles · 15 min</span>
-        <a class="ouvrir" href="5e/quart-d-heure/index.html">Ouvrir le quart d'heure techno 5<sup>e</sup></a>
+        <h4>🚁 Drone — 4<sup>e</sup></h4>
+        <p>Quatre sujets pour comprendre le vol&nbsp;: la portance, les hélices
+           contrarotatives, l'algorithme du retour maison, et l'énergie contenue dans
+           un kilo de batterie face à un kilo d'essence.</p>
+        <span class="niveaux">4 sujets · 20 min chacun</span>
+        <a class="ouvrir" href="4e/approfondissement-drone/index.html">Ouvrir les approfondissements du drone</a>
       </article>
 
       <article class="carte">
-        <h4>⚡ Le quart d'heure techno 3<sup>e</sup></h4>
-        <p>Quatre pastilles sur le VAE et la trottinette&nbsp;: la frontière légale des
-           25&nbsp;km/h, la différence entre un Wh et un W, ce que note vraiment l'indice de
-           réparabilité, et les données que laisse un trajet.</p>
-        <span class="niveaux">4 pastilles · 8 à 15 min</span>
-        <a class="ouvrir" href="3e/quart-d-heure/index.html">Ouvrir le quart d'heure techno 3<sup>e</sup></a>
+        <h4>🌐 Réseau informatique — 5<sup>e</sup></h4>
+        <p>Quatre sujets sur le réseau local&nbsp;: les six métiers de la box, la
+           différence entre l'adresse MAC et l'adresse IP (et le DHCP), la table de
+           routage, et le chemin d'un fichier dans une arborescence.</p>
+        <span class="niveaux">4 sujets · 20 min chacun</span>
+        <a class="ouvrir" href="5e/approfondissement-reseau/index.html">Ouvrir les approfondissements du réseau</a>
+      </article>
+
+      <article class="carte">
+        <h4>🚲 VAE et trottinette — 3<sup>e</sup></h4>
+        <p>Quatre sujets sur l'objet technique&nbsp;: la différence entre un Wh et un W,
+           ce que note vraiment l'indice de réparabilité, le capteur de couple, et les
+           données que laisse un trajet de location.</p>
+        <span class="niveaux">4 sujets · 20 min chacun</span>
+        <a class="ouvrir" href="3e/approfondissement-vae/index.html">Ouvrir les approfondissements du VAE</a>
       </article>
 
     </div>
@@ -710,7 +748,11 @@
     var intro = document.getElementById('accueil-intro');
 
     function maj() {
-      var cible = document.querySelector('.niveau:target');
+      // On lit l'ancre plutôt que :target : certains navigateurs headless ne
+      // l'appliquent pas au chargement, et l'ancre marche partout.
+      var h = (location.hash || '').replace('#', '');
+      var cible = h ? document.getElementById(h) : null;
+      if (cible && !cible.classList.contains('niveau')) { cible = null; }
       var id = cible ? '#' + cible.id : null;
       onglets.forEach(function (a) {
         var actif = id !== null && a.getAttribute('href') === id;

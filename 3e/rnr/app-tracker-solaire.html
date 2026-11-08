@@ -383,6 +383,19 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 }
 </style>
 <!-- RETOUR-ACCUEIL-CSS:FIN -->
+<style>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication » : l'explication
+   n'est plus imposée, et la bonne réponse n'est jamais désignée. Une seule
+   définition pour tout le site — ne pas éditer ici. */
+details.explication-masquee{margin-top:6px}
+details.explication-masquee summary{cursor:pointer;font-weight:bold;min-height:44px;
+  display:flex;align-items:center;gap:6px;color:inherit;text-decoration:underline;
+  text-underline-offset:2px}
+details.explication-masquee summary:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+details.explication-masquee .explication{display:block;margin-top:6px;padding-top:6px;
+  border-top:1px solid currentColor;font-weight:normal;line-height:1.5}
+/* EXPLICATION-MASQUEE:FIN */
+</style>
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -1105,9 +1118,10 @@ function checkQCM(id, correct) {
     fb.textContent = '✅ Bonne réponse !';
     if (!STATE.quizDone[id]) { STATE.quizScore++; STATE.quizDone[id] = true; }
   } else {
+    // On ne montre QUE la mauvaise réponse : la bonne n'est jamais désignée,
+    // et la question reste ouverte — l'élève réessaie.
     fb.className = 'quiz-feedback wrong';
-    fb.textContent = '❌ Incorrect. La bonne réponse était mise en évidence.';
-    if (!STATE.quizDone[id]) { STATE.quizDone[id] = true; }
+    fb.textContent = "❌ Réponse fausse : cherche pourquoi, puis choisis une autre réponse et vérifie à nouveau.";
   }
   updateQuizProgress();
 }
@@ -2917,5 +2931,18 @@ if (document.readyState === 'loading') {
   })();
 </script>
 <!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+<script>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication ». Le texte vient des
+   données de la page (aucune réponse n'y est ajoutée). Une seule définition
+   pour tout le site — ne pas éditer ici. */
+function voletExplication(html) {
+  if (!html) return '';
+  return '<details class="explication-masquee">' +
+         '<summary>Voir l’explication</summary>' +
+         '<span class="explication"><strong>Explication :</strong> ' + html + '</span>' +
+         '</details>';
+}
+/* EXPLICATION-MASQUEE:FIN */
+</script>
 </body>
 </html>

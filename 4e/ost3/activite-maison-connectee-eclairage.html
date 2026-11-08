@@ -510,7 +510,15 @@
         details.explication-masquee summary {
             cursor: pointer;
             font-weight: 600;
-            color: var(--couleur-primaire);
+            /* Couleur du texte, pas la primaire : posée sur le fond rouge du
+               retour faux (#fee2e2), la primaire ne donne que 4,23:1 — sous le
+               seuil AA de 4,5:1 que mesure verifier_mode_sombre.py. La couleur
+               du texte monte à 12:1, en clair comme en sombre, et le
+               soulignement garde l'affordance du volet. */
+            color: var(--couleur-texte);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
             min-height: var(--hauteur-cible-min);
             display: flex;
             align-items: center;
@@ -1061,6 +1069,19 @@
             margin-bottom: var(--espacement-sm);
             font-weight: 700;
             color: #1a4f7a;
+        }
+
+        /* Mesure NEUTRE d'une étape de choix libre : le coût du système retenu,
+           le nombre de constituants… Ce n'est pas un verdict — seulement de
+           quoi décider — donc aucune couleur de réussite ou d'échec. La couleur
+           du texte est héritée : elle suit le mode sombre sans réglage. */
+        .etape-selection-indicateur {
+            margin: var(--espacement-sm) 0 var(--espacement-md) 0;
+            font-weight: 700;
+        }
+
+        .etape-selection-indicateur:empty {
+            display: none;
         }
 
         .choix-contraintes {
@@ -6208,7 +6229,7 @@
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
                     <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>Votre démarche de conception est libre : plusieurs systèmes se défendent, et c'est votre justification qui compte. Le classement des contraintes est un choix, pas une réponse juste ; le choix des constituants et le schéma de fonctionnement, eux, se vérifient : chaque fonction doit recevoir le constituant qui la réalise.</p>
+                    <p>Votre démarche de conception est libre : plusieurs systèmes se défendent, et c'est votre justification qui compte. Aucun choix de cet onglet n'est juste ou faux — ni votre classement des contraintes, ni les constituants que vous retenez, ni la façon dont vous les branchez. Ce qui est attendu, c'est une solution personnelle, construite, et les raisons de vos choix.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
@@ -6306,170 +6327,138 @@
                         </div>
                     </div>
                     <div class="etape-conception" id="etape-selection-3">
-                        <h4>Étape 3 : Choisir les constituants du système</h4>
-                        <p>Retenez exactement quatre constituants qui, ensemble, permettent d'atteindre −35 % sur la facture sans descendre sous 500 lux. Chaque proposition annonce son prix, sa performance et sa durée de vie : appuyez-vous dessus, puis vérifiez votre choix.</p>
-                            <p class="note-liberte">Un constituant compte s'il est indispensable à une fonction du système : sans lui, l'une des fonctions n'est plus assurée. Un constituant qui n'en assure aucune ne compte pas.</p>
-                        <div class="etape-selection" data-conception-selection data-maximum="4" data-conception-consigne="Choisis exactement 4 proposition(s) dans l'étape « Choisir les constituants du système », puis clique sur « Vérifier mes quatre constituants ».">
-                            <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 4</p>
-                            <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
+                        <h4>Étape 3 : Composer le système de l'éclairage</h4>
+                        <p>Retenez les constituants que votre système utilisera. Il n'y a pas de liste attendue : deux systèmes différents peuvent tenir le même −35 %. Chaque proposition dit ce qu'elle fait et ce qu'elle coûte, et le coût de votre composition s'affiche au fur et à mesure, à comparer au budget voté.</p>
+                        <p class="note-liberte">Ces constituants sont ceux que vous branchez à l'étape 4 : retenez ce que vous êtes prêt à justifier à l'étape 5. Le choix n'est pas corrigé — il est enregistré, et c'est votre justification qui le rend solide ou non.</p>
+                        <p class="etape-consigne-usage">Touchez les constituants que vous retenez : il en faut au moins 3 et au plus 6. Ce choix n'est ni juste ni faux : il engage votre système et sera justifié à la dernière étape.</p>
+                        <div class="etape-selection" data-conception-selection data-libre="1" data-minimum="3" data-maximum="6" data-libelle-choix="constituant" data-gabarit-indicateur="Coût de votre composition : {total} € par salle, soit {general} € pour les 22 salles — budget voté : {budget} €. {retenus} constituant(s) retenu(s)." data-facteur="22.0" data-budget="18000.0" data-conception-consigne="Termine l'étape « Composer le système de l'éclairage » : retiens tes constituants, puis clique sur « Enregistrer mes constituants ».">
+                            <ul class="choix-contraintes" role="group" aria-label="Constituants du système d'éclairage — propositions à retenir">
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Pour le même éclairement, elle consomme environ trente fois plus qu'une LED : l'installer fait monter la facture au lieu de la réduire." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🔥</span>
-                                        <span class="choix-texte">Lampe halogène 300 W — 4 €, 3 000 heures</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Il applique la consigne en modulant la puissance envoyée aux lampes : c'est cette baisse de puissance qui produit l'économie, pas le seul allumage." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cout="60.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">🎚</span>
-                                        <span class="choix-texte">Variateur de puissance — 60 €, règle de 5 % à 100 %, 12 ans</span>
+                                        <span class="choix-texte">Variateur de puissance — 60 € · dose la puissance envoyée aux lampes</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
-                                        <p class="choix-explication cache"></p>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Il fonctionne déjà, et il n'apporte aucune économie : les utilisateurs ne l'actionnent pas en sortant, c'est précisément le gaspillage constaté." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🖐</span>
-                                        <span class="choix-texte">Interrupteur manuel — 8 €, déjà installé dans chaque salle</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Il allume à heure fixe, que la salle soit occupée ou non : c'est exactement la cause du gaspillage identifiée au niveau 3 (éclairage inutile la nuit)." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">⏰</span>
-                                        <span class="choix-texte">Programmateur horaire mécanique — 25 €, 5 000 heures</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Les LED convertissent environ cinq fois mieux l'électricité en lumière que les halogènes : changer la technologie de la source est le premier levier d'économie." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cout="180.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">💡</span>
-                                        <span class="choix-texte">Lampes LED — 18 €, 9 W pour environ 800 lumens, 25 000 heures</span>
+                                        <span class="choix-texte">Lampes LED, dix luminaires — 180 € · 9 W et 800 lm chacune, 25 000 heures</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
-                                        <p class="choix-explication cache"></p>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="Il évite d'éclairer quand la lumière du jour suffit déjà : sans lui, le système ne sait pas à quel moment baisser la puissance." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🌗</span>
-                                        <span class="choix-texte">Capteur de luminosité (photorésistance) — 12 €, mesure de 0 à 2 000 lux, 8 ans</span>
+                                        <button type="button" class="choix-contrainte" data-cout="45.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🧠</span>
+                                        <span class="choix-texte">Contrôleur (microcontrôleur) — 45 € · décide à partir des mesures des capteurs</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
-                                        <p class="choix-explication cache"></p>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Il relève de la sécurité incendie, pas de l'éclairage : il ne commande aucune lampe." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-icone" aria-hidden="true">🚨</span>
-                                        <span class="choix-texte">Détecteur de fumée — 20 €, 10 ans</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est lui qui éteint une salle vide : une part importante des heures d'éclairage actuelles se fait sans personne, et aucun autre constituant ne récupère ces heures." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cout="35.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">👣</span>
-                                        <span class="choix-texte">Capteur de présence infrarouge — 35 €, détecte à 6 m, durée de vie 10 ans</span>
+                                        <span class="choix-texte">Capteur de présence infrarouge — 35 € · éteint la salle quand personne n'y est</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
-                                        <p class="choix-explication cache"></p>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="Il produit de l'électricité mais ne réduit pas la consommation de l'éclairage : à 450 € l'unité, équiper les 22 salles coûterait 9 900 €, plus de la moitié du budget, sans rendre l'éclairage plus économe." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cout="1200.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">☀️</span>
-                                        <span class="choix-texte">Panneau solaire 300 Wc — 450 € l'unité, 25 ans</span>
+                                        <span class="choix-texte">Panneau solaire 300 Wc — 1 200 € posé · produit de l'électricité</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
-                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-cout="25.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">⏰</span>
+                                        <span class="choix-texte">Programmateur horaire — 25 € · allume à heure fixe, occupants ou non</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-cout="30.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">📶</span>
+                                        <span class="choix-texte">Liaison filaire ou module radio — 30 € · transporte les ordres du contrôleur</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-cout="0.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔌</span>
+                                        <span class="choix-texte">Alimentation 230 V — déjà présente · fournit l'énergie au système</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-cout="12.0" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🌗</span>
+                                        <span class="choix-texte">Capteur de luminosité — 12 € · mesure la lumière du jour qui entre</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
                                     </li>
                             </ul>
-                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Vérifier mes quatre constituants</button>
+                            <p class="etape-selection-indicateur" role="status" aria-live="polite"></p>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Enregistrer mes constituants</button>
                             <p class="etape-selection-retour" role="status" aria-live="polite"></p>
-                            <p class="etape-selection-explication cache">Les quatre constituants retenus forment le système : les capteurs disent quand éclairer et combien, le contrôleur décide, le variateur dose la puissance, les LED produisent la lumière au meilleur rendement. Retirer l'un d'eux, c'est perdre la fonction qu'il assure : sans capteur de présence, la salle vide reste éclairée ; sans capteur de luminosité, on éclaire à pleine puissance en plein jour ; sans variateur, la puissance ne peut pas baisser ; sans LED, chaque lumen coûte cinq fois plus d'électricité. Les autres propositions ne réduisent pas la consommation d'éclairage : l'interrupteur manuel existe déjà et n'est pas utilisé en sortant, l'halogène consomme trente fois plus, le programmateur allume à heure fixe même quand la salle est vide, le panneau solaire produit de l'électricité sans réduire la consommation, et le détecteur de fumée relève de la sécurité incendie.</p>
                         </div>
                     </div>
-                    <div class="etape-conception" id="etape-schema-4">
-                        <h4>Étape 4 : Réaliser le schéma de fonctionnement</h4>
-                        <p>Complétez le schéma de fonctionnement du système retenu : placez chaque constituant dans la fonction qu'il réalise. Un constituant reste dans la réserve — le schéma n'en utilise que six.</p>
-                        <p class="note-liberte">Deux gestes : touchez un constituant dans la réserve, puis la fonction du schéma où il intervient. Pour reprendre un constituant déjà posé, touchez son emplacement.</p>
-                        <div class="etape-schema" data-conception-etape data-schema-etape data-termine="0" data-conception-consigne="Complète et vérifie le schéma de l'étape « Réaliser le schéma de fonctionnement » : chaque fonction doit recevoir son constituant avant de finaliser.">
-                            <p class="etape-consigne-usage">Touche un constituant de la réserve, puis la fonction du schéma où il intervient. Touche un emplacement déjà rempli pour reprendre son constituant.</p>
-                            <h5 class="etape-reserve-titre">Les constituants à placer</h5>
-                            <div class="etape-reserve" role="group" aria-label="Constituants à placer — Réaliser le schéma de fonctionnement">
-                                <button type="button" class="etape-piece" data-piece="alimentation" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">🔌</span><span class="etape-piece-texte">Alimentation 230 V</span>
-                                </button>
-                                <button type="button" class="etape-piece" data-piece="commande" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">📶</span><span class="etape-piece-texte">Liaison filaire ou module radio</span>
-                                </button>
-                                <button type="button" class="etape-piece" data-piece="interrupteur" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">🖐</span><span class="etape-piece-texte">Interrupteur manuel</span>
-                                </button>
-                                <button type="button" class="etape-piece" data-piece="variateur" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">🎚</span><span class="etape-piece-texte">Variateur de puissance</span>
-                                </button>
-                                <button type="button" class="etape-piece" data-piece="led" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">💡</span><span class="etape-piece-texte">Lampes LED</span>
-                                </button>
-                                <button type="button" class="etape-piece" data-piece="controleur" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">🧠</span><span class="etape-piece-texte">Contrôleur (microcontrôleur)</span>
-                                </button>
-                                <button type="button" class="etape-piece" data-piece="capteurs" aria-pressed="false" onclick="n4SchemaChoisir(this)"><span class="etape-icone" aria-hidden="true">🌗</span><span class="etape-piece-texte">Capteurs de présence et de luminosité</span>
-                                </button>
+                    <div class="etape-conception" id="etape-assemblage-4">
+                        <h4>Étape 4 : Assembler le schéma de votre système</h4>
+                        <p>Posez sur le fond blanc les constituants retenus à l'étape 3, puis reliez-les par des fils comme vous pensez que le système doit être branché. C'est votre schéma : aucun branchement n'est imposé, et il n'y a pas de schéma à retrouver. Il est complet quand vos constituants sont posés et qu'aucun n'est resté isolé.</p>
+                        <p class="note-liberte">Ceux que vous n'avez pas retenus peuvent rester dans la réserve. Si le schéma vous fait changer d'avis, revenez à l'étape 3 : l'accord entre votre choix et votre schéma fait partie de la justification attendue à l'étape 5.</p>
+                        <article class="cablage-n4" id="cablage-atelier" data-mode="assemblage" data-minimum-poses="3" data-minimum-fils="2" data-conception-consigne="Ton schéma de l'étape « Assembler le schéma de votre système » n'est pas encore complet : place tes constituants, relie-les, puis clique sur « Enregistrer mon schéma »." aria-label="Schéma de fonctionnement du système d'éclairage">
+                            <p class="cablage-consigne">Touchez un constituant de la réserve pour le poser ; touchez-en deux l'un après l'autre pour les relier par un fil ; touchez un fil pour le retirer.</p>
+                            <p class="cablage-aide">Pour déplacer un constituant posé, faites-le glisser. Au clavier : Entrée le pose ou le choisit, les flèches le déplacent.</p>
+                            <div class="cablage-reserve" id="cablage-reserve" role="group" aria-label="Constituants à placer">
+                            <button type="button" class="noeud-reseau" data-noeud="capteur-presence" data-type="constituant" data-nom="Capteur de présence" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">👣</span>
+                                <span class="noeud-nom">Capteur de présence</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="capteur-luminosite" data-type="constituant" data-nom="Capteur de luminosité" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🌗</span>
+                                <span class="noeud-nom">Capteur de luminosité</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="controleur" data-type="constituant" data-nom="Contrôleur (microcontrôleur)" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🧠</span>
+                                <span class="noeud-nom">Contrôleur (microcontrôleur)</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="liaison" data-type="constituant" data-nom="Liaison filaire ou radio" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">📶</span>
+                                <span class="noeud-nom">Liaison filaire ou radio</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="alimentation" data-type="constituant" data-nom="Alimentation 230 V" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🔌</span>
+                                <span class="noeud-nom">Alimentation 230 V</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="variateur" data-type="constituant" data-nom="Variateur de puissance" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">🎚</span>
+                                <span class="noeud-nom">Variateur de puissance</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="led" data-type="constituant" data-nom="Lampes LED" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">💡</span>
+                                <span class="noeud-nom">Lampes LED</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="programmateur" data-type="constituant" data-nom="Programmateur horaire" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">⏰</span>
+                                <span class="noeud-nom">Programmateur horaire</span>
+                            </button>
+                            <button type="button" class="noeud-reseau" data-noeud="panneau-solaire" data-type="constituant" data-nom="Panneau solaire 300 Wc" data-famille="" data-famille-nom="" aria-pressed="false" onclick="cablageChoisir(this)">
+                                <span class="noeud-icone" aria-hidden="true">☀️</span>
+                                <span class="noeud-nom">Panneau solaire 300 Wc</span>
+                            </button>
                             </div>
-                            <p class="etape-compteur" role="status" aria-live="polite">0 / 6 fonction(s) complétée(s)</p>
-                            <div class="etape-plateau" role="group" aria-label="Schéma de fonctionnement à compléter — Réaliser le schéma de fonctionnement">
-                            <div class="etape-chaine">
-                                <p class="etape-chaine-titre">Chaîne d'information</p>
-                                    <div class="etape-rangee">
-                                        <button type="button" class="etape-slot" data-slot="acquerir" data-attendu="capteurs" aria-label="Acquérir : emplacement vide" onclick="n4SchemaPoser(this)">
-                                            <span class="etape-slot-fonction">Acquérir</span>
-                                            <span class="etape-slot-piece vide">Choisir un constituant…</span>
-                                            <span class="etape-slot-aide">Mesurer la présence et la luminosité de la salle.</span>
-                                            <span class="etape-slot-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <span class="etape-fleche" aria-hidden="true">→</span>
-                                        <button type="button" class="etape-slot" data-slot="traiter" data-attendu="controleur" aria-label="Traiter : emplacement vide" onclick="n4SchemaPoser(this)">
-                                            <span class="etape-slot-fonction">Traiter</span>
-                                            <span class="etape-slot-piece vide">Choisir un constituant…</span>
-                                            <span class="etape-slot-aide">Comparer les mesures à la consigne : 500 lux, salle occupée.</span>
-                                            <span class="etape-slot-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <span class="etape-fleche" aria-hidden="true">→</span>
-                                        <button type="button" class="etape-slot" data-slot="communiquer" data-attendu="commande" aria-label="Communiquer : emplacement vide" onclick="n4SchemaPoser(this)">
-                                            <span class="etape-slot-fonction">Communiquer</span>
-                                            <span class="etape-slot-piece vide">Choisir un constituant…</span>
-                                            <span class="etape-slot-aide">Ce qui transporte l'ordre du contrôleur vers le variateur : un fil, ou une liaison radio.</span>
-                                            <span class="etape-slot-marque" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
+                            <div class="cablage-zone" id="cablage-zone" role="group" aria-label="Fond blanc du schéma : pose les constituants et relie-les par des fils">
+                                <svg class="cablage-fils" id="cablage-fils" role="group" aria-label="Fils du schéma" focusable="false"></svg>
+                                <p class="cablage-indication" id="cablage-indication">Posez vos constituants ici, puis touchez-en deux pour les relier par un fil.</p>
                             </div>
-                            <div class="etape-chaine">
-                                <p class="etape-chaine-titre">Chaîne d'énergie</p>
-                                    <div class="etape-rangee">
-                                        <button type="button" class="etape-slot" data-slot="alimenter" data-attendu="alimentation" aria-label="Alimenter : emplacement vide" onclick="n4SchemaPoser(this)">
-                                            <span class="etape-slot-fonction">Alimenter</span>
-                                            <span class="etape-slot-piece vide">Choisir un constituant…</span>
-                                            <span class="etape-slot-aide">Fournir l'énergie électrique au système.</span>
-                                            <span class="etape-slot-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <span class="etape-fleche" aria-hidden="true">→</span>
-                                        <button type="button" class="etape-slot" data-slot="distribuer" data-attendu="variateur" aria-label="Distribuer : emplacement vide" onclick="n4SchemaPoser(this)">
-                                            <span class="etape-slot-fonction">Distribuer</span>
-                                            <span class="etape-slot-piece vide">Choisir un constituant…</span>
-                                            <span class="etape-slot-aide">Doser la puissance envoyée aux lampes.</span>
-                                            <span class="etape-slot-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <span class="etape-fleche" aria-hidden="true">→</span>
-                                        <button type="button" class="etape-slot" data-slot="convertir" data-attendu="led" aria-label="Convertir : emplacement vide" onclick="n4SchemaPoser(this)">
-                                            <span class="etape-slot-fonction">Convertir</span>
-                                            <span class="etape-slot-piece vide">Choisir un constituant…</span>
-                                            <span class="etape-slot-aide">Transformer l'énergie électrique en lumière.</span>
-                                            <span class="etape-slot-marque" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
+                            <div class="cablage-actions">
+                                <button type="button" class="bouton-action" onclick="cablageVerifier()">Enregistrer mon schéma</button>
+                                <button type="button" class="bouton-action secondaire" onclick="cablageEffacerFils()">Effacer tous les fils</button>
+                                <button type="button" class="bouton-action secondaire" onclick="cablageToutRanger()">Tout remettre dans la réserve</button>
                             </div>
-                            </div>
-                            <button type="button" class="bouton-action" onclick="n4SchemaVerifier(this)">Vérifier mon schéma</button>
-                            <p class="etape-retour" role="status" aria-live="polite"></p>
-                            <p class="etape-explication cache">Le schéma sépare deux chaînes. La chaîne d'information ACQUIERT (les capteurs mesurent la présence et la luminosité), TRAITE (le contrôleur compare ces mesures à la consigne : au moins 500 lux, et seulement si la salle est occupée) et COMMUNIQUE l'ordre. La chaîne d'énergie ALIMENTE (le réseau du collège fournit l'énergie), DISTRIBUE (le variateur dose la puissance demandée) et CONVERTIT (les LED transforment l'énergie électrique en lumière). C'est l'ordre reçu de la chaîne d'information qui règle la chaîne d'énergie : voilà pourquoi le système éclaire juste ce qu'il faut, et seulement quand il le faut. L'interrupteur manuel reste hors du schéma : l'automatisme remplace le geste humain, et c'est cet automatisme qui produit l'économie.</p>
-                        </div>
+                            <p class="cablage-retour" id="cablage-retour" role="status" aria-live="polite"></p>
+                            <div class="cablage-bilan cache" id="cablage-bilan" aria-live="polite"></div>
+                        </article>
                     </div>
                     <div class="etape-conception">
                         <h4>Étape 5 : Justifier le système retenu</h4>
@@ -6477,7 +6466,7 @@
                         <textarea id="solution-choisie"
                             data-conception-texte
                             data-min="100"
-                            placeholder="Mes deux contraintes prioritaires sont… Le schéma y répond parce que… En revanche, j'accepte de renoncer à…"
+                            placeholder="Mes deux contraintes prioritaires sont… Mon schéma y répond parce que… En revanche, j'accepte de renoncer à…"
                             aria-label="Justification du choix"></textarea>
                     </div>
                     <!-- ETAPES-CONCEPTION-N4 : FIN -->
@@ -8086,11 +8075,15 @@
             }
 
             // L'atelier de câblage, quand la configuration en déclare un, fait
-            // partie de la conception : un schéma faux ne peut pas être
-            // finalisé, sinon la règle pédagogique du niveau serait décorative.
+            // partie de la conception : un schéma faux — ou, en mode libre, un
+            // schéma inachevé — ne peut pas être finalisé, sinon la règle
+            // pédagogique du niveau serait décorative. La phrase de blocage est
+            // écrite à la génération : elle dit quoi faire dans les mots de
+            // l'atelier réel (réseau vérifié ou schéma personnel).
             const atelierCablage = cablageAtelier();
             if (atelierCablage && !CABLAGE.valide) {
-                alert('Le câblage du réseau n\'est pas encore validé : place tous les ' +
+                alert(atelierCablage.getAttribute('data-conception-consigne') ||
+                      'Le câblage du réseau n\'est pas encore validé : place tous les ' +
                       'équipements sur le fond blanc, relie-les, puis clique ' +
                       '« Vérifier le câblage ».');
                 atelierCablage.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -8144,15 +8137,73 @@
             return conteneur.querySelectorAll('.choix-contrainte[aria-pressed="true"]');
         }
 
+        // Une étape de choix peut être LIBRE (`data-libre="1"`) : l'élève retient
+        // ce qu'il veut, dans les bornes minimum/maximum, et l'étape est
+        // ENREGISTRÉE, jamais corrigée. C'est la règle du N4 : la conception est
+        // un parti pris, pas une réponse juste. Aucune proposition n'est alors
+        // marquée, et aucune explication de « bonne » réponse n'existe.
+        function n4SelectionEstLibre(conteneur) {
+            return !!conteneur && conteneur.getAttribute('data-libre') === '1';
+        }
+
+        // Mesure NEUTRE affichée sous une étape libre (coût du système retenu,
+        // par exemple). Elle est recalculée à chaque clic : c'est l'information
+        // qui permet de décider, pas un verdict sur ce qui a été décidé. Le
+        // gabarit vient de la configuration ({total}, {retenus}, {general},
+        // {budget}) ; sans indicateur déclaré, la zone n'existe pas.
+        function n4MajIndicateurSelection(conteneur) {
+            const zone = conteneur.querySelector('.etape-selection-indicateur');
+            const gabarit = conteneur.getAttribute('data-gabarit-indicateur');
+            if (!zone || !gabarit) return;
+            let total = 0;
+            let nombre = 0;
+            n4SelectionRetenues(conteneur).forEach(function (choix) {
+                const cout = parseFloat(choix.getAttribute('data-cout'));
+                if (!isNaN(cout)) { total += cout; nombre += 1; }
+            });
+            const facteur = parseFloat(conteneur.getAttribute('data-facteur') || '0');
+            const budget = parseFloat(conteneur.getAttribute('data-budget') || '0');
+            const formater = function (valeur) {
+                return String(Math.round(valeur)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            };
+            zone.textContent = gabarit
+                .split('{total}').join(formater(total))
+                .split('{retenus}').join(String(nombre))
+                .split('{general}').join(formater(facteur ? total * facteur : 0))
+                .split('{budget}').join(formater(budget));
+        }
+
         function n4CompterSelection(conteneur) {
             const retenues = n4SelectionRetenues(conteneur).length;
             const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
             const compteur = conteneur.querySelector('.compteur-selection');
             if (compteur) {
-                compteur.textContent = retenues + ' proposition' + (retenues > 1 ? 's' : '') +
-                    ' retenue' + (retenues > 1 ? 's' : '') + ' sur ' + maximum;
+                if (n4SelectionEstLibre(conteneur)) {
+                    const minimum = parseInt(conteneur.getAttribute('data-minimum') || '0', 10);
+                    const bornes = [];
+                    if (minimum) bornes.push('au moins ' + minimum);
+                    if (maximum) bornes.push('au plus ' + maximum);
+                    compteur.textContent = retenues + ' proposition' +
+                        (retenues > 1 ? 's' : '') + ' retenue' + (retenues > 1 ? 's' : '') +
+                        (bornes.length ? ' (' + bornes.join(', ') + ')' : '');
+                } else {
+                    compteur.textContent = retenues + ' proposition' +
+                        (retenues > 1 ? 's' : '') + ' retenue' + (retenues > 1 ? 's' : '') +
+                        ' sur ' + maximum;
+                }
             }
+            n4MajIndicateurSelection(conteneur);
             return retenues;
+        }
+
+        // Au chargement, la mesure neutre d'une étape libre s'affiche déjà —
+        // avec le total de départ, qui n'est pas un reproche : c'est le point
+        // de comparaison à partir duquel l'élève va décider.
+        function n4InitialiserIndicateursSelection() {
+            document.querySelectorAll('#contenu-n4-probleme [data-gabarit-indicateur]')
+                .forEach(function (conteneur) {
+                    n4CompterSelection(conteneur);
+                });
         }
 
         function n4RetourSelection(conteneur, message, type) {
@@ -8214,6 +8265,10 @@
         function n4VerifierSelection(bouton) {
             const conteneur = bouton.closest('[data-conception-selection]');
             if (!conteneur) return;
+            if (n4SelectionEstLibre(conteneur)) {
+                n4EnregistrerSelectionLibre(conteneur);
+                return;
+            }
             const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
             const retenues = n4CompterSelection(conteneur);
 
@@ -8276,6 +8331,42 @@
                 ' point(s) à corriger : ' + aRetirer + ' proposition' +
                 (aRetirer > 1 ? 's' : '') + ' à retirer et ' + manquantes +
                 ' à retrouver. Lis l\'explication sous chaque proposition.', 'echec');
+        }
+
+        // Enregistrement d'une étape de choix LIBRE : aucun verdict, aucune
+        // marque sur les propositions, aucune explication de « bonne » réponse.
+        // Le moteur contrôle seulement que le choix tient dans les bornes — en
+        // dessous, il n'y aurait rien à justifier à l'étape suivante — puis il
+        // retient le choix, comme le classement retient un ordre. Le message le
+        // dit explicitement à l'élève : son choix n'est ni juste ni faux.
+        function n4EnregistrerSelectionLibre(conteneur) {
+            const retenues = n4CompterSelection(conteneur);
+            const minimum = parseInt(conteneur.getAttribute('data-minimum') || '0', 10);
+            const maximum = parseInt(conteneur.getAttribute('data-maximum') || '0', 10);
+            const libelle = conteneur.getAttribute('data-libelle-choix') || 'proposition';
+            if (minimum && retenues < minimum) {
+                conteneur.removeAttribute('data-termine');
+                n4RetourSelection(conteneur, 'Retenez au moins ' + minimum + ' ' +
+                    libelle + '(s) : un système n\'existe pas avec ' + retenues + '.', '');
+                return;
+            }
+            if (maximum && retenues > maximum) {
+                conteneur.removeAttribute('data-termine');
+                n4RetourSelection(conteneur, 'Retenez au plus ' + maximum + ' ' + libelle +
+                    '(s) pour rester dans le budget de l\'étude : vous en avez ' +
+                    retenues + '.', '');
+                return;
+            }
+            const noms = Array.prototype.slice.call(n4SelectionRetenues(conteneur))
+                .map(function (choix) {
+                    const texte = choix.querySelector('.choix-texte');
+                    return String(texte ? texte.textContent : '').trim().split(' —')[0];
+                });
+            conteneur.setAttribute('data-termine', '1');
+            n4RetourSelection(conteneur, 'Choix enregistré : ' + noms.join(', ') +
+                '. Ce choix n\'est ni juste ni faux : c\'est celui que vous justifierez à ' +
+                'la dernière étape. Pour le changer, touchez une proposition, puis ' +
+                'enregistrez de nouveau.', '');
         }
 
         // ============================================
@@ -9568,6 +9659,7 @@
             // n'en déclare pas.
             n4InitialiserEtapesClassement();
             n4InitialiserEtapesSchema();
+            n4InitialiserIndicateursSelection();
 
             // Simulateur de réglages du N3 (n3.simulateur) : ne fait rien si la
             // configuration n'a pas produit son bloc.
@@ -11244,24 +11336,41 @@
 
         // Première case libre d'une grille : poser un équipement au clic ou au
         // clavier doit donner un schéma lisible, sans superposition.
-        function cablagePositionLibre() {
+        // Première place LIBRE pour poser un constituant : il ne doit jamais
+        // recouvrir un constituant déjà posé — un recouvrement cache une cible
+        // tactile, et l'élève ne peut plus relier ce qu'il ne voit pas.
+        //
+        // La grille se règle sur la taille RÉELLE du constituant qu'on pose, et
+        // non sur une cellule fixe de 100 px : à 320 px de large, un nom long
+        // (« Contrôleur (microcontrôleur) ») dépasse la cellule, et deux voisins
+        // se chevauchaient — mesuré par verifier_cablage.py sur un atelier de
+        // neuf constituants. Chaque position candidate est donc confrontée aux
+        // rectangles réellement occupés.
+        function cablagePositionLibre(noeud) {
             const zone = cablageZone();
             if (!zone) return { x: 8, y: 8 };
-            const celluleLargeur = 100;
-            const celluleHauteur = 74;
             const marge = 8;
-            const colonnes = Math.max(1, Math.floor((zone.clientWidth - marge) / celluleLargeur));
-            const occupees = {};
-            cablageNoeuds().forEach(function (noeud) {
-                if (!cablageSurPlateau(noeud)) return;
-                const x = parseInt(noeud.style.left, 10) || 0;
-                const y = parseInt(noeud.style.top, 10) || 0;
-                occupees[Math.round(x / celluleLargeur) + ':' + Math.round(y / celluleHauteur)] = true;
+            const largeur = Math.max(60, noeud && noeud.offsetWidth ? noeud.offsetWidth : 96);
+            const hauteur = Math.max(44, noeud && noeud.offsetHeight ? noeud.offsetHeight : 62);
+            const occupes = cablageNoeuds().filter(cablageSurPlateau).map(function (pose) {
+                return {
+                    x: parseInt(pose.style.left, 10) || 0,
+                    y: parseInt(pose.style.top, 10) || 0,
+                    l: pose.offsetWidth,
+                    h: pose.offsetHeight
+                };
             });
-            for (let ligne = 0; ligne < 30; ligne += 1) {
+            const colonnes = Math.max(1, Math.floor((zone.clientWidth - marge) / (largeur + marge)));
+            const lignes = Math.max(1, Math.floor((zone.clientHeight - marge) / (hauteur + marge)));
+            for (let ligne = 0; ligne < lignes; ligne += 1) {
                 for (let colonne = 0; colonne < colonnes; colonne += 1) {
-                    if (occupees[colonne + ':' + ligne]) continue;
-                    return { x: marge + colonne * celluleLargeur, y: marge + ligne * celluleHauteur };
+                    const x = marge + colonne * (largeur + marge);
+                    const y = marge + ligne * (hauteur + marge);
+                    const libre = occupes.every(function (pose) {
+                        return x + largeur + 2 <= pose.x || pose.x + pose.l + 2 <= x ||
+                               y + hauteur + 2 <= pose.y || pose.y + pose.h + 2 <= y;
+                    });
+                    if (libre) return { x: x, y: y };
                 }
             }
             return { x: marge, y: marge };
@@ -11304,7 +11413,7 @@
             if (Date.now() - CABLAGE.finGlissement < 350) return;
 
             if (!cablageSurPlateau(noeud)) {
-                const libre = cablagePositionLibre();
+                const libre = cablagePositionLibre(noeud);
                 cablagePoserSurPlateau(noeud, libre.x, libre.y);
                 cablageRetour(cablageNom(noeud) + ' est posé sur le fond blanc. ' +
                     'Clique-le, puis clique l\'équipement à relier avec un fil.', 'info');
@@ -11595,11 +11704,114 @@
             conteneur.appendChild(liste);
         }
 
+        // ── Deux usages du même atelier ──────────────────────────────────────
+        // `data-mode="reseau"` (défaut) : le câblage est VÉRIFIÉ contre les
+        // règles du réseau — chaque salle son commutateur, le routeur seul vers
+        // Internet. C'est l'usage du n4.cablage.
+        //
+        // `data-mode="assemblage"` : le schéma est LIBRE (étape « assemblage »
+        // du N4). L'élève branche les constituants qu'il a retenus comme il
+        // l'entend ; le moteur ne compare rien à un attendu, ne dit jamais
+        // qu'un branchement est juste ou faux. Il constate seulement que le
+        // schéma est COMPLET : assez de constituants posés, aucun posé sans
+        // fil, assez de fils. C'est ce que la conception demande — un parti
+        // pris construit, puis justifié à l'étape suivante.
+        function cablageMode() {
+            const atelier = cablageAtelier();
+            return atelier ? (atelier.getAttribute('data-mode') || 'reseau') : 'reseau';
+        }
+
+        function cablageEnregistrer() {
+            const atelier = cablageAtelier();
+            if (!atelier) return;
+            const noeuds = cablageNoeuds();
+            const poses = noeuds.filter(cablageSurPlateau);
+            const restants = noeuds.filter(function (noeud) {
+                return !cablageSurPlateau(noeud);
+            });
+            const degre = {};
+            noeuds.forEach(function (noeud) {
+                degre[noeud.getAttribute('data-noeud')] = 0;
+            });
+            CABLAGE.fils.forEach(function (fil) {
+                if (degre[fil.a] !== undefined) degre[fil.a] += 1;
+                if (degre[fil.b] !== undefined) degre[fil.b] += 1;
+            });
+            const isoles = poses.filter(function (noeud) {
+                return !degre[noeud.getAttribute('data-noeud')];
+            });
+            const minimumPoses = parseInt(atelier.getAttribute('data-minimum-poses') || '2', 10);
+            const minimumFils = parseInt(atelier.getAttribute('data-minimum-fils') || '1', 10);
+
+            // Rien n'est comparé à un schéma attendu : on constate seulement que
+            // le travail est ALLÉ AU BOUT. Ce sont des manques, pas des fautes.
+            const manques = [];
+            if (poses.length < minimumPoses) {
+                manques.push('Placez au moins ' + minimumPoses + ' constituant(s) sur le ' +
+                    'fond blanc (' + poses.length + ' pour l\'instant).');
+            }
+            if (isoles.length) {
+                manques.push('Aucun fil ne part de : ' +
+                    isoles.map(cablageNom).join(', ') + '.');
+            }
+            if (CABLAGE.fils.length < minimumFils) {
+                manques.push('Tracez au moins ' + minimumFils + ' fil(s) entre les ' +
+                    'constituants de votre schéma.');
+            }
+            const complet = manques.length === 0;
+
+            const bilan = cablageBilan();
+            if (bilan) {
+                bilan.textContent = '';
+                // Ni « succes » ni « echec » : un schéma personnel n'est pas
+                // noté. La classe neutre est celle du bilan, sans couleur de
+                // verdict.
+                bilan.className = 'cablage-bilan';
+                const titre = document.createElement('p');
+                titre.textContent = complet
+                    ? 'Schéma enregistré : ' + poses.length + ' constituant(s) posé(s), ' +
+                      CABLAGE.fils.length + ' fil(s) tracé(s).'
+                    : 'Ton schéma n\'est pas encore complet : ' + manques.length +
+                      ' point(s) à terminer.';
+                bilan.appendChild(titre);
+                if (complet) {
+                    const rappel = document.createElement('p');
+                    rappel.textContent = 'Ce schéma est le vôtre : aucun branchement n\'est ' +
+                        'imposé, et il n\'est pas noté. C\'est à la dernière étape que vous ' +
+                        'expliquez en quoi il répond à vos contraintes.';
+                    bilan.appendChild(rappel);
+                    if (restants.length) {
+                        const note = document.createElement('p');
+                        note.textContent = 'Restent dans la réserve : ' +
+                            restants.map(cablageNom).join(', ') +
+                            ' — c\'est votre choix, aucun d\'eux n\'est exigé.';
+                        bilan.appendChild(note);
+                    }
+                } else {
+                    cablageAjouterListe(bilan, 'À terminer :', manques);
+                }
+            }
+
+            CABLAGE.valide = complet;
+            // Aucun fil n'est marqué « juste » : le schéma n'est pas corrigé.
+            CABLAGE.fils.forEach(function (fil) { fil.etat = ''; });
+            cablageTracerFils();
+            cablageRetour(complet
+                ? 'Schéma enregistré : vous pouvez finaliser votre conception.'
+                : 'Terminez les points ci-dessous, puis enregistrez de nouveau votre schéma.',
+                'info');
+        }
+
         // Vérification du câblage : on construit le graphe des fils et on
         // confronte chaque règle du cours, en expliquant chaque manquement.
         function cablageVerifier() {
             const atelier = cablageAtelier();
             if (!atelier) return;
+            // Schéma libre (étape « assemblage ») : on enregistre, on ne juge pas.
+            if (cablageMode() === 'assemblage') {
+                cablageEnregistrer();
+                return;
+            }
             const noeuds = cablageNoeuds();
             const parId = {};
             noeuds.forEach(function (noeud) { parId[noeud.getAttribute('data-noeud')] = noeud; });
@@ -15906,6 +16118,12 @@
                 }
                 var globale = conteneur.querySelector('.etape-selection-explication');
                 if (globale) globale.classList.toggle('cache', !!sauvegarde.globaleCache);
+                // Étape de choix LIBRE : la mesure neutre (coût du système…)
+                // n'est pas stockée, elle se recalcule depuis les propositions
+                // restaurées — la stocker ferait diverger le fichier et l'écran.
+                if (typeof n4MajIndicateurSelection === 'function') {
+                    n4MajIndicateurSelection(conteneur);
+                }
             });
     }
 

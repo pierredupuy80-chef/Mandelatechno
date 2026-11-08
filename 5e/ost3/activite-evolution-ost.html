@@ -496,6 +496,19 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 }
 </style>
 <!-- RETOUR-ACCUEIL-CSS:FIN -->
+<style>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication » : l'explication
+   n'est plus imposée, et la bonne réponse n'est jamais désignée. Une seule
+   définition pour tout le site — ne pas éditer ici. */
+details.explication-masquee{margin-top:6px}
+details.explication-masquee summary{cursor:pointer;font-weight:bold;min-height:44px;
+  display:flex;align-items:center;gap:6px;color:inherit;text-decoration:underline;
+  text-underline-offset:2px}
+details.explication-masquee summary:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+details.explication-masquee .explication{display:block;margin-top:6px;padding-top:6px;
+  border-top:1px solid currentColor;font-weight:normal;line-height:1.5}
+/* EXPLICATION-MASQUEE:FIN */
+</style>
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -919,28 +932,32 @@ function renderQuiz() {
 }
 
 function checkQuiz(qIndex, optIndex) {
+    // Seule une bonne réponse ferme la question : une erreur la laisse ouverte.
     if (state.quizAnswered.has(qIndex)) return;
-    state.quizAnswered.add(qIndex);
 
     const block = document.getElementById(`q-block-${qIndex}`);
     const buttons = block.querySelectorAll('.option-btn');
     const feedback = document.getElementById(`fb-${qIndex}`);
     const correct = quizData[qIndex].correct;
 
-    buttons.forEach((btn, idx) => {
-        btn.classList.add('disabled');
-        if (idx === correct) btn.classList.add('correct');
-        if (idx === optIndex && idx !== correct) btn.classList.add('wrong');
-    });
+    // Une nouvelle tentative efface la marque de la précédente.
+    buttons.forEach(btn => btn.classList.remove('wrong'));
 
     feedback.style.display = 'block';
     if (optIndex === correct) {
+        state.quizAnswered.add(qIndex);
+        buttons.forEach(btn => btn.classList.add('disabled'));
+        buttons[correct].classList.add('correct');
         state.scores.n1++;
         feedback.style.background = '#d4edda';
         feedback.innerHTML = `✅ Bravo ! ${quizData[qIndex].info}`;
     } else {
+        // On ne montre QUE la mauvaise réponse : la bonne n'est jamais
+        // désignée, et la question reste ouverte — l'élève réessaie.
+        buttons[optIndex].classList.add('wrong');
         feedback.style.background = '#f8d7da';
-        feedback.innerHTML = `❌ Incorrect. ${quizData[qIndex].info}`;
+        feedback.innerHTML = `❌ Réponse fausse : cherche pourquoi, puis essaie une autre proposition.` +
+            voletExplication(quizData[qIndex].info);
     }
     document.getElementById('quiz-score').textContent = state.scores.n1;
 }
@@ -2081,5 +2098,18 @@ if (document.readyState === 'loading') {
   })();
 </script>
 <!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+<script>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication ». Le texte vient des
+   données de la page (aucune réponse n'y est ajoutée). Une seule définition
+   pour tout le site — ne pas éditer ici. */
+function voletExplication(html) {
+  if (!html) return '';
+  return '<details class="explication-masquee">' +
+         '<summary>Voir l’explication</summary>' +
+         '<span class="explication"><strong>Explication :</strong> ' + html + '</span>' +
+         '</details>';
+}
+/* EXPLICATION-MASQUEE:FIN */
+</script>
 </body>
 </html>

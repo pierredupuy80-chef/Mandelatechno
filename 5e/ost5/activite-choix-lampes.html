@@ -318,6 +318,19 @@ body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline
 }
 </style>
 <!-- RETOUR-ACCUEIL-CSS:FIN -->
+<style>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication » : l'explication
+   n'est plus imposée, et la bonne réponse n'est jamais désignée. Une seule
+   définition pour tout le site — ne pas éditer ici. */
+details.explication-masquee{margin-top:6px}
+details.explication-masquee summary{cursor:pointer;font-weight:bold;min-height:44px;
+  display:flex;align-items:center;gap:6px;color:inherit;text-decoration:underline;
+  text-underline-offset:2px}
+details.explication-masquee summary:focus-visible{outline:3px solid currentColor;outline-offset:2px}
+details.explication-masquee .explication{display:block;margin-top:6px;padding-top:6px;
+  border-top:1px solid currentColor;font-weight:normal;line-height:1.5}
+/* EXPLICATION-MASQUEE:FIN */
+</style>
 </head>
 <!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
 <style>
@@ -720,15 +733,20 @@ let quizAnswered=0,quizCorrect=0;
 })();
 function checkQuiz(qi,chosen){
   const fb=document.getElementById(`qf${qi}`);
-  if(fb.classList.contains("correct")||fb.classList.contains("wrong")) return;
-  quizAnswered++;
-  if(chosen===QUIZ_DATA[qi].a){
+  // Seule une bonne réponse ferme la question : une erreur la laisse ouverte,
+  // sinon l'élève ne peut pas réfléchir à ce qu'il a raté.
+  if(fb.classList.contains("correct")) return;
+  const question=QUIZ_DATA[qi];
+  if(fb.dataset.tentee!=="1"){fb.dataset.tentee="1";quizAnswered++;}
+  if(chosen===question.a){
     quizCorrect++;
     fb.className="feedback correct";
-    fb.textContent="✅ Bravo ! "+QUIZ_DATA[qi].exp;
+    fb.innerHTML="✅ Bravo ! "+question.exp;
   }else{
+    // On ne montre QUE la mauvaise réponse : la bonne n'est jamais désignée.
     fb.className="feedback wrong";
-    fb.textContent="❌ Incorrect. "+QUIZ_DATA[qi].exp;
+    fb.innerHTML="❌ Réponse fausse : cherche pourquoi, puis essaie une autre proposition."+
+      voletExplication(question.exp);
   }
   document.getElementById("quizScore").textContent=`Score : ${quizCorrect} / ${QUIZ_DATA.length} (${Math.round(quizCorrect/QUIZ_DATA.length*100)}%)`;
 }
@@ -1782,5 +1800,18 @@ if (document.readyState === 'loading') {
   })();
 </script>
 <!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+<script>
+/* EXPLICATION-MASQUEE:DEBUT — volet « Voir l'explication ». Le texte vient des
+   données de la page (aucune réponse n'y est ajoutée). Une seule définition
+   pour tout le site — ne pas éditer ici. */
+function voletExplication(html) {
+  if (!html) return '';
+  return '<details class="explication-masquee">' +
+         '<summary>Voir l’explication</summary>' +
+         '<span class="explication"><strong>Explication :</strong> ' + html + '</span>' +
+         '</details>';
+}
+/* EXPLICATION-MASQUEE:FIN */
+</script>
 </body>
 </html>
