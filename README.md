@@ -10,7 +10,7 @@ utilisées sur ordinateur, tablette et téléphone.
 ## Ce que contient le dépôt
 
 ```
-index.html                          page d'accueil : les 54 pages d'activités, sommaire par niveau
+index.html                          page d'accueil : les 56 pages d'activités, sommaire par niveau
 chronometre.html                    Chronomètre de classe — page du professeur, compte à rebours à projeter
 4e/approfondissement-domotique/     Approfondissement 4e — 4 sujets (2 présentations + 2 ateliers chacun)
 4e/approfondissement-drone/         Approfondissement 4e — 4 sujets
@@ -28,6 +28,7 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/ost3/app-comparateur-ost.html    OST 3 — comparateur trottinette / VAE
 3e/ost3/activite-ost-ideal.html     OST 3 — la trottinette dans son environnement (jeu bonus)
 3e/ost3/jeu-trottinette.html        Bonus — « Le trajet du prof de techno »
+3e/sfc1/activite-fortnite-client-serveur.html  SFC 1 — le trajet d'un tir en jeu en ligne (sans quiz)
 3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
 3e/tp-ia/                           TP d'apprentissage IA
     tp-ia.html
@@ -37,6 +38,7 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/bonus-incident-ia/               Activité bonus — l'incident OpenAI / Hugging Face
     infographie-incident-ia.html    infographie à projeter et à commenter
     infographie-incident-ia.jpg     l'infographie (1536 × 1024, JPEG, 374 Ko)
+3e/ost13/activite-defi-chatgpt.html            Défi — l'IA générative, 5 défis (sans quiz)
 
 4e/ost1/activite-securite-donnees.html            Séquence 1 — sécurité des données
 4e/ost2/activite-evolution-drones.html            Séquence 2 — les drones
@@ -81,9 +83,9 @@ publication est leur propre chemin
 
 Les liens directs `#p1`, `#p2`, `#a1`, `#a2`, `#conduite` ouvrent l'onglet
 correspondant. Aucune ressource externe, aucun formulaire, aucun stockage ;
-cibles tactiles de 44 px. Mesuré le 2026-11-07 : **54/54 pages conformes**
+cibles tactiles de 44 px. Mesuré le 2026-11-07 : **54/54 pages alors en ligne**
 (`inventorier_activites.py`), **43 contrôles** du panneau de développement sur
-chacune des 54 pages, aucun débordement horizontal à 320 / 390 / 412 / 1280 px,
+chacune des pages alors en ligne, aucun débordement horizontal à 320 / 390 / 412 / 1280 px,
 0 anomalie de diaporama sur les 16 pages sujets.
 
 Les pages sont **générées**, jamais écrites à la main : source de vérité dans
