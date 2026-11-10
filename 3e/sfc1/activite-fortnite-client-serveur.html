@@ -6004,8 +6004,35 @@
         /* SAUVEGARDE:CSS-FIN */
 
     </style>
+    <!-- AMBIANCE:DEBUT (feuille d'ambiance injectée par personnaliser.py depuis
+         metadata.ambiance ; le bloc reste vide quand aucune ambiance n'est
+         demandée. Aucune image : uniquement des dégradés et motifs CSS.) -->
+    <style id="ambiance-activite">
+/* Ambiance « partie en ligne » — dégradés violet/cyan/orange et grille */
+body.ambiance-fortnite {
+    background:
+        radial-gradient(1200px 700px at 8% -10%, rgba(124, 58, 237, .20), transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, rgba(14, 165, 233, .16), transparent 55%),
+        radial-gradient(800px 500px at 50% 110%, rgba(245, 158, 11, .12), transparent 60%),
+        repeating-linear-gradient(115deg, rgba(15, 23, 42, .035) 0 2px, transparent 2px 24px),
+        var(--couleur-fond);
+    background-attachment: fixed;
+}
+body.ambiance-fortnite header {
+    background: linear-gradient(135deg, #4c1d95, #0e7490 55%, #b45309);
+}
+body.ambiance-fortnite header h1::before { content: "🎮 "; }
+html[data-theme="sombre"] body.ambiance-fortnite {
+    background:
+        radial-gradient(1100px 650px at 8% -10%, rgba(124, 58, 237, .28), transparent 60%),
+        radial-gradient(800px 500px at 100% 0%, rgba(14, 165, 233, .20), transparent 55%),
+        repeating-linear-gradient(115deg, rgba(255, 255, 255, .035) 0 2px, transparent 2px 24px),
+        #0b1120;
+}
+</style>
+    <!-- AMBIANCE:FIN -->
 </head>
-<body>
+<body class="ambiance-fortnite">
     <!-- Skip link pour accessibilité -->
     <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
@@ -6208,7 +6235,7 @@
                                 <dd>Il relie entre eux les appareils d'un même réseau local et aiguille les données vers le bon appareil, comme un standard téléphonique. Il ne relie pas à Internet.</dd>
                             </div>
                             <div class="glossaire-entree" data-ost-id="n1-glossaire-4">
-                                <dt>Routeur</dt>
+                                <dt>Routeur (modem routeur)</dt>
                                 <dd>Il relie le réseau local à Internet. Il choisit la route que prennent les données et émet souvent le Wi-Fi.</dd>
                             </div>
                             <div class="glossaire-entree" data-ost-id="n1-glossaire-5">
@@ -7199,68 +7226,44 @@ function animerRouteur(btn) {
                             <h3>📖 Les termes du jeu en ligne (N1 - Connaissance)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f1-p1">
                                     <strong>Poste client (terminal) :</strong>
-                                    <p>L'ordinateur (ou la tablette) utilisé par une personne : il demande des informations au réseau. « Client » = celui qui demande.</p>
+                                    <p>L'appareil qui demande et affiche : mon PC ou ma console.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f1-p2">
-                                    <strong>Serveur :</strong>
-                                    <p>Un ordinateur qui stocke et partage des données pour tous les utilisateurs du réseau (fichiers, comptes, site web). Il répond aux demandes.</p>
-                                </div>
-                                <div class="point-cle" data-ost-id="synthese-f1-p3">
-                                    <strong>Routeur :</strong>
-                                    <p>Il relie le réseau local à Internet. Il choisit la route que prennent les données et émet souvent le Wi-Fi.</p>
-                                </div>
-                                <div class="point-cle" data-ost-id="synthese-f1-p4">
-                                    <strong>Adresse IP :</strong>
-                                    <p>Numéro d'identification unique attribué à chaque appareil connecté à un réseau utilisant le protocole Internet (IP), composé de quatre séries de chiffres compris entre 0 et 255, séparés par des points (IPv4).</p>
-                                </div>
-                                <div class="point-cle" data-ost-id="synthese-f1-p5">
-                                    <strong>Débit :</strong>
-                                    <p>Quantité de données numériques transmise par une interface ou un support de communication sur une période de temps donnée ; il s'exprime en bits par seconde (bps, Mbps).</p>
+                                    <strong>Serveur de jeu :</strong>
+                                    <p>Il arbitre la partie et renvoie le même état à tous les clients.</p>
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f2">
-                            <h3>📖 Comment circule une action dans la partie (N2 - Compréhension)</h3>
+                            <h3>📖 Comment circule une action (N2 - Compréhension)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f2-p1">
                                     <strong>Le modèle client-serveur :</strong>
-                                    <p>Mon poste est un client : il envoie ses actions et affiche l'état reçu. Le serveur de jeu arbitre : il calcule l'état de la partie et le renvoie à tous les clients, qui reçoivent donc la même version.</p>
+                                    <p>Mon poste envoie ; le serveur arbitre et répond à tous.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f2-p2">
-                                    <strong>Le rôle du modem routeur (routeur) :</strong>
-                                    <p>Le modem routeur est le seul passage entre mon réseau local et Internet : tout ce qui sort du collège le traverse, et un échange interne au réseau local ne le traverse jamais.</p>
-                                </div>
-                                <div class="point-cle" data-ost-id="synthese-f2-p3">
-                                    <strong>Paquets et table de routage :</strong>
-                                    <p>Les données sont découpées en paquets qui portent l'adresse IP de destination ; chaque routeur consulte sa table de routage pour choisir le prochain saut, jusqu'à la destination finale.</p>
+                                    <strong>Le rôle du modem routeur :</strong>
+                                    <p>Seul passage entre le réseau local et Internet.</p>
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f3">
-                            <h3>📖 Diagnostiquer une partie qui se téléporte (N3 - Application)</h3>
+                            <h3>📖 Diagnostiquer une partie qui se téléporte (N3 - Analyse)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f3-p1">
-                                    <strong>Formuler des hypothèses :</strong>
-                                    <p>J'examine chaque élément du trajet et je cherche l'indice qui l'innocente ou qui l'accuse : poste client, liaison Wi-Fi ou Ethernet, modem routeur, serveur.</p>
+                                    <strong>Relier la cause à l'effet :</strong>
+                                    <p>Un réseau encombré retarde les paquets ; le serveur arbitre une action ancienne.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f3-p2">
-                                    <strong>Relier la cause à l'effet :</strong>
-                                    <p>Un débit faible ou un réseau encombré font arriver les paquets en retard ; le serveur arbitre une action déjà ancienne, et le personnage se téléporte à la position suivante.</p>
-                                </div>
-                                <div class="point-cle" data-ost-id="synthese-f3-p3">
                                     <strong>Proposer un dépannage :</strong>
-                                    <p>Je propose le câble Ethernet plutôt que le Wi-Fi, ou je libère la connexion et je me rapproche du modem routeur, puis je vérifie que le débit est revenu stable.</p>
+                                    <p>Je branche en câble Ethernet ou je libère la connexion, puis je vérifie.</p>
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f4">
                             <h3>📖 Choisir un équipement en équipe (N4 - Création)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f4-p1">
                                     <strong>Hiérarchiser avant de choisir :</strong>
-                                    <p>J'exprime le besoin, je classe les besoins concurrents du plus important au moins important, je fige mon classement et je l'argumente : deux équipes peuvent classer différemment.</p>
+                                    <p>Je classe les besoins, je fige mon ordre et je l'argumente.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f4-p2">
-                                    <strong>Comparer sans verdict automatique :</strong>
-                                    <p>Je compare les solutions sur des critères chiffrés (coût, débit, consommation électrique, sécurité des comptes) et je repère ce qu'une fiche ne dit pas dans ses chiffres.</p>
-                                </div>
-                                <div class="point-cle" data-ost-id="synthese-f4-p3">
                                     <strong>Assumer le compromis :</strong>
-                                    <p>Je retiens une solution, je cite au moins deux valeurs de sa fiche, je dis quel besoin a tranché et à quoi le collège renonce en la choisissant.</p>
+                                    <p>Je retiens une solution et je dis ce que le collège abandonne.</p>
                                 </div>
                         </div>
                     </div>
@@ -7405,6 +7408,10 @@ function animerRouteur(btn) {
         // reverrouiller une activité déjà générée avant la classe :
         //     python3 mode-developpement.py desactiver ACTIVITE.html
         const MODE_DEVELOPPEMENT = false;
+        // Onglets libres : tous les onglets sont accessibles dès le chargement,
+        // sans le panneau de correction du mode développement. Déclaré par
+        // `metadata.ongletsLibres` ; personnaliser.py remplace la valeur.
+        const ONGLETS_LIBRES = true;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -10552,6 +10559,16 @@ function animerRouteur(btn) {
         document.addEventListener('DOMContentLoaded', function() {
             mettreAJourProgression();
 
+            // Onglets libres : rendre tous les onglets cliquables dès l'arrivée,
+            // avant même le premier clic (le déverrouillage de `changerOnglet`
+            // ne s'exécute qu'au changement d'onglet).
+            if (ONGLETS_LIBRES) {
+                document.querySelectorAll('.bouton-onglet').forEach(function (bouton) {
+                    bouton.classList.remove('verrouille');
+                    bouton.disabled = false;
+                });
+            }
+
             // Options de quiz : clic (la surbrillance marque la sélection) et
             // clavier (Entrée / Espace), puisqu'il n'y a plus de bouton radio
             // natif pour assurer cette navigation.
@@ -10614,7 +10631,7 @@ function animerRouteur(btn) {
             // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
             // Si activé, déverrouille tous les onglets et boutons pour
             // permettre de tester librement (jeux bonus, navigation, etc.)
-            if (MODE_DEVELOPPEMENT) {
+            if (MODE_DEVELOPPEMENT || ONGLETS_LIBRES) {
                 const tousNiveaux = ['n1-intro', 'n1-quiz', 'n2-intro', 'n2-quiz',
                                      'n3-enigme', 'n4-probleme', 'synthese', 'bonus'];
                 tousNiveaux.forEach(niveauId => {
@@ -10629,7 +10646,9 @@ function animerRouteur(btn) {
                     bouton.classList.remove('verrouille');
                     bouton.disabled = false;
                 });
-                console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
+                console.log(ONGLETS_LIBRES
+                    ? '🔓 Onglets libres — tous les niveaux sont accessibles.'
+                    : '🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
             }
         });
 

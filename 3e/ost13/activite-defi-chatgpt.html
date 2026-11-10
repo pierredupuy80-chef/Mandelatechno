@@ -6004,8 +6004,33 @@
         /* SAUVEGARDE:CSS-FIN */
 
     </style>
+    <!-- AMBIANCE:DEBUT (feuille d'ambiance injectée par personnaliser.py depuis
+         metadata.ambiance ; le bloc reste vide quand aucune ambiance n'est
+         demandée. Aucune image : uniquement des dégradés et motifs CSS.) -->
+    <style id="ambiance-activite">
+/* Ambiance « réseau de neurones » — points lumineux et halos froids */
+body.ambiance-ia {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(37, 99, 235, .14) 0 1.6px, transparent 2.2px) 0 0 / 26px 26px,
+        radial-gradient(1000px 600px at 82% -10%, rgba(37, 99, 235, .16), transparent 60%),
+        radial-gradient(700px 500px at 10% 110%, rgba(124, 58, 237, .10), transparent 60%),
+        var(--couleur-fond);
+    background-attachment: fixed;
+}
+body.ambiance-ia header {
+    background: linear-gradient(135deg, #1e3a8a, #0e7490 60%, #6d28d9);
+}
+body.ambiance-ia header h1::before { content: "🤖 "; }
+html[data-theme="sombre"] body.ambiance-ia {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(34, 211, 238, .12) 0 1.5px, transparent 2.2px) 0 0 / 26px 26px,
+        radial-gradient(900px 550px at 82% -10%, rgba(30, 64, 175, .30), transparent 60%),
+        #070d1c;
+}
+</style>
+    <!-- AMBIANCE:FIN -->
 </head>
-<body>
+<body class="ambiance-ia">
     <!-- Skip link pour accessibilité -->
     <a href="#contenu-principal" class="skip-link">Aller au contenu principal</a>
 
@@ -6243,6 +6268,10 @@
                                 <dt>Empreinte carbone</dt>
                                 <dd>Quantité de gaz à effet de serre, exprimée en grammes de CO2 équivalent, émise par une activité — ici, faire fonctionner une IA. Le numérique représente environ 4 % des émissions mondiales (2020).</dd>
                             </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-13">
+                                <dt>Modem routeur (box)</dt>
+                                <dd>L'équipement qui relie le réseau local à Internet et choisit la route des paquets : au collège, c'est le modem routeur ; à la maison, la box.</dd>
+                            </div>
                         </dl>
                     </div>
 
@@ -6450,14 +6479,14 @@
                         </div>
                         <span class="aroute-fleche" aria-hidden="true">↓</span>
                         <div class="aroute-rangee">
-                            <div class="aroute-noeud aroute-frontiere-noeud" data-noeud="routeur" data-nom="La box du collège (le routeur)">
+                            <div class="aroute-noeud aroute-frontiere-noeud" data-noeud="routeur" data-nom="Le modem routeur du collège">
                                 <span class="aroute-icone" aria-hidden="true">📶</span>
-                                <strong>La box du collège (le routeur)</strong>
+                                <strong>Le modem routeur du collège</strong>
                                 <em>fait sortir du collège</em>
                                 <span class="aroute-paquet" aria-hidden="true">📦</span>
                             </div>
                         </div>
-                        <p class="aroute-frontiere">La box du collège est le routeur : c'est la seule porte vers Internet. Tout ce qui reste dans la salle — un document envoyé à l'imprimante, par exemple — ne la traverse pas.</p>
+                        <p class="aroute-frontiere">Le modem routeur du collège est la seule porte vers Internet. Tout ce qui reste dans la salle — un document envoyé à l'imprimante, par exemple — ne le traverse pas.</p>
                         <span class="aroute-fleche" aria-hidden="true">↓</span>
                         <div class="aroute-rangee">
                             <div class="aroute-noeud" data-noeud="internet" data-nom="Internet">
@@ -6514,7 +6543,7 @@ window.__EFFETS_INTERACTIONS__={};
 </script>
 
                     <script>
-window.__ANIMATION_ROUTEUR__ = {"scenarios": {"consigne-part": {"chemin": ["ordinateur", "routeur", "internet", "serveurs"], "etapes": ["Ton ordinateur découpe la consigne en petits paquets de données.", "La box du collège fait sortir les paquets vers Internet : c'est le seul passage.", "Les paquets traversent Internet jusqu'aux serveurs de l'IA.", "Le centre de données reçoit la consigne : le modèle peut commencer à calculer."], "conclusion": "La consigne a quitté le collège : elle est maintenant chez l'entreprise qui héberge le modèle."}, "reponse-revient": {"chemin": ["serveurs", "internet", "routeur", "ordinateur"], "etapes": ["Le centre de données renvoie les premiers jetons de la réponse.", "Ils retraversent Internet, dans l'autre sens.", "La box du collège les fait entrer dans le réseau de la salle.", "Ton ordinateur affiche les jetons les uns après les autres."], "conclusion": "La réponse suit le même chemin que la consigne, en sens inverse : rien ne s'affiche sans un aller-retour."}, "deux-eleves": {"chemin": ["ordinateur", "routeur", "internet", "serveurs", "internet", "routeur", "telephone"], "etapes": ["Ta consigne part de ton ordinateur.", "Celle de ton voisin part de son téléphone, au même moment.", "Les deux passent par la box du collège.", "Elles voyagent ensemble sur Internet, mêlées à des millions d'autres.", "Le centre de données traite les deux demandes l'une après l'autre.", "La première réponse repart sur Internet, puis revient par la box.", "Elle arrive jusqu'au téléphone de ton voisin."], "conclusion": "Chaque demande est traitée séparément : le modèle ne sait pas que deux élèves de la même classe lui écrivent au même moment."}, "impression-locale": {"chemin": ["ordinateur", "imprimante"], "etapes": ["Ton ordinateur envoie le document à l'imprimante de la salle.", "L'imprimante l'imprime : aucun paquet n'a quitté le collège."], "conclusion": "Un document qui reste dans la salle ne sort pas du collège : seules les demandes faites à l'IA traversent le routeur."}}};
+window.__ANIMATION_ROUTEUR__ = {"scenarios": {"consigne-part": {"chemin": ["ordinateur", "routeur", "internet", "serveurs"], "etapes": ["Ton ordinateur découpe la consigne en petits paquets de données.", "Le modem routeur du collège fait sortir les paquets vers Internet : c'est le seul passage.", "Les paquets traversent Internet jusqu'aux serveurs de l'IA.", "Le centre de données reçoit la consigne : le modèle peut commencer à calculer."], "conclusion": "La consigne a quitté le collège : elle est maintenant chez l'entreprise qui héberge le modèle."}, "reponse-revient": {"chemin": ["serveurs", "internet", "routeur", "ordinateur"], "etapes": ["Le centre de données renvoie les premiers jetons de la réponse.", "Ils retraversent Internet, dans l'autre sens.", "Le modem routeur du collège les fait entrer dans le réseau de la salle.", "Ton ordinateur affiche les jetons les uns après les autres."], "conclusion": "La réponse suit le même chemin que la consigne, en sens inverse : rien ne s'affiche sans un aller-retour."}, "deux-eleves": {"chemin": ["ordinateur", "routeur", "internet", "serveurs", "internet", "routeur", "telephone"], "etapes": ["Ta consigne part de ton ordinateur.", "Celle de ton voisin part de son téléphone, au même moment.", "Les deux passent par le modem routeur du collège.", "Elles voyagent ensemble sur Internet, mêlées à des millions d'autres.", "Le centre de données traite les deux demandes l'une après l'autre.", "La première réponse repart sur Internet, puis revient par le modem routeur.", "Elle arrive jusqu'au téléphone de ton voisin."], "conclusion": "Chaque demande est traitée séparément : le modèle ne sait pas que deux élèves de la même classe lui écrivent au même moment."}, "impression-locale": {"chemin": ["ordinateur", "imprimante"], "etapes": ["Ton ordinateur envoie le document à l'imprimante de la salle.", "L'imprimante l'imprime : aucun paquet n'a quitté le collège."], "conclusion": "Un document qui reste dans la salle ne sort pas du collège : seules les demandes faites à l'IA traversent le routeur."}}};
 var __AROUTE = { scenario: null, index: 0, chemin: [], minuteur: null };
 
 function __arouteParCle(cle) {
@@ -7156,6 +7185,10 @@ function animerRouteur(btn) {
         // reverrouiller une activité déjà générée avant la classe :
         //     python3 mode-developpement.py desactiver ACTIVITE.html
         const MODE_DEVELOPPEMENT = false;
+        // Onglets libres : tous les onglets sont accessibles dès le chargement,
+        // sans le panneau de correction du mode développement. Déclaré par
+        // `metadata.ongletsLibres` ; personnaliser.py remplace la valeur.
+        const ONGLETS_LIBRES = true;
 
         // ============================================
         // GESTION DES ONGLETS
@@ -10303,6 +10336,16 @@ function animerRouteur(btn) {
         document.addEventListener('DOMContentLoaded', function() {
             mettreAJourProgression();
 
+            // Onglets libres : rendre tous les onglets cliquables dès l'arrivée,
+            // avant même le premier clic (le déverrouillage de `changerOnglet`
+            // ne s'exécute qu'au changement d'onglet).
+            if (ONGLETS_LIBRES) {
+                document.querySelectorAll('.bouton-onglet').forEach(function (bouton) {
+                    bouton.classList.remove('verrouille');
+                    bouton.disabled = false;
+                });
+            }
+
             // Options de quiz : clic (la surbrillance marque la sélection) et
             // clavier (Entrée / Espace), puisqu'il n'y a plus de bouton radio
             // natif pour assurer cette navigation.
@@ -10365,7 +10408,7 @@ function animerRouteur(btn) {
             // ── MODE DÉVELOPPEMENT ──────────────────────────────────────────
             // Si activé, déverrouille tous les onglets et boutons pour
             // permettre de tester librement (jeux bonus, navigation, etc.)
-            if (MODE_DEVELOPPEMENT) {
+            if (MODE_DEVELOPPEMENT || ONGLETS_LIBRES) {
                 const tousNiveaux = ['n1-intro', 'n1-quiz', 'n2-intro', 'n2-quiz',
                                      'n3-enigme', 'n4-probleme', 'synthese', 'bonus'];
                 tousNiveaux.forEach(niveauId => {
@@ -10380,7 +10423,9 @@ function animerRouteur(btn) {
                     bouton.classList.remove('verrouille');
                     bouton.disabled = false;
                 });
-                console.log('🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
+                console.log(ONGLETS_LIBRES
+                    ? '🔓 Onglets libres — tous les niveaux sont accessibles.'
+                    : '🔓 MODE DÉVELOPPEMENT actif — tous les onglets sont déverrouillés.');
             }
         });
 
