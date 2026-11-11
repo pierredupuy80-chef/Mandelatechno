@@ -26,12 +26,20 @@
    unique rangée extensible (la scène). Les manches d'exercice ne défilent pas.
    La synthèse, elle, défile dans son propre cadre (autorisé par le contrat).
 
-   Mesuré dans Chrome 156 headless : voir travail/styles/mesures.json.
-   Limites connues (documentées, mesurées) :
-     * 4 fiches/QR dans une même manche : tient à 1024×768, très juste à
-       1280×720, et incompatible avec deux exercices de verdicts ;
-     * après « Vérifier », le verdict et le volet d'explication ajoutent de la
-       hauteur : le pire cas mesuré est une manche à 3 lignes de verdicts.
+   Mesuré dans Chrome 156 headless (iframe à taille exacte, cf. mesurer.py) :
+     * 1024×768 : débordement scène 0 px, consigne 24,6 px, intitulé 22 px,
+       titre 41,5 px, champ 28 px / 58,4 px, cible 44 px, QR 180 px ;
+     * 1280×720 : 0 px, consigne 24 px, champ 28 px / 56 px, QR 180 px ;
+     * 1920×1080 : 0 px, consigne 34,6 px, intitulé 29,2 px, titre 58,3 px,
+       champ 36,7 px / 82,1 px, QR 245,6 px.
+   Vérifié aussi APRÈS « Vérifier » (verdict + volet d'explication affichés).
+   Limites connues (documentées, mesurées par le profil « stress ») :
+     * une manche qui cumule ≥ 4 QR, ou 2 exercices avec champs de
+       justification, ou 2 exercices de verdicts de 3 lignes, déborde à
+       1024×768 et 1280×720 (+13 à +311 px selon le cas) ; à 1920×1080 tout
+       passe. Le contenu OST3 livré reste sous ces bornes (≤ 2 exercices,
+       ≤ 2 QR, verdicts ≤ 3 lignes sans justification) : mesures 100 % vertes.
+     * la 7e fiche d'une planche force le QR à 47 mm pour tenir sur UNE page A4.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -53,7 +61,7 @@
   --ok-fond: #e8f5ec;
   --ko: #991b1b;
   --ko-fond: #fdecea;
-  --attention: #7c4a03;
+  --attention: #6b3f02;       /* 8,2:1 sur #fff4d6 */
   --attention-fond: #fff4d6;
   --focus: #0b5fff;
 
@@ -241,6 +249,7 @@ a { color: var(--primaire); }
   text-transform: uppercase;
   white-space: nowrap;
 }
+.compteur-manche { font-weight: 900; }
 .etat-valeur {
   color: var(--texte);
   font-size: clamp(17px, 2.2vh, 26px);
@@ -596,6 +605,9 @@ body.chrono-pause .btn-chrono {
   min-width: 0;
 }
 .champ-court { max-width: 34ch; }
+/* Un champ « long » (phrase entière) prend toute la rangée : taper une phrase
+   dans une colonne de 200 px serait illisible pour la classe. */
+.champ-long { grid-column: 1 / -1; }
 .champ-libelle {
   color: var(--texte-doux);
   font-size: clamp(16px, 1.9vh, 23px);
@@ -616,7 +628,7 @@ body.chrono-pause .btn-chrono {
   line-height: 1.1;
 }
 .champ-reponse::placeholder {
-  color: #4a5d70;               /* 7,5:1 sur blanc — lisible sans crier */
+  color: #42566a;               /* 7,6:1 sur blanc — lisible sans crier */
   font-weight: 500;
   opacity: 1;
 }
@@ -1221,7 +1233,7 @@ body.chrono-pause .btn-chrono {
        les manches, en noir sur blanc, sans boutons ni verdicts.
    -------------------------------------------------------------------------- */
 @media print {
-  @page { margin: 12mm; }
+  @page { size: A4 portrait; margin: 12mm; }
   body.orale {
     display: block;
     height: auto;
@@ -1290,6 +1302,15 @@ body.chrono-pause .btn-chrono {
     background: #ffffff !important;
   }
   .consigne { font-size: 12pt; font-weight: 700; }
+  /* Le pilotage automatique du premier champ laisse un anneau de focus bleu :
+     sur papier il ne veut rien dire. */
+  :focus-visible, .champ-reponse:focus-visible { outline: none !important; }
+  .etiquette {
+    border: 1pt solid #000000;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .question-classe { border-left: 3pt solid #000000; }
   .exercice { break-inside: avoid; page-break-inside: avoid; margin: 4pt 0; }
   .champ-reponse {
     min-height: 0;
