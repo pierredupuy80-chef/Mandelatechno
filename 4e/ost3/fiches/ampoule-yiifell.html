@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ampoule YIIFELL Wi-Fi — fiche</title>
+<style>
+/* ============================================================================
+   FICHE-MOBILE.CSS — fiche technique lue au téléphone (320 → 430 px)
+   ============================================================================
+   Périmètre : classes de la page « fiche » du générateur (CONTRAT-DOM §2 et §3).
+   Objectif : lisible d'une main, à bout de bras, dans une salle de classe ;
+   corps ≥ 16 px, aucun débordement horizontal de 320 à 430 px, cibles ≥ 44 px,
+   contrastes AA minimum (calculés : voir travail/styles/contrastes.json).
+
+   Aucune police, aucune image, aucun script distant : seules des piles système
+   et des data: URIs (les images de fiche sont embarquées par le générateur).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Jetons
+   -------------------------------------------------------------------------- */
+:root {
+  --primaire: #1f4e79;          /* 8,6:1 avec blanc */
+  --primaire-fonce: #143a5c;
+  --texte: #14202e;             /* 15,3:1 sur blanc */
+  --texte-doux: #33475b;        /* 9,1:1 sur blanc */
+  --fond: #e9eef3;
+  --carte: #ffffff;
+  --bord: #b6c5d3;
+  --bord-fort: #5b6f84;
+  --ok: #166534;
+  --ok-fond: #eefaf1;
+  --attention: #7c3d05;
+  --attention-fond: #fff7e8;
+  --source: #3f4f61;
+  --source-fond: #f2f5f8;
+  --focus: #0b5fff;
+  --rayon: 12px;
+  --ombre: 0 1px 2px rgba(16, 32, 48, 0.10);
+}
+
+/* --------------------------------------------------------------------------
+   2. Socle
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body.fiche {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 17px;              /* ≥ 16 px partout, même à 320 px */
+  line-height: 1.55;
+  overflow-x: hidden;           /* filet de sécurité : rien ne dépasse */
+  overflow-wrap: break-word;
+}
+@media (min-width: 430px) {
+  body.fiche { font-size: 18px; }
+}
+
+[hidden] { display: none !important; }
+
+a { color: var(--primaire); }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   3. Retour à l'accueil — module canonique du site, en tête et dans le flux.
+   -------------------------------------------------------------------------- */
+.retour-accueil {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 8px 12px 4px;
+  padding: 9px 16px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #1f4e79;
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+.retour-accueil:hover { background: #2a6fb0; }
+.retour-accueil:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px #1f4e79;
+}
+
+/* --------------------------------------------------------------------------
+   4. En-tête de la fiche
+   -------------------------------------------------------------------------- */
+.fiche-entete {
+  padding: 12px 16px 14px;
+  background: var(--carte);
+  border-bottom: 4px solid var(--primaire);
+  box-shadow: var(--ombre);
+}
+.fiche-kicker {
+  margin: 0 0 3px;
+  color: var(--texte-doux);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.fiche-titre {
+  margin: 0;
+  color: var(--primaire);
+  font-size: clamp(25px, 7.4vw, 34px);
+  font-weight: 800;
+  line-height: 1.13;
+  overflow-wrap: anywhere;
+}
+.fiche-chapo {
+  margin: 7px 0 0;
+  color: var(--texte-doux);
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   5. Corps
+   -------------------------------------------------------------------------- */
+.fiche-corps {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 12px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fiche-visuel {
+  margin: 0;
+  padding: 10px;
+  background: var(--carte);
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre);
+}
+/* L'image ne dépasse jamais la largeur, son ratio est conservé. */
+.fiche-visuel img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+}
+.fiche-visuel figcaption {
+  margin-top: 7px;
+  color: var(--texte-doux);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.fiche-section {
+  padding: 11px 13px 6px;
+  background: var(--carte);
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre);
+}
+.fiche-section-titre {
+  margin: 0 0 6px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--bord);
+  color: var(--primaire);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* Grille de définitions : dt à gauche, dd à droite, une ligne par spec. */
+.fiche-specs {
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.spec {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid #dbe4ec;
+}
+.spec:last-child { border-bottom: 0; padding-bottom: 2px; }
+.spec dt {
+  min-width: 0;
+  color: var(--texte-doux);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.spec dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--texte);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------------------
+   6. Encarts
+   -------------------------------------------------------------------------- */
+.encart {
+  padding: 11px 13px;
+  border: 2px solid var(--bord-fort);
+  border-left-width: 8px;
+  border-radius: var(--rayon);
+  background: var(--carte);
+  box-shadow: var(--ombre);
+}
+.encart-titre {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+.encart-texte {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.encart-cles {
+  border-color: var(--ok);
+  background: var(--ok-fond);
+}
+.encart-cles .encart-titre { color: var(--ok); }
+.encart-attention {
+  border-color: var(--attention);
+  background: var(--attention-fond);
+}
+.encart-attention .encart-titre { color: var(--attention); }
+.encart-source {
+  border-color: var(--source);
+  background: var(--source-fond);
+}
+.encart-source .encart-titre { color: var(--source); }
+
+.fiche-source {
+  margin: 0;
+  color: var(--texte-doux);
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* Retour vers l'activité projetée, en bas de fiche. */
+.fiche-retour { margin: 2px 0 4px; }
+.fiche-retour a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 2px solid var(--primaire);
+  border-radius: 10px;
+  background: var(--carte);
+  color: var(--primaire);
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.fiche-retour a:hover { background: #e8eff6; }
+
+.mention-rgpd {
+  margin: 6px 12px 20px;
+  padding: 10px 12px;
+  border: 1px solid var(--bord);
+  border-radius: 10px;
+  background: #f6f8fa;
+  color: var(--texte-doux);
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   7. Thème sombre — confort de lecture au bureau / en soirée, contrastes AA.
+   -------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primaire: #9cc9f0;
+    --primaire-fonce: #7fb6e6;
+    --texte: #f0f5fa;
+    --texte-doux: #c3ced8;
+    --fond: #0f1720;
+    --carte: #18232d;
+    --bord: #4f6274;
+    --bord-fort: #8ba2b8;
+    --ok: #7ee2a8;
+    --ok-fond: #12301f;
+    --attention: #ffd27a;
+    --attention-fond: #3a2a0c;
+    --source: #cbd5e1;
+    --source-fond: #1b2733;
+    --focus: #8ecbff;
+  }
+  body.fiche { background: var(--fond); color: var(--texte); }
+  .fiche-entete { background: var(--carte); }
+  .fiche-titre { color: var(--primaire); }
+  .fiche-section, .fiche-visuel { background: var(--carte); }
+  .spec { border-bottom-color: #2b3a49; }
+  .spec dt, .fiche-source, .fiche-chapo, .fiche-kicker { color: var(--texte-doux); }
+  .encart { background: var(--carte); color: var(--texte); }
+  .encart-cles { background: var(--ok-fond); }
+  .encart-attention { background: var(--attention-fond); }
+  .encart-source { background: var(--source-fond); }
+  .mention-rgpd { background: #0c141b; border-color: var(--bord); }
+  .fiche-retour a { background: var(--carte); }
+}
+
+/* --------------------------------------------------------------------------
+   8. Impression (le professeur peut imprimer une fiche pour un élève sans
+      téléphone) : noir sur blanc, sans navigation.
+   -------------------------------------------------------------------------- */
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  body.fiche {
+    background: #ffffff;
+    color: #000000;
+    font-size: 11pt;
+    overflow: visible;
+  }
+  .retour-accueil,
+  .fiche-retour { display: none !important; }
+  .fiche-entete, .fiche-section, .fiche-visuel, .encart, .mention-rgpd {
+    box-shadow: none;
+    border: 1pt solid #000000;
+    background: #ffffff !important;
+  }
+  .fiche-entete { border-bottom-width: 3pt; }
+  .fiche-titre, .fiche-section-titre, .encart-titre { color: #000000; }
+  .fiche-visuel img { max-width: 100%; }
+  .fiche-corps { gap: 8pt; padding: 0; }
+}
+</style>
+</head>
+<body class="fiche" data-fiche="ampoule-yiifell">
+
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Retour à l’accueil</a>
+
+<header class="fiche-entete">
+  <p class="fiche-kicker">Fiche technique · 4e OST3 · activité 3</p>
+  <h1 class="fiche-titre">Ampoule YIIFELL Wi-Fi</h1>
+  <p class="fiche-chapo">Une ampoule Wi-Fi en culot E27, de classe énergétique A.</p>
+</header>
+
+<main class="fiche-corps">
+
+  <section class="fiche-section">
+    <h2 class="fiche-section-titre">Compatibilité</h2>
+    <dl class="fiche-specs">
+      <div class="spec"><dt>Culot</dt><dd>E27 (annoncé par le vendeur)</dd></div>
+      <div class="spec"><dt>Connexion</dt><dd>Wi-Fi</dd></div>
+      <div class="spec"><dt>Assistants vocaux</dt><dd>Alexa, Google Assistant</dd></div>
+      <div class="spec"><dt>Gradation</dt><dd>oui, dimmable</dd></div>
+    </dl>
+  </section>
+  <section class="fiche-section">
+    <h2 class="fiche-section-titre">Énergie</h2>
+    <dl class="fiche-specs">
+      <div class="spec"><dt>Classe énergétique</dt><dd>A (annoncée par le vendeur)</dd></div>
+    </dl>
+  </section>
+  <aside class="encart encart-cles">
+    <p class="encart-titre">Le point fort</p>
+    <p class="encart-texte">Même culot et même connexion que l’ampoule installée, avec une meilleure classe énergétique : A au lieu de F.</p>
+  </aside>
+  <p class="fiche-source">Source : Doc ressources « Choix ampoules » (lien marchand, classe énergétique A), support Bordeaux.</p>
+<p class="fiche-retour"><a href="../activite-ost3-act3-orale.html">← Revenir à l'activité projetée</a></p>
+</main>
+
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+
+</body>
+</html>
