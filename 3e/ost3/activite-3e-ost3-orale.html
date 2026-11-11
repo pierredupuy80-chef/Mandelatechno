@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light">
+<title>Trottinette ou VAE : comparer un objet et ses interacteurs</title>
+<style>
+/* ============================================================================
+   PROJECTION.CSS — diaporama projeté sur tableau blanc (v2)
+   ============================================================================
+   Contrat de référence : CONTRAT-DOM.md v2 (« diaporama tableau blanc »).
+   La page n'est PAS une interface : elle est projetée sur le tableau blanc et
+   l'élève écrit au feutre par-dessus. Il n'y a donc :
+     * aucune commande à l'écran — la navigation se fait au clavier, côté page ;
+     * aucune correction, aucune réponse attendue : le professeur corrige à
+       l'oral, un corrigé séparé n'est jamais projeté ;
+     * un thème clair unique : fond blanc, encre foncée, traits gris clair.
+
+   Les surfaces d'écriture (le cœur du travail) sont dimensionnées pour le
+   feutre : une ligne ≥ 56 px, une cellule de tableau ≥ 64 px, une colonne
+   ≥ 200 px, un maillon de chaîne ≥ 120 px à 1280×720.
+
+   Mesures de référence (Chrome 156, iframe à taille exacte, cf. travail/styles) :
+     à 1280×720 : titre 40,3 px, intro 24 px, ligne 108 px, cellule 113 px,
+     colonne 424 px, maillon 173 px, QR 179 px, schéma 715 px, débordement 0 ;
+     à 1024×768 et 1920×1080 : mêmes planchers tenus, débordement 0.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Jetons — palette claire unique, aucune variante sombre.
+      Contrastes calculés sur blanc : encre 14,4:1 ; encre douce 8,6:1 ;
+      gris 5,4:1 ; filet d'écriture volontairement clair (repère de feutre).
+   -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --encre: #1f2933;
+  --encre-douce: #4a5560;
+  --gris: #6b7783;
+  --trait: #bcc6d0;        /* filet sur lequel on écrit */
+  --trait-fort: #a9b5c0;   /* bordure des surfaces d'écriture */
+  --trait-pale: #e6ebef;   /* séparateur interne, presque invisible */
+  --fond: #ffffff;
+
+  --f-titre: clamp(40px, 5.6vh, 68px);
+  --f-intro: clamp(24px, 3.2vh, 40px);
+  --f-marque: clamp(12px, 1.5vh, 16px);
+  --f-texte: clamp(20px, 2.4vh, 30px);
+  --f-petit: clamp(11px, 1.35vh, 15px);
+  --f-ligne-titre: clamp(22px, 2.7vh, 34px);
+  --f-acte: clamp(14px, 1.75vh, 19px);
+
+  --marge-x: clamp(16px, 2.4vw, 44px);
+  --marge-y: clamp(10px, 1.8vh, 30px);
+  --gap: clamp(6px, 1.2vh, 16px);
+  --rayon: 8px;
+  --rayon-panneau: 14px;
+
+  /* Accents par fonction : apport bleu, exercice ambre, conclusion vert.
+     La couleur ne porte jamais le texte (qui reste --encre) : elle porte
+     la bordure, le filet, la pastille et le voile du panneau. */
+  --accent: #475569;
+  --accent-voile: rgba(71, 85, 105, 0.055);
+}
+
+/* --------------------------------------------------------------------------
+   2. Socle : la page tient dans la fenêtre, la scène ne défile pas.
+      Trois rangées : la scène, puis le pied discret, puis la mention RGPD.
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--fond);
+}
+
+body.diapo-corps {
+  margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "scene"
+    "pied"
+    "rgpd";
+  background: var(--fond);
+  color: var(--encre);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: var(--f-texte);
+  line-height: 1.3;
+}
+
+/* --------------------------------------------------------------------------
+   3. Scène : une seule diapositive visible, sans défilement.
+   -------------------------------------------------------------------------- */
+.scene {
+  grid-area: scene;
+  min-height: 0;
+  padding: var(--marge-y) var(--marge-x);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.diapo { display: none; }
+.diapo.actif {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* --------------------------------------------------------------------------
+   4. Texte de diapositive
+   -------------------------------------------------------------------------- */
+.marque {
+  margin: 0;
+  color: var(--gris);
+  font-size: var(--f-marque);
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.diapo-titre {
+  margin: 0;
+  color: var(--encre);
+  font-size: var(--f-titre);
+  font-weight: 760;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+  overflow-wrap: break-word;
+}
+.diapo-intro {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--encre-douce);
+  font-size: var(--f-intro);
+  line-height: 1.22;
+}
+.diapo-probleme {
+  margin: 0;
+  max-width: 54ch;
+  padding-left: clamp(12px, 1.6vw, 26px);
+  border-left: 6px solid var(--trait-fort);
+  color: var(--encre);
+  font-size: clamp(26px, 3.8vh, 48px);
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+/* Accent par fonction : un code stable d'une activité à l'autre — le bleu
+   apporte, l'ambre demande, le vert retient. */
+.diapo-apport { --accent: #1f4e79; --accent-voile: rgba(31, 78, 121, 0.06); }
+.diapo-exercice { --accent: #a16207; --accent-voile: rgba(161, 98, 7, 0.06); }
+.diapo-synthese { --accent: #14532d; --accent-voile: rgba(20, 83, 45, 0.06); }
+
+/* Bandeau de titre : un filet d'accent à gauche et une pastille discrète
+   (niveau N1..N4, ou la fonction de l'écran). Ce sont des repères de
+   lecture, jamais des commandes : rien ne se clique. */
+.diapo-bandeau {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.1vw, 18px);
+  min-width: 0;
+  padding-left: clamp(10px, 1.2vw, 18px);
+  border-left: 7px solid var(--accent);
+}
+.diapo-bandeau .diapo-titre { flex: 1 1 auto; min-width: 0; }
+.pastille {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px clamp(8px, 0.9vw, 14px);
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-voile);
+  color: var(--encre);
+  font-size: clamp(14px, 1.7vh, 17px);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ouverture : titre + situation + problème, centrés dans la page. */
+.diapo-ouverture.actif {
+  justify-content: center;
+  gap: clamp(10px, 2.2vh, 28px);
+  max-width: 1500px;
+}
+
+/* Fiches : tous les QR sur une seule diapositive (ancienne version). */
+.diapo-fiches.actif { gap: calc(var(--gap) * 0.8); }
+
+/* Documentation : l'UNIQUE QR de la séance, seul au milieu de l'écran.
+   Toute la classe doit le scanner depuis sa place, parfois à 5-6 m. */
+.diapo-documentation.actif {
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 1.6vh, 20px);
+  text-align: center;
+}
+.diapo-documentation.actif .diapo-intro {
+  max-width: 52ch;
+  margin-inline: auto;
+}
+.diapo-documentation.actif .diapo-titre { margin-inline: auto; }
+.documentation-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 16px);
+  max-width: 100%;
+}
+/* 30vw : 307 px à 1024×768 (plancher 260), 384 px à 1280×720, 420 px au-delà.
+   Le viewBox du SVG inclut la quiet zone : le fond blanc la conserve. */
+.documentation-qr .qr {
+  width: clamp(260px, 30vw, 420px);
+  max-width: 100%;
+  height: auto;
+  background: #ffffff;
+}
+.documentation-url {
+  margin: 0;
+  max-width: clamp(260px, 30vw, 420px);
+  color: var(--encre-douce);   /* 8,6:1 : c'est le recours si le scan échoue */
+  font-size: clamp(16px, 1.8vh, 22px);
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.documentation-nombre {
+  margin: 0;
+  color: var(--gris);
+  font-size: clamp(14px, 1.7vh, 18px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Synthèse : les mots à écrire, pas la trace à recopier. */
+.diapo-synthese.actif { gap: var(--gap); }
+
+/* --------------------------------------------------------------------------
+   5. Diapositive « apport » : titre et intro en haut, PUIS les points à
+      gauche et le schéma à droite (le schéma est le cœur de la diapo).
+   -------------------------------------------------------------------------- */
+.diapo-apport.actif {
+  gap: clamp(6px, 1.2vh, 16px);
+}
+.apport-corps {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  align-items: center;
+  gap: clamp(16px, 2.6vw, 48px);
+}
+.apport-corps .points { align-self: center; }
+.apport-corps .schema {
+  align-self: stretch;
+  justify-content: center;
+  /* le schéma est le cœur de l'apport : il a son panneau, teinté de l'accent */
+  padding: clamp(6px, 1vh, 14px);
+  border: 2px solid var(--accent);
+  border-radius: var(--rayon-panneau);
+  background: var(--accent-voile);
+  overflow: hidden;
+}
+
+/* Un apport sans schéma (des puces et rien d'autre) ne doit pas rester dans la
+   colonne étroite prévue pour le texte quand un schéma l'accompagne : on lui
+   rend toute la largeur, avec une mesure de lecture confortable. */
+.diapo-apport.diapo-sans-schema .apport-corps {
+  grid-template-columns: minmax(0, 1fr);
+}
+.diapo-apport.diapo-sans-schema .points {
+  /* Aligné sous le titre, pas centré : une colonne de texte flottant au milieu
+     de l'écran se lit mal, et la classe ne sait plus où regarder. La mesure de
+     lecture est bornée pour que les lignes ne traversent pas toute la largeur. */
+  max-width: 64ch;
+  width: 100%;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. Surfaces d'écriture — le panneau, puis les douze formes
+      Le panneau est tinté par la fonction de la diapositive (ambre = exercice,
+      bleu = apport, vert = conclusion) ; le texte reste en --encre. Le libellé
+      d'acte et les équerres de coin sont des repères de feutre, pas des
+      commandes : rien ne se clique, tout s'écrit.
+   -------------------------------------------------------------------------- */
+.zone {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--accent-voile);
+  border: 2px solid var(--accent);
+  border-radius: var(--rayon-panneau);
+  overflow: hidden;
+}
+
+/* Le libellé d'acte (« Complète », « Range »…) : un repère discret, en haut à
+   gauche du panneau. Piloté par `zone.acte`, avec un défaut par forme. */
+.zone-acte {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: clamp(3px, 0.7vh, 8px) clamp(10px, 1.3vw, 20px);
+  border-bottom: 1.5px dashed var(--trait-fort);
+  color: var(--encre-douce);
+  font-size: var(--f-acte);
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.zone-corps {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(4px, 0.8vh, 10px) clamp(8px, 1.1vw, 18px);
+}
+
+/* Quatre équerres fines : elles délimitent la surface utile sans faire cadre. */
+.zone-coins {
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+}
+.zone-coins i {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--trait-fort);
+}
+.zone-coins i:nth-child(1) {
+  left: 0; top: 0;
+  border-left-width: 2px; border-top-width: 2px;
+  border-top-left-radius: 4px;
+}
+.zone-coins i:nth-child(2) {
+  right: 0; top: 0;
+  border-right-width: 2px; border-top-width: 2px;
+  border-top-right-radius: 4px;
+}
+.zone-coins i:nth-child(3) {
+  left: 0; bottom: 0;
+  border-left-width: 2px; border-bottom-width: 2px;
+  border-bottom-left-radius: 4px;
+}
+.zone-coins i:nth-child(4) {
+  right: 0; bottom: 0;
+  border-right-width: 2px; border-bottom-width: 2px;
+  border-bottom-right-radius: 4px;
+}
+
+/* --- 6a. Lignes : une réponse par ligne, un guide pointillé par ligne ------ */
+.zone-lignes .zone-corps {
+  padding: clamp(4px, 0.8vh, 10px) clamp(10px, 1.3vw, 24px);
+}
+.ligne {
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(4px, 0.6vw, 10px);
+  min-height: clamp(56px, 7.4vh, 104px);
+  padding: 0 clamp(2px, 0.4vw, 8px);
+}
+.ligne-titre {
+  flex: 0 0 clamp(110px, 13vw, 210px);
+  padding-bottom: clamp(6px, 1.2vh, 14px);
+  color: var(--encre);
+  font-size: var(--f-ligne-titre);
+  font-weight: 640;
+  line-height: 1.15;
+}
+.ligne-trait {
+  flex: 1 1 auto;
+  height: 0;
+  margin-bottom: clamp(6px, 1.2vh, 14px);
+  border-bottom: 2px dashed var(--trait-fort);
+}
+.ligne:last-child .ligne-trait { border-bottom-color: var(--trait); }
+
+/* --- 6b. Tableau : la grille à remplir, en-tête teinté --------------------- */
+.zone-tableau .zone-corps { padding: 0; }
+.grille {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.grille-entete {
+  padding: clamp(6px, 1.1vh, 14px) clamp(8px, 1vw, 18px);
+  border-bottom: 2px solid var(--accent);
+  background: var(--accent-voile);
+  color: var(--encre);
+  font-size: clamp(16px, 1.9vh, 24px);
+  font-weight: 750;
+  text-align: left;
+  vertical-align: bottom;
+}
+.grille-case {
+  height: clamp(64px, 9vh, 120px);
+  padding: clamp(4px, 0.8vh, 10px) clamp(8px, 1vw, 18px);
+  border: 1.5px solid var(--trait-fort);
+  color: var(--encre);
+  font-size: clamp(20px, 2.2vh, 30px);
+  line-height: 1.2;
+  text-align: left;
+  vertical-align: middle;
+}
+.grille-libelle { font-weight: 650; }   /* th de première colonne */
+.grille tbody tr:first-child .grille-case { border-top: 0; }
+.grille-case:first-child { border-left: 0; }
+.grille tbody tr:last-child .grille-case { border-bottom: 0; }
+.grille tbody tr .grille-case:last-child { border-right: 0; }
+
+/* --- 6c. Colonnes : des cibles de tri, avec des guides de feutre ---------- */
+.elements {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(6px, 1vw, 14px);
+}
+.element {
+  padding: clamp(5px, 0.9vh, 12px) clamp(12px, 1.4vw, 24px);
+  border: 2px solid var(--trait-fort);
+  border-radius: 999px;
+  background: var(--fond);
+  color: var(--encre);
+  font-size: clamp(18px, 2.1vh, 30px);
+  line-height: 1.15;
+}
+.zone-colonnes .zone-corps {
+  gap: clamp(10px, 1.6vh, 22px);
+  justify-content: flex-start;
+}
+.colonnes-ecriture {
+  flex: 1 1 auto;
+  min-height: clamp(200px, 30vh, 360px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: clamp(12px, 1.8vw, 28px);
+}
+.colonne-ecriture {
+  position: relative;
+  min-height: clamp(200px, 30vh, 360px);
+  padding: clamp(8px, 1.2vh, 18px);
+  border: 2px dashed var(--accent);
+  border-radius: var(--rayon);
+  background: rgba(255, 255, 255, 0.62);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1vh, 12px);
+}
+/* deux guides horizontaux : trois bandes d'écriture par colonne */
+.colonne-ecriture::before,
+.colonne-ecriture::after {
+  content: "";
+  position: absolute;
+  left: clamp(10px, 1.2vw, 18px);
+  right: clamp(10px, 1.2vw, 18px);
+  border-top: 2px dashed var(--trait);
+  pointer-events: none;
+}
+.colonne-ecriture::before { top: 52%; }
+.colonne-ecriture::after { bottom: 16%; }
+.colonne-titre {
+  margin: 0;
+  padding-bottom: clamp(4px, 0.8vh, 10px);
+  border-bottom: 2px solid var(--accent);
+  color: var(--encre);
+  font-size: clamp(20px, 2.3vh, 32px);
+  font-weight: 750;
+  line-height: 1.15;
+}
+
+/* --- 6d. Chaîne : des maillons-cibles reliés par des flèches -------------- */
+.zone-chaine .zone-corps {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(6px, 1vw, 18px);
+}
+.maillon {
+  position: relative;
+  flex: 1 1 clamp(150px, 16vw, 280px);
+  max-width: clamp(220px, 24vw, 340px);
+  min-height: clamp(120px, 24vh, 300px);
+  padding: clamp(8px, 1.4vh, 18px);
+  border: 2px solid var(--trait-fort);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.62);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: clamp(4px, 0.8vh, 10px);
+  text-align: left;
+}
+/* la cible de feutre : un cadre pointillé à l'intérieur du maillon */
+.maillon::before {
+  content: "";
+  position: absolute;
+  inset: clamp(5px, 0.8vh, 10px);
+  border: 2px dashed var(--trait);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.maillon-numero {
+  color: var(--gris);
+  font-size: clamp(14px, 1.6vh, 18px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.maillon-indice {
+  color: var(--gris);
+  font-size: clamp(12px, 1.45vh, 16px);
+  line-height: 1.15;
+}
+.fleche {
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--accent);
+  font-size: clamp(24px, 3vh, 44px);
+  line-height: 1;
+  user-select: none;
+}
+
+/* --- 6e. Cadre libre : un panneau pointillé, schéma à main levée ---------- */
+.zone-libre .zone-corps {
+  margin: clamp(4px, 0.8vh, 10px);
+  padding: 0;
+  border: 2px dashed var(--trait-fort);
+  border-radius: 10px;
+}
+
+/* --- 6f. Étoile : l'objet au centre, les interacteurs autour -------------- */
+.zone-etoile .zone-corps { padding: clamp(6px, 1vh, 14px); }
+.etoile {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+.etoile-rayons {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.etoile-rayons line {
+  stroke: var(--trait-fort);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.etoile-centre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(220px, 20vw, 300px);
+  min-height: clamp(88px, 11vh, 130px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(8px, 1.2vh, 16px) clamp(10px, 1.4vw, 22px);
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--encre);
+  font-size: clamp(18px, 2.2vh, 28px);
+  font-weight: 760;
+  line-height: 1.15;
+  text-align: center;
+}
+.etoile-branche {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: clamp(120px, 13.5vw, 200px);
+  min-height: clamp(72px, 9.4vh, 108px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: clamp(6px, 0.9vh, 12px) clamp(8px, 1vw, 14px);
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+.etoile-titre {
+  color: var(--encre);
+  font-size: clamp(15px, 1.8vh, 22px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+/* La ligne sur laquelle le feutre écrit la réponse. Sans elle, la bulle n'est
+   qu'une étiquette et l'élève ne sait pas où écrire — c'est exactement le
+   défaut que la grammaire visuelle corrige ailleurs. */
+.etoile-reponse {
+  display: block;
+  width: 100%;
+  min-height: clamp(26px, 3.2vh, 42px);
+  border-bottom: 2px dashed var(--trait-fort);
+}
+.etoile-indice {
+  color: var(--gris);
+  font-size: clamp(11px, 1.3vh, 15px);
+  line-height: 1.15;
+}
+
+/* --- 6g. Anoter : les zones numérotées d'une image ----------------------- */
+/* Le panneau PREND LE RAPPORT de l'image : au vidéoprojecteur la surface
+   d'écriture est la photo elle-même, sans deux grands vides latéraux. Le
+   rapport est posé en style inline par le générateur (--anoter-ratio). */
+.zone-anoter {
+  flex: 0 1 auto;
+  align-self: center;
+  height: 100%;
+  width: auto;
+  aspect-ratio: var(--anoter-ratio, 1.3333);
+  max-width: 100%;
+}
+.zone-anoter .zone-corps {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(4px, 0.6vh, 8px);
+}
+.anoter-svg {
+  flex: 0 1 auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.anoter-image { background: #ffffff; }
+.anoter-cible {
+  /* un anneau, pas une pastille : le contenu de l'image reste lisible */
+  fill: none;
+  stroke: var(--accent);
+}
+.anoter-numero {
+  fill: var(--encre);
+  font-family: system-ui, sans-serif;
+  font-weight: 800;
+  text-anchor: middle;
+}
+/* Petits mots d'aide de la forme « anoter » : au-dessus du panneau, jamais
+   dedans — le panneau épouse l'image. */
+.anoter-indices {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(4px, 0.9vw, 14px) clamp(10px, 1.6vw, 26px);
+  color: var(--encre-douce);
+  font-size: clamp(13px, 1.55vh, 18px);
+  line-height: 1.2;
+}
+.anoter-indice b { color: var(--encre); font-weight: 800; }
+
+/* --- 6h. Comparatif : les objets en colonnes, les critères en lignes ----- */
+.zone-comparatif .zone-corps { padding: 0; }
+.comparatif {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.comparatif-entete {
+  padding: clamp(6px, 1.1vh, 14px) clamp(8px, 1vw, 18px);
+  border-bottom: 2px solid var(--accent);
+  background: var(--accent-voile);
+  color: var(--encre);
+  font-size: clamp(15px, 1.9vh, 24px);
+  font-weight: 760;
+  text-align: left;
+  vertical-align: bottom;
+}
+.comparatif-critere {
+  padding: clamp(4px, 0.8vh, 10px) clamp(8px, 1vw, 18px);
+  border: 1.5px solid var(--trait-fort);
+  background: var(--accent-voile);
+  color: var(--encre);
+  font-size: clamp(15px, 1.9vh, 24px);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  vertical-align: middle;
+}
+.comparatif thead .comparatif-critere { vertical-align: bottom; }
+.comparatif-case {
+  height: clamp(64px, 8.6vh, 110px);
+  padding: clamp(4px, 0.8vh, 10px) clamp(8px, 1vw, 18px);
+  border: 1.5px solid var(--trait-fort);
+  color: var(--encre);
+  font-size: clamp(16px, 2vh, 26px);
+  font-weight: 650;
+  line-height: 1.2;
+  vertical-align: middle;
+  text-align: left;
+}
+.comparatif thead .comparatif-critere,
+.comparatif tbody tr .comparatif-critere { border-left: 0; }
+.comparatif tbody tr:last-child .comparatif-case,
+.comparatif tbody tr:last-child .comparatif-critere { border-bottom: 0; }
+.comparatif tbody tr .comparatif-case:last-child { border-right: 0; }
+
+/* --- 6i. Grille nue : des cases à remplir, entêtes facultatives ---------- */
+.zone-grille .zone-corps { padding: 0; }
+.matrice {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.matrice-entete,
+.matrice-rang,
+.matrice-coin {
+  padding: clamp(6px, 1.1vh, 14px) clamp(8px, 1vw, 18px);
+  border: 1.5px solid var(--trait-fort);
+  background: var(--accent-voile);
+  color: var(--encre);
+  font-size: clamp(15px, 1.9vh, 24px);
+  font-weight: 760;
+  text-align: left;
+  vertical-align: bottom;
+}
+.matrice-rang { vertical-align: middle; }
+.matrice-case {
+  min-width: clamp(64px, 8vw, 160px);
+  height: clamp(64px, 8.6vh, 110px);
+  padding: clamp(4px, 0.8vh, 10px) clamp(8px, 1vw, 18px);
+  border: 1.5px solid var(--trait-fort);
+  color: var(--encre);
+  font-size: clamp(16px, 2vh, 26px);
+  vertical-align: middle;
+  text-align: left;
+}
+.matrice thead .matrice-coin { border-left: 0; border-top: 0; }
+.matrice tbody tr:last-child .matrice-rang,
+.matrice tbody tr:last-child .matrice-case { border-bottom: 0; }
+.matrice tbody tr .matrice-case:last-child { border-right: 0; }
+
+/* --- 6j. Frise : des segments-jalons et leur espace d'écriture ----------- */
+.zone-frise .zone-corps { justify-content: center; }
+.frise-piste {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(4px, 0.7vw, 10px);
+}
+.frise-segment {
+  flex: 1 1 0;
+  min-width: clamp(120px, 13vw, 220px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.7vh, 10px);
+  padding: clamp(6px, 1vh, 14px);
+  border: 2px solid var(--trait-fort);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.62);
+}
+.frise-numero {
+  color: var(--accent);
+  font-size: clamp(12px, 1.4vh, 16px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.frise-titre {
+  color: var(--encre);
+  font-size: clamp(15px, 1.8vh, 22px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.frise-vide {
+  flex: 1 1 auto;
+  min-height: clamp(56px, 8vh, 120px);
+  border-bottom: 2px dashed var(--trait-fort);
+}
+.frise-fleche {
+  align-self: center;
+  color: var(--accent);
+  font-size: clamp(20px, 2.6vh, 34px);
+  line-height: 1;
+  user-select: none;
+}
+
+/* --- 6k. Cause : les causes à gauche, l'effet à droite ------------------- */
+.zone-cause .zone-corps { justify-content: center; }
+.cause-dispositif {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(clamp(160px, 16vw, 260px), 0.55fr);
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 30px);
+}
+.cause-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: clamp(8px, 1.4vh, 18px);
+}
+.cause-boite {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 12px);
+  min-width: clamp(160px, 18vw, 280px);
+  min-height: clamp(64px, 8.6vh, 110px);
+  padding: clamp(6px, 1vh, 12px) clamp(8px, 1vw, 14px);
+  border: 2px solid var(--trait-fort);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.65);
+}
+.cause-boite::after {
+  content: "→";
+  position: absolute;
+  right: calc(-1 * clamp(16px, 1.6vw, 26px));
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  font-size: clamp(18px, 2.2vh, 28px);
+  line-height: 1;
+  pointer-events: none;
+}
+.cause-numero {
+  flex: none;
+  color: var(--gris);
+  font-size: clamp(12px, 1.4vh, 16px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.cause-titre {
+  color: var(--encre);
+  font-size: clamp(16px, 2vh, 26px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.cause-effet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(160px, 16vw, 260px);
+  min-height: clamp(64px, 8.6vh, 110px);
+  padding: clamp(8px, 1.2vh, 16px) clamp(10px, 1.2vw, 18px);
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-voile);
+  color: var(--encre);
+  font-size: clamp(18px, 2.2vh, 28px);
+  font-weight: 760;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   7. Diapositive « apport » : puces et schéma
+   -------------------------------------------------------------------------- */
+.points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2vh, 16px);
+}
+.point {
+  color: var(--encre);
+  font-size: clamp(20px, 2.5vh, 34px);
+  line-height: 1.3;
+  padding-left: 1.3em;
+  text-indent: -1.3em;
+}
+.point::before {
+  content: "—";
+  color: var(--trait-fort);
+  margin-right: 0.55em;
+}
+.point strong { font-weight: 760; }
+
+.schema {
+  margin: 0;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 0.9vh, 12px);
+}
+.schema svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+/* Schéma SVG libre (`schema: "svg"`) : il remplit la hauteur disponible, la
+   légende et le crédit restent en HTML sous le dessin. */
+.schema-svg { flex: 1 1 auto; min-height: 0; width: 100%; }
+.schema-svg svg {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+.schema figcaption,
+.schema-legende {
+  color: var(--gris);
+  font-size: clamp(12px, 1.5vh, 18px);
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   8. Diapositive « fiches » : tous les QR, prêts à scanner
+   -------------------------------------------------------------------------- */
+.grille-fiches {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: clamp(4px, 1vw, 18px);
+}
+.carte-fiche {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.5vh, 8px);
+}
+.qr {
+  display: block;
+  width: clamp(150px, 14vw, 300px);
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background: #ffffff;
+}
+.fiche-nom {
+  color: var(--encre);
+  font-size: clamp(14px, 1.7vh, 22px);
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------------------------
+   9. Diapositive « synthèse » : les mots-clés à dicter
+   -------------------------------------------------------------------------- */
+
+
+.mot-cle::before {
+  content: "—";
+  color: var(--trait-fort);
+  margin-right: 0.45em;
+}
+
+/* --------------------------------------------------------------------------
+   10. Pied : lien d'accueil discret et compteur, au-dessus de la mention RGPD
+   -------------------------------------------------------------------------- */
+.pied {
+  grid-area: pied;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 var(--marge-x) 2px;
+}
+.retour-accueil {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--gris) !important;
+  font-family: inherit;
+  font-size: clamp(12px, 1.6vh, 14px);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.retour-accueil:hover {
+  color: var(--encre) !important;
+  text-decoration: underline;
+}
+.retour-accueil:focus-visible {
+  outline: 2px solid #1f4e79;
+  outline-offset: 3px;
+}
+.compteur {
+  color: var(--gris);
+  font-size: clamp(12px, 1.6vh, 14px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+.mention-rgpd {
+  grid-area: rgpd;
+  margin: 0;
+  padding: 0 var(--marge-x) 6px;
+  color: var(--gris);
+  font-size: clamp(10px, 1.2vh, 12px);
+  line-height: 1.25;
+  text-align: left;
+}
+
+/* --------------------------------------------------------------------------
+   11. Impression : une diapositive par page A4, noir sur blanc.
+      Les traits restent lisibles en niveaux de gris (aucun aplat).
+   -------------------------------------------------------------------------- */
+@media print {
+  @page { size: A4 portrait; margin: 10mm; }
+
+  body.diapo-corps {
+    display: block;
+    height: auto;
+    overflow: visible;
+    background: #ffffff;
+    color: #000000;
+    font-size: 12pt;
+  }
+  .pied { display: none !important; }
+
+  .scene {
+    display: block;
+    padding: 0;
+    overflow: visible;
+  }
+  .diapo,
+  .diapo.actif {
+    display: block !important;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 0;
+    margin: 0;
+  }
+  .diapo:last-of-type { break-after: auto; page-break-after: auto; }
+
+  .marque { color: #000000; font-size: 9pt; }
+  .diapo-titre { color: #000000; font-size: 22pt; }
+  .diapo-intro { color: #000000; font-size: 12pt; }
+  .diapo-probleme {
+    color: #000000;
+    font-size: 15pt;
+    border-left: 3pt solid #000000;
+  }
+
+  .apport-corps { display: block; }
+  .apport-corps .points { margin-bottom: 6mm; }
+  .schema { margin-top: 4mm; }
+
+  .zone {
+    border: 1pt solid #000000;
+    border-radius: 0;
+    min-height: 150mm;
+    background: #ffffff;
+  }
+  .zone-acte {
+    color: #000000;
+    border-bottom: 1pt dashed #000000;
+    font-size: 9pt;
+  }
+  .zone-coins { display: none; }
+  .diapo-bandeau {
+    border-left: 3pt solid #000000;
+    padding-left: 3mm;
+  }
+  .pastille {
+    border: 1pt solid #000000;
+    background: #ffffff;
+    color: #000000;
+    font-size: 9pt;
+  }
+  .etoile-centre, .etoile-branche, .maillon, .colonne-ecriture,
+  .comparatif-case, .comparatif-entete, .matrice-case, .matrice-entete,
+  .matrice-rang, .matrice-coin, .frise-segment, .cause-boite, .cause-effet {
+    background: #ffffff;
+    border: 1pt solid #000000;
+  }
+  .grille-entete, .comparatif tbody tr th.comparatif-case {
+    background: #ffffff;
+    border-bottom: 1pt solid #000000;
+  }
+  .ligne-trait, .frise-vide, .colonne-ecriture::before,
+  .colonne-ecriture::after, .maillon::before { border-color: #000000; }
+  .etoile-rayons line { stroke: #000000; }
+  .cause-boite::after, .frise-fleche, .fleche,
+  .frise-numero, .cause-numero, .etoile-rayons { color: #000000; }
+  .anoter-cible { stroke: #000000; fill: none; }
+  .anoter-numero { fill: #000000; stroke: #ffffff; }
+  .anoter-indices { color: #000000; }
+  .zone-anoter {
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    max-width: 100%;
+  }
+  .anoter-svg { width: 100%; height: auto; }
+  .zone-lignes { padding: 0 4mm; }
+  .ligne {
+    height: auto;
+    min-height: 16mm;
+    flex: 0 0 auto;
+    break-inside: avoid;
+  }
+  .ligne-titre { color: #000000; font-size: 12pt; }
+  .ligne-trait { border-bottom: 1pt solid #000000; }
+  .grille-entete {
+    color: #000000;
+    font-size: 10pt;
+    border-bottom: 1pt solid #000000;
+  }
+  .grille-case {
+    height: 14mm;
+    border: 1pt solid #000000;
+    font-size: 11pt;
+  }
+  .colonne-ecriture {
+    min-height: 55mm;
+    border: 1pt dashed #000000;
+  }
+  .colonne-titre { color: #000000; font-size: 12pt; }
+  .element {
+    border: 1pt solid #000000;
+    color: #000000;
+    font-size: 10pt;
+  }
+  .maillon {
+    min-height: 28mm;
+    border: 1pt solid #000000;
+  }
+  .maillon-numero, .maillon-indice, .fleche { color: #000000; }
+  .point, 
+  .point::before, .mot-cle::before { color: #000000; }
+  .schema figcaption, .schema-legende {
+    color: #000000;
+    font-size: 9pt;
+  }
+  .schema svg { max-height: 70mm; }
+  .qr { width: 34mm; }
+  .fiche-nom { color: #000000; font-size: 9pt; }
+  .grille-fiches { gap: 3mm; }
+
+  .mention-rgpd {
+    margin-top: 4mm;
+    color: #000000;
+    font-size: 8pt;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Conclusion : un récapitulatif en QUESTIONS, pas une liste de mots-clés.
+   La classe répond à l'oral ; l'écran ne sert qu'à poser les problèmes un
+   par un, dans l'ordre où ils ont été rencontrés pendant la séance.
+   -------------------------------------------------------------------------- */
+.questions-recap {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 0 clamp(28px, 3.4vw, 54px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(10px, 1.9vh, 26px);
+  counter-reset: question;
+}
+.question-recap {
+  position: relative;
+  font-size: clamp(20px, 2.5vw, 34px);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--encre, var(--texte));
+  padding-right: 4%;
+}
+.question-recap::marker {
+  color: var(--accent, var(--primaire));
+  font-weight: 800;
+}
+
+
+/* --------------------------------------------------------------------------
+   Schéma de maillage : le réseau se construit à l'apparition de la diapositive.
+   Chaque élément porte son rang (--i) et, pour un trait, sa longueur : la
+   cascade montre les nœuds qui s'ajoutent par cercle de proximité et les
+   liaisons qu'ils apportent. Le professeur commente pendant que ça se dessine.
+
+   Aucune commande à l'écran : l'animation part à l'affichage et rejoue si l'on
+   revient sur la diapositive (classe `.joue` posée par le JavaScript de
+   navigation).
+   -------------------------------------------------------------------------- */
+.maillage-anime .maillage-element {
+  opacity: 1;
+  transform: none;
+}
+
+/* On n'anime que la diapositive marquée .joue : une diapositive simplement
+   présente dans le DOM (donc invisible) ne consomme aucun calcul. */
+.diapo-apport.joue .maillage-anime line.maillage-element {
+  stroke-dasharray: var(--longueur);
+  stroke-dashoffset: var(--longueur);
+  animation: maillage-trace 0.55s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.85s);
+}
+.diapo-apport.joue .maillage-anime circle.maillage-element,
+.diapo-apport.joue .maillage-anime g.maillage-element {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: maillage-apparait 0.45s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.85s);
+}
+
+@keyframes maillage-trace {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes maillage-apparait {
+  from { opacity: 0; transform: scale(0.45); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Impression : le schéma doit sortir complet, jamais figé au milieu. */
+@media print {
+  .maillage-anime .maillage-element {
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+}
+
+/* Accessibilité : qui demande moins d'animations voit le schéma d'un coup. */
+@media (prefers-reduced-motion: reduce) {
+  .diapo-apport.joue .maillage-anime line.maillage-element,
+  .diapo-apport.joue .maillage-anime circle.maillage-element,
+  .diapo-apport.joue .maillage-anime g.maillage-element {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Cours « logos » : six marques, leur acronyme explicité, qui les a définies
+   et les produits concernés. C'est ce qui rend la diapositive compréhensible :
+   un sigle seul ne dit rien à un élève de 4e.
+   -------------------------------------------------------------------------- */
+.diapo-logos .diapo-chapeau {
+  margin: 0 0 clamp(6px, 1.2vh, 14px);
+  font-size: clamp(15px, 1.7vh, 20px);
+  line-height: 1.3;
+  color: var(--texte-doux);
+}
+.grille-logos {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  margin-top: clamp(4px, 0.9vh, 12px);
+  gap: clamp(8px, 1.6vh, 18px) clamp(10px, 1.8vw, 26px);
+}
+.logo-carte {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 16px);
+  padding: clamp(6px, 1vh, 12px) clamp(8px, 1vw, 14px);
+  border: 1.5px solid var(--trait, #cbd5e1);
+  border-radius: 10px;
+  background: #ffffff;
+  min-width: 0;
+}
+.logo-marque {
+  display: block;
+  line-height: 0;
+  flex: none;
+}
+.logo-marque svg {
+  display: block;
+  width: clamp(62px, 7.4vw, 108px);
+  height: auto;
+}
+.logo-corps {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.logo-sigle {
+  font-size: clamp(17px, 2.2vh, 26px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+.logo-nom {
+  font-size: clamp(12px, 1.6vh, 18px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--texte-doux);
+  overflow-wrap: anywhere;
+}
+.logo-defini,
+.logo-produits {
+  font-size: clamp(12px, 1.5vh, 17px);
+  line-height: 1.25;
+  color: var(--texte-doux);
+  overflow-wrap: anywhere;
+}
+.logo-defini b,
+.logo-produits b {
+  font-weight: 700;
+  color: var(--texte);
+}
+
+/* --------------------------------------------------------------------------
+   Surface « relier » : deux colonnes et un large couloir vide au milieu, dans
+   lequel l'élève trace les flèches au feutre.
+   -------------------------------------------------------------------------- */
+.zone-relier .zone-corps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 0.34fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 22px);
+}
+.relier-colonne {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(4px, 0.8vh, 10px);
+  min-width: 0;
+  height: 100%;
+}
+.relier-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: clamp(44px, 6vh, 64px);
+  padding: clamp(3px, 0.6vh, 8px) clamp(6px, 0.9vw, 12px);
+  border: 1.5px solid var(--trait-fort, #94a3b8);
+  border-radius: 8px;
+  background: #ffffff;
+  min-width: 0;
+}
+.relier-cle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.9em;
+  height: 1.9em;
+  border-radius: 50%;
+  background: var(--encre, #0f172a);
+  color: #ffffff;
+  font-size: clamp(14px, 1.6vh, 18px);
+  font-weight: 800;
+}
+.relier-texte {
+  font-size: clamp(14px, 1.7vh, 20px);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.relier-couloir {
+  align-self: stretch;
+  display: block;
+  border-left: 1px dashed var(--trait, #cbd5e1);
+  border-right: 1px dashed var(--trait, #cbd5e1);
+}
+
+/* Une marque dessinée dans un élément de la surface « relier » : le logo
+   remplace une partie du texte, l'élève le reconnaît avant de lire. */
+.relier-item .relier-marque {
+  flex: none;
+  display: block;
+  line-height: 0;
+}
+.relier-item .relier-marque svg {
+  display: block;
+  width: clamp(36px, 4.2vw, 56px);
+  height: auto;
+}
+/* Logo officiel (image) : même gabarit que le pictogramme dessiné, quelle que
+   soit la forme du fichier (carré, ovale, étiquette haute). On ne déforme
+   jamais un logo : la hauteur est fixée, la largeur suit. */
+.relier-item .relier-marque img {
+  display: block;
+  height: clamp(36px, 4.2vw, 56px);
+  width: auto;
+  max-width: clamp(64px, 10vw, 120px);
+  object-fit: contain;
+}
+
+/* --------------------------------------------------------------------------
+   Support visuel repris des activités en ligne : une photo annotée ou un
+   schéma déjà produit. L'image est incorporée dans la page (data:), donc
+   projetable sans réseau. La légende et le crédit restent en texte HTML.
+   -------------------------------------------------------------------------- */
+.schema-image {
+  align-self: stretch;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, 0.6vh, 8px);
+}
+.schema-image img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  /* on réserve la place de la légende et du crédit sous l'image : sans cela,
+     la diapositive dépasse de quelques pixels en bas de la projection */
+  max-height: calc(100% - 46px);
+  object-fit: contain;
+  border: 1.5px solid var(--trait, #cbd5e1);
+  border-radius: 8px;
+  background: #ffffff;
+}
+/* Le crédit est une mention légale, pas un titre : il reste petit quel que soit
+   le type de schéma (image de la banque ou SVG généré). Sans le préfixe large,
+   un schéma `svg` héritait de la taille du texte courant et s'affichait géant. */
+.schema .credit {
+  margin: 0;
+  font-size: clamp(9px, 1vh, 11.5px);
+  line-height: 1.15;
+  color: var(--texte-doux, #475569);
+  text-align: center;
+  max-width: 90%;
+}
+.diapo-avec-schema .points { font-size: clamp(13px, 1.55vh, 17.5px); }
+
+</style>
+</head>
+<body class="diapo-corps">
+
+<main class="scene">
+<section class="diapo diapo-ouverture actif" data-id="s0" data-duree="300" data-titre="La situation">
+  <p class="marque">3e · OST2 · activité 3</p>
+  <h1 class="diapo-titre">Trottinette ou VAE : comparer un objet et ses interacteurs</h1>
+  <p class="diapo-intro">Un élève vient au collège avec sa trottinette électrique : sous la pluie, l’autonomie baisse plus vite que d’habitude et son smartphone l’alerte sur une chaussée glissante. La même semaine, la municipalité doit choisir quatre VAE pour son libre-service. Deux objets, deux choix à justifier.</p>
+  <p class="diapo-probleme">Comment les interacteurs extérieurs d’un objet technique permettent-ils de le comparer à un autre et de justifier un choix ?</p>
+</section>
+<section class="diapo diapo-documentation" data-id="s1" data-duree="240" data-titre="La documentation">
+  <h2 class="diapo-titre">La documentation technique</h2>
+  <p class="diapo-intro">Scannez ce code : vous y trouverez toutes les fiches.</p>
+  <div class="documentation-qr">
+    <svg class="qr" viewBox="0 0 53 53" role="img" aria-label="QR code vers la documentation technique" shape-rendering="crispEdges"><title>la documentation technique</title><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM14 4h1v1h-1zM17 4h2v1h-2zM24 4h2v1h-2zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h4v1h-4zM40 4h1v1h-1zM42 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM18 5h3v1h-3zM23 5h2v1h-2zM28 5h1v1h-1zM30 5h1v1h-1zM32 5h1v1h-1zM39 5h1v1h-1zM42 5h1v1h-1zM48 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM17 6h2v1h-2zM20 6h2v1h-2zM23 6h1v1h-1zM26 6h5v1h-5zM32 6h1v1h-1zM34 6h1v1h-1zM36 6h2v1h-2zM39 6h1v1h-1zM42 6h1v1h-1zM44 6h3v1h-3zM48 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM17 7h1v1h-1zM22 7h1v1h-1zM25 7h3v1h-3zM30 7h4v1h-4zM35 7h3v1h-3zM39 7h2v1h-2zM42 7h1v1h-1zM44 7h3v1h-3zM48 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM17 8h1v1h-1zM19 8h1v1h-1zM22 8h7v1h-7zM32 8h3v1h-3zM36 8h1v1h-1zM38 8h3v1h-3zM42 8h1v1h-1zM44 8h3v1h-3zM48 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM15 9h3v1h-3zM21 9h1v1h-1zM23 9h2v1h-2zM28 9h1v1h-1zM31 9h2v1h-2zM35 9h2v1h-2zM42 9h1v1h-1zM48 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM40 10h1v1h-1zM42 10h7v1h-7zM13 11h2v1h-2zM16 11h1v1h-1zM21 11h1v1h-1zM24 11h1v1h-1zM28 11h2v1h-2zM32 11h2v1h-2zM35 11h3v1h-3zM5 12h1v1h-1zM10 12h3v1h-3zM15 12h4v1h-4zM20 12h3v1h-3zM24 12h5v1h-5zM33 12h1v1h-1zM35 12h1v1h-1zM41 12h1v1h-1zM47 12h2v1h-2zM4 13h2v1h-2zM7 13h2v1h-2zM12 13h3v1h-3zM16 13h1v1h-1zM20 13h1v1h-1zM23 13h2v1h-2zM28 13h3v1h-3zM33 13h2v1h-2zM37 13h2v1h-2zM40 13h3v1h-3zM44 13h2v1h-2zM4 14h1v1h-1zM6 14h2v1h-2zM9 14h3v1h-3zM13 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM25 14h1v1h-1zM27 14h1v1h-1zM30 14h1v1h-1zM32 14h1v1h-1zM34 14h5v1h-5zM41 14h2v1h-2zM46 14h2v1h-2zM8 15h1v1h-1zM11 15h5v1h-5zM19 15h6v1h-6zM26 15h2v1h-2zM32 15h1v1h-1zM34 15h3v1h-3zM40 15h1v1h-1zM44 15h5v1h-5zM6 16h2v1h-2zM10 16h1v1h-1zM12 16h4v1h-4zM17 16h1v1h-1zM25 16h2v1h-2zM31 16h2v1h-2zM35 16h2v1h-2zM41 16h5v1h-5zM48 16h1v1h-1zM4 17h4v1h-4zM11 17h4v1h-4zM19 17h1v1h-1zM23 17h1v1h-1zM25 17h5v1h-5zM32 17h6v1h-6zM40 17h2v1h-2zM43 17h1v1h-1zM46 17h1v1h-1zM48 17h1v1h-1zM4 18h3v1h-3zM8 18h4v1h-4zM13 18h2v1h-2zM16 18h4v1h-4zM26 18h2v1h-2zM29 18h2v1h-2zM35 18h2v1h-2zM38 18h5v1h-5zM45 18h1v1h-1zM47 18h1v1h-1zM5 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM14 19h2v1h-2zM17 19h1v1h-1zM20 19h1v1h-1zM23 19h1v1h-1zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM33 19h2v1h-2zM46 19h3v1h-3zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h3v1h-3zM12 20h4v1h-4zM17 20h1v1h-1zM20 20h3v1h-3zM27 20h4v1h-4zM34 20h1v1h-1zM37 20h3v1h-3zM47 20h1v1h-1zM11 21h3v1h-3zM15 21h2v1h-2zM18 21h1v1h-1zM21 21h4v1h-4zM26 21h1v1h-1zM28 21h2v1h-2zM32 21h5v1h-5zM40 21h2v1h-2zM45 21h1v1h-1zM48 21h1v1h-1zM4 22h1v1h-1zM7 22h1v1h-1zM9 22h2v1h-2zM12 22h1v1h-1zM15 22h3v1h-3zM21 22h1v1h-1zM25 22h1v1h-1zM27 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM37 22h1v1h-1zM44 22h1v1h-1zM46 22h1v1h-1zM48 22h1v1h-1zM5 23h2v1h-2zM9 23h1v1h-1zM11 23h5v1h-5zM18 23h1v1h-1zM21 23h1v1h-1zM24 23h2v1h-2zM27 23h2v1h-2zM32 23h1v1h-1zM36 23h1v1h-1zM38 23h1v1h-1zM40 23h2v1h-2zM44 23h1v1h-1zM46 23h2v1h-2zM5 24h2v1h-2zM8 24h6v1h-6zM17 24h1v1h-1zM19 24h2v1h-2zM24 24h5v1h-5zM34 24h2v1h-2zM37 24h1v1h-1zM39 24h7v1h-7zM47 24h1v1h-1zM5 25h1v1h-1zM7 25h2v1h-2zM12 25h1v1h-1zM15 25h3v1h-3zM22 25h1v1h-1zM24 25h1v1h-1zM28 25h1v1h-1zM30 25h7v1h-7zM38 25h3v1h-3zM44 25h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM15 26h3v1h-3zM19 26h1v1h-1zM23 26h2v1h-2zM26 26h1v1h-1zM28 26h1v1h-1zM32 26h2v1h-2zM35 26h2v1h-2zM38 26h3v1h-3zM42 26h1v1h-1zM44 26h1v1h-1zM46 26h1v1h-1zM4 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM12 27h1v1h-1zM14 27h3v1h-3zM19 27h2v1h-2zM22 27h1v1h-1zM24 27h1v1h-1zM28 27h1v1h-1zM32 27h1v1h-1zM35 27h4v1h-4zM40 27h1v1h-1zM44 27h3v1h-3zM48 27h1v1h-1zM7 28h12v1h-12zM21 28h9v1h-9zM32 28h1v1h-1zM34 28h1v1h-1zM36 28h2v1h-2zM40 28h5v1h-5zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h2v1h-2zM16 29h2v1h-2zM19 29h2v1h-2zM22 29h1v1h-1zM24 29h3v1h-3zM29 29h2v1h-2zM33 29h5v1h-5zM39 29h1v1h-1zM41 29h1v1h-1zM43 29h1v1h-1zM45 29h4v1h-4zM4 30h3v1h-3zM10 30h1v1h-1zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM20 30h1v1h-1zM22 30h1v1h-1zM24 30h2v1h-2zM28 30h1v1h-1zM35 30h5v1h-5zM41 30h1v1h-1zM43 30h1v1h-1zM46 30h1v1h-1zM4 31h3v1h-3zM9 31h1v1h-1zM12 31h1v1h-1zM14 31h2v1h-2zM17 31h1v1h-1zM25 31h1v1h-1zM27 31h1v1h-1zM29 31h1v1h-1zM37 31h1v1h-1zM39 31h1v1h-1zM43 31h4v1h-4zM48 31h1v1h-1zM4 32h3v1h-3zM9 32h3v1h-3zM15 32h4v1h-4zM20 32h1v1h-1zM24 32h2v1h-2zM27 32h1v1h-1zM29 32h2v1h-2zM34 32h1v1h-1zM37 32h2v1h-2zM41 32h5v1h-5zM47 32h1v1h-1zM5 33h2v1h-2zM8 33h2v1h-2zM12 33h2v1h-2zM15 33h1v1h-1zM17 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM28 33h1v1h-1zM31 33h7v1h-7zM39 33h5v1h-5zM48 33h1v1h-1zM4 34h4v1h-4zM10 34h1v1h-1zM13 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM22 34h5v1h-5zM28 34h2v1h-2zM33 34h1v1h-1zM35 34h3v1h-3zM39 34h2v1h-2zM42 34h3v1h-3zM46 34h1v1h-1zM48 34h1v1h-1zM4 35h1v1h-1zM13 35h1v1h-1zM16 35h2v1h-2zM19 35h1v1h-1zM24 35h1v1h-1zM30 35h1v1h-1zM32 35h2v1h-2zM36 35h4v1h-4zM42 35h2v1h-2zM45 35h3v1h-3zM6 36h1v1h-1zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h2v1h-2zM17 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h3v1h-3zM33 36h3v1h-3zM41 36h2v1h-2zM44 36h2v1h-2zM47 36h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM14 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM22 37h5v1h-5zM29 37h1v1h-1zM31 37h14v1h-14zM46 37h1v1h-1zM8 38h1v1h-1zM10 38h1v1h-1zM13 38h2v1h-2zM17 38h2v1h-2zM23 38h1v1h-1zM29 38h1v1h-1zM31 38h1v1h-1zM35 38h1v1h-1zM37 38h2v1h-2zM40 38h2v1h-2zM45 38h3v1h-3zM5 39h4v1h-4zM11 39h1v1h-1zM14 39h2v1h-2zM17 39h2v1h-2zM20 39h1v1h-1zM23 39h5v1h-5zM30 39h1v1h-1zM32 39h3v1h-3zM36 39h2v1h-2zM39 39h1v1h-1zM42 39h2v1h-2zM45 39h2v1h-2zM48 39h1v1h-1zM4 40h1v1h-1zM7 40h2v1h-2zM10 40h5v1h-5zM17 40h1v1h-1zM20 40h3v1h-3zM24 40h7v1h-7zM32 40h1v1h-1zM34 40h11v1h-11zM12 41h2v1h-2zM19 41h4v1h-4zM24 41h1v1h-1zM28 41h2v1h-2zM31 41h1v1h-1zM34 41h3v1h-3zM39 41h2v1h-2zM44 41h2v1h-2zM48 41h1v1h-1zM4 42h7v1h-7zM12 42h1v1h-1zM17 42h1v1h-1zM19 42h6v1h-6zM26 42h1v1h-1zM28 42h3v1h-3zM35 42h2v1h-2zM38 42h1v1h-1zM40 42h1v1h-1zM42 42h1v1h-1zM44 42h2v1h-2zM47 42h1v1h-1zM4 43h1v1h-1zM10 43h1v1h-1zM13 43h4v1h-4zM19 43h1v1h-1zM22 43h1v1h-1zM24 43h1v1h-1zM28 43h1v1h-1zM31 43h1v1h-1zM34 43h1v1h-1zM37 43h1v1h-1zM39 43h2v1h-2zM44 43h3v1h-3zM4 44h1v1h-1zM6 44h3v1h-3zM10 44h1v1h-1zM13 44h2v1h-2zM17 44h2v1h-2zM20 44h9v1h-9zM30 44h1v1h-1zM33 44h3v1h-3zM38 44h1v1h-1zM40 44h5v1h-5zM4 45h1v1h-1zM6 45h3v1h-3zM10 45h1v1h-1zM13 45h1v1h-1zM15 45h1v1h-1zM17 45h3v1h-3zM22 45h2v1h-2zM25 45h1v1h-1zM27 45h2v1h-2zM30 45h2v1h-2zM33 45h3v1h-3zM39 45h1v1h-1zM43 45h2v1h-2zM46 45h2v1h-2zM4 46h1v1h-1zM6 46h3v1h-3zM10 46h1v1h-1zM13 46h5v1h-5zM22 46h1v1h-1zM24 46h2v1h-2zM29 46h2v1h-2zM32 46h1v1h-1zM35 46h1v1h-1zM37 46h1v1h-1zM40 46h3v1h-3zM44 46h1v1h-1zM48 46h1v1h-1zM4 47h1v1h-1zM10 47h1v1h-1zM12 47h2v1h-2zM17 47h2v1h-2zM20 47h3v1h-3zM29 47h2v1h-2zM32 47h3v1h-3zM36 47h1v1h-1zM39 47h3v1h-3zM45 47h2v1h-2zM4 48h7v1h-7zM13 48h2v1h-2zM17 48h1v1h-1zM19 48h1v1h-1zM22 48h3v1h-3zM27 48h1v1h-1zM29 48h1v1h-1zM34 48h1v1h-1zM37 48h1v1h-1zM39 48h4v1h-4zM47 48h1v1h-1z"/></svg>
+    <p class="documentation-url">https://pierredupuy80-chef.github.io/Mandelatechno/3e/ost3/documentation-3e-ost3.html</p>
+  </div>
+  <p class="documentation-nombre">8 fiches · une page à la fois</p>
+</section>
+<section class="diapo diapo-exercice" data-id="d1"
+         data-niveau="N1" data-duree="300"
+         data-titre="Interacteur ou constituant ?" data-rab="false">
+  <header class="diapo-bandeau"><span class="pastille">N1</span><h2 class="diapo-titre">Interacteur ou constituant ?</h2></header>
+  <p class="diapo-intro">Six éléments entourent la trottinette : rangez chacun dans la colonne qui convient.</p>
+  <ul class="elements"><li class="element">L’utilisateur</li><li class="element">La route</li><li class="element">Le moteur électrique</li><li class="element">Le chargeur de batterie</li><li class="element">Le guidon</li><li class="element">La météo</li></ul>
+  <div class="zone zone-colonnes"><p class="zone-acte">Range</p><div class="zone-corps"><div class="colonnes-ecriture"><div class="colonne-ecriture"><p class="colonne-titre">Interacteur extérieur</p></div><div class="colonne-ecriture"><p class="colonne-titre">Constituant de l’objet</p></div></div><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-apport diapo-avec-schema" data-id="d2"
+         data-duree="360" data-titre="Quatre familles autour de l’objet">
+  <header class="diapo-bandeau"><span class="pastille">Apport</span><h2 class="diapo-titre">Quatre familles autour de l’objet</h2></header>
+  <p class="diapo-intro">Ce qui entoure un objet technique n’est pas du décor : c’est ce avec quoi il échange.</p>
+  <div class="apport-corps">
+    <ul class="points"><li class="point">Un interacteur est un élément (humain, matériel ou environnemental) qui agit sur un système technique ou échange avec lui des informations, de l’énergie ou de la matière.</li><li class="point">La fiche OST2a en distingue quatre familles : les usagers, les données, les autres objets et les éléments de l’environnement.</li><li class="point">Chaque flèche du schéma est un échange, et il va dans les deux sens : l’objet reçoit, et il renseigne en retour.</li></ul>
+    <figure class="schema schema-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 380" role="img" aria-labelledby="titre-interacteurs description-interacteurs" preserveAspectRatio="xMidYMid meet"><title id="titre-interacteurs">Les interacteurs extérieurs d’une trottinette électrique</title><desc id="description-interacteurs">La trottinette électrique est au centre. Autour d’elle, les quatre familles d’interacteurs de la fiche OST2a : les usagers, les données, les autres objets et les éléments de l’environnement. Chaque double flèche indique un échange qui se fait dans les deux sens.</desc><rect x="300" y="142" width="240" height="96" rx="10" fill="#ffffff" stroke="#1f4e79" stroke-width="4"/><g transform="translate(312,160) scale(2.5)" fill="none" stroke="#1f2933" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M6 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M8 17h5a6 6 0 0 1 5 -5v-5a2 2 0 0 0 -2 -2h-1"/><path d="M10 4l-2 4h3l-2 4"/></g><text x="382" y="184" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#1f2933" text-anchor="start">La trottinette</text><text x="382" y="206" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#1f2933" text-anchor="start">électrique</text><rect x="335" y="40" width="170" height="60" rx="10" fill="#e6ebef" stroke="#bcc6d0" stroke-width="2"/><text x="420" y="77" font-family="system-ui, sans-serif" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Usager</text><rect x="335" y="280" width="170" height="60" rx="10" fill="#e6ebef" stroke="#bcc6d0" stroke-width="2"/><text x="420" y="317" font-family="system-ui, sans-serif" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Autres objets</text><rect x="24" y="148" width="224" height="84" rx="10" fill="#e6ebef" stroke="#bcc6d0" stroke-width="2"/><text x="136" y="181" font-family="system-ui, sans-serif" font-size="18" font-weight="700" fill="#1f2933" text-anchor="middle">Éléments de</text><text x="136" y="205" font-family="system-ui, sans-serif" font-size="18" font-weight="700" fill="#1f2933" text-anchor="middle">l’environnement</text><rect x="592" y="148" width="224" height="84" rx="10" fill="#e6ebef" stroke="#bcc6d0" stroke-width="2"/><text x="704" y="200" font-family="system-ui, sans-serif" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Données</text><path d="M420 140 l-7 -13 h14 z" fill="#1f4e79"/><path d="M420 104 l-7 13 h14 z" fill="#1f4e79"/><line x1="420" y1="114" x2="420" y2="130" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/><path d="M420 240 l-7 13 h14 z" fill="#1f4e79"/><path d="M420 276 l-7 -13 h14 z" fill="#1f4e79"/><line x1="420" y1="266" x2="420" y2="250" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/><path d="M298 190 l-13 -7 v14 z" fill="#1f4e79"/><path d="M250 190 l13 -7 v14 z" fill="#1f4e79"/><line x1="260" y1="190" x2="288" y2="190" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/><path d="M542 190 l13 -7 v14 z" fill="#1f4e79"/><path d="M590 190 l-13 -7 v14 z" fill="#1f4e79"/><line x1="580" y1="190" x2="552" y2="190" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/></svg><figcaption class="schema-legende">L’objet est au centre ; autour de lui, les quatre familles d’interacteurs de la fiche OST2a. La double flèche signifie que l’échange se fait dans les deux sens : l’objet reçoit, et il renseigne en retour.</figcaption><p class="credit">Pictogramme de trottinette : Tabler Icons, licence MIT.</p></figure>
+  </div>
+</section>
+<section class="diapo diapo-exercice" data-id="d3"
+         data-niveau="N2" data-duree="300"
+         data-titre="La famille de chaque interacteur" data-rab="false">
+  <header class="diapo-bandeau"><span class="pastille">N2</span><h2 class="diapo-titre">La famille de chaque interacteur</h2></header>
+  <p class="diapo-intro">Quatre interacteurs autour de l’objet : écrivez la famille de chacun.</p>
+  
+  <div class="zone zone-etoile"><p class="zone-acte">Écris la famille</p><div class="zone-corps"><div class="etoile"><svg class="etoile-rayons" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><line x1="50" y1="50" x2="50.00" y2="19.00"/><line x1="50" y1="50" x2="84.00" y2="50.00"/><line x1="50" y1="50" x2="50.00" y2="81.00"/><line x1="50" y1="50" x2="16.00" y2="50.00"/></svg><div class="etoile-centre">La trottinette électrique</div><div class="etoile-branche" style="left:50.00%;top:19.00%"><span class="etoile-titre">le conducteur</span><span class="etoile-reponse" aria-hidden="true"></span></div><div class="etoile-branche" style="left:84.00%;top:50.00%"><span class="etoile-titre">le niveau de batterie</span><span class="etoile-reponse" aria-hidden="true"></span></div><div class="etoile-branche" style="left:50.00%;top:81.00%"><span class="etoile-titre">le smartphone</span><span class="etoile-reponse" aria-hidden="true"></span></div><div class="etoile-branche" style="left:16.00%;top:50.00%"><span class="etoile-titre">la route et la pluie</span><span class="etoile-reponse" aria-hidden="true"></span></div></div><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice diapo-rab" data-id="d4"
+         data-niveau="N2" data-duree="240"
+         data-titre="Ce que l’écran affiche" data-rab="true">
+  <header class="diapo-bandeau"><span class="pastille">N2</span><h2 class="diapo-titre">Ce que l’écran affiche</h2></header>
+  <p class="diapo-intro">L’utilisateur ouvre son application : que lit-il sur l’écran, et à quoi cela lui sert-il ?</p>
+  
+  <div class="zone zone-lignes"><p class="zone-acte">Complète</p><div class="zone-corps"><div class="ligne"><span class="ligne-titre">Ce qu’il lit</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Leur rôle</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Ce qu’elles décident</span><span class="ligne-trait"></span></div><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-apport diapo-avec-schema" data-id="d5"
+         data-duree="360" data-titre="De la batterie à la roue">
+  <header class="diapo-bandeau"><span class="pastille">Apport</span><h2 class="diapo-titre">De la batterie à la roue</h2></header>
+  <p class="diapo-intro">L’énergie qui fait avancer l’objet ne se crée pas : elle se transforme, étape par étape.</p>
+  <div class="apport-corps">
+    <ul class="points"><li class="point">Quatre fonctions se succèdent : alimenter, distribuer, convertir, transmettre.</li><li class="point">La batterie stocke l’énergie électrique, le contrôleur la distribue, le moteur la convertit en mouvement, la transmission l’amène à la roue.</li><li class="point">C’est par cette chaîne que l’objet échange de l’énergie avec l’extérieur : la batterie se recharge, et le moteur la restitue en mouvement.</li></ul>
+    <figure class="schema schema-svg"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 380" role="img" aria-labelledby="titre-chaine description-chaine" preserveAspectRatio="xMidYMid meet"><title id="titre-chaine">La chaîne d’énergie d’une trottinette électrique</title><desc id="description-chaine">Quatre blocs dans l’ordre : la batterie alimente, le contrôleur distribue, le moteur convertit, la transmission amène le mouvement à la roue. Entre deux blocs, une étiquette dit sous quelle forme se trouve l’énergie : électrique jusqu’au moteur, mécanique ensuite.</desc><rect x="24" y="48" width="138" height="120" rx="10" fill="#ffffff" stroke="#1f4e79" stroke-width="4"/><text x="93" y="96" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">Batterie</text><text x="93" y="136" font-family="system-ui, sans-serif" font-size="14" font-weight="400" fill="#6b7783" text-anchor="middle">alimenter</text><rect x="242" y="48" width="138" height="120" rx="10" fill="#ffffff" stroke="#1f4e79" stroke-width="4"/><text x="311" y="96" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">Contrôleur</text><text x="311" y="136" font-family="system-ui, sans-serif" font-size="14" font-weight="400" fill="#6b7783" text-anchor="middle">distribuer</text><rect x="460" y="48" width="138" height="120" rx="10" fill="#ffffff" stroke="#1f4e79" stroke-width="4"/><text x="529" y="96" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">Moteur</text><text x="529" y="136" font-family="system-ui, sans-serif" font-size="14" font-weight="400" fill="#6b7783" text-anchor="middle">convertir</text><rect x="678" y="48" width="138" height="120" rx="10" fill="#ffffff" stroke="#1f4e79" stroke-width="4"/><text x="747" y="96" font-family="system-ui, sans-serif" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">Transmission</text><text x="747" y="136" font-family="system-ui, sans-serif" font-size="14" font-weight="400" fill="#6b7783" text-anchor="middle">transmettre</text><line x1="162" y1="108" x2="230" y2="108" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/><path d="M242 108 l-13 -7 v14 z" fill="#1f4e79"/><line x1="380" y1="108" x2="448" y2="108" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/><path d="M460 108 l-13 -7 v14 z" fill="#1f4e79"/><line x1="598" y1="108" x2="666" y2="108" stroke="#1f4e79" stroke-width="4" stroke-linecap="round"/><path d="M678 108 l-13 -7 v14 z" fill="#1f4e79"/><line x1="202" y1="120" x2="202" y2="206" stroke="#bcc6d0" stroke-width="2" stroke-dasharray="6 6"/><text x="202" y="226" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#1f4e79" text-anchor="middle">énergie électrique</text><line x1="420" y1="120" x2="420" y2="206" stroke="#bcc6d0" stroke-width="2" stroke-dasharray="6 6"/><text x="420" y="226" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#1f4e79" text-anchor="middle">énergie électrique</text><line x1="638" y1="120" x2="638" y2="206" stroke="#bcc6d0" stroke-width="2" stroke-dasharray="6 6"/><text x="638" y="226" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#1f4e79" text-anchor="middle">énergie mécanique</text><rect x="24" y="266" width="792" height="70" rx="10" fill="#e6ebef"/><text x="420" y="296" font-family="system-ui, sans-serif" font-size="15" font-weight="400" fill="#1f2933" text-anchor="middle">La batterie stocke l’énergie, le contrôleur la distribue,</text><text x="420" y="320" font-family="system-ui, sans-serif" font-size="15" font-weight="400" fill="#1f2933" text-anchor="middle">le moteur la convertit en mouvement, la transmission l’amène à la roue.</text></svg><figcaption class="schema-legende">Les quatre blocs de la chaîne d’énergie, dans l’ordre du flux. Entre deux blocs, l’étiquette dit sous quelle forme se trouve l’énergie : électrique jusqu’au moteur, mécanique ensuite. Les flèches n’ont qu’une pointe : l’énergie va de la batterie vers la roue, elle ne revient pas.</figcaption></figure>
+  </div>
+</section>
+<section class="diapo diapo-exercice" data-id="d6"
+         data-niveau="N2" data-duree="300"
+         data-titre="Matière, énergie ou information ?" data-rab="false">
+  <header class="diapo-bandeau"><span class="pastille">N2</span><h2 class="diapo-titre">Matière, énergie ou information ?</h2></header>
+  <p class="diapo-intro">Chaque interacteur échange quelque chose avec l’objet : dites de quelle nature est cet échange.</p>
+  
+  <div class="zone zone-tableau"><p class="zone-acte">Remplis la grille</p><div class="zone-corps"><table class="grille"><thead><tr><th class="grille-entete" scope="col">L’échange</th><th class="grille-entete" scope="col">Sa nature</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Les ordres du conducteur</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Le niveau de batterie affiché</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">La batterie qui alimente le moteur</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Le contact de la roue avec la route</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Le chargement de la batterie sur le secteur</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">La pluie sur la chaussée</th><td class="grille-case"></td></tr></tbody></table><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice" data-id="d7"
+         data-niveau="N3" data-duree="360"
+         data-titre="Derrière chaque besoin, un interacteur" data-rab="false">
+  <header class="diapo-bandeau"><span class="pastille">N3</span><h2 class="diapo-titre">Derrière chaque besoin, un interacteur</h2></header>
+  <p class="diapo-intro">Quatre besoins pour le trajet quotidien : trouvez l’interacteur caché derrière chacun.</p>
+  
+  <div class="zone zone-tableau"><p class="zone-acte">Remplis la grille</p><div class="zone-corps"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Ce que l’ami veut</th><th class="grille-entete" scope="col">Interacteur extérieur</th><th class="grille-entete" scope="col">Famille</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Connaître l’autonomie restante avant de partir</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Rester sûr par tous les temps</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Une application mobile simple et fiable</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Un éclairage efficace pour rouler de nuit</th><td class="grille-case"></td><td class="grille-case"></td></tr></tbody></table><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice" data-id="d8"
+         data-niveau="N3" data-duree="420"
+         data-titre="Trottinette C ou VAE 4 ?" data-rab="false">
+  <header class="diapo-bandeau"><span class="pastille">N3</span><h2 class="diapo-titre">Trottinette C ou VAE 4 ?</h2></header>
+  <p class="diapo-intro">Deux objets, six critères : relevez les valeurs et désignez le gagnant de chaque ligne.</p>
+  
+  <div class="zone zone-comparatif"><p class="zone-acte">Compare</p><div class="zone-corps"><table class="comparatif"><thead><tr><th class="comparatif-entete comparatif-critere" scope="col"></th><th class="comparatif-entete" scope="col">Trottinette C</th><th class="comparatif-entete" scope="col">VAE 4 (TREK CITY EVO 600)</th></tr></thead><tbody><tr><th class="comparatif-critere" scope="row">Autonomie annoncée</th><td class="comparatif-case"></td><td class="comparatif-case"></td></tr><tr><th class="comparatif-critere" scope="row">Vitesse maximale</th><td class="comparatif-case"></td><td class="comparatif-case"></td></tr><tr><th class="comparatif-critere" scope="row">Puissance moteur</th><td class="comparatif-case"></td><td class="comparatif-case"></td></tr><tr><th class="comparatif-critere" scope="row">Temps de charge</th><td class="comparatif-case"></td><td class="comparatif-case"></td></tr><tr><th class="comparatif-critere" scope="row">Poids</th><td class="comparatif-case"></td><td class="comparatif-case"></td></tr><tr><th class="comparatif-critere" scope="row">Prix</th><td class="comparatif-case"></td><td class="comparatif-case"></td></tr></tbody></table><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice diapo-rab" data-id="d9"
+         data-niveau="N4" data-duree="300"
+         data-titre="Deux gagnants, une seule décision" data-rab="true">
+  <header class="diapo-bandeau"><span class="pastille">N4</span><h2 class="diapo-titre">Deux gagnants, une seule décision</h2></header>
+  <p class="diapo-intro">Le comparatif ne tranche pas tout seul : expliquez ce qui décide, et ce qui manque.</p>
+  
+  <div class="zone zone-lignes"><p class="zone-acte">Explique</p><div class="zone-corps"><div class="ligne"><span class="ligne-titre">Le critère qui décide</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Pourquoi celui-là</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Ce qui manque</span><span class="ligne-trait"></span></div><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice diapo-rab" data-id="d10"
+         data-niveau="N4" data-duree="300"
+         data-titre="Trois conseils pour choisir" data-rab="true">
+  <header class="diapo-bandeau"><span class="pastille">N4</span><h2 class="diapo-titre">Trois conseils pour choisir</h2></header>
+  <p class="diapo-intro">Appuyez chaque conseil sur une caractéristique du comparatif.</p>
+  
+  <div class="zone zone-lignes"><p class="zone-acte">Rédige</p><div class="zone-corps"><div class="ligne"><span class="ligne-titre">Conseil 1</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Conseil 2</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Conseil 3</span><span class="ligne-trait"></span></div><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice diapo-rab" data-id="d11"
+         data-niveau="N4" data-duree="300"
+         data-titre="Le libre-service change d’usager" data-rab="true">
+  <header class="diapo-bandeau"><span class="pastille">N4</span><h2 class="diapo-titre">Le libre-service change d’usager</h2></header>
+  <p class="diapo-intro">En libre-service, l’usager n’est plus le propriétaire : qu’est-ce que cela change ?</p>
+  
+  <div class="zone zone-tableau"><p class="zone-acte">Remplis la grille</p><div class="zone-corps"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Interacteur</th><th class="grille-entete" scope="col">Ce qui change en libre-service</th><th class="grille-entete" scope="col">Conséquence pour le choix</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Usager</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Autres objets</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Éléments de l’environnement</th><td class="grille-case"></td><td class="grille-case"></td></tr></tbody></table><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-exercice diapo-rab" data-id="d12"
+         data-niveau="N2" data-duree="300"
+         data-titre="Le cycle de vie d’un VAE" data-rab="true">
+  <header class="diapo-bandeau"><span class="pastille">N2</span><h2 class="diapo-titre">Le cycle de vie d’un VAE</h2></header>
+  <p class="diapo-intro">Les cinq étapes sont mélangées : écrivez le rang de chacune, de 1 à 5.</p>
+  
+  <div class="zone zone-frise"><p class="zone-acte">Écris le rang (1 à 5)</p><div class="zone-corps"><div class="frise-piste"><div class="frise-segment"><span class="frise-numero">1</span><span class="frise-titre">utilisation</span><span class="frise-vide"></span></div><span class="frise-fleche" aria-hidden="true">→</span><div class="frise-segment"><span class="frise-numero">2</span><span class="frise-titre">fabrication</span><span class="frise-vide"></span></div><span class="frise-fleche" aria-hidden="true">→</span><div class="frise-segment"><span class="frise-numero">3</span><span class="frise-titre">fin de vie / recyclage</span><span class="frise-vide"></span></div><span class="frise-fleche" aria-hidden="true">→</span><div class="frise-segment"><span class="frise-numero">4</span><span class="frise-titre">extraction ou fabrication des matières premières</span><span class="frise-vide"></span></div><span class="frise-fleche" aria-hidden="true">→</span><div class="frise-segment"><span class="frise-numero">5</span><span class="frise-titre">transport</span><span class="frise-vide"></span></div></div><span class="zone-coins" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div></div>
+</section>
+<section class="diapo diapo-synthese" data-id="synthese"
+         data-duree="420" data-titre="Conclusion, à retenir">
+  <header class="diapo-bandeau"><span class="pastille">Conclusion</span><h2 class="diapo-titre">Conclusion, à retenir</h2></header>
+  <p class="diapo-intro">La classe répond ; le professeur reformule et fixe la trace écrite au tableau.</p>
+  <ol class="questions-recap"><li class="question-recap">Qu’est-ce qu’un interacteur extérieur, et quelles sont ses quatre familles ?</li><li class="question-recap">Pourquoi le moteur et le guidon ne sont-ils pas des interacteurs extérieurs ?</li><li class="question-recap">De quelle nature peut être un échange entre l’objet et ce qui l’entoure ?</li><li class="question-recap">Que transporte la chaîne d’énergie, et dans quel ordre ?</li><li class="question-recap">Comment les interacteurs aident-ils à justifier un choix entre deux objets ?</li><li class="question-recap">Pourquoi un seul critère ne suffit-il pas à choisir ?</li><li class="question-recap">Que nous apprennent l’indice énergétique et l’indice de réparabilité ?</li></ol>
+</section>
+</main>
+
+<div class="pied">
+  <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+  <span class="compteur" aria-hidden="true">1 / 15</span>
+</div>
+
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet.</footer>
+
+<script>
+
+(function () {
+  'use strict';
+
+  var diapos = Array.prototype.slice.call(document.querySelectorAll('.diapo'));
+  if (!diapos.length) { return; }
+  var index = 0;
+  // Une télécommande de présentation peut envoyer une touche PUIS un clic pour
+  // le même appui : on ignore le clic qui suit une touche de moins de 400 ms.
+  // En revanche on n'ignore jamais un second appui sur la touche : le
+  // professeur doit pouvoir avancer vite, même en tapant plusieurs fois.
+  var derniereTouche = 0;
+
+  function afficher(n) {
+    if (n < 0) { n = 0; }
+    if (n > diapos.length - 1) { n = diapos.length - 1; }
+    index = n;
+    diapos.forEach(function (d, i) { d.classList.toggle('actif', i === n); });
+    var compteur = document.querySelector('.compteur');
+    if (compteur) { compteur.textContent = (n + 1) + ' / ' + diapos.length; }
+
+    // Relance l'animation du schéma de maillage : la classe retire la classe
+    // puis la remet à l'image suivante, sinon le navigateur ne rejoue pas les
+    // animations. Revenir sur la diapositive la rejoue donc depuis le début,
+    // ce qui sert quand le professeur veut remontrer la construction.
+    diapos.forEach(function (diapo) { diapo.classList.remove('joue'); });
+    void document.body.offsetWidth;                    // force le recalcul de style
+    if (diapos[n].querySelector('.maillage-anime')) {
+      diapos[n].classList.add('joue');
+    }
+  }
+
+  function bouger(pas) { afficher(index + pas); }
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.altKey || evt.ctrlKey || evt.metaKey) { return; }
+    derniereTouche = Date.now();
+    switch (evt.key) {
+      case 'ArrowRight': case 'PageDown': case ' ': case 'Enter':
+        evt.preventDefault(); bouger(1); break;
+      case 'ArrowLeft': case 'PageUp':
+        evt.preventDefault(); bouger(-1); break;
+      case 'Home': evt.preventDefault(); afficher(0); break;
+      case 'End': evt.preventDefault(); afficher(diapos.length - 1); break;
+    }
+  });
+
+  // Une télécommande de présentation émet souvent un clic : moitié droite =
+  // avancer, moitié gauche = reculer. Il n'y a aucun autre élément cliquable.
+  document.addEventListener('click', function (evt) {
+    if (Date.now() - derniereTouche < 400) { return; }
+    if (evt.target.closest && evt.target.closest('a')) { return; }
+    bouger(evt.clientX > window.innerWidth / 2 ? 1 : -1);
+  });
+
+  var demande = (window.location.search.match(/[?&]c=(\d+)/) || [])[1];
+  afficher(demande ? parseInt(demande, 10) - 1 : 0);
+})();
+
+</script>
+</body>
+</html>

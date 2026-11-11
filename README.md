@@ -28,6 +28,9 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/ost3/app-comparateur-ost.html    OST 3 — comparateur trottinette / VAE
 3e/ost3/activite-ost-ideal.html     OST 3 — la trottinette dans son environnement (jeu bonus)
 3e/ost3/jeu-trottinette.html        Bonus — « Le trajet du prof de techno »
+3e/ost3/activite-3e-ost3-orale.html                OST 3 — diaporama tableau blanc (interacteurs, comparaison trottinette / VAE)
+3e/ost3/documentation-3e-ost3.html                 OST 3 — la documentation (viewer PDF, cible de l'unique QR code)
+3e/ost3/documentation-3e-ost3/*.pdf|jpg            OST 3 — les 8 fiches en PDF et les images de leurs pages
 3e/sfc1/activite-fortnite-client-serveur.html  SFC 1 — le trajet d'un tir en jeu en ligne (sans quiz)
 3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
 3e/tp-ia/                           TP d'apprentissage IA
