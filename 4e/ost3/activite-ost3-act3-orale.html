@@ -710,6 +710,69 @@ body.diapo-corps {
   font-weight: 800;
 }
 
+
+/* --------------------------------------------------------------------------
+   Schéma de maillage : le réseau se construit à l'apparition de la diapositive.
+   Chaque élément porte son rang (--i) et, pour un trait, sa longueur : la
+   cascade montre les nœuds qui s'ajoutent par cercle de proximité et les
+   liaisons qu'ils apportent. Le professeur commente pendant que ça se dessine.
+
+   Aucune commande à l'écran : l'animation part à l'affichage et rejoue si l'on
+   revient sur la diapositive (classe `.joue` posée par le JavaScript de
+   navigation).
+   -------------------------------------------------------------------------- */
+.maillage-anime .maillage-element {
+  opacity: 1;
+  transform: none;
+}
+
+/* On n'anime que la diapositive marquée .joue : une diapositive simplement
+   présente dans le DOM (donc invisible) ne consomme aucun calcul. */
+.diapo-apport.joue .maillage-anime line.maillage-element {
+  stroke-dasharray: var(--longueur);
+  stroke-dashoffset: var(--longueur);
+  animation: maillage-trace 0.55s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.85s);
+}
+.diapo-apport.joue .maillage-anime circle.maillage-element,
+.diapo-apport.joue .maillage-anime g.maillage-element {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: maillage-apparait 0.45s ease-out forwards;
+  animation-delay: calc(var(--i) * 0.85s);
+}
+
+@keyframes maillage-trace {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes maillage-apparait {
+  from { opacity: 0; transform: scale(0.45); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Impression : le schéma doit sortir complet, jamais figé au milieu. */
+@media print {
+  .maillage-anime .maillage-element {
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+}
+
+/* Accessibilité : qui demande moins d'animations voit le schéma d'un coup. */
+@media (prefers-reduced-motion: reduce) {
+  .diapo-apport.joue .maillage-anime line.maillage-element,
+  .diapo-apport.joue .maillage-anime circle.maillage-element,
+  .diapo-apport.joue .maillage-anime g.maillage-element {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 </style>
 </head>
 <body class="diapo-corps">
@@ -790,7 +853,7 @@ body.diapo-corps {
   <p class="diapo-intro">Une autre famille d’objets connectés : ceux qui forment un réseau maillé.</p>
   <div class="apport-corps">
     <ul class="points"><li class="point">Un protocole sans fil : Zigbee relie des objets connectés par ondes radio, sur la norme IEEE 802.15.4, dans la bande 2,4 GHz, avec un débit faible (jusqu’à 250 kbit/s).</li><li class="point">Un réseau maillé : les routeurs relaient les messages des autres appareils ; un paquet peut emprunter plusieurs chemins et le réseau contourne un nœud en panne.</li><li class="point">Trois topologies, trois rôles : étoile, arbre ou maillé ; un seul coordinateur par réseau, des routeurs alimentés sur secteur et des terminaux souvent sur pile.</li><li class="point">Basse consommation : les terminaux dorment entre deux transmissions, d’où une autonomie de plusieurs années ; les échanges sont chiffrés en AES-128.</li></ul>
-    <figure class="schema schema-maillage"><svg viewBox="0 0 840 380" role="img" aria-label="Réseau maillé : sept appareils reliés entre eux, chacun pouvant relayer les messages des autres"><title>Réseau maillé</title><line x1="420" y1="42" x2="300" y2="128" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="420" y1="42" x2="540" y2="128" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="300" y1="128" x2="192" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="300" y1="128" x2="420" y2="232" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="300" y1="128" x2="540" y2="128" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="540" y1="128" x2="648" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="540" y1="128" x2="420" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="192" y1="232" x2="300" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="192" y1="232" x2="420" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="420" y1="232" x2="300" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="420" y1="232" x2="540" y2="336" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="420" y1="232" x2="648" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="648" y1="232" x2="540" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="300" y1="336" x2="540" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><rect x="386" y="24" width="68" height="36" rx="6" fill="#0f172a"/><text x="420" y="48" text-anchor="middle" font-size="16" font-family="system-ui, sans-serif" fill="#ffffff">box</text><circle cx="300" cy="128" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="540" cy="128" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="192" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="420" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="648" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="300" cy="336" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="540" cy="336" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/></svg><figcaption class="schema-legende">Le boîtier distingué est la passerelle : elle relie le réseau maillé au reste de la maison. Le trait épais montre un chemin possible pour un message ; les autres liaisons sont en gris.</figcaption></figure>
+    <figure class="schema schema-maillage"><svg viewBox="0 0 840 380" role="img" aria-label="Réseau maillé : sept appareils reliés entre eux, chacun pouvant relayer les messages des autres"><title>Réseau maillé</title><g class="maillage-anime"><line class="maillage-element" style="--i:1;--longueur:147.6" x1="420" y1="42" x2="300" y2="128" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line class="maillage-element" style="--i:1;--longueur:147.6" x1="420" y1="42" x2="540" y2="128" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:2;--longueur:149.9" x1="300" y1="128" x2="192" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:2;--longueur:158.8" x1="300" y1="128" x2="420" y2="232" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line class="maillage-element" style="--i:1;--longueur:240.0" x1="300" y1="128" x2="540" y2="128" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:2;--longueur:149.9" x1="540" y1="128" x2="648" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:2;--longueur:158.8" x1="540" y1="128" x2="420" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:3;--longueur:149.9" x1="192" y1="232" x2="300" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:2;--longueur:228.0" x1="192" y1="232" x2="420" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:3;--longueur:158.8" x1="420" y1="232" x2="300" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:3;--longueur:158.8" x1="420" y1="232" x2="540" y2="336" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line class="maillage-element" style="--i:2;--longueur:228.0" x1="420" y1="232" x2="648" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:3;--longueur:149.9" x1="648" y1="232" x2="540" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line class="maillage-element" style="--i:3;--longueur:240.0" x1="300" y1="336" x2="540" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><g class="maillage-element" style="--i:0"><rect x="386" y="24" width="68" height="36" rx="6" fill="#0f172a"/><text x="420" y="48" text-anchor="middle" font-size="16" font-family="system-ui, sans-serif" fill="#ffffff">box</text></g><circle class="maillage-element" style="--i:1" cx="300" cy="128" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle class="maillage-element" style="--i:1" cx="540" cy="128" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle class="maillage-element" style="--i:2" cx="192" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle class="maillage-element" style="--i:2" cx="420" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle class="maillage-element" style="--i:2" cx="648" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle class="maillage-element" style="--i:3" cx="300" cy="336" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle class="maillage-element" style="--i:3" cx="540" cy="336" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/></g></svg><figcaption class="schema-legende">Le boîtier distingué est la passerelle : elle relie le réseau maillé au reste de la maison. Le trait épais montre un chemin possible pour un message ; les autres liaisons sont en gris.</figcaption></figure>
   </div>
 </section>
 <section class="diapo diapo-apport diapo-avec-schema" data-id="d8"
@@ -883,6 +946,16 @@ body.diapo-corps {
     diapos.forEach(function (d, i) { d.classList.toggle('actif', i === n); });
     var compteur = document.querySelector('.compteur');
     if (compteur) { compteur.textContent = (n + 1) + ' / ' + diapos.length; }
+
+    // Relance l'animation du schéma de maillage : la classe retire la classe
+    // puis la remet à l'image suivante, sinon le navigateur ne rejoue pas les
+    // animations. Revenir sur la diapositive la rejoue donc depuis le début,
+    // ce qui sert quand le professeur veut remontrer la construction.
+    diapos.forEach(function (diapo) { diapo.classList.remove('joue'); });
+    void document.body.offsetWidth;                    // force le recalcul de style
+    if (diapos[n].querySelector('.maillage-anime')) {
+      diapos[n].classList.add('joue');
+    }
   }
 
   function bouger(pas) { afficher(index + pas); }
