@@ -773,6 +773,138 @@ body.diapo-corps {
   }
 }
 
+/* --------------------------------------------------------------------------
+   Cours « logos » : six marques, leur acronyme explicité, qui les a définies
+   et les produits concernés. C'est ce qui rend la diapositive compréhensible :
+   un sigle seul ne dit rien à un élève de 4e.
+   -------------------------------------------------------------------------- */
+.diapo-logos .diapo-chapeau {
+  margin: 0 0 clamp(6px, 1.2vh, 14px);
+  font-size: clamp(15px, 1.7vh, 20px);
+  line-height: 1.3;
+  color: var(--texte-doux);
+}
+.grille-logos {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  margin-top: clamp(4px, 0.9vh, 12px);
+  gap: clamp(8px, 1.6vh, 18px) clamp(10px, 1.8vw, 26px);
+}
+.logo-carte {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 16px);
+  padding: clamp(6px, 1vh, 12px) clamp(8px, 1vw, 14px);
+  border: 1.5px solid var(--trait, #cbd5e1);
+  border-radius: 10px;
+  background: #ffffff;
+  min-width: 0;
+}
+.logo-marque {
+  display: block;
+  line-height: 0;
+  flex: none;
+}
+.logo-marque svg {
+  display: block;
+  width: clamp(62px, 7.4vw, 108px);
+  height: auto;
+}
+.logo-corps {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.logo-sigle {
+  font-size: clamp(17px, 2.2vh, 26px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+.logo-nom {
+  font-size: clamp(12px, 1.6vh, 18px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--texte-doux);
+  overflow-wrap: anywhere;
+}
+.logo-defini,
+.logo-produits {
+  font-size: clamp(12px, 1.5vh, 17px);
+  line-height: 1.25;
+  color: var(--texte-doux);
+  overflow-wrap: anywhere;
+}
+.logo-defini b,
+.logo-produits b {
+  font-weight: 700;
+  color: var(--texte);
+}
+
+/* --------------------------------------------------------------------------
+   Surface « relier » : deux colonnes et un large couloir vide au milieu, dans
+   lequel l'élève trace les flèches au feutre.
+   -------------------------------------------------------------------------- */
+.zone-relier {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 0.34fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 22px);
+}
+.relier-colonne {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(6px, 1.1vh, 14px);
+  min-width: 0;
+}
+.relier-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: clamp(44px, 6vh, 64px);
+  padding: clamp(4px, 0.8vh, 10px) clamp(6px, 0.9vw, 12px);
+  border: 1.5px solid var(--trait-fort, #94a3b8);
+  border-radius: 8px;
+  background: #ffffff;
+  min-width: 0;
+}
+.relier-cle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.9em;
+  height: 1.9em;
+  border-radius: 50%;
+  background: var(--encre, #0f172a);
+  color: #ffffff;
+  font-size: clamp(12px, 1.4vh, 16px);
+  font-weight: 800;
+}
+.relier-texte {
+  font-size: clamp(14px, 1.7vh, 20px);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.relier-couloir {
+  align-self: stretch;
+  display: block;
+  border-left: 1px dashed var(--trait, #cbd5e1);
+  border-right: 1px dashed var(--trait, #cbd5e1);
+}
+
 </style>
 </head>
 <body class="diapo-corps">
@@ -793,23 +925,21 @@ body.diapo-corps {
   </div>
   <p class="documentation-nombre">8 fiches · une page à la fois</p>
 </section>
-<section class="diapo diapo-exercice" data-id="d1"
-         data-niveau="N1" data-duree="300"
-         data-titre="D’où viennent les contraintes ?" data-rab="false">
-  <p class="marque">N1</p>
-  <h2 class="diapo-titre">D’où viennent les contraintes ?</h2>
-  <p class="diapo-intro">Trois sources imposent des exigences à une ampoule connectée.</p>
-  <ul class="elements"><li class="element">Marquage CE</li><li class="element">Ampoule pilotable par l’application Tapo</li><li class="element">Étiquette énergie</li></ul>
-  <div class="zone zone-colonnes"><div class="colonnes-ecriture"><div class="colonne-ecriture"><p class="colonne-titre">Les normes</p></div><div class="colonne-ecriture"><p class="colonne-titre">Le cahier des charges</p></div><div class="colonne-ecriture"><p class="colonne-titre">Les labels et certifications</p></div></div></div>
+<section class="diapo diapo-apport diapo-logos" data-id="d1"
+         data-duree="420" data-titre="Six marques à savoir reconnaître">
+  <h2 class="diapo-titre">Six marques à savoir reconnaître</h2>
+  <p class="diapo-intro">Sur un emballage, ces marques disent ce que le produit respecte.</p>
+  <p class="diapo-chapeau">CE, RoHS et ErP sont des règles de l’Union européenne ; Wi-Fi et Zigbee sont des marques de certification adossées à des normes IEEE.</p>
+  <ul class="grille-logos"><li class="logo-carte"><span class="logo-marque"><svg width="92" height="92" viewBox="0 0 100 100" role="img" aria-label="Marquage CE"><rect x="10" y="22" width="80" height="56" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="4"/><text x="50" y="64" text-anchor="middle" font-size="34" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">CE</text></svg></span><span class="logo-corps"><span class="logo-sigle">CE</span><span class="logo-nom">Conformité Européenne</span><span class="logo-defini"><b>Défini par</b> l’Union européenne</span><span class="logo-produits"><b>Concerne</b> tous les produits vendus dans l’Union</span></span></li><li class="logo-carte"><span class="logo-marque"><svg width="92" height="92" viewBox="0 0 100 100" role="img" aria-label="Marquage RoHS"><circle cx="50" cy="50" r="38" fill="#ffffff" stroke="#0f172a" stroke-width="4"/><line x1="22" y1="78" x2="78" y2="22" stroke="#0f172a" stroke-width="4"/><text x="50" y="58" text-anchor="middle" font-size="20" font-weight="700" font-family="system-ui, sans-serif" fill="#0f172a">RoHS</text></svg></span><span class="logo-corps"><span class="logo-sigle">RoHS</span><span class="logo-nom">Restriction of Hazardous Substances</span><span class="logo-defini"><b>Défini par</b> l’Union européenne</span><span class="logo-produits"><b>Concerne</b> les appareils électriques et électroniques</span></span></li><li class="logo-carte"><span class="logo-marque"><svg width="92" height="92" viewBox="0 0 100 100" role="img" aria-label="Écoconception ErP"><circle cx="50" cy="50" r="38" fill="#ffffff" stroke="#0f172a" stroke-width="4"/><path d="M55 20 L34 54 h13 l-4 26 22-34 H52 z" fill="#0f172a"/></svg></span><span class="logo-corps"><span class="logo-sigle">ErP</span><span class="logo-nom">Energy-related Products</span><span class="logo-defini"><b>Défini par</b> l’Union européenne</span><span class="logo-produits"><b>Concerne</b> les produits qui consomment de l’énergie</span></span></li><li class="logo-carte"><span class="logo-marque"><svg width="92" height="92" viewBox="0 0 100 100" role="img" aria-label="Étiquette énergie"><rect x="14" y="14" width="72" height="72" rx="4" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><rect x="18" y="22" width="46" height="7" rx="1" fill="#009a44"/><text x="68" y="28.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">A</text><rect x="18" y="31" width="46" height="7" rx="1" fill="#4cb944"/><text x="68" y="37.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">B</text><rect x="18" y="40" width="46" height="7" rx="1" fill="#bfd730"/><text x="68" y="46.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">C</text><rect x="18" y="49" width="46" height="7" rx="1" fill="#fff200"/><text x="68" y="55.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">D</text><rect x="18" y="58" width="46" height="7" rx="1" fill="#f8b133"/><text x="68" y="64.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">E</text><rect x="18" y="67" width="46" height="7" rx="1" fill="#ee7f1b"/><text x="68" y="73.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">F</text><rect x="18" y="76" width="46" height="7" rx="1" fill="#e30613"/><text x="68" y="82.6" font-size="9" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">G</text></svg></span><span class="logo-corps"><span class="logo-sigle">Étiquette énergie</span><span class="logo-nom">Étiquette énergie, échelle A à G</span><span class="logo-defini"><b>Défini par</b> l’Union européenne</span><span class="logo-produits"><b>Concerne</b> les ampoules et les appareils électroménagers</span></span></li><li class="logo-carte"><span class="logo-marque"><svg width="92" height="92" viewBox="0 0 100 100" role="img" aria-label="Certification Wi-Fi"><circle cx="50" cy="50" r="38" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><path d="M30 46a26 26 0 0 1 40 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/><path d="M37 56a17 17 0 0 1 26 0" fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="66" r="4.5" fill="#0f172a"/></svg></span><span class="logo-corps"><span class="logo-sigle">Wi-Fi</span><span class="logo-nom">Wi-Fi, marque Wi-Fi CERTIFIED</span><span class="logo-defini"><b>Défini par</b> la Wi-Fi Alliance</span><span class="logo-produits"><b>Concerne</b> les appareils qui communiquent par le réseau sans fil de la maison</span></span></li><li class="logo-carte"><span class="logo-marque"><svg width="92" height="92" viewBox="0 0 100 100" role="img" aria-label="Certification Zigbee"><polygon points="50,14 82,32 82,68 50,86 18,68 18,32" fill="#ffffff" stroke="#0f172a" stroke-width="4"/><text x="50" y="63" text-anchor="middle" font-size="30" font-weight="800" font-family="system-ui, sans-serif" fill="#0f172a">Z</text></svg></span><span class="logo-corps"><span class="logo-sigle">Zigbee</span><span class="logo-defini"><b>Défini par</b> la Connectivity Standards Alliance (CSA)</span><span class="logo-produits"><b>Concerne</b> les objets connectés à faible consommation, souvent sur pile</span></span></li></ul>
 </section>
-<section class="diapo diapo-apport diapo-sans-schema" data-id="d2"
-         data-duree="360" data-titre="Normes, labels et certifications">
-  <h2 class="diapo-titre">Normes, labels et certifications</h2>
-  <p class="diapo-intro">Les trois sources nommées à la diapositive précédente ne garantissent pas la même chose.</p>
-  <div class="apport-corps">
-    <ul class="points"><li class="point">Une norme fixe les règles techniques qu’un produit doit respecter. Le marquage CE atteste que le fabricant déclare s’y conformer, sous sa responsabilité.</li><li class="point">RoHS limite l’usage de substances dangereuses dans les équipements électriques et électroniques ; ErP fixe des exigences d’écoconception.</li><li class="point">Un label ou une certification atteste qu’un produit répond à des critères de qualité et de performance. La certification est délivrée par un organisme indépendant après contrôle.</li><li class="point">Sur les ampoules et les appareils électroménagers, l’étiquette énergie est obligatoire : elle classe le produit de A, le plus efficace, à G, et indique sa consommation en kWh/1000 h.</li></ul>
-    
-  </div>
+<section class="diapo diapo-exercice" data-id="d2"
+         data-niveau="N1" data-duree="480"
+         data-titre="Reliez chaque objet à sa marque" data-rab="false">
+  <p class="marque">N1</p>
+  <h2 class="diapo-titre">Reliez chaque objet à sa marque</h2>
+  <p class="diapo-intro">Tracez une flèche entre chaque objet et la marque qui le concerne.</p>
+  
+  <div class="zone zone-relier"><ul class="relier-colonne relier-gauche"><li class="relier-item"><span class="relier-cle">A</span><span class="relier-texte">Une ampoule LED mise en vente en France</span></li><li class="relier-item"><span class="relier-cle">B</span><span class="relier-texte">La boîte d’ampoule avec l’échelle A à G</span></li><li class="relier-item"><span class="relier-cle">C</span><span class="relier-texte">Un fabricant qui remplace le plomb de ses soudures</span></li><li class="relier-item"><span class="relier-cle">D</span><span class="relier-texte">Un chargeur qui doit consommer moins en veille</span></li><li class="relier-item"><span class="relier-cle">E</span><span class="relier-texte">Une ampoule qui rejoint la box par ondes radio</span></li><li class="relier-item"><span class="relier-cle">F</span><span class="relier-texte">Un capteur sur pile qui relaie les messages des autres</span></li></ul><span class="relier-couloir" aria-hidden="true"></span><ul class="relier-colonne relier-droite"><li class="relier-item"><span class="relier-cle">1</span><span class="relier-texte">Zigbee — marque de certification</span></li><li class="relier-item"><span class="relier-cle">2</span><span class="relier-texte">CE — Conformité Européenne</span></li><li class="relier-item"><span class="relier-cle">3</span><span class="relier-texte">Étiquette énergie — échelle A à G</span></li><li class="relier-item"><span class="relier-cle">4</span><span class="relier-texte">Wi-Fi — marque Wi-Fi CERTIFIED</span></li><li class="relier-item"><span class="relier-cle">5</span><span class="relier-texte">RoHS — Restriction of Hazardous Substances</span></li><li class="relier-item"><span class="relier-cle">6</span><span class="relier-texte">ErP — Energy-related Products</span></li></ul></div>
 </section>
 <section class="diapo diapo-exercice" data-id="d3"
          data-niveau="N1" data-duree="300"
@@ -820,9 +950,9 @@ body.diapo-corps {
   
   <div class="zone zone-lignes"><div class="ligne"><span class="ligne-titre">Culot</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Tension</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Fréquence Wi-Fi</span><span class="ligne-trait"></span></div></div>
 </section>
-<section class="diapo diapo-exercice" data-id="d4"
+<section class="diapo diapo-exercice diapo-rab" data-id="d4"
          data-niveau="N2" data-duree="240"
-         data-titre="Le culot de la douille" data-rab="false">
+         data-titre="Le culot de la douille" data-rab="true">
   <p class="marque">N2</p>
   <h2 class="diapo-titre">Le culot de la douille</h2>
   <p class="diapo-intro">Deux ampoules, deux culots : une seule se visse dans la douille de M. Machin.</p>
