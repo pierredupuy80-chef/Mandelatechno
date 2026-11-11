@@ -517,25 +517,8 @@ body.diapo-corps {
 /* --------------------------------------------------------------------------
    9. Diapositive « synthèse » : les mots-clés à dicter
    -------------------------------------------------------------------------- */
-.mots-cles {
-  flex: 1 1 auto;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: center;
-  gap: clamp(6px, 1.6vh, 20px) clamp(24px, 4vw, 72px);
-}
-.mot-cle {
-  color: var(--encre);
-  font-size: clamp(28px, 4vh, 56px);
-  font-weight: 700;
-  line-height: 1.15;
-  padding-left: 1.1em;
-  text-indent: -1.1em;
-}
+
+
 .mot-cle::before {
   content: "—";
   color: var(--trait-fort);
@@ -680,7 +663,7 @@ body.diapo-corps {
     border: 1pt solid #000000;
   }
   .maillon-numero, .maillon-indice, .fleche { color: #000000; }
-  .point, .mot-cle { color: #000000; font-size: 13pt; }
+  .point, 
   .point::before, .mot-cle::before { color: #000000; }
   .schema figcaption, .schema-legende {
     color: #000000;
@@ -697,6 +680,36 @@ body.diapo-corps {
     font-size: 8pt;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Conclusion : un récapitulatif en QUESTIONS, pas une liste de mots-clés.
+   La classe répond à l'oral ; l'écran ne sert qu'à poser les problèmes un
+   par un, dans l'ordre où ils ont été rencontrés pendant la séance.
+   -------------------------------------------------------------------------- */
+.questions-recap {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0 0 clamp(28px, 3.4vw, 54px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(10px, 1.9vh, 26px);
+  counter-reset: question;
+}
+.question-recap {
+  position: relative;
+  font-size: clamp(20px, 2.5vw, 34px);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--encre, var(--texte));
+  padding-right: 4%;
+}
+.question-recap::marker {
+  color: var(--accent, var(--primaire));
+  font-weight: 800;
+}
+
 </style>
 </head>
 <body class="diapo-corps">
@@ -835,10 +848,10 @@ body.diapo-corps {
   <div class="zone zone-tableau"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Indication de l’emballage</th><th class="grille-entete" scope="col">Pourquoi c’est interdit</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Endroit humide</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Extérieur</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Éclairage de secours</th><td class="grille-case"></td></tr></tbody></table></div>
 </section>
 <section class="diapo diapo-synthese" data-id="synthese"
-         data-duree="420" data-titre="Ce qu’on retient">
-  <h2 class="diapo-titre">Ce qu’on retient</h2>
-  <p class="diapo-intro">La classe dicte ; la trace écrite s’écrit au tableau.</p>
-  <ul class="mots-cles"><li class="mot-cle">Contraintes</li><li class="mot-cle">Normes et labels</li><li class="mot-cle">Compatibilité</li><li class="mot-cle">Chaîne d’information</li><li class="mot-cle">Réseau maillé</li><li class="mot-cle">Ergonomie</li><li class="mot-cle">Impact environnemental</li></ul>
+         data-duree="420" data-titre="Conclusion, à retenir">
+  <h2 class="diapo-titre">Conclusion, à retenir</h2>
+  <p class="diapo-intro">On reprend la séance à l&#x27;oral : chaque question appelle une réponse de la classe.</p>
+  <ol class="questions-recap"><li class="question-recap">Quelles sont les contraintes qui pèsent sur un réseau domotique ?</li><li class="question-recap">Que garantissent les normes, les labels et les certifications ?</li><li class="question-recap">Comment vérifier la compatibilité des composants d&#x27;un réseau domotique ?</li><li class="question-recap">À quoi ressemble un réseau maillé, et à quoi sert sa passerelle ?</li><li class="question-recap">Comment l&#x27;information circule-t-elle, du bouton d&#x27;alerte jusqu&#x27;aux secours ?</li><li class="question-recap">Comment rendre l&#x27;application utilisable au quotidien ?</li><li class="question-recap">Pourquoi la classe énergétique d&#x27;une ampoule compte-t-elle ?</li></ol>
 </section>
 </main>
 
