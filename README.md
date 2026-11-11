@@ -44,7 +44,8 @@ chronometre.html                    Chronomètre de classe — page du professeu
 4e/ost2/activite-evolution-drones.html            Séquence 2 — les drones
 4e/ost3/activite-maison-connectee-eclairage.html  Séquence 3 — maison connectée
 4e/ost3/activite-ost3-act3-orale.html              Séquence 3 — diaporama tableau blanc (l'élève écrit au feutre sur la projection)
-4e/ost3/fiches/*.html                              Séquence 3 — les 8 fiches techniques téléphone (cibles des QR codes)
+4e/ost3/documentation-ost3-act3.html               Séquence 3 — la documentation (viewer PDF, cible de l'unique QR code)
+4e/ost3/documentation/*.pdf|jpg                    Séquence 3 — les 8 fiches en PDF et les images de leurs pages
 4e/ost4/activite-chauffage-choix-tapo.html        Séquence 4 — choisir un chauffage (choix de l'OST)
 4e/ost4/activite-chauffage-domotique.html         Séquence 4 — chauffage domotique
 
