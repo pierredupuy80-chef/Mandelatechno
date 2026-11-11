@@ -228,6 +228,21 @@ body.diapo-corps {
   justify-content: center;
 }
 
+/* Un apport sans schéma (des puces et rien d'autre) ne doit pas rester dans la
+   colonne étroite prévue pour le texte quand un schéma l'accompagne : on lui
+   rend toute la largeur, avec une mesure de lecture confortable. */
+.diapo-apport.diapo-sans-schema .apport-corps {
+  grid-template-columns: minmax(0, 1fr);
+}
+.diapo-apport.diapo-sans-schema .points {
+  /* Aligné sous le titre, pas centré : une colonne de texte flottant au milieu
+     de l'écran se lit mal, et la classe ne sait plus où regarder. La mesure de
+     lecture est bornée pour que les lignes ne traversent pas toute la largeur. */
+  max-width: 64ch;
+  width: 100%;
+  margin: 0;
+}
+
 /* --------------------------------------------------------------------------
    6. Surfaces d'écriture — le cœur du support
    -------------------------------------------------------------------------- */
@@ -711,7 +726,16 @@ body.diapo-corps {
   <ul class="elements"><li class="element">Marquage CE</li><li class="element">Ampoule pilotable par l’application Tapo</li><li class="element">Étiquette énergie</li></ul>
   <div class="zone zone-colonnes"><div class="colonnes-ecriture"><div class="colonne-ecriture"><p class="colonne-titre">Les normes</p></div><div class="colonne-ecriture"><p class="colonne-titre">Le cahier des charges</p></div><div class="colonne-ecriture"><p class="colonne-titre">Les labels et certifications</p></div></div></div>
 </section>
-<section class="diapo diapo-exercice" data-id="d2"
+<section class="diapo diapo-apport diapo-sans-schema" data-id="d2"
+         data-duree="360" data-titre="Normes, labels et certifications">
+  <h2 class="diapo-titre">Normes, labels et certifications</h2>
+  <p class="diapo-intro">Les trois sources nommées à la diapositive précédente ne garantissent pas la même chose.</p>
+  <div class="apport-corps">
+    <ul class="points"><li class="point">Une norme fixe les règles techniques qu’un produit doit respecter. Le marquage CE atteste que le fabricant déclare s’y conformer, sous sa responsabilité.</li><li class="point">RoHS limite l’usage de substances dangereuses dans les équipements électriques et électroniques ; ErP fixe des exigences d’écoconception.</li><li class="point">Un label ou une certification atteste qu’un produit répond à des critères de qualité et de performance. La certification est délivrée par un organisme indépendant après contrôle.</li><li class="point">Sur les ampoules et les appareils électroménagers, l’étiquette énergie est obligatoire : elle classe le produit de A, le plus efficace, à G, et indique sa consommation en kWh/1000 h.</li></ul>
+    
+  </div>
+</section>
+<section class="diapo diapo-exercice" data-id="d3"
          data-niveau="N1" data-duree="300"
          data-titre="Lire l’emballage de l’ampoule Tapo" data-rab="false">
   <p class="marque">N1</p>
@@ -720,7 +744,7 @@ body.diapo-corps {
   
   <div class="zone zone-lignes"><div class="ligne"><span class="ligne-titre">Culot</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Tension</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Fréquence Wi-Fi</span><span class="ligne-trait"></span></div></div>
 </section>
-<section class="diapo diapo-exercice" data-id="d3"
+<section class="diapo diapo-exercice" data-id="d4"
          data-niveau="N2" data-duree="240"
          data-titre="Le culot de la douille" data-rab="false">
   <p class="marque">N2</p>
@@ -729,16 +753,16 @@ body.diapo-corps {
   <ul class="elements"><li class="element">Ampoule Tapo L510E</li><li class="element">Ampoule Tapo L420C</li></ul>
   <div class="zone zone-colonnes"><div class="colonnes-ecriture"><div class="colonne-ecriture"><p class="colonne-titre">Se visse dans la douille</p></div><div class="colonne-ecriture"><p class="colonne-titre">Ne se visse pas</p></div></div></div>
 </section>
-<section class="diapo diapo-exercice" data-id="d4"
+<section class="diapo diapo-exercice diapo-rab" data-id="d5"
          data-niveau="N2" data-duree="300"
-         data-titre="Wi-Fi ou Bluetooth ?" data-rab="false">
+         data-titre="Wi-Fi ou Bluetooth ?" data-rab="true">
   <p class="marque">N2</p>
   <h2 class="diapo-titre">Wi-Fi ou Bluetooth ?</h2>
   <p class="diapo-intro">Deux ampoules ont le bon culot : une seule peut rejoindre le réseau Tapo.</p>
   <ul class="elements"><li class="element">Ampoule Antela Beacon A60</li><li class="element">Ampoule YIIFELL Wi-Fi</li></ul>
   <div class="zone zone-lignes"><div class="ligne"><span class="ligne-titre">Ampoule retenue</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Pourquoi</span><span class="ligne-trait"></span></div></div>
 </section>
-<section class="diapo diapo-exercice" data-id="d5"
+<section class="diapo diapo-exercice" data-id="d6"
          data-niveau="N3" data-duree="420"
          data-titre="Les quatre ampoules sont-elles compatibles ?" data-rab="false">
   <p class="marque">N3</p>
@@ -747,7 +771,7 @@ body.diapo-corps {
   
   <div class="zone zone-tableau"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Ampoule</th><th class="grille-entete" scope="col">Compatible ?</th><th class="grille-entete" scope="col">Raison</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Ampoule 1 — Amazon Basics 8,5 W</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Ampoule 2 — Tapo L420C</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Ampoule 3 — Antela Beacon A60</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Ampoule 4 — YIIFELL Wi-Fi</th><td class="grille-case"></td><td class="grille-case"></td></tr></tbody></table></div>
 </section>
-<section class="diapo diapo-apport diapo-avec-schema" data-id="d6"
+<section class="diapo diapo-apport diapo-avec-schema" data-id="d7"
          data-duree="360" data-titre="Zigbee et réseau maillé">
   <h2 class="diapo-titre">Zigbee et réseau maillé</h2>
   <p class="diapo-intro">Une autre famille d’objets connectés : ceux qui forment un réseau maillé.</p>
@@ -756,7 +780,16 @@ body.diapo-corps {
     <figure class="schema schema-maillage"><svg viewBox="0 0 840 380" role="img" aria-label="Réseau maillé : sept appareils reliés entre eux, chacun pouvant relayer les messages des autres"><title>Réseau maillé</title><line x1="420" y1="42" x2="300" y2="128" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="420" y1="42" x2="540" y2="128" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="300" y1="128" x2="192" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="300" y1="128" x2="420" y2="232" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="300" y1="128" x2="540" y2="128" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="540" y1="128" x2="648" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="540" y1="128" x2="420" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="192" y1="232" x2="300" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="192" y1="232" x2="420" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="420" y1="232" x2="300" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="420" y1="232" x2="540" y2="336" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/><line x1="420" y1="232" x2="648" y2="232" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="648" y1="232" x2="540" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="300" y1="336" x2="540" y2="336" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><rect x="386" y="24" width="68" height="36" rx="6" fill="#0f172a"/><text x="420" y="48" text-anchor="middle" font-size="16" font-family="system-ui, sans-serif" fill="#ffffff">box</text><circle cx="300" cy="128" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="540" cy="128" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="192" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="420" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="648" cy="232" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="300" cy="336" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><circle cx="540" cy="336" r="13" fill="#ffffff" stroke="#0f172a" stroke-width="3"/></svg><figcaption class="schema-legende">Le boîtier distingué est la passerelle : elle relie le réseau maillé au reste de la maison. Le trait épais montre un chemin possible pour un message ; les autres liaisons sont en gris.</figcaption></figure>
   </div>
 </section>
-<section class="diapo diapo-exercice" data-id="d7"
+<section class="diapo diapo-apport diapo-avec-schema" data-id="d8"
+         data-duree="360" data-titre="Un stimulateur cardiaque connecté qui prévient les secours">
+  <h2 class="diapo-titre">Un stimulateur cardiaque connecté qui prévient les secours</h2>
+  <p class="diapo-intro">Un implant qui surveille le cœur peut aujourd’hui prévenir un centre de suivi.</p>
+  <div class="apport-corps">
+    <ul class="points"><li class="point">Un stimulateur cardiaque est implanté dans le corps : il surveille l’activité électrique du cœur et délivre des impulsions quand le rythme est trop lent.</li><li class="point">La version connectée ajoute un boîtier à domicile : il communique avec l’implant et transmet les données au centre qui suit le patient, sans déplacement.</li><li class="point">En cas d’anomalie, le centre de suivi alerte le médecin : c’est lui qui contacte le patient et, si la situation le justifie, fait intervenir les secours.</li><li class="point">C’est une chaîne d’information : mesurer, transmettre, analyser, alerter — la même que pour la téléassistance.</li></ul>
+    <figure class="schema schema-chaine"><svg viewBox="0 0 900 260" role="img" aria-label="Chaîne d'information : Mesurer puis Transmettre puis Analyser puis Alerter"><title>Chaîne d'information</title><rect x="20.0" y="70" width="189.5" height="120" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><text x="114.8" y="118" text-anchor="middle" font-size="17" font-family="system-ui, sans-serif" font-weight="700" fill="#0f172a">1</text><text x="114.8" y="152" text-anchor="middle" font-size="21" font-family="system-ui, sans-serif" fill="#0f172a">Mesurer</text><line x1="215.5" y1="130" x2="235.5" y2="130" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/><path d="M235.5 130 l-11 -7 v14 z" fill="#0f172a"/><rect x="243.5" y="70" width="189.5" height="120" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><text x="338.2" y="118" text-anchor="middle" font-size="17" font-family="system-ui, sans-serif" font-weight="700" fill="#0f172a">2</text><text x="338.2" y="152" text-anchor="middle" font-size="21" font-family="system-ui, sans-serif" fill="#0f172a">Transmettre</text><line x1="439.0" y1="130" x2="459.0" y2="130" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/><path d="M459.0 130 l-11 -7 v14 z" fill="#0f172a"/><rect x="467.0" y="70" width="189.5" height="120" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><text x="561.8" y="118" text-anchor="middle" font-size="17" font-family="system-ui, sans-serif" font-weight="700" fill="#0f172a">3</text><text x="561.8" y="152" text-anchor="middle" font-size="21" font-family="system-ui, sans-serif" fill="#0f172a">Analyser</text><line x1="662.5" y1="130" x2="682.5" y2="130" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/><path d="M682.5 130 l-11 -7 v14 z" fill="#0f172a"/><rect x="690.5" y="70" width="189.5" height="120" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="3"/><text x="785.2" y="118" text-anchor="middle" font-size="17" font-family="system-ui, sans-serif" font-weight="700" fill="#0f172a">4</text><text x="785.2" y="152" text-anchor="middle" font-size="21" font-family="system-ui, sans-serif" fill="#0f172a">Alerter</text></svg><figcaption class="schema-legende">L’implant mesure, le boîtier transmet, le centre analyse, l’alerte part vers le médecin ou les secours.</figcaption></figure>
+  </div>
+</section>
+<section class="diapo diapo-exercice" data-id="d9"
          data-niveau="N3" data-duree="240"
          data-titre="La chaîne d’information d’une téléassistance" data-rab="false">
   <p class="marque">N3</p>
@@ -765,16 +798,16 @@ body.diapo-corps {
   
   <div class="zone zone-chaine"><div class="maillon"><span class="maillon-numero">1</span><span class="maillon-indice">ce qui détecte</span></div><span class="fleche" aria-hidden="true">→</span><div class="maillon"><span class="maillon-numero">2</span><span class="maillon-indice">ce qui transmet</span></div><span class="fleche" aria-hidden="true">→</span><div class="maillon"><span class="maillon-numero">3</span><span class="maillon-indice">ce qui traite</span></div><span class="fleche" aria-hidden="true">→</span><div class="maillon"><span class="maillon-numero">4</span><span class="maillon-indice">ce qui alerte</span></div></div>
 </section>
-<section class="diapo diapo-exercice" data-id="d8"
+<section class="diapo diapo-exercice diapo-rab" data-id="d10"
          data-niveau="N3" data-duree="180"
-         data-titre="Par où passe l’information ?" data-rab="false">
+         data-titre="Par où passe l’information ?" data-rab="true">
   <p class="marque">N3</p>
   <h2 class="diapo-titre">Par où passe l’information ?</h2>
   <p class="diapo-intro">Écrivez le chemin complet, du geste de la personne jusqu’à l’appel des secours.</p>
   
   <div class="zone zone-lignes"><div class="ligne"><span class="ligne-titre">Le chemin</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">Qui décide ?</span><span class="ligne-trait"></span></div></div>
 </section>
-<section class="diapo diapo-exercice diapo-rab" data-id="d9"
+<section class="diapo diapo-exercice diapo-rab" data-id="d11"
          data-niveau="N3" data-duree="600"
          data-titre="Retrouver son ampoule dans l’application" data-rab="true">
   <p class="marque">N3</p>
@@ -783,7 +816,7 @@ body.diapo-corps {
   
   <div class="zone zone-lignes"><div class="ligne"><span class="ligne-titre">Le libellé</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">L’icône</span><span class="ligne-trait"></span></div><div class="ligne"><span class="ligne-titre">La pièce ou le groupe</span><span class="ligne-trait"></span></div></div>
 </section>
-<section class="diapo diapo-exercice diapo-rab" data-id="d10"
+<section class="diapo diapo-exercice diapo-rab" data-id="d12"
          data-niveau="N4" data-duree="600"
          data-titre="Classe énergétique et impact" data-rab="true">
   <p class="marque">N4</p>
@@ -792,14 +825,14 @@ body.diapo-corps {
   
   <div class="zone zone-tableau"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Ampoule</th><th class="grille-entete" scope="col">Classe</th><th class="grille-entete" scope="col">Consommation</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Tapo L510E (installée)</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">YIIFELL</th><td class="grille-case"></td><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Amazon Basics</th><td class="grille-case"></td><td class="grille-case"></td></tr></tbody></table></div>
 </section>
-<section class="diapo diapo-exercice diapo-rab" data-id="d11"
+<section class="diapo diapo-exercice diapo-rab" data-id="d13"
          data-niveau="N4" data-duree="540"
-         data-titre="Sécurité : le marquage CE" data-rab="true">
+         data-titre="Où ne pas installer cette ampoule ?" data-rab="true">
   <p class="marque">N4</p>
-  <h2 class="diapo-titre">Sécurité : le marquage CE</h2>
-  <p class="diapo-intro">Sur l’emballage, deux logos et une phrase d’avertissement : que garantissent-ils ?</p>
+  <h2 class="diapo-titre">Où ne pas installer cette ampoule ?</h2>
+  <p class="diapo-intro">Trois indications de l’emballage disent où et comment ne pas utiliser cette ampoule.</p>
   
-  <div class="zone zone-tableau"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Information</th><th class="grille-entete" scope="col">Ce qu’elle garantit</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Marquage CE</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">RoHS</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Endroit interdit</th><td class="grille-case"></td></tr></tbody></table></div>
+  <div class="zone zone-tableau"><table class="grille"><thead><tr><th class="grille-entete" scope="col">Indication de l’emballage</th><th class="grille-entete" scope="col">Pourquoi c’est interdit</th></tr></thead><tbody><tr><th class="grille-case grille-libelle" scope="row">Endroit humide</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Extérieur</th><td class="grille-case"></td></tr><tr><th class="grille-case grille-libelle" scope="row">Éclairage de secours</th><td class="grille-case"></td></tr></tbody></table></div>
 </section>
 <section class="diapo diapo-synthese" data-id="synthese"
          data-duree="420" data-titre="Ce qu’on retient">
@@ -811,7 +844,7 @@ body.diapo-corps {
 
 <div class="pied">
   <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
-  <span class="compteur" aria-hidden="true">1 / 14</span>
+  <span class="compteur" aria-hidden="true">1 / 16</span>
 </div>
 
 <footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet.</footer>
