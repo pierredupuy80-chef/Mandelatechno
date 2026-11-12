@@ -588,6 +588,70 @@
         }
 
         /* ============================================
+           CHAÎNE-GLOSSAIRE — tuiles indépendantes qui se déplient
+           (n2.chaine.disposition = "glossaire")
+           ============================================ */
+        .chaine-interactive.chaine-glossaire {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            align-items: start;
+            justify-content: stretch;
+        }
+
+        .chaine-glossaire .element-chaine {
+            min-width: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            text-align: left;
+            transition: background-color .2s ease, border-color .2s ease;
+        }
+
+        .chaine-glossaire .element-chaine:hover {
+            background-color: white;
+            color: var(--couleur-texte);
+            transform: none;
+        }
+
+        .chaine-glossaire .element-chaine.revele {
+            background-color: #f4f8fc;
+            color: var(--couleur-texte);
+            border-color: var(--couleur-secondaire);
+            cursor: default;
+        }
+
+        .chaine-glossaire .element-chaine .info-element {
+            display: none;
+            width: 100%;
+            margin-top: var(--espacement-sm);
+            padding-top: var(--espacement-sm);
+            background: transparent;
+            border: 0;
+            border-top: 1px solid #dce3ed;
+            border-radius: 0;
+            box-shadow: none;
+            text-align: left;
+        }
+
+        .chaine-glossaire .element-chaine.revele .info-element {
+            display: block;
+        }
+
+        .chaine-glossaire .unite-element {
+            display: block;
+            color: var(--couleur-secondaire);
+            margin-bottom: var(--espacement-xs);
+        }
+
+        html[data-theme="sombre"] .chaine-glossaire .element-chaine:hover {
+            background-color: #1c2534;
+        }
+
+        html[data-theme="sombre"] .chaine-glossaire .element-chaine.revele {
+            background-color: #16202e;
+        }
+
+        /* ============================================
            PROBLÉMATIQUE - NIVEAU N3
            (les noms de classes « enigme-* » sont historiques : ils sont
            référencés par personnaliser.py et par les activités déjà publiées,
@@ -4785,84 +4849,78 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
             <section id="contenu-n2-intro" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-intro">
                 <div class="carte-contenu">
                     <h2>Niveau 2 : Explorer en détail</h2>
-                    <p>Cliquez sur chaque matière pour découvrir où elle se trouve sur le vélo, si elle se recycle facilement et ce qu'elle devient en fin de vie.</p>
+                    <p>Cliquez sur une grandeur : le cadre s'agrandit et affiche son unité, suivie d'une courte explication.</p>
 
-                    <h3>Les matières d'un vélo et leur recyclage</h3>
-                    <div class="chaine-interactive" role="list" aria-label="Les matières d'un vélo et leur recyclage — éléments interactifs">
+                    <h3>Les unités de mesure</h3>
+                    <div class="chaine-interactive chaine-glossaire" role="list" aria-label="Les unités de mesure — éléments interactifs">
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e1"
-                             aria-label="Aluminium : Cliquer pour plus d'informations" 
+                             aria-label="Force : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Aluminium
+                            Force
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Cadre, jantes, guidon et potence. Léger et résistant à la corrosion, c'est le métal dominant d'un VAE en libre-service. Recyclage : très facile et bien établi. Les pièces sont broyées, les impuretés séparées, puis le métal est refondu : il peut resservir presque indéfiniment sans perdre ses propriétés. Recycler l'aluminium demande environ 95 % d'énergie en moins que de le produire à partir du minerai, la bauxite.</p>
+                                <strong class="unite-element">Le newton (N)</strong>
+                                <p>L'effort exercé sur les pédales se mesure en newtons.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e2"
-                             aria-label="Acier : Cliquer pour plus d'informations" 
+                             aria-label="Autonomie : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Acier
+                            Autonomie
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Visserie, axes, roulements, ressorts, parfois le cadre ou la fourche. Plus lourd que l'aluminium mais très solide. Recyclage : facile. L'acier est trié à l'aimant (il est magnétique), puis refondu avec la ferraille pour produire un acier neuf. La difficulté vient des petites pièces mélangées à d'autres métaux : il faut les démonter pour que chaque métal suive sa filière.</p>
+                                <strong class="unite-element">Le kilomètre (km)</strong>
+                                <p>La distance parcourue avec une seule charge de batterie.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e3"
-                             aria-label="Plastiques : Cliquer pour plus d'informations" 
+                             aria-label="Énergie : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Plastiques
+                            Énergie
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Garde-boue, poignées, selle, boîtier de batterie, écran. Légers et faciles à mouler, ils remplacent souvent le métal. Recyclage : difficile. Il existe de nombreux plastiques (ABS, polypropylène…), souvent colorés, additivés, collés ou mélangés entre eux : un objet composé de plusieurs plastiques se recycle mal, et les filières pour les plastiques techniques sont rares. Ces pièces finissent souvent incinérées ou enfouies ; les concevoir en un seul matériau et les démonter améliore leur sort.</p>
+                                <strong class="unite-element">Le wattheure (Wh)</strong>
+                                <p>L'énergie stockée dans la batterie, par exemple 400 Wh.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e4"
-                             aria-label="Caoutchouc : Cliquer pour plus d'informations" 
+                             aria-label="Puissance : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Caoutchouc
+                            Puissance
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Pneus, chambres à air, poignées. Élastique et adhérent, il assure le contact avec la route. Recyclage : difficile. Le caoutchouc des pneus est vulcanisé (cuit avec du soufre) et mélangé à des fibres et à des charges : il ne peut plus être fondu comme un plastique. On le réduit en granulats pour des sols ou des revêtements sportifs, ou on le valorise en énergie ; le recyclage matière reste limité, et les pneus de vélo sont peu collectés.</p>
+                                <strong class="unite-element">Le watt (W)</strong>
+                                <p>L'énergie fournie par le moteur à chaque seconde.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e5"
-                             aria-label="Électronique : Cliquer pour plus d'informations" 
+                             aria-label="Tension : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Électronique
+                            Tension
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Contrôleur, écran, capteurs, faisceau de câbles. Elle commande l'assistance et affiche les informations. Recyclage : complexe mais encadré. Ces déchets d'équipements électriques et électroniques (DEEE) contiennent du cuivre, de l'aluminium, des métaux précieux et parfois des terres rares. Il faut les démonter, les broyer et séparer les matériaux ; une filière dédiée existe, mais elle récupère mieux certains métaux que d'autres.</p>
+                                <strong class="unite-element">Le volt (V)</strong>
+                                <p>La tension électrique de la batterie, par exemple 36 V.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e6"
-                             aria-label="Batterie lithium-ion : Cliquer pour plus d'informations" 
+                             aria-label="Vitesse : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Batterie lithium-ion
+                            Vitesse
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Cellules, gestionnaire électronique (BMS) et boîtier. Elle stocke l'énergie et pèse lourd dans le bilan environnemental. Recyclage : filière spécifique et obligatoire. Une batterie ne va jamais dans la poubelle : elle est collectée séparément (risque d'incendie si elle est percée), puis traitée par pyrométallurgie ou hydrométallurgie. On récupère une partie du lithium, du cobalt, du nickel, du cuivre et de l'aluminium ; ces métaux sont critiques, et leur récupération réduit la pression sur les mines.</p>
+                                <strong class="unite-element">Le kilomètre par heure (km/h)</strong>
+                                <p>La distance parcourue pendant une heure.</p>
                             </div>
                         </div>
-                        <span class="fleuve-chaine" aria-hidden="true">→</span>
 
                         <div class="element-chaine" role="listitem" tabindex="0" data-ost-id="n2-chaine-e7"
-                             aria-label="Composites : Cliquer pour plus d'informations" 
+                             aria-label="Masse : Cliquer pour plus d'informations" 
                              onclick="revelerElement(this)">
-                            Composites
+                            Masse
                             <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Cadres et roues haut de gamme. Très légers et rigides, ils sont réservés aux vélos chers. Recyclage : très difficile. La fibre est noyée dans une résine thermodurcissable qui ne fond pas : on ne peut pas la refondre comme un métal. Des procédés (broyage, traitement thermique ou chimique) permettent de récupérer une partie des fibres, mais ils restent expérimentaux et coûteux ; ces pièces finissent souvent enfouies ou incinérées. Le mieux est de les réparer et de les réutiliser.</p>
+                                <strong class="unite-element">Le kilogramme (kg)</strong>
+                                <p>La masse du vélo ou de la charge transportée.</p>
                             </div>
                         </div>
                     </div>
@@ -6497,6 +6555,20 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
             // Cela garde la visibilité demandée : l'élève peut décocher
             // une tuile pour ne plus voir sa description.
             const revele = element.classList.toggle('revele');
+
+            // Disposition « glossaire » : le volet reste DANS la tuile, qui
+            // s'agrandit sur place ; une seule tuile ouverte à la fois.
+            const glossaire = element.closest('.chaine-glossaire');
+            if (glossaire) {
+                if (revele) {
+                    glossaire.querySelectorAll('.element-chaine.revele').forEach(function (autre) {
+                        if (autre !== element) autre.classList.remove('revele');
+                    });
+                }
+                elementsVisites.add(element);
+                mettreAJourSuiteN2();
+                return;
+            }
 
             const zone = document.getElementById('details-chaine');
             const index = String(Array.prototype.indexOf.call(
