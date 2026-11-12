@@ -5183,7 +5183,45 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                         </div>
                     </div>
 
-                    <div class="solution-enigme marge-haut">
+                    <div class="ateliers-n2" id="ateliers-n3">
+                                            <h3>🔧 Choisir le VAE adapté à chaque situation</h3>
+                                        <p class="texte-secondaire">Un même vélo ne convient pas à tous les usages. Lisez les cinq situations, puis associez chacune à la fiche technique du VAE qui y répond le mieux.</p>
+
+                                        <article class="atelier-carte" data-ost-bloc="n3-atelier-vae-situation" data-type="association" data-atelier="vae-situation" aria-labelledby="atelier-titre-vae-situation">
+                                            <h3 id="atelier-titre-vae-situation">🚲 Quel VAE pour quelle situation ?</h3>
+                                            <p class="atelier-consigne">Cliquez une situation d'usage, puis la fiche technique du VAE qui y répond le mieux : les paires justes restent affichées en vert.</p>
+                                            <div class="atelier-colonnes">
+                                                <div>
+                                                    <h4>Situations d'usage</h4>
+                                                    <div class="atelier-liste" role="group" aria-label="Situations d'usage">
+                                                <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">🛣️ Parcourir 100 km par jour sur route plate, avec une seule recharge par nuit.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">⛰️ Monter un col de 7 km matin et soir, avec une assistance qui suit l'effort.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">♻️ Réduire l'impact environnemental : vélo léger, matériaux recyclés, facile à réparer.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">👧 Transporter deux enfants à l'école et faire les courses.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">🏙️ Faire 10 km par jour en ville, avec un budget serré.</button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h4>Fiches techniques des VAE</h4>
+                                                    <div class="atelier-liste" role="group" aria-label="Fiches techniques des VAE">
+                                                <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">VAE B « Montagne » — batterie 500 Wh, moteur central au pédalier et capteur de couple, 24 kg, 80 km d'autonomie, 3 400 €.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">VAE C « Éco » — batterie 360 Wh, 18 kg, cadre en aluminium recyclé, 60 km d'autonomie, réparabilité 9/10, 1 800 €.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">VAE D « Famille » — batterie 500 Wh, moteur central, 32 kg, porte-bagages 40 kg, 70 km d'autonomie, 3 800 €.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">VAE E « Citadin » — batterie 300 Wh, 20 kg, 45 km d'autonomie, 1 300 €, réparabilité 5/10.</button>
+                                                <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">VAE A « Trajet » — batterie 630 Wh, moteur au moyeu, 25 kg, 110 km d'autonomie, 3 100 €, réparabilité 6/10.</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="atelier-compteur" data-role="compteur">0 paire(s) trouvée(s) sur 5 — il en reste 5.</p>
+                                            <div class="atelier-actions">
+                                                <button type="button" class="bouton-action" onclick="atelierVerifierAssociation(this)">Vérifier l'atelier</button>
+                                            </div>
+                                            <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
+                                            <p class="atelier-explication cache" data-role="explication">Aucun VAE n'est le meilleur partout : il faut croiser le besoin avec des caractéristiques mesurables. A : la plus grosse batterie (630 Wh) et 110 km d'autonomie, pour les longues distances. B : moteur central et capteur de couple, pour grimper en souplesse. C : le plus léger (18 kg), cadre en aluminium recyclé et réparabilité 9/10, pour limiter l'impact. D : porte-bagages de 40 kg et moteur central, pour transporter des enfants ou des courses. E : 1 300 €, pour les petits trajets urbains, mais avec une petite batterie et une réparabilité faible.</p>
+                                        </article>
+                                        </div>
+
+                                        <div class="solution-enigme marge-haut">
                         <h3>Vos réponses</h3>
                         <p>Remplissez les deux cadres ci-dessous : le premier expose ce que vous avez constaté, le second ce que vous proposez de faire.</p>
 
@@ -8389,7 +8427,7 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
             });
         }
 
-        // ── Type « association » : constituant ↔ fonction technique ──────
+        // ── Type « association » : deux colonnes à apparier ─────────────────
         function atelierChoisirJeton(bouton) {
             const contexte = atelierContexte(bouton);
             if (!contexte) return;
@@ -8414,8 +8452,8 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                 etat.attente = bouton;
                 atelierRetour(carte,
                     cote === 'constituant'
-                        ? 'Constituant choisi. Clique maintenant la fonction technique qui lui correspond.'
-                        : 'Fonction choisie. Clique maintenant le constituant qui la réalise.',
+                        ? 'Élément choisi. Clique maintenant la proposition qui lui correspond.'
+                        : 'Proposition choisie. Clique maintenant l\'élément qui lui correspond.',
                     'info');
                 return;
             }
@@ -8435,14 +8473,14 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                 etat.paires += 1;
                 atelierCompteur(carte);
                 if (etat.paires >= etat.total) {
-                    atelierRetour(carte, '🎉 Toutes les paires sont trouvées : chaque constituant est relié à sa fonction technique.', 'succes');
+                    atelierRetour(carte, '🎉 Toutes les paires sont trouvées : chaque élément est relié à sa proposition.', 'succes');
                     atelierAfficherExplication(carte);
                 } else {
                     atelierRetour(carte, '✅ Association juste : ' + bouton.textContent.trim(), 'succes');
                 }
             } else {
                 atelierSignaler([precedente, bouton], 'erreur');
-                atelierRetour(carte, '❌ Ces deux-là ne vont pas ensemble. Relis la définition de la fonction et réessaie.', 'echec');
+                atelierRetour(carte, '❌ Ces deux propositions ne vont pas ensemble. Relis la consigne et réessaie.', 'echec');
             }
         }
 
@@ -8455,7 +8493,7 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                 atelierRetour(carte, '🎉 Atelier terminé : les ' + etat.total + ' paires sont trouvées.', 'succes');
                 atelierAfficherExplication(carte);
             } else {
-                atelierRetour(carte, 'Il reste ' + (etat.total - etat.paires) + ' paire(s) à trouver. Clique un constituant puis sa fonction, ou l\'inverse.', 'info');
+                atelierRetour(carte, 'Il reste ' + (etat.total - etat.paires) + ' paire(s) à trouver. Clique un élément puis sa proposition, ou l\'inverse.', 'info');
             }
         }
 
