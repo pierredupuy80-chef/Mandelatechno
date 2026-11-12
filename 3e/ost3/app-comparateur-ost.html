@@ -2277,6 +2277,23 @@
             margin-top: 1.25rem;
         }
 
+        /* Glossaire replié d'un atelier : mêmes classes que le glossaire du
+           N1, avec une cible tactile de 44 px sur le volet. */
+        .atelier-glossaire {
+            margin: .85rem 0 .25rem;
+        }
+
+        .atelier-glossaire > summary {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            min-height: var(--hauteur-cible-min);
+        }
+
+        .atelier-glossaire[open] > summary {
+            margin-bottom: var(--espacement-sm);
+        }
+
         .atelier-carte h3 {
             margin: 0 0 .35rem;
             font-size: 1.05rem;
@@ -4898,6 +4915,24 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                     <article class="atelier-carte" data-ost-bloc="n2-atelier-matieres-recyclage" data-type="association" data-atelier="matieres-recyclage" aria-labelledby="atelier-titre-matieres-recyclage">
                         <h3 id="atelier-titre-matieres-recyclage">♻️ Atelier 2 — Chaque matière et sa filière</h3>
                         <p class="atelier-consigne">Cliquez une matière du vélo, puis ce qu'elle devient en fin de vie : les paires justes restent affichées en vert.</p>
+
+                        <details class="glossaire atelier-glossaire">
+                            <summary class="glossaire-titre">📖 Mots de l'atelier</summary>
+                            <dl class="glossaire-liste">
+                            <div class="glossaire-entree" data-ost-id="n2-atelier-matieres-recyclage-glossaire-1">
+                                <dt>Vulcanisé</dt>
+                                <dd>Caoutchouc cuit avec du soufre pour devenir élastique et résistant ; une fois vulcanisé, il ne peut plus être fondu comme un plastique.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n2-atelier-matieres-recyclage-glossaire-2">
+                                <dt>Filière DEEE</dt>
+                                <dd>Filière de collecte et de recyclage des déchets d'équipements électriques et électroniques (DEEE) : elle démonte les appareils et sépare leurs métaux.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n2-atelier-matieres-recyclage-glossaire-3">
+                                <dt>Granulats</dt>
+                                <dd>Petits morceaux de caoutchouc obtenus en broyant des pneus usés, réutilisés dans des sols ou des revêtements sportifs.</dd>
+                            </div>
+                            </dl>
+                        </details>
                         <div class="atelier-colonnes">
                             <div>
                                 <h4>Matières et pièces</h4>
