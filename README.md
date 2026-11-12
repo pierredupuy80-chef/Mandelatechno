@@ -31,6 +31,9 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/ost3/activite-3e-ost3-orale.html                OST 3 — diaporama tableau blanc (interacteurs, comparaison trottinette / VAE)
 3e/ost3/documentation-3e-ost3.html                 OST 3 — la documentation (viewer PDF, cible de l'unique QR code)
 3e/ost3/documentation-3e-ost3/*.pdf|jpg            OST 3 — les 8 fiches en PDF et les images de leurs pages
+3e/ost3/activite-3e-reparabilite-orale.html        OST 3 — diaporama tableau blanc (indice de réparabilité, estimation sur fiche technique)
+3e/ost3/documentation-3e-reparabilite.html         OST 3 — la documentation de ce diaporama (viewer PDF, cible de l'unique QR code)
+3e/ost3/documentation-3e-reparabilite/*.pdf|jpg    OST 3 — les 4 fiches en PDF et les images de leurs pages
 3e/sfc1/activite-fortnite-client-serveur.html  SFC 1 — le trajet d'un tir en jeu en ligne (sans quiz)
 3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
 3e/tp-ia/                           TP d'apprentissage IA
