@@ -4357,11 +4357,6 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
     font-weight: 600;
 }
 </style>
-     Barre « Ma progression » : sauvegarde par fichier (export) et
-     reprise (import). Dans le flux, entre l'en-tête et la barre de
-     progression — visible sur tous les onglets, atteignable au clavier
-     comme les autres commandes. recopiée sur les activités déjà
-     générées par _outils/template-activite/greffer_sauvegarde.py. -->
 <div class="sauvegarde-bar" data-ost-bloc="sauvegarde-progression">
     <span class="sauvegarde-intitule" id="sauvegarde-intitule">Ma progression</span>
     <div class="sauvegarde-actions" role="group" aria-labelledby="sauvegarde-intitule">
@@ -6136,6 +6131,24 @@ html[data-theme="sombre"] .bouton-sauvegarde:focus-visible {
                             Jouer maintenant →
                         </a>
                         <p class="texte-secondaire marge-haut">Durée : 5 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-3">
+                        <h3>🚲 VAE GP — Le Grand Prix du prof de techno</h3>
+                        <p>Un jeu de course rétro où tu pilotes le prof de techno sur son VAE : choisis ton vélo selon sa batterie, sa masse et son assistance, gère ton énergie et bats ton record sur trois circuits. Le jeu reprend le vocabulaire de l'activité : autonomie, wattheures, assistance, éco-conduite.</p>
+                        <a href="jeu-course-vae.html" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Jouer maintenant →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 15-20 minutes</p>
+                    </article>
+
+                    <article class="carte-jeu marge-haut" data-ost-id="bonus-jeu-4">
+                        <h3>🐍 Pour les élèves qui font du Python — exercices sur les boucles</h3>
+                        <p>Une série d'exercices corrigés automatiquement pour t'entraîner sur les boucles en Python (for, while, range). À faire à ton rythme, sur le site Docstring : rien à installer, tout se passe dans le navigateur.</p>
+                        <a href="https://www.docstring.fr/formations/exercices/theme/boucles/" class="bouton-action" target="_blank" rel="noopener noreferrer">
+                            Faire les exercices →
+                        </a>
+                        <p class="texte-secondaire marge-haut">Durée : 20-30 minutes</p>
                     </article>
                     </div>
 
@@ -14854,15 +14867,15 @@ statut.className = 'sauvegarde-statut' + (classe ? ' ' + classe : '');
   }
 
   function texteEtClasse(element) {
-          if (!element) return null;
-          // `html` conserve le volet « Voir l'explication » (un <details>) : une
-          // restauration au textContent l'aplatirait en texte suivi.
-          return {
-              texte: String(element.textContent || ''),
-              classe: String(element.className || ''),
-              html: String(element.innerHTML || '')
-          };
-      }
+if (!element) return null;
+// `html` conserve le volet « Voir l'explication » (un <details>) : une
+// restauration au textContent l'aplatirait en texte suivi.
+return {
+    texte: String(element.textContent || ''),
+    classe: String(element.className || ''),
+    html: String(element.innerHTML || '')
+};
+  }
 
   function slug(nom) {
 return String(nom || 'activite').toLowerCase()
@@ -15338,6 +15351,7 @@ if (typeof reinitialiserAteliers === 'function') {
     try { reinitialiserAteliers(); } catch (erreur) { /* page sans ateliers */ }
 }
 if (typeof n4ReinitialiserConception === 'function') n4ReinitialiserConception();
+if (typeof n4ReinitialiserArborescence === 'function') n4ReinitialiserArborescence();
 if (typeof n4ReinitialiserSelections === 'function') n4ReinitialiserSelections();
 if (typeof n3ReinitialiserQCMCorrectif === 'function') n3ReinitialiserQCMCorrectif();
 if (document.getElementById('dimensionnement') &&
@@ -15499,43 +15513,43 @@ if (typeof mettreAJourSuiteN2 === 'function') mettreAJourSuiteN2();
   // RESTAURATION — ateliers
   // ---------------------------------------------------------------
   function restaurerQuestionsChoix(carte, questions) {
-          (questions || []).forEach(function (q, index) {
-              var liste = carte.querySelectorAll('.atelier-question');
-              var question = liste[index];
-              if (!question) return;
-              question.querySelectorAll('.atelier-option').forEach(function (option) {
-                  option.classList.remove('choisi', 'correcte', 'fausse');
-                  option.setAttribute('aria-checked', 'false');
-              });
-              (q.marques || []).forEach(function (marque) {
-                  var option = question.querySelector(
-                      '.atelier-option[data-valeur="' + marque.valeur + '"]');
-                  if (!option) return;
-                  if (marque.correcte) option.classList.add('correcte');
-                  if (marque.fausse) option.classList.add('fausse');
-                  if (marque.checked) option.setAttribute('aria-checked', 'true');
-              });
-              if (q.choisie) {
-                  var choisie = question.querySelector(
-                      '.atelier-option[data-valeur="' + q.choisie + '"]');
-                  if (choisie) {
-                      choisie.classList.add('choisi');
-                      choisie.setAttribute('aria-checked', 'true');
-                  }
-              }
-              var retour = question.querySelector('[data-role="retour"]');
-              if (retour && q.retour) {
-                  // `html` d'abord (le volet « Voir l'explication » survit tel
-                  // quel) ; `texte` pour les fichiers exportés avant ce champ.
-                  if (typeof q.retour.html === 'string' && q.retour.html) {
-                      retour.innerHTML = q.retour.html;
-                  } else {
-                      retour.textContent = q.retour.texte;
-                  }
-                  retour.className = q.retour.classe;
-              }
-          });
-      }
+(questions || []).forEach(function (q, index) {
+    var liste = carte.querySelectorAll('.atelier-question');
+    var question = liste[index];
+    if (!question) return;
+    question.querySelectorAll('.atelier-option').forEach(function (option) {
+        option.classList.remove('choisi', 'correcte', 'fausse');
+        option.setAttribute('aria-checked', 'false');
+    });
+    (q.marques || []).forEach(function (marque) {
+        var option = question.querySelector(
+            '.atelier-option[data-valeur="' + marque.valeur + '"]');
+        if (!option) return;
+        if (marque.correcte) option.classList.add('correcte');
+        if (marque.fausse) option.classList.add('fausse');
+        if (marque.checked) option.setAttribute('aria-checked', 'true');
+    });
+    if (q.choisie) {
+        var choisie = question.querySelector(
+            '.atelier-option[data-valeur="' + q.choisie + '"]');
+        if (choisie) {
+            choisie.classList.add('choisi');
+            choisie.setAttribute('aria-checked', 'true');
+        }
+    }
+    var retour = question.querySelector('[data-role="retour"]');
+    if (retour && q.retour) {
+        // `html` d'abord (le volet « Voir l'explication » survit tel
+        // quel) ; `texte` pour les fichiers exportés avant ce champ.
+        if (typeof q.retour.html === 'string' && q.retour.html) {
+            retour.innerHTML = q.retour.html;
+        } else {
+            retour.textContent = q.retour.texte;
+        }
+        retour.className = q.retour.classe;
+    }
+});
+  }
 
   function restaurerAteliers(ateliers) {
 if (!Array.isArray(ateliers)) return;
@@ -15749,11 +15763,18 @@ if (typeof n3RafraichirSimulateur === 'function') {
   // RESTAURATION — N4
   // ---------------------------------------------------------------
   function restaurerChampsN4(champs) {
+var valeursSelect = {};
 (champs || []).forEach(function (champ) {
     if (!champ.chemin) return;
     if (champ.chemin.indexOf('id:') === 0) {
         var el = document.getElementById(champ.chemin.slice(3));
-        if (el) el.value = champ.valeur;
+        if (el) {
+            el.value = champ.valeur;
+            // Les listes de l'arborescence sont reconstruites à partir
+            // des noms de dossiers : leurs valeurs sont réappliquées
+            // après le rafraîchissement, plus bas.
+            if (el.tagName === 'SELECT') valeursSelect[el.id] = champ.valeur;
+        }
     } else if (champ.chemin.indexOf('index:') === 0) {
         // Retrouvé par position dans la même liste de contrôles.
         var controles = $$('#contenu-n4-probleme textarea, ' +
@@ -15764,6 +15785,17 @@ if (typeof n3RafraichirSimulateur === 'function') {
         if (cible) cible.value = champ.valeur;
     }
 });
+// Arborescence : les options des listes dépendent des noms saisis. On
+// reconstruit les listes APRÈS la restauration des noms, puis on
+// réapplique les dossiers choisis pour chaque fichier.
+if (document.getElementById('arborescence-n4') &&
+    typeof n4ArbreRafraichirSelects === 'function') {
+    n4ArbreRafraichirSelects();
+    Object.keys(valeursSelect).forEach(function (id) {
+        var select = document.getElementById(id);
+        if (select) select.value = valeursSelect[id];
+    });
+}
   }
 
   function restaurerGuide(etat) {
@@ -15852,6 +15884,12 @@ $$('#contenu-n4-probleme [data-conception-selection]')
         }
         var globale = conteneur.querySelector('.etape-selection-explication');
         if (globale) globale.classList.toggle('cache', !!sauvegarde.globaleCache);
+        // Étape de choix LIBRE : la mesure neutre (coût du système…)
+        // n'est pas stockée, elle se recalcule depuis les propositions
+        // restaurées — la stocker ferait diverger le fichier et l'écran.
+        if (typeof n4MajIndicateurSelection === 'function') {
+            n4MajIndicateurSelection(conteneur);
+        }
     });
   }
 
