@@ -6809,7 +6809,7 @@
                     <h3>🎯 Ta mission : aider un élève</h3>
 
                     <!-- ETAPES-CONCEPTION-N4 : DEBUT -->
-                    <div class="etape-conception" id="etape-selection-1">
+                    <div data-etape-numero="1" class="etape-conception" id="etape-selection-1">
                         <h4>Étape 1 : L'élève que j'aide</h4>
                         <p>Choisis l'élève que tu vas aider. Il n'y a pas de bon choix : les trois ont un vrai souci avec le poste, et chacun se règle autrement.</p>
                         <p class="note-liberte">Retiens une seule carte, puis clique sur « Enregistrer mon élève ».</p>
@@ -6817,21 +6817,21 @@
                         <div class="etape-selection" data-conception-selection data-libre="1" data-minimum="1" data-maximum="1" data-libelle-choix="élève" data-conception-consigne="Termine l'étape « L'élève que j'aide » : retiens tes élèves, puis clique sur « Enregistrer mon élève ».">
                             <ul class="choix-contraintes" role="group" aria-label="Élèves à aider — propositions à retenir">
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cle="lina" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">👧</span>
                                         <span class="choix-texte">Lina, gauchère : « La souris est faite pour la main droite, mes clics partent tout seuls. »</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cle="noe" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">👦</span>
                                         <span class="choix-texte">Noé, lit mal : « Les lettres à l'écran sont trop petites, je perds les consignes. »</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-cle="sam" aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-icone" aria-hidden="true">🧑</span>
                                         <span class="choix-texte">Sam, gêné par le bruit : « Je n'entends pas les consignes, et je dérange mes voisins. »</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
@@ -6842,7 +6842,7 @@
                             <p class="etape-selection-retour" role="status" aria-live="polite"></p>
                         </div>
                     </div>
-                    <div class="etape-conception">
+                    <div data-etape-numero="2" data-progressive="1" class="etape-conception cache">
                         <h4>Étape 2 : Le besoin de mon élève</h4>
                         <p>Écris ce dont ton élève a besoin, avec la phrase : « … a besoin de … pour … ». Ne dis pas encore comment on va l'aider : pour l'instant, on dit seulement ce qu'il veut pouvoir faire.</p>
                         <textarea id="besoin-eleve"
@@ -6851,36 +6851,36 @@
                             placeholder="Ex. : Lina a besoin d'utiliser la souris avec sa main gauche pour travailler sans faire de clics au hasard."
                             aria-label="Besoin de l'élève choisi"></textarea>
                     </div>
-                    <div class="etape-conception" id="etape-selection-3">
+                    <div data-etape-numero="3" data-etape-cle="lina" data-si-etape="1" data-si-options="lina" data-progressive="1" class="etape-conception cache" id="etape-selection-3-lina">
                         <h4>Étape 3 : Besoin ou solution ?</h4>
-                        <p>Retiens les deux phrases qui disent un BESOIN, c'est-à-dire ce que l'élève veut pouvoir faire. Les deux autres disent déjà une SOLUTION : un moyen d'y arriver.</p>
+                        <p>Tu aides Lina, la gauchère. Retiens les deux phrases qui disent un BESOIN, c'est-à-dire ce que Lina veut pouvoir faire. Les deux autres disent déjà une SOLUTION : un moyen d'y arriver.</p>
                         <div class="etape-selection" data-conception-selection data-maximum="2" data-conception-consigne="Choisis exactement 2 proposition(s) dans l'étape « Besoin ou solution ? », puis clique sur « Vérifier mon tri ».">
                             <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 2</p>
                             <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : Lina veut pouvoir se servir du poste avec sa main naturelle. Aucun moyen n'est encore choisi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : le geste doit faire ce que Lina veut, rien de plus. Aucun réglage n'est encore choisi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Cliquer sans que les clics partent au hasard.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : c'est UN moyen de répondre au besoin de Lina. Une souris symétrique y répondrait aussi, et le besoin resterait le même." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Régler les boutons de la souris sur la main gauche.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : Lina veut pouvoir se servir du poste avec sa main naturelle, sans avoir choisi de moyen. Une autre solution pourrait convenir aussi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
                                         <span class="choix-texte">Utiliser la souris avec sa main gauche.</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
                                         <p class="choix-explication cache"></p>
                                     </li>
                                     <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : agrandir est UN moyen d'y arriver. Des lunettes, une loupe ou une autre place feraient aussi l'affaire." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-texte">Agrandir le texte à l'écran.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : on dit ce que l'élève veut pouvoir faire, sans avoir choisi comment. Une autre solution pourrait convenir aussi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-texte">Lire facilement les consignes affichées à l'écran.</span>
-                                        <span class="choix-marque" aria-hidden="true"></span>
-                                        </button>
-                                        <p class="choix-explication cache"></p>
-                                    </li>
-                                    <li class="choix-item">
-                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : elle répond au besoin de Lina, mais une souris symétrique y répondrait aussi. Le besoin, lui, resterait le même." aria-pressed="false" onclick="n4BasculerContrainte(this)">
-                                        <span class="choix-texte">Régler les boutons de la souris pour un gaucher.</span>
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : elle change de matériel au lieu de changer de réglage. Le besoin de Lina, lui, ne dépend pas du modèle choisi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Choisir une souris symétrique, utilisable des deux mains.</span>
                                         <span class="choix-marque" aria-hidden="true"></span>
                                         </button>
                                         <p class="choix-explication cache"></p>
@@ -6888,10 +6888,90 @@
                             </ul>
                             <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Vérifier mon tri</button>
                             <p class="etape-selection-retour" role="status" aria-live="polite"></p>
-                            <p class="etape-selection-explication cache">Un besoin dit ce que l'élève veut pouvoir faire (« lire les consignes », « utiliser la souris avec la main gauche ») ; une solution dit comment on y arrive (« agrandir le texte », « régler les boutons pour un gaucher »). Le besoin ne change pas quand on change de solution : c'est pour cela qu'on l'écrit d'abord.</p>
+                            <p class="etape-selection-explication cache">Un besoin dit ce que Lina veut pouvoir faire (« utiliser la souris avec sa main gauche », « cliquer sans que les clics partent au hasard ») ; une solution dit comment on y arrive (« régler les boutons sur la main gauche », « choisir une souris symétrique »). Le besoin ne change pas quand on change de solution : c'est pour cela qu'on l'écrit d'abord.</p>
                         </div>
                     </div>
-                    <div class="etape-conception" id="etape-selection-4">
+                    <div data-etape-numero="3" data-etape-cle="noe" data-si-etape="1" data-si-options="noe" data-progressive="1" class="etape-conception cache" id="etape-selection-3-noe">
+                        <h4>Étape 3 : Besoin ou solution ?</h4>
+                        <p>Tu aides Noé, qui lit mal les petites lettres. Retiens les deux phrases qui disent un BESOIN, c'est-à-dire ce que Noé veut pouvoir faire. Les deux autres disent déjà une SOLUTION : un moyen d'y arriver.</p>
+                        <div class="etape-selection" data-conception-selection data-maximum="2" data-conception-consigne="Choisis exactement 2 proposition(s) dans l'étape « Besoin ou solution ? », puis clique sur « Vérifier mon tri ».">
+                            <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 2</p>
+                            <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : on dit ce que Noé veut pouvoir faire, sans avoir choisi comment. Une autre solution pourrait convenir aussi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Lire les consignes de l'écran sans se fatiguer.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : elle sort les consignes de l'écran au lieu de les agrandir. Le besoin de Noé, lui, reste de lire sans se fatiguer." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Écrire les consignes en gros sur une feuille, à côté du poste.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : agrandir est UN moyen d'y arriver. Une loupe, des lunettes ou une autre place feraient aussi l'affaire." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Agrandir le texte à l'écran.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : c'est le résultat attendu du travail, pas le moyen de l'obtenir. Aucun réglage n'est encore choisi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Suivre les consignes sans perdre le fil.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                            </ul>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Vérifier mon tri</button>
+                            <p class="etape-selection-retour" role="status" aria-live="polite"></p>
+                            <p class="etape-selection-explication cache">Un besoin dit ce que Noé veut pouvoir faire (« lire les consignes sans se fatiguer », « suivre les consignes sans perdre le fil ») ; une solution dit comment on y arrive (« agrandir le texte à l'écran », « écrire les consignes en gros sur une feuille »). Le besoin ne change pas quand on change de solution : c'est pour cela qu'on l'écrit d'abord.</p>
+                        </div>
+                    </div>
+                    <div data-etape-numero="3" data-etape-cle="sam" data-si-etape="1" data-si-options="sam" data-progressive="1" class="etape-conception cache" id="etape-selection-3-sam">
+                        <h4>Étape 3 : Besoin ou solution ?</h4>
+                        <p>Tu aides Sam, gêné par le bruit de la classe. Retiens les deux phrases qui disent un BESOIN, c'est-à-dire ce que Sam veut pouvoir faire. Les deux autres disent déjà une SOLUTION : un moyen d'y arriver.</p>
+                        <div class="etape-selection" data-conception-selection data-maximum="2" data-conception-consigne="Choisis exactement 2 proposition(s) dans l'étape « Besoin ou solution ? », puis clique sur « Vérifier mon tri ».">
+                            <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 2</p>
+                            <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : le casque est UN moyen d'entendre les consignes sans gêner les autres." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Brancher un casque pour écouter les consignes.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : on dit ce que Sam veut pouvoir faire, sans avoir choisi comment. Un casque n'est qu'un moyen parmi d'autres." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Entendre les consignes sans gêner ses voisins.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : c'est le résultat attendu par Sam et par ses voisins. Aucun moyen n'est encore choisi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Travailler au calme, sans déranger la classe.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : elle change la place du poste au lieu de changer l'écoute. Le besoin de Sam reste le même." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Déplacer le poste dans un coin plus calme de la salle.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                            </ul>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Vérifier mon tri</button>
+                            <p class="etape-selection-retour" role="status" aria-live="polite"></p>
+                            <p class="etape-selection-explication cache">Un besoin dit ce que Sam veut pouvoir faire (« entendre les consignes sans gêner ses voisins », « travailler au calme ») ; une solution dit comment on y arrive (« brancher un casque », « déplacer le poste dans un coin plus calme »). Le besoin ne change pas quand on change de solution : c'est pour cela qu'on l'écrit d'abord.</p>
+                        </div>
+                    </div>
+                    <div data-etape-numero="4" data-progressive="1" class="etape-conception cache" id="etape-selection-4">
                         <h4>Étape 4 : Mon idée pour l'aider</h4>
                         <p>Choisis l'idée que tu veux proposer. Tu peux en retenir deux, ou prendre la carte « J'ai une autre idée » : c'est permis, et c'est même souvent la meilleure.</p>
                         <p class="note-liberte">Aucune idée n'est meilleure qu'une autre : ce qui compte, c'est qu'elle réponde au besoin que tu as écrit à l'étape 2.</p>
@@ -6952,7 +7032,7 @@
                             <p class="etape-selection-retour" role="status" aria-live="polite"></p>
                         </div>
                     </div>
-                    <div class="etape-conception">
+                    <div data-etape-numero="5" data-progressive="1" class="etape-conception cache">
                         <h4>Étape 5 : Ma carte d'inventeur</h4>
                         <p>Écris ta carte d'inventeur en une phrase : « Je propose … parce que cela permet à … de … ». Ensuite, sur ta feuille, ajoute un croquis rapide de ton idée avec une flèche et une légende.</p>
                         <textarea id="carte-inventeur"
@@ -8778,6 +8858,10 @@
                 '#contenu-n4-probleme textarea[data-conception-texte]');
 
             for (const champ of champs) {
+                // Une variante qui ne concerne pas l'élève (étape conditionnelle
+                // écartée) ou une étape encore fermée ne bloquent pas la
+                // finalisation : l'élève ne les voit pas.
+                if (n4ElementHorsJeu(champ)) continue;
                 const mini = parseInt(champ.getAttribute('data-min') || '10', 10);
                 if (champ.value.trim().length < mini) {
                     champ.style.borderColor = 'var(--couleur-alerte)';
@@ -8799,6 +8883,7 @@
             const ateliers = document.querySelectorAll(
                 '#contenu-n4-probleme [data-conception-atelier]');
             for (const atelier of ateliers) {
+                if (n4ElementHorsJeu(atelier)) continue;
                 if (atelier.getAttribute('data-atelier-valide') === '1') continue;
                 alert(atelier.getAttribute('data-conception-consigne') ||
                     'Termine l\'atelier avant de finaliser : clique sur chaque emplacement et choisis un composant.');
@@ -8809,6 +8894,7 @@
             const ateliersModeles = document.querySelectorAll(
                 '#contenu-n4-probleme [data-conception-modele]');
             for (const atelier of ateliersModeles) {
+                if (n4ElementHorsJeu(atelier)) continue;
                 if (atelier.querySelector('.modele-ost.choisi')) continue;
                 const consigne = atelier.getAttribute('data-conception-consigne') ||
                     'Choisis un modèle dans le comparateur : clique sur celui que tu retiens.';
@@ -8824,6 +8910,7 @@
             const selections = document.querySelectorAll(
                 '#contenu-n4-probleme [data-conception-selection]');
             for (const selection of selections) {
+                if (n4ElementHorsJeu(selection)) continue;
                 if (selection.getAttribute('data-termine') === '1') continue;
                 alert(selection.getAttribute('data-conception-consigne') ||
                     'Termine l\'étape de choix : retiens les propositions, puis clique sur « Vérifier ».');
@@ -8840,6 +8927,7 @@
             const etapesManipulees = document.querySelectorAll(
                 '#contenu-n4-probleme [data-conception-etape]');
             for (const etape of etapesManipulees) {
+                if (n4ElementHorsJeu(etape)) continue;
                 if (etape.getAttribute('data-termine') === '1') continue;
                 alert(etape.getAttribute('data-conception-consigne') ||
                     'Termine l\'étape en cours avant de finaliser ta conception.');
@@ -9145,6 +9233,164 @@
                 '. Ce choix n\'est ni juste ni faux : c\'est celui que vous justifierez à ' +
                 'la dernière étape. Pour le changer, touchez une proposition, puis ' +
                 'enregistrez de nouveau.', '');
+        }
+
+        // ============================================
+        // ÉTAPES N4 CONDITIONNELLES ET AFFICHAGE PROGRESSIF (optionnels)
+        // ============================================
+        //
+        // Deux règles que personnaliser.py traduit en attributs sur les cadres
+        // `.etape-conception` :
+        //   • `data-si-etape` / `data-si-options` — l'étape ne concerne que
+        //     l'élève qui a retenu telle carte plus haut : « le tri besoin /
+        //     solution de Lina » ne se pose pas à qui aide Sam. Les variantes
+        //     sont toutes dans la page, une seule s'affiche ;
+        //   • `data-progressive` — l'étape reste masquée tant que la
+        //     précédente n'est pas résolue, pour ne pas noyer l'élève sous cinq
+        //     consignes d'un coup.
+        //
+        // Rien n'est écrit une fois pour toutes : la règle est recalculée après
+        // chaque geste (frappe, clic, enregistrement), parce qu'un élève peut
+        // revenir sur son choix et que la variante affichée doit suivre.
+        // L'affichage progressif, lui, ne se referme jamais : une étape gagnée
+        // le reste, même si le champ est vidé — sinon la page clignoterait à
+        // chaque correction.
+
+        function n4EtapesConception() {
+            return Array.prototype.slice.call(document.querySelectorAll(
+                '#contenu-n4-probleme .etape-conception[data-etape-numero]'));
+        }
+
+        function n4EtapeDeNumero(numero) {
+            const etapes = n4EtapesConception();
+            for (let i = 0; i < etapes.length; i++) {
+                if (etapes[i].getAttribute('data-etape-numero') === String(numero)) {
+                    return etapes[i];
+                }
+            }
+            return null;
+        }
+
+        // Clés des propositions retenues dans une étape (`data-cle`, posé à la
+        // génération). Sert à savoir quel cas s'applique : c'est la carte
+        // enregistrée, pas la carte survolée, qui décide.
+        function n4ClesRetenues(numero) {
+            const etape = n4EtapeDeNumero(numero);
+            const cles = [];
+            if (!etape) return cles;
+            etape.querySelectorAll('.choix-contrainte[aria-pressed="true"]')
+                .forEach(function (bouton) {
+                    const cle = bouton.getAttribute('data-cle');
+                    if (cle) cles.push(cle);
+                });
+            return cles;
+        }
+
+        function n4EtapeApplicable(bloc) {
+            const controle = bloc.getAttribute('data-si-etape');
+            if (!controle) return true;
+            const attendues = String(bloc.getAttribute('data-si-options') || '')
+                .split(/\s+/).filter(Boolean);
+            const retenues = n4ClesRetenues(controle);
+            return retenues.some(function (cle) {
+                return attendues.indexOf(cle) !== -1;
+            });
+        }
+
+        // Une étape est RÉSOLUE quand tout ce qu'elle demande est fait :
+        // longueur minimale atteinte pour une rédaction, vérification réussie
+        // ou choix enregistré pour une sélection, classement ou schéma terminé.
+        // Une étape sans exigence (une consigne seule) ne bloque rien.
+        function n4EtapeResolue(bloc) {
+            let exigences = 0;
+            let resolue = true;
+            bloc.querySelectorAll('textarea[data-conception-texte]').forEach(function (champ) {
+                exigences += 1;
+                const mini = parseInt(champ.getAttribute('data-min') || '10', 10);
+                if (String(champ.value || '').trim().length < mini) resolue = false;
+            });
+            bloc.querySelectorAll('[data-conception-selection]').forEach(function (selection) {
+                exigences += 1;
+                if (selection.getAttribute('data-termine') !== '1') resolue = false;
+            });
+            bloc.querySelectorAll('[data-conception-etape]').forEach(function (etape) {
+                exigences += 1;
+                if (etape.getAttribute('data-termine') !== '1') resolue = false;
+            });
+            bloc.querySelectorAll('[data-conception-atelier]').forEach(function (atelier) {
+                exigences += 1;
+                if (atelier.getAttribute('data-atelier-valide') !== '1') resolue = false;
+            });
+            bloc.querySelectorAll('[data-conception-modele]').forEach(function (atelier) {
+                exigences += 1;
+                if (!atelier.querySelector('.modele-ost.choisi')) resolue = false;
+            });
+            return exigences > 0 && resolue;
+        }
+
+        // Applique les deux règles dans l'ordre du document. `data-applicable`
+        // est le repère lu par finaliserConception() et par le bilan : ce qu'une
+        // variante écartée contient ne compte ni dans la trace, ni dans les
+        // exigences de la finalisation.
+        function n4RafraichirEtapesN4() {
+            const etapes = n4EtapesConception();
+            if (!etapes.length) return;
+            let precedentesResolues = true;
+            etapes.forEach(function (bloc) {
+                const applicable = n4EtapeApplicable(bloc);
+                bloc.setAttribute('data-applicable', applicable ? '1' : '0');
+                if (!applicable) {
+                    bloc.classList.add('cache');
+                    return;
+                }
+                const progressive = bloc.getAttribute('data-progressive') === '1';
+                const dejaOuverte = bloc.getAttribute('data-revelee') === '1';
+                if (!progressive || precedentesResolues || dejaOuverte) {
+                    bloc.classList.remove('cache');
+                    if (progressive) bloc.setAttribute('data-revelee', '1');
+                } else {
+                    bloc.classList.add('cache');
+                }
+                precedentesResolues = precedentesResolues && n4EtapeResolue(bloc);
+            });
+        }
+
+        function n4ReinitialiserEtapesN4() {
+            n4EtapesConception().forEach(function (bloc) {
+                bloc.removeAttribute('data-revelee');
+            });
+            n4RafraichirEtapesN4();
+        }
+
+        // Un élément appartient-il à une étape écartée (variante qui ne
+        // concerne pas l'élève) ou encore fermée ? Dans les deux cas, la
+        // finalisation et le bilan ne le lisent pas : l'élève ne peut pas être
+        // bloqué par un champ qu'il ne voit pas.
+        function n4ElementHorsJeu(element) {
+            const etape = element ? element.closest('.etape-conception') : null;
+            if (!etape) return false;
+            return etape.classList.contains('cache') ||
+                etape.getAttribute('data-applicable') === '0';
+        }
+
+        // Recalcul immédiat après chaque geste : l'onglet ne compte que
+        // quelques étapes, et une règle qui s'appliquerait « un peu plus tard »
+        // se lirait comme un défaut de la page (l'étape suivante s'ouvrirait
+        // après coup). Le recalcul est idempotent : il ne fait que reposer des
+        // classes et des attributs.
+        function n4EcouterEtapesN4() {
+            const zone = document.getElementById('contenu-n4-probleme');
+            if (!zone) return;
+            ['input', 'change', 'click'].forEach(function (evenement) {
+                zone.addEventListener(evenement, n4RafraichirEtapesN4);
+            });
+            n4RafraichirEtapesN4();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', n4EcouterEtapesN4);
+        } else {
+            n4EcouterEtapesN4();
         }
 
         // ============================================
@@ -10109,6 +10355,9 @@
                 '#contenu-n4-probleme .etape-conception');
             let numero = 0;
             for (const etape of etapes) {
+                // Une variante écartée ne fait pas partie de la trace : le
+                // bilan ne doit recopier que ce que l'élève a réellement fait.
+                if (etape.getAttribute('data-applicable') === '0') continue;
                 const morceaux = [];
                 const champ = etape.querySelector('textarea[data-conception-texte]');
                 if (champ && String(champ.value || '').trim()) {
@@ -10430,6 +10679,11 @@
                 // marque de vérification. Sans cela, l'élève relancerait
                 // l'activité avec sa sélection précédente déjà validée.
                 n4ReinitialiserSelections();
+
+                // Étapes conditionnelles et progressives : on repart de la
+                // première seule, et les variantes reprennent leur place
+                // d'attente (aucun élève aidé, donc aucune variante ouverte).
+                if (typeof n4ReinitialiserEtapesN4 === 'function') n4ReinitialiserEtapesN4();
 
                 // Étapes de classement et de schéma : les tuiles retrouvent
                 // leur ordre de départ, aucun classement n'est enregistré, et
@@ -16728,6 +16982,7 @@
         if (typeof n4ReinitialiserConception === 'function') n4ReinitialiserConception();
         if (typeof n4ReinitialiserArborescence === 'function') n4ReinitialiserArborescence();
         if (typeof n4ReinitialiserSelections === 'function') n4ReinitialiserSelections();
+        if (typeof n4ReinitialiserEtapesN4 === 'function') n4ReinitialiserEtapesN4();
         if (typeof n3ReinitialiserQCMCorrectif === 'function') n3ReinitialiserQCMCorrectif();
         if (document.getElementById('dimensionnement') &&
             typeof n4ReinitialiserDimensionnement === 'function') {
@@ -17532,6 +17787,10 @@
             }
             try {
                 appliquerEtat(donnees);
+                // La progression restaurée peut avoir retenu un autre élève :
+                // les variantes et les étapes ouvertes se recalculent à partir
+                // de ce qui vient d'être relu.
+                if (typeof n4RafraichirEtapesN4 === 'function') n4RafraichirEtapesN4();
             } catch (erreur) {
                 annoncer('La reprise a rencontré un problème (' +
                     (erreur && erreur.message ? erreur.message : 'erreur inattendue') +
