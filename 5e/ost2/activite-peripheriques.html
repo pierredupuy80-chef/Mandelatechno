@@ -6297,10 +6297,18 @@
                                 <dd>Élément qui interagit avec l'objet : usager, surface, autres objets, environnement, énergie.</dd>
                             </div>
                             <div class="glossaire-entree" data-ost-id="n1-glossaire-4">
+                                <dt>Besoin</dt>
+                                <dd>Ce que l'usager veut pouvoir faire, dit sans choisir encore de solution : « lire facilement les consignes ».</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-5">
+                                <dt>Solution</dt>
+                                <dd>Le moyen choisi pour répondre au besoin : agrandir le texte, régler les boutons de la souris. Plusieurs solutions peuvent répondre au même besoin.</dd>
+                            </div>
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-6">
                                 <dt>Ergonomie</dt>
                                 <dd>Adaptation de l'objet à son usager : forme, taille, effort, confort.</dd>
                             </div>
-                            <div class="glossaire-entree" data-ost-id="n1-glossaire-5">
+                            <div class="glossaire-entree" data-ost-id="n1-glossaire-7">
                                 <dt>Liaison</dt>
                                 <dd>Moyen de transmission entre le périphérique et le poste (USB, Bluetooth).</dd>
                             </div>
@@ -6790,359 +6798,196 @@
             <!-- N4 - Problème ouvert -->
             <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
                 <div class="carte-contenu">
-                    <h2>Niveau 4 : Concevoir votre solution</h2>
-                    <p>La salle de technologie a besoin de nouvelles souris : les élèves se plaignent du poignet, et les gauchers doivent tenir la souris de la main droite. Tu as les fiches de trois modèles, la règle de prix du collège et les exigences du diagramme des exigences de la souris. À toi d'exprimer le besoin, de dire quelles exigences passent d'abord, de comparer les trois fiches et de recommander une souris. Compte 20 à 25 minutes : ce niveau est un prolongement de la séance, tu peux le reprendre chez toi.</p>
+                    <h2>Niveau 4 : Aider un élève du cours</h2>
+                    <p>Cette fois, tu n'achètes rien : tu AIDES un camarade. Choisis l'élève que tu vas aider, écris avec tes mots ce dont il a besoin, trie les phrases qui disent un besoin et celles qui disent une solution, puis propose TON idée et remplis ta carte d'inventeur. Compte 10 à 15 minutes, et retiens bien : il n'y a pas de bonne réponse — c'est ton idée, défendue avec tes mots, qui compte.</p>
 
                     <div class="probleme-ouvert">
                         <h3>🎯 Le défi</h3>
-                        <p><strong>Situation :</strong> Le collège renouvelle les souris de la salle de technologie. En fin de séance, plusieurs élèves ont mal au poignet, et les gauchers doivent se servir de la souris de la main droite. Le gestionnaire a fixé une règle : pas plus de 90 € par souris (c'est le coût indiqué sur le diagramme des exigences de la souris ergonomique). Le fournisseur a envoyé trois fiches de souris sans fil, toutes conformes aux normes de sécurité ISO, NF et CE. Tu es l'élève chargé du dossier : conseille le collège et justifie ta recommandation.</p>
+                        <p><strong>Situation :</strong> Trois élèves de 5e ont un souci avec le poste de la salle de technologie. Lina est gauchère : la souris lui fait faire des clics au hasard. Noé lit mal les petites lettres affichées à l'écran et perd le fil des consignes. Sam n'arrive pas à écouter les consignes sans gêner ses voisins. Ton rôle : aider UN de ces trois élèves. D'abord tu écris ce dont il a besoin (ce qu'il veut pouvoir faire), puis tu proposes une idée qui l'aide — un objet, un réglage ou une façon de faire.</p>
                     </div>
 
-                    <h3>Étapes de conception</h3>
+                    <h3>🎯 Ta mission : aider un élève</h3>
 
-
-
-
-
-                    <div class="conception-guidee" id="conception-guidee">
-                        <div class="etape-conception">
-                            <h4>Étape 1 : Exprimer le besoin de la salle</h4>
-                            <p>Décris le besoin avec tes mots : qui utilise les souris, pendant combien de temps, quels inconvénients il faut corriger et à quoi sert la souris.</p>
-                            <textarea
-                                id="besoin-identifie"
-                                data-conception-texte
-                                data-min="20"
-                                placeholder="Ex. : les élèves des six îlots travaillent une heure par semaine sur les postes ; il faut corriger la douleur au poignet et le fait que les gauchers soient obligés de se servir de la main droite ; la souris sert à déplacer le curseur et à cliquer…"
-                                aria-label="Description du besoin de la salle de technologie"></textarea>
+                    <!-- ETAPES-CONCEPTION-N4 : DEBUT -->
+                    <div class="etape-conception" id="etape-selection-1">
+                        <h4>Étape 1 : L'élève que j'aide</h4>
+                        <p>Choisis l'élève que tu vas aider. Il n'y a pas de bon choix : les trois ont un vrai souci avec le poste, et chacun se règle autrement.</p>
+                        <p class="note-liberte">Retiens une seule carte, puis clique sur « Enregistrer mon élève ».</p>
+                        <p class="etape-consigne-usage">Touchez la carte que vous retenez : une seule. Touchez-la de nouveau pour la retirer. Ce choix n'est ni juste ni faux : il engage votre système et sera justifié à la dernière étape.</p>
+                        <div class="etape-selection" data-conception-selection data-libre="1" data-minimum="1" data-maximum="1" data-libelle-choix="élève" data-conception-consigne="Termine l'étape « L'élève que j'aide » : retiens tes élèves, puis clique sur « Enregistrer mon élève ».">
+                            <ul class="choix-contraintes" role="group" aria-label="Élèves à aider — propositions à retenir">
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">👧</span>
+                                        <span class="choix-texte">Lina, gauchère : « La souris est faite pour la main droite, mes clics partent tout seuls. »</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">👦</span>
+                                        <span class="choix-texte">Noé, lit mal : « Les lettres à l'écran sont trop petites, je perds les consignes. »</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🧑</span>
+                                        <span class="choix-texte">Sam, gêné par le bruit : « Je n'entends pas les consignes, et je dérange mes voisins. »</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                            </ul>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Enregistrer mon élève</button>
+                            <p class="etape-selection-retour" role="status" aria-live="polite"></p>
                         </div>
-                        <div class="etape-conception">
-                            <h4>Étape 2 : Hiérarchiser les exigences de la souris</h4>
-                            <p>La salle a toutes ces exigences à la fois, et on ne peut pas toutes les pousser au maximum. Classe les tuiles, de l'exigence qui tranchera le choix (en haut) à la moins décisive (en bas). Il n'y a pas de bonne réponse : un ordre défendu avec des arguments vaut mieux qu'un ordre arbitraire. Justifie ton classement, puis clique « Figer ma hiérarchie » : la comparaison des trois modèles ne s'ouvre qu'à ce moment-là.</p>
-                            <p class="note-liberte">Aucun chiffre n'est écrit sur les tuiles : tu poses un ordre, pas une mesure. Tu peux déplacer les tuiles autant de fois que nécessaire avant de figer ta hiérarchie.</p>
-                            <div class="reglages-contraintes" data-mode="classement" data-figer="1">
-                            <p class="classement-consigne" id="classement-consigne-usage">Déplace les tuiles pour les classer : la première est l'exigence qui passe avant les autres. Utilise les boutons ▲ ▼ (au clavier aussi), ou fais glisser une tuile à la souris. Au doigt, sur tablette, privilégie les boutons.</p>
-                            <ol class="tuiles-contraintes" id="tuiles-contraintes"
-                                aria-describedby="classement-consigne-usage">
-                                <li class="tuile-contrainte"
-                                    data-ost-id="n4-tuile-1"
-                                    data-ost-bloc="n4-tuile-ergonomie"
-                                    data-cle="ergonomie"
-                                    data-nom="Ergonomie : convenir à toutes les mains"
-                                    data-ordre-depart="1"
-                                    data-rang="1"
-                                    draggable="true">
-                                    <span class="tuile-rang" aria-hidden="true">1</span>
-                                    <span class="tuile-texte">
-                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🖐️</span> Ergonomie : convenir à toutes les mains</span>
-                                    <span class="tuile-aide">Droitiers et gauchers, grandes et petites mains, une heure d'affilée : la souris doit s'adapter à l'usager sans provoquer de douleur. C'est l'exigence d'ergonomie du diagramme des exigences.</span>
-                                    </span>
-                                    <span class="tuile-actions">
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="-1"
-                                                data-ost-id="n4-tuile-1-monter"
-                                                aria-label="Monter le besoin « Ergonomie : convenir à toutes les mains »"
-                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="1"
-                                                data-ost-id="n4-tuile-1-descendre"
-                                                aria-label="Descendre le besoin « Ergonomie : convenir à toutes les mains »"
-                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
-                                    </span>
-                                </li>
-                                <li class="tuile-contrainte"
-                                    data-ost-id="n4-tuile-2"
-                                    data-ost-bloc="n4-tuile-information"
-                                    data-cle="information"
-                                    data-nom="Transmettre l'information au poste"
-                                    data-ordre-depart="2"
-                                    data-rang="2"
-                                    draggable="true">
-                                    <span class="tuile-rang" aria-hidden="true">2</span>
-                                    <span class="tuile-texte">
-                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">📶</span> Transmettre l'information au poste</span>
-                                    <span class="tuile-aide">La souris doit transmettre ses déplacements et ses clics à l'ordinateur, ici par radiofréquence (sans fil) : une liaison qui perd le signal arrête la séance.</span>
-                                    </span>
-                                    <span class="tuile-actions">
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="-1"
-                                                data-ost-id="n4-tuile-2-monter"
-                                                aria-label="Monter le besoin « Transmettre l'information au poste »"
-                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="1"
-                                                data-ost-id="n4-tuile-2-descendre"
-                                                aria-label="Descendre le besoin « Transmettre l'information au poste »"
-                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
-                                    </span>
-                                </li>
-                                <li class="tuile-contrainte"
-                                    data-ost-id="n4-tuile-3"
-                                    data-ost-bloc="n4-tuile-securite"
-                                    data-cle="securite"
-                                    data-nom="Sécurité et normes"
-                                    data-ordre-depart="3"
-                                    data-rang="3"
-                                    draggable="true">
-                                    <span class="tuile-rang" aria-hidden="true">3</span>
-                                    <span class="tuile-texte">
-                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🛡️</span> Sécurité et normes</span>
-                                    <span class="tuile-aide">Un matériel électrique vendu en Europe doit respecter les normes de sécurité (ISO, NF, CE). C'est une exigence qu'on ne peut pas abandonner.</span>
-                                    </span>
-                                    <span class="tuile-actions">
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="-1"
-                                                data-ost-id="n4-tuile-3-monter"
-                                                aria-label="Monter le besoin « Sécurité et normes »"
-                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="1"
-                                                data-ost-id="n4-tuile-3-descendre"
-                                                aria-label="Descendre le besoin « Sécurité et normes »"
-                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
-                                    </span>
-                                </li>
-                                <li class="tuile-contrainte"
-                                    data-ost-id="n4-tuile-4"
-                                    data-ost-bloc="n4-tuile-cout"
-                                    data-cle="cout"
-                                    data-nom="Coût : moins de 90 € par souris"
-                                    data-ordre-depart="4"
-                                    data-rang="4"
-                                    draggable="true">
-                                    <span class="tuile-rang" aria-hidden="true">4</span>
-                                    <span class="tuile-texte">
-                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">💰</span> Coût : moins de 90 € par souris</span>
-                                    <span class="tuile-aide">Le gestionnaire a fixé ce prix maximal. L'argent mis dans une souris ne va pas au reste du matériel de la salle.</span>
-                                    </span>
-                                    <span class="tuile-actions">
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="-1"
-                                                data-ost-id="n4-tuile-4-monter"
-                                                aria-label="Monter le besoin « Coût : moins de 90 € par souris »"
-                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="1"
-                                                data-ost-id="n4-tuile-4-descendre"
-                                                aria-label="Descendre le besoin « Coût : moins de 90 € par souris »"
-                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
-                                    </span>
-                                </li>
-                                <li class="tuile-contrainte"
-                                    data-ost-id="n4-tuile-5"
-                                    data-ost-bloc="n4-tuile-durabilite"
-                                    data-cle="durabilite"
-                                    data-nom="Durabilité et réparabilité"
-                                    data-ordre-depart="5"
-                                    data-rang="5"
-                                    draggable="true">
-                                    <span class="tuile-rang" aria-hidden="true">5</span>
-                                    <span class="tuile-texte">
-                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">♻️</span> Durabilité et réparabilité</span>
-                                    <span class="tuile-aide">Une souris reste plusieurs années dans une salle : une garantie longue et une pile remplaçable évitent d'en racheter chaque année.</span>
-                                    </span>
-                                    <span class="tuile-actions">
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="-1"
-                                                data-ost-id="n4-tuile-5-monter"
-                                                aria-label="Monter le besoin « Durabilité et réparabilité »"
-                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="1"
-                                                data-ost-id="n4-tuile-5-descendre"
-                                                aria-label="Descendre le besoin « Durabilité et réparabilité »"
-                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
-                                    </span>
-                                </li>
-                                <li class="tuile-contrainte"
-                                    data-ost-id="n4-tuile-6"
-                                    data-ost-bloc="n4-tuile-esthetique"
-                                    data-cle="esthetique"
-                                    data-nom="Esthétique"
-                                    data-ordre-depart="6"
-                                    data-rang="6"
-                                    draggable="true">
-                                    <span class="tuile-rang" aria-hidden="true">6</span>
-                                    <span class="tuile-texte">
-                                        <span class="tuile-nom"><span class="tuile-icone" aria-hidden="true">🎨</span> Esthétique</span>
-                                    <span class="tuile-aide">L'objet doit plaire : couleur, forme, finition. C'est une vraie contrainte de conception, mais elle ne répare aucune douleur au poignet.</span>
-                                    </span>
-                                    <span class="tuile-actions">
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="-1"
-                                                data-ost-id="n4-tuile-6-monter"
-                                                aria-label="Monter le besoin « Esthétique »"
-                                                onclick="n4DeplacerTuile(this, -1)">▲</button>
-                                        <button type="button" class="tuile-deplacer"
-                                                data-direction="1"
-                                                data-ost-id="n4-tuile-6-descendre"
-                                                aria-label="Descendre le besoin « Esthétique »"
-                                                onclick="n4DeplacerTuile(this, 1)">▼</button>
-                                    </span>
-                                </li>
-                            </ol>
-                            <p class="classement-etat" id="classement-etat"
-                               role="status" aria-live="polite"></p>
-                            </div>
+                    </div>
+                    <div class="etape-conception">
+                        <h4>Étape 2 : Le besoin de mon élève</h4>
+                        <p>Écris ce dont ton élève a besoin, avec la phrase : « … a besoin de … pour … ». Ne dis pas encore comment on va l'aider : pour l'instant, on dit seulement ce qu'il veut pouvoir faire.</p>
+                        <textarea id="besoin-eleve"
+                            data-conception-texte
+                            data-min="40"
+                            placeholder="Ex. : Lina a besoin d'utiliser la souris avec sa main gauche pour travailler sans faire de clics au hasard."
+                            aria-label="Besoin de l'élève choisi"></textarea>
+                    </div>
+                    <div class="etape-conception" id="etape-selection-3">
+                        <h4>Étape 3 : Besoin ou solution ?</h4>
+                        <p>Retiens les deux phrases qui disent un BESOIN, c'est-à-dire ce que l'élève veut pouvoir faire. Les deux autres disent déjà une SOLUTION : un moyen d'y arriver.</p>
+                        <div class="etape-selection" data-conception-selection data-maximum="2" data-conception-consigne="Choisis exactement 2 proposition(s) dans l'étape « Besoin ou solution ? », puis clique sur « Vérifier mon tri ».">
+                            <p class="compteur-selection" aria-live="polite">0 proposition retenue sur 2</p>
+                            <ul class="choix-contraintes" role="group" aria-label="Propositions à retenir">
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : Lina veut pouvoir se servir du poste avec sa main naturelle. Aucun moyen n'est encore choisi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Utiliser la souris avec sa main gauche.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : agrandir est UN moyen d'y arriver. Des lunettes, une loupe ou une autre place feraient aussi l'affaire." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Agrandir le texte à l'écran.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="1" data-explication="C'est un besoin : on dit ce que l'élève veut pouvoir faire, sans avoir choisi comment. Une autre solution pourrait convenir aussi." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Lire facilement les consignes affichées à l'écran.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" data-essentielle="0" data-explication="C'est une solution : elle répond au besoin de Lina, mais une souris symétrique y répondrait aussi. Le besoin, lui, resterait le même." aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-texte">Régler les boutons de la souris pour un gaucher.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                        <p class="choix-explication cache"></p>
+                                    </li>
+                            </ul>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Vérifier mon tri</button>
+                            <p class="etape-selection-retour" role="status" aria-live="polite"></p>
+                            <p class="etape-selection-explication cache">Un besoin dit ce que l'élève veut pouvoir faire (« lire les consignes », « utiliser la souris avec la main gauche ») ; une solution dit comment on y arrive (« agrandir le texte », « régler les boutons pour un gaucher »). Le besoin ne change pas quand on change de solution : c'est pour cela qu'on l'écrit d'abord.</p>
+                        </div>
+                    </div>
+                    <div class="etape-conception" id="etape-selection-4">
+                        <h4>Étape 4 : Mon idée pour l'aider</h4>
+                        <p>Choisis l'idée que tu veux proposer. Tu peux en retenir deux, ou prendre la carte « J'ai une autre idée » : c'est permis, et c'est même souvent la meilleure.</p>
+                        <p class="note-liberte">Aucune idée n'est meilleure qu'une autre : ce qui compte, c'est qu'elle réponde au besoin que tu as écrit à l'étape 2.</p>
+                        <p class="etape-consigne-usage">Touchez les idées que vous retenez : il en faut au moins 1 et au plus 2. Ce choix n'est ni juste ni faux : il engage votre système et sera justifié à la dernière étape.</p>
+                        <div class="etape-selection" data-conception-selection data-libre="1" data-minimum="1" data-maximum="2" data-libelle-choix="idée" data-conception-consigne="Termine l'étape « Mon idée pour l'aider » : retiens tes idées, puis clique sur « Enregistrer mon idée ».">
+                            <ul class="choix-contraintes" role="group" aria-label="Idées pour aider l'élève — propositions à retenir">
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🖱️</span>
+                                        <span class="choix-texte">Régler les boutons de la souris sur la main gauche.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔁</span>
+                                        <span class="choix-texte">Choisir une souris symétrique, utilisable des deux mains.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🔍</span>
+                                        <span class="choix-texte">Agrandir l'affichage et rapprocher l'écran des yeux.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">📄</span>
+                                        <span class="choix-texte">Écrire les consignes en gros sur une feuille, à côté du poste.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🎧</span>
+                                        <span class="choix-texte">Brancher un casque pour écouter les consignes sans gêner les voisins.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">🚪</span>
+                                        <span class="choix-texte">Déplacer le poste dans un coin plus calme de la salle.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                                    <li class="choix-item">
+                                        <button type="button" class="choix-contrainte" aria-pressed="false" onclick="n4BasculerContrainte(this)">
+                                        <span class="choix-icone" aria-hidden="true">💡</span>
+                                        <span class="choix-texte">J'ai une autre idée : je l'écris à l'étape suivante.</span>
+                                        <span class="choix-marque" aria-hidden="true"></span>
+                                        </button>
+                                    </li>
+                            </ul>
+                            <button type="button" class="bouton-action" onclick="n4VerifierSelection(this)">Enregistrer mon idée</button>
+                            <p class="etape-selection-retour" role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="etape-conception">
+                        <h4>Étape 5 : Ma carte d'inventeur</h4>
+                        <p>Écris ta carte d'inventeur en une phrase : « Je propose … parce que cela permet à … de … ». Ensuite, sur ta feuille, ajoute un croquis rapide de ton idée avec une flèche et une légende.</p>
+                        <textarea id="carte-inventeur"
+                            data-conception-texte
+                            data-min="60"
+                            placeholder="Ex. : Je propose de régler les boutons sur la main gauche, parce que cela permet à Lina d'utiliser la souris avec sa main naturelle et de ne plus cliquer au hasard."
+                            aria-label="Carte d'inventeur : mon idée et ce qu'elle change pour l'élève"></textarea>
+                    </div>
+                    <!-- ETAPES-CONCEPTION-N4 : FIN -->
+
+
+
+
+
+
+
+
+
+                    <!-- BILAN-N4 : DEBUT -->
+                        <div class="bilan-n4" id="bilan-n4" data-entete="MA CARTE D'INVENTEUR">
+                            <h4 id="bilan-n4-titre">🎨 Ma carte d'inventeur</h4>
+                            <p class="bilan-n4-consigne">Génère ta carte : elle reprend ton élève, son besoin, ton idée et ta phrase d'inventeur. Copie-la ou imprime-la pour la présenter à un camarade, ou pour la remettre au professeur.</p>
                             <p class="contraintes-actions"><button type="button" class="bouton-action"
-                                    id="bouton-figer-contraintes"
-                                    data-libelle-figer="Figer ma hiérarchie"
-                                    data-libelle-modifier="Modifier ma hiérarchie"
-                                    aria-pressed="false"
-                                    onclick="n4FigerContraintes(this)">Figer ma hiérarchie</button></p>
-                            <div class="contraintes-recap" id="contraintes-recap" hidden>
-                                <h5>Ma hiérarchie des exigences de la salle</h5>
-                                <ul id="contraintes-recap-liste"></ul>
-                                <p class="contraintes-recap-note">Ta hiérarchie est verrouillée : c'est avec elle que tu vas comparer les trois fiches, et la comparaison vient de s'ouvrir. Si tu t'es trompé, clique « Modifier ma hiérarchie ».</p>
-                            </div>
-                            <p class="classement-argumentation-consigne">Explique ton ordre : pourquoi cette exigence passe-t-elle avant les autres, et à quoi le collège accepte-t-il de renoncer en la plaçant là ?</p>
-                            <textarea
-                                id="hierarchie-justifiee"
-                                data-conception-texte
-                                data-min="40"
-                                placeholder="Ex. : je place l'ergonomie en premier, parce que la douleur au poignet est le problème de départ et qu'elle touche tous les élèves ; la durabilité vient ensuite, parce que des souris rachetées chaque année coûtent plus cher qu'une garantie longue ; je place l'esthétique en dernier, parce que…"
-                                aria-label="Argumentation de la hiérarchie des exigences de la salle"></textarea>
-                        </div>
-                        <div id="etape-comparateur" class="etape-conception cache" data-comparateur-apres-gel="1">
-                            <h4>Étape 3 : Comparer les trois souris proposées</h4>
-                            <p>Les trois modèles sont réalistes : chacun répond à une partie des exigences, aucun à toutes. Choisis un tri dans le menu, lis les valeurs ligne par ligne (chaque critère garde la même couleur d'une fiche à l'autre), puis compare-les à ta hiérarchie figée. Aucun voyant vert ni rouge ne s'affiche : seule ton analyse compte.</p>
-                            <div class="comparateur-ost" data-conception-modele
-                                 data-verdicts="0"
-                                 data-conception-consigne="Choisis la souris que le collège doit acheter : clique sa fiche, puis justifie ton choix à l'étape suivante.">
-                                <div class="comparateur-outils">
-                                    <label for="tri-comparateur">Trier les modèles</label>
-                                    <select id="tri-comparateur">
-                                        <option value="prix" data-sens="bas">Prix d'achat : du plus bas au plus haut</option>
-                                        <option value="autonomie" data-sens="haut">Autonomie de la pile : du plus haut au plus bas</option>
-                                        <option value="garantie" data-sens="haut">Garantie : du plus haut au plus bas</option>
-                                        <option value="">Ordre du magasin</option>
-                                    </select>
-                                </div>
-                                <div class="comparateur-modeles" id="comparateur-modeles"
-                                     role="radiogroup"
-                                     aria-label="Trois souris sans fil à comparer">
-                                    <article class="modele-ost" id="modele-ost-1"
-                                             data-ost-bloc="n4-modele-1"
-                                             data-rang="1"
-                                             data-nom="Modèle A : souris optique compacte"
-                                         data-prix="19"
-                                         data-autonomie="12"
-                                         data-garantie="12"
-                                         data-largeur="6"
-                                             tabindex="0" role="radio" aria-checked="false"
-                                             aria-label="Modèle A : souris optique compacte : cliquer pour retenir ce modèle"
-                                             onclick="n4ChoisirModele(this)">
-                                        <div class="modele-entete">
-                                            <span class="modele-icone" aria-hidden="true">🖱️</span>
-                                            <h4>Modèle A : souris optique compacte</h4>
-                                        </div>
-                                    <p class="modele-description">Forme plate, taille unique, à plat sur la table.</p>
-                                        <table class="modele-valeurs">
-                                            <tbody>
-                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>19 €</strong></td></tr>
-                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie de la pile</th><td><strong>12 mois</strong></td></tr>
-                                            <tr data-critere="garantie"><th scope="row" class="modele-critere">Garantie</th><td><strong>12 mois</strong></td></tr>
-                                            <tr data-critere="largeur"><th scope="row" class="modele-critere">Largeur (prise en main)</th><td><strong>6 cm</strong></td></tr>
-                                            </tbody>
-                                        </table>
-                                    </article>
-                                    <article class="modele-ost" id="modele-ost-2"
-                                             data-ost-bloc="n4-modele-2"
-                                             data-rang="2"
-                                             data-nom="Modèle B : souris verticale"
-                                         data-prix="49"
-                                         data-autonomie="3"
-                                         data-garantie="24"
-                                         data-largeur="7"
-                                             tabindex="0" role="radio" aria-checked="false"
-                                             aria-label="Modèle B : souris verticale : cliquer pour retenir ce modèle"
-                                             onclick="n4ChoisirModele(this)">
-                                        <div class="modele-entete">
-                                            <span class="modele-icone" aria-hidden="true">🖐️</span>
-                                            <h4>Modèle B : souris verticale</h4>
-                                        </div>
-                                    <p class="modele-description">Tenue verticale : la main reste dans l'axe du bras.</p>
-                                        <table class="modele-valeurs">
-                                            <tbody>
-                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>49 €</strong></td></tr>
-                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie de la pile</th><td><strong>3 mois</strong></td></tr>
-                                            <tr data-critere="garantie"><th scope="row" class="modele-critere">Garantie</th><td><strong>24 mois</strong></td></tr>
-                                            <tr data-critere="largeur"><th scope="row" class="modele-critere">Largeur (prise en main)</th><td><strong>7 cm</strong></td></tr>
-                                            </tbody>
-                                        </table>
-                                    </article>
-                                    <article class="modele-ost" id="modele-ost-3"
-                                             data-ost-bloc="n4-modele-3"
-                                             data-rang="3"
-                                             data-nom="Modèle C : souris symétrique pour gauchers"
-                                         data-prix="89"
-                                         data-autonomie="6"
-                                         data-garantie="24"
-                                         data-largeur="8"
-                                             tabindex="0" role="radio" aria-checked="false"
-                                             aria-label="Modèle C : souris symétrique pour gauchers : cliquer pour retenir ce modèle"
-                                             onclick="n4ChoisirModele(this)">
-                                        <div class="modele-entete">
-                                            <span class="modele-icone" aria-hidden="true">🔁</span>
-                                            <h4>Modèle C : souris symétrique pour gauchers</h4>
-                                        </div>
-                                    <p class="modele-description">Forme symétrique, boutons inversables pour la main gauche.</p>
-                                        <table class="modele-valeurs">
-                                            <tbody>
-                                            <tr data-critere="prix"><th scope="row" class="modele-critere">Prix d'achat</th><td><strong>89 €</strong></td></tr>
-                                            <tr data-critere="autonomie"><th scope="row" class="modele-critere">Autonomie de la pile</th><td><strong>6 mois</strong></td></tr>
-                                            <tr data-critere="garantie"><th scope="row" class="modele-critere">Garantie</th><td><strong>24 mois</strong></td></tr>
-                                            <tr data-critere="largeur"><th scope="row" class="modele-critere">Largeur (prise en main)</th><td><strong>8 cm</strong></td></tr>
-                                            </tbody>
-                                        </table>
-                                    </article>
-                                </div>
-                                <p class="comparateur-choix" aria-live="polite">Modèle que tu retiens :
-                                    <strong id="modele-choisi-nom">aucun pour l'instant</strong></p>
-                            </div>
-                        </div>
-                        <div class="etape-conception">
-                            <h4>Étape 4 : Justifier la souris retenue</h4>
-                            <p>Rédige ta recommandation au gestionnaire : nomme le modèle retenu, cite au moins deux valeurs chiffrées de sa fiche, dis quelle exigence de ta hiérarchie a tranché, et à quoi le collège renonce en le choisissant.</p>
-                            <textarea
-                                id="solution-choisie"
-                                data-conception-texte
-                                data-min="40"
-                                placeholder="Je recommande le modèle … : il coûte … €, sa pile dure … mois et il est garanti … mois. L'exigence qui a tranché est …, et j'accepte de renoncer à …"
-                                aria-label="Justification de la souris retenue"></textarea>
-                        </div>
-                        <div class="bilan-n4" id="bilan-n4">
-                            <h4 id="bilan-n4-titre">Mon bilan à transmettre au professeur</h4>
-                            <p class="bilan-n4-consigne">Génère ton bilan : il reprend ton besoin, ta hiérarchie figée, le modèle retenu avec ses valeurs, ta justification et ta réponse sur les interacteurs. Copie-le ou imprime-le pour le remettre au professeur.</p>
-                            <p class="contraintes-actions"><button type="button" class="bouton-action"
-                                    id="bouton-bilan" onclick="n4GenererBilan()">Générer mon bilan</button></p>
+                                    id="bouton-bilan" onclick="n4GenererBilan()">Générer ma carte</button></p>
                             <div class="bilan-n4-resultat" id="bilan-n4-resultat" hidden>
                                 <textarea id="bilan-n4-texte" rows="16" readonly
                                           aria-labelledby="bilan-n4-titre"></textarea>
                                 <p class="bilan-n4-actions">
-                                    <button type="button" class="bouton-action" onclick="n4CopierBilan()">Copier le bilan</button>
-                                    <button type="button" class="bouton-action" onclick="n4ImprimerBilan()">Imprimer le bilan</button>
+                                    <button type="button" class="bouton-action" onclick="n4CopierBilan()">Copier ma carte</button>
+                                    <button type="button" class="bouton-action" onclick="n4ImprimerBilan()">Imprimer ma carte</button>
                                 </p>
                                 <p class="bilan-n4-etat" id="bilan-n4-etat" role="status" aria-live="polite"></p>
                             </div>
                         </div>
-                    </div>
-
-
-
-
-
-
-                    <!-- QUESTIONS-OUVERTES-N4 : DEBUT -->
-                    <div class="questions-ouvertes-n4" id="questions-ouvertes-n4" data-ost-id="n4-questions-ouvertes">
-                        <h3 class="marge-haut">🧠 Exercice supplémentaire — les interactions de la souris</h3>
-                        <p>Une souris ne fonctionne pas seule : elle dialogue avec plusieurs éléments extérieurs, ses interacteurs extérieurs (tu les as rencontrés dans le quiz N2). Réponds avec tes mots, puis relis ta réponse à voix haute : elle doit tenir debout devant la classe.</p>
-                        <div class="etape-conception" data-ost-id="n4-question-interacteurs">
-                            <h4>Avec quels éléments extérieurs la souris que tu retiens va-t-elle interagir ? Nomme au moins trois interacteurs et explique, pour chacun, ce qu'il change dans ton choix.</h4>
-                            <p class="consigne-question">Un interacteur extérieur, c'est un élément qui interagit avec l'objet : l'usager, la surface de la table, le poste, l'énergie… Pour chacun, dis ce qu'il impose à la souris de la salle.</p>
-                            <textarea id="question-ouverte-interacteurs" data-conception-texte data-min="120" data-question-ouverte="interacteurs" data-question="Avec quels éléments extérieurs la souris que tu retiens va-t-elle interagir ? Nomme au moins trois interacteurs et explique, pour chacun, ce qu'il change dans ton choix." placeholder="Ex. : l'usager interagit par sa main (droitiers, gauchers, petites mains) : il impose une forme qui convient à tous ; la surface de la table interagit avec le capteur optique : elle impose une souris qui ne glisse pas sur une table brillante…" aria-label="Interacteurs extérieurs de la souris retenue"></textarea>
-                        </div>
-                    </div>
-                    <!-- QUESTIONS-OUVERTES-N4 : FIN -->
+                    <!-- BILAN-N4 : FIN -->
 
                     <button class="bouton-action marge-haut" onclick="finaliserConception()">
                         Finaliser ma conception
@@ -7211,14 +7056,14 @@
                                 </div>
                         </div>
                         <div class="fiche-synthese" data-ost-id="synthese-f4">
-                            <h3>📖 Concevoir pour l'usager (N4 - Création)</h3>
+                            <h3>📖 Du besoin à la solution (N4 - Création)</h3>
                                 <div class="point-cle" data-ost-id="synthese-f4-p1">
-                                    <strong>Partir de l'usage réel :</strong>
-                                    <p>La durée d'utilisation et la variété des usagers (mains, droitiers et gauchers) fixent la forme et la taille, pas l'esthétique.</p>
+                                    <strong>D'abord le besoin, ensuite la solution :</strong>
+                                    <p>On commence par dire ce que l'usager veut pouvoir faire ; le moyen d'y arriver vient après, et plusieurs solutions peuvent répondre au même besoin.</p>
                                 </div>
                                 <div class="point-cle" data-ost-id="synthese-f4-p2">
-                                    <strong>Un objet technique dans son environnement :</strong>
-                                    <p>La résistance aux chocs, le nettoyage et le rangement font partie du cahier des charges d'un matériel de salle.</p>
+                                    <strong>Aider un usager précis :</strong>
+                                    <p>Le même poste ne convient pas à tous : la main (droitier ou gaucher), la vue et le bruit changent ce dont chacun a besoin.</p>
                                 </div>
                         </div>
                     </div>
@@ -9274,14 +9119,19 @@
             const libelle = conteneur.getAttribute('data-libelle-choix') || 'proposition';
             if (minimum && retenues < minimum) {
                 conteneur.removeAttribute('data-termine');
-                n4RetourSelection(conteneur, 'Retenez au moins ' + minimum + ' ' +
-                    libelle + '(s) : un système n\'existe pas avec ' + retenues + '.', '');
+                // Choix unique (« choisis ton personnage ») : la phrase générique
+                // « retenez au moins 1 élève(s) » se lisait comme un défaut de la
+                // page. Le message dit alors le geste attendu, au singulier.
+                n4RetourSelection(conteneur, minimum === 1
+                    ? 'Choisis une ' + libelle + ', puis enregistre : il en faut une.'
+                    : 'Retenez au moins ' + minimum + ' ' + libelle + '(s) : il en ' +
+                      'manque ' + (minimum - retenues) + '.', '');
                 return;
             }
             if (maximum && retenues > maximum) {
                 conteneur.removeAttribute('data-termine');
                 n4RetourSelection(conteneur, 'Retenez au plus ' + maximum + ' ' + libelle +
-                    '(s) pour rester dans le budget de l\'étude : vous en avez ' +
+                    '(s) pour respecter la consigne : vous en avez retenu ' +
                     retenues + '.', '');
                 return;
             }
@@ -10131,9 +9981,23 @@
             const titre = document.getElementById('titre-activite');
             const lignes = [];
 
-            lignes.push('BILAN DE MA DÉMARCHE DE CONCEPTION');
+            // L'en-tête vient de la configuration (`n4.bilan.entete`) quand elle
+            // en fournit un : « MA CARTE D'INVENTEUR » ne se lit pas comme un
+            // « bilan de démarche de conception ». À défaut, l'en-tête d'origine.
+            const blocBilan = document.getElementById('bilan-n4');
+            const entete = (blocBilan && blocBilan.getAttribute('data-entete')) ||
+                'BILAN DE MA DÉMARCHE DE CONCEPTION';
+            lignes.push(entete);
             if (titre) lignes.push('Activité : ' + String(titre.textContent || '').trim());
             lignes.push('');
+
+            // Sans conception guidée (activité bâtie sur `n4.etapes` : saisies,
+            // choix, classements), il n'y a ni curseurs, ni modèle retenu, ni
+            // contraintes figées à recopier. La trace est alors celle des
+            // ÉTAPES elles-mêmes : chacune livre ce que l'élève y a écrit ou
+            // retenu, dans l'ordre du document. Le bilan reste la pièce qu'il
+            // remet au professeur, quel que soit le mode de conception.
+            if (!zone) return n4BilanEtapesTexte(lignes);
 
             lignes.push('1. LE BESOIN EXPRIMÉ');
             const besoin = document.getElementById('besoin-identifie');
@@ -10227,6 +10091,80 @@
                         champ.getAttribute('aria-label') || ('Question ' + (indice + 1));
                     lignes.push('- ' + intitule);
                     lignes.push('  ' + (champ.value.trim() || '(non renseigné)'));
+                });
+                lignes.push('');
+            }
+
+            lignes.push('Rien n\'a été envoyé sur Internet : ce bilan est à remettre au professeur.');
+            return lignes.join('\n');
+        }
+
+        // ── Bilan d'une conception en ÉTAPES (n4.etapes) ────────────────────
+        // Relit l'onglet N4 dans l'ordre du document : l'écrit de chaque étape,
+        // les propositions que l'élève a retenues (choix libres) et l'ordre de
+        // son classement. Rien n'est inventé ni complété : une étape laissée
+        // vide n'apparaît pas, et un bilan sans aucune étape le dit.
+        function n4BilanEtapesTexte(lignes) {
+            const etapes = document.querySelectorAll(
+                '#contenu-n4-probleme .etape-conception');
+            let numero = 0;
+            for (const etape of etapes) {
+                const morceaux = [];
+                const champ = etape.querySelector('textarea[data-conception-texte]');
+                if (champ && String(champ.value || '').trim()) {
+                    morceaux.push(String(champ.value).trim());
+                }
+                etape.querySelectorAll('[data-conception-selection]').forEach(function (bloc) {
+                    const retenus = [];
+                    bloc.querySelectorAll('.choix-contrainte[aria-pressed="true"]')
+                        .forEach(function (bouton) {
+                            const texte = bouton.querySelector('.choix-texte');
+                            if (texte) {
+                                retenus.push('- ' + String(texte.textContent || '')
+                                    .replace(/\s+/g, ' ').trim());
+                            }
+                        });
+                    if (retenus.length) morceaux.push(retenus.join('\n'));
+                });
+                etape.querySelectorAll('[data-classement-etape]').forEach(function (bloc) {
+                    const ordre = [];
+                    bloc.querySelectorAll('.tuile-contrainte').forEach(function (tuile, rang) {
+                        ordre.push('  ' + (rang + 1) + '. ' +
+                            String(tuile.getAttribute('data-nom') || '').trim());
+                    });
+                    if (ordre.length) morceaux.push(ordre.join('\n'));
+                });
+                if (etape.querySelector(
+                        '[data-schema-etape], [data-conception-atelier], [data-conception-modele]')) {
+                    morceaux.push('(schéma réalisé dans l\'activité)');
+                }
+                if (!morceaux.length) continue;
+                numero += 1;
+                const titreEtape = etape.querySelector('h4');
+                let intitule = titreEtape
+                    ? String(titreEtape.textContent || '').replace(/\s+/g, ' ').trim()
+                    : ('Étape ' + numero);
+                intitule = intitule.replace(/^Étape\s+\d+\s*:\s*/i, '');
+                lignes.push(numero + '. ' + intitule.toUpperCase());
+                for (const morceau of morceaux) lignes.push(morceau);
+                lignes.push('');
+            }
+            if (!numero) {
+                lignes.push('(aucune étape renseignée)');
+                lignes.push('');
+            }
+
+            // Les écrits supplémentaires (n4.questionsOuvertes) font partie de
+            // la trace, exactement comme dans une conception guidée.
+            const questionsSupplementaires = document.querySelectorAll(
+                '#contenu-n4-probleme [data-question-ouverte]');
+            if (questionsSupplementaires.length) {
+                lignes.push('MES RÉPONSES AUX QUESTIONS SUPPLÉMENTAIRES');
+                questionsSupplementaires.forEach(function (champSup, indice) {
+                    const intituleSup = champSup.getAttribute('data-question') ||
+                        champSup.getAttribute('aria-label') || ('Question ' + (indice + 1));
+                    lignes.push('- ' + intituleSup);
+                    lignes.push('  ' + (String(champSup.value || '').trim() || '(non renseigné)'));
                 });
                 lignes.push('');
             }
