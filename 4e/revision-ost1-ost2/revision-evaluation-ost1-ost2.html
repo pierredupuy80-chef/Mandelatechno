@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réviser l’évaluation</title>
+<style>
+:root{--bleu:#1f4e79;--bleu2:#2e75b6;--bleuf:#e8f1fa;--orange:#d97706;--orangeF:#fdf1e0;--vert:#2e7d32;--vertF:#e8f5e9;--rouge:#b3261e;--rougeF:#fdecea;--gris:#5b6b7b;--bord:#c9d6e4;--noir:#1f2933}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Liberation Sans",Arial,sans-serif;font-size:17px;line-height:1.5;color:var(--noir);background:#f4f8fc}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid var(--bleu2);padding:10px 16px;box-shadow:0 2px 6px rgba(31,78,121,.08)}
+h1{font-size:1.2rem;color:var(--bleu)}h1 small{display:block;font-weight:normal;font-size:.75rem;color:var(--gris)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tabs button{font:inherit;font-size:.88rem;padding:8px 14px;border:2px solid var(--bleu2);background:#fff;color:var(--bleu);border-radius:999px;cursor:pointer;transition:all .2s}
+.tabs button.active{background:var(--bleu2);color:#fff}.tabs button:hover:not(.active){background:var(--bleuf)}
+main{padding:16px;max-width:900px;margin:0 auto}
+section{display:none;animation:fadeIn .3s}section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#fff;border:1px solid var(--bord);border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.badge{display:inline-block;font-size:.7rem;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.badge.n1{background:#dbeafe;color:#1e40af}.badge.n2{background:#fef3c7;color:#92400e}.badge.n3{background:#d1fae5;color:#065f46}.badge.n4{background:#fce7f3;color:#9d174d}
+h2{font-size:1.15rem;color:var(--bleu);margin:0 0 8px}h3{font-size:1.05rem;color:var(--bleu);margin:12px 0 6px}
+p{margin:6px 0}
+.info{background:var(--bleuf);border-left:5px solid var(--bleu2);border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.95rem}
+.success{background:var(--vertF);border-left-color:var(--vert)}.error{background:var(--rougeF);border-left-color:var(--rouge)}
+.match-item{padding:10px 14px;border:2px solid var(--bord);border-radius:10px;cursor:pointer;background:#fff;font-size:.9rem;transition:all .15s;margin-bottom:6px}
+.match-item:hover{border-color:var(--bleu2);background:var(--bleuf)}
+.match-item.selected{border-color:var(--bleu2);background:var(--bleuf);font-weight:bold}
+.match-item.matched{border-color:var(--vert);background:var(--vertF);cursor:default;opacity:.7}
+.score-display{font-size:1.3rem;font-weight:bold;color:var(--bleu);text-align:center;padding:12px;background:var(--bleuf);border-radius:10px;margin:12px 0}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.chain-step{display:inline-flex;align-items:center;padding:8px 14px;background:var(--bleuf);border:1px solid var(--bleu2);border-radius:8px;font-size:.9rem;font-weight:bold;margin:4px 0}
+.chain-arrow{color:var(--bleu2);font-size:1.2rem;margin:0 6px}
+footer{text-align:center;padding:20px;color:var(--gris);font-size:.8rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:var(--bleu2);color:#fff;padding:10px;text-align:center}
+td{padding:8px;text-align:center;border-bottom:1px solid var(--bord)}
+td.best{background:var(--vertF);font-weight:bold}
+td:first-child{text-align:left;font-weight:bold}
+@media(max-width:600px){.tabs button{font-size:.78rem;padding:6px 10px}}
+
+/* =====================================================================
+   AJOUT — RESSOURCES N1 (fiches de connaissances, vidéos, quiz) & EXPORT PDF
+   ===================================================================== */
+.ressources-n1{margin:16px 0 6px;padding:12px 14px;background:#f7fbff;
+  border:1px solid var(--bord,#c9d6e4);border-left:5px solid var(--bleu,#1f4e79);border-radius:10px}
+.ressources-n1 > h3{margin:0 0 6px;color:var(--bleu,#1f4e79);font-size:1rem}
+.ressources-n1 .note{font-size:.82rem;color:var(--gris,#5b6b7b);margin:.35rem 0}
+.ress-carte{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between;
+  background:#fff;border:1px solid #dbe6f2;border-radius:8px;padding:8px 10px;margin:6px 0}
+.ress-code-titre{font-size:.9rem;flex:1 1 320px;line-height:1.35}
+.ress-code{display:inline-block;font-weight:bold;font-size:.78rem;letter-spacing:.03em;
+  background:#dce9f7;color:var(--bleu,#1f4e79);border-radius:4px;padding:2px 7px;margin-right:6px}
+.ress-liens{display:flex;flex-wrap:wrap;gap:6px}
+a.ress-lien{font-size:.8rem;text-decoration:none;border-radius:999px;padding:4px 10px;border:1px solid;white-space:nowrap}
+a.ress-lien.fiche{background:#fdf0dd;border-color:#d97706;color:#8a4b04}
+a.ress-lien.video{background:#f3e5f5;border-color:#6a1b9a;color:#5c1487}
+a.ress-lien.quiz{background:#e6f4e7;border-color:#2e7d32;color:#1e5b23}
+a.ress-lien.form{background:#eef1fa;border-color:#3b4b8a;color:#2b3768}
+.carte-export-pdf{margin:16px 0 6px;padding:14px;background:#fff;border:1px solid var(--bord,#c9d6e4);
+  border-left:5px solid var(--vert,#2e7d32);border-radius:10px}
+.carte-export-pdf h3{margin:0 0 4px;color:var(--vert,#2e7d32)}
+.bouton-export-pdf{font:inherit;font-size:1rem;font-weight:bold;padding:12px 18px;margin-top:8px;
+  border:none;border-radius:10px;background:var(--vert,#2e7d32);color:#fff;cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.bouton-export-pdf:hover{background:#256428}
+#entete-export-pdf{display:none}
+.ep-titre{font-size:1.25rem;font-weight:bold;color:#1f4e79}
+.ep-sous{font-size:.85rem;color:#5b6b7b;margin:2px 0 6px}
+.ep-legende{font-size:.78rem;color:#333;border:1px dashed #8a9bb0;border-radius:6px;
+  padding:5px 7px;margin:4px 0 6px}
+table.ep-infos{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:6px}
+table.ep-infos td{border:1px solid #8a9bb0;padding:4px 6px;vertical-align:top}
+.ep-reponse{border:1px solid #99a;border-radius:4px;padding:4px 6px;margin:4px 0;
+  white-space:pre-wrap;min-height:1.1em;font-size:.95em;background:#fbfcfe}
+.ep-vide{color:#999;font-style:italic}
+@media screen{.ajout-export{display:none !important}}
+@media print{
+  @page{size:A4;margin:12mm 10mm}
+  html,body{background:#fff !important;font-size:10.5pt !important;color:#000 !important}
+  header,footer,nav,nav.tabs,.onglets,.tabs,.boutons,.barre-progression,#zone-message,
+  .no-print,.bouton-export-pdf,.print-btn{display:none !important}
+  main{padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+  section,.tab-content{display:block !important;page-break-before:always;break-before:page;
+    opacity:1 !important;transform:none !important;animation:none !important}
+  section:first-of-type,.tab-content:first-of-type{page-break-before:auto;break-before:auto}
+  section *, .tab-content *{animation:none !important;transition:none !important}
+  section .carte, section .card, section .quiz-question, section .mesure, .tab-content > div{
+    opacity:1 !important;visibility:visible !important}
+  #entete-export-pdf{display:block !important;margin:0 0 8mm 0}
+  .ajout-export{display:block !important}
+  .masque-impression{display:none !important}
+  .quiz-feedback{display:block !important}
+  .carte,.card,.quiz-question,.mesure,.bilan-defi,.carte-export-pdf,.ressources-n1,.ress-carte{
+    page-break-inside:avoid;break-inside:avoid}
+  a{color:#000 !important;text-decoration:none}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:7.5pt;color:#444;word-break:break-all}
+  /* marqueurs de réponse : on voit d'un coup d'œil ce que l'élève a choisi */
+  .correct-answer::before,.correct-choice::before,.opt-btn.correct::before,
+  .match-item.matched::before,.assoc-item.matched::before,.etiquette-drop.correct::before,
+  .tag-selectable.selected::before,.filled::before,.placed::before,.placed-ok::before,
+  .quiz-option.selected::before{content:"✔ "}
+  .wrong-answer::before,.wrong-choice::before,.opt-btn.wrong::before,.placed-ko::before,
+  .incorrect::before{content:"✘ "}
+  .quiz-question.correct > p.enonce::before{content:"✔ "}
+  .quiz-question.incorrect > p.enonce::before{content:"✘ "}
+  .ress-carte{border:none;padding:2px 0;margin:2px 0}
+  .ressources-n1{background:#fff;padding:6px 8px}
+  .ressources-n1 a[href^="http"]::after{font-size:7pt}
+}
+
+/* =====================================================================
+   ADAPTATION TELEPHONE (correctifs mobiles)
+   Voir Rapport-compatibilite-mobile-apps.md
+   - la barre du haut se replie au defilement : seuls les onglets restent
+   - onglets sur une seule ligne, defilement horizontal au doigt
+   - champs a 16 px : supprime le zoom automatique d'iOS
+   - cibles tactiles des QCM et des etiquettes portees a 44 px
+   La condition vise les ecrans etroits ET les ecrans peu hauts (telephone
+   en paysage). Le prefixe « screen » protege l'impression et l'export PDF.
+   ===================================================================== */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
+
+  /* --- En-tete plus compact --- */
+  header{padding:8px 10px 6px}
+  header h1{font-size:.95rem; line-height:1.15}
+  header h1 small{display:block; font-size:.68rem}
+  header .bloc-binome, header .header-fields, header .meta{gap:6px; font-size:.78rem}
+  header .barre-progression{display:none}
+
+  /* --- Barre d'onglets : une seule ligne, defilement horizontal --- */
+  header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav{
+    flex-wrap:nowrap !important;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    gap:6px;
+  }
+  header .onglets button, header .tabs button, header .tabs-nav button,
+  nav.tabs button, header + nav button, body > nav button{
+    flex:0 0 auto; white-space:nowrap; font-size:.76rem; padding:7px 11px;
+  }
+
+  /* --- Champs de saisie : 16 px = pas de zoom automatique sur iOS --- */
+  input, textarea, select{font-size:16px !important}
+
+  /* --- Reponses de QCM : la ligne entiere devient une cible confortable --- */
+  /* min-height est ignore sur un <label> reste en display:inline : on force
+     donc un affichage qui tient compte de la hauteur (inline-flex centre le
+     texte verticalement et laisse la ligne se poursuivre comme avant). */
+  label:has(input[type="radio"]), label:has(input[type="checkbox"]){
+    display:inline-flex; align-items:center;
+    min-height:44px; min-width:44px; box-sizing:border-box}
+  label.option-choix, label.quiz-option, .opt-btn{min-height:44px}
+  input[type="radio"], input[type="checkbox"]{width:22px; height:22px; flex:0 0 auto}
+
+  /* --- Etiquettes a deplacer --- */
+  .etiquette, .assoc-item, .etiquette-drop, .chip{min-height:44px; box-sizing:border-box}
+  .etiquette, .assoc-item, .chip{display:inline-flex; align-items:center}
+  .etiquette-drop{display:flex; align-items:center}
+
+  /* --- Repere visuel de l'etiquette selectionnee au doigt --- */
+  .etiquette.selectionnee, .assoc-item.selectionnee, .chip.selectionnee{
+    outline:3px solid #ef6c00; background:#fff3e0; border-color:#ef6c00}
+}
+
+/* =====================================================================
+   Composants du gabarit d'activité — à charger APRÈS coquille.css
+   =====================================================================
+   Ces composants complètent la charte d'origine. Ils répondent aux
+   exigences du banc d'essai mobile (Rapport-compatibilite-mobile-apps.md) :
+
+   - toute cible tactile fait au moins 44 px de haut ;
+   - aucun champ de saisie sous 16 px de police (sinon zoom automatique
+     sur iPhone) ;
+   - aucune interaction au glisser-déposer : tout se fait au clic, donc
+     utilisable au doigt ;
+   - ce que l'élève a répondu reste lisible à l'impression (PDF).
+   ===================================================================== */
+
+/* --- Bouton-réponse pleine largeur : le modèle recommandé par le rapport --- */
+.opt-btn{
+  display:block; width:100%; text-align:left;
+  font:inherit; font-size:1rem; line-height:1.35;
+  padding:12px 16px; margin:6px 0;
+  min-height:44px;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px;
+  background:#fff; color:var(--noir,#1f2933); cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.opt-btn:hover:not(:disabled){border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.opt-btn:disabled{cursor:default}
+.opt-btn.choisi{border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa); font-weight:bold}
+.opt-btn.juste{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9)}
+.opt-btn.faux{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+.opt-btn.faux::after{content:" ✘"}
+.opt-btn.juste::after{content:" ✔"}
+
+/* --- Question de quiz --- */
+.quiz-question{margin:12px 0; padding:10px 0; border-top:1px solid var(--bord,#c9d6e4)}
+.quiz-question:first-of-type{border-top:none; padding-top:0}
+.quiz-question > p.enonce{font-weight:bold; margin:0 0 4px}
+.quiz-feedback{display:none; margin-top:6px; font-size:.92rem; border-radius:8px; padding:8px 12px}
+.quiz-feedback.visible{display:block}
+.quiz-feedback.juste{background:var(--vertF,#e8f5e9); border-left:4px solid var(--vert,#2e7d32)}
+.quiz-feedback.faux{background:var(--rougeF,#fdecea); border-left:4px solid var(--rouge,#b3261e)}
+
+/* --- Compteur de score --- */
+.compteur{
+  font-size:1rem; font-weight:bold; color:var(--bleu,#1f4e79);
+  text-align:center; padding:10px 12px; margin:12px 0;
+  background:var(--bleuf,#e8f1fa); border-radius:10px; min-height:44px;
+}
+
+/* --- Association par clic (jamais de glisser-déposer) --- */
+.assoc-grille{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px}
+.assoc-colonne{display:flex; flex-direction:column; gap:6px}
+.assoc-titre{font-size:.82rem; font-weight:bold; text-transform:uppercase;
+  letter-spacing:.04em; color:var(--gris,#5b6b7b); margin:0 0 2px}
+.assoc-item{
+  display:flex; align-items:center; min-height:44px;
+  padding:10px 14px; font-size:.95rem;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px; background:#fff;
+  cursor:pointer; transition:all .15s;
+}
+.assoc-item:hover:not(.apparie){border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.assoc-item.selectionne{border-color:var(--orange,#d97706); background:var(--orangeF,#fdf1e0); font-weight:bold}
+.assoc-item.apparie{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9); cursor:default; opacity:.85}
+.assoc-item.rate{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+
+/* --- Remise en ordre par clic --- */
+.ordre-liste{display:flex; flex-direction:column; gap:6px; counter-reset:rang}
+.ordre-etape{
+  display:flex; align-items:center; gap:10px; min-height:44px;
+  padding:10px 14px; font-size:.95rem;
+  border:2px solid var(--bord,#c9d6e4); border-radius:10px; background:#fff; cursor:pointer;
+}
+.ordre-etape::before{
+  counter-increment:rang; content:counter(rang);
+  flex:0 0 26px; height:26px; line-height:26px; text-align:center;
+  background:var(--bleuf,#e8f1fa); color:var(--bleu,#1f4e79);
+  border-radius:50%; font-weight:bold; font-size:.85rem;
+}
+.ordre-etape:hover{border-color:var(--bleu2,#2e75b6); background:var(--bleuf,#e8f1fa)}
+.ordre-etape.selectionne{border-color:var(--orange,#d97706); background:var(--orangeF,#fdf1e0)}
+.ordre-etape.juste{border-color:var(--vert,#2e7d32); background:var(--vertF,#e8f5e9)}
+.ordre-etape.faux{border-color:var(--rouge,#b3261e); background:var(--rougeF,#fdecea)}
+.ordre-actions{margin-top:10px}
+.bouton{
+  font:inherit; font-size:1rem; font-weight:bold;
+  min-height:44px; padding:12px 18px;
+  border:none; border-radius:10px; background:var(--bleu2,#2e75b6); color:#fff; cursor:pointer;
+}
+.bouton:hover{background:var(--bleu,#1f4e79)}
+.bouton.secondaire{background:#fff; color:var(--bleu,#1f4e79); border:2px solid var(--bleu2,#2e75b6)}
+.bouton.secondaire:hover{background:var(--bleuf,#e8f1fa)}
+
+/* --- Chaîne (énergie, information, étapes techniques) --- */
+.chaine-rail{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin:10px 0}
+.chaine-bloc{
+  display:inline-flex; align-items:center; min-height:44px;
+  padding:10px 14px; font-size:.92rem; font-weight:bold;
+  background:var(--bleuf,#e8f1fa); border:1px solid var(--bleu2,#2e75b6); border-radius:8px;
+}
+.chaine-fleche{color:var(--bleu2,#2e75b6); font-size:1.2rem; margin:0 4px}
+
+/* --- Saisie libre --- */
+.saisie textarea{
+  width:100%; min-height:90px; padding:10px 12px;
+  border:2px solid var(--bord,#c9d6e4); border-radius:8px;
+  font:inherit; font-size:1rem; /* >= 16px : évite le zoom automatique iOS */
+  resize:vertical; background:#fff; color:var(--noir,#1f2933);
+}
+.saisie textarea:focus{outline:none; border-color:var(--bleu2,#2e75b6); background:#fff}
+.saisie .aide{font-size:.82rem; color:var(--gris,#5b6b7b); margin-top:4px}
+
+/* --- Objectifs / bandeau d'ouverture --- */
+.objectifs{margin:8px 0 0; padding-left:1.2rem}
+.objectifs li{margin:4px 0}
+.fiche-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:.85rem;
+  color:var(--gris,#5b6b7b); margin:6px 0 0}
+.fiche-meta b{color:var(--bleu,#1f4e79)}
+.etiquette-code{
+  display:inline-block; font-weight:bold; font-size:.78rem; letter-spacing:.03em;
+  background:#dce9f7; color:var(--bleu,#1f4e79); border-radius:4px;
+  padding:3px 8px; margin:2px 4px 2px 0;
+}
+
+/* --- Ce que l'élève a répondu, visible uniquement à l'impression --- */
+.marque-impression{display:none}
+
+/* =====================================================================
+   Corrections appliquées PAR-DESSUS la coquille extraite
+   =====================================================================
+   La coquille (coquille.css) est extraite telle quelle du fichier de
+   référence : on n'y touche pas. Mais mesurée au navigateur en 390 px de
+   large, elle laisse deux cibles tactiles sous les 44 px exigés :
+
+     - les onglets de niveau : 36 px (la règle « max-width:600px » de la
+       coquille réduit la police à .78rem et le rembourrage à 6px) ;
+     - les liens de ressources (fiche, vidéo, quiz) : 29 px.
+
+   Ces deux règles viennent après dans la feuille, donc elles gagnent sans
+   qu'il soit besoin de modifier la coquille. Si la coquille est ré-extraite
+   depuis une activité plus récente, ces corrections restent valables : le
+   script de vérification de rendu les re-contrôle à chaque construction.
+   ===================================================================== */
+
+.tabs button{min-height:44px}
+a.ress-lien{
+  display:inline-flex; align-items:center;
+  min-height:44px; padding:8px 12px;
+}
+
+@media (max-width:600px){
+  /* On garde la police compacte choisie pour la coquille, mais on rend la
+     hauteur tactile minimale : c'est un doigt d'élève, pas un curseur. */
+  .tabs button{min-height:44px; padding:8px 12px}
+  a.ress-lien{width:100%; justify-content:center}
+}
+
+/* --- Message d'erreur de bloc : jamais de page blanche --- */
+.bloc-erreur{
+  background:var(--rougeF,#fdecea); border-left:5px solid var(--rouge,#b3261e);
+  border-radius:8px; padding:10px 14px; margin:10px 0; font-size:.88rem;
+}
+
+@media (max-width:600px){
+  /* On garde les cibles à 44 px : on réduit les marges, pas la hauteur. */
+  .quiz-question{margin:10px 0}
+  .assoc-grille{gap:8px}
+  .chaine-fleche{margin:0 2px}
+}
+
+@media print{
+  /* Les onglets sont masqués : toutes les sections doivent être visibles. */
+  .quiz-feedback{display:block !important}
+  .marque-impression{display:inline !important; font-size:8pt; font-weight:bold}
+  .ordre-etape,.assoc-item,.opt-btn,.chaine-bloc{min-height:0}
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:DEBUT (greffé par _outils/template-activite/greffer_retour_accueil.py) -->
+<style id="retour-accueil-style">
+/* ── RETOUR À L'ACCUEIL DU SITE ───────────────────────────────────── */
+/* Un lien simple, posé EN TÊTE DE PAGE, dans le flux — jamais
+   flottant. C'est une mesure qui l'a décidé : un bouton flottant
+   finissait toujours par recouvrir un contrôle. En bas à gauche, les
+   flèches du jeu de réseau et les commandes du diaporama ; en haut à
+   droite, l'option d'affichage et le lien du jeu ; en haut à gauche,
+   le titre de l'activité. On ne cache jamais ce que l'élève doit
+   cliquer : le retour reste donc à sa place, et il défile avec la
+   page. C'est aussi la convention déjà suivie par les pages de jeu
+   (« ← Toutes les activités »).
+   Le `!important` est volontaire : le module est posé sur des pages
+   dont nous ne maîtrisons pas le CSS. Sans lui, la règle sombre d'une
+   page ancienne réécrivait la couleur du texte et le lien tombait à
+   4,1:1 (mesuré sur tp-ia.html). */
+.retour-accueil {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    margin: 8px 12px 12px;
+    padding: 9px 16px;
+    border: 2px solid #ffffff !important;
+    border-radius: 999px;
+    background: #1f4e79 !important;
+    color: #ffffff !important;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+.retour-accueil:hover,
+.retour-accueil:focus-visible {
+    background: #2a6fb0 !important;
+}
+
+/* Double anneau : blanc au contact du bouton, bleu foncé au large. Sur
+   une page claire c'est l'anneau bleu qui se voit, sur une page sombre
+   c'est l'anneau blanc — le focus reste visible dans les deux modes. */
+.retour-accueil:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px #1f4e79, 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+/* Une page imprimée ne renvoie nulle part : le bouton n'a rien à y
+   faire, et il prendrait la place d'une consigne. */
+@media print {
+    .retour-accueil {
+        display: none;
+    }
+}
+</style>
+<!-- RETOUR-ACCUEIL-CSS:FIN -->
+<!-- OST-PANNEAU-DEV-STYLE:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<style id="ost-style-panneau-dev">
+/* Panneau de debug — recopié du template par greffer_panneau_dev.py.
+   NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+   `greffer_panneau_dev.py --extraire` et regreffer. */
+
+/* ── Mode clair ─────────────────────────────────────────────── */
+/* ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────── */
+#ost-bouton-corriger{position:fixed;right:14px;bottom:14px;z-index:2147483000;min-height:44px;padding:0 14px;border:1px solid #e07b00;border-radius:999px;background:#fff7ec;color:#8a4b00;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+#ost-bouton-corriger.ost-arme{background:#e07b00;color:#fff}
+body.ost-correction-arme [data-ost-id],body.ost-correction-arme .ost-identifiable{outline:2px dashed #e07b00 !important;outline-offset:2px;cursor:copy}
+#ost-panneau-corriger{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:92vw;z-index:2147483001;background:#fff;border-right:1px solid #dce3ed;box-shadow:6px 0 24px rgba(0,0,0,.18);overflow:auto;transform:translateX(-102%);transition:transform .18s ease;padding:16px;box-sizing:border-box;font-size:13px;line-height:1.5;color:#1f2937}
+#ost-panneau-corriger.ost-ouvert{transform:none}
+#ost-panneau-corriger h2{margin:0 0 2px;font-size:15px}
+.ost-fermer{float:right;border:0;background:#f1f5f9;border-radius:6px;cursor:pointer;min-height:32px;padding:0 10px;font:inherit;font-size:14px}
+.ost-champ{margin:12px 0 0}
+.ost-champ legend,.ost-libelle{font-weight:600;font-size:12.5px;margin:0 0 5px;display:block}
+.ost-option{display:flex;align-items:flex-start;gap:7px;margin:4px 0;font-weight:400}
+.ost-option input{margin-top:3px}
+#ost-commentaire{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;font:inherit;font-size:13px;padding:8px;border:1px solid #dce3ed;border-radius:8px}
+/* Modèles de commentaire : des phrases génériques à compléter, jamais un
+   niveau ni un identifiant figé — le panneau les déduit déjà de l'onglet
+   et de l'élément sélectionnés. */
+.ost-modeles{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.ost-modele{min-height:32px;padding:0 10px;border:1px dashed #c7d2e3;border-radius:999px;background:#fff;color:#334155;font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.ost-modele:hover{background:#f1f5f9}
+.ost-modeles-legende{margin:0;font-size:11px;color:#64748b}
+.ost-identifiant{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#f7f9fc;border:1px solid #dce3ed;border-radius:6px;padding:5px 8px;word-break:break-all;margin:6px 0 0}
+.ost-apercu{margin:4px 0 0;font-size:11.5px;color:#64748b;font-style:italic}
+.ost-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ost-bouton{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #dce3ed;background:#f7f9fc;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;color:#1f2937}
+.ost-bouton-primaire{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-bouton:disabled{opacity:.55;cursor:default}
+#ost-prompt-genere{width:100%;box-sizing:border-box;min-height:150px;margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;padding:8px;white-space:pre-wrap;word-break:break-word}
+/* Portée du correctif : élément / exercice / onglet */
+.ost-portees{display:flex;gap:6px;margin:6px 0 0}
+.ost-portee{flex:1 1 0;min-height:38px;padding:0 6px;border:1px solid #dce3ed;border-radius:8px;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ost-portee[aria-pressed="true"]{background:#2563eb;border-color:#2563eb;color:#fff}
+.ost-portee small{display:block;font-weight:400;font-size:10px;opacity:.85}
+.ost-chemin{margin:6px 0 0;font-size:11px;color:#64748b;word-break:break-word}
+/* Menus repliables : une seule catégorie ouverte à la fois */
+.ost-section{margin:10px 0 0;border:1px solid #dce3ed;border-radius:8px;overflow:hidden}
+.ost-section[hidden]{display:none}
+.ost-entete-section{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:40px;padding:0 10px;border:0;background:#f7f9fc;color:#1f2937;font:inherit;font-size:12.5px;font-weight:600;text-align:left;cursor:pointer}
+.ost-entete-section::after{content:'▾';font-size:11px;color:#64748b}
+.ost-entete-section[aria-expanded="true"]{background:#eef4ff}
+.ost-entete-section[aria-expanded="true"]::after{content:'▴'}
+.ost-contenu-section{padding:8px 10px 10px}
+.ost-contenu-section[hidden]{display:none}
+#ost-prompt-genere[hidden]{display:none}
+body.ost-correction-arme .ost-cible{outline:3px solid #e07b00 !important;outline-offset:3px}
+
+/* ── Mode sombre ────────────────────────────────────────────── */
+:where(html[data-theme="sombre"]) .ost-fermer,:where(html[data-theme="sombre"]) .ost-modele:hover{background:#16202e}
+:where(html[data-theme="sombre"]) .ost-modeles-legende,:where(html[data-theme="sombre"]) .ost-apercu,:where(html[data-theme="sombre"]) .ost-chemin,:where(html[data-theme="sombre"]) .ost-entete-section::after{color:#a9b8cc}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger{background:#2c2415;color:#fcd34d}
+:where(html[data-theme="sombre"]) #ost-bouton-corriger.ost-arme,:where(html[data-theme="sombre"]) .ost-bouton-primaire,:where(html[data-theme="sombre"]) .ost-portee[aria-pressed="true"]{color:#ffffff}
+:where(html[data-theme="sombre"]) #ost-panneau-corriger{background:#1c2534;border-right:1px solid #2b3a52;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-commentaire,:where(html[data-theme="sombre"]) .ost-section{border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-modele{background:#1c2534;color:#cbd5e1}
+:where(html[data-theme="sombre"]) .ost-identifiant{background:#16202e;border:1px solid #2b3a52}
+:where(html[data-theme="sombre"]) .ost-bouton,:where(html[data-theme="sombre"]) .ost-portee{border:1px solid #2b3a52;background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) #ost-prompt-genere{border:1px solid #2b3a52;background:#16202e}
+:where(html[data-theme="sombre"]) .ost-entete-section{background:#16202e;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .ost-entete-section[aria-expanded="true"]{background:#1b2740}
+</style>
+<!-- OST-PANNEAU-DEV-STYLE:FIN -->
+</head>
+<body>
+<!-- RETOUR-ACCUEIL:DEBUT (module unique du site, recopié par _outils/template-activite/greffer_retour_accueil.py) -->
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Retour à l’accueil</a>
+<!-- RETOUR-ACCUEIL:FIN -->
+
+<!-- Correctifs téléphone (barre repliable, onglets sur une ligne, retour en haut
+     au changement de niveau). Extrait du fichier de référence validé :
+     ne pas modifier ici, relancer _outils/gabarit/extraire_coquille.py. -->
+<script>
+(function () {
+  // Conteneurs d'onglets possibles, selon la structure de l'app.
+  var SELECTEUR_ONGLETS =
+    'header .onglets, header .tabs, header .tabs-nav, nav.tabs, header + nav, body > nav';
+
+  function trouverOnglets() {
+    var liste = document.querySelectorAll(SELECTEUR_ONGLETS);
+    for (var i = 0; i < liste.length; i++) {
+      if (liste[i].querySelector('button')) return liste[i];
+    }
+    return null;
+  }
+
+  function ajuster() {
+    var entete = document.querySelector('header');
+    var onglets = trouverOnglets();
+    if (!entete || !onglets) return;
+    var petit = window.matchMedia('(max-width: 700px), (max-height: 500px)').matches;
+
+    if (!petit) {
+      // Ordinateur : on rend la main au CSS d'origine.
+      entete.style.top = '0px';
+      onglets.style.position = '';
+      onglets.style.top = '';
+      document.documentElement.style.scrollPaddingTop =
+        (entete.offsetHeight + 8) + 'px';
+      return;
+    }
+
+    if (entete.contains(onglets)) {
+      // Onglets DANS l'en-tete : on replie l'en-tete jusqu'aux onglets.
+      // Le titre et les champs binome/classe sortent de l'ecran au
+      // defilement, les onglets restent sous les yeux.
+      var hautEntete = entete.getBoundingClientRect().top + window.scrollY;
+      var hautOnglets = onglets.getBoundingClientRect().top + window.scrollY;
+      var dessus = Math.max(0, Math.round(hautOnglets - hautEntete));
+      entete.style.top = (-dessus) + 'px';
+    } else {
+      // Onglets HORS de l'en-tete : l'en-tete disparait entierement au
+      // defilement et la barre d'onglets se colle en haut de l'ecran.
+      entete.style.top = (-entete.offsetHeight) + 'px';
+      onglets.style.position = 'sticky';
+      onglets.style.top = '0px';
+      var fond = getComputedStyle(onglets).backgroundColor;
+      if (!fond || fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent') {
+        onglets.style.background = '#fff';
+      }
+      if (getComputedStyle(onglets).zIndex === 'auto') onglets.style.zIndex = '30';
+    }
+
+    // Les sauts d'ancre et les scrollIntoView ne passent plus sous la barre.
+    var hauteurBarre = Math.round(onglets.getBoundingClientRect().height);
+    document.documentElement.style.scrollPaddingTop = (hauteurBarre + 8) + 'px';
+  }
+
+  // Retour en haut au changement de niveau. Ecouteur delegue : il fonctionne
+  // quelle que soit la mecanique propre a l'app (data-tab, switchTab, onclick).
+  function retourEnHaut(e) {
+    var cible = e.target;
+    if (!cible || !cible.closest) return;
+    var bouton = cible.closest('button');
+    if (!bouton || !bouton.closest(SELECTEUR_ONGLETS)) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function demarrer() {
+    ajuster();
+    document.addEventListener('click', retourEnHaut, true);
+    window.addEventListener('resize', ajuster);
+    window.addEventListener('orientationchange', ajuster);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajuster);
+    window.setTimeout(ajuster, 300);   // apres application des styles et des polices
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', demarrer);
+  } else {
+    demarrer();
+  }
+  window.addEventListener('load', demarrer);
+})();
+</script>
+
+<header>
+<h1>Réviser l’évaluation<small>4e — Le drone, l’éclairage et la maison connectée</small></h1>
+
+</header>
+<main  id="content" data-ost-id="content"></main>
+<footer>Mini-application pédagogique — Niveau Bloom N1 à N4 — 4e Technologie</footer>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+
+<!-- Contenu pédagogique : une donnée, pas du code. -->
+<script>
+window.ACTIVITE = {
+ "id": "4e-revision-ost1-ost2-evaluation",
+ "titre": "Réviser l’évaluation",
+ "niveau": "4e",
+ "onglets": [
+  {
+   "titre": "Ce qui est évalué",
+   "blocs": [
+    {
+     "type": "brut",
+     "html": "\n<!-- ===== RESSOURCES ASSOCIÉES (fiches, vidéos, quiz) ===== -->\n<div class=\"ressources-n1\">\n  <h3>📚 Ressources associées<\/h3>\n  <p class=\"note\">Dans l’ordre : 📄 lis la fiche de connaissances, puis ✅ réponds au QCM auto-correctif. 🎬 La vidéo et 📝 le formulaire restent disponibles si tu veux un exemple ou une autre série de questions.<\/p>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1a<\/span>Les éléments qui participent à l’évolution des besoins (invention, innovation, développement durable)<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/SW5baiZ2eJTqWfQ\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113251-ost1a-les-elements-qui-participent-a-levolution-des-besoins-invention-innovation-developpement-durable/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/2z1NaaZfmgGfKGF2A\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST2a<\/span>les interacteurs extérieurs : usagers, données, autres objets, éléments de l’environnement<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/7sy9CD6oA3xypzb\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113224-ost2a-les-interacteurs-exterieurs-usagers-donnees-autres-objets-elements-de-lenvironnement/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113224-ost2a-les-interacteurs-exterieurs-usagers-donnees-autres-objets-elements-de-lenvironnement/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/ZmigfNrUkFmaw9zp8\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST2c<\/span>les contraintes : prise en compte des exigences issues des normes ou d’un cahier des charges, labels et certifications<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien fiche\" href=\"https://nuage01.apps.education.fr/index.php/s/ofospYFZEYkRD7K\" target=\"_blank\" rel=\"noopener\">📄 Fiche de connaissances<\/a><a class=\"ress-lien video\" href=\"https://podeduc.apps.education.fr/video/113217-ost2c-les-contraintes-prise-en-compte-des-exigences-issues-des-normes-ou-dun-cahier-des-charges-labels-et-certifications/\" target=\"_blank\" rel=\"noopener\">🎬 Vidéo<\/a><a class=\"ress-lien quiz\" href=\"https://podeduc.apps.education.fr/quiz/113217-ost2c-les-contraintes-prise-en-compte-des-exigences-issues-des-normes-ou-dun-cahier-des-charges-labels-et-certifications/\" target=\"_blank\" rel=\"noopener\">✅ Quiz auto-correctif<\/a><a class=\"ress-lien form\" href=\"https://forms.gle/nu4LYwQ4Jee88UEW6\" target=\"_blank\" rel=\"noopener\">📝 Quiz (formulaire)<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST1 · à faire<\/span>L’évolution des drones en réponse aux besoins de la société<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien form\" href=\"../ost2/activite-evolution-drones.html\" target=\"_blank\" rel=\"noopener\">🔗 Ressource<\/a><\/div>\n  <\/div>\n  <div class=\"ress-carte\">\n    <div class=\"ress-code-titre\"><span class=\"ress-code\">OST2 · à faire<\/span>La maison connectée — la gestion de l’éclairage<\/div>\n    <div class=\"ress-liens\"><a class=\"ress-lien form\" href=\"../ost3/activite-maison-connectee-eclairage.html\" target=\"_blank\" rel=\"noopener\">🔗 Ressource<\/a><\/div>\n  <\/div>\n<\/div>\n"
+    },
+    {
+     "type": "intro",
+     "titre": "Une évaluation, huit questions, quatre niveaux",
+     "texte": "L’évaluation porte sur les séquences <b>2 — Comprendre l’évolution des drones en réponse aux besoins de la société<\/b> et <b>3 — Comprendre les enjeux de la maison connectée (gestion de l’éclairage)<\/b>.<br><br>Le sujet comporte <b>huit questions<\/b> et <b>quatre parties de 5 points<\/b> : deux questions par niveau. La première page porte sur <b>l’évolution de l’objet<\/b>, la seconde sur <b>l’objet dans son environnement<\/b>. Il tient sur <b>une feuille A4 recto-verso<\/b> — pense à tourner ta feuille.<br><br>Il existe <b>trois sujets (A, B, C)<\/b> : les objets supports changent, la structure et le barème sont les mêmes.",
+     "duree": "55 minutes",
+     "codes": [
+      "OST11",
+      "OST13",
+      "OST21",
+      "OST22"
+     ],
+     "objectifs": [
+      "Relier un objet technique à ses usages, et distinguer une <b>invention<\/b> d’une <b>innovation<\/b>.",
+      "Justifier l’évolution d’un objet par <b>l’évolution des besoins<\/b>, en situant les étapes et en parlant du <b>développement durable<\/b>.",
+      "Identifier les <b>interacteurs extérieurs<\/b> d’un objet et relier chacun à son type : usagers, données, autres objets, éléments de l’environnement.",
+      "Confronter un produit à son <b>cahier des charges<\/b> : dire quelle exigence est respectée, laquelle ne l’est pas, et pourquoi.",
+      "Proposer une <b>innovation<\/b> et l’argumenter, ou répondre à une <b>contrainte nouvelle<\/b> par une solution justifiée."
+     ]
+    },
+    {
+     "type": "texte",
+     "titre": "Les huit questions et ce qu’elles demandent",
+     "html": "<p>Chaque question est rattachée à une compétence du programme et à une fiche de connaissances. Les quatre niveaux pèsent chacun 5 points.<\/p><table><thead><tr><th>Niveau<\/th><th>Questions<\/th><th>Ce que tu dois faire<\/th><th>Points<\/th><\/tr><\/thead><tbody><tr><td>N1 — Connaissance<\/td><td>N1a · N1b<\/td><td>relier quatre mots à leur définition, identifier les interacteurs<\/td><td>5<\/td><\/tr><tr><td>N2 — Compréhension<\/td><td>N2a · N2b<\/td><td>distinguer invention et innovation, relier chaque interacteur à son type<\/td><td>5<\/td><\/tr><tr><td>N3 — Application<\/td><td>N3a · N3b<\/td><td>situer trois étapes d’une évolution, confronter le produit au cahier des charges<\/td><td>5<\/td><\/tr><tr><td>N4 — Création, transfert<\/td><td>N4a · N4b<\/td><td>proposer une innovation et l’argumenter, répondre à une contrainte nouvelle<\/td><td>5<\/td><\/tr><\/tbody><\/table><p><b>Total : 20 points.<\/b> Le sujet ne demande aucune fiche produit à lire : tout ce qu’il faut est sur la feuille.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "Les compétences évaluées, avec leur code",
+     "html": "<ul><li><b>OST11<\/b> — mettre en relation les objets et systèmes techniques avec leurs usages. <b>Fiche OST1a.<\/b><\/li><li><b>OST13<\/b> — justifier l’évolution d’un objet technique pour répondre à l’évolution des besoins. <b>Fiche OST1a.<\/b><\/li><li><b>OST21<\/b> — décrire l’expérience de l’utilisateur (ressenti et facilité d’usage) en partant du langage naturel (texte, croquis) pour aboutir aux schémas, graphiques, algorithmes. <b>Fiche OST2a.<\/b><\/li><li><b>OST22<\/b> — repérer et expliquer les contraintes et exigences prises en compte : sécurité, incidences environnementales, formes et fonctions, ergonomie, qualité, fiabilité. <b>Fiche OST2c.<\/b><\/li><\/ul><p><b>OST12<\/b> (les avantages et les inconvénients des évolutions technologiques) n’est <b>pas<\/b> évalué par ce sujet : il a été travaillé à l’oral en classe.<\/p><p>Les trois fiches officielles sont en haut de la page, dans « 📚 Ressources associées », avec la vidéo et le QCM de chacune.<\/p>"
+    },
+    {
+     "type": "texte",
+     "titre": "La consigne, dans cet ordre",
+     "html": "<ol class='consigne'><li><b>Lis les trois fiches de connaissances<\/b> — OST1a, OST2a et OST2c — en haut de la page, dans « 📚 Ressources associées ».<\/li><li><b>Fais les trois QCM auto-correctifs.<\/b> Un par fiche. On peut recommencer autant de fois que l’on veut.<\/li><li><b>Revois les deux activités du cours<\/b> — <i>facultatif<\/i> : l’évolution des drones et la maison connectée. Les deux liens sont dans les ressources.<\/li><li><b>Sache dire, sans regarder, la différence entre invention et innovation<\/b> : c’est ce que le niveau N2 demande.<\/li><li><b>Sache citer les quatre types d’interacteurs extérieurs<\/b> : usagers, données, autres objets, éléments de l’environnement.<\/li><\/ol>"
+    },
+    {
+     "type": "info",
+     "ton": "alerte",
+     "titre": "Le jour de l’évaluation :",
+     "texte": "il te faut <b>un stylo<\/b>, pas de calculatrice et aucun document personnel : les quatre parties et les huit questions du sujet tiennent sur une seule feuille recto-verso."
+    }
+   ]
+  }
+ ]
+};
+</script>
+
+<!-- Moteur d'activité : rend les blocs et gère les interactions. -->
+<script>
+/* =====================================================================
+   Moteur d'activité — rend les blocs décrits dans window.ACTIVITE
+   =====================================================================
+   Principe : le contenu pédagogique est une DONNÉE (JSON), pas du HTML
+   écrit à la main. Ce moteur le transforme en page interactive. Écrire
+   39 Ko de HTML+CSS à chaque nouvelle activité, c'était :
+
+     - cher à produire (le modèle rédigeait du code au lieu du cours) ;
+     - instable (chaque activité réinventait sa structure) ;
+     - risqué (les correctifs mobiles déjà faits ne se propageaient pas).
+
+   Règles de conception, tirées du banc d'essai mobile :
+     - aucune interaction au glisser-déposer : tout au clic ;
+     - toute cible tactile >= 44 px (voir composants.css) ;
+     - un bloc mal décrit n'efface jamais la page : il affiche une erreur
+       visible et les autres blocs continuent de s'afficher ;
+     - ce que l'élève a répondu reste lisible dans le PDF exporté.
+
+   Compatible ES5 volontairement (tablettes scolaires anciennes, file://).
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var A = window.ACTIVITE;
+  var hote = document.getElementById('content');
+
+  if (!hote) return;
+
+  if (!A || !A.onglets || !A.onglets.length) {
+    hote.innerHTML =
+      '<div class="bloc-erreur"><b>Activité vide.</b> Les données ' +
+      '<code>window.ACTIVITE</code> sont absentes ou sans onglet. ' +
+      'Regénérer le fichier avec <code>construire_activite.py</code>.</div>';
+    return;
+  }
+
+  /* ---------------------------------------------------------------- outils */
+
+  function esc(t) {
+    return String(t === undefined || t === null ? '' : t)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /** HTML déjà rédigé par l'auteur : inséré tel quel. */
+  function brut(t) { return String(t === undefined ? '' : t); }
+
+  function melanger(liste) {
+    var a = liste.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /** Le bloc carte qui contient un élément : indispensable pour que chaque
+      compteur de score ne compte QUE son propre exercice. */
+  function carteDe(el) {
+    return el && el.closest ? el.closest('.card') : null;
+  }
+
+  function dansCarte(el, selecteur) {
+    var c = carteDe(el);
+    return c ? c.querySelectorAll(selecteur) : [];
+  }
+
+  /* ---------------------------------------------------- état / progression */
+
+  var CLE = 'activite:' + (A.id || A.titre || 'sans-titre');
+
+  /* Aucune conservation (RGPD) : l'état des réponses vit en mémoire le temps
+     de la page. Un rechargement repart de zéro, et rien n'est écrit sur
+     l'appareil de l'élève. */
+  function chargerEtat() { return {}; }
+  function ecrireEtat() {}
+
+  var etat = chargerEtat();
+
+  /** Exposé au module d'export PDF, qui l'appelle avant d'imprimer. */
+  window.saveState = function () { ecrireEtat(); };
+
+  /* --------------------------------------------------------------- fabrique */
+
+  function carte(interne) { return '<div class="card">' + interne + '</div>'; }
+
+  var NOMS_BLOOM = {
+    n1: 'N1 — Mémoriser', n2: 'N2 — Comprendre',
+    n3: 'N3 — Appliquer', n4: 'N4 — Analyser'
+  };
+
+  function badge(bloom, libelle) {
+    if (!bloom) return '';
+    return '<span class="badge ' + esc(bloom) + '">' +
+           esc(libelle || NOMS_BLOOM[bloom] || '') + '</span>';
+  }
+
+  function enteteBloc(b, defaut) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    if (defaut) h += '<p>' + brut(defaut) + '</p>';
+    if (b.consigne) h += '<p>' + brut(b.consigne) + '</p>';
+    return h;
+  }
+
+  /** Marque lisible seulement à l'impression : ce que l'élève a répondu. */
+  function marque(texte) {
+    return '<span class="marque-impression"> ' + esc(texte) + '</span>';
+  }
+
+  function compteur(id, texte) {
+    return '<div class="compteur" id="' + id + '">' + esc(texte) + '</div>';
+  }
+
+  /* ---------------------------------------------------- rendu des blocs */
+
+  var BLOCS = {};
+
+  /* --- intro : ouverture de l'activité (objectifs, durée, matériel) --- */
+  BLOCS.intro = function (b) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    if (b.texte) h += '<p>' + brut(b.texte) + '</p>';
+    if (b.objectifs && b.objectifs.length) {
+      h += '<h3>Ce que tu vas apprendre</h3><ul class="objectifs">';
+      for (var i = 0; i < b.objectifs.length; i++) h += '<li>' + brut(b.objectifs[i]) + '</li>';
+      h += '</ul>';
+    }
+    if (b.materiel && b.materiel.length) {
+      h += '<h3>Matériel</h3><ul class="objectifs">';
+      for (var j = 0; j < b.materiel.length; j++) h += '<li>' + brut(b.materiel[j]) + '</li>';
+      h += '</ul>';
+    }
+    var meta = '';
+    if (b.duree) meta += '<span><b>Durée :</b> ' + esc(b.duree) + '</span>';
+    if (b.modalite) meta += '<span><b>Travail :</b> ' + esc(b.modalite) + '</span>';
+    if (b.codes && b.codes.length) {
+      meta += '<span><b>Programme :</b> ';
+      for (var k = 0; k < b.codes.length; k++) {
+        meta += '<span class="etiquette-code">' + esc(b.codes[k]) + '</span>';
+      }
+      meta += '</span>';
+    }
+    if (meta) h += '<div class="fiche-meta">' + meta + '</div>';
+    return carte(h);
+  };
+
+  /* --- info : encadré de cours, d'aide ou d'alerte --- */
+  BLOCS.info = function (b) {
+    var ton = b.ton === 'succes' ? ' success' : (b.ton === 'alerte' ? ' error' : '');
+    var h = '';
+    if (b.titre) h += '<strong>' + esc(b.titre) + '</strong> ';
+    h += brut(b.texte || '');
+    return '<div class="info' + ton + '">' + h + '</div>';
+  };
+
+  /* --- brut : HTML inséré sans habillage (cartes déjà stylées par la coquille :
+         ressources associées, carte d'export PDF) --- */
+  BLOCS.brut = function (b) { return brut(b.html || ''); };
+
+  /* --- texte : contenu libre déjà rédigé (HTML fourni par l'auteur) --- */
+  BLOCS.texte = function (b) {
+    var h = '';
+    if (b.bloom) h += badge(b.bloom, b.bloomLibelle);
+    if (b.titre) h += '<h2>' + esc(b.titre) + '</h2>';
+    h += brut(b.html || '');
+    return carte(h);
+  };
+
+  /* --- quiz à correction immédiate --- */
+  BLOCS.quiz = function (b, idx) {
+    var qs = b.questions || [];
+    var idScore = 'score-quiz-' + idx;
+    var h = enteteBloc(b, 'Clique sur la réponse qui te semble juste. La correction est immédiate.');
+
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i];
+      h += '<div class="quiz-question" data-q="' + i + '">';
+      h += '<p class="enonce">' + (i + 1) + '. ' + brut(q.question) + '</p>';
+      var options = q.options || [];
+      for (var j = 0; j < options.length; j++) {
+        h += '<button type="button" class="opt-btn" data-juste="' +
+             (j === q.bonne ? '1' : '0') + '">' + brut(options[j]) + '</button>';
+      }
+      h += '<div class="quiz-feedback"></div>';
+      if (q.explication) {
+        h += '<p class="aide" style="display:none" data-explication="1">' +
+             brut(q.explication) + '</p>';
+      }
+      h += '</div>';
+    }
+    h += compteur(idScore, 'Score : 0 / ' + qs.length);
+    return carte(h);
+  };
+
+  /* --- tri par catégories : on clique l'élément, puis la catégorie --- */
+  BLOCS.tri = function (b, idx) {
+    var cats = b.categories || [];
+    var items = b.items || [];
+    var idScore = 'score-tri-' + idx;
+    var h = enteteBloc(b, 'Clique un élément, puis la catégorie qui lui correspond.');
+
+    h += '<div class="assoc-colonne" style="margin-bottom:14px">';
+    for (var c = 0; c < cats.length; c++) {
+      h += '<button type="button" class="opt-btn tri-cat" data-cat="' + esc(cats[c]) +
+           '" style="text-align:center;font-weight:bold">' + brut(cats[c]) + '</button>';
+    }
+    h += '</div><div class="grid-3">';
+    var melange = melanger(items);
+    for (var i = 0; i < melange.length; i++) {
+      var it = melange[i];
+      h += '<button type="button" class="opt-btn tri-item" data-cat="' + esc(it.categorie) + '">';
+      if (it.icone) h += esc(it.icone) + ' ';
+      h += brut(it.texte) + '</button>';
+    }
+    h += '</div>' + compteur(idScore, 'Éléments classés : 0 / ' + items.length);
+    return carte(h);
+  };
+
+  /* --- association : deux colonnes, tout au clic --- */
+  BLOCS.association = function (b, idx) {
+    var paires = b.paires || [];
+    var idScore = 'score-assoc-' + idx;
+    var h = enteteBloc(b, 'Clique un élément de gauche, puis son correspondant à droite.');
+
+    h += '<div class="assoc-grille"><div class="assoc-colonne">';
+    h += '<p class="assoc-titre">' + esc(b.titreGauche || 'Éléments') + '</p>';
+    for (var i = 0; i < paires.length; i++) {
+      h += '<button type="button" class="assoc-item assoc-gauche" data-cle="' + i + '">' +
+           brut(paires[i].gauche) + '</button>';
+    }
+    h += '</div><div class="assoc-colonne">';
+    h += '<p class="assoc-titre">' + esc(b.titreDroite || 'Correspondances') + '</p>';
+    // La colonne de droite est mélangée ; data-cle porte l'indice de la paire.
+    var indices = [];
+    for (var n = 0; n < paires.length; n++) indices.push(n);
+    indices = melanger(indices);
+    for (var j = 0; j < indices.length; j++) {
+      h += '<button type="button" class="assoc-item assoc-droite" data-cle="' +
+           indices[j] + '">' + brut(paires[indices[j]].droite) + '</button>';
+    }
+    h += '</div></div>' + compteur(idScore, 'Paires trouvées : 0 / ' + paires.length);
+    return carte(h);
+  };
+
+  /* --- remise en ordre par clic (jamais de glisser-déposer) --- */
+  BLOCS.ordre = function (b, idx) {
+    var etapes = b.etapes || [];
+    var h = enteteBloc(b, 'Clique deux étapes pour les échanger, jusqu\'à retrouver le bon ordre.');
+
+    var affiche = etat['ordre-' + idx];
+    if (!affiche || affiche.length !== etapes.length) affiche = melanger(etapes);
+
+    // L'ordre attendu voyage avec la liste : aucune ambiguïté possible entre
+    // deux exercices de même longueur dans la même page.
+    h += '<div class="ordre-liste" id="ordre-' + idx + '" data-attendu="' +
+         esc(JSON.stringify(etapes)) + '">';
+    for (var i = 0; i < affiche.length; i++) {
+      h += '<button type="button" class="ordre-etape" data-mot="' + esc(affiche[i]) + '">' +
+           brut(affiche[i]) + '</button>';
+    }
+    h += '</div><div class="ordre-actions">';
+    h += '<button type="button" class="bouton" data-action="verifier">Vérifier mon ordre</button> ';
+    h += '<button type="button" class="bouton secondaire" data-action="melanger">Mélanger</button>';
+    h += '</div>';
+    h += '<div class="quiz-feedback" id="retour-ordre-' + idx + '"></div>';
+    return carte(h);
+  };
+
+  /* --- chaîne fonctionnelle : énergie, information, étapes techniques --- */
+  BLOCS.chaine = function (b) {
+    var h = enteteBloc(b, b.consigne || '');
+    var chaines = b.chaines || [];
+    for (var i = 0; i < chaines.length; i++) {
+      var ch = chaines[i];
+      if (chaines.length > 1 && ch.nom) h += '<h3>' + esc(ch.nom) + '</h3>';
+      h += '<div class="chaine-rail">';
+      var et = ch.etapes || [];
+      for (var j = 0; j < et.length; j++) {
+        h += '<span class="chaine-bloc">' + brut(et[j]) + '</span>';
+        if (j < et.length - 1) h += '<span class="chaine-fleche">→</span>';
+      }
+      h += '</div>';
+      if (ch.note) h += '<div class="info">' + brut(ch.note) + '</div>';
+    }
+    return carte(h);
+  };
+
+  /* --- tableau comparatif : la meilleure valeur de chaque critère est marquée --- */
+
+  /** Nombre lu « à la française » : « 1 800 » → 1800, « 4,5 » → 4.5.
+      Sans ce nettoyage, parseFloat("1 800") vaudrait 1 et le tableau
+      désignerait la mauvaise case — un tableau qui désigne un mauvais
+      « meilleur » est pire qu'un tableau sans surlignage. */
+  function nombre(v) {
+    if (typeof v === 'number') return v;
+    if (v === undefined || v === null) return null;
+    var t = String(v).replace(/[\s\u00a0\u202f]/g, '').replace(',', '.').replace(/[^0-9.\-]/g, '');
+    if (t === '' || t === '-' || t === '.') return null;
+    var n = parseFloat(t);
+    return isNaN(n) ? null : n;
+  }
+
+  BLOCS.tableau = function (b) {
+    var lignes = b.lignes || [];
+    var criteres = b.criteres || [];
+    var h = enteteBloc(b, b.consigne || '');
+
+    h += '<div style="overflow-x:auto"><table><thead><tr><th>' +
+         esc(b.enteteGauche || 'Critère') + '</th>';
+    for (var i = 0; i < lignes.length; i++) h += '<th>' + esc(lignes[i].nom) + '</th>';
+    h += '</tr></thead><tbody>';
+
+    for (var c = 0; c < criteres.length; c++) {
+      var cr = criteres[c];
+      var valeurs = [];
+      var numeriques = [];
+      for (var l = 0; l < lignes.length; l++) {
+        var n = nombre(lignes[l].valeurs ? lignes[l].valeurs[cr.cle] : undefined);
+        valeurs.push(n);
+        if (n !== null) numeriques.push(n);
+      }
+      var meilleure = null;
+      if (numeriques.length && cr.meilleur) {
+        meilleure = cr.meilleur === 'max'
+          ? Math.max.apply(null, numeriques)
+          : Math.min.apply(null, numeriques);
+      }
+      h += '<tr><td>' + esc(cr.label) + (cr.unite ? ' (' + esc(cr.unite) + ')' : '') + '</td>';
+      for (var m = 0; m < lignes.length; m++) {
+        var texte = lignes[m].valeurs ? lignes[m].valeurs[cr.cle] : '';
+        var estMeilleur = meilleure !== null && valeurs[m] === meilleure;
+        h += '<td' + (estMeilleur ? ' class="best"' : '') + '>' + brut(texte) + '</td>';
+      }
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    return carte(h);
+  };
+
+  /* --- saisie libre : la réponse part dans le PDF exporté --- */
+  BLOCS.saisie = function (b, idx) {
+    var h = enteteBloc(b, b.consigne || '');
+    var nom = 'saisie-' + idx;
+    h += '<div class="saisie"><textarea id="' + nom + '" placeholder="' +
+         esc(b.placeholder || 'Ta réponse ici...') + '">' + esc(etat[nom] || '') + '</textarea>';
+    if (b.aide) h += '<p class="aide">' + brut(b.aide) + '</p>';
+    h += '</div>';
+    return carte(h);
+  };
+
+  /* ------------------------------------------------------------ assemblage */
+
+  /** Rend un bloc ; une erreur reste locale et visible. */
+  function rendreBloc(b, idx) {
+    if (!b || !b.type) return '<div class="bloc-erreur">Bloc sans type.</div>';
+    var f = BLOCS[b.type];
+    if (!f) return '<div class="bloc-erreur">Type de bloc inconnu : <b>' + esc(b.type) + '</b></div>';
+    try {
+      return f(b, idx);
+    } catch (err) {
+      return '<div class="bloc-erreur">Bloc « ' + esc(b.type) + ' » invalide : ' +
+             esc(err && err.message ? err.message : err) + '</div>';
+    }
+  }
+
+  function construire() {
+    var barre = document.getElementById('tabs');
+    var sections = [];
+
+    for (var i = 0; i < A.onglets.length; i++) {
+      var o = A.onglets[i] || {};
+      var etiquette = o.titre || ('Partie ' + (i + 1));
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = etiquette;
+      btn.className = i === 0 ? 'active' : '';
+      btn.setAttribute('data-onglet', String(i));
+      if (barre) barre.appendChild(btn);
+
+      var blocs = o.blocs || [];
+      var contenu = '';
+      for (var j = 0; j < blocs.length; j++) {
+        // L'index doit être unique dans toute la page : « onglet-bloc ».
+        contenu += rendreBloc(blocs[j], i + '-' + j);
+      }
+      if (!blocs.length) contenu = '<div class="info">Cet onglet ne contient pas encore de contenu.</div>';
+
+      var s = document.createElement('section');
+      s.id = 's-' + i;
+      s.className = i === 0 ? 'active' : '';
+      s.innerHTML = contenu;
+      sections.push(s);
+      hote.appendChild(s);
+    }
+
+    if (barre) {
+      barre.addEventListener('click', function (e) {
+        var c = e.target;
+        while (c && c !== barre && !c.getAttribute('data-onglet')) c = c.parentNode;
+        if (!c || c === barre) return;
+        var n = parseInt(c.getAttribute('data-onglet'), 10);
+        var btns = barre.querySelectorAll('button');
+        for (var k = 0; k < sections.length; k++) {
+          sections[k].className = k === n ? 'active' : '';
+          if (btns[k]) btns[k].className = k === n ? 'active' : '';
+        }
+      });
+    }
+    return sections;
+  }
+
+  /* -------------------------------------------------------- interactions */
+
+  /** Quiz : correction immédiate, score du seul exercice concerné. */
+  function brancherQuiz() {
+    hote.addEventListener('click', function (e) {
+      var btn = e.target;
+      if (!btn || !btn.className || btn.className.indexOf('opt-btn') === -1) return;
+      if (btn.className.indexOf('tri-item') !== -1) return;
+      if (btn.className.indexOf('tri-cat') !== -1) return;
+      if (btn.disabled) return;
+
+      var question = btn.closest ? btn.closest('.quiz-question') : null;
+      if (!question) return;
+      var boite = question.querySelector('.quiz-feedback');
+      if (!boite) return;
+
+      var juste = btn.getAttribute('data-juste') === '1';
+      var boutons = question.querySelectorAll('.opt-btn');
+      for (var i = 0; i < boutons.length; i++) {
+        boutons[i].disabled = true;
+        if (boutons[i] !== btn) boutons[i].style.opacity = '.55';
+      }
+      btn.className = 'opt-btn ' + (juste ? 'juste' : 'faux');
+      // Trace conservée pour le PDF exporté.
+      btn.insertAdjacentHTML('beforeend',
+        marque(juste ? '← réponse choisie, correcte' : '← réponse choisie, incorrecte'));
+
+      boite.className = 'quiz-feedback visible ' + (juste ? 'juste' : 'faux');
+      boite.innerHTML = juste
+        ? '<b>Bonne réponse !</b>'
+        : '<b>Réponse incorrecte.</b> La bonne réponse est indiquée ci-dessus.';
+      var expl = question.querySelector('[data-explication]');
+      if (expl) expl.style.display = 'block';
+
+      majScoreQuiz(question);
+    });
+  }
+
+  function majScoreQuiz(question) {
+    var cartes = dansCarte(question, '.quiz-question');
+    if (!cartes.length) return;
+    var total = cartes.length;
+    var repondues = 0, justes = 0;
+    for (var i = 0; i < cartes.length; i++) {
+      if (cartes[i].querySelector('.quiz-feedback.visible')) repondues++;
+      if (cartes[i].querySelector('.opt-btn.juste')) justes++;
+    }
+    var cp = carteDe(question) ? carteDe(question).querySelector('.compteur') : null;
+    if (!cp) return;
+    cp.textContent = 'Score : ' + justes + ' / ' + total +
+      (repondues < total
+        ? '  (' + repondues + ' question' + (repondues > 1 ? 's' : '') +
+          ' traitée' + (repondues > 1 ? 's' : '') + ')'
+        : '  — exercice terminé !');
+  }
+
+  /** Tri : sélection d'un élément, puis d'une catégorie. */
+  function brancherTri() {
+    var selection = null;
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c || !c.className || c.className.indexOf('opt-btn') === -1) return;
+      var estItem = c.className.indexOf('tri-item') !== -1;
+      var estCat = c.className.indexOf('tri-cat') !== -1;
+      if (!estItem && !estCat) return;
+      if (c.className.indexOf('juste') !== -1 || c.disabled) return;
+
+      if (estItem) {
+        if (selection && selection !== c) selection.className = 'opt-btn tri-item';
+        selection = c;
+        c.className = 'opt-btn tri-item selectionne';
+        return;
+      }
+
+      if (!selection) {
+        c.className = 'opt-btn tri-cat faux';
+        window.setTimeout(function () { c.className = 'opt-btn tri-cat'; }, 600);
+        return;
+      }
+
+      var item = selection;
+      var ok = item.getAttribute('data-cat') === c.getAttribute('data-cat');
+      selection = null;
+
+      if (ok) {
+        item.className = 'opt-btn tri-item juste';
+        item.insertAdjacentHTML('beforeend', marque('← ' + c.textContent));
+        item.disabled = true;
+        var faits = dansCarte(item, '.tri-item.juste').length;
+        var tous = dansCarte(item, '.tri-item').length;
+        var cp = carteDe(item) ? carteDe(item).querySelector('.compteur') : null;
+        if (cp) {
+          cp.textContent = 'Éléments classés : ' + faits + ' / ' + tous +
+            (faits === tous ? '  — tout est classé, bravo !' : '');
+        }
+      } else {
+        item.className = 'opt-btn tri-item';
+        c.className = 'opt-btn tri-cat faux';
+        window.setTimeout(function () { c.className = 'opt-btn tri-cat'; }, 600);
+      }
+    });
+  }
+
+  /** Association : un élément de gauche, un de droite. */
+  function brancherAssociation() {
+    var gauche = null;
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c || !c.className || c.className.indexOf('assoc-item') === -1) return;
+      if (c.className.indexOf('apparie') !== -1) return;
+
+      var estGauche = c.className.indexOf('assoc-gauche') !== -1;
+
+      if (estGauche) {
+        if (gauche && gauche !== c) gauche.className = 'assoc-item assoc-gauche';
+        gauche = c;
+        c.className = 'assoc-item assoc-gauche selectionne';
+        return;
+      }
+
+      if (!gauche) return;
+      var g = gauche;
+      var ok = g.getAttribute('data-cle') === c.getAttribute('data-cle');
+      gauche = null;
+
+      if (ok) {
+        g.className = 'assoc-item assoc-gauche apparie';
+        c.className = 'assoc-item assoc-droite apparie';
+        g.insertAdjacentHTML('beforeend', marque('↔'));
+        var faits = dansCarte(g, '.assoc-item.apparie').length / 2;
+        var tous = dansCarte(g, '.assoc-gauche').length;
+        var cp = carteDe(g) ? carteDe(g).querySelector('.compteur') : null;
+        if (cp) {
+          cp.textContent = 'Paires trouvées : ' + faits + ' / ' + tous +
+            (faits === tous ? '  — toutes les paires sont trouvées !' : '');
+        }
+      } else {
+        g.className = 'assoc-item assoc-gauche';
+        c.className = 'assoc-item assoc-droite rate';
+        window.setTimeout(function () { c.className = 'assoc-item assoc-droite'; }, 700);
+      }
+    });
+  }
+
+  /** Remise en ordre : deux clics échangent deux étapes. */
+  function brancherOrdre() {
+    var premier = null;
+
+    function listeDe(el) { return el.closest ? el.closest('.card').querySelector('.ordre-liste') : null; }
+
+    function memoriser(liste) {
+      var idx = liste.id.replace('ordre-', '');
+      var bs = liste.querySelectorAll('.ordre-etape');
+      var seq = [];
+      for (var i = 0; i < bs.length; i++) seq.push(bs[i].getAttribute('data-mot'));
+      etat['ordre-' + idx] = seq;
+      ecrireEtat();
+    }
+
+    hote.addEventListener('click', function (e) {
+      var c = e.target;
+      if (!c) return;
+
+      /* --- boutons d'action --- */
+      if (c.getAttribute && c.getAttribute('data-action')) {
+        var liste = listeDe(c);
+        if (!liste) return;
+        var action = c.getAttribute('data-action');
+        var boutons = liste.querySelectorAll('.ordre-etape');
+
+        if (action === 'melanger') {
+          var seq = [];
+          for (var i = 0; i < boutons.length; i++) seq.push(boutons[i].getAttribute('data-mot'));
+          seq = melanger(seq);
+          for (var j = 0; j < boutons.length; j++) {
+            boutons[j].setAttribute('data-mot', seq[j]);
+            boutons[j].textContent = seq[j];
+            boutons[j].className = 'ordre-etape';
+          }
+          memoriser(liste);
+          var r0 = document.getElementById('retour-' + liste.id);
+          if (r0) r0.className = 'quiz-feedback';
+          return;
+        }
+
+        /* --- vérification : l'ordre attendu est porté par la liste --- */
+        var attendu = [];
+        try { attendu = JSON.parse(liste.getAttribute('data-attendu') || '[]'); } catch (err) {}
+        var courant = [];
+        for (var k = 0; k < boutons.length; k++) courant.push(boutons[k].getAttribute('data-mot'));
+
+        var toutJuste = attendu.length === courant.length && attendu.length > 0;
+        for (var q = 0; q < courant.length; q++) {
+          var okPos = courant[q] === attendu[q];
+          boutons[q].className = 'ordre-etape ' + (okPos ? 'juste' : 'faux');
+          if (!okPos) toutJuste = false;
+        }
+        var retour = document.getElementById('retour-' + liste.id);
+        if (retour) {
+          retour.className = 'quiz-feedback visible ' + (toutJuste ? 'juste' : 'faux');
+          retour.innerHTML = toutJuste
+            ? '<b>Bravo, l\'ordre est correct !</b>'
+            : '<b>Pas encore.</b> Les étapes en rouge ne sont pas à leur place : échange-les à nouveau.';
+        }
+        memoriser(liste);
+        return;
+      }
+
+      /* --- échange de deux étapes --- */
+      if (c.className && c.className.indexOf('ordre-etape') !== -1) {
+        if (!premier) {
+          premier = c;
+          c.className = 'ordre-etape selectionne';
+          return;
+        }
+        if (premier === c) {
+          premier.className = 'ordre-etape';
+          premier = null;
+          return;
+        }
+        var a = premier, b = c;
+        var motA = a.getAttribute('data-mot'), motB = b.getAttribute('data-mot');
+        a.setAttribute('data-mot', motB); a.textContent = motB;
+        b.setAttribute('data-mot', motA); b.textContent = motA;
+        a.className = 'ordre-etape'; b.className = 'ordre-etape';
+        premier = null;
+        memoriser(a.parentNode);
+      }
+    });
+  }
+
+  /** Sauvegarde des réponses écrites (restituées au rechargement). */
+  function brancherSaisie() {
+    hote.addEventListener('input', function (e) {
+      var c = e.target;
+      if (!c || (c.tagName !== 'TEXTAREA' && c.tagName !== 'INPUT')) return;
+      if (!c.id) return;
+      etat[c.id] = c.value;
+      ecrireEtat();
+    });
+  }
+
+  /* -------------------------------------------------------------- départ */
+
+  try {
+    construire();
+    brancherQuiz();
+    brancherTri();
+    brancherAssociation();
+    brancherOrdre();
+    brancherSaisie();
+  } catch (err) {
+    hote.insertAdjacentHTML('afterbegin',
+      '<div class="bloc-erreur"><b>Erreur du moteur d\'activité :</b> ' +
+      esc(err && err.message ? err.message : err) + '</div>');
+  }
+})();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:DEBUT (greffé par _outils/template-activite/greffer_panneau_dev.py) -->
+<script id="ost-script-panneau-dev">
+const ACTIVITE_PUBLICATION = "4e/revision-ost1-ost2/revision-evaluation-ost1-ost2.html";
+const MODE_DEVELOPPEMENT = false;
+// Panneau de debug — recopié du template par greffer_panneau_dev.py.
+// NE PAS ÉDITER ICI : modifier index.html (bloc PANNEAU-DEV), puis
+// `greffer_panneau_dev.py --extraire` et regreffer.
+
+  // ── MODE DÉVELOPPEMENT : panneau de correctif → dépôt ────────────────────
+  // Actif seulement quand MODE_DEVELOPPEMENT est vrai. Ajoute un bouton
+  // « Corriger » : une fois armé, cliquer sur un énoncé ou un champ porteur
+  // d'un identifiant (data-ost-id, ou id stable du template) ouvre un panneau
+  // à gauche. Le panneau produit un prompt à copier dans l'onglet « Dépôt ».
+  // La valeur d'ACTIVITE_PUBLICATION est écrite par personnaliser.py.
+
+  (function () {
+if (typeof MODE_DEVELOPPEMENT === 'undefined' || !MODE_DEVELOPPEMENT) return;
+
+// Énoncés/champs statiques du template (titres, cadres et champs N3,
+// champs des étapes N4). Les contenus dynamiques portent data-ost-id.
+var IDS_ENONCES_CHAMPS = [
+    'titre-activite', 'sous-titre-activite',
+    'consigne-diagnostic', 'diagnostic-eleve',
+    'consigne-solution', 'solution-eleve',
+    'solution-diagnostic', 'solution-attendue',
+    'besoin-identifie', 'solutions-imaginees', 'contraintes-definies',
+    'solution-choisie', 'confirmation-conception'
+];
+
+// ── Portée du correctif ──────────────────────────────────────────────
+// Un clic désigne d'abord l'élément identifié le plus proche (comportement
+// historique). Deux portées plus larges s'ajoutent : « exercice » (le bloc
+// entier — carte de question, atelier, curseur, modèle de comparateur…) et
+// « onglet » (tout le niveau). Sans elles, un bloc dont les parties ne
+// portent pas d'identifiant n'était pas sélectionnable en entier : on ne
+// pouvait demander « refais cet exercice », seulement « corrige ce mot ».
+var SELECTEUR_BLOC = [
+    '[data-ost-bloc]',
+    '.carte-contenu', '.question-quiz', '.carte-video', '.element-chaine',
+    '.atelier-carte', '.objet-explorable', '.curseur-contrainte',
+    '.etape-conception', '.modele-ost', '.carte-jeu', '.fiche-synthese',
+    '.action-corrective-ligne', '.cf-etape', '.reglages-contraintes',
+    '.qcm-correctif', '.solution-enigme', '.cadre-reponse',
+    '.zone-exploration', '.ressources-video', '.comparateur-ost'
+].join(',');
+
+var PORTEES = ['element', 'exercice', 'onglet'];
+var LIBELLE_PORTEE = {element: 'élément', exercice: 'exercice', onglet: 'onglet'};
+
+// Un « champ » : ce que l'élève remplit. Sert à n'afficher « Type de
+// champ » que sur un champ, et « Type d'exercice » que sur un bloc.
+var SELECTEUR_CHAMP = 'textarea, input, select, [contenteditable=""], [contenteditable="true"]';
+
+// ── Options du panneau ───────────────────────────────────────────────
+// Type d'erreur : ce que le professeur constate, sans avoir à l'écrire.
+var OPTIONS_TYPE_ERREUR = [
+    'label à changer',
+    'inconsistance de la réponse',
+    'exercice cassé',
+    'petite adaptation',
+    "ajout d'options"
+];
+var OPTIONS_PRECO = [
+    "corriger simplement",
+    "reformuler la question/l'énoncé",
+    "régénérer l'exercice en entier",
+    "changer le type d'exercice"
+];
+// Modèles de commentaire : des phrases génériques, à compléter par le
+// professeur. Elles ne nomment NI niveau NI identifiant — le panneau les
+// déduit déjà de l'onglet et de l'élément sélectionnés. C'est ce qui
+// remplace les exemples figés, qui désignaient toujours un autre niveau
+// que celui qu'on corrigeait.
+var MODELES_COMMENTAIRE = [
+    {libelle: 'énoncé pas clair', texte: "L'énoncé n'est pas clair : reformule-le plus simplement, sans jargon."},
+    {libelle: 'pas ce que je veux', texte: "Ça ne correspond pas à ce que je veux : <ce que j'attends, en une phrase>."},
+    {libelle: 'élève bloqué', texte: "L'élève est bloqué ici : il devrait pouvoir <ce qu'il doit réussir à faire>."},
+    {libelle: 'trop long', texte: "C'est trop long et illisible : raccourcis ce texte, l'essentiel seul compte."},
+    {libelle: 'à retirer', texte: "Retire ce texte : il n'apporte rien à l'élève."},
+    {libelle: 'ajouter des choix', texte: "Ajoute <nombre> propositions de plus, du même niveau de difficulté."}
+];
+// Chaque série de réglages commence par « ne rien changer » : le prompt
+// ne contient que ce que le professeur a réellement choisi.
+var OPTIONS_DIFFICULTE = [
+    ['inchangee', 'ne rien changer'],
+    ['augmenter', 'augmenter la difficulté'],
+    ['reduire', 'réduire la difficulté']
+];
+var OPTIONS_VISUELS = [
+    ['inchanges', 'ne rien changer'],
+    ['comfyui', 'ComfyUI (LoRA pixel-art local)'],
+    ['pixellab', 'PixelLab (API)'],
+    ['icone-standard', 'icône standard (aucune génération)']
+];
+// Forme de l'exercice entier.
+var OPTIONS_EXERCICE = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre'],
+    ['liste-de-choix', 'liste de choix'],
+    ['jeu-relier', 'jeu pour relier'],
+    ['jeu-graphe', 'jeu de graphe (réseau)']
+];
+// Forme d'un champ de saisie.
+var OPTIONS_TYPE_CHAMP = [
+    ['inchange', 'ne rien changer'],
+    ['saisie-libre', 'saisie libre (champ texte)'],
+    ['liste-de-choix', 'liste de choix (une réponse)'],
+    ['cases-a-cocher', 'cases à cocher (plusieurs réponses)']
+];
+
+var arme = false;
+var origine = null;        // élément réellement cliqué
+var portee = 'element';    // 'element' | 'exercice' | 'onglet'
+var panneau = null;
+var zoneIdentifiant, zoneApercu, zoneCommentaire, zonePrompt, boutonCopier, boutonPrompt;
+var zoneChemin, boutonsPortee = [];
+var sections = {};         // {cle: {racine, entete, contenu, nom, defaut}}
+var sectionOuverte = '';   // une seule catégorie dépliée à la fois
+
+function identifiantDe(el) {
+    if (!el || !el.getAttribute) return null;
+    var data = el.getAttribute('data-ost-id');
+    if (data) return data;
+    var id = el.id;
+    return (id && IDS_ENONCES_CHAMPS.indexOf(id) !== -1) ? id : null;
+}
+
+function elementIdentifiable(depuis) {
+    var el = depuis;
+    while (el && el !== document.body) {
+        if (identifiantDe(el)) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+// Identifiant d'un bloc qui n'en porte pas : lisible et reproductible
+// (onglet + classe + rang), plutôt qu'un « (sans identifiant) » qui ne
+// dit pas à l'agent quoi corriger.
+// Vrai quand le dernier identifiant produit a été *inventé* faute
+// d'attribut dans la page. Le prompt le dit alors explicitement : un
+// chemin comme « n3-enigme/p » ne désigne aucun élément du fichier, et
+// aucun remplacement de texte ne peut l'atteindre.
+var identifiantInvente = false;
+
+function identifiantBloc(el) {
+    if (!el || !el.getAttribute) { identifiantInvente = false; return null; }
+    var pose = el.getAttribute('data-ost-bloc') || el.getAttribute('data-ost-id');
+    if (pose) { identifiantInvente = false; return pose; }
+    identifiantInvente = true;
+    var classes = String(el.className || '').split(/\s+/).filter(function (c) {
+        return c && c.indexOf('marge-') !== 0 && c !== 'cache';
+    });
+    var base = classes[0] || el.tagName.toLowerCase();
+    var onglet = ongletDe(el);
+    var freres = el.parentElement
+        ? Array.prototype.filter.call(el.parentElement.children, function (s) {
+            return s.classList && s.classList.contains(base);
+        })
+        : [];
+    var rang = freres.indexOf(el) + 1;
+    return (onglet ? onglet.id.replace(/^contenu-/, '') + '/' : '') + base +
+           (freres.length > 1 ? '#' + rang : '');
+}
+
+function ongletDe(el) {
+    return (el && el.closest) ? el.closest('.contenu-onglet') : null;
+}
+
+function libelleOnglet(onglet) {
+    if (!onglet) return '';
+    var bouton = document.querySelector('[aria-controls="' + onglet.id + '"]');
+    var texte = bouton ? String(bouton.textContent || '').trim().replace(/\s+/g, ' ') : '';
+    return texte ? texte + ' (' + onglet.id + ')' : onglet.id;
+}
+
+// L'élément visé, recalculé depuis le clic d'origine selon la portée.
+function cible() {
+    if (!origine) return null;
+    if (portee === 'onglet') return ongletDe(origine) || origine;
+    if (portee === 'exercice') {
+        var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+        return bloc || origine;
+    }
+    return elementIdentifiable(origine) || origine;
+}
+
+function identifiantCourant() {
+    var el = cible();
+    identifiantInvente = false;
+    if (!el) return '';
+    if (portee === 'onglet') {
+        if (el.id) return el.id;
+        return identifiantBloc(el) || '';
+    }
+    if (portee === 'exercice') return identifiantBloc(el) || '';
+    var reel = identifiantDe(el);
+    if (reel) { identifiantInvente = false; return reel; }
+    return identifiantBloc(el) || '';
+}
+
+function cheminCourant() {
+    if (!origine) return '';
+    var onglet = ongletDe(origine);
+    var bloc = origine.closest ? origine.closest(SELECTEUR_BLOC) : null;
+    var el = elementIdentifiable(origine);
+    var parts = [];
+    if (onglet) parts.push(libelleOnglet(onglet));
+    if (bloc && bloc !== onglet) parts.push(identifiantBloc(bloc));
+    if (el && el !== bloc) parts.push(identifiantDe(el));
+    return parts.join(' › ');
+}
+
+function initialiser() {
+    var bouton = document.createElement('button');
+    bouton.id = 'ost-bouton-corriger';
+    bouton.type = 'button';
+    bouton.textContent = '🛠 Corriger';
+    bouton.addEventListener('click', function () {
+        basculerCorrection(!arme);
+    });
+    document.body.appendChild(bouton);
+
+    // Capture : en mode armé, on intercepte le clic AVANT l'action normale.
+    // « Tout est sélectionnable » ne vaut PAS pour les commandes de la
+    // page : une fois armé, un clic sur le bouton « Corriger » était capté
+    // comme une sélection, donc le bouton ne répondait plus et le mode ne
+    // pouvait plus être quitté (il fallait recharger la page). Même chose
+    // pour les onglets, le retour à l'accueil et le lien d'évitement : ils
+    // restent utilisables pendant la relecture.
+    var SELECTEUR_COMMANDES = '#ost-bouton-corriger, #ost-panneau-corriger, ' +
+        '.navigation-onglets, .retour-accueil, .skip-link';
+
+    document.body.addEventListener('click', function (e) {
+        if (!arme) return;
+        if (e.target === document.body || e.target === document.documentElement) return;
+        if (e.target.closest && e.target.closest(SELECTEUR_COMMANDES)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        ouvrirPanneau(e.target);
+    }, true);
+
+    // Échap : d'abord refermer le panneau, puis, s'il est déjà fermé,
+    // quitter le mode correction. Sortie de secours clavier, pour qu'un
+    // mode qui ne se désarme pas ne puisse plus arriver.
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (panneau && panneau.className.indexOf('ost-ouvert') !== -1) {
+            fermerPanneau();
+            return;
+        }
+        if (arme) basculerCorrection(false);
+    });
+}
+
+// Seul endroit qui arme ou désarme le mode : le bouton, Échap et les
+// tests passent tous par ici, donc l'état affiché ne peut pas diverger.
+function basculerCorrection(actif) {
+    arme = !!actif;
+    document.body.classList.toggle('ost-correction-arme', arme);
+    var bouton = document.getElementById('ost-bouton-corriger');
+    if (bouton) {
+        bouton.classList.toggle('ost-arme', arme);
+        bouton.textContent = arme ? '✕ Corriger (armé)' : '🛠 Corriger';
+        bouton.setAttribute('aria-pressed', arme ? 'true' : 'false');
+    }
+    if (!arme) fermerPanneau();
+}
+
+function ouvrirPanneau(depuis) {
+    origine = depuis;
+    var p = construirePanneau();
+    majCible();
+    p.classList.add('ost-ouvert');
+}
+
+// Rafraîchit identifiant, chemin, aperçu et boutons de portée.
+function majCible() {
+    var el = cible();
+    if (!el) return;
+    if (portee === 'onglet') {
+        var onglet = ongletDe(el) || el;
+        zoneIdentifiant.textContent = onglet.id || identifiantBloc(onglet) || '(sans identifiant)';
+        zoneApercu.textContent = "Tout l'onglet : " + (libelleOnglet(onglet) || onglet.id);
+    } else {
+        zoneIdentifiant.textContent = identifiantCourant() || '(sans identifiant)';
+        var texte = String(
+            el.textContent || (el.getAttribute ? el.getAttribute('placeholder') : '') || ''
+        ).trim().replace(/\s+/g, ' ');
+        zoneApercu.textContent = texte.length > 140 ? texte.slice(0, 140) + '…' : texte;
+    }
+    if (zoneChemin) zoneChemin.textContent = cheminCourant();
+    boutonsPortee.forEach(function (b) {
+        b.setAttribute('aria-pressed',
+            b.getAttribute('data-portee') === portee ? 'true' : 'false');
+    });
+    majSections();
+    majPrompt();
+}
+
+function changerPortee(cle) {
+    if (PORTEES.indexOf(cle) === -1) return;
+    portee = cle;
+    majCible();
+}
+
+function fermerPanneau() {
+    if (panneau) panneau.classList.remove('ost-ouvert');
+    origine = null;
+}
+
+function construirePanneau() {
+    if (panneau) return panneau;
+    panneau = document.createElement('aside');
+    panneau.id = 'ost-panneau-corriger';
+    panneau.setAttribute('role', 'dialog');
+    panneau.setAttribute('aria-label', "Correctif d'activité");
+
+    var fermer = document.createElement('button');
+    fermer.type = 'button';
+    fermer.className = 'ost-fermer';
+    fermer.textContent = '✕';
+    fermer.addEventListener('click', fermerPanneau);
+
+    var titre = document.createElement('h2');
+    titre.textContent = "Correctif d'activité";
+
+    zoneIdentifiant = document.createElement('div');
+    zoneIdentifiant.className = 'ost-identifiant';
+    zoneIdentifiant.textContent = '—';
+
+    zoneApercu = document.createElement('p');
+    zoneApercu.className = 'ost-apercu';
+
+    panneau.appendChild(fermer);
+    panneau.appendChild(titre);
+    panneau.appendChild(zoneIdentifiant);
+    panneau.appendChild(zoneApercu);
+
+    // Portée : le réglage le plus important, en tête du panneau. Un clic
+    // désigne d'abord un élément ; ces trois boutons disent s'il faut
+    // corriger ce point précis, tout l'exercice, ou tout le niveau.
+    var blocPortee = document.createElement('div');
+    blocPortee.className = 'ost-champ';
+    var libPortee = document.createElement('span');
+    libPortee.className = 'ost-libelle';
+    libPortee.textContent = 'Portée du correctif';
+    blocPortee.appendChild(libPortee);
+    var rangee = document.createElement('div');
+    rangee.className = 'ost-portees';
+    rangee.setAttribute('role', 'group');
+    rangee.setAttribute('aria-label', 'Portée du correctif');
+    PORTEES.forEach(function (cle) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ost-portee';
+        b.setAttribute('data-portee', cle);
+        b.setAttribute('aria-pressed', cle === portee ? 'true' : 'false');
+        b.textContent = LIBELLE_PORTEE[cle];
+        b.addEventListener('click', function () { changerPortee(cle); });
+        rangee.appendChild(b);
+        boutonsPortee.push(b);
+    });
+    blocPortee.appendChild(rangee);
+    zoneChemin = document.createElement('p');
+    zoneChemin.className = 'ost-chemin';
+    blocPortee.appendChild(zoneChemin);
+    panneau.appendChild(blocPortee);
+
+    panneau.appendChild(champRadio("Type d'erreur", 'ost-type', OPTIONS_TYPE_ERREUR));
+    panneau.appendChild(champRadio('Préconisation', 'ost-preco', OPTIONS_PRECO));
+
+    // Menus repliables : une seule catégorie dépliée à la fois. Les deux premiers
+    // ne s'affichent que si la sélection s'y prête — « Type d'exercice »
+    // sur un exercice, « Type de champ » sur un champ.
+    panneau.appendChild(sectionAccordeon('exercice', "Type d'exercice",
+        'ost-exercice', OPTIONS_EXERCICE, 'inchange'));
+    panneau.appendChild(sectionAccordeon('champ', 'Type de champ',
+        'ost-type-champ', OPTIONS_TYPE_CHAMP, 'inchange'));
+    panneau.appendChild(sectionAccordeon('difficulte', 'Difficulté du quiz',
+        'ost-difficulte', OPTIONS_DIFFICULTE, 'inchangee'));
+    panneau.appendChild(sectionAccordeon('visuels', 'Visuels',
+        'ost-visuels', OPTIONS_VISUELS, 'inchanges'));
+
+    var blocCom = document.createElement('div');
+    blocCom.className = 'ost-champ';
+    var libCom = document.createElement('label');
+    libCom.className = 'ost-libelle';
+    libCom.textContent = 'Commentaire';
+    libCom.setAttribute('for', 'ost-commentaire');
+    zoneCommentaire = document.createElement('textarea');
+    zoneCommentaire.id = 'ost-commentaire';
+    zoneCommentaire.placeholder = 'Décrivez la correction à apporter…';
+    zoneCommentaire.addEventListener('input', majPrompt);
+    blocCom.appendChild(libCom);
+    blocCom.appendChild(zoneCommentaire);
+    // Un modèle remplit un commentaire vide, s'ajoute à la suite sinon :
+    // rien de ce qui est déjà écrit n'est effacé.
+    var rangeeModeles = document.createElement('div');
+    rangeeModeles.className = 'ost-modeles';
+    rangeeModeles.setAttribute('role', 'group');
+    rangeeModeles.setAttribute('aria-label', 'Modèles de commentaire');
+    MODELES_COMMENTAIRE.forEach(function (modele) {
+        var bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'ost-modele';
+        bouton.textContent = modele.libelle;
+        bouton.title = 'Insère « ' + modele.texte + ' » — à compléter.';
+        bouton.addEventListener('click', function () {
+            var actuel = zoneCommentaire.value.trim();
+            zoneCommentaire.value = actuel === '' ? modele.texte : actuel + ' ' + modele.texte;
+            zoneCommentaire.dispatchEvent(new Event('input'));
+            zoneCommentaire.focus();
+        });
+        rangeeModeles.appendChild(bouton);
+    });
+    blocCom.appendChild(rangeeModeles);
+    var legendeModeles = document.createElement('p');
+    legendeModeles.className = 'ost-modeles-legende';
+    legendeModeles.textContent = "Un modèle s'ajoute au commentaire : complétez les <…> avant de copier le prompt.";
+    blocCom.appendChild(legendeModeles);
+    panneau.appendChild(blocCom);
+
+    var actions = document.createElement('div');
+    actions.className = 'ost-actions';
+    boutonCopier = document.createElement('button');
+    boutonCopier.type = 'button';
+    boutonCopier.className = 'ost-bouton ost-bouton-primaire';
+    boutonCopier.textContent = '📋 Copier le prompt';
+    boutonCopier.addEventListener('click', copier);
+    actions.appendChild(boutonCopier);
+    // Le prompt se consulte à la demande : masqué par défaut.
+    boutonPrompt = document.createElement('button');
+    boutonPrompt.type = 'button';
+    boutonPrompt.id = 'ost-bouton-prompt';
+    boutonPrompt.className = 'ost-bouton';
+    boutonPrompt.textContent = 'Afficher le prompt';
+    boutonPrompt.setAttribute('aria-expanded', 'false');
+    boutonPrompt.setAttribute('aria-controls', 'ost-prompt-genere');
+    boutonPrompt.addEventListener('click', function () {
+        montrerPrompt(zonePrompt.hidden);
+    });
+    actions.appendChild(boutonPrompt);
+    panneau.appendChild(actions);
+
+    zonePrompt = document.createElement('textarea');
+    zonePrompt.id = 'ost-prompt-genere';
+    zonePrompt.readOnly = true;
+    zonePrompt.hidden = true;
+    zonePrompt.setAttribute('aria-label', 'Prompt généré');
+    panneau.appendChild(zonePrompt);
+
+    document.body.appendChild(panneau);
+    return panneau;
+}
+
+function groupeRadio(nom, valeurs, defaut, libelleGroupe) {
+    var groupe = document.createElement('div');
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', libelleGroupe);
+    valeurs.forEach(function (valeur) {
+        // Une option s'écrit « code » ou [code, libellé] : le code part dans
+        // le prompt (lisible par script), le libellé s'affiche.
+        var cle = Array.isArray(valeur) ? valeur[0] : valeur;
+        var libelle = Array.isArray(valeur) ? valeur[1] : valeur;
+        var label = document.createElement('label');
+        label.className = 'ost-option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = nom;
+        input.value = cle;
+        input.checked = (cle === defaut);
+        input.addEventListener('change', majPrompt);
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(libelle));
+        groupe.appendChild(label);
+    });
+    return groupe;
+}
+
+function champRadio(legende, nom, valeurs, defaut) {
+    var fieldset = document.createElement('fieldset');
+    fieldset.className = 'ost-champ';
+    var legend = document.createElement('legend');
+    legend.textContent = legende;
+    fieldset.appendChild(legend);
+    fieldset.appendChild(groupeRadio(nom, valeurs, defaut, legende));
+    return fieldset;
+}
+
+// ── Menus repliables ──────────────────────────────────────────────────
+// Une seule catégorie dépliée à la fois : le panneau tient dans une
+// colonne étroite sans noyer le réglage en cours.
+function sectionAccordeon(cle, titre, nom, options, defaut) {
+    var section = document.createElement('div');
+    section.className = 'ost-section';
+    section.setAttribute('data-section', cle);
+    var entete = document.createElement('button');
+    entete.type = 'button';
+    entete.className = 'ost-entete-section';
+    entete.textContent = titre;
+    entete.setAttribute('aria-expanded', 'false');
+    entete.setAttribute('aria-controls', 'ost-section-' + cle);
+    var contenu = document.createElement('div');
+    contenu.className = 'ost-contenu-section';
+    contenu.id = 'ost-section-' + cle;
+    contenu.hidden = true;
+    contenu.appendChild(groupeRadio(nom, options, defaut, titre));
+    entete.addEventListener('click', function () { basculerSection(cle); });
+    section.appendChild(entete);
+    section.appendChild(contenu);
+    sections[cle] = {racine: section, entete: entete, contenu: contenu,
+                     nom: nom, defaut: defaut};
+    return section;
+}
+
+function basculerSection(cle) {
+    var etaitOuverte = (sectionOuverte === cle);
+    fermerSections();
+    if (etaitOuverte) return;
+    var s = sections[cle];
+    if (!s) return;
+    s.entete.setAttribute('aria-expanded', 'true');
+    s.contenu.hidden = false;
+    sectionOuverte = cle;
+}
+
+function fermerSections() {
+    Object.keys(sections).forEach(function (cle) {
+        sections[cle].entete.setAttribute('aria-expanded', 'false');
+        sections[cle].contenu.hidden = true;
+    });
+    sectionOuverte = '';
+}
+
+function remettreSection(cle) {
+    var s = sections[cle];
+    if (!s) return;
+    var defaut = document.querySelector(
+        'input[name="' + s.nom + '"][value="' + s.defaut + '"]');
+    if (defaut) defaut.checked = true;
+}
+
+function sectionVisible(cle) {
+    var s = sections[cle];
+    return !!s && !s.racine.hidden;
+}
+
+// Ce que la sélection désigne : 'exercice' (un bloc), 'champ' (ce que
+// l'élève remplit), ou rien. « Type d'exercice » ne s'affiche que sur un
+// exercice, « Type de champ » que sur un champ.
+function typeDeCible() {
+    var el = cible();
+    if (!el || !el.matches) return '';
+    var estBloc = el.matches(SELECTEUR_BLOC);
+    if (!estBloc && (el.matches(SELECTEUR_CHAMP) || (el.closest && el.closest(SELECTEUR_CHAMP)))) {
+        return 'champ';
+    }
+    return estBloc ? 'exercice' : '';
+}
+
+function majSections() {
+    var type = typeDeCible();
+    var pertinents = {exercice: (type === 'exercice'), champ: (type === 'champ')};
+    Object.keys(sections).forEach(function (cle) {
+        var visible = (cle in pertinents) ? pertinents[cle] : true;
+        sections[cle].racine.hidden = !visible;
+        if (!visible) {
+            if (sectionOuverte === cle) fermerSections();
+            remettreSection(cle);
+        }
+    });
+}
+
+function valeurRadio(nom, defaut) {
+    var el = document.querySelector('input[name="' + nom + '"]:checked');
+    return el ? el.value : (defaut || '');
+}
+
+// Phrase de consigne par option : c'est elle que l'agent lit pour savoir
+// QUOI changer. Sans elle, « visuels: comfyui » ne dit pas quelle chaîne
+// relancer ni ce qu'il faut faire quand le serveur ne répond pas.
+var CONSIGNES = {
+    type_erreur: {
+        'label à changer': "corriger le libellé seul : le comportement de l'exercice ne change pas.",
+        'inconsistance de la réponse': "corriger le fond : l'énoncé et la réponse attendue doivent dire la même chose ; vérifier que l'indice de bonne réponse désigne bien la bonne option.",
+        'exercice cassé': "rétablir le fonctionnement : reproduire d'abord (bouton inerte, validation qui ne s'ouvre pas, score faux, texte manquant), puis corriger la cause dans le générateur ou le moteur — jamais en retouchant le HTML produit à la main.",
+        'petite adaptation': "ajuster sans refonte : un mot, un chiffre, une consigne ou l'ordre des options ; le reste de l'exercice ne bouge pas.",
+        "ajout d'options": "ajouter des propositions à l'exercice visé (distracteurs, critères, actions) sans changer la bonne réponse ni le niveau ; vérifier ensuite les indices de bonne réponse et les explications."
+    },
+    preconisation: {
+        'corriger simplement': "corriger simplement : se limiter au défaut signalé — même structure, mêmes mécanismes, même nombre d'options — et n'ajouter aucun réglage de fond (ni difficulté, ni visuel, ni changement de type) tant que le défaut n'est pas réglé."
+    },
+    difficulte: {
+        'augmenter': "difficulté : durcir le quiz visé (distracteurs plus proches de la bonne réponse, moins d'indices gratuits, aucune option éliminable sans réfléchir) — mêmes notions, même niveau, même nombre de questions.",
+        'reduire': "difficulté : alléger le quiz visé (énoncés plus courts, une seule difficulté par question, distracteurs franchement faux) — mêmes notions, même nombre de questions."
+    },
+    visuels: {
+        'comfyui': "visuels : regénérer les visuels avec ComfyUI et le LoRA pixel-art-xl, par le sous-agent d'assets (généré/ puis copie vers le chemin déclaré) ; si ComfyUI ne répond pas, le dire et ne produire AUCUNE image inventée — le sprite canonique du professeur se réutilise tel quel.",
+        'pixellab': "visuels : regénérer les visuels avec l'API PixelLab (objets_pixellab.py : --verifier puis --generer) ; si l'API ne répond pas, le dire et ne rien inventer.",
+        'icone-standard': "visuels : remplacer les visuels par une icône standard (emoji ou pictogramme) et retirer les clés image/imageAlt devenues inutiles ; aucune génération d'image."
+    },
+    exercice: {
+        'saisie-libre': "type d'exercice : transformer l'exercice visé en saisie libre (étape N4 de type texte, ou justification rédigée).",
+        'liste-de-choix': "type d'exercice : transformer l'exercice visé en liste de choix (question de quiz à options, ou étape N4 de type selection).",
+        'jeu-relier': "type d'exercice : transformer l'exercice visé en jeu pour relier (n2.ateliers, type association).",
+        'jeu-graphe': "type d'exercice : transformer l'exercice visé en jeu de graphe (n4.cablage pour câbler un réseau, ou n2.ateliers de type reseau)."
+    },
+    champ: {
+        'saisie-libre': "type de champ : remplacer le champ visé par une saisie libre (champ texte ou zone de texte).",
+        'liste-de-choix': "type de champ : remplacer le champ visé par une liste de choix à réponse unique.",
+        'cases-a-cocher': "type de champ : remplacer le champ visé par des cases à cocher à réponses multiples."
+    }
+};
+
+function genererPrompt() {
+    if (!origine) return '';
+    var type = valeurRadio('ost-type');
+    var preco = valeurRadio('ost-preco');
+    if (!type || !preco) return '';
+    var difficulte = valeurRadio('ost-difficulte', 'inchangee');
+    var visuels = valeurRadio('ost-visuels', 'inchanges');
+    // Un réglage dont la section est masquée ne part pas dans le prompt :
+    // la section est d'ailleurs remise à zéro quand elle disparaît.
+    var typeExercice = sectionVisible('exercice')
+        ? valeurRadio('ost-exercice', 'inchange') : 'inchange';
+    var typeChamp = sectionVisible('champ')
+        ? valeurRadio('ost-type-champ', 'inchange') : 'inchange';
+    var id = identifiantCourant();
+    // Capturé tout de suite : cheminCourant() rappelle identifiantBloc.
+    var idInvente = identifiantInvente;
+    var onglet = ongletDe(origine);
+    var commentaire = zoneCommentaire ? zoneCommentaire.value.trim() : '';
+
+    var lignes = ["## Correctif d'activité"];
+    if (ACTIVITE_PUBLICATION) lignes.push('- activite: ' + ACTIVITE_PUBLICATION);
+    lignes.push('- portee: ' + portee + ' (' + LIBELLE_PORTEE[portee] + ')');
+    if (id) lignes.push('- identifiant: ' + id);
+    if (id && idInvente) lignes.push('- identifiant_synthetique: oui');
+    if (onglet && onglet.id) lignes.push('- onglet: ' + libelleOnglet(onglet));
+    if (cheminCourant()) lignes.push('- chemin: ' + cheminCourant());
+    lignes.push('- type_erreur: ' + type);
+    lignes.push('- preconisation: ' + preco);
+    if (difficulte !== 'inchangee') lignes.push('- difficulte: ' + difficulte);
+    if (visuels !== 'inchanges') lignes.push('- visuels: ' + visuels);
+    if (typeExercice !== 'inchange') lignes.push('- type_exercice_demande: ' + typeExercice);
+    if (typeChamp !== 'inchange') lignes.push('- type_champ_demande: ' + typeChamp);
+    if (commentaire) lignes.push('- commentaire: ' + commentaire.replace(/\n+/g, ' '));
+
+    var consignes = [];
+    // La préconisation choisie ouvre la consigne : c'est l'action
+    // demandée, les réglages de fond viennent après.
+    if (CONSIGNES.preconisation[preco]) {
+        consignes.push(CONSIGNES.preconisation[preco]);
+    }
+    if (CONSIGNES.type_erreur[type]) {
+        consignes.push(CONSIGNES.type_erreur[type]);
+    }
+    if (difficulte !== 'inchangee' && CONSIGNES.difficulte[difficulte]) {
+        consignes.push(CONSIGNES.difficulte[difficulte]);
+    }
+    if (visuels !== 'inchanges' && CONSIGNES.visuels[visuels]) {
+        consignes.push(CONSIGNES.visuels[visuels]);
+    }
+    if (typeExercice !== 'inchange' && CONSIGNES.exercice[typeExercice]) {
+        consignes.push(CONSIGNES.exercice[typeExercice]);
+    }
+    if (typeChamp !== 'inchange' && CONSIGNES.champ[typeChamp]) {
+        consignes.push(CONSIGNES.champ[typeChamp]);
+    }
+    // Le panneau sert aussi les pages qui ne viennent pas du template
+    // (jeu, TP, infographie) : elles n'ont ni configuration JSON ni
+    // moteur N1-N4. La consigne de reprise doit donc dire quoi faire
+    // dans les deux cas, sinon l'agent cherche un fichier inexistant.
+    consignes.push("ensuite : corriger à la source — la configuration JSON de l'activité puis sa régénération quand elle en a une, la page elle-même sinon — puis relancer verifier_quiz.py et verifier_parcours.py quand l'activité s'y prête, et toujours verifier_panneau_dev.py ; publier seulement si les contrôles passent.");
+    lignes.push('');
+    lignes.push("## Consigne pour l'agent");
+    consignes.forEach(function (c) { lignes.push('- ' + c); });
+    return lignes.join('\n');
+}
+
+function majPrompt() {
+    var prompt = genererPrompt();
+    if (zonePrompt) zonePrompt.value = prompt;
+    if (boutonCopier) boutonCopier.disabled = !prompt;
+}
+
+function montrerPrompt(visible) {
+    if (!zonePrompt) return;
+    zonePrompt.hidden = !visible;
+    if (boutonPrompt) {
+        boutonPrompt.setAttribute('aria-expanded', visible ? 'true' : 'false');
+        boutonPrompt.textContent = visible ? 'Masquer le prompt' : 'Afficher le prompt';
+    }
+}
+
+function copier() {
+    var prompt = genererPrompt();
+    if (!prompt) return;
+    // Le prompt est masqué par défaut ; on l'affiche au moment de la
+    // copie pour que la sélection soit possible et que l'on voie ce qui
+    // part dans le presse-papiers.
+    if (zonePrompt.hidden) montrerPrompt(true);
+    zonePrompt.value = prompt;
+    zonePrompt.focus();
+    zonePrompt.select();
+    var marquer = function () {
+        boutonCopier.textContent = '✅ Copié';
+        setTimeout(function () { boutonCopier.textContent = '📋 Copier le prompt'; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(marquer, function () {
+            try { document.execCommand('copy') && marquer(); } catch (e) {}
+        });
+    } else {
+        try { if (document.execCommand('copy')) marquer(); } catch (e) {}
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+  })();
+</script>
+<!-- OST-PANNEAU-DEV-SCRIPT:FIN -->
+</body>
+</html>

@@ -10,7 +10,7 @@ utilisées sur ordinateur, tablette et téléphone.
 ## Ce que contient le dépôt
 
 ```
-index.html                          page d'accueil : les 56 pages d'activités, sommaire par niveau
+index.html                          page d'accueil : les pages d'activités, sommaire par niveau
 chronometre.html                    Chronomètre de classe — page du professeur, compte à rebours à projeter
 4e/approfondissement-domotique/     Approfondissement 4e — 4 sujets (2 présentations + 2 ateliers chacun)
 4e/approfondissement-drone/         Approfondissement 4e — 4 sujets
@@ -20,6 +20,9 @@ chronometre.html                    Chronomètre de classe — page du professeu
 
 3e/revision-ost1/                   Réviser l'évaluation — séquences 1a et 2a
     revision-evaluation.html        fiches de synthèse, lexique, méthode et 42 questions
+3e/revision-ost3/revision-evaluation-ost3.html     Réviser l'évaluation — OST 3 (trois sujets : notice, performance, choix durable)
+4e/revision-ost1-ost2/revision-evaluation-ost1-ost2.html  Réviser l'évaluation — OST 1 et OST 2 (sujets A, B, C)
+5e/revision-sfc1/revision-evaluation-sfc1.html     Réviser l'évaluation — réseau, composants internes, périphériques
 3e/ost1a/                           OST 1 — le smartphone
     app-activite1-frise-evolution.html
     app-activite2-innovations.html
