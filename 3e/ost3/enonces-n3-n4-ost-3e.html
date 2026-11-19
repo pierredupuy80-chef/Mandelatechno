@@ -47,6 +47,21 @@ main {
     padding: 2vh 3.5vw 4vh;
 }
 .enonce { width: 100%; max-width: 1180px; --facteur: 1; }
+.enonce-titre {
+    margin: 0 0 0.85em;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid var(--bord);
+    font-size: calc(var(--facteur) * clamp(13px, min(1.3vw, 2.1vh), 23px));
+    font-weight: 400;
+    line-height: 1.32;
+    color: var(--encre-douce);
+}
+.enonce-code {
+    margin-right: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+}
 .enonce[hidden] { display: none; }
 .enonce p {
     margin: 0 0 0.62em;
@@ -80,6 +95,7 @@ main {
     main { min-height: 0; display: block; padding: 0; }
     .enonce, .enonce[hidden] { display: block !important; page-break-after: always; }
     .enonce:last-child { page-break-after: auto; }
+    .enonce-titre { font-size: 11pt; }
     .enonce p { font-size: 13pt; }
     .enonce table { font-size: 10.5pt; }
 }
@@ -88,7 +104,8 @@ main {
 <body>
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
 <main id="scene">
-        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="imprimante 3D" aria-label="Énoncé 1 sur 8">
+        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="imprimante 3D" data-competence="OST33" aria-label="Énoncé 1 sur 14">
+            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
             <p>Le club robotique du collège veut acheter une imprimante 3D pour fabriquer les pièces de ses robots. Trois exigences ont été écrites :</p>
             <p>• un volume d’impression d’au moins 20 × 20 × 20 cm ;</p>
             <p>• un niveau sonore inférieur à 50 dB, pour travailler en salle de classe ;</p>
@@ -101,19 +118,23 @@ main {
             </table>
             <p class="enonce-tache">Pour chaque imprimante, indique si elle respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quelles imprimantes sont éliminées et pourquoi.</p>
         </section>
-        <section class="enonce" data-theme="OST33" data-niveau="N4" data-objet="aspirateur robot" aria-label="Énoncé 2 sur 8" hidden>
+        <section class="enonce" data-theme="OST33" data-niveau="N4" data-objet="aspirateur robot" data-competence="OST33" aria-label="Énoncé 2 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
             <p>Le collège doit acheter un aspirateur robot pour les salles de classe.</p>
             <p class="enonce-tache">Rédige la grille d’évaluation qui servira au choix : quatre critères, l’unité de chacun et la valeur exigée. Explique ensuite, en une phrase, comment tu éliminerais un modèle qui échoue à un seul critère.</p>
         </section>
-        <section class="enonce" data-theme="OST31" data-niveau="N3" data-objet="arrosage des plantes" aria-label="Énoncé 3 sur 8" hidden>
+        <section class="enonce" data-theme="OST31" data-niveau="N3" data-objet="arrosage des plantes" data-competence="OST31" aria-label="Énoncé 3 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
             <p>Pendant les vacances d’été, les plantes de la classe doivent être arrosées sans intervention humaine et sans eau courante.</p>
             <p class="enonce-tache">Liste trois objets techniques ou systèmes qui pourraient convenir. Pour chacun, indique un interacteur extérieur et une contrainte à respecter.</p>
         </section>
-        <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="déchets de cantine" aria-label="Énoncé 4 sur 8" hidden>
+        <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="déchets de cantine" data-competence="OST31" aria-label="Énoncé 4 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
             <p>Le self du collège jette chaque jour vingt kilos d’épluchures.</p>
             <p class="enonce-tache">Conçois un objet technique qui réduit le volume de ces déchets. Donne son nom, sa fonction principale, deux interacteurs extérieurs et une contrainte de sécurité.</p>
         </section>
-        <section class="enonce" data-theme="OST32" data-niveau="N3" data-objet="perceuse sans fil" aria-label="Énoncé 5 sur 8" hidden>
+        <section class="enonce" data-theme="OST32" data-niveau="N3" data-objet="perceuse sans fil" data-competence="OST32" aria-label="Énoncé 5 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
             <p>Un particulier doit percer du béton : deux cents trous par mois, dans un appartement, avec un budget de 150 €. Percer du béton demande une puissance d’au moins 500 W.</p>
             <p>Le comparatif donne trois perceuses sans fil.</p>
             <table>
@@ -123,7 +144,8 @@ main {
             </table>
             <p class="enonce-tache">Pour chaque perceuse, indique si elle répond au besoin (avec la valeur du tableau), puis désigne celle qui convient.</p>
         </section>
-        <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="casque audio" aria-label="Énoncé 6 sur 8" hidden>
+        <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="casque audio" data-competence="OST32" aria-label="Énoncé 6 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
             <p>Un élève prend le train deux heures par jour et veut un casque à réduction de bruit : une autonomie d’au moins 20 heures, un budget de 200 €.</p>
             <p>Le comparatif donne trois modèles.</p>
             <table>
@@ -133,13 +155,51 @@ main {
             </table>
             <p class="enonce-tache">Choisis un casque et rédige un argumentaire de cinq lignes : deux valeurs du comparatif avec leur unité, un pilier du développement durable et une étape du cycle de vie.</p>
         </section>
-        <section class="enonce" data-theme="OST34" data-niveau="N3" data-objet="enceinte connectée" aria-label="Énoncé 7 sur 8" hidden>
+        <section class="enonce" data-theme="OST34" data-niveau="N3" data-objet="enceinte connectée" data-competence="OST34" aria-label="Énoncé 7 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
             <p>Un protocole mesure l’autonomie d’une enceinte connectée en trois étapes : charger à 100 %, jouer une liste de lecture à volume 50 %, chronométrer jusqu’à l’arrêt. Un élève trouve 7 h 20 ; le constructeur annonce 10 h.</p>
             <p class="enonce-tache">Cite deux raisons possibles de cet écart et, pour chacune, la grandeur à relever pour la vérifier.</p>
         </section>
-        <section class="enonce" data-theme="OST34" data-niveau="N4" data-objet="drone de loisir" aria-label="Énoncé 8 sur 8" hidden>
+        <section class="enonce" data-theme="OST34" data-niveau="N4" data-objet="drone de loisir" data-competence="OST34" aria-label="Énoncé 8 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
             <p>Un club veut mesurer la consommation d’un drone de loisir pendant un vol de dix minutes.</p>
             <p class="enonce-tache">Conçois le protocole de cette mesure : indique la grandeur mesurée et son unité, le matériel nécessaire, les trois étapes du protocole et deux grandeurs à relever en même temps.</p>
+        </section>
+        <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="lave-vaisselle du foyer" data-competence="OST32" aria-label="Énoncé 9 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
+            <p>Le lave-vaisselle du foyer du collège a douze ans. Le réparateur propose un devis de 180 € ; les pièces détachées resteront disponibles deux ans. Un appareil neuf coûte 429 €, il est classé C à l’étiquette énergie et sa durée de vie est estimée à dix ans.</p>
+            <p class="enonce-tache">Analyse les deux solutions avec le cycle de vie et les trois piliers du développement durable. Rédige un conseil argumenté de cinq lignes : deux arguments chiffrés, un pilier, une étape du cycle de vie, et la solution que tu retiens.</p>
+        </section>
+        <section class="enonce" data-theme="OST34" data-niveau="N4" data-objet="robot aspirateur" data-competence="OST34" aria-label="Énoncé 10 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
+            <p>Deux élèves mesurent l’autonomie d’un robot aspirateur. Le premier trouve 68 minutes, en laissant l’appareil aspirer en continu sur un sol dur. Le second trouve 95 minutes, sur un tapis et en mode éco. Le constructeur annonce 90 minutes.</p>
+            <p class="enonce-tache">Explique pourquoi les deux mesures diffèrent. Rédige ensuite le protocole qui permettrait de comparer l’appareil à l’annonce du constructeur : grandeur, unité, matériel, trois étapes, et les grandeurs à relever en même temps.</p>
+        </section>
+        <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="refuge de montagne" data-competence="OST31" aria-label="Énoncé 11 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
+            <p>Un refuge de montagne, hors réseau électrique, doit alimenter une lampe, une radio et un chargeur de téléphone. Le gardien ne peut pas installer de ligne électrique et veut une solution qui fonctionne toute l’année.</p>
+            <p class="enonce-tache">Liste trois solutions techniques possibles. Pour chacune, indique un interacteur extérieur, une contrainte de l’environnement et la raison pour laquelle elle pourrait échouer en hiver.</p>
+        </section>
+        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="vidéoprojecteur" data-competence="OST33" aria-label="Énoncé 12 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
+            <p>Une salle de classe sans store doit être équipée d’un vidéoprojecteur. Trois exigences ont été écrites : une luminosité d’au moins 3 000 lumens ; un contraste d’au moins 10 000 : 1 ; un prix inférieur à 600 €.</p>
+            <p>Le comparatif donne quatre modèles.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : vidéoprojecteur</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Luminosité (lumens)</th><th scope="col">Contraste</th><th scope="col">Prix (€)</th></tr></thead>
+                <tbody><tr><th scope="row">V1</th><td>3 200</td><td>12 000 : 1</td><td>549</td></tr><tr><th scope="row">V2</th><td>2 800</td><td>20 000 : 1</td><td>399</td></tr><tr><th scope="row">V3</th><td>4 000</td><td>8 000 : 1</td><td>699</td></tr><tr><th scope="row">V4</th><td>3 000</td><td>10 000 : 1</td><td>599</td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Pour chaque modèle, indique s’il respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quels modèles sont éliminés et pourquoi.</p>
+        </section>
+        <section class="enonce" data-theme="OST2" data-niveau="N3" data-objet="portail automatique" data-competence="OST2" aria-label="Énoncé 13 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST2</span> <span class="enonce-competence">Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs</span></h2>
+            <p>Le portail du collège s’ouvre pour laisser passer les voitures et se referme seul. Il détecte une présence devant lui et reçoit l’heure de fermeture du collège.</p>
+            <p class="enonce-tache">Cite quatre interacteurs extérieurs du portail, dont deux données. Explique ensuite ce qui se passe, pour un usager, si la donnée « présence » est erronée.</p>
+        </section>
+        <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="sacs de sport" data-competence="OST32" aria-label="Énoncé 14 sur 14" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
+            <p>Deux sacs de sport sont proposés au collège. Le premier est en polyester recyclé, fabriqué en Asie, vendu 25 €. Le second est en coton bio, fabriqué en France, vendu 45 €. Aucun des deux ne donne la durée de vie ni la masse de tissu.</p>
+            <p class="enonce-tache">Compare les deux sacs avec les trois piliers du développement durable et le cycle de vie. Dis quelle information manque pour trancher, et laquelle des deux fiches produit tu demanderais en premier.</p>
         </section>
 </main>
 <script>
