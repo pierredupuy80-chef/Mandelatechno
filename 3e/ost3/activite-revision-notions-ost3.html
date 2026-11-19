@@ -6151,6 +6151,39 @@
 .revision-tableau tbody tr.ligne-notice td { background: #eaf3fb; }
 .revision-tableau tbody tr.ligne-doc-technique th,
 .revision-tableau tbody tr.ligne-doc-technique td { background: #fdf3e3; }
+/* Vignette d'un onglet : un SVG inséré dans la page (aucune requête). */
+.revision-illustration { margin: var(--espacement-lg) 0 0; text-align: center; }
+.revision-illustration-cadre {
+    display: inline-block; max-width: 100%; padding: 0.6rem;
+    background: #ffffff; border: 1px solid #c9d6e4;
+    border-radius: var(--rayon-bordure, 12px);
+}
+.revision-illustration svg {
+    display: block; width: 100%; max-width: 300px; height: auto;
+}
+.revision-illustration figcaption {
+    margin-top: 0.5rem; font-size: 0.9rem; color: var(--couleur-texte-leger);
+}
+.revision-illustration-credit {
+    margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--couleur-texte-leger);
+}
+/* Encart « méthode » : un calcul officiel, mis en avant avant les exercices. */
+.revision-methode {
+    margin-top: var(--espacement-lg); padding: 0.9rem 1rem;
+    background: #f7fbff; border: 1px solid #b9d5ec;
+    border-left: 5px solid #2e75b6; border-radius: var(--rayon-bordure, 12px);
+}
+.revision-methode-titre { margin: 0 0 0.4rem; color: #1f4e79; font-size: 1.05rem; }
+.revision-methode-intro { margin: 0 0 0.6rem; font-size: 0.95rem; }
+.revision-methode-criteres { margin: 0 0 0.6rem 1.1rem; padding: 0; font-size: 0.92rem; }
+.revision-methode-criteres li { margin-bottom: 0.45rem; }
+.revision-methode-calcul {
+    margin: 0.4rem 0; padding: 0.55rem 0.7rem; background: #ffffff;
+    border: 1px dashed #2e75b6; border-radius: 8px; font-weight: 600;
+}
+.revision-methode-source {
+    margin: 0.35rem 0 0; font-size: 0.82rem; color: var(--couleur-texte-leger);
+}
 /* L'aide au défilement ne s'affiche que là où le tableau défile vraiment. */
 .revision-tableau-aide { display: none; font-size: 0.85rem; color: var(--couleur-texte-leger); margin-top: 0.25rem; }
 @media (max-width: 760px) { .revision-tableau-aide { display: block; } }
@@ -6264,6 +6297,14 @@
 :where(html[data-theme="sombre"]) .revision-tableau tbody tr.ligne-doc-technique td { background: #2a2118; }
 :where(html[data-theme="sombre"]) .revision-tableau-couleurs .couleur-notice { background: #14213a; color: #bfdbfe; border-color: #2b4570; }
 :where(html[data-theme="sombre"]) .revision-tableau-couleurs .couleur-doc-technique { background: #2a2118; color: #fcd9a4; border-color: #6b5227; }
+:where(html[data-theme="sombre"]) .revision-illustration-cadre { background: #0f172a; border-color: #2b4570; }
+:where(html[data-theme="sombre"]) .revision-methode {
+    background: #101d33; border-color: #2b4570; border-left-color: #60a5fa;
+}
+:where(html[data-theme="sombre"]) .revision-methode-titre { color: #93c5fd; }
+:where(html[data-theme="sombre"]) .revision-methode-calcul {
+    background: #0f172a; border-color: #60a5fa;
+}
 :where(html[data-theme="sombre"]) .extrait-fiche { background: #14213a; border-color: #2b4570; }
 :where(html[data-theme="sombre"]) .extrait-source { color: #93c5fd; }
 :where(html[data-theme="sombre"]) .extrait-retiens { background: #0f172a; }
@@ -6917,6 +6958,75 @@
                     <h2>Fiche OST3b — L'indice énergétique et l'indice de réparabilité</h2>
                     <p class="carte-fiche-meta">Fiche OST3b · compétences OST33</p>
                     <p>Deux indices aident à choisir un appareil performant et durable. Le questionnaire fixe les deux échelles ; l'exercice suivant relie une valeur lue sur l'étiquette à ce qu'elle indique, et à ce qu'elle ne dit pas.</p>
+                    <figure class="revision-illustration" data-ost-id="illustration-ost3b">
+                            <div class="revision-illustration-cadre"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="330" viewBox="0 0 300 330"
+     role="img" aria-labelledby="etiquette-energie-titre etiquette-energie-desc">
+  <title id="etiquette-energie-titre">Étiquette énergie d'un lave-linge</title>
+  <desc id="etiquette-energie-desc">La classe B est mise en avant à côté de
+    l'échelle de A, la plus économe, à G, la moins économe. La consommation est
+    de 58 kilowattheures pour 100 cycles.</desc>
+
+  <rect x="1.5" y="1.5" width="297" height="327" rx="14" fill="#ffffff"
+        stroke="#1f2933" stroke-width="3"/>
+
+  <text x="150" y="36" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="21" font-weight="700" letter-spacing="2" fill="#1f2933">ÉNERGIE</text>
+  <text x="150" y="58" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="11" fill="#4a5568">LAVE-LINGE · Modèle A</text>
+  <line x1="24" y1="68" x2="276" y2="68" stroke="#c9d6e4" stroke-width="1"/>
+
+  <!-- La classe de l'appareil -->
+  <rect x="24" y="80" width="62" height="66" rx="6" fill="#1f4e79"/>
+  <text x="55" y="124" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="36" font-weight="700" fill="#ffffff">B</text>
+
+  <!-- L'échelle A à G, lettres dans les barres -->
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif">
+    <rect x="96" y="80.0" width="162" height="9" rx="2" fill="#00a651"/>
+    <text x="264" y="87.4" font-size="9.5" font-weight="700" fill="#1f2933">A</text>
+    <rect x="96" y="89.7" width="162" height="9" rx="2" fill="#50b848"/>
+    <text x="264" y="97.1" font-size="9.5" font-weight="700" fill="#1f2933">B</text>
+    <rect x="96" y="99.4" width="162" height="9" rx="2" fill="#bfd730"/>
+    <text x="264" y="106.8" font-size="9.5" font-weight="700" fill="#1f2933">C</text>
+    <rect x="96" y="109.1" width="162" height="9" rx="2" fill="#fff200"/>
+    <text x="264" y="116.5" font-size="9.5" font-weight="700" fill="#1f2933">D</text>
+    <rect x="96" y="118.8" width="162" height="9" rx="2" fill="#fdb913"/>
+    <text x="264" y="126.2" font-size="9.5" font-weight="700" fill="#1f2933">E</text>
+    <rect x="96" y="128.5" width="162" height="9" rx="2" fill="#f37021"/>
+    <text x="264" y="135.9" font-size="9.5" font-weight="700" fill="#1f2933">F</text>
+    <rect x="96" y="138.2" width="162" height="9" rx="2" fill="#ed1c24"/>
+    <text x="264" y="145.6" font-size="9.5" font-weight="700" fill="#1f2933">G</text>
+  </g>
+
+  <!-- La consommation -->
+  <rect x="24" y="162" width="252" height="58" rx="6" fill="#eef3fa"
+        stroke="#b9d5ec" stroke-width="1"/>
+  <text x="150" y="188" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="20" font-weight="700" fill="#1f4e79">58 kWh</text>
+  <text x="150" y="207" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="11" fill="#4a5568">pour 100 cycles · programme Éco 40-60</text>
+
+  <!-- Le rappel de l'échelle -->
+  <line x1="24" y1="236" x2="276" y2="236" stroke="#c9d6e4" stroke-width="1"/>
+  <text x="150" y="258" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="11" fill="#4a5568">A = la plus économe · G = la moins économe</text>
+  <text x="150" y="288" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="10" fill="#5b6b7b">La classe est calculée à partir de la</text>
+  <text x="150" y="303" text-anchor="middle"
+        font-family="system-ui, -apple-system, 'Segoe UI', Arial, sans-serif"
+        font-size="10" fill="#5b6b7b">consommation mesurée en laboratoire.</text>
+</svg>
+                            </div>
+                            <figcaption>Étiquette énergie d'un lave-linge : la classe B est mise en avant, entre A (la plus économe) et G (la moins économe).</figcaption>
+                            <p class="revision-illustration-credit">Vignette redessinée pour l'activité, d'après l'étiquette énergie européenne (règlement UE 2017/1369).</p>
+                    </figure>
                     <section class="revision-tableau" data-ost-id="tableau-ost3b" aria-labelledby="tableau-ost3b-titre">
                         <h3 class="revision-tableau-titre" id="tableau-ost3b-titre">Les deux indices, et ce qu'ils ne disent pas</h3>
                         <div class="revision-tableau-defilement" role="group" tabindex="0" aria-label="Tableau récapitulatif, défilable horizontalement">
@@ -6945,6 +7055,19 @@
                         </div>
                         <p class="revision-tableau-intro">Une note élevée à un indice ne dit rien de l'autre : un appareil très économe peut être difficile à réparer. Il faut aussi vérifier la disponibilité des pièces détachées et le coût des réparations.</p>
                         <p class="revision-tableau-aide">Faites glisser le tableau horizontalement pour voir la dernière colonne.</p>
+                    </section>
+                    <section class="revision-methode" data-ost-id="methode-ost3b" aria-labelledby="methode-ost3b-titre">
+                        <h3 class="revision-methode-titre" id="methode-ost3b-titre">Comment est calculée la note sur 10 ?</h3>
+                        <p class="revision-methode-intro">La note n'est pas une impression : elle vient de cinq critères, chacun noté sur 20.</p>
+                        <ol class="revision-methode-criteres">
+                            <li><strong>La documentation</strong> — Durée de disponibilité de la documentation technique et relative aux conseils d'utilisation et d'entretien, auprès des producteurs, réparateurs, et des consommateurs.</li>
+                            <li><strong>Le démontage</strong> — Caractère démontable de l'équipement entendu comme le nombre d'étapes de démontage pour un accès unitaire aux pièces détachées, ainsi que les caractéristiques des outils nécessaires et des fixations entre pièces détachées.</li>
+                            <li><strong>Les pièces détachées</strong> — Durées de disponibilité sur le marché des pièces détachées et aux délais de livraison, auprès des producteurs, des distributeurs en pièces détachées, des réparateurs et des consommateurs.</li>
+                            <li><strong>Le prix des pièces</strong> — Rapport entre le prix de vente des pièces détachées par le constructeur ou l'importateur et le prix de vente des équipements par le constructeur ou l'importateur.</li>
+                            <li><strong>La catégorie d'équipement</strong> — Critères spécifiques à la catégorie d'équipements concernée.</li>
+                        </ol>
+                        <p class="revision-methode-calcul">On additionne les cinq notes sur 20, puis on divise le total par 10 : la note sur 10 est obtenue ainsi.</p>
+                        <p class="revision-methode-source">Source : <a href="https://entreprendre.service-public.gouv.fr/vosdroits/F38092" target="_blank" rel="noopener noreferrer">service-public.fr — l'indice de réparabilité</a></p>
                     </section>
 
                     <div class="revision-parcours" id="revision-ost3b">
