@@ -6184,6 +6184,31 @@
 .revision-methode-source {
     margin: 0.35rem 0 0; font-size: 0.82rem; color: var(--couleur-texte-leger);
 }
+/* Score de fin de questionnaire : un score global et un commentaire, aucun
+   retour par question. L'onglet de la fiche prend la couleur du résultat. */
+.bouton-onglet.partiel {
+    background-color: #f59e0b; color: #1f2933; border-color: #d97706;
+}
+.bouton-onglet.partiel::after { content: "•"; margin-left: var(--espacement-xs); }
+.bouton-onglet.echec {
+    background-color: #dc2626; color: #ffffff; border-color: #b91c1c;
+}
+.bouton-onglet.echec::after { content: "!"; margin-left: var(--espacement-xs); }
+.resultat-quiz {
+    padding: 0.8rem 1rem; background: #f8fafc;
+    border-left: 5px solid #64748b; border-radius: var(--rayon-bordure, 12px);
+}
+.resultat-quiz[data-etat="vert"] { background: #e8f5e9; border-left-color: #2e7d32; }
+.resultat-quiz[data-etat="orange"] { background: #fff4e5; border-left-color: #d97706; }
+.resultat-quiz[data-etat="rouge"] { background: #fdecea; border-left-color: #b3261e; }
+.score-quiz-valeur { display: block; font-size: 1.5rem; font-weight: 700; }
+.score-quiz-commentaire { display: block; margin-top: 0.2rem; }
+.score-quiz-appel {
+    display: block; margin-top: 0.45rem; font-weight: 700; color: #b3261e;
+}
+.bouton-recommencer {
+    background: #ffffff; color: #1f4e79; border: 2px solid #2e75b6;
+}
 /* L'aide au défilement ne s'affiche que là où le tableau défile vraiment. */
 .revision-tableau-aide { display: none; font-size: 0.85rem; color: var(--couleur-texte-leger); margin-top: 0.25rem; }
 @media (max-width: 760px) { .revision-tableau-aide { display: block; } }
@@ -6304,6 +6329,14 @@
 :where(html[data-theme="sombre"]) .revision-methode-titre { color: #93c5fd; }
 :where(html[data-theme="sombre"]) .revision-methode-calcul {
     background: #0f172a; border-color: #60a5fa;
+}
+:where(html[data-theme="sombre"]) .resultat-quiz { background: #101d33; border-left-color: #64748b; }
+:where(html[data-theme="sombre"]) .resultat-quiz[data-etat="vert"] { background: #0f2a20; border-left-color: #34d399; }
+:where(html[data-theme="sombre"]) .resultat-quiz[data-etat="orange"] { background: #2a2118; border-left-color: #fbbf24; }
+:where(html[data-theme="sombre"]) .resultat-quiz[data-etat="rouge"] { background: #2a1414; border-left-color: #f87171; }
+:where(html[data-theme="sombre"]) .score-quiz-appel { color: #fca5a5; }
+:where(html[data-theme="sombre"]) .bouton-recommencer {
+    background: #0f172a; color: #bfdbfe; border-color: #2b4570;
 }
 :where(html[data-theme="sombre"]) .extrait-fiche { background: #14213a; border-color: #2b4570; }
 :where(html[data-theme="sombre"]) .extrait-source { color: #93c5fd; }
@@ -6625,6 +6658,9 @@
                                 <button type="button" class="bouton-action succes cache" id="bouton-suite-ost2a-1" onclick="revisionAllerA('bloc-ost2a-2')">
                                     Exercice suivant ↓
                                 </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-ost2a-1" onclick="revisionRecommencerQuiz('ost2a-1')">
+                                    Recommencer de 0
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -6885,6 +6921,9 @@
                                 <p id="message-resultat-ost3a-1"></p>
                                 <button type="button" class="bouton-action succes cache" id="bouton-suite-ost3a-1" onclick="revisionAllerA('bloc-ost3a-2')">
                                     Exercice suivant ↓
+                                </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-ost3a-1" onclick="revisionRecommencerQuiz('ost3a-1')">
+                                    Recommencer de 0
                                 </button>
                             </div>
                         </form>
@@ -7193,6 +7232,9 @@
                                 <button type="button" class="bouton-action succes cache" id="bouton-suite-ost3b-1" onclick="revisionAllerA('bloc-ost3b-2')">
                                     Exercice suivant ↓
                                 </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-ost3b-1" onclick="revisionRecommencerQuiz('ost3b-1')">
+                                    Recommencer de 0
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -7423,6 +7465,9 @@
                                 <button type="button" class="bouton-action succes cache" id="bouton-suite-ost3d-1" onclick="revisionAllerA('bloc-ost3d-2')">
                                     Exercice suivant ↓
                                 </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-ost3d-1" onclick="revisionRecommencerQuiz('ost3d-1')">
+                                    Recommencer de 0
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -7642,6 +7687,9 @@
                                 <p id="message-resultat-ost3e-1"></p>
                                 <button type="button" class="bouton-action succes cache" id="bouton-suite-ost3e-1" onclick="revisionAllerA('bloc-ost3e-2')">
                                     Exercice suivant ↓
+                                </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-ost3e-1" onclick="revisionRecommencerQuiz('ost3e-1')">
+                                    Recommencer de 0
                                 </button>
                             </div>
                         </form>
@@ -7899,6 +7947,9 @@
                                 <p id="message-resultat-ost3f-1"></p>
                                 <button type="button" class="bouton-action succes cache" id="bouton-suite-ost3f-1" onclick="revisionAllerA('bloc-ost3f-2')">
                                     Exercice suivant ↓
+                                </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-ost3f-1" onclick="revisionRecommencerQuiz('ost3f-1')">
+                                    Recommencer de 0
                                 </button>
                             </div>
                         </form>
@@ -18592,7 +18643,8 @@
 // ==== SAUVEGARDE:JS-FIN ====
     </script>
 
-<script>
+<script>const SCORE_QUIZ = {"actif": true, "seuilOrange": 50, "commentaires": {"vert": ["Sans faute. Tu peux postuler pour corriger les copies.", "Zéro erreur : même le professeur vérifie deux fois avant de te croire.", "Parfait. La fiche suivante n'a qu'à bien se tenir."], "orange": ["Presque : tu n'es pas loin de la médaille.", "Bon score ({score} sur {total}), mais pas encore le sans-faute. Recommence de zéro pour la décrocher.", "Tu chauffes : encore un essai et c'est bon."], "rouge": ["Aïe : {score} sur {total}. Ce n'est pas ton jour, et ce n'est pas grave — mais on va en parler.", "Oups : {score} sur {total}. La fiche n'est pas encore dans la poche.", "Ce n'est pas gagné : {score} sur {total}. Respire, on reprend ensemble."]}, "appel": "Trop de réponses fausses : appelle le professeur. Ce n'est pas une punition, c'est pour t'aider à repartir du bon pied."};
+
 // ============================================================
 // PARCOURS-RÉVISION:JS-DEBUT
 // ============================================================
@@ -18626,6 +18678,10 @@
     // Un bloc = un questionnaire réussi (toutes les questions justes) OU tous
     // ses ateliers terminés. Le verdict est lu là où l'élève le lit.
     function blocReussi(bloc) {
+        // Mode « score » : un questionnaire n'est réussi qu'à 100 % ; le score
+        // est écrit sur le bloc par `validerQuizScore`.
+        var etatScore = bloc.getAttribute('data-score-etat');
+        if (etatScore) return etatScore === 'vert';
         var questions = bloc.querySelectorAll('.question-quiz');
         if (questions.length) {
             for (var i = 0; i < questions.length; i++) {
@@ -18840,6 +18896,152 @@
         if (typeof ONGLETS_LIBRES !== 'undefined' && !ONGLETS_LIBRES) {
             console.log('🔓 Révision : fiches déverrouillées (mode développement).');
         }
+    }
+
+    // ── Score de fin de questionnaire (revision.scoreQuiz) ───────────────────
+    // Décision du professeur : à la validation, l'élève reçoit un score et un
+    // commentaire, et AUCUNE indication des questions ratées. L'onglet de la
+    // fiche prend la couleur du résultat — vert sans faute, orange au-dessus de
+    // la moitié de bonnes réponses, rouge sinon, avec l'appel au professeur.
+    // Le bouton « Vérifier mes réponses » reste celui du gabarit.
+    var SCORE_ACTIF = (typeof SCORE_QUIZ !== 'undefined') && SCORE_QUIZ && SCORE_QUIZ.actif;
+
+    function sansBalises(texte) {
+        return String(texte).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;');
+    }
+
+    function commentaireScore(etat, score, total, niveau) {
+        var liste = ((SCORE_QUIZ.commentaires || {})[etat]) || [];
+        if (!liste.length) return '';
+        var graine = score + total;
+        for (var i = 0; i < String(niveau).length; i += 1) {
+            graine += String(niveau).charCodeAt(i);
+        }
+        var texte = String(liste[graine % liste.length]);
+        return texte.split('{score}').join(score)
+                    .split('{total}').join(total)
+                    .split('{manque}').join(total - score);
+    }
+
+    function ongletDeQuiz(niveau) {
+        var form = document.getElementById('quiz-' + niveau);
+        var section = form && form.closest ? form.closest('.contenu-onglet') : null;
+        var identifiant = section ? String(section.id).replace('contenu-', '') : '';
+        return identifiant
+            ? document.querySelector('.navigation-onglets [data-niveau="' + identifiant + '"]')
+            : null;
+    }
+
+    function appliquerEtatScore(niveau, etat) {
+        var resultat = document.getElementById('resultat-quiz-' + niveau);
+        if (resultat) {
+            resultat.classList.add('resultat-quiz');
+            resultat.setAttribute('data-etat', etat);
+        }
+        var bloc = document.getElementById('bloc-' + niveau);
+        if (bloc) {
+            bloc.setAttribute('data-score-etat', etat);
+            basculer(bloc, 'score-vert', etat === 'vert');
+            basculer(bloc, 'score-orange', etat === 'orange');
+            basculer(bloc, 'score-rouge', etat === 'rouge');
+        }
+        var bouton = ongletDeQuiz(niveau);
+        if (bouton) {
+            bouton.classList.remove('partiel', 'echec');
+            if (etat === 'vert') {
+                bouton.classList.add('valide');
+            } else {
+                bouton.classList.add(etat === 'orange' ? 'partiel' : 'echec');
+            }
+        }
+    }
+
+    function validerQuizScore(niveau) {
+        var form = document.getElementById('quiz-' + niveau);
+        if (!form) return;
+        var questions = Array.prototype.slice.call(
+            form.querySelectorAll('.question-quiz'));
+        var score = 0;
+        var repondues = 0;
+        questions.forEach(function (question, index) {
+            var choisie = question.querySelector('.option-reponse.selectionnee');
+            if (!choisie) return;
+            repondues += 1;
+            var table = (typeof bonnesReponses !== 'undefined' && bonnesReponses[niveau]) || {};
+            if (choisie.getAttribute('data-value') === table['q' + (index + 1)]) {
+                score += 1;
+            }
+        });
+        if (repondues < questions.length) {
+            window.alert('Réponds à toutes les questions avant de valider.');
+            return;
+        }
+        var total = questions.length;
+        var pourcentage = total ? Math.round(100 * score / total) : 0;
+        var seuil = (typeof SCORE_QUIZ.seuilOrange === 'number')
+            ? SCORE_QUIZ.seuilOrange : 50;
+        var etat = score === total ? 'vert' : (pourcentage > seuil ? 'orange' : 'rouge');
+        var resultat = document.getElementById('resultat-quiz-' + niveau);
+        var message = document.getElementById('message-resultat-' + niveau);
+        var suite = document.getElementById('bouton-suite-' + niveau);
+        var recommencer = document.getElementById('bouton-recommencer-' + niveau);
+        if (resultat) resultat.style.display = 'block';
+        appliquerEtatScore(niveau, etat);
+        if (message) {
+            var appel = (etat === 'rouge')
+                ? '<span class="score-quiz-appel">📣 '
+                  + sansBalises(String(SCORE_QUIZ.appel || 'Appelle le professeur.'))
+                  + '</span>'
+                : '';
+            message.innerHTML =
+                '<span class="score-quiz-valeur">' + score + ' / ' + total + '</span>'
+                + '<span class="score-quiz-commentaire">'
+                + sansBalises(commentaireScore(etat, score, total, niveau))
+                + '</span>' + appel;
+        }
+        if (suite) basculer(suite, 'cache', etat !== 'vert');
+        if (recommencer) basculer(recommencer, 'cache', etat === 'vert');
+        rafraichir();
+    }
+
+    // « Recommencer de 0 » : toutes les réponses sont effacées, l'onglet revient
+    // à son état neutre, et l'élève repart sur un questionnaire vierge.
+    window.revisionRecommencerQuiz = function (niveau) {
+        var form = document.getElementById('quiz-' + niveau);
+        if (!form) return;
+        Array.prototype.forEach.call(
+            form.querySelectorAll('.option-reponse.selectionnee'), function (option) {
+                option.classList.remove('selectionnee');
+                option.setAttribute('aria-checked', 'false');
+            });
+        Array.prototype.forEach.call(
+            form.querySelectorAll('.feedback-reponse'), function (retour) {
+                retour.className = 'feedback-reponse';
+                retour.innerHTML = '';
+            });
+        var resultat = document.getElementById('resultat-quiz-' + niveau);
+        if (resultat) {
+            resultat.style.display = 'none';
+            resultat.classList.remove('resultat-quiz');
+            resultat.removeAttribute('data-etat');
+        }
+        var bloc = document.getElementById('bloc-' + niveau);
+        if (bloc) {
+            bloc.removeAttribute('data-score-etat');
+            bloc.classList.remove('score-vert', 'score-orange', 'score-rouge');
+        }
+        var bouton = ongletDeQuiz(niveau);
+        if (bouton) bouton.classList.remove('partiel', 'echec');
+        var suite = document.getElementById('bouton-suite-' + niveau);
+        if (suite) basculer(suite, 'cache', true);
+        var recommencer = document.getElementById('bouton-recommencer-' + niveau);
+        if (recommencer) basculer(recommencer, 'cache', true);
+        rafraichir();
+    };
+
+    if (SCORE_ACTIF) {
+        window.validerQuiz = validerQuizScore;
     }
 
     if (libres) {
