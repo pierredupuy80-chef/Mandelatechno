@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Énoncés N3 et N4 — Technologie 3e</title>
+<meta name="description" content="Huit énoncés bruts, un par écran, comme un sujet d'évaluation : niveaux N3 et N4, thèmes OST33, OST31, OST32, OST34.">
+<style>
+:root {
+    --encre: #10243b;
+    --encre-douce: #3b4f66;
+    --fond: #fbfcfe;
+    --accent: #1f4e79;
+    --bord: #c9d6e4;
+    --entete-tableau: #eaf1f8;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    min-height: 100vh;
+    background: var(--fond);
+    color: var(--encre);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.visuellement-cache {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; border: 0; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.retour-accueil {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; margin: 10px 14px; padding: 8px 16px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 0.85rem; font-weight: 700;
+    text-decoration: none;
+}
+.retour-accueil:hover { background: #2a6394; }
+body.projection .retour-accueil { display: none; }
+body.projection main { min-height: 100vh; }
+body.projection .mention-rgpd { display: none; }
+main {
+    min-height: calc(100vh - 72px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2vh 3.5vw 4vh;
+}
+.enonce { width: 100%; max-width: 1180px; --facteur: 1; }
+.enonce[hidden] { display: none; }
+.enonce p {
+    margin: 0 0 0.62em;
+    font-size: calc(var(--facteur) * clamp(16px, min(2.25vw, 3.7vh), 42px));
+    line-height: 1.4;
+    hyphens: auto;
+}
+.enonce .enonce-tache {
+    margin-top: 0.9em;
+    padding: 0.5em 0.75em;
+    border-left: 5px solid var(--accent);
+    background: #eef4fa;
+    font-weight: 600;
+}
+.enonce table {
+    border-collapse: collapse;
+    margin: 0.6em 0 1em;
+    font-size: calc(var(--facteur) * clamp(12px, min(1.55vw, 2.5vh), 27px));
+    font-variant-numeric: tabular-nums;
+}
+.enonce th, .enonce td {
+    border: 1px solid var(--bord);
+    padding: 0.34em 0.65em;
+    text-align: left;
+}
+.enonce th { background: var(--entete-tableau); font-weight: 700; }
+.enonce td:not(:first-child), .enonce th:not(:first-child) { text-align: center; }
+@media print {
+    @page { size: 297mm 167mm; margin: 14mm; }
+    .retour-accueil { display: none; }
+    main { min-height: 0; display: block; padding: 0; }
+    .enonce, .enonce[hidden] { display: block !important; page-break-after: always; }
+    .enonce:last-child { page-break-after: auto; }
+    .enonce p { font-size: 13pt; }
+    .enonce table { font-size: 10.5pt; }
+}
+</style>
+</head>
+<body>
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+<main id="scene">
+        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="imprimante 3D" aria-label="Énoncé 1 sur 8">
+            <p>Le club robotique du collège veut acheter une imprimante 3D pour fabriquer les pièces de ses robots. Trois exigences ont été écrites :</p>
+            <p>• un volume d’impression d’au moins 20 × 20 × 20 cm ;</p>
+            <p>• un niveau sonore inférieur à 50 dB, pour travailler en salle de classe ;</p>
+            <p>• un prix inférieur à 400 €.</p>
+            <p>Le comparatif donne quatre modèles.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : imprimante 3D</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Volume (cm)</th><th scope="col">Niveau sonore (dB)</th><th scope="col">Prix (€)</th></tr></thead>
+                <tbody><tr><th scope="row">A1</th><td>22 × 22 × 25</td><td>48</td><td>379</td></tr><tr><th scope="row">B2</th><td>18 × 18 × 18</td><td>45</td><td>349</td></tr><tr><th scope="row">C3</th><td>25 × 21 × 21</td><td>52</td><td>459</td></tr><tr><th scope="row">D4</th><td>20 × 20 × 20</td><td>49</td><td>399</td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Pour chaque imprimante, indique si elle respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quelles imprimantes sont éliminées et pourquoi.</p>
+        </section>
+        <section class="enonce" data-theme="OST33" data-niveau="N4" data-objet="aspirateur robot" aria-label="Énoncé 2 sur 8" hidden>
+            <p>Le collège doit acheter un aspirateur robot pour les salles de classe.</p>
+            <p class="enonce-tache">Rédige la grille d’évaluation qui servira au choix : quatre critères, l’unité de chacun et la valeur exigée. Explique ensuite, en une phrase, comment tu éliminerais un modèle qui échoue à un seul critère.</p>
+        </section>
+        <section class="enonce" data-theme="OST31" data-niveau="N3" data-objet="arrosage des plantes" aria-label="Énoncé 3 sur 8" hidden>
+            <p>Pendant les vacances d’été, les plantes de la classe doivent être arrosées sans intervention humaine et sans eau courante.</p>
+            <p class="enonce-tache">Liste trois objets techniques ou systèmes qui pourraient convenir. Pour chacun, indique un interacteur extérieur et une contrainte à respecter.</p>
+        </section>
+        <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="déchets de cantine" aria-label="Énoncé 4 sur 8" hidden>
+            <p>Le self du collège jette chaque jour vingt kilos d’épluchures.</p>
+            <p class="enonce-tache">Conçois un objet technique qui réduit le volume de ces déchets. Donne son nom, sa fonction principale, deux interacteurs extérieurs et une contrainte de sécurité.</p>
+        </section>
+        <section class="enonce" data-theme="OST32" data-niveau="N3" data-objet="perceuse sans fil" aria-label="Énoncé 5 sur 8" hidden>
+            <p>Un particulier doit percer du béton : deux cents trous par mois, dans un appartement, avec un budget de 150 €. Percer du béton demande une puissance d’au moins 500 W.</p>
+            <p>Le comparatif donne trois perceuses sans fil.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : perceuse sans fil</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Puissance (W)</th><th scope="col">Autonomie (Ah)</th><th scope="col">Prix (€)</th></tr></thead>
+                <tbody><tr><th scope="row">P1</th><td>550</td><td>2,0</td><td>129</td></tr><tr><th scope="row">P2</th><td>600</td><td>2,5</td><td>179</td></tr><tr><th scope="row">P3</th><td>350</td><td>1,5</td><td>99</td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Pour chaque perceuse, indique si elle répond au besoin (avec la valeur du tableau), puis désigne celle qui convient.</p>
+        </section>
+        <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="casque audio" aria-label="Énoncé 6 sur 8" hidden>
+            <p>Un élève prend le train deux heures par jour et veut un casque à réduction de bruit : une autonomie d’au moins 20 heures, un budget de 200 €.</p>
+            <p>Le comparatif donne trois modèles.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : casque audio</caption>
+                <thead><tr><th scope="col">Casque</th><th scope="col">Autonomie (h)</th><th scope="col">Prix (€)</th><th scope="col">Masse (g)</th><th scope="col">Garantie (ans)</th></tr></thead>
+                <tbody><tr><th scope="row">C1</th><td>30</td><td>199</td><td>250</td><td>2</td></tr><tr><th scope="row">C2</th><td>20</td><td>149</td><td>180</td><td>1</td></tr><tr><th scope="row">C3</th><td>40</td><td>249</td><td>310</td><td>3</td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Choisis un casque et rédige un argumentaire de cinq lignes : deux valeurs du comparatif avec leur unité, un pilier du développement durable et une étape du cycle de vie.</p>
+        </section>
+        <section class="enonce" data-theme="OST34" data-niveau="N3" data-objet="enceinte connectée" aria-label="Énoncé 7 sur 8" hidden>
+            <p>Un protocole mesure l’autonomie d’une enceinte connectée en trois étapes : charger à 100 %, jouer une liste de lecture à volume 50 %, chronométrer jusqu’à l’arrêt. Un élève trouve 7 h 20 ; le constructeur annonce 10 h.</p>
+            <p class="enonce-tache">Cite deux raisons possibles de cet écart et, pour chacune, la grandeur à relever pour la vérifier.</p>
+        </section>
+        <section class="enonce" data-theme="OST34" data-niveau="N4" data-objet="drone de loisir" aria-label="Énoncé 8 sur 8" hidden>
+            <p>Un club veut mesurer la consommation d’un drone de loisir pendant un vol de dix minutes.</p>
+            <p class="enonce-tache">Conçois le protocole de cette mesure : indique la grandeur mesurée et son unité, le matériel nécessaire, les trois étapes du protocole et deux grandeurs à relever en même temps.</p>
+        </section>
+</main>
+<script>
+(function () {
+    var diapos = Array.prototype.slice.call(document.querySelectorAll('.enonce'));
+    if (!diapos.length) { return; }
+    var courant = 0;
+
+    // Chaque énoncé est ajusté à la hauteur disponible : la taille de départ est
+    // généreuse (lisible du fond de la classe), puis on réduit si besoin.
+    function ajuster(diapo) {
+        var scene = document.getElementById('scene');
+        var enTete = document.querySelector('.retour-accueil');
+        var style = window.getComputedStyle(scene);
+        // La hauteur utile se mesure sur la FENÊTRE : la scène grandit avec son
+        // contenu, elle ne peut donc pas servir de référence.
+        var dispo = window.innerHeight
+            - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - 6;
+        if (enTete && enTete.offsetParent !== null) {
+            var styleTete = window.getComputedStyle(enTete);
+            dispo -= enTete.getBoundingClientRect().height
+                + parseFloat(styleTete.marginTop) + parseFloat(styleTete.marginBottom);
+        }
+        diapo.style.setProperty('--facteur', '1');
+        var facteur = 1;
+        var tours = 0;
+        while (diapo.getBoundingClientRect().height > dispo && facteur > 0.55 && tours < 40) {
+            facteur -= 0.03;
+            diapo.style.setProperty('--facteur', facteur.toFixed(2));
+            tours += 1;
+        }
+    }
+
+    function afficher(rang) {
+        courant = Math.max(0, Math.min(diapos.length - 1, rang));
+        diapos.forEach(function (diapo, index) {
+            if (index === courant) {
+                diapo.hidden = false;
+                diapo.removeAttribute('hidden');
+            } else {
+                diapo.hidden = true;
+            }
+        });
+        document.body.setAttribute('data-ecran', String(courant + 1));
+        ajuster(diapos[courant]);
+    }
+
+    if (/[?&]proj=1/.test(window.location.search)) {
+        document.body.classList.add('projection');
+    }
+
+    window.addEventListener('resize', function () { ajuster(diapos[courant]); });
+
+    var demande = /[?&]c=(\d+)/.exec(window.location.search) ||
+                  /#(\d+)$/.exec(window.location.hash);
+    if (demande) { afficher(parseInt(demande[1], 10) - 1); }
+    afficher(courant);
+
+    document.addEventListener('keydown', function (evenement) {
+        var touche = evenement.key;
+        if (touche === 'ArrowRight' || touche === 'ArrowDown' ||
+            touche === ' ' || touche === 'PageDown' || touche === 'Enter') {
+            afficher(courant + 1);
+            evenement.preventDefault();
+        } else if (touche === 'ArrowLeft' || touche === 'ArrowUp' ||
+                   touche === 'PageUp' || touche === 'Backspace') {
+            afficher(courant - 1);
+            evenement.preventDefault();
+        } else if (touche === 'Home') {
+            afficher(0);
+            evenement.preventDefault();
+        } else if (touche === 'End') {
+            afficher(diapos.length - 1);
+            evenement.preventDefault();
+        }
+    });
+
+    // Au clic : le tiers gauche recule, le reste avance (tablette, téléviseur).
+    document.addEventListener('click', function (evenement) {
+        if (evenement.target.closest && evenement.target.closest('a')) { return; }
+        var largeur = window.innerWidth || 1;
+        afficher(courant + (evenement.clientX < largeur * 0.18 ? -1 : 1));
+    });
+})();
+</script>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+</body>
+</html>

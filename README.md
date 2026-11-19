@@ -31,6 +31,7 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/ost3/app-comparateur-ost.html    OST 3 — comparateur trottinette / VAE
 3e/ost3/activite-ost-ideal.html     OST 3 — la trottinette dans son environnement (jeu bonus)
 3e/ost3/activite-revision-notions-ost3.html       OST 3 — révision interactive des notions (six fiches, un onglet par fiche)
+3e/ost3/enonces-n3-n4-ost-3e.html                 OST 3 — diaporama d'énoncés N3/N4 (huit énoncés bruts, objets neufs, un par écran)
 3e/ost3/activite-revision-n3-n4-ost-3e-orale.html OST 3 — diaporama tableau blanc « réviser N3-N4 » (quatre gestes, fiche papier recto-verso)
 3e/ost3/documentation-revision-n3-n4-ost-3e.html  OST 3 — la documentation de ce diaporama (viewer PDF, cible de l'unique QR code)
 3e/ost3/documentation-revision-n3-n4-ost-3e/*.pdf|jpg  OST 3 — les 3 fiches en PDF et les images de leurs pages
