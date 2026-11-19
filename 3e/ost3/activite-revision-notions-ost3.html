@@ -6128,6 +6128,29 @@
 .revision-tableau tbody tr:last-child th,
 .revision-tableau tbody tr:last-child td { border-bottom: 0; }
 .revision-tableau-intro { font-size: 0.92rem; color: var(--couleur-texte-leger); margin-top: var(--espacement-sm); }
+/* Code couleur d'un tableau à deux documents (notice / documentation
+   technique) : la couleur souligne, le libellé et la légende expliquent. */
+.revision-tableau-couleurs {
+    list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem;
+    margin: 0.35rem 0 0.55rem; padding: 0; font-size: 0.85rem;
+}
+.revision-tableau-couleurs li {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.18rem 0.6rem; border-radius: 999px; font-weight: 600;
+    border: 1px solid transparent;
+}
+.revision-tableau-couleurs li::before {
+    content: ""; width: 0.7rem; height: 0.7rem; border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+.revision-tableau-couleurs .couleur-notice { background: #eaf3fb; color: #1f4e79; border-color: #b9d5ec; }
+.revision-tableau-couleurs .couleur-notice::before { background: #9ec5e8; }
+.revision-tableau-couleurs .couleur-doc-technique { background: #fdf3e3; color: #8a4b04; border-color: #eccf9d; }
+.revision-tableau-couleurs .couleur-doc-technique::before { background: #e9b46a; }
+.revision-tableau tbody tr.ligne-notice th,
+.revision-tableau tbody tr.ligne-notice td { background: #eaf3fb; }
+.revision-tableau tbody tr.ligne-doc-technique th,
+.revision-tableau tbody tr.ligne-doc-technique td { background: #fdf3e3; }
 /* L'aide au défilement ne s'affiche que là où le tableau défile vraiment. */
 .revision-tableau-aide { display: none; font-size: 0.85rem; color: var(--couleur-texte-leger); margin-top: 0.25rem; }
 @media (max-width: 760px) { .revision-tableau-aide { display: block; } }
@@ -6235,6 +6258,12 @@
 :where(html[data-theme="sombre"]) .revision-tableau tbody th { background: #0f172a; }
 :where(html[data-theme="sombre"]) .revision-tableau th,
 :where(html[data-theme="sombre"]) .revision-tableau td { border-color: #263449; }
+:where(html[data-theme="sombre"]) .revision-tableau tbody tr.ligne-notice th,
+:where(html[data-theme="sombre"]) .revision-tableau tbody tr.ligne-notice td { background: #17294a; }
+:where(html[data-theme="sombre"]) .revision-tableau tbody tr.ligne-doc-technique th,
+:where(html[data-theme="sombre"]) .revision-tableau tbody tr.ligne-doc-technique td { background: #2a2118; }
+:where(html[data-theme="sombre"]) .revision-tableau-couleurs .couleur-notice { background: #14213a; color: #bfdbfe; border-color: #2b4570; }
+:where(html[data-theme="sombre"]) .revision-tableau-couleurs .couleur-doc-technique { background: #2a2118; color: #fcd9a4; border-color: #6b5227; }
 :where(html[data-theme="sombre"]) .extrait-fiche { background: #14213a; border-color: #2b4570; }
 :where(html[data-theme="sombre"]) .extrait-source { color: #93c5fd; }
 :where(html[data-theme="sombre"]) .extrait-retiens { background: #0f172a; }
@@ -6625,6 +6654,10 @@
                     <p>La notice et la documentation technique permettent d'utiliser un objet en toute sécurité. Le questionnaire vérifie les parties du document et leur rôle ; l'exercice suivant demande dans quelle partie chercher une information, comme la question N3 des sujets.</p>
                     <section class="revision-tableau" data-ost-id="tableau-ost3a" aria-labelledby="tableau-ost3a-titre">
                         <h3 class="revision-tableau-titre" id="tableau-ost3a-titre">Les parties du document et leur rôle</h3>
+                        <ul class="revision-tableau-couleurs" aria-label="Légende des couleurs du tableau">
+                            <li class="couleur-notice">Notice</li>
+                            <li class="couleur-doc-technique">Documentation technique (en plus)</li>
+                        </ul>
                         <div class="revision-tableau-defilement" role="group" tabindex="0" aria-label="Tableau récapitulatif, défilable horizontalement">
                             <table aria-labelledby="tableau-ost3a-titre">
                                 <caption class="revision-tableau-legende">Les parties du document et leur rôle</caption>
@@ -6635,61 +6668,62 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Couverture</th>
                                     <td>Le produit, le nom du fabricant et le numéro de modèle.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Table des matières</th>
                                     <td>Les parties du document et leur numéro de page.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Introduction</th>
                                     <td>Le produit et ses principales fonctionnalités.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Instructions d'installation</th>
                                     <td>Comment installer le produit, étape par étape.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Mode d'emploi</th>
                                     <td>Comment utiliser le produit et chaque fonction.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Consignes de sécurité</th>
                                     <td>Les précautions à prendre pour utiliser le produit en toute sécurité.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Dépannage</th>
                                     <td>Les solutions aux problèmes courants.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Garantie</th>
                                     <td>Les conditions de la garantie.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-notice">
                                     <th scope="row">Informations de contact</th>
                                     <td>Comment joindre le fabricant ou le service après-vente.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-doc-technique">
                                     <th scope="row">Guide de maintenance (documentation technique)</th>
                                     <td>L'entretien : nettoyage, lubrification, remplacement des pièces.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-doc-technique">
                                     <th scope="row">Guide de réparation (documentation technique)</th>
                                     <td>Réparer le produit en cas de panne.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-doc-technique">
                                     <th scope="row">Schémas et diagrammes (documentation technique)</th>
                                     <td>Le fonctionnement du produit illustré.</td>
                                 </tr>
-                                <tr>
+                                <tr class="ligne-doc-technique">
                                     <th scope="row">Glossaire et index (documentation technique)</th>
                                     <td>Les termes techniques définis, et l'accès rapide à une information.</td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <p class="revision-tableau-intro">Les neuf premières parties composent la notice ; la documentation technique reprend ces parties et ajoute les quatre dernières.</p>
                         <p class="revision-tableau-aide">Faites glisser le tableau horizontalement pour voir la dernière colonne.</p>
                     </section>
 
