@@ -18643,7 +18643,7 @@
 // ==== SAUVEGARDE:JS-FIN ====
     </script>
 
-<script>const SCORE_QUIZ = {"actif": true, "seuilOrange": 50, "commentaires": {"vert": ["Sans faute. Tu peux postuler pour corriger les copies.", "Zéro erreur : même le professeur vérifie deux fois avant de te croire.", "Parfait. La fiche suivante n'a qu'à bien se tenir."], "orange": ["Presque : tu n'es pas loin de la médaille.", "Bon score ({score} sur {total}), mais pas encore le sans-faute. Recommence de zéro pour la décrocher.", "Tu chauffes : encore un essai et c'est bon."], "rouge": ["Aïe : {score} sur {total}. Ce n'est pas ton jour, et ce n'est pas grave — mais on va en parler.", "Oups : {score} sur {total}. La fiche n'est pas encore dans la poche.", "Ce n'est pas gagné : {score} sur {total}. Respire, on reprend ensemble."]}, "appel": "Trop de réponses fausses : appelle le professeur. Ce n'est pas une punition, c'est pour t'aider à repartir du bon pied."};
+<script>const SCORE_QUIZ = {"actif": true, "seuilOrange": 50, "commentaires": {"vert": ["Sans faute. Tu peux postuler pour corriger les copies.", "Zéro erreur : même le professeur vérifie deux fois avant de te croire.", "Parfait. La fiche suivante n'a qu'à bien se tenir."], "orange": ["Presque : tu n'es pas loin de la médaille.", "Bon score ({score} sur {total}), mais pas encore le sans-faute. Recommence de zéro pour la décrocher.", "Tu chauffes : encore un essai et c'est bon."], "rouge": ["Aïe : {score} sur {total}. Ce n'est pas ton jour, et ce n'est pas grave — mais on va en parler.", "Oups : {score} sur {total}. La fiche n'est pas encore dans la poche.", "Ce n'est pas gagné : {score} sur {total}. Respire, on reprend ensemble."]}, "appel": "Trop de réponses fausses : appelle le professeur. Ce n'est pas une punition, c'est pour t'aider à repartir du bon pied.", "bip": {"actif": true, "volume": 0.9}};
 
 // ============================================================
 // PARCOURS-RÉVISION:JS-DEBUT
@@ -18957,6 +18957,44 @@
         }
     }
 
+    // Bip d'alerte : deux notes courtes et fortes, synthétisées par la page
+    // (aucun fichier son à héberger). Il ne part que sur un score ROUGE, pour
+    // que le professeur repère de loin un élève en difficulté. Le son démarre
+    // au clic sur « Vérifier mes réponses » : les navigateurs exigent un geste.
+    var contexteBip = null;
+
+    function bipErreur() {
+        var reglage = (SCORE_QUIZ && SCORE_QUIZ.bip) || {};
+        if (!reglage.actif) return false;
+        var AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return false;
+        try {
+            if (!contexteBip) contexteBip = new AudioCtx();
+            if (contexteBip.state === 'suspended') contexteBip.resume();
+            var volume = Math.min(1, Math.max(0.05, Number(reglage.volume) || 0.9));
+            var depart = contexteBip.currentTime + 0.02;
+            [[0, 1000], [0.26, 700]].forEach(function (pas) {
+                var oscillateur = contexteBip.createOscillator();
+                var gain = contexteBip.createGain();
+                oscillateur.type = 'square';
+                oscillateur.frequency.value = pas[1];
+                var debut = depart + pas[0];
+                gain.gain.setValueAtTime(0, debut);
+                gain.gain.linearRampToValueAtTime(volume * 0.45, debut + 0.012);
+                gain.gain.setValueAtTime(volume * 0.45, debut + 0.17);
+                gain.gain.linearRampToValueAtTime(0, debut + 0.21);
+                oscillateur.connect(gain);
+                gain.connect(contexteBip.destination);
+                oscillateur.start(debut);
+                oscillateur.stop(debut + 0.22);
+            });
+            window.__bips = (window.__bips || 0) + 1;
+            return true;
+        } catch (erreur) {
+            return false;
+        }
+    }
+
     function validerQuizScore(niveau) {
         var form = document.getElementById('quiz-' + niveau);
         if (!form) return;
@@ -18988,6 +19026,7 @@
         var recommencer = document.getElementById('bouton-recommencer-' + niveau);
         if (resultat) resultat.style.display = 'block';
         appliquerEtatScore(niveau, etat);
+        if (etat === 'rouge') bipErreur();
         if (message) {
             var appel = (etat === 'rouge')
                 ? '<span class="score-quiz-appel">📣 '
