@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Énoncés N3 et N4 — Technologie 3e</title>
+<meta name="description" content="Huit énoncés bruts, un par écran, comme un sujet d'évaluation : niveaux N3 et N4, thèmes OST22, OST33, OST21, OST31.">
+<style>
+:root {
+    --encre: #10243b;
+    --encre-douce: #3b4f66;
+    --fond: #fbfcfe;
+    --accent: #1f4e79;
+    --bord: #c9d6e4;
+    --entete-tableau: #eaf1f8;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    min-height: 100vh;
+    background: var(--fond);
+    color: var(--encre);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.visuellement-cache {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; border: 0; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.retour-accueil {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; margin: 10px 14px; padding: 8px 16px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 0.85rem; font-weight: 700;
+    text-decoration: none;
+}
+.retour-accueil:hover { background: #2a6394; }
+body.projection .retour-accueil { display: none; }
+body.projection main { min-height: 100vh; }
+body.projection .mention-rgpd { display: none; }
+main {
+    min-height: calc(100vh - 72px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2vh 3.5vw 4vh;
+}
+.enonce { width: 100%; max-width: 1180px; --facteur: 1; }
+.enonce-titre {
+    margin: 0 0 0.85em;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid var(--bord);
+    font-size: calc(var(--facteur) * clamp(13px, min(1.3vw, 2.1vh), 23px));
+    font-weight: 400;
+    line-height: 1.32;
+    color: var(--encre-douce);
+}
+.enonce-code {
+    margin-right: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+}
+.enonce[hidden] { display: none; }
+.enonce p {
+    margin: 0 0 0.62em;
+    font-size: calc(var(--facteur) * clamp(16px, min(2.25vw, 3.7vh), 42px));
+    line-height: 1.4;
+    hyphens: auto;
+}
+.enonce .enonce-tache {
+    margin-top: 0.9em;
+    padding: 0.5em 0.75em;
+    border-left: 5px solid var(--accent);
+    background: #eef4fa;
+    font-weight: 600;
+}
+.enonce table {
+    border-collapse: collapse;
+    margin: 0.6em 0 1em;
+    font-size: calc(var(--facteur) * clamp(12px, min(1.55vw, 2.5vh), 27px));
+    font-variant-numeric: tabular-nums;
+}
+.enonce th, .enonce td {
+    border: 1px solid var(--bord);
+    padding: 0.34em 0.65em;
+    text-align: left;
+}
+.enonce th { background: var(--entete-tableau); font-weight: 700; }
+.enonce td:not(:first-child), .enonce th:not(:first-child) { text-align: center; }
+@media print {
+    @page { size: 297mm 167mm; margin: 14mm; }
+    .retour-accueil { display: none; }
+    main { min-height: 0; display: block; padding: 0; }
+    .enonce, .enonce[hidden] { display: block !important; page-break-after: always; }
+    .enonce:last-child { page-break-after: auto; }
+    .enonce-titre { font-size: 11pt; }
+    .enonce p { font-size: 13pt; }
+    .enonce table { font-size: 10.5pt; }
+}
+</style>
+</head>
+<body>
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+<main id="scene">
+        <section class="enonce" data-theme="OST22" data-niveau="N3" data-objet="purificateur d'air" data-competence="OST22" aria-label="Énoncé 1 sur 4">
+            <h2 class="enonce-titre"><span class="enonce-code">OST22</span> <span class="enonce-competence">Repérer et expliquer les contraintes, exigences prises en compte (sécurité, incidences environnementales, formes et fonctions, ergonomie, qualité, fiabilité) pour répondre aux attentes des utilisateurs</span></h2>
+            <p>Le foyer du collège veut installer un purificateur d'air dans la salle de repos. Le cahier des charges fixe cinq exigences :</p>
+            <p>• un débit d'air d'au moins 300 m³/h ;</p>
+            <p>• un niveau sonore inférieur à 45 dB ;</p>
+            <p>• un prix inférieur ou égal à 250 € ;</p>
+            <p>• une garantie d'au moins 2 ans ;</p>
+            <p>• une certification de conformité obligatoire.</p>
+            <p>Le comparatif donne trois modèles.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : purificateur d'air</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Débit (m³/h)</th><th scope="col">Bruit (dB)</th><th scope="col">Prix (€)</th><th scope="col">Garantie (ans)</th><th scope="col">Certification</th></tr></thead>
+                <tbody><tr><th scope="row">Airly</th><td>320</td><td>42</td><td>229</td><td>2</td><td>oui</td></tr><tr><th scope="row">Purio</th><td>280</td><td>38</td><td>199</td><td>3</td><td>oui</td></tr><tr><th scope="row">Ventis</th><td>350</td><td>44</td><td>289</td><td>2</td><td>non</td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Écris, pour chaque modèle, l'exigence qui n'est pas respectée (ou « aucune »), puis le modèle retenu, puis ce que garantissent ces contraintes pour l'utilisateur.</p>
+        </section>
+        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="bouilloire électrique" data-competence="OST33" aria-label="Énoncé 2 sur 4" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Choisir les appareils de mesure à utiliser pour mesurer une performance d'un OST à partir d'un protocole donné</span></h2>
+            <p>Au laboratoire, on mesure les performances d'une bouilloire électrique pour vérifier son annonce « chauffe 1 L d'eau en 3 minutes ». Instruments disponibles : a. thermomètre · b. balance · c. wattmètre · d. chronomètre · e. multimètre.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : bouilloire électrique</caption>
+                <thead><tr><th scope="col">Grandeur à mesurer</th><th scope="col">Instrument (lettre)</th></tr></thead>
+                <tbody><tr><th scope="row">la masse d'eau versée</th><td></td></tr><tr><th scope="row">la température de l'eau</th><td></td></tr><tr><th scope="row">la puissance électrique</th><td></td></tr><tr><th scope="row">la durée de chauffe</th><td></td></tr><tr><th scope="row">la tension du secteur</th><td></td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Écris la lettre de l'instrument qui correspond à chaque grandeur, puis explique pourquoi il faut mesurer la masse d'eau avant de comparer deux bouilloires et quelle grandeur manque pour vérifier l'annonce (avec son unité).</p>
+        </section>
+        <section class="enonce" data-theme="OST21" data-niveau="N4" data-objet="thermostat connecté" data-competence="OST21" aria-label="Énoncé 3 sur 4" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST21</span> <span class="enonce-competence">Décrire l'expérience de l'utilisateur (ressenti et facilité d'usage) d'un OST en partant du langage naturel (texte, croquis) pour aboutir aux schémas, graphiques, algorithmes</span></h2>
+            <p>Un thermostat connecté règle le chauffage d'une maison : il affiche la température, se programme depuis un téléphone et baisse le chauffage quand une fenêtre s'ouvre.</p>
+            <p class="enonce-tache">Décris l'expérience de l'utilisateur en trois moments : avant de partir, en rentrant, la nuit. Puis, pour chaque besoin, choisis le mode de représentation et justifie : expliquer à un camarade à quoi ressemble l'écran d'accueil ; décrire ce que fait le thermostat quand une fenêtre s'ouvre ; montrer l'évolution de la température sur 24 heures.</p>
+        </section>
+        <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="poêle à granulés" data-competence="OST31" aria-label="Énoncé 4 sur 4" hidden>
+            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Identifier les caractéristiques à prendre en compte dans le choix d'un OST en vue de répondre à un besoin</span></h2>
+            <p>Le CDI doit choisir un poêle à granulés. Le comparatif ne donne que quatre critères.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : poêle à granulés</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Puissance (kW)</th><th scope="col">Prix (€)</th><th scope="col">Surface (m²)</th><th scope="col">Autonomie (h)</th></tr></thead>
+                <tbody><tr><th scope="row">A</th><td>6</td><td>2 400</td><td>60</td><td>20</td></tr><tr><th scope="row">B</th><td>9</td><td>3 200</td><td>90</td><td>30</td></tr><tr><th scope="row">C</th><td>7</td><td>2 800</td><td>75</td><td>24</td></tr></tbody>
+            </table>
+            <p class="enonce-tache">Propose deux critères qui manquent (nom, unité, ce qu'ils apportent), puis choisis un modèle pour une salle de 80 m² en justifiant avec deux valeurs du tableau.</p>
+        </section>
+</main>
+<script>
+(function () {
+    var diapos = Array.prototype.slice.call(document.querySelectorAll('.enonce'));
+    if (!diapos.length) { return; }
+    var courant = 0;
+
+    // Chaque énoncé est ajusté à la hauteur disponible : la taille de départ est
+    // généreuse (lisible du fond de la classe), puis on réduit si besoin.
+    function ajuster(diapo) {
+        var scene = document.getElementById('scene');
+        var enTete = document.querySelector('.retour-accueil');
+        var style = window.getComputedStyle(scene);
+        // La hauteur utile se mesure sur la FENÊTRE : la scène grandit avec son
+        // contenu, elle ne peut donc pas servir de référence.
+        var dispo = window.innerHeight
+            - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - 6;
+        if (enTete && enTete.offsetParent !== null) {
+            var styleTete = window.getComputedStyle(enTete);
+            dispo -= enTete.getBoundingClientRect().height
+                + parseFloat(styleTete.marginTop) + parseFloat(styleTete.marginBottom);
+        }
+        diapo.style.setProperty('--facteur', '1');
+        var facteur = 1;
+        var tours = 0;
+        while (diapo.getBoundingClientRect().height > dispo && facteur > 0.55 && tours < 40) {
+            facteur -= 0.03;
+            diapo.style.setProperty('--facteur', facteur.toFixed(2));
+            tours += 1;
+        }
+    }
+
+    function afficher(rang) {
+        courant = Math.max(0, Math.min(diapos.length - 1, rang));
+        diapos.forEach(function (diapo, index) {
+            if (index === courant) {
+                diapo.hidden = false;
+                diapo.removeAttribute('hidden');
+            } else {
+                diapo.hidden = true;
+            }
+        });
+        document.body.setAttribute('data-ecran', String(courant + 1));
+        ajuster(diapos[courant]);
+    }
+
+    if (/[?&]proj=1/.test(window.location.search)) {
+        document.body.classList.add('projection');
+    }
+
+    window.addEventListener('resize', function () { ajuster(diapos[courant]); });
+
+    var demande = /[?&]c=(\d+)/.exec(window.location.search) ||
+                  /#(\d+)$/.exec(window.location.hash);
+    if (demande) { afficher(parseInt(demande[1], 10) - 1); }
+    afficher(courant);
+
+    document.addEventListener('keydown', function (evenement) {
+        var touche = evenement.key;
+        if (touche === 'ArrowRight' || touche === 'ArrowDown' ||
+            touche === ' ' || touche === 'PageDown' || touche === 'Enter') {
+            afficher(courant + 1);
+            evenement.preventDefault();
+        } else if (touche === 'ArrowLeft' || touche === 'ArrowUp' ||
+                   touche === 'PageUp' || touche === 'Backspace') {
+            afficher(courant - 1);
+            evenement.preventDefault();
+        } else if (touche === 'Home') {
+            afficher(0);
+            evenement.preventDefault();
+        } else if (touche === 'End') {
+            afficher(diapos.length - 1);
+            evenement.preventDefault();
+        }
+    });
+
+    // Au clic : le tiers gauche recule, le reste avance (tablette, téléviseur).
+    document.addEventListener('click', function (evenement) {
+        if (evenement.target.closest && evenement.target.closest('a')) { return; }
+        var largeur = window.innerWidth || 1;
+        afficher(courant + (evenement.clientX < largeur * 0.18 ? -1 : 1));
+    });
+})();
+</script>
+
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+</body>
+</html>
