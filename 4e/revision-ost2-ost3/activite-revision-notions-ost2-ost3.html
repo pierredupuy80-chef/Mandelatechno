@@ -19020,6 +19020,11 @@
                 // les variantes et les étapes ouvertes se recalculent à partir
                 // de ce qui vient d'être relu.
                 if (typeof n4RafraichirEtapesN4 === 'function') n4RafraichirEtapesN4();
+                // Un mode de rendu peut avoir son propre état à recalculer après
+                // la reprise (le parcours de révision et son score de quiz).
+                if (typeof window.revisionRestaurerScores === 'function') {
+                    window.revisionRestaurerScores();
+                }
             } catch (erreur) {
                 annoncer('La reprise a rencontré un problème (' +
                     (erreur && erreur.message ? erreur.message : 'erreur inattendue') +
@@ -19077,6 +19082,9 @@
                 var defaut = validerDonnees(donnees);
                 if (defaut) throw new Error(defaut);
                 appliquerEtat(donnees);
+                if (typeof window.revisionRestaurerScores === 'function') {
+                    window.revisionRestaurerScores();
+                }
                 return true;
             }
         };
@@ -19527,8 +19535,73 @@
         rafraichir();
     };
 
+    // Reprise de progression : l'import replace les réponses cochées et le
+    // message du score, mais pas la couleur de l'onglet ni l'état du bloc. On
+    // recalcule donc le score à partir des réponses (sans rejouer le bip) dès
+    // qu'un message de résultat est rempli.
+    function restaurerScores() {
+        var seuil = (typeof SCORE_QUIZ.seuilOrange === 'number')
+            ? SCORE_QUIZ.seuilOrange : 50;
+        Array.prototype.forEach.call(
+            document.querySelectorAll('.bloc-revision'), function (bloc) {
+                var cle = bloc.getAttribute('data-exercice');
+                if (!cle) return;
+                var form = document.getElementById('quiz-' + cle);
+                if (!form) return;
+                var resultat = document.getElementById('resultat-quiz-' + cle);
+                if (!resultat || resultat.style.display === 'none') return;
+                var message = document.getElementById('message-resultat-' + cle);
+                // Le score relu est celui qui a été exporté : il fait foi, même
+                // si l'élève a coché autre chose après avoir validé.
+                var lu = message
+                    ? /(\d+)\s*\/\s*(\d+)/.exec(String(message.textContent || ''))
+                    : null;
+                var score;
+                var total;
+                if (lu) {
+                    score = parseInt(lu[1], 10);
+                    total = parseInt(lu[2], 10);
+                } else {
+                    var questions = form.querySelectorAll('.question-quiz');
+                    score = 0;
+                    total = questions.length;
+                    Array.prototype.forEach.call(questions, function (question, index) {
+                        var choisie = question.querySelector('.option-reponse.selectionnee');
+                        if (!choisie) return;
+                        var table = (typeof bonnesReponses !== 'undefined'
+                                     && bonnesReponses[cle]) || {};
+                        if (choisie.getAttribute('data-value') === table['q' + (index + 1)]) {
+                            score += 1;
+                        }
+                    });
+                }
+                if (!total) return;
+                var pourcentage = Math.round(100 * score / total);
+                var etat = score === total ? 'vert'
+                    : (pourcentage > seuil ? 'orange' : 'rouge');
+                appliquerEtatScore(cle, etat);
+                var recommencer = document.getElementById('bouton-recommencer-' + cle);
+                if (recommencer) basculer(recommencer, 'cache', etat === 'vert');
+                var suite = document.getElementById('bouton-suite-' + cle);
+                if (suite) basculer(suite, 'cache', etat !== 'vert');
+            });
+        rafraichir();
+    }
+
+    if (SCORE_ACTIF && typeof MutationObserver !== 'undefined') {
+        var observateurScore = new MutationObserver(function () {
+            restaurerScores();
+        });
+        Array.prototype.forEach.call(
+            document.querySelectorAll('[id^="message-resultat-"]'),
+            function (zone) {
+                observateurScore.observe(zone, { childList: true, subtree: true });
+            });
+    }
+
     if (SCORE_ACTIF) {
         window.validerQuiz = validerQuizScore;
+        window.revisionRestaurerScores = restaurerScores;
     }
 
     if (libres) {
