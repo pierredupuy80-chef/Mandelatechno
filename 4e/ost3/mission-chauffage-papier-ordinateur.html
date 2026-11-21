@@ -6091,34 +6091,23 @@
 .bloc-revision[hidden] { display: none !important; }
 .revision-navigation-exercices { display:flex; align-items:center; gap:1rem; margin:1rem 0; }
 .revision-navigation-exercices[hidden] { display:none !important; }
-/* Notices et questions côte à côte : l'élève garde le tableau sous les yeux. */
-.bloc-revision-duo { display:grid; gap:1rem; align-items:start; }
-.bloc-revision-duo > .bloc-revision-travail { min-width:0; }
-.bloc-revision-duo .revision-tableau { margin-top:0; }
-.bloc-revision-duo .revision-tableau-defilement { max-width:100%; }
-@media (min-width: 1024px) {
-  .bloc-revision-duo { grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr); }
-  .bloc-revision-duo > .bloc-revision-notices {
-    position:sticky; top:0.5rem; max-height:calc(100vh - 1rem); overflow:auto;
-  }
-  /* Le tableau se replie dans sa colonne : plus de défilement horizontal
-     caché, l'élève voit les quatre colonnes en même temps que les questions. */
-  .bloc-revision-duo .revision-tableau table { min-width:0; font-size:0.82rem; }
-  .bloc-revision-duo .revision-tableau th,
-  .bloc-revision-duo .revision-tableau td {
-    padding:0.3rem 0.35rem; white-space:normal; overflow-wrap:break-word; hyphens:auto;
-  }
-  .bloc-revision-duo .revision-tableau-aide { display:none; }
+/* Notices au-dessus des questions : l'élève lit d'abord, répond ensuite. */
+.bloc-revision-duo { display:block; }
+.bloc-revision-duo .revision-tableau { margin-top:0; margin-bottom:1rem; }
+/* Une seule question affichée à la fois. */
+.atelier-question[hidden] { display:none !important; }
+.atelier-carte button[hidden] { display:none !important; }
+.atelier-pagination { display:flex; align-items:center; gap:1rem; margin:.6rem 0 .4rem; }
+.atelier-pagination button {
+    width:2.75rem; height:2.75rem; border-radius:50%; cursor:pointer;
+    border:2px solid var(--couleur-info); background:transparent;
+    font:inherit; font-size:1.1rem; color:var(--couleur-texte);
 }
-.revision-navigation-exercices button, .revision-support summary { min-width:44px; min-height:44px; cursor:pointer; }
-.revision-support summary { padding:0.6rem; }
-.bloc-revision { scroll-margin-top:1rem; }
-.revision-pied[hidden] { display:none !important; }
-.revision-lecture-notions { border:2px solid var(--couleur-info); border-radius:var(--rayon-bordure); padding:1rem; margin-top:1rem; }
-.revision-lecture-notions p { margin:0 0 0.75rem; }
-.revision-lecture-notions .bouton-action { min-height:44px; }
+.atelier-pagination button:disabled { opacity:.45; cursor:default; }
+.atelier-pagination [role="status"] { font-weight:600; }
 /* Aide contextuelle : un point d'interrogation cliquable, puis une modale. */
 .revision-aide-bouton {
+    display:inline-flex; align-items:center; justify-content:center;
     width:2.75rem; height:2.75rem; min-width:2.75rem; border-radius:50%;
     border:2px solid var(--couleur-info); background:transparent; cursor:pointer;
     font:inherit; font-size:1rem; font-weight:700; color:var(--couleur-texte);
@@ -6931,14 +6920,6 @@
                     <article class="atelier-carte" data-ost-bloc="n2-atelier-mission-2a" data-type="commandes" data-atelier="mission-2a" data-obligatoire="1" aria-labelledby="atelier-titre-mission-2a">
                         <h3 id="atelier-titre-mission-2a">🕵️ 2A — Qui suis-je ?</h3>
                         <p class="atelier-consigne">La réserve du laboratoire mesure 8 m² et le chauffage devrait être piloté par TAPO. Quatre appareils se présentent à tour de rôle : lisez le portrait, puis cliquez sur l’appareil du tableau qui correspond. Attention : un seul des cinq appareils ne sera jamais désigné. Repérez-le, puis justifiez vos décisions en 2A sur la feuille.</p>
-                        <h4>Les cinq appareils du tableau</h4>
-                        <ul class="atelier-legende">
-                            <li><strong>🔆 D1 · halogène</strong> : </li>
-                            <li><strong>🌬️ D2 · soufflant</strong> : </li>
-                            <li><strong>🔥 D3 · gaz</strong> : </li>
-                            <li><strong>🛢️ D4 · pétrole</strong> : </li>
-                            <li><strong>🪵 D5 · granulés</strong> : </li>
-                        </ul>
                         <div class="atelier-missions">
                             <div class="atelier-question" data-mission="1" data-bonne="d3" data-explication="La notice du radiant à gaz réserve son usage au plein air : il ne peut pas être retenu pour le laboratoire fermé.">
                                 <p class="atelier-enonce"><strong>Mission 1 :</strong> « Je brûle du gaz et ma notice m’interdit tout local fermé. Qui suis-je ? »</p>
@@ -17928,6 +17909,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
 <script>const SCORE_QUIZ = {"seuilOrange": 100, "commentaires": {"vert": ["Score complet."], "orange": ["Appelez le professeur."], "rouge": ["Appelez le professeur."]}, "appel": "Appelez le professeur avant de reprendre vos choix.", "bip": {"actif": false}, "actif": true};
 const NAVIGATION_EXERCICES = true;
 const LECTURE_NOTIONS = true;
+const UNE_QUESTION_ALA_FOIS = true;
 const AIDE_TERME = {"terme": "TAPO", "titre": "Qu’est-ce que le système TAPO ?", "texte": "TAPO est le système domotique du laboratoire : des appareils connectés, ici l’éclairage, que l’on pilote et programme depuis une application sur un téléphone ou une tablette. L’application TAPO permet aussi de suivre en direct la puissance consommée et la température mesurée. Dans cette séquence, on se demande si ce système peut également piloter un chauffage. Attention : le dossier ne contient aucune notice du système TAPO du laboratoire. La compatibilité avec un chauffage n’est donc pas démontrée, et aucun branchement n’est autorisé."};
 const SCORE_ATELIERS = true;
 
@@ -18675,9 +18657,55 @@ const SCORE_ATELIERS = true;
             });
     }
 
+    // ── Une seule question à la fois (revision.uneQuestionAlaFois) ──────────
+    // Les ateliers à choix posent plusieurs questions. On n'en affiche qu'une,
+    // avec un compteur et deux flèches ; le bouton de vérification n'apparaît
+    // qu'à la dernière, une fois le parcours des questions effectué.
+    function paginerQuestions() {
+        if (typeof UNE_QUESTION_ALA_FOIS === 'undefined' || !UNE_QUESTION_ALA_FOIS) return;
+        Array.prototype.forEach.call(
+            document.querySelectorAll('.atelier-carte'), function (carte) {
+                if (['commandes', 'environnement'].indexOf(carte.dataset.type) < 0) return;
+                if (carte.hasAttribute('data-question-une')) return;
+                var questions = carte.querySelectorAll('.atelier-question');
+                if (questions.length < 2) return;
+                carte.setAttribute('data-question-une', '1');
+                var rang = 0;
+                var barre = document.createElement('nav');
+                barre.className = 'atelier-pagination';
+                barre.setAttribute('aria-label', 'Navigation entre les questions');
+                barre.innerHTML = '<button type="button" data-q="-1" aria-label="Question précédente">←</button> '
+                    + '<span role="status" aria-live="polite"></span> '
+                    + '<button type="button" data-q="1" aria-label="Question suivante">→</button>';
+                questions[0].parentNode.insertBefore(barre, questions[0]);
+                var verifier = carte.querySelector('button[onclick*="atelierVerifier"]');
+                function afficher() {
+                    Array.prototype.forEach.call(questions, function (q, i) {
+                        if (q.hidden !== (i !== rang)) q.hidden = i !== rang;
+                    });
+                    barre.querySelector('[data-q="-1"]').disabled = rang === 0;
+                    barre.querySelector('[data-q="1"]').disabled = rang === questions.length - 1;
+                    ecrire(barre.querySelector('span'), 'Question ' + (rang + 1) + ' / ' + questions.length);
+                    if (verifier) {
+                        var dernier = rang === questions.length - 1;
+                        if (verifier.hidden === dernier) verifier.hidden = !dernier;
+                    }
+                }
+                barre.addEventListener('click', function (event) {
+                    var bouton = event.target.closest('button[data-q]');
+                    if (!bouton || bouton.disabled) return;
+                    rang = Math.max(0, Math.min(questions.length - 1, rang + Number(bouton.dataset.q)));
+                    afficher();
+                    questions[rang].scrollIntoView({behavior: 'instant', block: 'start'});
+                });
+                afficher();
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', rafraichir);
     rafraichir();
     installerAideTerme();
+    paginerQuestions();
 })();
 // PARCOURS-RÉVISION:JS-FIN
 
