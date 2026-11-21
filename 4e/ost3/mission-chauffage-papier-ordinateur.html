@@ -17837,12 +17837,11 @@ const SCORE_ATELIERS = true;
     var succesConnus = new WeakMap();
 
     function defilerDiscret(cible) {
-        // Ne déplace ni le focus ni une page dont le lecteur est encore au-dessus.
         if (!cible || !cible.closest('.contenu-onglet.actif')) return;
-        var haut = cible.getBoundingClientRect().top;
-        if (haut < 0 || haut > window.innerHeight * 0.75) {
-            cible.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
+        function aligner() { cible.scrollIntoView({behavior: 'instant', block: 'start'}); }
+        aligner();
+        // Réaligner après le repli des ressources et le remplacement du bloc.
+        requestAnimationFrame(aligner);
     }
 
     function afficherNavigation(section, blocs) {
@@ -17861,22 +17860,30 @@ const SCORE_ATELIERS = true;
                 panneau.insertBefore(parcours.previousElementSibling, resume.nextSibling);
             }
             parcours.parentNode.insertBefore(panneau, parcours);
-            nav = document.createElement('nav');
-            nav.className = 'revision-navigation-exercices';
-            nav.setAttribute('aria-label', 'Navigation entre les exercices');
-            nav.innerHTML = '<button type="button" data-direction="-1" aria-label="Exercice précédent">←</button> <span role="status" aria-live="polite"></span> <button type="button" data-direction="1" aria-label="Exercice suivant">→</button>';
-            parcours.parentNode.insertBefore(nav, parcours);
-            nav.addEventListener('click', function (event) {
-                var bouton = event.target.closest('button[data-direction]');
-                if (!bouton || bouton.disabled) return;
-                var cible = (positions.get(section) || 0) + Number(bouton.dataset.direction);
-                if (cible < 0 || cible > blocs.length ||
-                    (cible < blocs.length && blocs[cible].classList.contains('verrouille')) ||
-                    (cible === blocs.length && !blocs.every(blocReussi))) return;
-                positions.set(section, cible);
-                rafraichir();
-                defilerDiscret(blocs[cible] || section.querySelector('.revision-pied'));
+            function creerNavigation() {
+                var barre = document.createElement('nav');
+                barre.className = 'revision-navigation-exercices';
+                barre.setAttribute('aria-label', 'Navigation entre les exercices');
+                barre.innerHTML = '<button type="button" data-direction="-1" aria-label="Exercice précédent">←</button> <span role="status" aria-live="off"></span> <button type="button" data-direction="1" aria-label="Exercice suivant">→</button>';
+                barre.addEventListener('click', function (event) {
+                    var bouton = event.target.closest('button[data-direction]');
+                    if (!bouton || bouton.disabled) return;
+                    var cible = (positions.get(section) || 0) + Number(bouton.dataset.direction);
+                    if (cible < 0 || cible > blocs.length ||
+                        (cible < blocs.length && blocs[cible].classList.contains('verrouille')) ||
+                        (cible === blocs.length && !blocs.every(blocReussi))) return;
+                    positions.set(section, cible);
+                    rafraichir();
+                    defilerDiscret(blocs[cible] || section.querySelector('.revision-pied'));
+                });
+                return barre;
+            }
+            blocs.forEach(function (bloc) {
+                bloc.insertBefore(creerNavigation(), bloc.firstChild);
+                bloc.appendChild(creerNavigation());
             });
+            var pied = section.querySelector('.revision-pied');
+            pied.insertBefore(creerNavigation(), pied.firstChild);
         }
         var position = positions.get(section);
         var changement = false;
@@ -17902,10 +17909,12 @@ const SCORE_ATELIERS = true;
             support.open = position === 0;
             support.dataset.position = String(position);
         }
-        nav.querySelector('[data-direction="-1"]').disabled = position === 0;
-        nav.querySelector('[data-direction="1"]').disabled = position >= blocs.length ||
-            (position + 1 < blocs.length ? blocs[position + 1].classList.contains('verrouille') : !blocs.every(blocReussi));
-        ecrire(nav.querySelector('span'), position === blocs.length ? 'Bilan de la fiche' : 'Exercice ' + (position + 1) + ' / ' + blocs.length);
+        section.querySelectorAll('.revision-navigation-exercices').forEach(function (barre) {
+            barre.querySelector('[data-direction="-1"]').disabled = position === 0;
+            barre.querySelector('[data-direction="1"]').disabled = position >= blocs.length ||
+                (position + 1 < blocs.length ? blocs[position + 1].classList.contains('verrouille') : !blocs.every(blocReussi));
+            ecrire(barre.querySelector('span'), position === blocs.length ? 'Bilan de la fiche' : 'Exercice ' + (position + 1) + ' / ' + blocs.length);
+        });
         if (changement) defilerDiscret(blocs[position] || section.querySelector('.revision-pied'));
     }
 
@@ -18011,7 +18020,7 @@ const SCORE_ATELIERS = true;
                 basculer(bloc, 'valide', reussi);
                 totalBlocs += 1;
                 if (reussi) { blocsReussis += 1; reussis += 1; }
-                ouverts = ouverts && reussi;
+                ouverts = navigation ? ouverts && reussi : reussi;
             });
             afficherNavigation(section, blocs);
             var ficheFinie = blocs.length > 0 && ouverts;
