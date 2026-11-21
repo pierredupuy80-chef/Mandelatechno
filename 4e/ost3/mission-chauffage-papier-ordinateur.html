@@ -6093,6 +6093,10 @@
 .revision-navigation-exercices button, .revision-support summary { min-width:44px; min-height:44px; cursor:pointer; }
 .revision-support summary { padding:0.6rem; }
 .bloc-revision { scroll-margin-top:1rem; }
+.revision-pied[hidden] { display:none !important; }
+.revision-lecture-notions { border:2px solid var(--couleur-info); border-radius:var(--rayon-bordure); padding:1rem; margin-top:1rem; }
+.revision-lecture-notions p { margin:0 0 0.75rem; }
+.revision-lecture-notions .bouton-action { min-height:44px; }
 
 /* PARCOURS-RÉVISION:CSS-DEBUT
    Extraits de fiche et blocs « extrait puis exercice » du mode révision.
@@ -17814,6 +17818,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
 
 <script>const SCORE_QUIZ = {"seuilOrange": 100, "commentaires": {"vert": ["Score complet."], "orange": ["Appelez le professeur."], "rouge": ["Appelez le professeur."]}, "appel": "Appelez le professeur avant de reprendre vos choix.", "bip": {"actif": false}, "actif": true};
 const NAVIGATION_EXERCICES = true;
+const LECTURE_NOTIONS = true;
 const SCORE_ATELIERS = true;
 
 // ============================================================
@@ -17835,6 +17840,7 @@ const SCORE_ATELIERS = true;
     var navigation = typeof NAVIGATION_EXERCICES !== 'undefined' && NAVIGATION_EXERCICES;
     var positions = new WeakMap();
     var succesConnus = new WeakMap();
+    var lectureNotions = typeof LECTURE_NOTIONS !== 'undefined' && LECTURE_NOTIONS;
 
     function defilerDiscret(cible) {
         if (!cible || !cible.closest('.contenu-onglet.actif')) return;
@@ -17859,7 +17865,27 @@ const SCORE_ATELIERS = true;
             while (parcours.previousElementSibling && parcours.previousElementSibling.tagName !== 'H2') {
                 panneau.insertBefore(parcours.previousElementSibling, resume.nextSibling);
             }
+            // Le vocabulaire des fiches se lit avec les notions, pas après les
+            // exercices : il rejoint le panneau repliable pour éviter un long
+            // défilement et reste accessible à tout moment.
+            var glossaire = section.querySelector('.glossaire');
+            if (glossaire) panneau.appendChild(glossaire);
             parcours.parentNode.insertBefore(panneau, parcours);
+            if (lectureNotions) {
+                var porte = document.createElement('div');
+                porte.className = 'revision-lecture-notions';
+                porte.setAttribute('data-ost-id', 'lecture-notions');
+                porte.innerHTML = '<p>Lisez les notions et le tableau de cette fiche. Le premier exercice s’ouvrira après votre confirmation.</p>'
+                    + '<button type="button" class="bouton-action">J’ai lu les notions à retenir</button>';
+                parcours.parentNode.insertBefore(porte, parcours);
+                porte.querySelector('button').addEventListener('click', function () {
+                    section.dataset.lectureNotions = '1';
+                    var ressources = section.querySelector('.revision-support');
+                    if (ressources) ressources.open = false;
+                    rafraichir();
+                    defilerDiscret(blocs[positions.get(section)] || section.querySelector('.revision-pied'));
+                });
+            }
             function creerNavigation() {
                 var barre = document.createElement('nav');
                 barre.className = 'revision-navigation-exercices';
@@ -17900,10 +17926,17 @@ const SCORE_ATELIERS = true;
             position = blocs.findIndex(function (bloc) { return !blocReussi(bloc); });
         }
         positions.set(section, position);
+        var porte = section.querySelector('.revision-lecture-notions');
+        var notionsLues = !porte || section.dataset.lectureNotions === '1' ||
+            blocs.some(function (bloc) { return blocReussi(bloc); });
+        if (porte && porte.hidden !== notionsLues) porte.hidden = notionsLues;
         blocs.forEach(function (bloc, i) {
-            if (bloc.hidden !== (i !== position)) bloc.hidden = i !== position;
+            var masque = !notionsLues || i !== position;
+            if (bloc.hidden !== masque) bloc.hidden = masque;
             succesConnus.set(bloc, blocReussi(bloc));
         });
+        var piedLecture = section.querySelector('.revision-pied');
+        if (piedLecture && piedLecture.hidden !== !notionsLues) piedLecture.hidden = !notionsLues;
         var support = section.querySelector('.revision-support');
         if (support.dataset.position !== String(position)) {
             support.open = position === 0;
@@ -17915,7 +17948,7 @@ const SCORE_ATELIERS = true;
                 (position + 1 < blocs.length ? blocs[position + 1].classList.contains('verrouille') : !blocs.every(blocReussi));
             ecrire(barre.querySelector('span'), position === blocs.length ? 'Bilan de la fiche' : 'Exercice ' + (position + 1) + ' / ' + blocs.length);
         });
-        if (changement) defilerDiscret(blocs[position] || section.querySelector('.revision-pied'));
+        if (changement && notionsLues) defilerDiscret(blocs[position] || section.querySelector('.revision-pied'));
     }
 
 
