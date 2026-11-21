@@ -6307,8 +6307,54 @@
     display: inline-block; margin-top: var(--espacement-sm); font-weight: 700;
     color: var(--couleur-primaire);
 }
+/* Défi du bonus : un questionnaire de challenge, détaché de la liste des
+   cartes par un filet. Le cadre reprend celui d'un exercice, avec un fond
+   distinct pour qu'on voie qu'il ne fait pas partie des fiches. */
+.defi-revision {
+    margin-top: var(--espacement-xl, 2rem); padding-top: var(--espacement-lg);
+    border-top: 2px dashed #cbd5e1;
+}
+.defi-entete {
+    padding: var(--espacement-md) var(--espacement-lg);
+    background: #fff7ed; border: 1px solid #fed7aa; border-left: 6px solid #c2410c;
+    border-radius: var(--rayon-bordure); margin-bottom: var(--espacement-md);
+}
+.defi-titre { font-size: 1.15rem; color: #9a3412; margin-bottom: var(--espacement-xs); }
+.defi-duree {
+    display: inline-block; margin-left: var(--espacement-sm); padding: 0.1rem 0.5rem;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
+    background: #ffffff; color: #9a3412; border: 1px solid #fed7aa;
+    border-radius: 999px; vertical-align: middle;
+}
+.defi-intro { font-size: 0.97rem; margin-bottom: var(--espacement-xs); }
+.defi-origine {
+    /* Bleu foncé : le bleu d'information du gabarit tombe à 3,5:1 sur le fond
+       crème de l'encart, sous le seuil WCAG AA de 4,5:1. */
+    font-size: 0.8rem; font-weight: 600; color: #1d4ed8;
+    margin-bottom: var(--espacement-xs);
+}
+.defi-consigne { font-size: 0.95rem; font-weight: 600; color: var(--couleur-texte); }
+.defi-revision .quiz-conteneur {
+    background: white; border: 1px solid #e2e8f0; border-left: 6px solid #c2410c;
+    border-radius: var(--rayon-bordure); padding: var(--espacement-md) var(--espacement-lg);
+}
+.defi-revision .question-quiz { margin-bottom: var(--espacement-md); }
 :where(html[data-theme="sombre"]) .carte-bonus { background: #111c2f; border-color: #263449; }
 :where(html[data-theme="sombre"]) .carte-bonus h3 { color: #c4b5fd; }
+:where(html[data-theme="sombre"]) .defi-revision { border-top-color: #334155; }
+:where(html[data-theme="sombre"]) .defi-entete {
+    background: #2a1d12; border-color: #7c3a1d; border-left-color: #fb923c;
+}
+:where(html[data-theme="sombre"]) .defi-titre { color: #fdba74; }
+:where(html[data-theme="sombre"]) .defi-duree {
+    background: #101d33; color: #fdba74; border-color: #7c3a1d;
+}
+/* Le bleu de l'origine est foncé en clair, clair en sombre : c'est le seul
+   couple qui tienne le seuil WCAG AA sur les deux fonds de l'encart. */
+:where(html[data-theme="sombre"]) .defi-origine { color: #93c5fd; }
+:where(html[data-theme="sombre"]) .defi-revision .quiz-conteneur {
+    background: #111c2f; border-color: #263449; border-left-color: #fb923c;
+}
 .revision-fin-compteur { font-weight: 600; margin: var(--espacement-sm) 0; }
 
 :where(html[data-theme="sombre"]) .revision-tableau table { background: #111c2f; border-color: #2b4570; }
@@ -8018,7 +8064,7 @@
                         <h3>🎉 Révision terminée : les six fiches sont revues</h3>
                         <p>Tu as relu les six fiches et réussi les douze exercices, dont les questions N1 et N2 des sujets d'évaluation. Avant l'épreuve, retiens ce qui sert partout : un OST a quatre familles d'interacteurs extérieurs (usagers, données, autres objets, environnement) ; la notice informe et la documentation technique répare ; un indice énergétique se lit de A à G et un indice de réparabilité de 1 à 10 ; le développement durable a trois piliers et un OST cinq étapes de cycle de vie ; quatre critères permettent de choisir un objet durable ; une performance se mesure avec une grandeur et une unité.</p>
                         <p class="revision-fin-compteur" data-role="revision-fin-compteur"></p>
-                        <p class="revision-fin-bonus">🎁 Des activités bonus t'attendent dans l'onglet « Bonus », en haut de la page.</p>
+                        <p class="revision-fin-bonus">🎁 Des activités bonus et un défi de 20 questions t'attendent dans l'onglet « Bonus », en haut de la page.</p>
                         <button type="button" class="bouton-action" onclick="recommencerActivite()">Refaire la révision ↻</button>
                     </div>
                 </div>
@@ -8027,7 +8073,7 @@
                 <div class="carte-contenu">
                     <h2>Activités bonus — pour aller plus loin</h2>
                     <p>Quatre activités de la séquence pour prolonger la révision, à faire seul ou en classe. Elles ne sont pas notées : ce sont des entraînements.</p>
-                    <ul class="bonus-revision">
+                    <ul class="bonus-revision" id="bonus-liens" data-ost-id="bonus-liens">
                         <li class="carte-bonus-item">
                             <a class="carte-bonus" href="https://pierredupuy80-chef.github.io/Mandelatechno/3e/ost3/app-comparateur-ost.html" target="_blank" rel="noopener noreferrer" data-ost-id="bonus-lien-1">
                                 <h3>Le comparateur de trottinettes et de VAE</h3>
@@ -8061,6 +8107,367 @@
                             </a>
                         </li>
                     </ul>
+                    <section id="defi-defi" class="defi-revision" data-defi="defi" data-exercice="defi" aria-labelledby="titre-defi-defi">
+                        <div class="defi-entete">
+                            <h3 class="defi-titre" id="titre-defi-defi">🎯 Le défi des 20 questions<span class="defi-duree">⏱ 30 minutes</span></h3>
+                        <p class="defi-intro">Vingt questions plus difficiles que celles des fiches. Trottinette, VAE, indices, cycle de vie : il faut souvent calculer, arbitrer, et parfois se méfier de la réponse évidente.</p>
+                        <p class="defi-origine">D'après les six fiches de la révision (OST2a, OST3a, OST3b, OST3d, OST3e, OST3f) et la séquence « L'OST idéal : trottinette et VAE ».</p>
+                        <p class="defi-consigne">Une seule proposition est juste par question. Tu peux valider, puis recommencer autant de fois que tu veux : ce défi n'est pas noté, il sert à savoir où tu en es.</p>
+                        </div>
+                        <form id="quiz-defi" class="quiz-conteneur">
+                        <div class="question-quiz" data-ost-id="defi-quiz-q1" data-question="1" data-explication="L'application est un autre objet technique : c'est avec elle que la trottinette échange des données. Le client, lui, est l'usager ; la rue est un élément de l'environnement.">
+                            <p>1. Sur une trottinette en libre-service, l'application qui déverrouille l'engin est…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q1-opta">
+                                    <span>un usager</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q1-optb">
+                                    <span>un autre objet technique avec lequel la trottinette communique</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q1-optc">
+                                    <span>un élément de l'environnement</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q2" data-question="2" data-explication="La position et le niveau de batterie sont des informations que l'engin produit et transmet : ce sont des données. La rue, elle, est un élément de l'environnement ; le client est l'usager.">
+                            <p>2. Une trottinette en libre-service transmet au loueur sa position et le niveau de sa batterie. Pour le loueur, ces informations sont…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q2-opta">
+                                    <span>des éléments de l'environnement</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q2-optb">
+                                    <span>des données produites par l'engin et transmises à distance</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q2-optc">
+                                    <span>des usagers</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q3" data-question="3" data-explication="Le capteur (capteur de couple) acquiert l'information : l'effort sur les pédales. La batterie fournit l'énergie, le pneu transmet le mouvement au sol.">
+                            <p>3. Sur un VAE, l'assistance se déclenche selon l'effort du cycliste. Quel élément fournit cette information ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q3-opta">
+                                    <span>le capteur qui mesure l'effort sur les pédales</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q3-optb">
+                                    <span>la batterie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q3-optc">
+                                    <span>le pneu arrière</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q4" data-question="4" data-explication="L'index localise une information dans le document ; le glossaire définit les termes techniques. Ce sont deux éléments propres à la documentation technique.">
+                            <p>4. Dans une documentation technique de quarante pages, tu cherches la page qui parle du « capteur de couple ». Tu utilises…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q4-opta">
+                                    <span>la couverture et la garantie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q4-optb">
+                                    <span>l'index, et le glossaire pour la définition du terme</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q4-optc">
+                                    <span>la partie « installation »</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q5" data-question="5" data-explication="Chaque document a son lecteur : la notice informe l'utilisateur (installation, mode d'emploi, consignes de sécurité, dépannage courant) ; la documentation technique outille le réparateur (maintenance, réparation, schémas, glossaire, index). Une information de réparation n'a pas sa place dans la notice.">
+                            <p>5. Le guide de réparation d'un VAE indique un couple de serrage de 40 N·m pour les vis du moteur ; la notice n'en parle pas. Pourquoi ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q5-opta">
+                                    <span>Parce que la notice s'adresse à l'utilisateur (usage et sécurité), la documentation technique au réparateur.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q5-optb">
+                                    <span>Parce que la notice est incomplète : elle devrait tout dire.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q5-optc">
+                                    <span>Parce qu'un couple de serrage est une information commerciale.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q6" data-question="6" data-explication="L'indice énergétique ne renseigne que sur la consommation : A+ est plus économe que C. La réparabilité et la durée de vie relèvent d'autres indices ou critères.">
+                            <p>6. Un appareil passe de la classe A+ à la classe C entre deux modèles. Que peut-on affirmer ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q6-opta">
+                                    <span>Le modèle C consomme plus d'énergie que le modèle A+.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q6-optb">
+                                    <span>Le modèle C est plus facile à réparer.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q6-optc">
+                                    <span>Le modèle C durera moins longtemps.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q7" data-question="7" data-explication="500 Wh = 0,5 kWh. Coût = 0,5 × 0,25 = 0,125 €, soit environ 12,5 centimes la recharge complète.">
+                            <p>7. Une batterie de VAE de 500 Wh se recharge à 0,25 € le kWh. Combien coûte une recharge complète ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q7-opta">
+                                    <span>environ 0,125 € (12,5 centimes)</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q7-optb">
+                                    <span>environ 1,25 €</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q7-optc">
+                                    <span>environ 12,50 €</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q8" data-question="8" data-explication="Les deux indices disent deux choses différentes : l'énergie consommée d'un côté, la facilité de réparation de l'autre. C'est au besoin de l'utilisateur de trancher.">
+                            <p>8. Le VAE A a un meilleur indice énergétique que le B, mais un indice de réparabilité plus faible. Que peut-on conclure ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q8-opta">
+                                    <span>A est meilleur dans tous les domaines.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q8-optb">
+                                    <span>Il faut arbitrer entre consommation et réparabilité : aucun n'est meilleur partout.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q8-optc">
+                                    <span>Les deux indices mesurent la même chose, donc ils se contredisent.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q9" data-question="9" data-explication="La valorisation, c'est utiliser l'OST pour une autre utilité. Le recyclage consiste à réutiliser ses matériaux pour fabriquer un nouvel objet.">
+                            <p>9. Une batterie usagée de VAE sert à stocker l'électricité de panneaux solaires dans un garage. C'est…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q9-opta">
+                                    <span>du recyclage</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q9-optb">
+                                    <span>de la valorisation</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q9-optc">
+                                    <span>de la destruction</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q10" data-question="10" data-explication="Le cycle de vie suit : extraction des matières premières (Chili), fabrication (Chine), transport vers l'utilisateur (France), puis utilisation et fin de vie.">
+                            <p>10. Le lithium est extrait au Chili, les cellules sont assemblées en Chine, puis le VAE est transporté par bateau jusqu'en France. Ces étapes du cycle de vie sont…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q10-opta">
+                                    <span>extraction, fabrication, transport</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q10-optb">
+                                    <span>fabrication, transport, fin de vie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q10-optc">
+                                    <span>utilisation, transport, extraction</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q11" data-question="11" data-explication="Réduire les déchets et préserver les ressources relèvent du pilier environnemental. L'économique crée de la richesse, le social lutte contre les inégalités.">
+                            <p>11. Une marque s'engage à n'utiliser que des batteries recyclables et à réduire ses emballages. C'est le pilier…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q11-opta">
+                                    <span>économique</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q11-optb">
+                                    <span>social</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q11-optc">
+                                    <span>environnemental</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q12" data-question="12" data-explication="Le développement durable s'appuie sur trois piliers (économique, social, environnemental) et sur les cinq étapes du cycle de vie : un seul chiffre ne suffit pas à justifier un choix.">
+                            <p>12. Pour comparer deux VAE du point de vue du développement durable, il faut…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q12-opta">
+                                    <span>comparer les trois piliers sur tout le cycle de vie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q12-optb">
+                                    <span>ne regarder que le prix d'achat</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q12-optc">
+                                    <span>ne regarder que la couleur du cadre</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q13" data-question="13" data-explication="La durabilité, c'est la longue durée de vie et la possibilité de réparer : pièces détachées, réparabilité, évolutivité. La qualité porte sur la robustesse et la fiabilité.">
+                            <p>13. « Pièces détachées disponibles pendant dix ans » relève du critère…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q13-opta">
+                                    <span>de la durabilité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q13-optb">
+                                    <span>de la qualité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q13-optc">
+                                    <span>de la recyclabilité</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q14" data-question="14" data-explication="Pouvoir changer la batterie facilement prolonge la vie de l'objet : c'est un point de vigilance de la durabilité, qui lutte contre l'obsolescence.">
+                            <p>14. « Batterie remplaçable sans outil » relève surtout…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q14-opta">
+                                    <span>de l'efficacité énergétique</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q14-optb">
+                                    <span>de la durabilité (réparabilité et évolutivité)</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q14-optc">
+                                    <span>de la recyclabilité</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q15" data-question="15" data-explication="Autonomie = énergie ÷ consommation = 360 ÷ 15 = 24 km. Multiplier les deux valeurs (5 400) ou diviser dans l'autre sens ne donne pas une distance.">
+                            <p>15. La batterie d'un VAE stocke 360 Wh et le moteur consomme 15 Wh par kilomètre. Quelle est son autonomie théorique ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q15-opta">
+                                    <span>6 km</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q15-optb">
+                                    <span>24 km</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q15-optc">
+                                    <span>54 km</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q16" data-question="16" data-explication="12 minutes = 0,2 h. Vitesse = 4 ÷ 0,2 = 20 km/h — sous la limite de 25 km/h des cycles à assistance électrique. Multiplier 4 par 12 donne un nombre sans unité de vitesse.">
+                            <p>16. Un VAE parcourt 4 km en 12 minutes. Sa vitesse moyenne est de…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q16-opta">
+                                    <span>12 km/h</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q16-optb">
+                                    <span>20 km/h</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q16-optc">
+                                    <span>48 km/h</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q17" data-question="17" data-explication="Les critères de performance sont des grandeurs mesurables (vitesse, autonomie, temps de recharge). Le confort est un ressenti : il compte pour l'ergonomie, mais il ne se mesure pas au chronomètre.">
+                            <p>17. Lequel de ces critères ne se mesure pas avec un instrument ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q17-opta">
+                                    <span>la vitesse</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q17-optb">
+                                    <span>l'autonomie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q17-optc">
+                                    <span>le confort ressenti</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q18" data-question="18" data-explication="Une performance ne se compare que dans des conditions identiques. Sans protocole commun (poids, parcours, assistance), deux autonomies annoncées ne sont pas comparables.">
+                            <p>18. Un constructeur annonce 40 km d'autonomie. Pour vérifier ce chiffre, il faut…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q18-opta">
+                                    <span>refaire le test avec un protocole connu : même poids, même parcours, même niveau d'assistance</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q18-optb">
+                                    <span>croire l'annonce, c'est une donnée constructeur</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q18-optc">
+                                    <span>mesurer la longueur du guidon</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q19" data-question="19" data-explication="Le VAE transporte un sac et avance aussi sans assistance : l'autonomie devient moins critique. Les deux engins sont bridés à 25 km/h, et le VAE a bien une batterie.">
+                            <p>19. Pour un trajet quotidien de 8 km avec un sac de cours, on préfère souvent le VAE à la trottinette parce que…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q19-opta">
+                                    <span>il est toujours plus rapide</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q19-optb">
+                                    <span>il porte une charge et pédale, donc il dépend moins de l'autonomie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q19-optc">
+                                    <span>il n'a pas de batterie</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q20" data-question="20" data-explication="Un choix se justifie sur le cycle de vie : une batterie non remplaçable condamne l'engin au premier problème de batterie, alors que l'autre se répare et se garde. L'écart de prix se paie une fois ; une panne non réparable se paie en remplaçant tout l'engin.">
+                            <p>20. Deux trottinettes : la première coûte 249 € avec une batterie non remplaçable ; la seconde 349 €, avec une batterie remplaçable et des pièces détachées disponibles cinq ans. Pour un usage quotidien pendant quatre ans, l'argument décisif est…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q20-opta">
+                                    <span>la durabilité (batterie remplaçable, pièces disponibles), qui pèse plus que 100 € d'écart</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q20-optb">
+                                    <span>le prix le plus bas, seul critère objectif</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q20-optc">
+                                    <span>la couleur du modèle</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+                            <button type="button" class="bouton-action" onclick="validerQuiz('defi')">
+                                Vérifier mes réponses
+                            </button>
+                            <div id="resultat-quiz-defi" class="marge-haut" style="display: none;">
+                                <p id="message-resultat-defi"></p>
+                                <button type="button" class="bouton-action succes cache" id="bouton-suite-defi" onclick="revisionAllerA('bonus-liens')">
+                                    Revoir les activités bonus ↑
+                                </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-defi" onclick="revisionRecommencerQuiz('defi')">
+                                    Recommencer de 0
+                                </button>
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </section>
         </main>
@@ -8236,7 +8643,8 @@
             'ost3b-1': {'q1': 'c', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a'},
             'ost3d-1': {'q1': 'b', 'q2': 'c', 'q3': 'a', 'q4': 'b', 'q5': 'c'},
             'ost3e-1': {'q1': 'a', 'q2': 'b', 'q3': 'c', 'q4': 'a', 'q5': 'b'},
-            'ost3f-1': {'q1': 'c', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a', 'q6': 'b'}
+            'ost3f-1': {'q1': 'c', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a', 'q6': 'b'},
+            'defi': {'q1': 'b', 'q2': 'b', 'q3': 'a', 'q4': 'b', 'q5': 'a', 'q6': 'a', 'q7': 'a', 'q8': 'b', 'q9': 'b', 'q10': 'a', 'q11': 'c', 'q12': 'a', 'q13': 'a', 'q14': 'b', 'q15': 'b', 'q16': 'b', 'q17': 'c', 'q18': 'a', 'q19': 'b', 'q20': 'a'}
         };
 
         // Échappe un texte destiné à être inséré dans du HTML
@@ -18660,6 +19068,7 @@
     </script>
 
 <script>const SCORE_QUIZ = {"actif": true, "seuilOrange": 50, "commentaires": {"vert": ["Sans faute. Tu peux postuler pour corriger les copies.", "Zéro erreur : même le professeur vérifie deux fois avant de te croire.", "Parfait. La fiche suivante n'a qu'à bien se tenir."], "orange": ["Presque : tu n'es pas loin de la médaille.", "Bon score ({score} sur {total}), mais pas encore le sans-faute. Recommence de zéro pour la décrocher.", "Tu chauffes : encore un essai et c'est bon."], "rouge": ["Aïe : {score} sur {total}. Ce n'est pas ton jour, et ce n'est pas grave — mais on va en parler.", "Oups : {score} sur {total}. La fiche n'est pas encore dans la poche.", "Ce n'est pas gagné : {score} sur {total}. Respire, on reprend ensemble."]}, "appel": "Trop de réponses fausses : appelle le professeur. Ce n'est pas une punition, c'est pour t'aider à repartir du bon pied.", "bip": {"actif": true, "volume": 0.9}};
+const SCORE_DEFI = {"seuilOrange": 60, "bip": {"actif": false}, "appel": "", "commentaires": {"vert": ["20 sur 20 : sans faute. Tu peux expliquer la correction à la classe.", "Sans faute. Un défi réussi comme celui-là, ça ne s'oublie pas.", "Parfait. Les fiches sont derrière toi, la séquence aussi."], "orange": ["{score} sur {total} : solide. Il reste {manque} question(s) à conquérir.", "{score} sur {total}. Reprends le défi : le prochain essai peut être un sans-faute.", "Bon score ({score} sur {total}). Tu es au-dessus de la moitié : c'est déjà un vrai résultat sur ce défi."], "rouge": ["{score} sur {total} : c'est le but d'un défi — on se mesure, on ne se note pas. Reprends les fiches, puis reviens.", "{score} sur {total}. Un défi se rate souvent la première fois : relis les fiches, puis retente.", "{score} sur {total}. Ce n'est pas grave : ce questionnaire est fait pour ça. Reviens après avoir relu les fiches."]}, "cle": "defi"};
 
 // ============================================================
 // PARCOURS-RÉVISION:JS-DEBUT
@@ -18921,14 +19330,35 @@
     // la moitié de bonnes réponses, rouge sinon, avec l'appel au professeur.
     // Le bouton « Vérifier mes réponses » reste celui du gabarit.
     var SCORE_ACTIF = (typeof SCORE_QUIZ !== 'undefined') && SCORE_QUIZ && SCORE_QUIZ.actif;
+    // Le DÉFI du bonus est un questionnaire de challenge : il a son propre barème
+    // (seuil, commentaires, appel, bip) et il ne colore pas l'onglet Bonus — un
+    // défi raté n'est pas une fiche ratée. Sans barème déclaré, il hérite de
+    // celui de la révision.
+    var DEFI = (typeof SCORE_DEFI !== 'undefined' && SCORE_DEFI && SCORE_DEFI.cle)
+        ? SCORE_DEFI : null;
+
+    function reglageScore(niveau) {
+        if (DEFI && niveau === DEFI.cle) {
+            var base = (SCORE_ACTIF && SCORE_QUIZ) ? SCORE_QUIZ : {};
+            return {
+                seuilOrange: (typeof DEFI.seuilOrange === 'number')
+                    ? DEFI.seuilOrange
+                    : ((typeof base.seuilOrange === 'number') ? base.seuilOrange : 50),
+                commentaires: DEFI.commentaires || base.commentaires || {},
+                appel: (typeof DEFI.appel === 'string') ? DEFI.appel : (base.appel || ''),
+                bip: (DEFI.bip !== undefined) ? DEFI.bip : base.bip
+            };
+        }
+        return SCORE_ACTIF ? SCORE_QUIZ : null;
+    }
 
     function sansBalises(texte) {
         return String(texte).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                             .replace(/>/g, '&gt;');
     }
 
-    function commentaireScore(etat, score, total, niveau) {
-        var liste = ((SCORE_QUIZ.commentaires || {})[etat]) || [];
+    function commentaireScore(reglage, etat, score, total, niveau) {
+        var liste = ((reglage.commentaires || {})[etat]) || [];
         if (!liste.length) return '';
         var graine = score + total;
         for (var i = 0; i < String(niveau).length; i += 1) {
@@ -18962,6 +19392,8 @@
             basculer(bloc, 'score-orange', etat === 'orange');
             basculer(bloc, 'score-rouge', etat === 'rouge');
         }
+        // Le défi ne colore pas l'onglet : le bonus n'est pas une fiche.
+        if (document.getElementById('defi-' + niveau)) return;
         var bouton = ongletDeQuiz(niveau);
         if (bouton) {
             bouton.classList.remove('partiel', 'echec');
@@ -18979,8 +19411,8 @@
     // au clic sur « Vérifier mes réponses » : les navigateurs exigent un geste.
     var contexteBip = null;
 
-    function bipErreur() {
-        var reglage = (SCORE_QUIZ && SCORE_QUIZ.bip) || {};
+    function bipErreur(reglageScoreQuiz) {
+        var reglage = (reglageScoreQuiz || (SCORE_QUIZ && SCORE_QUIZ.bip)) || {};
         if (!reglage.actif) return false;
         var AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return false;
@@ -19011,7 +19443,19 @@
         }
     }
 
+    // Le défi peut exister sur une page SANS barème de révision : il garde le
+    // sien, et les autres questionnaires reprennent le moteur du gabarit.
+    var validerQuizGabarit = (typeof window.validerQuiz === 'function')
+        ? window.validerQuiz : null;
+
     function validerQuizScore(niveau) {
+        var reglage = reglageScore(niveau);
+        // Questionnaire sans barème (ni révision, ni défi) : le moteur du gabarit
+        // reprend la main, avec son retour question par question.
+        if (!reglage) {
+            if (typeof validerQuizGabarit === 'function') validerQuizGabarit(niveau);
+            return;
+        }
         var form = document.getElementById('quiz-' + niveau);
         if (!form) return;
         var questions = Array.prototype.slice.call(
@@ -19033,8 +19477,8 @@
         }
         var total = questions.length;
         var pourcentage = total ? Math.round(100 * score / total) : 0;
-        var seuil = (typeof SCORE_QUIZ.seuilOrange === 'number')
-            ? SCORE_QUIZ.seuilOrange : 50;
+        var seuil = (typeof reglage.seuilOrange === 'number')
+            ? reglage.seuilOrange : 50;
         var etat = score === total ? 'vert' : (pourcentage > seuil ? 'orange' : 'rouge');
         var resultat = document.getElementById('resultat-quiz-' + niveau);
         var message = document.getElementById('message-resultat-' + niveau);
@@ -19042,17 +19486,20 @@
         var recommencer = document.getElementById('bouton-recommencer-' + niveau);
         if (resultat) resultat.style.display = 'block';
         appliquerEtatScore(niveau, etat);
-        if (etat === 'rouge') bipErreur();
+        if (etat === 'rouge') bipErreur(reglage.bip);
         if (message) {
-            var appel = (etat === 'rouge')
+            var appel = (etat === 'rouge' && reglage.appel)
                 ? '<span class="score-quiz-appel">📣 '
-                  + sansBalises(String(SCORE_QUIZ.appel || 'Appelle le professeur.'))
+                  + sansBalises(String(reglage.appel))
                   + '</span>'
                 : '';
+            // Le point final sépare le score du commentaire aussi pour la
+            // lecture vocale et le copier-coller : sans lui, le texte brut dit
+            // « 7 / 207 sur 20 » et un lecteur d'écran annonce « deux cent sept ».
             message.innerHTML =
-                '<span class="score-quiz-valeur">' + score + ' / ' + total + '</span>'
+                '<span class="score-quiz-valeur">' + score + ' / ' + total + '.</span> '
                 + '<span class="score-quiz-commentaire">'
-                + sansBalises(commentaireScore(etat, score, total, niveau))
+                + sansBalises(commentaireScore(reglage, etat, score, total, niveau))
                 + '</span>' + appel;
         }
         if (suite) basculer(suite, 'cache', etat !== 'vert');
@@ -19100,12 +19547,12 @@
     // recalcule donc le score à partir des réponses (sans rejouer le bip) dès
     // qu'un message de résultat est rempli.
     function restaurerScores() {
-        var seuil = (typeof SCORE_QUIZ.seuilOrange === 'number')
-            ? SCORE_QUIZ.seuilOrange : 50;
         Array.prototype.forEach.call(
-            document.querySelectorAll('.bloc-revision'), function (bloc) {
+            document.querySelectorAll('.bloc-revision, .defi-revision'), function (bloc) {
                 var cle = bloc.getAttribute('data-exercice');
                 if (!cle) return;
+                var reglage = reglageScore(cle);
+                if (!reglage) return;
                 var form = document.getElementById('quiz-' + cle);
                 if (!form) return;
                 var resultat = document.getElementById('resultat-quiz-' + cle);
@@ -19136,6 +19583,8 @@
                     });
                 }
                 if (!total) return;
+                var seuil = (typeof reglage.seuilOrange === 'number')
+                    ? reglage.seuilOrange : 50;
                 var pourcentage = Math.round(100 * score / total);
                 var etat = score === total ? 'vert'
                     : (pourcentage > seuil ? 'orange' : 'rouge');
@@ -19148,7 +19597,7 @@
         rafraichir();
     }
 
-    if (SCORE_ACTIF && typeof MutationObserver !== 'undefined') {
+    if ((SCORE_ACTIF || DEFI) && typeof MutationObserver !== 'undefined') {
         var observateurScore = new MutationObserver(function () {
             restaurerScores();
         });
@@ -19159,7 +19608,7 @@
             });
     }
 
-    if (SCORE_ACTIF) {
+    if (SCORE_ACTIF || DEFI) {
         window.validerQuiz = validerQuizScore;
         window.revisionRestaurerScores = restaurerScores;
     }
@@ -19173,8 +19622,5 @@
 })();
 // PARCOURS-RÉVISION:JS-FIN
 </script>
-
-<!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 </body>
 </html>

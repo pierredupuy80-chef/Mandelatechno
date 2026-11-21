@@ -6307,8 +6307,54 @@
     display: inline-block; margin-top: var(--espacement-sm); font-weight: 700;
     color: var(--couleur-primaire);
 }
+/* Défi du bonus : un questionnaire de challenge, détaché de la liste des
+   cartes par un filet. Le cadre reprend celui d'un exercice, avec un fond
+   distinct pour qu'on voie qu'il ne fait pas partie des fiches. */
+.defi-revision {
+    margin-top: var(--espacement-xl, 2rem); padding-top: var(--espacement-lg);
+    border-top: 2px dashed #cbd5e1;
+}
+.defi-entete {
+    padding: var(--espacement-md) var(--espacement-lg);
+    background: #fff7ed; border: 1px solid #fed7aa; border-left: 6px solid #c2410c;
+    border-radius: var(--rayon-bordure); margin-bottom: var(--espacement-md);
+}
+.defi-titre { font-size: 1.15rem; color: #9a3412; margin-bottom: var(--espacement-xs); }
+.defi-duree {
+    display: inline-block; margin-left: var(--espacement-sm); padding: 0.1rem 0.5rem;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em;
+    background: #ffffff; color: #9a3412; border: 1px solid #fed7aa;
+    border-radius: 999px; vertical-align: middle;
+}
+.defi-intro { font-size: 0.97rem; margin-bottom: var(--espacement-xs); }
+.defi-origine {
+    /* Bleu foncé : le bleu d'information du gabarit tombe à 3,5:1 sur le fond
+       crème de l'encart, sous le seuil WCAG AA de 4,5:1. */
+    font-size: 0.8rem; font-weight: 600; color: #1d4ed8;
+    margin-bottom: var(--espacement-xs);
+}
+.defi-consigne { font-size: 0.95rem; font-weight: 600; color: var(--couleur-texte); }
+.defi-revision .quiz-conteneur {
+    background: white; border: 1px solid #e2e8f0; border-left: 6px solid #c2410c;
+    border-radius: var(--rayon-bordure); padding: var(--espacement-md) var(--espacement-lg);
+}
+.defi-revision .question-quiz { margin-bottom: var(--espacement-md); }
 :where(html[data-theme="sombre"]) .carte-bonus { background: #111c2f; border-color: #263449; }
 :where(html[data-theme="sombre"]) .carte-bonus h3 { color: #c4b5fd; }
+:where(html[data-theme="sombre"]) .defi-revision { border-top-color: #334155; }
+:where(html[data-theme="sombre"]) .defi-entete {
+    background: #2a1d12; border-color: #7c3a1d; border-left-color: #fb923c;
+}
+:where(html[data-theme="sombre"]) .defi-titre { color: #fdba74; }
+:where(html[data-theme="sombre"]) .defi-duree {
+    background: #101d33; color: #fdba74; border-color: #7c3a1d;
+}
+/* Le bleu de l'origine est foncé en clair, clair en sombre : c'est le seul
+   couple qui tienne le seuil WCAG AA sur les deux fonds de l'encart. */
+:where(html[data-theme="sombre"]) .defi-origine { color: #93c5fd; }
+:where(html[data-theme="sombre"]) .defi-revision .quiz-conteneur {
+    background: #111c2f; border-color: #263449; border-left-color: #fb923c;
+}
 .revision-fin-compteur { font-weight: 600; margin: var(--espacement-sm) 0; }
 
 :where(html[data-theme="sombre"]) .revision-tableau table { background: #111c2f; border-color: #2b4570; }
@@ -8472,7 +8518,7 @@
                         <h3>Révision terminée</h3>
                         <p>Les huit fiches des deux séquences ont été revues. En 4e, l'évaluation ajoute les contraintes : normes, cahier des charges, labels et certifications.</p>
                         <p class="revision-fin-compteur" data-role="revision-fin-compteur"></p>
-                        <p class="revision-fin-bonus">🎁 Des activités bonus t'attendent dans l'onglet « Bonus », en haut de la page.</p>
+                        <p class="revision-fin-bonus">🎁 Des activités bonus et un défi de 20 questions t'attendent dans l'onglet « Bonus », en haut de la page.</p>
                         <button type="button" class="bouton-action" onclick="recommencerActivite()">Refaire la révision ↻</button>
                     </div>
                 </div>
@@ -8481,7 +8527,7 @@
                 <div class="carte-contenu">
                     <h2>Activités bonus — pour aller plus loin</h2>
                     <p>Deux activités du cours de 4e pour prolonger la révision. Elles ne sont pas notées : ce sont des entraînements.</p>
-                    <ul class="bonus-revision">
+                    <ul class="bonus-revision" id="bonus-liens" data-ost-id="bonus-liens">
                         <li class="carte-bonus-item">
                             <a class="carte-bonus" href="https://pierredupuy80-chef.github.io/Mandelatechno/4e/ost3/activite-maison-connectee-eclairage.html" target="_blank" rel="noopener noreferrer" data-ost-id="bonus-lien-1">
                                 <h3>La maison connectée : l'éclairage domotisé</h3>
@@ -8499,6 +8545,367 @@
                             </a>
                         </li>
                     </ul>
+                    <section id="defi-defi" class="defi-revision" data-defi="defi" data-exercice="defi" aria-labelledby="titre-defi-defi">
+                        <div class="defi-entete">
+                            <h3 class="defi-titre" id="titre-defi-defi">🎯 Le défi des 20 questions<span class="defi-duree">⏱ 30 minutes</span></h3>
+                        <p class="defi-intro">Vingt questions plus difficiles que celles des fiches : il faut souvent décider, comparer, calculer — et parfois se méfier de la réponse qui semble évidente.</p>
+                        <p class="defi-origine">D'après les huit fiches de la révision (OST2a, OST2b, OST2c, OST2d, OST3a, OST3b, OST3e, OST3f) et les deux séquences : la maison connectée et le chauffage domotique.</p>
+                        <p class="defi-consigne">Une seule proposition est juste par question. Tu peux valider, puis recommencer autant de fois que tu veux : ce défi n'est pas noté, il sert à savoir où tu en es.</p>
+                        </div>
+                        <form id="quiz-defi" class="quiz-conteneur">
+                        <div class="question-quiz" data-ost-id="defi-quiz-q1" data-question="1" data-explication="Les données sont les informations que l'OST utilise ou produit : ici, la température mesurée. Le téléphone est un autre objet technique, le jardin un élément de l'environnement.">
+                            <p>1. Une station météo connectée mesure la température du jardin et l'envoie sur un téléphone. Quel élément joue le rôle de « données » ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q1-opta">
+                                    <span>le téléphone, qui affiche le résultat</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q1-optb">
+                                    <span>la température mesurée puis transmise</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q1-optc">
+                                    <span>le jardin, qui entoure la station</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q2" data-question="2" data-explication="Le soleil appartient à l'environnement. La luminosité mesurée par le capteur du store, elle, est une donnée : c'est l'information que l'objet utilise pour décider.">
+                            <p>2. Un store automatique se ferme quand le soleil donne trop fort. Dans cette interaction, le soleil est…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q2-opta">
+                                    <span>un élément de l'environnement</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q2-optb">
+                                    <span>un usager</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q2-optc">
+                                    <span>une donnée</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q3" data-question="3" data-explication="L'algorithme est une suite d'instructions ordonnées et précises : il décrit l'enchaînement des décisions et des actions. Un schéma montrerait les éléments et leurs relations, sans ordre d'exécution ; un graphique montre l'évolution d'une grandeur.">
+                            <p>3. Tu dois décrire à un camarade la suite de décisions du store automatique : mesurer la luminosité, puis fermer si elle dépasse un seuil. Le mode de représentation le plus adapté est…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q3-opta">
+                                    <span>un croquis à main levée</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q3-optb">
+                                    <span>un algorithme</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q3-optc">
+                                    <span>un graphique</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q4" data-question="4" data-explication="Le graphique est la représentation visuelle de données : il fait voir l'évolution d'une grandeur. Le schéma montre des éléments et leurs relations, pas une évolution dans le temps.">
+                            <p>4. Pour montrer comment la température d'une pièce évolue sur 24 heures quand le chauffage se déclenche, on trace…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q4-opta">
+                                    <span>un schéma</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q4-optb">
+                                    <span>une modélisation</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q4-optc">
+                                    <span>un graphique</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q5" data-question="5" data-explication="La modélisation crée un modèle numérique ou physique qui permet de simuler le comportement et de tester des solutions avant de fabriquer.">
+                            <p>5. Avant de fabriquer un nouveau boîtier, une équipe en teste le comportement et essaie plusieurs solutions sans rien construire. Ce mode de représentation est…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q5-opta">
+                                    <span>une modélisation</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q5-optb">
+                                    <span>une notice</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q5-optc">
+                                    <span>un cahier des charges</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q6" data-question="6" data-explication="Le cahier des charges décrit les exigences spécifiques d'un client. Une norme, elle, définit les caractéristiques minimales que TOUS les produits doivent respecter pour être mis sur le marché.">
+                            <p>6. Une commune achète 300 luminaires pour ses gymnases et écrit : « moins de 40 W, garantie 5 ans minimum ». Ces exigences forment…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q6-opta">
+                                    <span>une norme</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q6-optb">
+                                    <span>un cahier des charges</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q6-optc">
+                                    <span>un label</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q7" data-question="7" data-explication="La fiche OST2c prend l'exemple de la norme NF pour les jouets : elle garantit la sécurité des enfants, c'est-à-dire des caractéristiques minimales à respecter. Elle ne dit rien d'une supériorité sur les autres produits, ni d'une origine.">
+                            <p>7. La norme NF sur un jouet garantit…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q7-opta">
+                                    <span>que le jouet respecte des caractéristiques minimales de sécurité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q7-optb">
+                                    <span>que le jouet est le plus résistant de sa catégorie</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q7-optc">
+                                    <span>que le jouet a été fabriqué en France</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q8" data-question="8" data-explication="L'utilisabilité, c'est pouvoir faire ce qu'on veut faire : efficacité, efficience et satisfaction. L'utilité répond seulement au besoin (« le site sert-il à quelque chose ? »).">
+                            <p>8. Sur un site de médiathèque, un élève trouve le livre qu'il cherche en trois clics, sans se tromper, et trouve cela agréable. Cela relève de…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q8-opta">
+                                    <span>l'utilité seule</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q8-optb">
+                                    <span>l'utilisabilité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q8-optc">
+                                    <span>la recyclabilité</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q9" data-question="9" data-explication="L'utilité et l'utilisabilité sont deux choses distinctes : un objet peut être utile et mal conçu. L'ergonomie vise justement à le rendre confortable, efficace et sûr à utiliser.">
+                            <p>9. Un objet répond exactement au besoin, mais on a du mal à s'en servir. Que peut-on dire ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q9-opta">
+                                    <span>Il est utile mais peu utilisable : l'ergonomie est à revoir.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q9-optb">
+                                    <span>Il est inutile, puisque l'usage est difficile.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q9-optc">
+                                    <span>Il est recyclable, donc acceptable.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q10" data-question="10" data-explication="La notice informe, aide à installer, à utiliser et à dépanner les problèmes courants. La documentation technique ajoute la maintenance, la réparation, les schémas, un glossaire et un index : c'est elle qu'on ouvre pour changer une pièce.">
+                            <p>10. Un élève veut changer lui-même la courroie de son sèche-linge. La notice renvoie au service après-vente. Que faut-il en conclure ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q10-opta">
+                                    <span>Que la notice est incomplète : elle devrait décrire la réparation.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q10-optb">
+                                    <span>Que c'est normal : la réparation relève de la documentation technique, pas de la notice.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q10-optc">
+                                    <span>Que le sèche-linge n'est pas réparable.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q11" data-question="11" data-explication="La documentation technique est plus complète, mais elle s'adresse à celui qui entretient ou répare. Pour utiliser un appareil, la notice suffit : installation, mode d'emploi, consignes de sécurité, dépannage courant.">
+                            <p>11. Deux documents pour le même appareil : la notice (12 pages) et la documentation technique (60 pages). Lequel donner à un voisin qui garde l'appareil une semaine et veut simplement s'en servir ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q11-opta">
+                                    <span>la documentation technique, puisqu'elle est plus complète</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q11-optb">
+                                    <span>la notice, qui donne l'usage et la sécurité sans le reste</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q11-optc">
+                                    <span>aucun des deux : il faut faire appel à un professionnel</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q12" data-question="12" data-explication="L'écart par cycle est de 1,2 − 0,8 = 0,4 kWh. Sur 200 cycles : 0,4 × 200 = 80 kWh économisés par an.">
+                            <p>12. Deux lave-linge de même capacité : le modèle A consomme 1,2 kWh par cycle, le modèle B 0,8 kWh. Pour 200 cycles par an, combien le modèle B économise-t-il ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q12-opta">
+                                    <span>40 kWh par an</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q12-optb">
+                                    <span>80 kWh par an</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q12-optc">
+                                    <span>160 kWh par an</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q13" data-question="13" data-explication="L'indice de réparabilité note la facilité de réparation (10 = le plus facile) et renseigne donc sur la durabilité : à 4,5 sur 10, l'appareil sera difficile à réparer. Il ne dit rien de la consommation (c'est l'indice énergétique) ni de la date d'une panne.">
+                            <p>13. Un smartphone affiche un indice de réparabilité de 4,5 sur 10. Que peut-on en conclure ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q13-opta">
+                                    <span>Il consomme beaucoup d'énergie.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q13-optb">
+                                    <span>Il sera difficile à réparer : c'est un point faible pour sa durabilité.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q13-optc">
+                                    <span>Il tombera en panne dans l'année.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q14" data-question="14" data-explication="La fiche conseille un indice énergétique élevé (A+++ ou A++) ET une réparabilité supérieure à 7. X remplit les deux conditions ; Y a 9/10 mais sa classe B ne remplit pas la première.">
+                            <p>14. Aspirateur X : classe A++, réparabilité 7,5/10. Aspirateur Y : classe B, réparabilité 9/10. Lequel remplit les deux indications chiffrées de la fiche (indice énergétique élevé, réparabilité supérieure à 7) ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q14-opta">
+                                    <span>Le X : bon indice énergétique et réparabilité au-dessus de 7.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q14-optb">
+                                    <span>Le Y : il a la meilleure réparabilité, donc il coche tout.</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q14-optc">
+                                    <span>Aucun des deux : il faudrait d'abord connaître leur couleur.</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q15" data-question="15" data-explication="La garantie est un point de vigilance du critère « qualité » ; la disponibilité des pièces détachées un point de vigilance du critère « durabilité » (réparabilité).">
+                            <p>15. Une perceuse est garantie 5 ans et ses pièces détachées restent disponibles 10 ans. Ces deux points relèvent surtout de…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q15-opta">
+                                    <span>l'efficacité énergétique</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q15-optb">
+                                    <span>la qualité et la durabilité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q15-optc">
+                                    <span>la recyclabilité</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q16" data-question="16" data-explication="L'aluminium recyclé relève de la recyclabilité (matériaux recyclables, fin de vie) ; la fiche cite aussi les matériaux recyclables dans les points de vigilance de la qualité, mais ici c'est bien la fin de vie qui est visée. Les vis démontables et la batterie remplaçable relèvent de la durabilité : réparabilité et évolutivité.">
+                            <p>16. Un fabricant annonce : coque en aluminium recyclé, vis démontables, batterie remplaçable. Quels critères de choix sont concernés ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q16-opta">
+                                    <span>l'efficacité énergétique et la qualité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q16-optb">
+                                    <span>la recyclabilité et la durabilité</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q16-optc">
+                                    <span>aucun des quatre critères</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q17" data-question="17" data-explication="Autonomie = énergie ÷ puissance = 360 ÷ 12 = 30 heures. Multiplier les deux valeurs (4320) ne donne pas une durée.">
+                            <p>17. Une batterie de 360 Wh alimente un appareil qui consomme 12 W. Quelle est son autonomie ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q17-opta">
+                                    <span>3 heures</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q17-optb">
+                                    <span>30 heures</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q17-optc">
+                                    <span>4320 heures</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q18" data-question="18" data-explication="15 minutes, c'est un quart d'heure (0,25 h). Vitesse = distance ÷ durée = 4,5 ÷ 0,25 = 18 km/h.">
+                            <p>18. Une trottinette parcourt 4,5 km en 15 minutes. Sa vitesse moyenne est de…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q18-opta">
+                                    <span>4,5 km/h</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q18-optb">
+                                    <span>18 km/h</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q18-optc">
+                                    <span>30 km/h</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q19" data-question="19" data-explication="Une autonomie en minutes ne dit rien sans la surface couverte pendant ce temps : c'est le croisement des deux qui répond au besoin. Une performance se juge sur la grandeur qui correspond à l'usage.">
+                            <p>19. Un robot aspirateur annonce « 120 minutes d'autonomie ». Pour savoir s'il suffit à nettoyer un appartement de 80 m², il manque…</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q19-opta">
+                                    <span>la surface qu'il nettoie par minute</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q19-optb">
+                                    <span>sa couleur et son poids</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q19-optc">
+                                    <span>le nombre de LED de son écran</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+
+                        <div class="question-quiz" data-ost-id="defi-quiz-q20" data-question="20" data-explication="Le système croise deux informations : la présence et la luminosité. S'il allume alors qu'il fait jour, c'est la seconde mesure qui est fausse. Les lampes et le relais fonctionnent, puisqu'elles s'allument.">
+                            <p>20. Dans une salle équipée d'un éclairage automatique (capteur de présence et mesure de luminosité), les lampes s'allument en plein jour. Quel élément est le plus probablement en cause ?</p>
+                            <div class="options-reponse" role="radiogroup">
+                                
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="defi-quiz-q20-opta">
+                                    <span>la mesure de luminosité, qui ne détecte plus la lumière du jour</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="defi-quiz-q20-optb">
+                                    <span>les lampes, qui s'allument trop tôt</span>
+                                </div>
+                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="defi-quiz-q20-optc">
+                                    <span>le relais, qui laisse passer le courant</span>
+                                </div>
+                            </div>
+                            <div class="feedback-reponse" role="alert"></div>
+                        </div>
+                            <button type="button" class="bouton-action" onclick="validerQuiz('defi')">
+                                Vérifier mes réponses
+                            </button>
+                            <div id="resultat-quiz-defi" class="marge-haut" style="display: none;">
+                                <p id="message-resultat-defi"></p>
+                                <button type="button" class="bouton-action succes cache" id="bouton-suite-defi" onclick="revisionAllerA('bonus-liens')">
+                                    Revoir les activités bonus ↑
+                                </button>
+                                <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-defi" onclick="revisionRecommencerQuiz('defi')">
+                                    Recommencer de 0
+                                </button>
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </section>
         </main>
@@ -8676,7 +9083,8 @@
             'ost3a-1': {'q1': 'a', 'q2': 'b', 'q3': 'c', 'q4': 'a', 'q5': 'b'},
             'ost3b-1': {'q1': 'c', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a'},
             'ost3e-1': {'q1': 'a', 'q2': 'b', 'q3': 'c', 'q4': 'a', 'q5': 'b'},
-            'ost3f-1': {'q1': 'c', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a', 'q6': 'b'}
+            'ost3f-1': {'q1': 'c', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a', 'q6': 'b'},
+            'defi': {'q1': 'b', 'q2': 'a', 'q3': 'b', 'q4': 'c', 'q5': 'a', 'q6': 'b', 'q7': 'a', 'q8': 'b', 'q9': 'a', 'q10': 'b', 'q11': 'b', 'q12': 'b', 'q13': 'b', 'q14': 'a', 'q15': 'b', 'q16': 'b', 'q17': 'b', 'q18': 'b', 'q19': 'a', 'q20': 'a'}
         };
 
         // Échappe un texte destiné à être inséré dans du HTML
@@ -19100,6 +19508,7 @@
     </script>
 
 <script>const SCORE_QUIZ = {"actif": true, "seuilOrange": 50, "commentaires": {"vert": ["Sans faute. Tu peux postuler pour corriger les copies.", "Zéro erreur : même le professeur vérifie deux fois avant de te croire.", "Parfait. La fiche suivante n'a qu'à bien se tenir."], "orange": ["Presque : tu n'es pas loin de la médaille.", "Bon score ({score} sur {total}), mais pas encore le sans-faute. Recommence de zéro pour la décrocher.", "Tu chauffes : encore un essai et c'est bon."], "rouge": ["Aïe : {score} sur {total}. Ce n'est pas ton jour, et ce n'est pas grave — mais on va en parler.", "Oups : {score} sur {total}. La fiche n'est pas encore dans la poche.", "Ce n'est pas gagné : {score} sur {total}. Respire, on reprend ensemble."]}, "appel": "Trop de réponses fausses : appelle le professeur. Ce n'est pas une punition, c'est pour t'aider à repartir du bon pied.", "bip": {"actif": true, "volume": 0.9}};
+const SCORE_DEFI = {"seuilOrange": 60, "bip": {"actif": false}, "appel": "", "commentaires": {"vert": ["20 sur 20 : sans faute. Tu peux expliquer la correction à la classe.", "Sans faute. Un défi réussi comme celui-là, ça ne s'oublie pas.", "Parfait. Les fiches sont derrière toi, la séquence aussi."], "orange": ["{score} sur {total} : solide. Il reste {manque} question(s) à conquérir.", "{score} sur {total}. Reprends le défi : le prochain essai peut être un sans-faute.", "Bon score ({score} sur {total}). Tu es au-dessus de la moitié : c'est déjà un vrai résultat sur ce défi."], "rouge": ["{score} sur {total} : c'est le but d'un défi — on se mesure, on ne se note pas. Reprends les fiches, puis reviens.", "{score} sur {total}. Un défi se rate souvent la première fois : relis les fiches, puis retente.", "{score} sur {total}. Ce n'est pas grave : ce questionnaire est fait pour ça. Reviens après avoir relu les fiches."]}, "cle": "defi"};
 
 // ============================================================
 // PARCOURS-RÉVISION:JS-DEBUT
@@ -19361,14 +19770,35 @@
     // la moitié de bonnes réponses, rouge sinon, avec l'appel au professeur.
     // Le bouton « Vérifier mes réponses » reste celui du gabarit.
     var SCORE_ACTIF = (typeof SCORE_QUIZ !== 'undefined') && SCORE_QUIZ && SCORE_QUIZ.actif;
+    // Le DÉFI du bonus est un questionnaire de challenge : il a son propre barème
+    // (seuil, commentaires, appel, bip) et il ne colore pas l'onglet Bonus — un
+    // défi raté n'est pas une fiche ratée. Sans barème déclaré, il hérite de
+    // celui de la révision.
+    var DEFI = (typeof SCORE_DEFI !== 'undefined' && SCORE_DEFI && SCORE_DEFI.cle)
+        ? SCORE_DEFI : null;
+
+    function reglageScore(niveau) {
+        if (DEFI && niveau === DEFI.cle) {
+            var base = (SCORE_ACTIF && SCORE_QUIZ) ? SCORE_QUIZ : {};
+            return {
+                seuilOrange: (typeof DEFI.seuilOrange === 'number')
+                    ? DEFI.seuilOrange
+                    : ((typeof base.seuilOrange === 'number') ? base.seuilOrange : 50),
+                commentaires: DEFI.commentaires || base.commentaires || {},
+                appel: (typeof DEFI.appel === 'string') ? DEFI.appel : (base.appel || ''),
+                bip: (DEFI.bip !== undefined) ? DEFI.bip : base.bip
+            };
+        }
+        return SCORE_ACTIF ? SCORE_QUIZ : null;
+    }
 
     function sansBalises(texte) {
         return String(texte).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                             .replace(/>/g, '&gt;');
     }
 
-    function commentaireScore(etat, score, total, niveau) {
-        var liste = ((SCORE_QUIZ.commentaires || {})[etat]) || [];
+    function commentaireScore(reglage, etat, score, total, niveau) {
+        var liste = ((reglage.commentaires || {})[etat]) || [];
         if (!liste.length) return '';
         var graine = score + total;
         for (var i = 0; i < String(niveau).length; i += 1) {
@@ -19402,6 +19832,8 @@
             basculer(bloc, 'score-orange', etat === 'orange');
             basculer(bloc, 'score-rouge', etat === 'rouge');
         }
+        // Le défi ne colore pas l'onglet : le bonus n'est pas une fiche.
+        if (document.getElementById('defi-' + niveau)) return;
         var bouton = ongletDeQuiz(niveau);
         if (bouton) {
             bouton.classList.remove('partiel', 'echec');
@@ -19419,8 +19851,8 @@
     // au clic sur « Vérifier mes réponses » : les navigateurs exigent un geste.
     var contexteBip = null;
 
-    function bipErreur() {
-        var reglage = (SCORE_QUIZ && SCORE_QUIZ.bip) || {};
+    function bipErreur(reglageScoreQuiz) {
+        var reglage = (reglageScoreQuiz || (SCORE_QUIZ && SCORE_QUIZ.bip)) || {};
         if (!reglage.actif) return false;
         var AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return false;
@@ -19451,7 +19883,19 @@
         }
     }
 
+    // Le défi peut exister sur une page SANS barème de révision : il garde le
+    // sien, et les autres questionnaires reprennent le moteur du gabarit.
+    var validerQuizGabarit = (typeof window.validerQuiz === 'function')
+        ? window.validerQuiz : null;
+
     function validerQuizScore(niveau) {
+        var reglage = reglageScore(niveau);
+        // Questionnaire sans barème (ni révision, ni défi) : le moteur du gabarit
+        // reprend la main, avec son retour question par question.
+        if (!reglage) {
+            if (typeof validerQuizGabarit === 'function') validerQuizGabarit(niveau);
+            return;
+        }
         var form = document.getElementById('quiz-' + niveau);
         if (!form) return;
         var questions = Array.prototype.slice.call(
@@ -19473,8 +19917,8 @@
         }
         var total = questions.length;
         var pourcentage = total ? Math.round(100 * score / total) : 0;
-        var seuil = (typeof SCORE_QUIZ.seuilOrange === 'number')
-            ? SCORE_QUIZ.seuilOrange : 50;
+        var seuil = (typeof reglage.seuilOrange === 'number')
+            ? reglage.seuilOrange : 50;
         var etat = score === total ? 'vert' : (pourcentage > seuil ? 'orange' : 'rouge');
         var resultat = document.getElementById('resultat-quiz-' + niveau);
         var message = document.getElementById('message-resultat-' + niveau);
@@ -19482,17 +19926,20 @@
         var recommencer = document.getElementById('bouton-recommencer-' + niveau);
         if (resultat) resultat.style.display = 'block';
         appliquerEtatScore(niveau, etat);
-        if (etat === 'rouge') bipErreur();
+        if (etat === 'rouge') bipErreur(reglage.bip);
         if (message) {
-            var appel = (etat === 'rouge')
+            var appel = (etat === 'rouge' && reglage.appel)
                 ? '<span class="score-quiz-appel">📣 '
-                  + sansBalises(String(SCORE_QUIZ.appel || 'Appelle le professeur.'))
+                  + sansBalises(String(reglage.appel))
                   + '</span>'
                 : '';
+            // Le point final sépare le score du commentaire aussi pour la
+            // lecture vocale et le copier-coller : sans lui, le texte brut dit
+            // « 7 / 207 sur 20 » et un lecteur d'écran annonce « deux cent sept ».
             message.innerHTML =
-                '<span class="score-quiz-valeur">' + score + ' / ' + total + '</span>'
+                '<span class="score-quiz-valeur">' + score + ' / ' + total + '.</span> '
                 + '<span class="score-quiz-commentaire">'
-                + sansBalises(commentaireScore(etat, score, total, niveau))
+                + sansBalises(commentaireScore(reglage, etat, score, total, niveau))
                 + '</span>' + appel;
         }
         if (suite) basculer(suite, 'cache', etat !== 'vert');
@@ -19540,12 +19987,12 @@
     // recalcule donc le score à partir des réponses (sans rejouer le bip) dès
     // qu'un message de résultat est rempli.
     function restaurerScores() {
-        var seuil = (typeof SCORE_QUIZ.seuilOrange === 'number')
-            ? SCORE_QUIZ.seuilOrange : 50;
         Array.prototype.forEach.call(
-            document.querySelectorAll('.bloc-revision'), function (bloc) {
+            document.querySelectorAll('.bloc-revision, .defi-revision'), function (bloc) {
                 var cle = bloc.getAttribute('data-exercice');
                 if (!cle) return;
+                var reglage = reglageScore(cle);
+                if (!reglage) return;
                 var form = document.getElementById('quiz-' + cle);
                 if (!form) return;
                 var resultat = document.getElementById('resultat-quiz-' + cle);
@@ -19576,6 +20023,8 @@
                     });
                 }
                 if (!total) return;
+                var seuil = (typeof reglage.seuilOrange === 'number')
+                    ? reglage.seuilOrange : 50;
                 var pourcentage = Math.round(100 * score / total);
                 var etat = score === total ? 'vert'
                     : (pourcentage > seuil ? 'orange' : 'rouge');
@@ -19588,7 +20037,7 @@
         rafraichir();
     }
 
-    if (SCORE_ACTIF && typeof MutationObserver !== 'undefined') {
+    if ((SCORE_ACTIF || DEFI) && typeof MutationObserver !== 'undefined') {
         var observateurScore = new MutationObserver(function () {
             restaurerScores();
         });
@@ -19599,7 +20048,7 @@
             });
     }
 
-    if (SCORE_ACTIF) {
+    if (SCORE_ACTIF || DEFI) {
         window.validerQuiz = validerQuizScore;
         window.revisionRestaurerScores = restaurerScores;
     }
@@ -19613,8 +20062,5 @@
 })();
 // PARCOURS-RÉVISION:JS-FIN
 </script>
-
-<!-- RGPD : mention informative pour les élèves -->
-<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 </body>
 </html>
