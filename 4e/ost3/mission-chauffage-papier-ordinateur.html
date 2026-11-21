@@ -6117,6 +6117,23 @@
 .revision-lecture-notions { border:2px solid var(--couleur-info); border-radius:var(--rayon-bordure); padding:1rem; margin-top:1rem; }
 .revision-lecture-notions p { margin:0 0 0.75rem; }
 .revision-lecture-notions .bouton-action { min-height:44px; }
+/* Aide contextuelle : un point d'interrogation cliquable, puis une modale. */
+.revision-aide-bouton {
+    width:2.75rem; height:2.75rem; min-width:2.75rem; border-radius:50%;
+    border:2px solid var(--couleur-info); background:transparent; cursor:pointer;
+    font:inherit; font-size:1rem; font-weight:700; color:var(--couleur-texte);
+    vertical-align:middle; margin:0 .2rem; line-height:1;
+}
+.revision-aide-bouton:hover, .revision-aide-bouton:focus-visible { background:var(--couleur-info); color:#fff; }
+.revision-aide-dialogue { position:fixed; inset:0; margin:auto; height:fit-content;
+    max-width:min(34rem, 92vw); border:2px solid var(--couleur-info);
+    border-radius:var(--rayon-bordure); padding:1.2rem;
+    background:var(--couleur-fond); color:var(--couleur-texte); }
+.revision-aide-dialogue::backdrop { background:rgba(15, 23, 42, .55); }
+.revision-aide-dialogue h2 { margin:0 0 .6rem; font-size:1.15rem; }
+.revision-aide-dialogue p { margin:0 0 .9rem; }
+.revision-aide-dialogue form { margin:0; text-align:right; }
+.revision-aide-dialogue button { min-height:44px; padding:.4rem 1rem; cursor:pointer; }
 
 /* PARCOURS-RÉVISION:CSS-DEBUT
    Extraits de fiche et blocs « extrait puis exercice » du mode révision.
@@ -17840,6 +17857,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
 <script>const SCORE_QUIZ = {"seuilOrange": 100, "commentaires": {"vert": ["Score complet."], "orange": ["Appelez le professeur."], "rouge": ["Appelez le professeur."]}, "appel": "Appelez le professeur avant de reprendre vos choix.", "bip": {"actif": false}, "actif": true};
 const NAVIGATION_EXERCICES = true;
 const LECTURE_NOTIONS = true;
+const AIDE_TERME = {"terme": "TAPO", "titre": "Qu’est-ce que le système TAPO ?", "texte": "TAPO est le système domotique du laboratoire : des appareils connectés, ici l’éclairage, que l’on pilote et programme depuis une application sur un téléphone ou une tablette. L’application TAPO permet aussi de suivre en direct la puissance consommée et la température mesurée. Dans cette séquence, on se demande si ce système peut également piloter un chauffage. Attention : le dossier ne contient aucune notice du système TAPO du laboratoire. La compatibilité avec un chauffage n’est donc pas démontrée, et aucun branchement n’est autorisé."};
 const SCORE_ATELIERS = true;
 
 // ============================================================
@@ -18521,8 +18539,74 @@ const SCORE_ATELIERS = true;
         onglets().forEach(function (bouton) { debloquer(identifiantDe(bouton)); });
     }
 
+    // ── Aide contextuelle (revision.aideTerme) ────────────────────────────
+    // Un point d'interrogation suit la PREMIÈRE occurrence du terme dans chaque
+    // onglet et ouvre une modale qui l'explique. Le terme n'est pas cliquable :
+    // l'élève voit d'abord son cours, puis demande de l'aide s'il en a besoin.
+    function installerAideTerme() {
+        if (typeof AIDE_TERME === 'undefined' || !AIDE_TERME || !AIDE_TERME.terme) return;
+        var terme = String(AIDE_TERME.terme);
+        var titre = String(AIDE_TERME.titre || ('Aide : ' + terme));
+        var texte = String(AIDE_TERME.texte || '');
+
+        var dialogue = document.createElement('dialog');
+        dialogue.className = 'revision-aide-dialogue';
+        dialogue.setAttribute('aria-labelledby', 'aide-terme-titre');
+        var titree = document.createElement('h2');
+        titree.id = 'aide-terme-titre';
+        titree.textContent = titre;
+        var corps = document.createElement('p');
+        corps.textContent = texte;
+        var pied = document.createElement('form');
+        pied.setAttribute('method', 'dialog');
+        var fermer = document.createElement('button');
+        fermer.type = 'submit';
+        fermer.className = 'bouton-action';
+        fermer.textContent = 'Fermer';
+        pied.appendChild(fermer);
+        dialogue.appendChild(titree);
+        dialogue.appendChild(corps);
+        dialogue.appendChild(pied);
+        document.body.appendChild(dialogue);
+
+        function ouvrir() {
+            if (typeof dialogue.showModal === 'function') dialogue.showModal();
+            else dialogue.setAttribute('open', '');
+            fermer.focus();
+        }
+
+        Array.prototype.forEach.call(
+            document.querySelectorAll('.contenu-onglet'), function (onglet) {
+                if (onglet.querySelector('.revision-aide-bouton')) return;
+                var marcheur = document.createTreeWalker(onglet, NodeFilter.SHOW_TEXT, null);
+                var noeud = null;
+                while ((noeud = marcheur.nextNode())) {
+                    var valeur = noeud.nodeValue || '';
+                    var position = valeur.indexOf(terme);
+                    if (position < 0) continue;
+                    var parent = noeud.parentElement;
+                    if (!parent || parent.closest('script, style, button, a, .revision-aide-dialogue')) continue;
+                    var avant = valeur.slice(0, position + terme.length);
+                    var apres = valeur.slice(position + terme.length);
+                    noeud.nodeValue = avant;
+                    var bouton = document.createElement('button');
+                    bouton.type = 'button';
+                    bouton.className = 'revision-aide-bouton';
+                    bouton.setAttribute('aria-haspopup', 'dialog');
+                    bouton.setAttribute('aria-label', 'Aide : ' + titre);
+                    bouton.title = titre;
+                    bouton.textContent = '?';
+                    bouton.addEventListener('click', ouvrir);
+                    parent.insertBefore(bouton, noeud.nextSibling);
+                    if (apres) parent.insertBefore(document.createTextNode(apres), bouton.nextSibling);
+                    break;
+                }
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', rafraichir);
     rafraichir();
+    installerAideTerme();
 })();
 // PARCOURS-RÉVISION:JS-FIN
 
