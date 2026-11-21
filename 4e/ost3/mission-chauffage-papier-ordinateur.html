@@ -6090,6 +6090,26 @@
     
 .bloc-revision[hidden] { display: none !important; }
 .revision-navigation-exercices { display:flex; align-items:center; gap:1rem; margin:1rem 0; }
+.revision-navigation-exercices[hidden] { display:none !important; }
+/* Notices et questions côte à côte : l'élève garde le tableau sous les yeux. */
+.bloc-revision-duo { display:grid; gap:1rem; align-items:start; }
+.bloc-revision-duo > .bloc-revision-travail { min-width:0; }
+.bloc-revision-duo .revision-tableau { margin-top:0; }
+.bloc-revision-duo .revision-tableau-defilement { max-width:100%; }
+@media (min-width: 1024px) {
+  .bloc-revision-duo { grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr); }
+  .bloc-revision-duo > .bloc-revision-notices {
+    position:sticky; top:0.5rem; max-height:calc(100vh - 1rem); overflow:auto;
+  }
+  /* Le tableau se replie dans sa colonne : plus de défilement horizontal
+     caché, l'élève voit les quatre colonnes en même temps que les questions. */
+  .bloc-revision-duo .revision-tableau table { min-width:0; font-size:0.82rem; }
+  .bloc-revision-duo .revision-tableau th,
+  .bloc-revision-duo .revision-tableau td {
+    padding:0.3rem 0.35rem; white-space:normal; overflow-wrap:break-word; hyphens:auto;
+  }
+  .bloc-revision-duo .revision-tableau-aide { display:none; }
+}
 .revision-navigation-exercices button, .revision-support summary { min-width:44px; min-height:44px; cursor:pointer; }
 .revision-support summary { padding:0.6rem; }
 .bloc-revision { scroll-margin-top:1rem; }
@@ -6620,7 +6640,13 @@
                 <article id="bloc-mission-1b" class="bloc-revision verrouille" data-bloc="mission-1b" data-atelier-bloc="mission-1b" aria-labelledby="titre-bloc-mission-1b">
                     <p class="bloc-revision-repere" id="titre-bloc-mission-1b">Exercice 2 · N2 — compréhension</p>
                     <p class="bloc-revision-origine">Séance 1 · Mission 1B · Feuille 1 verso</p>
-                    <span class="bloc-revision-etat" aria-hidden="true">✅</span><div class="extrait-fiche">
+                    <span class="bloc-revision-etat" aria-hidden="true">✅</span>
+                        <figure class="extrait-fiche" data-ost-id="extrait-1">
+                            <h3 class="extrait-titre">Coup de pouce</h3>
+                            <p class="extrait-source">Aide à l’enquête · adaptation professeur</p>
+                            <blockquote class="extrait-texte">Cherchez la phrase ou la valeur qui permet de dire « prouvé », « contredit » ou « information insuffisante ». Approfondissement : trouvez une information manquante qui empêcherait encore de choisir pour le laboratoire.</blockquote>
+                        </figure>
+                    <div class="bloc-revision-duo"><div class="bloc-revision-notices">
                     <section class="revision-tableau" data-ost-id="tableau-bloc-mission-1b" aria-labelledby="tableau-bloc-mission-1b-titre">
                         <h3 class="revision-tableau-titre" id="tableau-bloc-mission-1b-titre">D1 à D5 — Extraits des notices</h3>
                         <div class="revision-tableau-defilement" role="group" tabindex="0" aria-label="Tableau récapitulatif, défilable horizontalement">
@@ -6628,8 +6654,8 @@
                                 <caption class="revision-tableau-legende">D1 à D5 — Extraits des notices</caption>
                                 <thead>
                                 <tr>
-                                    <th scope="col">Document / appareil</th>
-                                    <th scope="col">Source d’énergie</th>
+                                    <th scope="col">Appareil</th>
+                                    <th scope="col">Énergie</th>
                                     <th scope="col">Caractéristiques annoncées</th>
                                     <th scope="col">Indications pour le choix</th>
                                 </tr>
@@ -6669,12 +6695,7 @@
                             </table>
                         </div>
                         <p class="revision-tableau-aide">Faites glisser le tableau horizontalement pour voir la dernière colonne.</p>
-                    </section></div>
-                        <figure class="extrait-fiche" data-ost-id="extrait-1">
-                            <h3 class="extrait-titre">Coup de pouce</h3>
-                            <p class="extrait-source">Aide à l’enquête · adaptation professeur</p>
-                            <blockquote class="extrait-texte">Cherchez la phrase ou la valeur qui permet de dire « prouvé », « contredit » ou « information insuffisante ». Approfondissement : trouvez une information manquante qui empêcherait encore de choisir pour le laboratoire.</blockquote>
-                        </figure>
+                    </section></div><div class="bloc-revision-travail">
                         <div class="extrait-retiens">
                             <p class="extrait-retiens-titre">À retenir</p>
                             <ul class="extrait-points">
@@ -6735,7 +6756,7 @@
                         <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
                         <p class="atelier-explication cache" data-role="explication">Une conclusion s’appuie sur une preuve. Une information absente ne devient pas vraie ; une valeur annoncée n’est pas un résultat de mesure en classe.</p>
                     </article>
-                    </div>
+                    </div></div></div>
                 </article>
                     </div>
                     <div class="glossaire marge-haut" data-ost-id="n1-glossaire" role="region" aria-labelledby="titre-glossaire-n1">
@@ -17943,6 +17964,9 @@ const SCORE_ATELIERS = true;
             support.dataset.position = String(position);
         }
         section.querySelectorAll('.revision-navigation-exercices').forEach(function (barre) {
+            var auPied = !!barre.closest('.revision-pied');
+            var masquerBarre = auPied && position !== blocs.length;
+            if (barre.hidden !== masquerBarre) barre.hidden = masquerBarre;
             barre.querySelector('[data-direction="-1"]').disabled = position === 0;
             barre.querySelector('[data-direction="1"]').disabled = position >= blocs.length ||
                 (position + 1 < blocs.length ? blocs[position + 1].classList.contains('verrouille') : !blocs.every(blocReussi));
