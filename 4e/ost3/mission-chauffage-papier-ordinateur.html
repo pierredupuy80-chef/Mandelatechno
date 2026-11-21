@@ -6088,6 +6088,12 @@
         /* SAUVEGARDE:CSS-FIN */
 
     
+.bloc-revision[hidden] { display: none !important; }
+.revision-navigation-exercices { display:flex; align-items:center; gap:1rem; margin:1rem 0; }
+.revision-navigation-exercices button, .revision-support summary { min-width:44px; min-height:44px; cursor:pointer; }
+.revision-support summary { padding:0.6rem; }
+.bloc-revision { scroll-margin-top:1rem; }
+
 /* PARCOURS-RÉVISION:CSS-DEBUT
    Extraits de fiche et blocs « extrait puis exercice » du mode révision.
    Les couleurs viennent des variables du gabarit ; la variante sombre est
@@ -6610,26 +6616,57 @@
                 <article id="bloc-mission-1b" class="bloc-revision verrouille" data-bloc="mission-1b" data-atelier-bloc="mission-1b" aria-labelledby="titre-bloc-mission-1b">
                     <p class="bloc-revision-repere" id="titre-bloc-mission-1b">Exercice 2 · N2 — compréhension</p>
                     <p class="bloc-revision-origine">Séance 1 · Mission 1B · Feuille 1 verso</p>
-                    <span class="bloc-revision-etat" aria-hidden="true">✅</span>
+                    <span class="bloc-revision-etat" aria-hidden="true">✅</span><div class="extrait-fiche">
+                    <section class="revision-tableau" data-ost-id="tableau-bloc-mission-1b" aria-labelledby="tableau-bloc-mission-1b-titre">
+                        <h3 class="revision-tableau-titre" id="tableau-bloc-mission-1b-titre">D1 à D5 — Extraits des notices</h3>
+                        <div class="revision-tableau-defilement" role="group" tabindex="0" aria-label="Tableau récapitulatif, défilable horizontalement">
+                            <table aria-labelledby="tableau-bloc-mission-1b-titre">
+                                <caption class="revision-tableau-legende">D1 à D5 — Extraits des notices</caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col">Document / appareil</th>
+                                    <th scope="col">Source d’énergie</th>
+                                    <th scope="col">Caractéristiques annoncées</th>
+                                    <th scope="col">Indications pour le choix</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">D1 · Chauffage halogène</th>
+                                    <td>Électricité</td>
+                                    <td>Puissance électrique : 400 W ; alimentation : 230 V</td>
+                                    <td>Programmable : Non ; compatible objet connecté : Non</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">D2 · Chauffage soufflant FH-103</th>
+                                    <td>Électricité</td>
+                                    <td>Puissance électrique : 2 000 W ; alimentation : 230 V</td>
+                                    <td>Surface annoncée : jusqu’à 20 m² ; non programmable</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">D3 · Chauffage radiant à gaz SOLOR4200SA</th>
+                                    <td>Gaz</td>
+                                    <td>Appareil à combustion</td>
+                                    <td>Notice : usage exclusivement en plein air</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">D4 · Poêle à pétrole RS4022</th>
+                                    <td>Pétrole</td>
+                                    <td>Puissance calorifique : 1 870 à 2 200 W</td>
+                                    <td>Local : au moins 34 m³ / 14 m² ; entrée ET sortie d’air de 50 cm² chacune</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">D5 · Poêle à granulés AUBRAC</th>
+                                    <td>Granulés de bois et électricité</td>
+                                    <td>Puissance thermique nominale : 12 kW ; puissance électrique maximale : 320 W</td>
+                                    <td>Arrivée d’air et conduit d’évacuation des fumées nécessaires</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="revision-tableau-aide">Faites glisser le tableau horizontalement pour voir la dernière colonne.</p>
+                    </section></div>
                         <figure class="extrait-fiche" data-ost-id="extrait-1">
-                            <h3 class="extrait-titre">D1 à D5 — Extraits des notices</h3>
-                            <p class="extrait-source">Notices fournies dans le dossier académique</p>
-                            <blockquote class="extrait-texte">D1 · Chauffage halogène · Électricité · Puissance électrique : 400 W ; alimentation : 230 V · Programmable : Non ; compatible objet connecté : Non
-
-D2 · Chauffage soufflant FH-103 · Électricité · Puissance électrique : 2 000 W ; alimentation : 230 V · Surface annoncée : jusqu’à 20 m² ; non programmable
-
-D3 · Chauffage radiant à gaz SOLOR4200SA · Gaz · Appareil à combustion · Notice : usage exclusivement en plein air
-
-D4 · Poêle à pétrole RS4022 · Pétrole · Puissance calorifique : 1 870 à 2 200 W · Local : au moins 34 m³ / 14 m² ; entrée ET sortie d’air de 50 cm² chacune
-
-D5 · Poêle à granulés AUBRAC · Granulés de bois et électricité · Puissance thermique nominale : 12 kW ; puissance électrique maximale : 320 W · Arrivée d’air et conduit d’évacuation des fumées nécessaires</blockquote>
-                        </figure>
-                        <figure class="extrait-fiche" data-ost-id="extrait-2">
-                            <h3 class="extrait-titre">Documents à examiner</h3>
-                            <p class="extrait-source">Notices : halogène, soufflant, radiant à gaz, poêle à pétrole, poêle à granulés</p>
-                            <blockquote class="extrait-texte">Les cinq documents D1 à D5 sont résumés dans le tableau de cet onglet. Leurs caractéristiques viennent des notices fournies avec la séquence. Ne comparez pas directement une puissance thermique à une puissance électrique.</blockquote>
-                        </figure>
-                        <figure class="extrait-fiche" data-ost-id="extrait-3">
                             <h3 class="extrait-titre">Coup de pouce</h3>
                             <p class="extrait-source">Aide à l’enquête · adaptation professeur</p>
                             <blockquote class="extrait-texte">Cherchez la phrase ou la valeur qui permet de dire « prouvé », « contredit » ou « information insuffisante ». Approfondissement : trouvez une information manquante qui empêcherait encore de choisir pour le laboratoire.</blockquote>
@@ -6670,7 +6707,7 @@ D5 · Poêle à granulés AUBRAC · Granulés de bois et électricité · Puissa
                                 <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
                             </div>
                             <div class="atelier-question" data-mission="3" data-bonne="inconnu" data-explication="Une puissance annoncée ne suffit pas : il manque les conditions et la durée d’utilisation pour comparer un même service.">
-                                <p class="atelier-enonce"><strong>Mission 3 :</strong> D2 : la mention 2 000 W prouve qu’il consommera moins d’énergie que D1 pour le même service.</p>
+                                <p class="atelier-enonce"><strong>Mission 3 :</strong> D2 consomme moins d’énergie que D1 pour chauffer la même pièce.</p>
                                 <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 3">
                                 <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="prouve" onclick="atelierChoisirOption(this)">🔎 Prouvé</button>
                                 <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="contredit" onclick="atelierChoisirOption(this)">🔎 Contredit</button>
@@ -6678,8 +6715,8 @@ D5 · Poêle à granulés AUBRAC · Granulés de bois et électricité · Puissa
                                 </div>
                                 <p class="atelier-retour" data-role="retour" role="status" aria-live="polite"></p>
                             </div>
-                            <div class="atelier-question" data-mission="4" data-bonne="contredit" data-explication="D5 distingue 320 W électriques au maximum et 12 kW thermiques nominaux. Ces deux valeurs ne désignent pas la même caractéristique.">
-                                <p class="atelier-enonce"><strong>Mission 4 :</strong> D5 : les 320 W électriques indiquent sa puissance thermique nominale.</p>
+                            <div class="atelier-question" data-mission="4" data-bonne="contredit" data-explication="D5 utilise des granulés de bois et de l’électricité. Il ne fonctionne donc pas seulement à l’électricité.">
+                                <p class="atelier-enonce"><strong>Mission 4 :</strong> D5 : le poêle à granulés fonctionne seulement à l’électricité.</p>
                                 <div class="atelier-options" role="radiogroup" aria-label="Commandes possibles pour la mission 4">
                                 <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="prouve" onclick="atelierChoisirOption(this)">🔎 Prouvé</button>
                                 <button type="button" class="atelier-option" role="radio" aria-checked="false" data-valeur="contredit" onclick="atelierChoisirOption(this)">🔎 Contredit</button>
@@ -6965,11 +7002,6 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
                     <p class="bloc-revision-origine">Séance 3 · Mission 3A · Feuille 3 recto</p>
                     <span class="bloc-revision-etat" aria-hidden="true">✅</span>
                         <figure class="extrait-fiche" data-ost-id="extrait-1">
-                            <h3 class="extrait-titre">Des grandeurs et des instruments</h3>
-                            <p class="extrait-source">Ressource « Descriptif appareils de mesures » · p. 1</p>
-                            <blockquote class="extrait-texte">Wattmètre : Permet de mesurer la puissance consommée. Chronomètre : Permet de mesurer une durée. Mètre ruban : Permet de mesurer une distance. Thermomètre infrarouge : Permet de mesurer une température à distance.</blockquote>
-                        </figure>
-                        <figure class="extrait-fiche" data-ost-id="extrait-2">
                             <h3 class="extrait-titre">La performance</h3>
                             <p class="extrait-source">Fiche OST3f · p. 1 ; protocole de test académique · objectif</p>
                             <blockquote class="extrait-texte">La performance d'un objet technique est sa capacité à répondre à un besoin de manière efficace. Le protocole académique utilise un projecteur halogène pour simuler un système de chauffage : il suit l’échauffement d’un capteur de +5 °C, pas le chauffage de toute une pièce.</blockquote>
@@ -17781,6 +17813,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
     </script>
 
 <script>const SCORE_QUIZ = {"seuilOrange": 100, "commentaires": {"vert": ["Score complet."], "orange": ["Appelez le professeur."], "rouge": ["Appelez le professeur."]}, "appel": "Appelez le professeur avant de reprendre vos choix.", "bip": {"actif": false}, "actif": true};
+const NAVIGATION_EXERCICES = true;
 const SCORE_ATELIERS = true;
 
 // ============================================================
@@ -17799,6 +17832,83 @@ const SCORE_ATELIERS = true;
     'use strict';
 
     var enCours = false;
+    var navigation = typeof NAVIGATION_EXERCICES !== 'undefined' && NAVIGATION_EXERCICES;
+    var positions = new WeakMap();
+    var succesConnus = new WeakMap();
+
+    function defilerDiscret(cible) {
+        // Ne déplace ni le focus ni une page dont le lecteur est encore au-dessus.
+        if (!cible || !cible.closest('.contenu-onglet.actif')) return;
+        var haut = cible.getBoundingClientRect().top;
+        if (haut < 0 || haut > window.innerHeight * 0.75) {
+            cible.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    }
+
+    function afficherNavigation(section, blocs) {
+        if (!navigation || !blocs.length) return;
+        var parcours = section.querySelector('.revision-parcours');
+        var nav = section.querySelector('.revision-navigation-exercices');
+        if (!nav) {
+            var panneau = document.createElement('details');
+            panneau.className = 'revision-support';
+            panneau.open = true;
+            var resume = document.createElement('summary');
+            resume.textContent = 'Notions et ressources de la fiche';
+            panneau.appendChild(resume);
+            // Conserve intégralement les supports et leurs identifiants dans le DOM.
+            while (parcours.previousElementSibling && parcours.previousElementSibling.tagName !== 'H2') {
+                panneau.insertBefore(parcours.previousElementSibling, resume.nextSibling);
+            }
+            parcours.parentNode.insertBefore(panneau, parcours);
+            nav = document.createElement('nav');
+            nav.className = 'revision-navigation-exercices';
+            nav.setAttribute('aria-label', 'Navigation entre les exercices');
+            nav.innerHTML = '<button type="button" data-direction="-1" aria-label="Exercice précédent">←</button> <span role="status" aria-live="polite"></span> <button type="button" data-direction="1" aria-label="Exercice suivant">→</button>';
+            parcours.parentNode.insertBefore(nav, parcours);
+            nav.addEventListener('click', function (event) {
+                var bouton = event.target.closest('button[data-direction]');
+                if (!bouton || bouton.disabled) return;
+                var cible = (positions.get(section) || 0) + Number(bouton.dataset.direction);
+                if (cible < 0 || cible > blocs.length ||
+                    (cible < blocs.length && blocs[cible].classList.contains('verrouille')) ||
+                    (cible === blocs.length && !blocs.every(blocReussi))) return;
+                positions.set(section, cible);
+                rafraichir();
+                defilerDiscret(blocs[cible] || section.querySelector('.revision-pied'));
+            });
+        }
+        var position = positions.get(section);
+        var changement = false;
+        if (position === undefined) {
+            position = blocs.findIndex(function (bloc) { return !blocReussi(bloc); });
+            if (position < 0) position = blocs.length;
+        } else if (position < blocs.length && blocReussi(blocs[position]) &&
+                   !succesConnus.get(blocs[position])) {
+            position += 1;
+            changement = true;
+        }
+        while (position > 0 && position < blocs.length && blocs[position].classList.contains('verrouille')) position -= 1;
+        if (position === blocs.length && !blocs.every(blocReussi)) {
+            position = blocs.findIndex(function (bloc) { return !blocReussi(bloc); });
+        }
+        positions.set(section, position);
+        blocs.forEach(function (bloc, i) {
+            if (bloc.hidden !== (i !== position)) bloc.hidden = i !== position;
+            succesConnus.set(bloc, blocReussi(bloc));
+        });
+        var support = section.querySelector('.revision-support');
+        if (support.dataset.position !== String(position)) {
+            support.open = position === 0;
+            support.dataset.position = String(position);
+        }
+        nav.querySelector('[data-direction="-1"]').disabled = position === 0;
+        nav.querySelector('[data-direction="1"]').disabled = position >= blocs.length ||
+            (position + 1 < blocs.length ? blocs[position + 1].classList.contains('verrouille') : !blocs.every(blocReussi));
+        ecrire(nav.querySelector('span'), position === blocs.length ? 'Bilan de la fiche' : 'Exercice ' + (position + 1) + ' / ' + blocs.length);
+        if (changement) defilerDiscret(blocs[position] || section.querySelector('.revision-pied'));
+    }
+
 
     function onglets() {
         return Array.prototype.slice.call(
@@ -17901,8 +18011,9 @@ const SCORE_ATELIERS = true;
                 basculer(bloc, 'valide', reussi);
                 totalBlocs += 1;
                 if (reussi) { blocsReussis += 1; reussis += 1; }
-                ouverts = reussi;
+                ouverts = ouverts && reussi;
             });
+            afficherNavigation(section, blocs);
             var ficheFinie = blocs.length > 0 && ouverts;
             var etat = section ? section.querySelector('[data-role="revision-etat"]') : null;
             var boutonFin = section ? section.querySelector('[data-role="revision-fin-bouton"]') : null;
@@ -17978,6 +18089,14 @@ const SCORE_ATELIERS = true;
     window.revisionAllerA = function (idCible) {
         var cible = document.getElementById(idCible);
         if (!cible) return;
+        if (navigation && cible.classList.contains('bloc-revision')) {
+            if (cible.classList.contains('verrouille')) return;
+            var section = cible.closest('.contenu-onglet');
+            positions.set(section, blocsDe(section).indexOf(cible));
+            rafraichir();
+            defilerDiscret(cible);
+            return;
+        }
         cible.scrollIntoView({ behavior: 'smooth', block: 'start' });
         var premier = cible.querySelector('.option-reponse, .atelier-jeton, .bouton-action');
         if (premier && typeof premier.focus === 'function') {
