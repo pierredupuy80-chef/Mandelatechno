@@ -6571,6 +6571,9 @@
             <button class="bouton-onglet verrouille" data-niveau="seance-3" role="tab" aria-selected="false" aria-controls="contenu-seance-3" tabindex="-1" disabled>
                 3 · Vérifier
             </button>
+            <button class="bouton-onglet verrouille" data-niveau="conclusion" role="tab" aria-selected="false" aria-controls="contenu-conclusion" tabindex="-1" disabled>
+                4 · Conclusion
+            </button>
         </nav>
 
         <!-- Contenu principal -->
@@ -7350,8 +7353,8 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
                             </button>
                             <div id="resultat-quiz-mission-3c" class="marge-haut" style="display: none;">
                                 <p id="message-resultat-mission-3c"></p>
-                                <button type="button" class="bouton-action succes cache" id="bouton-suite-mission-3c" onclick="revisionAllerA('bloc-mission-3d')">
-                                    Exercice suivant ↓
+                                <button type="button" class="bouton-action succes cache" id="bouton-suite-mission-3c" onclick="revisionAllerA('fin-seance-3')">
+                                    Bas de la fiche : bouton de suite ↓
                                 </button>
                                 <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-mission-3c" onclick="revisionRecommencerQuiz('mission-3c')">
                                     Recommencer de 0
@@ -7360,9 +7363,26 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
                         </form>
                     </div></div></div>
                 </article>
-                <article id="bloc-mission-3d" class="bloc-revision verrouille" data-bloc="mission-3d" data-exercice="mission-3d" aria-labelledby="titre-bloc-mission-3d">
-                    <p class="bloc-revision-repere" id="titre-bloc-mission-3d">Exercice 4 · N2 — compréhension</p>
-                    <p class="bloc-revision-origine">Séance 3 · Conclusion · Feuille 3 verso</p>
+                    </div>
+
+                    <div class="revision-pied marge-haut" id="fin-seance-3">
+                        <p class="revision-etat" data-role="revision-etat" role="status" aria-live="polite"></p>
+                        <button type="button" class="bouton-action succes cache" data-role="revision-fin-bouton" onclick="revisionOngletSuivant('conclusion')">
+                            Ouvrir la fiche suivante (4 · Conclusion) →
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <section id="contenu-conclusion" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-conclusion">
+                <div class="carte-contenu">
+                    <h2>Conclusion — dix questions pour faire le point</h2>
+                    <p class="carte-fiche-meta">compétences OST31 · OST32 · OST33</p>
+                    <p>Dernière étape : dix questions sur tout le dossier — les notices, les critères de choix, la lecture des relevés et les limites du test. Le score global s’affiche à la fin.</p>
+
+                    <div class="revision-parcours" id="revision-conclusion">
+                <article id="bloc-mission-3d" class="bloc-revision" data-bloc="mission-3d" data-exercice="mission-3d" aria-labelledby="titre-bloc-mission-3d">
+                    <p class="bloc-revision-repere" id="titre-bloc-mission-3d">Exercice 1 · N2 — compréhension</p>
+                    <p class="bloc-revision-origine">Conclusion · Feuille 3 verso</p>
                     <span class="bloc-revision-etat" aria-hidden="true">✅</span>
                         <figure class="extrait-fiche" data-ost-id="extrait-1">
                             <h3 class="extrait-titre">Le grand quiz de conclusion</h3>
@@ -7547,7 +7567,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
                             </button>
                             <div id="resultat-quiz-mission-3d" class="marge-haut" style="display: none;">
                                 <p id="message-resultat-mission-3d"></p>
-                                <button type="button" class="bouton-action succes cache" id="bouton-suite-mission-3d" onclick="revisionAllerA('fin-seance-3')">
+                                <button type="button" class="bouton-action succes cache" id="bouton-suite-mission-3d" onclick="revisionAllerA('fin-conclusion')">
                                     Bas de la fiche : bouton de suite ↓
                                 </button>
                                 <button type="button" class="bouton-action bouton-recommencer cache" id="bouton-recommencer-mission-3d" onclick="revisionRecommencerQuiz('mission-3d')">
@@ -7559,7 +7579,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
                 </article>
                     </div>
 
-                    <div class="revision-pied marge-haut" id="fin-seance-3">
+                    <div class="revision-pied marge-haut" id="fin-conclusion">
                         <p class="revision-etat" data-role="revision-etat" role="status" aria-live="polite"></p>
                         <button type="button" class="bouton-action succes cache" data-role="revision-fin-bouton" onclick="revisionTerminer()">
                             Voir le bilan de la révision ✓
