@@ -6098,6 +6098,18 @@
 .atelier-question[hidden] { display:none !important; }
 .atelier-carte button[hidden] { display:none !important; }
 /* Animation par étapes : une image, sa légende, trois commandes. */
+/* Onglet terminé : vert, y compris lorsqu'il est l'onglet affiché. */
+.navigation-onglets .bouton-onglet.valide,
+.navigation-onglets .bouton-onglet.valide.actif {
+    background-color: var(--couleur-succes);
+    border-color: var(--couleur-succes);
+    color: #fff;
+}
+.navigation-onglets .bouton-onglet.valide::after {
+    content: "✓";
+    margin-left: var(--espacement-xs);
+}
+
 .revision-animation { margin:.8rem 0; border:1px solid var(--couleur-info); border-radius:var(--rayon-bordure); padding:.8rem; }
 .revision-animation-titre { font-weight:700; color:var(--couleur-primaire); font-size:1rem; margin-bottom:.4rem; }
 .revision-animation-images { list-style:none; margin:.4rem 0; padding:0; }
@@ -18224,9 +18236,10 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
 // ==== SAUVEGARDE:JS-FIN ====
     </script>
 
-<script>const SCORE_QUIZ = {"seuilOrange": 100, "commentaires": {"vert": ["Score complet."], "orange": ["Appelez le professeur."], "rouge": ["Appelez le professeur."]}, "appel": "Appelez le professeur avant de reprendre vos choix.", "bip": {"actif": false}, "actif": true};
+<script>const SCORE_QUIZ = {"seuilOrange": 50, "commentaires": {"vert": ["Score complet."], "orange": ["Appelez le professeur."], "rouge": ["Appelez le professeur."]}, "appel": "Appelez le professeur avant de reprendre vos choix.", "bip": {"actif": true, "volume": 0.7}, "actif": true};
 const NAVIGATION_EXERCICES = true;
 const LECTURE_NOTIONS = false;
+const BIP_ATELIERS = {"actif": true, "seuil": 50, "volume": 0.7};
 const UNE_QUESTION_ALA_FOIS = true;
 const AIDE_TERME = {"terme": "TAPO", "titre": "Qu’est-ce que le système TAPO ?", "texte": "TAPO est le système domotique du laboratoire : des appareils connectés, ici l’éclairage, que l’on pilote et programme depuis une application sur un téléphone ou une tablette. L’application TAPO permet aussi de suivre en direct la puissance consommée et la température mesurée. Dans cette séquence, on se demande si ce système peut également piloter un chauffage. Attention : le dossier ne contient aucune notice du système TAPO du laboratoire. La compatibilité avec un chauffage n’est donc pas démontrée, et aucun branchement n’est autorisé.", "courte": "Système domotique du laboratoire : des objets connectés (ici l’éclairage) pilotés depuis une application."};
 const SCORE_ATELIERS = true;
@@ -18735,6 +18748,8 @@ const SCORE_ATELIERS = true;
             return false;
         }
     }
+    // Les ateliers à score global utilisent le même signal sonore.
+    window.__bipRevision = bipErreur;
 
     // Le défi peut exister sur une page SANS barème de révision : il garde le
     // sien, et les autres questionnaires reprennent le moteur du gabarit.
@@ -19117,9 +19132,16 @@ const SCORE_ATELIERS = true;
         if (typeof revisionRafraichir === 'function') revisionRafraichir();
     }
     function score(c, justes, total) {
+        var pourcentage = total ? Math.round(100 * justes / total) : 0;
         atelierRetour(c, 'Score global : ' + justes + ' / ' + total +
-            ' (' + Math.round(100 * justes / total) + ' %)' +
+            ' (' + pourcentage + ' %)' +
             (justes < total ? ' Appelle le professeur avant de reprendre tes réponses.' : ''), '');
+        // Sous le seuil, l'ordinateur bipe : le signal ne dit rien de la réponse.
+        if (typeof BIP_ATELIERS !== 'undefined' && BIP_ATELIERS && BIP_ATELIERS.actif &&
+            pourcentage < (Number(BIP_ATELIERS.seuil) || 50) &&
+            typeof window.__bipRevision === 'function') {
+            window.__bipRevision(BIP_ATELIERS);
+        }
         if (total && justes === total) c.setAttribute('data-termine', '1');
         else c.removeAttribute('data-termine');
         if (typeof revisionRafraichir === 'function') revisionRafraichir();
