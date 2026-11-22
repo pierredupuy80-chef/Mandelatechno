@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Énoncés N3 et N4 — Technologie 4e</title>
+<meta name="description" content="12 énoncés, un par écran, comme un sujet d'évaluation : la compétence de 4e en tête, thèmes OST2, OST13, OST21, OST22, OST31, OST32, OST33, SFC12, SFC13, SFC14.">
+<style>
+:root {
+    --encre: #10243b;
+    --encre-douce: #3b4f66;
+    --fond: #fbfcfe;
+    --accent: #1f4e79;
+    --accent-pale: #eef4fa;
+    --bord: #c9d6e4;
+    --entete-tableau: #eaf1f8;
+    --correction: #1d6b4b;
+    --correction-pale: #f2f8f4;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    background: var(--fond);
+    color: var(--encre);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.visuellement-cache {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; border: 0; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---- En-tête : le retour à l'accueil (dans le flux) et les deux commandes -- */
+.entete {
+    flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    padding: 10px 14px 4px;
+}
+.retour-accueil {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; margin: 0; padding: 8px 16px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 0.85rem; font-weight: 700;
+    text-decoration: none;
+}
+.retour-accueil:hover { background: #2a6394; }
+.barre-outils {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-left: auto;
+}
+.bouton-outil {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 44px; padding: 8px 20px;
+    border: 2px solid var(--accent); border-radius: 999px;
+    background: #ffffff; color: var(--accent);
+    font: inherit; font-size: 0.95rem; font-weight: 700;
+    line-height: 1.1; cursor: pointer;
+}
+.bouton-outil:hover { background: var(--accent-pale); }
+.bouton-outil[aria-pressed="true"] { background: var(--accent); color: #ffffff; }
+.bouton-outil--correction { border-color: var(--correction); color: var(--correction); }
+.bouton-outil--correction:hover { background: var(--correction-pale); }
+.bouton-outil--correction[aria-pressed="true"] {
+    background: var(--correction); color: #ffffff;
+}
+.bouton-outil:focus-visible,
+.bouton-fermer:focus-visible { outline: 3px solid #b45309; outline-offset: 2px; }
+.bouton-outil[hidden] { display: none; }
+.bouton-fermer {
+    min-height: 44px; padding: 6px 16px;
+    border: 2px solid var(--bord); border-radius: 999px;
+    background: #f3f6f9; color: var(--encre);
+    font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+}
+.bouton-fermer:hover { background: #e7edf3; }
+
+body.projection .retour-accueil { display: none; }
+body.projection .mention-rgpd { display: none; }
+
+main {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1vh 3vw 3vh;
+}
+.mention-rgpd { flex: 0 0 auto; }
+
+/* ---- L'énoncé, et la colonne de correction réservée à droite -------------- */
+.enonce {
+    width: 100%; max-width: 1180px; --facteur: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 2.2vw;
+    align-items: start;
+}
+.enonce[hidden] { display: none; }
+.enonce-corps { min-width: 0; }
+body.correction-ouverte .enonce:not([hidden]) {
+    max-width: 1820px;
+    grid-template-columns: minmax(0, 1fr) clamp(340px, 36vw, 660px);
+}
+.enonce-titre {
+    margin: 0 0 0.85em;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid var(--bord);
+    font-size: calc(var(--facteur) * clamp(13px, min(1.3vw, 2.1vh), 23px));
+    font-weight: 400;
+    line-height: 1.32;
+    color: var(--encre-douce);
+}
+.enonce-code {
+    margin-right: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+}
+.enonce p {
+    margin: 0 0 0.62em;
+    font-size: calc(var(--facteur) * clamp(16px, min(2.25vw, 3.7vh), 42px));
+    line-height: 1.4;
+    hyphens: auto;
+}
+.enonce .enonce-tache {
+    margin-top: 0.9em;
+    padding: 0.5em 0.75em;
+    border-left: 5px solid var(--accent);
+    background: var(--accent-pale);
+    font-weight: 600;
+}
+.enonce table {
+    border-collapse: collapse;
+    margin: 0.6em 0 1em;
+    font-size: calc(var(--facteur) * clamp(12px, min(1.55vw, 2.5vh), 27px));
+    font-variant-numeric: tabular-nums;
+}
+.enonce th, .enonce td {
+    border: 1px solid var(--bord);
+    padding: 0.34em 0.65em;
+    text-align: left;
+}
+.enonce th { background: var(--entete-tableau); font-weight: 700; }
+.enonce td:not(:first-child), .enonce th:not(:first-child) { text-align: center; }
+
+/* ---- Le volet de correction : la colonne de droite ------------------------ */
+.correction {
+    min-width: 0;
+    /* Plafonnée sur l'espace réellement disponible : la hauteur utile est
+       mesurée par le script (--hauteur-volet). Le volet défile alors tout seul,
+       et la section ne dépasse jamais l'écran. */
+    max-height: var(--hauteur-volet, 60vh);
+    overflow-y: auto;
+    padding: 0 0 0 1.2vw;
+    border-left: 3px solid var(--correction);
+    /* La barre de défilement doit se voir : sans elle, une correction plus
+       longue que l'écran semble s'arrêter en pleine phrase. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--correction) #e9eef3;
+}
+.correction::-webkit-scrollbar { width: 11px; }
+.correction::-webkit-scrollbar-track {
+    background: #e9eef3; border-radius: 6px;
+}
+.correction::-webkit-scrollbar-thumb {
+    background: var(--correction); border-radius: 6px;
+}
+.correction[hidden] { display: none; }
+.correction-entete {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 0.35em;
+}
+.correction-titre {
+    margin: 0;
+    font-size: clamp(14px, 1.3vw, 22px);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--correction);
+}
+/* Le raisonnement se lit comme un texte : paragraphes rédigés, interligne
+   large, pas de listes télégraphiques. */
+.raisonnement p {
+    margin: 0 0 0.85em;
+    font-size: clamp(15px, 1.15vw, 20px);
+    line-height: 1.5;
+    text-align: justify;
+    hyphens: auto;
+}
+.raisonnement p:last-child { margin-bottom: 0; }
+
+/* ---- La modale d'indication ---------------------------------------------- */
+.modale {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4vh 4vw;
+    background: rgba(16, 36, 59, 0.55);
+}
+.modale[hidden] { display: none; }
+.modale-boite {
+    /* La modale porte des rappels de fiches, donc du texte : elle s'élargit
+       plutôt que de s'allonger. */
+    width: min(1120px, 100%);
+    max-height: 90vh; overflow-y: auto;
+    padding: 26px 30px 20px;
+    border: 3px solid var(--accent);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 18px 44px rgba(16, 36, 59, 0.3);
+}
+.modale-boite:focus { outline: none; }
+.modale-titre {
+    margin: 0 0 0.55em;
+    font-size: clamp(18px, 1.7vw, 28px);
+    color: var(--accent);
+}
+.modale-resume {
+    margin: 0 0 0.7em;
+    font-size: clamp(17px, 1.5vw, 25px);
+    line-height: 1.42;
+}
+.rappel { margin: 0 0 1em; }
+.rappel:last-child { margin-bottom: 0; }
+.modale .rappel-titre {
+    margin: 0 0 0.25em;
+    font-size: clamp(16px, 1.25vw, 21px);
+    font-weight: 700; line-height: 1.3;
+    color: var(--accent);
+}
+.modale .rappel-texte {
+    margin: 0;
+    font-size: clamp(15px, 1.2vw, 20px);
+    line-height: 1.5;
+    text-align: justify;
+    hyphens: auto;
+}
+.modale .modale-fiches {
+    margin: 1.2em 0 0;
+    padding-top: 0.7em;
+    border-top: 1px solid var(--bord);
+    font-size: clamp(14px, 1.05vw, 18px);
+    font-style: italic;
+    color: var(--encre-douce);
+}
+.modale-pied {
+    display: flex; justify-content: flex-end; margin: 1.1em 0 0;
+    /* Le bouton « Fermer » reste atteignable même si la modale défile. */
+    position: sticky; bottom: 0;
+    background: #ffffff; padding-top: 0.6em;
+}
+
+@media (max-width: 360px) {
+    .enonce table { font-size: 10.5px; }
+    .enonce th, .enonce td { padding: 0.22em 0.36em; }
+}
+
+@media print {
+    @page { size: 297mm 167mm; margin: 14mm; }
+    .entete, .modale, .correction, .mention-rgpd, .mention-rgpd * { display: none; }
+    body { display: block; height: auto; min-height: 0; }
+    main { overflow: visible; min-height: 0; display: block; padding: 0; }
+    .enonce, .enonce[hidden] { display: block !important; page-break-after: always; }
+    .enonce:last-child { page-break-after: auto; }
+    .enonce-titre { font-size: 10.5pt; }
+    .enonce p { font-size: 12pt; }
+    .enonce table { font-size: 10pt; }
+}
+
+/* ---- Téléphone : les deux colonnes s'empilent ----------------------------- */
+@media (max-width: 900px) {
+    main { align-items: flex-start; padding: 1vh 4vw 4vh; }
+    /* Un tableau de six colonnes ne tient pas dans 390 px : on le fixe à la
+       largeur disponible et on laisse les en-têtes passer à la ligne, plutôt
+       que de le laisser déborder sous le bord droit de l'écran. */
+    .enonce table { width: 100%; table-layout: fixed; font-size: 11px; }
+    .enonce th, .enonce td { padding: 0.25em 0.3em; hyphens: auto; }
+    .enonce th { overflow-wrap: normal; }
+    .enonce, body.correction-ouverte .enonce:not([hidden]) {
+        max-width: none; grid-template-columns: minmax(0, 1fr);
+    }
+    .correction {
+        max-height: none; overflow: visible;
+        margin-top: 3vh; padding: 2vh 0 0;
+        border-left: 0; border-top: 3px solid var(--correction);
+    }
+    .modale-boite { padding: 20px 18px 16px; }
+}
+</style>
+<!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
+<style>
+  .nom-manuscrit{font-size:.85rem; color:var(--gris); margin:4px 0 0}
+  .nom-manuscrit .mention-donnees{display:block; font-size:.72rem; font-style:italic; opacity:.85}
+  .mention-rgpd{max-width:1240px; margin:16px auto 24px; padding:10px 14px; border:1px solid #d8e0e8;
+    border-radius:8px; background:#f6f8fa; color:#5a6672; font-size:.78rem; line-height:1.45;
+    text-align:center}
+@media print{.nom-manuscrit .mention-donnees{display:block}}
+</style>
+</head>
+<body>
+<header class="entete">
+<h1 class="visuellement-cache">Énoncés N3 et N4 — Technologie 4e</h1>
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+    <div class="barre-outils">
+        <button type="button" class="bouton-outil" id="bouton-indication" aria-pressed="false" aria-controls="modale-e1">Indication</button>
+        <button type="button" class="bouton-outil bouton-outil--correction" id="bouton-correction" aria-pressed="false" aria-controls="correction-e1">Correction</button>
+    </div>
+</header>
+<main id="scene">
+        <section class="enonce" data-theme="OST13" data-niveau="N3" data-objet="four à micro-ondes" data-competence="OST13" aria-label="Énoncé 1 sur 12">
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST13</span> <span class="enonce-competence">Justifier l’évolution d’un OST pour répondre à l’évolution des besoins</span></h2>
+                <p>En 1945, l’ingénieur Percy Spencer découvre qu’un magnétron de radar chauffe un aliment placé à côté : c’est le point de départ du four à micro-ondes.</p>
+                <p>En 1967, le premier modèle domestique entre dans les cuisines : plus compact, il tourne, et des touches prédéfinies remplacent les réglages savants. Il est fabriqué en série et adopté par les familles.</p>
+                <p>Depuis les années 2010, les modèles à inverter dosent la puissance, un mode éco réduit la veille et l’indice de réparabilité s’affiche en magasin.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : four à micro-ondes</caption>
+                <thead><tr><th scope="col">Étape</th><th scope="col">Ce qui change</th><th scope="col">Nature</th><th scope="col">Pourquoi</th></tr></thead>
+                <tbody><tr><th scope="row">1945</th><td>un magnétron chauffe un aliment</td><td></td><td></td></tr><tr><th scope="row">1967</th><td>modèle domestique, plateau tournant, touches</td><td></td><td></td></tr><tr><th scope="row">années 2010</th><td>inverter, mode éco, indice de réparabilité</td><td></td><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Pour chaque étape, indique s’il s’agit d’une invention, d’une innovation ou d’une réponse au développement durable, et justifie avec un élément du texte. Puis explique quel besoin a fait évoluer le four à micro-ondes.</p>
+            </div>
+            <aside class="correction" id="correction-e1" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>La découverte de 1945 est une invention : une solution technique nouvelle, née d’une observation scientifique, qui n’existait pas auparavant et n’est pas encore commercialisée. Le four domestique de 1967 relève, lui, de l’innovation : il ne crée pas la technique, il l’améliore — encombrement réduit, plateau tournant, touches prédéfinies —, puis il est fabriqué en série et adopté par les utilisateurs.</p>
+                    <p>L’étape des années 2010 cumule innovation et développement durable. L’inverter et le mode éco améliorent l’existant en réduisant la consommation ; l’affichage de l’indice de réparabilité et l’allongement de la durée de vie répondent à l’idée de satisfaire les besoins du présent sans compromettre ceux des générations futures.</p>
+                    <p>Le besoin qui a fait évoluer l’objet est d’abord celui de cuisiner plus vite, plus simplement et sans surveiller : le four chauffe un plat en quelques minutes, sans casserole. Viennent ensuite les besoins de sécurité, d’économie d’énergie et de durabilité, qui expliquent les évolutions les plus récentes. L’objet n’a pas changé de fonction ; il s’est adapté à l’évolution des attentes.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e1" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e1">
+                    <h3 class="modale-titre" id="modale-titre-e1">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST1a — Les éléments qui participent à l’évolution des besoins</p>
+                        <p class="rappel-texte">Pour répondre à ses besoins, l’Homme crée et fait évoluer des objets et systèmes techniques. Trois éléments expliquent cette évolution : l’invention, idée nouvelle ou découverte scientifique qui permet de créer un objet inédit ; l’innovation, recherche constante d’amélioration de l’existant, réussie lorsqu’elle est commercialisée et adoptée ; le développement durable, qui répond aux besoins du présent sans compromettre ceux des générations futures.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST13" data-niveau="N4" data-objet="casque de vélo" data-competence="OST13" aria-label="Énoncé 2 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST13</span> <span class="enonce-competence">Justifier l’évolution d’un OST pour répondre à l’évolution des besoins</span></h2>
+                <p>Le collège prête quarante casques de vélo aux élèves. Deux problèmes reviennent : beaucoup d’élèves serrent mal la sangle, et après une chute personne ne sait si le casque a été fragilisé.</p>
+                <p>Un casque est un objet de sécurité : sa coque et sa mousse absorbent l’énergie du choc. Une fois la mousse comprimée, le casque peut ne plus protéger.</p>
+                <p class="enonce-tache">Propose une innovation qui règle l’un de ces deux problèmes : donne son nom, ce qu’elle fait, comment elle fonctionne et le besoin auquel elle répond. Puis justifie ce choix au regard du développement durable : matériau, réparation possible, fin de vie.</p>
+            </div>
+            <aside class="correction" id="correction-e2" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Plusieurs innovations répondent au problème. La première est un témoin de choc : une pastille ou une bande de couleur, placée à l’arrière, qui change d’aspect quand la mousse a été comprimée. L’élève, comme le professeur, voit d’un coup d’œil que le casque ne protège plus et doit être écarté.</p>
+                    <p>La seconde est une molette de réglage graduée : elle affiche la taille et permet de serrer le casque d’une seule main, sans deviner. Le besoin visé est le même dans les deux cas : rendre la sécurité visible et l’usage fiable, sans ajouter de notice compliquée.</p>
+                    <p>Le développement durable oriente la conception : une coque en plastique recyclé, une mousse remplaçable et un témoin de choc lui-même démontable évitent de jeter le casque entier. Une filière de reprise au collège, qui récupère les casques hors d’usage, complète le raisonnement. Toute innovation est recevable si elle nomme le besoin, décrit un fonctionnement crédible et justifie ces trois points.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e2" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e2">
+                    <h3 class="modale-titre" id="modale-titre-e2">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST1a — Les éléments qui participent à l’évolution des besoins</p>
+                        <p class="rappel-texte">Pour répondre à ses besoins, l’Homme crée et fait évoluer des objets et systèmes techniques. L’invention est une idée nouvelle ou une découverte qui permet de créer un objet inédit ; l’innovation est la recherche constante d’amélioration de l’existant, réussie lorsqu’elle est commercialisée et adoptée ; le développement durable répond aux besoins du présent sans compromettre ceux des générations futures.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST2" data-niveau="N3" data-objet="store banne du CDI" data-competence="OST2" aria-label="Énoncé 3 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST2</span> <span class="enonce-competence">Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs</span></h2>
+                <p>Le CDI est équipé d’un store banne motorisé. Un capteur de vent et un capteur d’ensoleillement mesurent l’extérieur ; une télécommande permet de le commander ; un moteur déroule et enroule la toile.</p>
+                <p>Le système protège les livres du soleil, mais il ne doit jamais rester sorti sous une rafale.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : store banne du CDI</caption>
+                <thead><tr><th scope="col">Interacteur</th><th scope="col">Type</th><th scope="col">Ce qu’il apporte au système</th></tr></thead>
+                <tbody><tr><th scope="row">la télécommande du personnel</th><td></td><td>l’ordre d’ouvrir ou de fermer</td></tr><tr><th scope="row">l’anémomètre</th><td></td><td>la vitesse du vent, mesurée en km/h</td></tr><tr><th scope="row">les élèves et le professeur</th><td></td><td>l’usage du CDI, l’ouverture aux heures de cours</td></tr><tr><th scope="row">la pluie</th><td></td><td>une contrainte que le store doit supporter</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Complète la colonne « Type » avec le bon interacteur (usager, donnée, autre objet, élément de l’environnement), puis ajoute un interacteur de ton choix. Explique ensuite ce qui se passe si l’anémomètre envoie « vent nul » alors qu’une rafale arrive.</p>
+            </div>
+            <aside class="correction" id="correction-e3" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>La télécommande est un autre objet : elle transmet un ordre. L’anémomètre fournit une donnée, la vitesse du vent. Les élèves et le professeur sont des usagers : ce sont eux qui ouvrent le store aux heures de cours. La pluie est un élément de l’environnement, comme le soleil, qui peut d’ailleurs être ajouté à la liste ; le moteur serait, lui, un autre objet commandé par le système.</p>
+                    <p>Si l’anémomètre annonce « vent nul » alors qu’une rafale arrive, le système croit pouvoir rester sorti : la toile reste déployée, se gonfle et peut se déchirer, tordre les bras ou arracher la fixation. Le défaut ne vient pas du moteur, mais de la donnée qui l’a déclenché.</p>
+                    <p>Un système bien conçu doit donc être capable de replier le store en cas de doute : valeur incohérente, capteur muet ou vent qui monte. C’est le principe du repli sûr. Cette analyse montre qu’une donnée est un interacteur aussi important qu’un usager : une information fausse suffit à mettre l’objet en danger.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e3" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e3">
+                    <h3 class="modale-titre" id="modale-titre-e3">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2a — Les interacteurs extérieurs</p>
+                        <p class="rappel-texte">Un objet ou système technique ne fonctionne jamais seul : il est en interaction avec des interacteurs extérieurs. Les usagers sont les personnes qui l’utilisent ; les données sont les informations qu’il exploite, stockées ou reçues de l’extérieur ; les autres objets sont ceux avec lesquels il communique ou qu’il commande ; les éléments de l’environnement sont les réalités naturelles ou artificielles qui l’entourent. Identifier ces interactions et analyser leur influence permet de comprendre le fonctionnement de l’objet.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST21" data-niveau="N4" data-objet="borne de prêt du CDI" data-competence="OST21" aria-label="Énoncé 4 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST21</span> <span class="enonce-competence">Décrire l’expérience de l’utilisateur (ressenti et facilité d’usage) d’un OST en partant du langage naturel (texte, croquis) pour aboutir aux schémas, graphiques, algorithmes</span></h2>
+                <p>Le CDI installe une borne de prêt en libre-service. L’élève pose son badge, l’écran affiche le titre du livre, il appuie sur « Valider », un reçu sort.</p>
+                <p>À dix heures, la file s’allonge : certains ne trouvent pas le bouton, d’autres repartent sans reçu.</p>
+                <p class="enonce-tache">Décris l’expérience de l’utilisateur en trois moments : à l’arrivée, pendant le prêt, au départ. Propose une amélioration ergonomique et justifie-la avec le confort, l’efficacité ou la sécurité. Puis choisis un mode de représentation pour (a) l’écran d’accueil, (b) la suite des étapes du prêt, (c) le nombre de prêts par heure.</p>
+            </div>
+            <aside class="correction" id="correction-e4" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>À l’arrivée, l’élève cherche la borne, pose son badge et attend que l’écran réagisse ; s’il ne voit pas de confirmation, il recommence et perd du temps. Pendant le prêt, il doit repérer le bouton « Valider », vérifier que le titre affiché est le bon, puis attendre le reçu. Au départ, il doit comprendre que le prêt est enregistré : sans retour clair, il repart sans le reçu ou croit avoir échoué.</p>
+                    <p>L’amélioration ergonomique la plus utile est un retour immédiat : un bouton large et contrasté, une confirmation écrite et sonore, une barre qui montre l’étape en cours. Elle sert l’efficacité — moins d’erreurs, une file plus courte — et le confort, sans ajouter de sécurité inutile.</p>
+                    <p>Chaque besoin appelle un mode de représentation différent. Un croquis convient pour montrer la disposition de l’écran d’accueil ; un algorithme, pour ordonner les étapes du prêt — poser le badge, lire le titre, valider, imprimer ; un graphique, pour visualiser le nombre de prêts par heure. Le choix se justifie par ce que l’on veut donner à voir, pas par habitude.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e4" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e4">
+                    <h3 class="modale-titre" id="modale-titre-e4">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2b — Les modes de représentation</p>
+                        <p class="rappel-texte">Pour comprendre un objet technique ou communiquer une idée de conception, on dispose de cinq modes de représentation : le croquis, dessin rapide et simplifié réalisé à main levée ; le schéma, représentation symbolique et normalisée qui met en évidence les éléments et leurs relations ; le graphique, représentation visuelle de données qui fait apparaître une évolution ou une comparaison ; l’algorithme, suite d’instructions ordonnées et précises ; la modélisation, enfin, qui crée un modèle numérique ou physique que l’on peut simuler.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2d — L’ergonomie liée à l’usage</p>
+                        <p class="rappel-texte">L’ergonomie vise à adapter l’objet à l’utilisateur pour le rendre plus facile et plus sûr à employer. Elle s’intéresse au confort d’utilisation, à l’efficacité — accomplir la tâche rapidement et facilement — et à la sécurité. Un objet est ergonomique lorsque son usage est confortable, facile et sécurisant.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST22" data-niveau="N3" data-objet="lampe de bureau du CDI" data-competence="OST22" aria-label="Énoncé 5 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST22</span> <span class="enonce-competence">Repérer et expliquer les contraintes, exigences prises en compte (sécurité, incidences environnementales, formes et fonctions, ergonomie, qualité, fiabilité) pour répondre aux attentes des utilisateurs</span></h2>
+                <p>Le CDI doit acheter des lampes de bureau. Le cahier des charges fixe cinq exigences :</p>
+                <p>• un éclairement d’au moins 500 lux à 40 cm ;</p>
+                <p>• une consommation inférieure ou égale à 10 W ;</p>
+                <p>• un prix inférieur ou égal à 60 € ;</p>
+                <p>• une garantie d’au moins 2 ans ;</p>
+                <p>• un indice de réparabilité d’au moins 7 sur 10.</p>
+                <p>Le comparatif donne trois modèles.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : lampe de bureau du CDI</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Lux</th><th scope="col">W</th><th scope="col">Prix (€)</th><th scope="col">Garantie (ans)</th><th scope="col">Répar. (/10)</th></tr></thead>
+                <tbody><tr><th scope="row">A</th><td>550</td><td>9</td><td>49</td><td>2</td><td>8</td></tr><tr><th scope="row">B</th><td>480</td><td>12</td><td>39</td><td>3</td><td>6</td></tr><tr><th scope="row">C</th><td>620</td><td>8</td><td>69</td><td>2</td><td>9</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Pour chaque modèle, écris l’exigence ou les exigences qui ne sont pas respectées (ou « aucune »), puis le modèle retenu, puis ce que ces contraintes garantissent à l’utilisateur.</p>
+            </div>
+            <aside class="correction" id="correction-e5" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le cahier des charges fixe cinq exigences : un éclairement d’au moins 500 lux, une consommation d’au plus 10 W, un prix d’au plus 60 €, une garantie d’au moins deux ans et un indice de réparabilité d’au moins 7 sur 10.</p>
+                    <p>La lampe A les respecte toutes : 550 lux, 9 W, 49 €, deux ans et 8 sur 10. La lampe B échoue trois fois : 480 lux, soit vingt lux sous le minimum ; 12 W, deux watts au-dessus du plafond ; 6 sur 10 en réparabilité, sous le seuil de 7. Son prix de 39 € et sa garantie de trois ans ne compensent pas ces écarts. La lampe C n’échoue que sur le prix : 69 € au lieu de 60 €.</p>
+                    <p>Le modèle retenu est donc la lampe A. Les contraintes ne sont pas des formalités : l’éclairement garantit le confort de lecture, la consommation maîtrise la facture, la garantie couvre la durée, et l’indice de réparabilité assure que l’appareil pourra être réparé plutôt que jeté.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e5" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e5">
+                    <h3 class="modale-titre" id="modale-titre-e5">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2c — Les contraintes : normes, cahier des charges, labels</p>
+                        <p class="rappel-texte">Les exigences auxquelles répond un objet technique proviennent de trois sources : les normes, qui fixent les caractéristiques minimales à respecter pour être mis sur le marché ; le cahier des charges, qui décrit les exigences propres au client ; les labels et certifications, qui attestent la conformité à des critères de qualité et de performance. Ces contraintes garantissent la sécurité, la fiabilité et l’efficacité de l’objet, dans le respect des exigences environnementales.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3b — L’indice énergétique et l’indice de réparabilité</p>
+                        <p class="rappel-texte">L’indice énergétique est une note de A à G qui indique la consommation d’énergie d’un appareil, A étant le plus économe. L’indice de réparabilité est une note de 1 à 10 qui indique la facilité de réparation, 10 étant le plus facile à réparer. Ces deux indices aident à choisir un appareil à la fois performant et durable.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="panneau solaire de la maquette" data-competence="OST33" aria-label="Énoncé 6 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Choisir les appareils de mesure à utiliser pour mesurer une performance d’un OST à partir d’un protocole donné</span></h2>
+                <p>Au laboratoire, un petit panneau solaire alimente un ventilateur. Le protocole demande de mesurer sa puissance pour trois éclairements différents, afin de vérifier la fiche du fabricant.</p>
+                <p>Instruments disponibles : a. luxmètre · b. voltmètre · c. ampèremètre · d. wattmètre · e. thermomètre.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : panneau solaire de la maquette</caption>
+                <thead><tr><th scope="col">Grandeur à mesurer</th><th scope="col">Instrument (lettre)</th></tr></thead>
+                <tbody><tr><th scope="row">l’éclairement reçu</th><td></td></tr><tr><th scope="row">la tension aux bornes</th><td></td></tr><tr><th scope="row">le courant produit</th><td></td></tr><tr><th scope="row">la puissance</th><td></td></tr><tr><th scope="row">la température du panneau</th><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Écris la lettre de l’instrument qui correspond à chaque grandeur. Explique pourquoi le panneau doit rester à la même distance et au même angle de la lampe. Quelle grandeur manque-t-il pour rapporter la puissance produite à la surface du panneau ? Donne son unité.</p>
+            </div>
+            <aside class="correction" id="correction-e6" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Chaque grandeur appelle son instrument : le luxmètre pour l’éclairement, le voltmètre pour la tension, l’ampèremètre pour le courant, le wattmètre pour la puissance et le thermomètre pour la température. On obtient donc, ligne par ligne, les lettres a, b, c, d et e.</p>
+                    <p>Le panneau doit rester à la même distance et au même angle de la lampe parce que l’éclairement reçu diminue avec la distance et varie avec l’orientation : en changeant l’un ou l’autre, on ne compare plus les mêmes conditions et la mesure de puissance ne veut plus rien dire.</p>
+                    <p>Il manque la surface du panneau, exprimée en mètres carrés (m²), pour rapporter la puissance produite à la surface et la comparer à la fiche du fabricant. Sans elle, on connaît la puissance du panneau, mais pas sa puissance par mètre carré.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e6" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e6">
+                    <h3 class="modale-titre" id="modale-titre-e6">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin. Les critères sont des grandeurs mesurables, comme la vitesse ou l’autonomie.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1a — Les différentes formes d’énergie</p>
+                        <p class="rappel-texte">L’énergie est ce qui permet de réaliser un travail, de produire un mouvement ou de modifier la température. Elle se présente sous plusieurs formes : électrique, cinétique, potentielle, thermique et lumineuse. Un panneau solaire reçoit de l’énergie lumineuse et la convertit en énergie électrique.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="découpeuse laser du laboratoire" data-competence="OST31" aria-label="Énoncé 7 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Identifier les caractéristiques à prendre en compte dans le choix d’un OST en vue de répondre à un besoin</span></h2>
+                <p>Le laboratoire doit remplacer sa découpeuse laser. Les pièces à découper mesurent jusqu’à 70 cm sur 50 cm, avec une précision de 0,1 mm. Le comparatif ne donne que cinq colonnes.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : découpeuse laser du laboratoire</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Surface</th><th scope="col">W</th><th scope="col">Précision</th><th scope="col">Prix (€)</th><th scope="col">Bruit</th></tr></thead>
+                <tbody><tr><th scope="row">A</th><td>60 × 40</td><td>40</td><td>0,1</td><td>3 500</td><td>55</td></tr><tr><th scope="row">B</th><td>80 × 60</td><td>60</td><td>0,05</td><td>5 200</td><td>62</td></tr><tr><th scope="row">C</th><td>50 × 30</td><td>30</td><td>0,2</td><td>2 400</td><td>50</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Propose deux critères qui manquent (nom, unité, ce qu’ils apportent), puis choisis un modèle pour ces pièces en justifiant avec deux valeurs du tableau.</p>
+            </div>
+            <aside class="correction" id="correction-e7" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le comparatif ne renseigne que cinq colonnes — surface, puissance, précision, prix, bruit — et l’on ne peut pas choisir sur ce que l’on ignore. Deux critères manquent, qui pèsent lourd dans un laboratoire.</p>
+                    <p>Le premier est le coût d’usage, exprimé en euros par heure : il additionne l’électricité, le gaz de découpe et l’entretien, et pèse plus lourd que l’écart de prix d’achat sur plusieurs années. Le second est la filtration des fumées, en oui ou non : une découpeuse qui fume sans extraction oblige à équiper la salle. D’autres critères seraient recevables — indice de réparabilité sur 10, encombrement en centimètres, temps de découpe en minutes — pourvu que l’unité soit donnée et que l’apport soit expliqué.</p>
+                    <p>Pour des pièces de 70 cm sur 50 cm à 0,1 mm, le modèle B s’impose : sa surface de 80 × 60 cm couvre les pièces, quand les 60 × 40 cm du modèle A et les 50 × 30 cm du modèle C sont trop petites ; sa précision de 0,05 mm est deux fois meilleure que l’exigence. Il est plus cher et plus bruyant (62 dB), ce qui suppose de l’installer dans une salle isolée, mais il est le seul à répondre au besoin.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e7" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e7">
+                    <h3 class="modale-titre" id="modale-titre-e7">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST32" data-niveau="N3" data-objet="réfrigérateur du foyer" data-competence="OST32" aria-label="Énoncé 8 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Comparer qualitativement et/ou quantitativement (incidences environnementales, bilan carbone, efficacité énergétique) plusieurs OST répondant au même besoin et arrêter un choix</span></h2>
+                <p>Le foyer doit remplacer son réfrigérateur. La notice du modèle retenu comporte les sections : installation, mode d’emploi, entretien, dépannage, garantie.</p>
+                <p>Deux modèles sont en rayon.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : réfrigérateur du foyer</caption>
+                <thead><tr><th scope="col">Besoin</th><th scope="col">Section de la notice</th></tr></thead>
+                <tbody><tr><th scope="row">régler la température du bac à légumes</th><td></td></tr><tr><th scope="row">comprendre un voyant rouge qui clignote</th><td></td></tr><tr><th scope="row">savoir si le joint est couvert</th><td></td></tr><tr><th scope="row">nettoyer le condenseur</th><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Associe chaque besoin à la section de la notice. Puis choisis le modèle pour une famille qui veut un appareil durable : justifie avec deux valeurs et explique ce qui manque pour calculer le coût réel sur dix ans.</p>
+            </div>
+            <aside class="correction" id="correction-e8" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Chaque besoin renvoie à une section précise : régler la température du bac à légumes relève du mode d’emploi ; comprendre un voyant rouge qui clignote, du dépannage ; savoir si le joint est couvert, de la garantie ; nettoyer le condenseur, de l’entretien.</p>
+                    <p>Pour une famille qui veut un appareil durable, le modèle A s’impose : il consomme 150 kWh par an contre 250 pour le modèle B, soit cent kilowattheures de moins, et son indice de réparabilité atteint 9 sur 10 contre 6. Il coûte 300 € de plus, mais se répare plus facilement et consomme moins.</p>
+                    <p>Il manque pourtant le prix du kilowattheure, la durée de vie réelle des deux appareils et le coût des pièces détachées. Sans ces données, on ne peut pas calculer le coût total sur dix ans : l’écart de 300 € se rembourse lentement, et c’est surtout la réparabilité qui justifie le choix.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e8" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e8">
+                    <h3 class="modale-titre" id="modale-titre-e8">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3a — Les composantes d’une notice</p>
+                        <p class="rappel-texte">La notice est un document court qui permet d’installer, d’utiliser et de dépanner un produit. Elle comporte une couverture, une table des matières, une introduction, des instructions d’installation, un mode d’emploi, des consignes de sécurité, un dépannage, une garantie et des informations de contact. La documentation technique est plus détaillée : elle ajoute la maintenance, la réparation, des schémas et un glossaire.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3b — L’indice énergétique et l’indice de réparabilité</p>
+                        <p class="rappel-texte">L’indice énergétique est une note de A à G qui indique la consommation d’énergie d’un appareil, A étant le plus économe. L’indice de réparabilité est une note de 1 à 10 qui indique la facilité de réparation, 10 étant le plus facile à réparer. Ces deux indices aident à choisir un appareil à la fois performant et durable.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC12" data-niveau="N3" data-objet="volet roulant motorisé" data-competence="SFC12" aria-label="Énoncé 9 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC12</span> <span class="enonce-competence">Repérer les transformations d’énergie et les flux d’énergie au sein de l’OST</span></h2>
+                <p>Un volet roulant motorisé est commandé par un interrupteur mural. Le courant passe par un relais, qui alimente le moteur ; deux capteurs de fin de course arrêtent le moteur en haut et en bas.</p>
+                <p>La maison est alimentée par le réseau électrique.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : volet roulant motorisé</caption>
+                <thead><tr><th scope="col">Constituant</th><th scope="col">Fonction</th><th scope="col">Énergie à l’entrée → à la sortie</th></tr></thead>
+                <tbody><tr><th scope="row">interrupteur</th><td></td><td></td></tr><tr><th scope="row">relais</th><td></td><td></td></tr><tr><th scope="row">moteur</th><td></td><td></td></tr><tr><th scope="row">volet</th><td></td><td></td></tr><tr><th scope="row">capteur de fin de course</th><td></td><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Complète la fonction et la conversion d’énergie de chaque constituant. Explique le rôle du relais, puis nomme une perte d’énergie et sa forme.</p>
+            </div>
+            <aside class="correction" id="correction-e9" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>L’interrupteur est un actionneur manuel : il laisse passer ou coupe le courant de commande, sans transformer l’énergie. Le relais est un interrupteur commandé : un faible courant dans sa bobine ferme le contact qui alimente le moteur. Le moteur convertit l’énergie électrique en énergie cinétique, et il en perd une partie sous forme de chaleur. Le volet reçoit cette énergie cinétique et se déplace. Le capteur de fin de course, lui, ne convertit pas d’énergie : il produit une information qui arrête le moteur.</p>
+                    <p>Le relais sert donc à commander un courant fort avec un courant faible : l’interrupteur mural ne supporte pas l’intensité du moteur, mais il peut commander la bobine du relais, qui elle-même laisse passer le courant du moteur.</p>
+                    <p>La perte principale est thermique : le moteur chauffe, et la bobine du relais chauffe aussi. Cette chaleur est de l’énergie qui n’est pas utilisée pour lever le volet. On la retrouve dans tous les objets qui convertissent de l’énergie.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e9" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e9">
+                    <h3 class="modale-titre" id="modale-titre-e9">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1a — Les différentes formes d’énergie</p>
+                        <p class="rappel-texte">L’énergie est ce qui permet de réaliser un travail, de produire un mouvement ou de modifier la température. Elle se présente sous plusieurs formes : électrique, cinétique, potentielle, thermique et lumineuse.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1b — Les conversions d’énergie</p>
+                        <p class="rappel-texte">L’énergie ne peut ni être créée ni être détruite : elle se convertit d’une forme en une autre. Un moteur électrique convertit l’énergie électrique en énergie cinétique et en énergie thermique ; une lampe convertit l’électricité en lumière et en chaleur ; un radiateur produit de la chaleur. Ces conversions s’accompagnent de pertes, souvent sous forme de chaleur.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1c — Les fonctions de la batterie et du relais</p>
+                        <p class="rappel-texte">La batterie stocke et fournit de l’énergie électrique. Le relais est un interrupteur commandé par un courant électrique : lorsque le courant de commande circule dans sa bobine, un contact s’ouvre ou se ferme et laisse passer ou interrompt le courant principal. L’interrupteur, lui, est un actionneur manuel qui coupe ou rétablit le courant.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC14" data-niveau="N4" data-objet="jardinière connectée du CDI" data-competence="SFC14" aria-label="Énoncé 10 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC14</span> <span class="enonce-competence">Identifier les constituants de la chaîne d’information d’un objet réel et les associer à leur fonction</span></h2>
+                <p>Le CDI veut une jardinière connectée : elle arrose quand la terre est sèche et prévient quand le réservoir est vide.</p>
+                <p>Matériel disponible : un capteur d’humidité, un capteur de niveau, un microcontrôleur, une pompe, une LED rouge, un écran et un bouton.</p>
+                <p class="enonce-tache">Complète la chaîne : quel constituant acquiert, quel constituant traite, quel constituant agit, quel constituant informe ? Choisis ensuite un matériau et un procédé pour le boîtier, et justifie avec une propriété. Que doit faire le système si le capteur d’humidité est en panne ?</p>
+            </div>
+            <aside class="correction" id="correction-e10" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le capteur d’humidité et le capteur de niveau acquièrent les informations : l’humidité de la terre et le niveau d’eau. Le microcontrôleur les traite : il compare la mesure à un seuil et décide d’arroser ou non. La pompe agit : elle met l’eau en mouvement. La LED rouge et l’écran informent l’utilisateur, tandis que le bouton lui permet de commander manuellement le système.</p>
+                    <p>Pour le boîtier, le PLA imprimé en 3D convient : il est léger, il permet une forme complexe et une petite série, et l’impression 3D ajoute la matière sans moule. Un contreplaqué découpé au laser serait aussi recevable : rigide, renouvelable et facile à assembler. Dans les deux cas, la justification doit relier une propriété du matériau à une contrainte du procédé.</p>
+                    <p>Si le capteur d’humidité est en panne, le système ne doit pas arroser en continu : il doit arrêter la pompe, afficher un message d’erreur et prévenir l’utilisateur. C’est le principe du repli sûr : une panne de capteur ne doit pas provoquer un dégât, ici un sol détrempé.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e10" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e10">
+                    <h3 class="modale-titre" id="modale-titre-e10">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1i — Capteurs, microcontrôleur et IHM</p>
+                        <p class="rappel-texte">Les capteurs acquièrent des informations sur l’environnement : ils transforment une grandeur physique, comme la température ou la présence, en un signal électrique. Le microcontrôleur traite ces signaux en fonction de sa programmation et envoie des commandes aux actionneurs. Les composants d’une interface homme-machine, boutons et afficheurs, permettent à l’utilisateur d’agir sur l’objet ou de recevoir une information.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1e — Les caractéristiques des matériaux</p>
+                        <p class="rappel-texte">Les matériaux se classent en grandes familles : métaux, plastiques, céramiques et minéraux, matériaux organiques naturels et composites. Chacune a ses propriétés : résistance, dureté, conductivité, flexibilité, masse volumique. Choisir un matériau consiste à comparer ces propriétés avec les besoins de l’objet.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1f — Les procédés de mise en forme</p>
+                        <p class="rappel-texte">Les procédés de mise en forme se classent en trois familles : par déformation, comme le pliage ou le thermoformage ; par enlèvement de matière, comme le perçage ou la découpe laser ; par ajout de matière, comme le moulage ou l’impression 3D. Le choix dépend de la nature du matériau, de la forme, de la précision, du coût et de la rapidité.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC13" data-niveau="N4" data-objet="maquette de maison domotisée" data-competence="SFC13" aria-label="Énoncé 11 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC13</span> <span class="enonce-competence">Mettre en relation la forme d’une pièce avec le procédé de réalisation</span></h2>
+                <p>La classe fabrique une maquette de maison domotisée. Trois pièces sont à réaliser : un mur porteur, une fenêtre transparente et un connecteur d’angle qui assemble deux murs.</p>
+                <p>Matériaux disponibles : contreplaqué, PMMA (plexiglas), PLA, aluminium. Procédés : découpe laser, impression 3D, pliage, perçage.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : maquette de maison domotisée</caption>
+                <thead><tr><th scope="col">Pièce</th><th scope="col">Matériau</th><th scope="col">Procédé</th><th scope="col">Propriété qui justifie</th></tr></thead>
+                <tbody><tr><th scope="row">mur porteur</th><td></td><td></td><td></td></tr><tr><th scope="row">fenêtre transparente</th><td></td><td></td><td></td></tr><tr><th scope="row">connecteur d’angle</th><td></td><td></td><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Choisis un matériau et un procédé pour chaque pièce, et justifie par une propriété du matériau et une contrainte du procédé (forme, précision, rapidité).</p>
+            </div>
+            <aside class="correction" id="correction-e11" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Pour le mur porteur, le contreplaqué découpé au laser convient : il est rigide, léger et renouvelable, et la découpe laser donne une plaque plane aux bords nets. L’aluminium serait plus résistant, mais plus lourd et conducteur, ce qui n’est pas utile ici.</p>
+                    <p>Pour la fenêtre, le PMMA est le bon choix : il est transparent et rigide, et la découpe laser le coupe proprement. Le verre serait transparent aussi, mais il est fragile et plus difficile à découper au laboratoire.</p>
+                    <p>Pour le connecteur d’angle, le PLA imprimé en 3D s’impose : la forme est complexe, la série est petite, et l’impression 3D ajoute la matière sans moule. La justification doit toujours relier une propriété — rigidité, transparence, légèreté — à une contrainte du procédé — forme, précision, rapidité.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e11" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e11">
+                    <h3 class="modale-titre" id="modale-titre-e11">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1e — Les caractéristiques des matériaux</p>
+                        <p class="rappel-texte">Les matériaux se classent en grandes familles : métaux, plastiques, céramiques et minéraux, matériaux organiques naturels et composites. Chacune a ses propriétés : résistance, dureté, conductivité, flexibilité, masse volumique. Choisir un matériau consiste à comparer ces propriétés avec les besoins de l’objet.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1f — Les procédés de mise en forme</p>
+                        <p class="rappel-texte">Les procédés de mise en forme se classent en trois familles : par déformation, comme le pliage ou le thermoformage ; par enlèvement de matière, comme le perçage ou la découpe laser ; par ajout de matière, comme le moulage ou l’impression 3D. Le choix dépend de la nature du matériau, de la forme, de la précision, du coût et de la rapidité.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="lave-linge du foyer" data-competence="OST32" aria-label="Énoncé 12 sur 12" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Comparer qualitativement et/ou quantitativement (incidences environnementales, bilan carbone, efficacité énergétique) plusieurs OST répondant au même besoin et arrêter un choix</span></h2>
+                <p>Le lave-linge du foyer est en panne. Le réparateur propose deux solutions.</p>
+                <p>Réparer : 150 €, la machine repart pour cinq ans, 80 kg de matières ne sont pas jetées.</p>
+                <p>Remplacer : 450 € pour un appareil A+++, garanti dix ans, dont la fabrication mobilise des métaux et du plastique ; l’ancien sera recyclé.</p>
+                <p class="enonce-tache">Choisis une solution et argumente avec deux valeurs du document, un pilier du développement durable et une étape du cycle de vie. Dis ensuite quelle information manque pour comparer honnêtement les deux solutions.</p>
+            </div>
+            <aside class="correction" id="correction-e12" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Réparer coûte 150 € contre 450 € pour un appareil neuf : c’est trois fois moins cher, et cela évite de jeter 80 kg de matières. La réparation prolonge de cinq ans la durée de vie de la machine et reporte l’étape de fin de vie, qui consomme de l’énergie et des matières.</p>
+                    <p>Le choix de la réparation s’appuie sur le pilier économique du développement durable — un coût trois fois plus faible — et sur le pilier environnemental : moins de matières extraites, moins de déchets. Il fait aussi vivre un réparateur local, ce qui relève du pilier social.</p>
+                    <p>Il manque pourtant une information décisive : la consommation annuelle de l’ancienne machine et celle du modèle neuf, en kilowattheures par an. Sans elle, on ne peut pas savoir si l’économie d’énergie du neuf compense son impact de fabrication. Le prix du kilowattheure et la disponibilité des pièces détachées manquent aussi.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e12" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e12">
+                    <h3 class="modale-titre" id="modale-titre-e12">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, l’efficacité énergétique, la durabilité et la recyclabilité. La durabilité interroge la durée de vie et la réparabilité ; la recyclabilité, le devenir de l’objet en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3b — L’indice énergétique et l’indice de réparabilité</p>
+                        <p class="rappel-texte">L’indice énergétique est une note de A à G qui indique la consommation d’énergie d’un appareil. L’indice de réparabilité est une note de 1 à 10 qui indique la facilité de réparation. Ces deux indices aident à choisir un appareil à la fois performant et durable.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
+        </section>
+</main>
+<script>
+(function () {
+    var diapos = Array.prototype.slice.call(document.querySelectorAll('.enonce'));
+    if (!diapos.length) { return; }
+    var courant = 0;
+    var boutonIndication = document.getElementById('bouton-indication');
+    var boutonCorrection = document.getElementById('bouton-correction');
+    var etat = { indication: false, correction: false };
+    var dernierFocus = null;
+
+    // Chaque énoncé est ajusté à la hauteur disponible : la taille de départ est
+    // généreuse (lisible du fond de la classe), puis on réduit si besoin. On
+    // mesure le corps de l'énoncé, pas la section : avec la correction ouverte,
+    // la section est aussi haute que le plus long des deux volets.
+    function ajuster(diapo) {
+        var scene = document.getElementById('scene');
+        var style = window.getComputedStyle(scene);
+        // La hauteur utile se mesure sur la FENÊTRE : la scène grandit avec son
+        // contenu, elle ne peut donc pas servir de référence.
+        var dispo = scene.clientHeight
+            - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - 6;
+        var corps = diapo.querySelector('.enonce-corps') || diapo;
+        diapo.style.setProperty('--hauteur-volet', Math.max(200, dispo - 6) + 'px');
+        diapo.style.setProperty('--facteur', '1');
+        var facteur = 1;
+        var tours = 0;
+        while (corps.getBoundingClientRect().height > dispo && facteur > 0.55 && tours < 40) {
+            facteur -= 0.03;
+            diapo.style.setProperty('--facteur', facteur.toFixed(2));
+            tours += 1;
+        }
+    }
+
+    // La mesure dépend de la mise en page finale (en-tête, pied de page,
+    // colonnes) : on la rejoue à la frame suivante, sinon le premier écran
+    // garde la taille calculée avant que le flex n'ait réparti les hauteurs.
+    function ajusterPlusTard(diapo) {
+        ajuster(diapo);
+        if (window.requestAnimationFrame) {
+            requestAnimationFrame(function () { ajuster(diapo); });
+        }
+    }
+
+    function volet(nom) {
+        return diapos[courant].querySelector(nom === 'indication' ? '.modale' : '.correction');
+    }
+
+    // Applique un état : une seule commande ouverte à la fois, et le volet
+    // affiché est celui de l'énoncé courant (les volets des autres énoncés sont
+    // dans des sections masquées, mais on les referme quand même).
+    function appliquer(nouvelEtat) {
+        var section = diapos[courant];
+        var modale = section.querySelector('.modale');
+        var correction = section.querySelector('.correction');
+        var indicationOuverte = !!(nouvelEtat.indication && modale);
+        var correctionOuverte = !!(nouvelEtat.correction && correction);
+
+        diapos.forEach(function (diapo) {
+            var m = diapo.querySelector('.modale');
+            var c = diapo.querySelector('.correction');
+            if (m) { m.hidden = true; }
+            if (c) { c.hidden = true; }
+        });
+        if (modale) { modale.hidden = !indicationOuverte; }
+        if (correction) { correction.hidden = !correctionOuverte; }
+        document.body.classList.toggle('correction-ouverte', correctionOuverte);
+
+        etat.indication = indicationOuverte;
+        etat.correction = correctionOuverte;
+        if (boutonIndication) {
+            boutonIndication.setAttribute('aria-pressed', indicationOuverte ? 'true' : 'false');
+            boutonIndication.hidden = !modale;
+            if (modale) { boutonIndication.setAttribute('aria-controls', modale.id); }
+        }
+        if (boutonCorrection) {
+            boutonCorrection.setAttribute('aria-pressed', correctionOuverte ? 'true' : 'false');
+            boutonCorrection.hidden = !correction;
+            if (correction) { boutonCorrection.setAttribute('aria-controls', correction.id); }
+        }
+        ajusterPlusTard(section);
+    }
+
+    function rendreFocus() {
+        if (dernierFocus && dernierFocus.focus) { dernierFocus.focus(); }
+        dernierFocus = null;
+    }
+
+    function basculer(nom) {
+        var cible = volet(nom);
+        if (!cible) { return; }
+        var ouverture = !etat[nom];
+        var suivant = { indication: false, correction: false };
+        suivant[nom] = ouverture;
+        if (ouverture) { dernierFocus = document.activeElement; }
+        appliquer(suivant);
+        // La modale reçoit le focus (elle est modale : la classe ne doit plus
+        // pouvoir agir derrière). Le volet de correction, lui, n'en prend pas :
+        // le focus reste sur la commande, et le bouton ne s'entoure pas d'un
+        // anneau qui se verrait à la projection.
+        if (ouverture && nom === 'indication') {
+            var boite = cible.querySelector('.modale-boite');
+            if (boite) { boite.focus(); }
+        } else if (ouverture) {
+            dernierFocus = null;
+        } else {
+            rendreFocus();
+        }
+    }
+
+    function afficher(rang) {
+        courant = Math.max(0, Math.min(diapos.length - 1, rang));
+        diapos.forEach(function (diapo, index) {
+            if (index === courant) {
+                diapo.hidden = false;
+                diapo.removeAttribute('hidden');
+            } else {
+                diapo.hidden = true;
+            }
+        });
+        document.body.setAttribute('data-ecran', String(courant + 1));
+        appliquer({ indication: false, correction: false });
+    }
+
+    if (/[?&]proj=1/.test(window.location.search)) {
+        document.body.classList.add('projection');
+    }
+
+    window.addEventListener('resize', function () { ajuster(diapos[courant]); });
+    window.addEventListener('load', function () { ajusterPlusTard(diapos[courant]); });
+
+    var demande = /[?&]c=(\d+)/.exec(window.location.search) ||
+                  /#(\d+)$/.exec(window.location.hash);
+    if (demande) { afficher(parseInt(demande[1], 10) - 1); }
+    afficher(courant);
+
+    if (boutonIndication) {
+        boutonIndication.addEventListener('click', function () { basculer('indication'); });
+    }
+    if (boutonCorrection) {
+        boutonCorrection.addEventListener('click', function () { basculer('correction'); });
+    }
+
+    // Fermeture : le bouton « Fermer », le fond de la modale, ou Échap.
+    document.addEventListener('click', function (evenement) {
+        var cible = evenement.target;
+        if (!cible || !cible.closest) { return; }
+        if (cible.closest('[data-fermer]') ||
+            (cible.classList && cible.classList.contains('modale'))) {
+            appliquer({ indication: false, correction: false });
+            rendreFocus();
+        }
+    });
+
+    document.addEventListener('keydown', function (evenement) {
+        var touche = evenement.key;
+        var cible = evenement.target;
+        var surBouton = cible && cible.closest && cible.closest('button');
+        if (touche === 'Escape') {
+            appliquer({ indication: false, correction: false });
+            rendreFocus();
+            evenement.preventDefault();
+            return;
+        }
+        // Sur un bouton, Espace et Entrée activent le bouton : on ne navigue pas.
+        if (surBouton && (touche === ' ' || touche === 'Enter')) { return; }
+        if (touche === 'i' || touche === 'I') {
+            basculer('indication');
+            evenement.preventDefault();
+        } else if (touche === 'c' || touche === 'C') {
+            basculer('correction');
+            evenement.preventDefault();
+        } else if (touche === 'ArrowRight' || touche === 'ArrowDown' ||
+            touche === ' ' || touche === 'PageDown' || touche === 'Enter') {
+            afficher(courant + 1);
+            evenement.preventDefault();
+        } else if (touche === 'ArrowLeft' || touche === 'ArrowUp' ||
+                   touche === 'PageUp' || touche === 'Backspace') {
+            afficher(courant - 1);
+            evenement.preventDefault();
+        } else if (touche === 'Home') {
+            afficher(0);
+            evenement.preventDefault();
+        } else if (touche === 'End') {
+            afficher(diapos.length - 1);
+            evenement.preventDefault();
+        }
+    });
+
+    // Au clic : le cinquième gauche recule, le reste avance (tablette, téléviseur).
+    // Un clic sur une commande, la modale ou le volet de correction ne navigue pas.
+    document.addEventListener('click', function (evenement) {
+        var cible = evenement.target;
+        if (cible.closest && cible.closest('a, button, .modale, .correction')) { return; }
+        var largeur = window.innerWidth || 1;
+        afficher(courant + (evenement.clientX < largeur * 0.2 ? -1 : 1));
+    });
+})();
+</script>
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+</body>
+</html>

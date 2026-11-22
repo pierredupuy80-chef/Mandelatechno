@@ -24,6 +24,7 @@ chronometre.html                    Chronomètre de classe — page du professeu
 4e/revision-ost1-ost2/revision-evaluation-ost1-ost2.html  Réviser l'évaluation — OST 1 et OST 2 (sujets A, B, C)
 4e/revision-ost2-ost3/activite-revision-notions-ost2-ost3.html  Réviser les notions — huit fiches OST2-OST3 (un onglet par fiche, score par questionnaire)
 4e/revision-ost2-ost3/enonces-n3-n4-ost2-ost3.html       Énoncés N3/N4 OST2-OST3 (quatre énoncés bruts, objets neufs, compétence en tête)
+4e/revision-ost-sfc/enonces-n3-n4-ost-sfc-4e.html        Énoncés N3/N4 OST1-OST2-OST3-SFC5 (douze énoncés bruts, objets neufs, compétence en tête ; boutons Indication et Correction)
 5e/revision-sfc1/revision-evaluation-sfc1.html     Réviser l'évaluation — réseau, composants internes, périphériques
 3e/ost1a/                           OST 1 — le smartphone
     app-activite1-frise-evolution.html
