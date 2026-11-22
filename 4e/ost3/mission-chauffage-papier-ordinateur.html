@@ -6097,6 +6097,22 @@
 /* Une seule question affichée à la fois. */
 .atelier-question[hidden] { display:none !important; }
 .atelier-carte button[hidden] { display:none !important; }
+/* Animation par étapes : une image, sa légende, trois commandes. */
+.revision-animation { margin:.8rem 0; border:1px solid var(--couleur-info); border-radius:var(--rayon-bordure); padding:.8rem; }
+.revision-animation-titre { font-weight:700; color:var(--couleur-primaire); font-size:1rem; margin-bottom:.4rem; }
+.revision-animation-images { list-style:none; margin:.4rem 0; padding:0; }
+.revision-animation-etape[hidden] { display:none !important; }
+.revision-animation-scene svg { width:100%; height:auto; max-height:16rem; display:block; margin:0 auto; color:var(--couleur-texte); }
+.revision-animation-legende { margin:.5rem 0 0; }
+.revision-animation-commandes { display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-top:.5rem; }
+.revision-animation-commandes button {
+    min-height:44px; min-width:44px; padding:.3rem .8rem; cursor:pointer;
+    border:2px solid var(--couleur-info); background:transparent; color:var(--couleur-texte);
+    border-radius:var(--rayon-bordure); font:inherit;
+}
+.revision-animation-commandes button[aria-pressed="true"] { background:var(--couleur-info); color:#fff; }
+.revision-animation-commandes [role="status"] { font-weight:600; }
+
 /* Séquence filmée : la vidéo comme sa transcription restent lisibles. */
 .revision-sequence { margin:.8rem 0; }
 .revision-sequence-titre { font-size:1rem; font-weight:700; color:var(--couleur-primaire); margin:0 0 .4rem; }
@@ -7162,17 +7178,38 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
                             <p class="extrait-source">Protocole de test académique · objectif</p>
                             <blockquote class="extrait-texte">Le laboratoire veut savoir si un chauffage d’appoint chauffe vite et consomme peu. Le protocole fourni place un capteur de température devant un projecteur halogène : on mesure le temps nécessaire pour que la température du capteur augmente de 5 °C, et la puissance électrique consommée pendant ce temps. La séquence montre les gestes, sans mesure réelle.</blockquote>
                         </figure>
-                    <section class="revision-sequence" data-ost-id="sequence-mission-3b">
-                        <h3 class="revision-sequence-titre">La séquence du protocole, geste par geste</h3>
-                        <p>Regardez la séquence, puis décrivez le protocole sur votre feuille en 3B.</p>
-                        <p class="revision-sequence-attente">La séquence filmée n’est pas encore disponible dans cette page : les images sont décrites ci-dessous, dans l’ordre.</p>
-                        <ol class="revision-sequence-images">
-                            <li><strong>Préparer les conditions</strong> — Le projecteur est éteint et refroidi ; le capteur est posé à la distance prévue.</li>
-                            <li><strong>Relever la température initiale</strong> — La température de départ du capteur est notée avant tout chauffage.</li>
-                            <li><strong>Vérifier la consigne</strong> — La consigne vaut la température de départ augmentée de 5 °C.</li>
-                            <li><strong>Démarrer le test</strong> — Le chronomètre et la commande de la prise partent en même temps ; la puissance est relevée.</li>
-                            <li><strong>Observer puis relever</strong> — La température monte ; à la consigne, on arrête et on note la durée écoulée.</li></ol>
-                    </section>
+                    <figure class="revision-animation" data-ost-id="animation-mission-3b" data-etapes="5">
+                        <figcaption class="revision-animation-titre">La séquence du protocole, geste par geste</figcaption>
+                        <p>Avancez dans les images, puis décrivez le protocole sur votre feuille en 3B.</p>
+                        <ol class="revision-animation-images">
+                        <li class="revision-animation-etape" data-etape="1">
+                            <div class="revision-animation-scene"><svg viewBox="0 0 640 340" role="img" aria-label="Projecteur éteint, capteur posé sur la table à la distance prévue" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="262" x2="610" y2="262" stroke="currentColor" stroke-width="3"/><line x1="122" y1="140" x2="122" y2="262" stroke="currentColor" stroke-width="4"/><rect x="80" y="92" width="84" height="48" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="98" y="140" width="48" height="8" rx="4" fill="currentColor" opacity="0.55"/><text x="122" y="82" text-anchor="middle" font-size="15" fill="currentColor">projecteur</text><rect x="430" y="232" width="48" height="30" rx="4" fill="none" stroke="currentColor" stroke-width="3"/><text x="454" y="224" text-anchor="middle" font-size="15" fill="currentColor">capteur</text><rect x="256" y="216" width="60" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="274" cy="239" r="5" fill="currentColor"/><circle cx="298" cy="239" r="5" fill="currentColor"/><text x="286" y="208" text-anchor="middle" font-size="15" fill="currentColor">prise</text><line x1="130" y1="292" x2="430" y2="292" stroke="currentColor" stroke-width="2" stroke-dasharray="7 6"/><text x="280" y="314" text-anchor="middle" font-size="15" fill="currentColor">distance prévue</text></svg></div>
+                            <p class="revision-animation-legende"><strong>1. Préparer les conditions</strong> — Le projecteur est éteint et refroidi ; le capteur est posé à la distance prévue.</p>
+                        </li>
+                        <li class="revision-animation-etape" data-etape="2" hidden>
+                            <div class="revision-animation-scene"><svg viewBox="0 0 640 340" role="img" aria-label="Écran affichant la température de départ du capteur" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="262" x2="610" y2="262" stroke="currentColor" stroke-width="3"/><line x1="122" y1="140" x2="122" y2="262" stroke="currentColor" stroke-width="4"/><rect x="80" y="92" width="84" height="48" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="98" y="140" width="48" height="8" rx="4" fill="currentColor" opacity="0.55"/><text x="122" y="82" text-anchor="middle" font-size="15" fill="currentColor">projecteur</text><rect x="430" y="232" width="48" height="30" rx="4" fill="none" stroke="var(--couleur-primaire)" stroke-width="3"/><text x="454" y="224" text-anchor="middle" font-size="15" fill="currentColor">capteur</text><rect x="256" y="216" width="60" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="274" cy="239" r="5" fill="currentColor"/><circle cx="298" cy="239" r="5" fill="currentColor"/><text x="286" y="208" text-anchor="middle" font-size="15" fill="currentColor">prise</text><rect x="356" y="72" width="228" height="76" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><text x="470" y="102" text-anchor="middle" font-size="17" fill="currentColor">température de départ</text><text x="470" y="212" text-anchor="middle" font-size="15" fill="currentColor">notée sur la feuille</text></svg></div>
+                            <p class="revision-animation-legende"><strong>2. Relever la température initiale</strong> — La température de départ du capteur est notée avant tout chauffage.</p>
+                        </li>
+                        <li class="revision-animation-etape" data-etape="3" hidden>
+                            <div class="revision-animation-scene"><svg viewBox="0 0 640 340" role="img" aria-label="Consigne calculée : température de départ plus cinq degrés" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="262" x2="610" y2="262" stroke="currentColor" stroke-width="3"/><line x1="122" y1="140" x2="122" y2="262" stroke="currentColor" stroke-width="4"/><rect x="80" y="92" width="84" height="48" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="98" y="140" width="48" height="8" rx="4" fill="currentColor" opacity="0.55"/><text x="122" y="82" text-anchor="middle" font-size="15" fill="currentColor">projecteur</text><rect x="430" y="232" width="48" height="30" rx="4" fill="none" stroke="var(--couleur-primaire)" stroke-width="3"/><text x="454" y="224" text-anchor="middle" font-size="15" fill="currentColor">capteur</text><rect x="256" y="216" width="60" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="274" cy="239" r="5" fill="currentColor"/><circle cx="298" cy="239" r="5" fill="currentColor"/><text x="286" y="208" text-anchor="middle" font-size="15" fill="currentColor">prise</text><rect x="356" y="72" width="228" height="76" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><text x="470" y="102" text-anchor="middle" font-size="17" fill="currentColor">départ + 5 °C</text><text x="470" y="126" text-anchor="middle" font-size="17" fill="currentColor">= consigne à atteindre</text></svg></div>
+                            <p class="revision-animation-legende"><strong>3. Vérifier la consigne</strong> — La consigne vaut la température de départ augmentée de 5 °C.</p>
+                        </li>
+                        <li class="revision-animation-etape" data-etape="4" hidden>
+                            <div class="revision-animation-scene"><svg viewBox="0 0 640 340" role="img" aria-label="Chronomètre et prise démarrés ensemble, projecteur allumé" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="262" x2="610" y2="262" stroke="currentColor" stroke-width="3"/><polygon points="100,140 144,140 520,256 240,256" fill="var(--couleur-primaire)" opacity="0.12"/><circle cx="122" cy="132" r="46" fill="var(--couleur-primaire)" opacity="0.10"/><line x1="122" y1="140" x2="122" y2="262" stroke="currentColor" stroke-width="4"/><rect x="80" y="92" width="84" height="48" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="98" y="140" width="48" height="8" rx="4" fill="currentColor" opacity="0.55"/><text x="122" y="82" text-anchor="middle" font-size="15" fill="currentColor">projecteur</text><rect x="430" y="232" width="48" height="30" rx="4" fill="none" stroke="var(--couleur-primaire)" stroke-width="3"/><text x="454" y="224" text-anchor="middle" font-size="15" fill="currentColor">capteur</text><rect x="256" y="216" width="60" height="46" rx="8" fill="none" stroke="var(--couleur-succes)" stroke-width="3"/><circle cx="274" cy="239" r="5" fill="var(--couleur-succes)"/><circle cx="298" cy="239" r="5" fill="var(--couleur-succes)"/><text x="286" y="208" text-anchor="middle" font-size="15" fill="currentColor">prise</text><circle cx="252" cy="90" r="26" fill="none" stroke="var(--couleur-succes)" stroke-width="3"/><line x1="252" y1="90" x2="252" y2="72" stroke="var(--couleur-succes)" stroke-width="3"/><text x="252" y="132" text-anchor="middle" font-size="14" fill="currentColor">chronomètre</text><text x="252" y="150" text-anchor="middle" font-size="15" fill="currentColor">départ</text><rect x="356" y="72" width="228" height="76" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><text x="470" y="102" text-anchor="middle" font-size="17" fill="currentColor">puissance relevée</text><text x="470" y="126" text-anchor="middle" font-size="17" fill="currentColor">même instant</text></svg></div>
+                            <p class="revision-animation-legende"><strong>4. Démarrer le test</strong> — Le chronomètre et la prise connectée partent en même temps ; la puissance est relevée.</p>
+                        </li>
+                        <li class="revision-animation-etape" data-etape="5" hidden>
+                            <div class="revision-animation-scene"><svg viewBox="0 0 640 340" role="img" aria-label="La température monte jusqu’à la consigne, puis arrêt et durée notée" xmlns="http://www.w3.org/2000/svg"><line x1="30" y1="262" x2="610" y2="262" stroke="currentColor" stroke-width="3"/><polygon points="100,140 144,140 520,256 240,256" fill="var(--couleur-primaire)" opacity="0.12"/><circle cx="122" cy="132" r="46" fill="var(--couleur-primaire)" opacity="0.10"/><line x1="122" y1="140" x2="122" y2="262" stroke="currentColor" stroke-width="4"/><rect x="80" y="92" width="84" height="48" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><rect x="98" y="140" width="48" height="8" rx="4" fill="currentColor" opacity="0.55"/><text x="122" y="82" text-anchor="middle" font-size="15" fill="currentColor">projecteur</text><rect x="430" y="232" width="48" height="30" rx="4" fill="none" stroke="var(--couleur-primaire)" stroke-width="3"/><text x="454" y="224" text-anchor="middle" font-size="15" fill="currentColor">capteur</text><rect x="256" y="216" width="60" height="46" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="274" cy="239" r="5" fill="currentColor"/><circle cx="298" cy="239" r="5" fill="currentColor"/><text x="286" y="208" text-anchor="middle" font-size="15" fill="currentColor">prise</text><circle cx="252" cy="90" r="26" fill="none" stroke="currentColor" stroke-width="3"/><line x1="252" y1="90" x2="252" y2="72" stroke="currentColor" stroke-width="3"/><text x="252" y="132" text-anchor="middle" font-size="14" fill="currentColor">chronomètre</text><text x="252" y="150" text-anchor="middle" font-size="15" fill="currentColor">durée notée</text><rect x="356" y="72" width="228" height="76" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><text x="470" y="102" text-anchor="middle" font-size="17" fill="currentColor">consigne atteinte</text><text x="470" y="126" text-anchor="middle" font-size="17" fill="currentColor">on arrête</text><rect x="598" y="160" width="12" height="100" fill="none" stroke="currentColor" stroke-width="2"/><rect x="600" y="238" width="8" height="20" fill="var(--couleur-primaire)"><animate attributeName="y" from="238" to="166" dur="2.4s" repeatCount="indefinite"/><animate attributeName="height" from="20" to="92" dur="2.4s" repeatCount="indefinite"/></rect></svg></div>
+                            <p class="revision-animation-legende"><strong>5. Observer puis relever</strong> — La température monte ; à la consigne, on arrête et on note la durée écoulée.</p>
+                        </li>
+                        </ol>
+                        <div class="revision-animation-commandes">
+                            <button type="button" data-animation="-1" aria-label="Image précédente">←</button>
+                            <button type="button" data-animation="lecture" aria-pressed="false">Lecture</button>
+                            <span role="status" data-animation-etat></span>
+                            <button type="button" data-animation="1" aria-label="Image suivante">→</button>
+                        </div>
+                    </figure>
                     <div class="exercice-revision" data-ost-id="mission-3b-exercice">
                     <article class="atelier-carte" data-ost-bloc="n2-atelier-mission-3b" data-type="association" data-atelier="mission-3b" data-obligatoire="1" aria-labelledby="atelier-titre-mission-3b">
                         <h3 id="atelier-titre-mission-3b">🎬 3B — À quoi sert chaque étape ?</h3>
@@ -18991,10 +19028,72 @@ const SCORE_ATELIERS = true;
             });
     }
 
+    // ── Animation par étapes (bloc.sequence.mode = "svg") ───────────────────
+    // Lecture automatique facultative ; la préférence « réduire les
+    // animations » est respectée : on n'enclenche alors aucune lecture.
+    function animerSequences() {
+        var sobre = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        Array.prototype.forEach.call(
+            document.querySelectorAll('.revision-animation'), function (figure) {
+                if (figure.dataset.animee === '1') return;
+                figure.dataset.animee = '1';
+                var images = figure.querySelectorAll('.revision-animation-etape');
+                if (images.length < 2) return;
+                var lecteur = figure.querySelector('[data-animation="lecture"]');
+                var etat = figure.querySelector('[data-animation-etat]');
+                var rang = 0, minuteur = null;
+                function afficher() {
+                    Array.prototype.forEach.call(images, function (image, i) {
+                        if (image.hidden !== (i !== rang)) image.hidden = i !== rang;
+                    });
+                    var precedent = figure.querySelector('[data-animation="-1"]');
+                    var suivant = figure.querySelector('[data-animation="1"]');
+                    if (precedent) precedent.disabled = rang === 0;
+                    if (suivant) suivant.disabled = rang === images.length - 1;
+                    ecrire(etat, 'Image ' + (rang + 1) + ' / ' + images.length);
+                }
+                function arreter() {
+                    if (minuteur) window.clearInterval(minuteur);
+                    minuteur = null;
+                    if (lecteur) {
+                        lecteur.setAttribute('aria-pressed', 'false');
+                        ecrire(lecteur, 'Lecture');
+                    }
+                }
+                function avancer() {
+                    if (rang >= images.length - 1) { arreter(); return; }
+                    rang += 1;
+                    afficher();
+                }
+                figure.addEventListener('click', function (evenement) {
+                    var bouton = evenement.target.closest('[data-animation]');
+                    if (!bouton) return;
+                    var action = bouton.getAttribute('data-animation');
+                    if (action === 'lecture') {
+                        if (minuteur) { arreter(); return; }
+                        if (rang >= images.length - 1) rang = 0;
+                        afficher();
+                        lecteur.setAttribute('aria-pressed', 'true');
+                        ecrire(lecteur, 'Pause');
+                        minuteur = window.setInterval(avancer, 4000);
+                        return;
+                    }
+                    arreter();
+                    rang = Math.max(0, Math.min(images.length - 1, rang + Number(action)));
+                    afficher();
+                });
+                afficher();
+                if (!sobre && figure.hasAttribute('data-lecture-auto')) {
+                    figure.querySelector('[data-animation="lecture"]').click();
+                }
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', rafraichir);
     rafraichir();
     installerAideTerme();
     paginerQuestions();
+    animerSequences();
 })();
 // PARCOURS-RÉVISION:JS-FIN
 
