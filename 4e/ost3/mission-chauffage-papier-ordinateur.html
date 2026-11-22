@@ -6105,15 +6105,25 @@
 }
 .atelier-pagination button:disabled { opacity:.45; cursor:default; }
 .atelier-pagination [role="status"] { font-weight:600; }
-/* Aide contextuelle : un point d'interrogation cliquable, puis une modale. */
-.revision-aide-bouton {
-    display:inline-flex; align-items:center; justify-content:center;
-    width:2.75rem; height:2.75rem; min-width:2.75rem; border-radius:50%;
-    border:2px solid var(--couleur-info); background:transparent; cursor:pointer;
-    font:inherit; font-size:1rem; font-weight:700; color:var(--couleur-texte);
-    vertical-align:middle; margin:0 .2rem; line-height:1;
+/* Aide contextuelle : le terme est souligné en pointillé ; la bulle s'ouvre au
+   survol et au focus clavier, et le clic donne la fiche complète. */
+.revision-aide-mot { position:relative; display:inline-block; }
+.revision-aide-terme {
+    font:inherit; color:inherit; background:none; border:0; padding:0; margin:0;
+    text-decoration:underline dotted; text-decoration-thickness:2px;
+    text-underline-offset:3px; cursor:help;
 }
-.revision-aide-bouton:hover, .revision-aide-bouton:focus-visible { background:var(--couleur-info); color:#fff; }
+.revision-aide-terme:focus-visible { outline:2px solid var(--couleur-info); outline-offset:2px; }
+.revision-aide-bulle {
+    position:absolute; left:0; top:calc(100% + .35rem); z-index:30;
+    width:max-content; max-width:min(26rem, 80vw);
+    background:var(--couleur-fond); color:var(--couleur-texte);
+    border:1px solid var(--couleur-info); border-radius:var(--rayon-bordure);
+    padding:.5rem .7rem; font-size:.95rem; line-height:1.35;
+    box-shadow:0 6px 18px rgba(15, 23, 42, .18); display:none;
+}
+.revision-aide-mot:hover .revision-aide-bulle,
+.revision-aide-mot:focus-within .revision-aide-bulle { display:block; }
 .revision-aide-dialogue { position:fixed; inset:0; margin:auto; height:fit-content;
     max-width:min(34rem, 92vw); border:2px solid var(--couleur-info);
     border-radius:var(--rayon-bordure); padding:1.2rem;
@@ -17910,7 +17920,7 @@ Recyclabilité : l'objet peut-il être recyclé en fin de vie ?</blockquote>
 const NAVIGATION_EXERCICES = true;
 const LECTURE_NOTIONS = true;
 const UNE_QUESTION_ALA_FOIS = true;
-const AIDE_TERME = {"terme": "TAPO", "titre": "Qu’est-ce que le système TAPO ?", "texte": "TAPO est le système domotique du laboratoire : des appareils connectés, ici l’éclairage, que l’on pilote et programme depuis une application sur un téléphone ou une tablette. L’application TAPO permet aussi de suivre en direct la puissance consommée et la température mesurée. Dans cette séquence, on se demande si ce système peut également piloter un chauffage. Attention : le dossier ne contient aucune notice du système TAPO du laboratoire. La compatibilité avec un chauffage n’est donc pas démontrée, et aucun branchement n’est autorisé."};
+const AIDE_TERME = {"terme": "TAPO", "titre": "Qu’est-ce que le système TAPO ?", "texte": "TAPO est le système domotique du laboratoire : des appareils connectés, ici l’éclairage, que l’on pilote et programme depuis une application sur un téléphone ou une tablette. L’application TAPO permet aussi de suivre en direct la puissance consommée et la température mesurée. Dans cette séquence, on se demande si ce système peut également piloter un chauffage. Attention : le dossier ne contient aucune notice du système TAPO du laboratoire. La compatibilité avec un chauffage n’est donc pas démontrée, et aucun branchement n’est autorisé.", "courte": "Système domotique du laboratoire : des objets connectés (ici l’éclairage) pilotés depuis une application."};
 const SCORE_ATELIERS = true;
 
 // ============================================================
@@ -18639,19 +18649,29 @@ const SCORE_ATELIERS = true;
                     if (position < 0) continue;
                     var parent = noeud.parentElement;
                     if (!parent || parent.closest('script, style, button, a, .revision-aide-dialogue')) continue;
-                    var avant = valeur.slice(0, position + terme.length);
+                    var avant = valeur.slice(0, position);
                     var apres = valeur.slice(position + terme.length);
                     noeud.nodeValue = avant;
+                    var mot = document.createElement('span');
+                    mot.className = 'revision-aide-mot';
                     var bouton = document.createElement('button');
                     bouton.type = 'button';
-                    bouton.className = 'revision-aide-bouton';
+                    bouton.className = 'revision-aide-terme';
                     bouton.setAttribute('aria-haspopup', 'dialog');
                     bouton.setAttribute('aria-label', 'Aide : ' + titre);
-                    bouton.title = titre;
-                    bouton.textContent = '?';
+                    bouton.setAttribute('aria-describedby', 'aide-terme-bulle');
+                    bouton.textContent = terme;
                     bouton.addEventListener('click', ouvrir);
-                    parent.insertBefore(bouton, noeud.nextSibling);
-                    if (apres) parent.insertBefore(document.createTextNode(apres), bouton.nextSibling);
+                    var bulle = document.createElement('span');
+                    bulle.className = 'revision-aide-bulle';
+                    bulle.id = 'aide-terme-bulle-' + onglet.id;
+                    bulle.setAttribute('role', 'tooltip');
+                    bulle.textContent = String(AIDE_TERME.courte || '').trim() || texte;
+                    bouton.setAttribute('aria-describedby', bulle.id);
+                    mot.appendChild(bouton);
+                    mot.appendChild(bulle);
+                    parent.insertBefore(mot, noeud.nextSibling);
+                    if (apres) parent.insertBefore(document.createTextNode(apres), mot.nextSibling);
                     break;
                 }
             });
