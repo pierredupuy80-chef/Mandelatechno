@@ -4,20 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Énoncés N3 et N4 — Technologie 3e</title>
-<meta name="description" content="Huit énoncés bruts, un par écran, comme un sujet d'évaluation : niveaux N3 et N4, thèmes OST33, OST31, OST32, OST34.">
+<meta name="description" content="14 énoncés, un par écran, comme un sujet d'évaluation : la compétence de 3e en tête, thèmes OST33, OST31, OST32, OST34, OST2.">
 <style>
 :root {
     --encre: #10243b;
     --encre-douce: #3b4f66;
     --fond: #fbfcfe;
     --accent: #1f4e79;
+    --accent-pale: #eef4fa;
     --bord: #c9d6e4;
     --entete-tableau: #eaf1f8;
+    --correction: #1d6b4b;
+    --correction-pale: #f2f8f4;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-    min-height: 100vh;
+    height: 100vh;
+    display: flex; flex-direction: column;
     background: var(--fond);
     color: var(--encre);
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -27,9 +31,17 @@ body {
     padding: 0; border: 0; overflow: hidden;
     clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
+
+/* ---- En-tête : le retour à l'accueil (dans le flux) et les deux commandes -- */
+.entete {
+    flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    padding: 10px 14px 4px;
+}
 .retour-accueil {
     display: inline-flex; align-items: center; gap: 6px;
-    min-height: 44px; margin: 10px 14px; padding: 8px 16px;
+    min-height: 44px; margin: 0; padding: 8px 16px;
     border: 2px solid #ffffff;
     border-radius: 999px;
     background: var(--accent);
@@ -38,15 +50,61 @@ body {
     text-decoration: none;
 }
 .retour-accueil:hover { background: #2a6394; }
-body.projection .retour-accueil { display: none; }
-body.projection main { min-height: 100vh; }
-body.projection .mention-rgpd { display: none; }
-main {
-    min-height: calc(100vh - 72px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 2vh 3.5vw 4vh;
+.barre-outils {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-left: auto;
 }
-.enonce { width: 100%; max-width: 1180px; --facteur: 1; }
+.bouton-outil {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 44px; padding: 8px 20px;
+    border: 2px solid var(--accent); border-radius: 999px;
+    background: #ffffff; color: var(--accent);
+    font: inherit; font-size: 0.95rem; font-weight: 700;
+    line-height: 1.1; cursor: pointer;
+}
+.bouton-outil:hover { background: var(--accent-pale); }
+.bouton-outil[aria-pressed="true"] { background: var(--accent); color: #ffffff; }
+.bouton-outil--correction { border-color: var(--correction); color: var(--correction); }
+.bouton-outil--correction:hover { background: var(--correction-pale); }
+.bouton-outil--correction[aria-pressed="true"] {
+    background: var(--correction); color: #ffffff;
+}
+.bouton-outil:focus-visible,
+.bouton-fermer:focus-visible { outline: 3px solid #b45309; outline-offset: 2px; }
+.bouton-outil[hidden] { display: none; }
+.bouton-fermer {
+    min-height: 44px; padding: 6px 16px;
+    border: 2px solid var(--bord); border-radius: 999px;
+    background: #f3f6f9; color: var(--encre);
+    font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+}
+.bouton-fermer:hover { background: #e7edf3; }
+
+body.projection .retour-accueil { display: none; }
+body.projection .mention-rgpd { display: none; }
+
+main {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1vh 3vw 3vh;
+}
+.mention-rgpd { flex: 0 0 auto; }
+
+/* ---- L'énoncé, et la colonne de correction réservée à droite -------------- */
+.enonce {
+    width: 100%; max-width: 1180px; --facteur: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 2.2vw;
+    align-items: start;
+}
+.enonce[hidden] { display: none; }
+.enonce-corps { min-width: 0; }
+body.correction-ouverte .enonce:not([hidden]) {
+    max-width: 1820px;
+    grid-template-columns: minmax(0, 1fr) clamp(340px, 36vw, 660px);
+}
 .enonce-titre {
     margin: 0 0 0.85em;
     padding-bottom: 0.3em;
@@ -62,7 +120,6 @@ main {
     letter-spacing: 0.04em;
     color: var(--accent);
 }
-.enonce[hidden] { display: none; }
 .enonce p {
     margin: 0 0 0.62em;
     font-size: calc(var(--facteur) * clamp(16px, min(2.25vw, 3.7vh), 42px));
@@ -73,7 +130,7 @@ main {
     margin-top: 0.9em;
     padding: 0.5em 0.75em;
     border-left: 5px solid var(--accent);
-    background: #eef4fa;
+    background: var(--accent-pale);
     font-weight: 600;
 }
 .enonce table {
@@ -89,117 +146,672 @@ main {
 }
 .enonce th { background: var(--entete-tableau); font-weight: 700; }
 .enonce td:not(:first-child), .enonce th:not(:first-child) { text-align: center; }
+
+/* ---- Le volet de correction : la colonne de droite ------------------------ */
+.correction {
+    min-width: 0;
+    /* Plafonnée sur l'espace réellement disponible : la hauteur utile est
+       mesurée par le script (--hauteur-volet). Le volet défile alors tout seul,
+       et la section ne dépasse jamais l'écran. */
+    max-height: var(--hauteur-volet, 60vh);
+    overflow-y: auto;
+    padding: 0 0 0 1.2vw;
+    border-left: 3px solid var(--correction);
+    /* La barre de défilement doit se voir : sans elle, une correction plus
+       longue que l'écran semble s'arrêter en pleine phrase. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--correction) #e9eef3;
+}
+.correction::-webkit-scrollbar { width: 11px; }
+.correction::-webkit-scrollbar-track {
+    background: #e9eef3; border-radius: 6px;
+}
+.correction::-webkit-scrollbar-thumb {
+    background: var(--correction); border-radius: 6px;
+}
+.correction[hidden] { display: none; }
+.correction-entete {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 0.35em;
+}
+.correction-titre {
+    margin: 0;
+    font-size: clamp(14px, 1.3vw, 22px);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--correction);
+}
+/* Le raisonnement se lit comme un texte : paragraphes rédigés, interligne
+   large, pas de listes télégraphiques. */
+.raisonnement p {
+    margin: 0 0 0.85em;
+    font-size: clamp(15px, 1.15vw, 20px);
+    line-height: 1.5;
+    text-align: justify;
+    hyphens: auto;
+}
+.raisonnement p:last-child { margin-bottom: 0; }
+
+/* ---- La modale d'indication ---------------------------------------------- */
+.modale {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4vh 4vw;
+    background: rgba(16, 36, 59, 0.55);
+}
+.modale[hidden] { display: none; }
+.modale-boite {
+    /* La modale porte des rappels de fiches, donc du texte : elle s'élargit
+       plutôt que de s'allonger. */
+    width: min(1120px, 100%);
+    max-height: 90vh; overflow-y: auto;
+    padding: 26px 30px 20px;
+    border: 3px solid var(--accent);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 18px 44px rgba(16, 36, 59, 0.3);
+}
+.modale-boite:focus { outline: none; }
+.modale-titre {
+    margin: 0 0 0.55em;
+    font-size: clamp(18px, 1.7vw, 28px);
+    color: var(--accent);
+}
+.modale-resume {
+    margin: 0 0 0.7em;
+    font-size: clamp(17px, 1.5vw, 25px);
+    line-height: 1.42;
+}
+.rappel { margin: 0 0 1em; }
+.rappel:last-child { margin-bottom: 0; }
+.modale .rappel-titre {
+    margin: 0 0 0.25em;
+    font-size: clamp(16px, 1.25vw, 21px);
+    font-weight: 700; line-height: 1.3;
+    color: var(--accent);
+}
+.modale .rappel-texte {
+    margin: 0;
+    font-size: clamp(15px, 1.2vw, 20px);
+    line-height: 1.5;
+    text-align: justify;
+    hyphens: auto;
+}
+.modale .modale-fiches {
+    margin: 1.2em 0 0;
+    padding-top: 0.7em;
+    border-top: 1px solid var(--bord);
+    font-size: clamp(14px, 1.05vw, 18px);
+    font-style: italic;
+    color: var(--encre-douce);
+}
+.modale-pied {
+    display: flex; justify-content: flex-end; margin: 1.1em 0 0;
+    /* Le bouton « Fermer » reste atteignable même si la modale défile. */
+    position: sticky; bottom: 0;
+    background: #ffffff; padding-top: 0.6em;
+}
+
+@media (max-width: 360px) {
+    .enonce table { font-size: 10.5px; }
+    .enonce th, .enonce td { padding: 0.22em 0.36em; }
+}
+
 @media print {
     @page { size: 297mm 167mm; margin: 14mm; }
-    .retour-accueil { display: none; }
-    main { min-height: 0; display: block; padding: 0; }
+    .entete, .modale, .correction, .mention-rgpd, .mention-rgpd * { display: none; }
+    body { display: block; height: auto; min-height: 0; }
+    main { overflow: visible; min-height: 0; display: block; padding: 0; }
     .enonce, .enonce[hidden] { display: block !important; page-break-after: always; }
     .enonce:last-child { page-break-after: auto; }
-    .enonce-titre { font-size: 11pt; }
-    .enonce p { font-size: 13pt; }
-    .enonce table { font-size: 10.5pt; }
+    .enonce-titre { font-size: 10.5pt; }
+    .enonce p { font-size: 12pt; }
+    .enonce table { font-size: 10pt; }
 }
+
+/* ---- Téléphone : les deux colonnes s'empilent ----------------------------- */
+@media (max-width: 900px) {
+    main { align-items: flex-start; padding: 1vh 4vw 4vh; }
+    /* Un tableau de six colonnes ne tient pas dans 390 px : on le fixe à la
+       largeur disponible et on laisse les en-têtes passer à la ligne, plutôt
+       que de le laisser déborder sous le bord droit de l'écran. */
+    .enonce table { width: 100%; table-layout: fixed; font-size: 11px; }
+    .enonce th, .enonce td { padding: 0.25em 0.3em; hyphens: auto; }
+    .enonce th { overflow-wrap: normal; }
+    .enonce, body.correction-ouverte .enonce:not([hidden]) {
+        max-width: none; grid-template-columns: minmax(0, 1fr);
+    }
+    .correction {
+        max-height: none; overflow: visible;
+        margin-top: 3vh; padding: 2vh 0 0;
+        border-left: 0; border-top: 3px solid var(--correction);
+    }
+    .modale-boite { padding: 20px 18px 16px; }
+}
+</style>
+<!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
+<style>
+  .nom-manuscrit{font-size:.85rem; color:var(--gris); margin:4px 0 0}
+  .nom-manuscrit .mention-donnees{display:block; font-size:.72rem; font-style:italic; opacity:.85}
+  .mention-rgpd{max-width:1240px; margin:16px auto 24px; padding:10px 14px; border:1px solid #d8e0e8;
+    border-radius:8px; background:#f6f8fa; color:#5a6672; font-size:.78rem; line-height:1.45;
+    text-align:center}
+@media print{.nom-manuscrit .mention-donnees{display:block}}
 </style>
 </head>
 <body>
+<header class="entete">
+<h1 class="visuellement-cache">Énoncés N3 et N4 — Technologie 3e</h1>
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+    <div class="barre-outils">
+        <button type="button" class="bouton-outil" id="bouton-indication" aria-pressed="false" aria-controls="modale-e1">Indication</button>
+        <button type="button" class="bouton-outil bouton-outil--correction" id="bouton-correction" aria-pressed="false" aria-controls="correction-e1">Correction</button>
+    </div>
+</header>
 <main id="scene">
         <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="imprimante 3D" data-competence="OST33" aria-label="Énoncé 1 sur 14">
-            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
-            <p>Le club robotique du collège veut acheter une imprimante 3D pour fabriquer les pièces de ses robots. Trois exigences ont été écrites :</p>
-            <p>• un volume d’impression d’au moins 20 × 20 × 20 cm ;</p>
-            <p>• un niveau sonore inférieur à 50 dB, pour travailler en salle de classe ;</p>
-            <p>• un prix inférieur à 400 €.</p>
-            <p>Le comparatif donne quatre modèles.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
+                <p>Le club robotique du collège veut acheter une imprimante 3D pour fabriquer les pièces de ses robots. Trois exigences ont été écrites :</p>
+                <p>• un volume d’impression d’au moins 20 × 20 × 20 cm ;</p>
+                <p>• un niveau sonore inférieur à 50 dB, pour travailler en salle de classe ;</p>
+                <p>• un prix inférieur à 400 €.</p>
+                <p>Le comparatif donne quatre modèles.</p>
             <table>
-                <caption class="visuellement-cache">Comparatif : imprimante 3D</caption>
-                <thead><tr><th scope="col">Modèle</th><th scope="col">Volume (cm)</th><th scope="col">Niveau sonore (dB)</th><th scope="col">Prix (€)</th></tr></thead>
+                <caption class="visuellement-cache">Comparatif : imprimante 3D</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Dimensions (cm)</th><th scope="col">Niveau sonore (dB)</th><th scope="col">Prix (€)</th></tr></thead>
                 <tbody><tr><th scope="row">A1</th><td>22 × 22 × 25</td><td>48</td><td>379</td></tr><tr><th scope="row">B2</th><td>18 × 18 × 18</td><td>45</td><td>349</td></tr><tr><th scope="row">C3</th><td>25 × 21 × 21</td><td>52</td><td>459</td></tr><tr><th scope="row">D4</th><td>20 × 20 × 20</td><td>49</td><td>399</td></tr></tbody>
             </table>
-            <p class="enonce-tache">Pour chaque imprimante, indique si elle respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quelles imprimantes sont éliminées et pourquoi.</p>
+                <p class="enonce-tache">Pour chaque imprimante, indique si elle respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quelles imprimantes sont éliminées et pourquoi.</p>
+            </div>
+            <aside class="correction" id="correction-e1" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le cahier des charges fixe trois exigences : un volume d’impression d’au moins 20 cm de côté, un niveau sonore inférieur à 50 dB et un prix inférieur à 400 €. Confronter chaque modèle revient donc à comparer ces trois valeurs, sans perdre de vue l’unité dans laquelle chacune s’exprime.</p>
+                    <p>A1 y satisfait pleinement : 22 × 22 × 25 cm dépassent le minimum, 48 dB se tiennent sous la limite et 379 € demeurent inférieurs à 400 €. D4 y satisfait aussi, mais d’extrême justesse, ses dimensions atteignant exactement les 20 cm exigés, seuil que la formulation « au moins » autorise à atteindre.</p>
+                    <p>B2 échoue sur le volume — 18 cm, deux de moins que le minimum — et C3 échoue deux fois, par son bruit de 52 dB comme par son prix de 459 €. Une seule exigence manquée écartant un modèle, il ne reste qu’A1 et D4 : tous deux satisfont aux trois exigences, et le cahier des charges ne les sépare plus.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e1" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e1">
+                    <h3 class="modale-titre" id="modale-titre-e1">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST33" data-niveau="N4" data-objet="aspirateur robot" data-competence="OST33" aria-label="Énoncé 2 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
-            <p>Le collège doit acheter un aspirateur robot pour les salles de classe.</p>
-            <p class="enonce-tache">Rédige la grille d’évaluation qui servira au choix : quatre critères, l’unité de chacun et la valeur exigée. Explique ensuite, en une phrase, comment tu éliminerais un modèle qui échoue à un seul critère.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
+                <p>Le collège doit acheter un aspirateur robot pour les salles de classe.</p>
+                <p class="enonce-tache">Rédige la grille des quatre exigences chiffrées qui serviront au choix : le nom de chacune, son unité et la valeur exigée. Explique ensuite, en une phrase, comment tu éliminerais un modèle qui échoue à une seule.</p>
+            </div>
+            <aside class="correction" id="correction-e2" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Une grille d’évaluation n’est pas un catalogue de qualités : c’est un tableau d’exigences vérifiables, dont chacune s’écrit avec son nom, son unité et la valeur exigée. Quatre exigences se justifient par l’usage d’un aspirateur robot en salle de classe. Le prix doit tenir dans le budget de l’établissement. L’autonomie décide de la surface nettoyée en une charge. Le niveau sonore doit laisser travailler la classe voisine. La hauteur de l’appareil règle son passage sous les tables.</p>
+                    <p>On peut ainsi retenir un prix inférieur ou égal à 300 €, une autonomie d’au moins 90 minutes, un niveau sonore inférieur ou égal à 65 dB et une hauteur inférieure ou égale à 10 cm. D’autres critères sont recevables — capacité du bac en litres, dépression d’aspiration en pascals, temps de charge en minutes — pourvu que l’unité soit donnée et que la valeur exigée se justifie par l’usage.</p>
+                    <p>La grille est éliminatoire : un modèle qui échoue à une seule exigence est écarté, même s’il surpasse les autres ailleurs. C’est en cela qu’elle se distingue d’un simple relevé de performances.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e2" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e2">
+                    <h3 class="modale-titre" id="modale-titre-e2">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST31" data-niveau="N3" data-objet="arrosage des plantes" data-competence="OST31" aria-label="Énoncé 3 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
-            <p>Pendant les vacances d’été, les plantes de la classe doivent être arrosées sans intervention humaine et sans eau courante.</p>
-            <p class="enonce-tache">Liste trois objets techniques ou systèmes qui pourraient convenir. Pour chacun, indique un interacteur extérieur et une contrainte à respecter.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
+                <p>Pendant les vacances d’été, les plantes de la classe doivent être arrosées sans intervention humaine et sans eau courante.</p>
+                <p class="enonce-tache">Liste trois objets techniques ou systèmes qui pourraient convenir. Pour chacun, indique un interacteur extérieur et une contrainte à respecter.</p>
+            </div>
+            <aside class="correction" id="correction-e3" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Trois solutions techniques peuvent assurer cet arrosage sans intervention humaine ni eau courante, et rien n’interdit de les lister sans en écarter aucune : la comparaison vient après la liste, jamais avant.</p>
+                    <p>La première est une réserve à mèche capillaire, où l’eau remonte lentement vers la terre par un cordon de coton. Son interacteur principal est l’air de la classe, dont la chaleur accélère l’évaporation, et sa contrainte tient à un débit assez faible pour ne pas détremper les racines. La deuxième associe une pompe, une sonde d’humidité et un réservoir : les usagers, qui remplissent le réservoir avant les vacances, et la prise électrique, autre objet technique, en sont les interacteurs. Sa contrainte est double, car il faut se passer du réseau d’eau et veiller à la sécurité électrique près d’un point humide. La troisième, un pot à réserve d’eau intégrée, a pour interacteur l’usager qui le remplit et pour contrainte la masse que le rebord de la fenêtre peut supporter.</p>
+                    <p>Ces trois solutions ne se distinguent ni par leur prix ni par leur élégance, mais par l’interacteur qu’elles exploitent et par la contrainte qu’elles imposent : l’air, l’électricité et l’usager d’un côté, un débit lent, une alimentation électrique et une masse supportable de l’autre.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e3" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e3">
+                    <h3 class="modale-titre" id="modale-titre-e3">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2a — Les interacteurs extérieurs</p>
+                        <p class="rappel-texte">Un objet ou système technique ne fonctionne jamais seul : il est toujours en interaction avec des éléments extérieurs, que l’on nomme interacteurs. On en distingue quatre familles : les usagers, qui utilisent l’objet ; les données, informations que l’objet utilise pour fonctionner ; les autres objets, avec lesquels il est en contact ; les éléments de l’environnement, naturels ou artificiels, qui l’entourent.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="déchets de cantine" data-competence="OST31" aria-label="Énoncé 4 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
-            <p>Le self du collège jette chaque jour vingt kilos d’épluchures.</p>
-            <p class="enonce-tache">Conçois un objet technique qui réduit le volume de ces déchets. Donne son nom, sa fonction principale, deux interacteurs extérieurs et une contrainte de sécurité.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
+                <p>Le self du collège jette chaque jour vingt kilos d’épluchures.</p>
+                <p class="enonce-tache">Conçois un objet technique qui réduit le volume de ces déchets. Donne son nom, sa fonction principale, deux interacteurs extérieurs et une contrainte de sécurité.</p>
+            </div>
+            <aside class="correction" id="correction-e4" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Concevoir un objet suppose de nommer d’abord la fonction qu’il remplit, et non la solution que l’on imagine : il s’agit ici de réduire le volume des épluchures avant leur ramassage.</p>
+                    <p>On peut par exemple concevoir une presse à épluchures : les agents de cantine, qui la remplissent puis la vident, en sont les usagers, et le bac de collecte, qui reçoit la matière pressée, en est l’autre interacteur. Sa fonction principale est de réduire le volume des déchets avant l’enlèvement ; le taux de réduction — 70 %, par exemple — demeure une hypothèse à vérifier par la mesure. La contrainte de sécurité, elle, est concrète : aucune arête coupante, et un levier qui ne se referme pas seul sur les doigts.</p>
+                    <p>Un séchoir à air chaud, un composteur accéléré ou un séchoir solaire serait également recevable : ce qui compte n’est pas la solution retenue, mais la netteté de la fonction, l’identification de deux interacteurs et le sérieux de la contrainte de sécurité.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e4" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e4">
+                    <h3 class="modale-titre" id="modale-titre-e4">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2a — Les interacteurs extérieurs</p>
+                        <p class="rappel-texte">Un objet ou système technique ne fonctionne jamais seul : il est toujours en interaction avec des éléments extérieurs, que l’on nomme interacteurs. On en distingue quatre familles : les usagers, qui utilisent l’objet ; les données, informations que l’objet utilise pour fonctionner ; les autres objets, avec lesquels il est en contact ; les éléments de l’environnement, naturels ou artificiels, qui l’entourent.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
-        <section class="enonce" data-theme="OST32" data-niveau="N3" data-objet="perceuse sans fil" data-competence="OST32" aria-label="Énoncé 5 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
-            <p>Un particulier doit percer du béton : deux cents trous par mois, dans un appartement, avec un budget de 150 €. Percer du béton demande une puissance d’au moins 500 W.</p>
-            <p>Le comparatif donne trois perceuses sans fil.</p>
+        <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="perceuse sans fil" data-competence="OST33" aria-label="Énoncé 5 sur 14" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
+                <p>Un particulier doit percer du béton : deux cents trous par mois, dans un appartement, avec un budget de 150 €. Percer du béton demande une puissance d’au moins 500 W.</p>
+                <p>Le comparatif donne trois perceuses sans fil.</p>
             <table>
-                <caption class="visuellement-cache">Comparatif : perceuse sans fil</caption>
-                <thead><tr><th scope="col">Modèle</th><th scope="col">Puissance (W)</th><th scope="col">Autonomie (Ah)</th><th scope="col">Prix (€)</th></tr></thead>
+                <caption class="visuellement-cache">Comparatif : perceuse sans fil</caption>
+                <thead><tr><th scope="col">Modèle</th><th scope="col">Puissance (W)</th><th scope="col">Capacité (Ah)</th><th scope="col">Prix (€)</th></tr></thead>
                 <tbody><tr><th scope="row">P1</th><td>550</td><td>2,0</td><td>129</td></tr><tr><th scope="row">P2</th><td>600</td><td>2,5</td><td>179</td></tr><tr><th scope="row">P3</th><td>350</td><td>1,5</td><td>99</td></tr></tbody>
             </table>
-            <p class="enonce-tache">Pour chaque perceuse, indique si elle répond au besoin (avec la valeur du tableau), puis désigne celle qui convient.</p>
+                <p class="enonce-tache">Pour chaque perceuse, indique si elle répond au besoin (avec la valeur du tableau), puis désigne celle qui convient.</p>
+            </div>
+            <aside class="correction" id="correction-e5" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le besoin se traduit par deux exigences chiffrées : une puissance d’au moins 500 W, sans laquelle le béton ne se perce pas, et un budget de 150 € qu’il serait imprudent de dépasser.</p>
+                    <p>La perceuse P1 satisfait à l’une comme à l’autre, avec 550 W et 129 €. La P2 dispose d’une puissance supérieure — 600 W —, mais son prix de 179 € excède le budget de vingt-neuf euros : l’exigence de budget n’est pas respectée, et le modèle est écarté. La P3, enfin, ne développe que 350 W, très en deçà des 500 W nécessaires ; son prix de 99 € ne compense pas cette insuffisance, car un outil trop faible ne perce pas le béton, quel que soit son coût.</p>
+                    <p>La perceuse qui convient est donc la P1 : c’est la seule à respecter simultanément les deux exigences du besoin.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e5" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e5">
+                    <h3 class="modale-titre" id="modale-titre-e5">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="casque audio" data-competence="OST32" aria-label="Énoncé 6 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
-            <p>Un élève prend le train deux heures par jour et veut un casque à réduction de bruit : une autonomie d’au moins 20 heures, un budget de 200 €.</p>
-            <p>Le comparatif donne trois modèles.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
+                <p>Un élève prend le train deux heures par jour et veut un casque à réduction de bruit : une autonomie d’au moins 20 heures, un budget de 200 €.</p>
+                <p>Le comparatif donne trois modèles.</p>
             <table>
-                <caption class="visuellement-cache">Comparatif : casque audio</caption>
+                <caption class="visuellement-cache">Comparatif : casque audio</caption>
                 <thead><tr><th scope="col">Casque</th><th scope="col">Autonomie (h)</th><th scope="col">Prix (€)</th><th scope="col">Masse (g)</th><th scope="col">Garantie (ans)</th></tr></thead>
                 <tbody><tr><th scope="row">C1</th><td>30</td><td>199</td><td>250</td><td>2</td></tr><tr><th scope="row">C2</th><td>20</td><td>149</td><td>180</td><td>1</td></tr><tr><th scope="row">C3</th><td>40</td><td>249</td><td>310</td><td>3</td></tr></tbody>
             </table>
-            <p class="enonce-tache">Choisis un casque et rédige un argumentaire de cinq lignes : deux valeurs du comparatif avec leur unité, un pilier du développement durable et une étape du cycle de vie.</p>
+                <p class="enonce-tache">Choisis un casque et rédige un argumentaire de cinq lignes : deux valeurs du comparatif avec leur unité, un pilier du développement durable et une étape du cycle de vie.</p>
+            </div>
+            <aside class="correction" id="correction-e6" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le besoin comporte deux exigences mesurables — une autonomie d’au moins 20 heures et un budget de 200 € — et un motif qui, lui, n’est pas chiffré : la réduction de bruit. Or le comparatif ne renseigne pas ce dernier point ; on ne peut donc pas le vérifier, et le choix devra se fonder sur les seules colonnes disponibles.</p>
+                    <p>Deux modèles satisfont aux exigences : C1, avec 30 heures d’autonomie pour 199 €, et C2, avec 20 heures pour 149 €. Choisir C1, c’est servir le pilier économique — l’appareil reste sous le budget de 200 € — en pesant sur l’étape d’utilisation : ses deux ans de garantie et ses dix heures d’autonomie supplémentaires réduisent le nombre de recharges et la probabilité d’un remplacement, donc la fabrication d’un appareil neuf. Choisir C2, c’est servir le même pilier à moindre coût — cinquante euros de moins — et le confort d’usage, avec soixante-dix grammes de moins sur les oreilles.</p>
+                    <p>C3 est écarté sans discussion : ses 249 € dépassent le budget, quand bien même son autonomie de 40 heures et sa garantie de trois ans seraient les meilleures du comparatif. Un argumentaire complet nomme le pilier qu’il sert et l’étape du cycle de vie qu’il concerne, puis désigne le modèle retenu.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e6" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e6">
+                    <h3 class="modale-titre" id="modale-titre-e6">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3d — Piliers du développement durable et cycle de vie</p>
+                        <p class="rappel-texte">Le développement durable s’appuie sur trois piliers : le pilier économique, qui crée de la richesse ; le pilier social, qui lutte contre les inégalités ; le pilier environnemental, qui préserve les ressources et la diversité des espèces. Le cycle de vie d’un objet technique comporte cinq étapes : l’extraction des matières premières, la fabrication, le transport, l’utilisation et la fin de vie, celle-ci pouvant prendre la forme du recyclage, de la valorisation ou de la destruction.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST34" data-niveau="N3" data-objet="enceinte connectée" data-competence="OST34" aria-label="Énoncé 7 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
-            <p>Un protocole mesure l’autonomie d’une enceinte connectée en trois étapes : charger à 100 %, jouer une liste de lecture à volume 50 %, chronométrer jusqu’à l’arrêt. Un élève trouve 7 h 20 ; le constructeur annonce 10 h.</p>
-            <p class="enonce-tache">Cite deux raisons possibles de cet écart et, pour chacune, la grandeur à relever pour la vérifier.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
+                <p>Un protocole mesure l’autonomie d’une enceinte connectée en trois étapes : charger à 100 %, jouer une liste de lecture à volume 50 %, chronométrer jusqu’à l’arrêt. Un élève trouve 7 h 20 ; le constructeur annonce 10 h.</p>
+                <p class="enonce-tache">Cite deux raisons possibles de cet écart et, pour chacune, la grandeur à relever pour la vérifier.</p>
+            </div>
+            <aside class="correction" id="correction-e7" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>L’autonomie est une grandeur mesurable : elle s’exprime en heures ou en minutes, et sa valeur ne vaut que pour les conditions dans lesquelles la mesure a été faite. L’écart entre les 7 h 20 relevées et les 10 h annoncées suppose donc que ces conditions aient différé.</p>
+                    <p>Deux causes sont plausibles. La première est le volume d’écoute : une liste jouée plus fort que les 50 % du protocole consomme davantage, et il suffit de relever le volume sonore, en pourcentage ou en décibels, pour le vérifier. La seconde est le mode de liaison : une écoute en Wi-Fi, plus gourmande qu’une liaison Bluetooth, abaisse sensiblement l’autonomie ; relever la liaison employée suffit alors à expliquer l’écart. On pourrait encore invoquer une charge initiale incomplète, à condition de relever l’état de charge, ou la tension de la batterie, en volts.</p>
+                    <p>L’essentiel est que chaque cause proposée soit associée à une grandeur que l’on peut effectivement relever : une hypothèse que rien ne mesure ne vaut pas un raisonnement.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e7" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e7">
+                    <h3 class="modale-titre" id="modale-titre-e7">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST34" data-niveau="N4" data-objet="drone de loisir" data-competence="OST34" aria-label="Énoncé 8 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
-            <p>Un club veut mesurer la consommation d’un drone de loisir pendant un vol de dix minutes.</p>
-            <p class="enonce-tache">Conçois le protocole de cette mesure : indique la grandeur mesurée et son unité, le matériel nécessaire, les trois étapes du protocole et deux grandeurs à relever en même temps.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
+                <p>Un club veut mesurer la consommation d’un drone de loisir pendant un vol de dix minutes.</p>
+                <p class="enonce-tache">Conçois le protocole de cette mesure : indique la grandeur mesurée et son unité, le matériel nécessaire, les trois étapes du protocole et deux grandeurs à relever en même temps.</p>
+            </div>
+            <aside class="correction" id="correction-e8" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Concevoir un protocole de mesure, c’est d’abord nommer la grandeur à mesurer et son unité. Ici, il s’agit de l’énergie consommée pendant un vol de dix minutes : elle s’exprime en wattheures. On peut aussi mesurer la charge réinjectée à la recharge, en milliampères-heures, et la convertir en énergie grâce à la tension de la batterie.</p>
+                    <p>Le matériel s’en déduit : un analyseur d’énergie, ou un wattmètre, branché entre la batterie et le drone ; un chronomètre ; une balance, car la masse de l’appareil modifie sa consommation. Le protocole se déroule en trois temps : batterie chargée à 100 %, masse relevée, on fait voler l’appareil dix minutes au chronomètre, dans des conditions de pilotage identiques — vol stationnaire, sans rafale —, puis on relève l’énergie consommée. Un second essai est nécessaire : une mesure unique ne prouve rien.</p>
+                    <p>Deux grandeurs doivent être relevées pendant l’essai, sans quoi la mesure resterait inexplicable : la tension de la batterie, en volts, et la vitesse du vent, en mètres par seconde. La masse du drone, elle, se pèse avant le vol : une fois en l’air, elle n’est plus accessible.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e8" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e8">
+                    <h3 class="modale-titre" id="modale-titre-e8">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="lave-vaisselle du foyer" data-competence="OST32" aria-label="Énoncé 9 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
-            <p>Le lave-vaisselle du foyer du collège a douze ans. Le réparateur propose un devis de 180 € ; les pièces détachées resteront disponibles deux ans. Un appareil neuf coûte 429 €, il est classé C à l’étiquette énergie et sa durée de vie est estimée à dix ans.</p>
-            <p class="enonce-tache">Analyse les deux solutions avec le cycle de vie et les trois piliers du développement durable. Rédige un conseil argumenté de cinq lignes : deux arguments chiffrés, un pilier, une étape du cycle de vie, et la solution que tu retiens.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
+                <p>Le lave-vaisselle du foyer du collège a douze ans. Le réparateur propose un devis de 180 € ; les pièces détachées resteront disponibles deux ans. Un appareil neuf coûte 429 €, il est classé C à l’étiquette énergie et sa durée de vie est estimée à dix ans.</p>
+                <p class="enonce-tache">Analyse les deux solutions avec le cycle de vie et les trois piliers du développement durable. Rédige un conseil argumenté de cinq lignes : deux arguments chiffrés, un pilier, une étape du cycle de vie, et la solution que tu retiens.</p>
+            </div>
+            <aside class="correction" id="correction-e9" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Réparer ou remplacer : la question ne se tranche pas sur le seul prix d’achat, mais sur les étapes du cycle de vie que chaque solution engage et sur les piliers du développement durable qu’elle sert.</p>
+                    <p>Réparer coûte 180 €, soit environ 42 % du prix d’un appareil neuf. Cette dépense évite l’extraction des matières premières, la fabrication et le transport qu’exigerait un appareil neuf : elle relève du pilier environnemental et épargne les étapes amont du cycle de vie. L’argument demeure fragile, toutefois, car la disponibilité des pièces s’arrête dans deux ans : si l’appareil retombe en panne au-delà, les 180 € seront perdus.</p>
+                    <p>Remplacer coûte 429 € pour une durée de vie estimée à dix ans, mais engage une fabrication supplémentaire et une consommation supérieure, l’appareil étant classé C sur l’échelle A à G. Rapporté à l’année, le remplacement revient à environ 43 € ; la réparation, si l’appareil tient deux ans, à 90 €. Je retiens donc le remplacement : le surcoût annuel est faible, l’appareil neuf durera dix ans et la dépense ne risque pas d’être perdue au bout de deux.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e9" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e9">
+                    <h3 class="modale-titre" id="modale-titre-e9">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3d — Piliers du développement durable et cycle de vie</p>
+                        <p class="rappel-texte">Le développement durable s’appuie sur trois piliers : le pilier économique, qui crée de la richesse ; le pilier social, qui lutte contre les inégalités ; le pilier environnemental, qui préserve les ressources et la diversité des espèces. Le cycle de vie d’un objet technique comporte cinq étapes : l’extraction des matières premières, la fabrication, le transport, l’utilisation et la fin de vie, celle-ci pouvant prendre la forme du recyclage, de la valorisation ou de la destruction.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3b — L’indice énergétique et l’indice de réparabilité</p>
+                        <p class="rappel-texte">L’indice énergétique est une note de A à G : A désigne les appareils les plus économes, G les plus gourmands. L’indice de réparabilité, noté de 1 à 10, mesure la facilité de réparation ; au-delà de 7, l’appareil est réputé réparable. Ces deux indices aident à choisir un appareil à la fois performant et durable.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST34" data-niveau="N4" data-objet="robot aspirateur" data-competence="OST34" aria-label="Énoncé 10 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
-            <p>Deux élèves mesurent l’autonomie d’un robot aspirateur. Le premier trouve 68 minutes, en laissant l’appareil aspirer en continu sur un sol dur. Le second trouve 95 minutes, sur un tapis et en mode éco. Le constructeur annonce 90 minutes.</p>
-            <p class="enonce-tache">Explique pourquoi les deux mesures diffèrent. Rédige ensuite le protocole qui permettrait de comparer l’appareil à l’annonce du constructeur : grandeur, unité, matériel, trois étapes, et les grandeurs à relever en même temps.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST34</span> <span class="enonce-competence">Définir et mettre en œuvre un protocole pour mesurer une caractéristique, une performance d’un OST</span></h2>
+                <p>Deux élèves mesurent l’autonomie d’un robot aspirateur. Le premier trouve 68 minutes, en laissant l’appareil aspirer en continu sur un sol dur. Le second trouve 95 minutes, sur un tapis et en mode éco. Le constructeur annonce 90 minutes.</p>
+                <p class="enonce-tache">Explique pourquoi les deux mesures diffèrent. Rédige ensuite le protocole qui permettrait de comparer l’appareil à l’annonce du constructeur : grandeur, unité, matériel, trois étapes, et les grandeurs à relever en même temps.</p>
+            </div>
+            <aside class="correction" id="correction-e10" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Les deux mesures ne portent pas sur le même essai : le premier élève laisse l’appareil aspirer en continu sur un sol dur, le second le fait travailler sur un tapis, en mode éco. Deux conditions ont changé à la fois — le sol et le mode — et rien, dans ces deux chiffres, ne permet de dire laquelle produit l’écart.</p>
+                    <p>Tout au plus constate-t-on que le mode éco, bien moins gourmand, compense et au-delà la résistance du tapis : les 95 minutes du second essai le suggèrent. Attribuer l’écart au seul mode serait pourtant une conclusion hâtive ; seule une mesure à conditions identiques — même sol, deux modes successifs — permettrait de trancher.</p>
+                    <p>Pour confronter l’appareil à l’annonce du constructeur, il faut mesurer l’autonomie, en minutes, au moyen d’un chronomètre et d’un mètre ruban : charger la batterie à 100 %, faire tourner l’appareil dans une même pièce, sur sol dur et en mode standard, puis chronométrer jusqu’à l’arrêt. La surface nettoyée et le mode employé seront relevés en parallèle, et l’essai refait une seconde fois.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e10" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e10">
+                    <h3 class="modale-titre" id="modale-titre-e10">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST31" data-niveau="N4" data-objet="refuge de montagne" data-competence="OST31" aria-label="Énoncé 11 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
-            <p>Un refuge de montagne, hors réseau électrique, doit alimenter une lampe, une radio et un chargeur de téléphone. Le gardien ne peut pas installer de ligne électrique et veut une solution qui fonctionne toute l’année.</p>
-            <p class="enonce-tache">Liste trois solutions techniques possibles. Pour chacune, indique un interacteur extérieur, une contrainte de l’environnement et la raison pour laquelle elle pourrait échouer en hiver.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST31</span> <span class="enonce-competence">Établir une liste d’OST possibles en vue de répondre à un besoin</span></h2>
+                <p>Un refuge de montagne, hors réseau électrique, doit alimenter une lampe, une radio et un chargeur de téléphone. Le gardien ne peut pas installer de ligne électrique et veut une solution qui fonctionne toute l’année.</p>
+                <p class="enonce-tache">Liste trois solutions techniques possibles. Pour chacune, indique un interacteur extérieur, une contrainte de l’environnement et la raison pour laquelle elle pourrait échouer en hiver.</p>
+            </div>
+            <aside class="correction" id="correction-e11" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Trois solutions techniques peuvent produire de l’électricité hors réseau, et chacune doit être examinée avec l’interacteur qu’elle exploite et la contrainte qu’elle subit.</p>
+                    <p>Un panneau solaire associé à une batterie a pour interacteur le soleil ; la contrainte est l’enneigement, et l’échec hivernal s’explique aisément : les jours sont courts et des panneaux recouverts de neige ne rechargent plus la batterie. Une petite éolienne a pour interacteur le vent ; le givre et les rafales la contraignent, et elle peut rester plusieurs jours sans produire, ou s’arrêter par sécurité lorsque le vent forcit. Un groupe électrogène, enfin, dépend des usagers qui le ravitaillent et des autres objets que sont les bidons de carburant ; la neige et le gel en font la contrainte, et la route coupée en hiver, la cause d’échec la plus probable.</p>
+                    <p>Ces trois solutions ont en commun de dépendre d’un élément que le refuge ne maîtrise pas : le soleil, le vent ou le ravitaillement. Aucune ne suffit seule toute l’année ; c’est leur association qui rend le refuge autonome.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e11" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e11">
+                    <h3 class="modale-titre" id="modale-titre-e11">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2a — Les interacteurs extérieurs</p>
+                        <p class="rappel-texte">Un objet ou système technique ne fonctionne jamais seul : il est toujours en interaction avec des éléments extérieurs, que l’on nomme interacteurs. On en distingue quatre familles : les usagers, qui utilisent l’objet ; les données, informations que l’objet utilise pour fonctionner ; les autres objets, avec lesquels il est en contact ; les éléments de l’environnement, naturels ou artificiels, qui l’entourent.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST33" data-niveau="N3" data-objet="vidéoprojecteur" data-competence="OST33" aria-label="Énoncé 12 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
-            <p>Une salle de classe sans store doit être équipée d’un vidéoprojecteur. Trois exigences ont été écrites : une luminosité d’au moins 3 000 lumens ; un contraste d’au moins 10 000 : 1 ; un prix inférieur à 600 €.</p>
-            <p>Le comparatif donne quatre modèles.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST33</span> <span class="enonce-competence">Évaluer les OST selon des exigences ou des critères identifiés</span></h2>
+                <p>Une salle de classe sans store doit être équipée d’un vidéoprojecteur. Trois exigences ont été écrites : une luminosité d’au moins 3 000 lumens ; un contraste d’au moins 10 000 : 1 ; un prix inférieur à 600 €.</p>
+                <p>Le comparatif donne quatre modèles.</p>
             <table>
-                <caption class="visuellement-cache">Comparatif : vidéoprojecteur</caption>
+                <caption class="visuellement-cache">Comparatif : vidéoprojecteur</caption>
                 <thead><tr><th scope="col">Modèle</th><th scope="col">Luminosité (lumens)</th><th scope="col">Contraste</th><th scope="col">Prix (€)</th></tr></thead>
-                <tbody><tr><th scope="row">V1</th><td>3 200</td><td>12 000 : 1</td><td>549</td></tr><tr><th scope="row">V2</th><td>2 800</td><td>20 000 : 1</td><td>399</td></tr><tr><th scope="row">V3</th><td>4 000</td><td>8 000 : 1</td><td>699</td></tr><tr><th scope="row">V4</th><td>3 000</td><td>10 000 : 1</td><td>599</td></tr></tbody>
+                <tbody><tr><th scope="row">V1</th><td>3 200</td><td>12 000 : 1</td><td>549</td></tr><tr><th scope="row">V2</th><td>2 800</td><td>20 000 : 1</td><td>399</td></tr><tr><th scope="row">V3</th><td>4 000</td><td>8 000 : 1</td><td>699</td></tr><tr><th scope="row">V4</th><td>3 000</td><td>10 000 : 1</td><td>599</td></tr></tbody>
             </table>
-            <p class="enonce-tache">Pour chaque modèle, indique s’il respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quels modèles sont éliminés et pourquoi.</p>
+                <p class="enonce-tache">Pour chaque modèle, indique s’il respecte chaque exigence (oui ou non, avec la valeur du tableau). Écris ensuite quels modèles sont éliminés et pourquoi.</p>
+            </div>
+            <aside class="correction" id="correction-e12" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Trois exigences chiffrées encadrent le choix : une luminosité d’au moins 3 000 lumens, un contraste d’au moins 10 000 : 1 et un prix inférieur à 600 €. Chacune se vérifie sur le document, valeur par valeur.</p>
+                    <p>V1 satisfait aux trois : 3 200 lumens, 12 000 : 1 et 549 €. V4 y satisfait aussi, mais en touchant exactement les deux premiers seuils, puisque sa luminosité atteint 3 000 lumens et son contraste 10 000 : 1 — ce que la formulation « au moins » autorise. V2 échoue sur la luminosité, malgré un contraste très supérieur ; V3 échoue deux fois, par un contraste de 8 000 : 1 et un prix de 699 €.</p>
+                    <p>Une seule exigence non satisfaite écartant un modèle, il ne reste que V1 et V4 : tous deux satisfont aux trois exigences, et le cahier des charges ne les sépare plus.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e12" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e12">
+                    <h3 class="modale-titre" id="modale-titre-e12">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3f — Les critères de performance</p>
+                        <p class="rappel-texte">La performance d’un objet technique est sa capacité à répondre à un besoin de manière efficace. Pour comparer plusieurs objets, on identifie les critères de performance adaptés à l’usage, on mesure leurs valeurs pour chacun des modèles, puis on compare ces valeurs afin de retenir celui qui répond le mieux au besoin.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST2" data-niveau="N3" data-objet="portail automatique" data-competence="OST2" aria-label="Énoncé 13 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST2</span> <span class="enonce-competence">Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs</span></h2>
-            <p>Le portail du collège s’ouvre pour laisser passer les voitures et se referme seul. Il détecte une présence devant lui et reçoit l’heure de fermeture du collège.</p>
-            <p class="enonce-tache">Cite quatre interacteurs extérieurs du portail, dont deux données. Explique ensuite ce qui se passe, pour un usager, si la donnée « présence » est erronée.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST2</span> <span class="enonce-competence">Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs</span></h2>
+                <p>Le portail du collège s’ouvre pour laisser passer les voitures et se referme seul. Il détecte une présence devant lui et reçoit l’heure de fermeture du collège.</p>
+                <p class="enonce-tache">Cite quatre interacteurs extérieurs du portail, dont deux données. Explique ensuite ce qui se passe, pour un usager, si la donnée « présence » est erronée.</p>
+            </div>
+            <aside class="correction" id="correction-e13" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Quatre interacteurs suffisent à décrire le portail, et il faut les nommer précisément : un usager, l’automobiliste qui le franchit ; un autre objet, la télécommande qui commande l’ouverture ; et deux données, l’heure de fermeture du collège, transmise au système, et la présence détectée devant le portail.</p>
+                    <p>Une donnée n’est pas le capteur : c’est l’information que le capteur fournit. Confondre les deux conduit à décrire l’intérieur du portail, alors que la question porte sur ses relations avec l’extérieur ; les éléments de l’environnement, comme la pluie, peuvent d’ailleurs fausser cette détection.</p>
+                    <p>Si la donnée de présence est erronée — un vélo non détecté, par exemple —, le portail se refermera sur l’usager alors qu’il s’engage. La conséquence est un choc, voire un blocage du véhicule : l’usager subit précisément le danger que cette donnée devait prévenir.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e13" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e13">
+                    <h3 class="modale-titre" id="modale-titre-e13">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2a — Les interacteurs extérieurs</p>
+                        <p class="rappel-texte">Un objet ou système technique ne fonctionne jamais seul : il est toujours en interaction avec des éléments extérieurs, que l’on nomme interacteurs. On en distingue quatre familles : les usagers, qui utilisent l’objet ; les données, informations que l’objet utilise pour fonctionner ; les autres objets, avec lesquels il est en contact ; les éléments de l’environnement, naturels ou artificiels, qui l’entourent.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST32" data-niveau="N4" data-objet="sacs de sport" data-competence="OST32" aria-label="Énoncé 14 sur 14" hidden>
-            <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
-            <p>Deux sacs de sport sont proposés au collège. Le premier est en polyester recyclé, fabriqué en Asie, vendu 25 €. Le second est en coton bio, fabriqué en France, vendu 45 €. Aucun des deux ne donne la durée de vie ni la masse de tissu.</p>
-            <p class="enonce-tache">Compare les deux sacs avec les trois piliers du développement durable et le cycle de vie. Dis quelle information manque pour trancher, et laquelle des deux fiches produit tu demanderais en premier.</p>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST32</span> <span class="enonce-competence">Choisir un OST et argumenter ce choix en prenant en compte son cycle de vie et les trois piliers du développement durable</span></h2>
+                <p>Deux sacs de sport sont proposés au collège. Le premier est en polyester recyclé, fabriqué en Asie, vendu 25 €. Le second est en coton bio, fabriqué en France, vendu 45 €.</p>
+                <p class="enonce-tache">Compare les deux sacs avec les trois piliers du développement durable et le cycle de vie. Dis quelle information manque pour trancher, et laquelle des deux fiches produit demanderais-tu en premier.</p>
+            </div>
+            <aside class="correction" id="correction-e14" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Les deux sacs s’opposent presque terme à terme. Le premier, en polyester recyclé, valorise une matière déjà utilisée et coûte 25 €, mais il est fabriqué en Asie : le transport pèse sur son bilan. Le second, en coton bio et fabriqué en France, réduit ce transport et se passe de pesticides, au prix de 45 €.</p>
+                    <p>Lu avec les trois piliers, le premier sac sert le pilier économique par son prix ; le second sert le pilier environnemental par sa culture sans pesticides et par un transport court, et le pilier social par une fabrication locale. Aucun des deux, en revanche, ne documente les conditions de fabrication ni la fin de vie.</p>
+                    <p>C’est là que la comparaison s’arrête : la donnée qui départage les deux produits est la durée de vie, complétée par la masse de tissu. Un sac à 25 € qui dure un an revient plus cher qu’un sac à 45 € qui en dure cinq. La fiche technique du produit, et non le seul prix affiché, est donc le document à demander en premier.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e14" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e14">
+                    <h3 class="modale-titre" id="modale-titre-e14">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3d — Piliers du développement durable et cycle de vie</p>
+                        <p class="rappel-texte">Le développement durable s’appuie sur trois piliers : le pilier économique, qui crée de la richesse ; le pilier social, qui lutte contre les inégalités ; le pilier environnemental, qui préserve les ressources et la diversité des espèces. Le cycle de vie d’un objet technique comporte cinq étapes : l’extraction des matières premières, la fabrication, le transport, l’utilisation et la fin de vie, celle-ci pouvant prendre la forme du recyclage, de la valorisation ou de la destruction.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST3e — Les quatre critères de choix</p>
+                        <p class="rappel-texte">Un objet technique se choisit selon quatre critères : la qualité, c’est-à-dire la robustesse, la fiabilité et la conception pour durer ; l’efficacité énergétique, soit la sobriété de sa consommation ; la durabilité, c’est-à-dire sa durée de vie et sa réparabilité ; la recyclabilité, enfin, qui interroge son devenir en fin de vie. Ces critères s’analysent en fonction des besoins et des priorités du client.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
 </main>
 <script>
@@ -207,29 +819,107 @@ main {
     var diapos = Array.prototype.slice.call(document.querySelectorAll('.enonce'));
     if (!diapos.length) { return; }
     var courant = 0;
+    var boutonIndication = document.getElementById('bouton-indication');
+    var boutonCorrection = document.getElementById('bouton-correction');
+    var etat = { indication: false, correction: false };
+    var dernierFocus = null;
 
     // Chaque énoncé est ajusté à la hauteur disponible : la taille de départ est
-    // généreuse (lisible du fond de la classe), puis on réduit si besoin.
+    // généreuse (lisible du fond de la classe), puis on réduit si besoin. On
+    // mesure le corps de l'énoncé, pas la section : avec la correction ouverte,
+    // la section est aussi haute que le plus long des deux volets.
     function ajuster(diapo) {
         var scene = document.getElementById('scene');
-        var enTete = document.querySelector('.retour-accueil');
         var style = window.getComputedStyle(scene);
         // La hauteur utile se mesure sur la FENÊTRE : la scène grandit avec son
         // contenu, elle ne peut donc pas servir de référence.
-        var dispo = window.innerHeight
+        var dispo = scene.clientHeight
             - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - 6;
-        if (enTete && enTete.offsetParent !== null) {
-            var styleTete = window.getComputedStyle(enTete);
-            dispo -= enTete.getBoundingClientRect().height
-                + parseFloat(styleTete.marginTop) + parseFloat(styleTete.marginBottom);
-        }
+        var corps = diapo.querySelector('.enonce-corps') || diapo;
+        diapo.style.setProperty('--hauteur-volet', Math.max(200, dispo - 6) + 'px');
         diapo.style.setProperty('--facteur', '1');
         var facteur = 1;
         var tours = 0;
-        while (diapo.getBoundingClientRect().height > dispo && facteur > 0.55 && tours < 40) {
+        while (corps.getBoundingClientRect().height > dispo && facteur > 0.55 && tours < 40) {
             facteur -= 0.03;
             diapo.style.setProperty('--facteur', facteur.toFixed(2));
             tours += 1;
+        }
+    }
+
+    // La mesure dépend de la mise en page finale (en-tête, pied de page,
+    // colonnes) : on la rejoue à la frame suivante, sinon le premier écran
+    // garde la taille calculée avant que le flex n'ait réparti les hauteurs.
+    function ajusterPlusTard(diapo) {
+        ajuster(diapo);
+        if (window.requestAnimationFrame) {
+            requestAnimationFrame(function () { ajuster(diapo); });
+        }
+    }
+
+    function volet(nom) {
+        return diapos[courant].querySelector(nom === 'indication' ? '.modale' : '.correction');
+    }
+
+    // Applique un état : une seule commande ouverte à la fois, et le volet
+    // affiché est celui de l'énoncé courant (les volets des autres énoncés sont
+    // dans des sections masquées, mais on les referme quand même).
+    function appliquer(nouvelEtat) {
+        var section = diapos[courant];
+        var modale = section.querySelector('.modale');
+        var correction = section.querySelector('.correction');
+        var indicationOuverte = !!(nouvelEtat.indication && modale);
+        var correctionOuverte = !!(nouvelEtat.correction && correction);
+
+        diapos.forEach(function (diapo) {
+            var m = diapo.querySelector('.modale');
+            var c = diapo.querySelector('.correction');
+            if (m) { m.hidden = true; }
+            if (c) { c.hidden = true; }
+        });
+        if (modale) { modale.hidden = !indicationOuverte; }
+        if (correction) { correction.hidden = !correctionOuverte; }
+        document.body.classList.toggle('correction-ouverte', correctionOuverte);
+
+        etat.indication = indicationOuverte;
+        etat.correction = correctionOuverte;
+        if (boutonIndication) {
+            boutonIndication.setAttribute('aria-pressed', indicationOuverte ? 'true' : 'false');
+            boutonIndication.hidden = !modale;
+            if (modale) { boutonIndication.setAttribute('aria-controls', modale.id); }
+        }
+        if (boutonCorrection) {
+            boutonCorrection.setAttribute('aria-pressed', correctionOuverte ? 'true' : 'false');
+            boutonCorrection.hidden = !correction;
+            if (correction) { boutonCorrection.setAttribute('aria-controls', correction.id); }
+        }
+        ajusterPlusTard(section);
+    }
+
+    function rendreFocus() {
+        if (dernierFocus && dernierFocus.focus) { dernierFocus.focus(); }
+        dernierFocus = null;
+    }
+
+    function basculer(nom) {
+        var cible = volet(nom);
+        if (!cible) { return; }
+        var ouverture = !etat[nom];
+        var suivant = { indication: false, correction: false };
+        suivant[nom] = ouverture;
+        if (ouverture) { dernierFocus = document.activeElement; }
+        appliquer(suivant);
+        // La modale reçoit le focus (elle est modale : la classe ne doit plus
+        // pouvoir agir derrière). Le volet de correction, lui, n'en prend pas :
+        // le focus reste sur la commande, et le bouton ne s'entoure pas d'un
+        // anneau qui se verrait à la projection.
+        if (ouverture && nom === 'indication') {
+            var boite = cible.querySelector('.modale-boite');
+            if (boite) { boite.focus(); }
+        } else if (ouverture) {
+            dernierFocus = null;
+        } else {
+            rendreFocus();
         }
     }
 
@@ -244,7 +934,7 @@ main {
             }
         });
         document.body.setAttribute('data-ecran', String(courant + 1));
-        ajuster(diapos[courant]);
+        appliquer({ indication: false, correction: false });
     }
 
     if (/[?&]proj=1/.test(window.location.search)) {
@@ -252,15 +942,50 @@ main {
     }
 
     window.addEventListener('resize', function () { ajuster(diapos[courant]); });
+    window.addEventListener('load', function () { ajusterPlusTard(diapos[courant]); });
 
     var demande = /[?&]c=(\d+)/.exec(window.location.search) ||
                   /#(\d+)$/.exec(window.location.hash);
     if (demande) { afficher(parseInt(demande[1], 10) - 1); }
     afficher(courant);
 
+    if (boutonIndication) {
+        boutonIndication.addEventListener('click', function () { basculer('indication'); });
+    }
+    if (boutonCorrection) {
+        boutonCorrection.addEventListener('click', function () { basculer('correction'); });
+    }
+
+    // Fermeture : le bouton « Fermer », le fond de la modale, ou Échap.
+    document.addEventListener('click', function (evenement) {
+        var cible = evenement.target;
+        if (!cible || !cible.closest) { return; }
+        if (cible.closest('[data-fermer]') ||
+            (cible.classList && cible.classList.contains('modale'))) {
+            appliquer({ indication: false, correction: false });
+            rendreFocus();
+        }
+    });
+
     document.addEventListener('keydown', function (evenement) {
         var touche = evenement.key;
-        if (touche === 'ArrowRight' || touche === 'ArrowDown' ||
+        var cible = evenement.target;
+        var surBouton = cible && cible.closest && cible.closest('button');
+        if (touche === 'Escape') {
+            appliquer({ indication: false, correction: false });
+            rendreFocus();
+            evenement.preventDefault();
+            return;
+        }
+        // Sur un bouton, Espace et Entrée activent le bouton : on ne navigue pas.
+        if (surBouton && (touche === ' ' || touche === 'Enter')) { return; }
+        if (touche === 'i' || touche === 'I') {
+            basculer('indication');
+            evenement.preventDefault();
+        } else if (touche === 'c' || touche === 'C') {
+            basculer('correction');
+            evenement.preventDefault();
+        } else if (touche === 'ArrowRight' || touche === 'ArrowDown' ||
             touche === ' ' || touche === 'PageDown' || touche === 'Enter') {
             afficher(courant + 1);
             evenement.preventDefault();
@@ -277,15 +1002,16 @@ main {
         }
     });
 
-    // Au clic : le tiers gauche recule, le reste avance (tablette, téléviseur).
+    // Au clic : le cinquième gauche recule, le reste avance (tablette, téléviseur).
+    // Un clic sur une commande, la modale ou le volet de correction ne navigue pas.
     document.addEventListener('click', function (evenement) {
-        if (evenement.target.closest && evenement.target.closest('a')) { return; }
+        var cible = evenement.target;
+        if (cible.closest && cible.closest('a, button, .modale, .correction')) { return; }
         var largeur = window.innerWidth || 1;
-        afficher(courant + (evenement.clientX < largeur * 0.18 ? -1 : 1));
+        afficher(courant + (evenement.clientX < largeur * 0.2 ? -1 : 1));
     });
 })();
 </script>
-
 <!-- RGPD : mention informative pour les élèves -->
 <footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
 </body>

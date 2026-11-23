@@ -22,8 +22,8 @@ chronometre.html                    Chronomètre de classe — page du professeu
     revision-evaluation.html        fiches de synthèse, lexique, méthode et 42 questions
 3e/revision-ost3/revision-evaluation-ost3.html     Réviser l'évaluation — OST 3 (trois sujets : notice, performance, choix durable)
 4e/revision-ost1-ost2/revision-evaluation-ost1-ost2.html  Réviser l'évaluation — OST 1 et OST 2 (sujets A, B, C)
-4e/revision-ost2-ost3/activite-revision-notions-ost2-ost3.html  Réviser les notions — huit fiches OST2-OST3 (un onglet par fiche, score par questionnaire)
-4e/revision-ost2-ost3/enonces-n3-n4-ost2-ost3.html       Énoncés N3/N4 OST2-OST3 (quatre énoncés bruts, objets neufs, compétence en tête)
+4e/revision-ost2-ost3/activite-revision-notions-ost2-ost3.html  Réviser les notions — huit fiches OST2-OST3 (un onglet par fiche, score par questionnaire, défi de 20 questions dans l'onglet Bonus)
+4e/revision-ost2-ost3/enonces-n3-n4-ost2-ost3.html       Énoncés N3/N4 OST2-OST3 (quatre énoncés bruts, objets neufs, compétence en tête ; boutons Indication et Correction)
 4e/revision-ost-sfc/enonces-n3-n4-ost-sfc-4e.html        Énoncés N3/N4 OST1-OST2-OST3-SFC5 (douze énoncés bruts, objets neufs, compétence en tête ; boutons Indication et Correction)
 5e/revision-sfc1/revision-evaluation-sfc1.html     Réviser l'évaluation — réseau, composants internes, périphériques
 3e/ost1a/                           OST 1 — le smartphone
@@ -33,8 +33,8 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/ost2a/app-impact-numerique.html  OST 2a — l'impact du numérique
 3e/ost3/app-comparateur-ost.html    OST 3 — comparateur trottinette / VAE
 3e/ost3/activite-ost-ideal.html     OST 3 — la trottinette dans son environnement (jeu bonus)
-3e/ost3/activite-revision-notions-ost3.html       OST 3 — révision interactive des notions (six fiches, un onglet par fiche)
-3e/ost3/enonces-n3-n4-ost-3e.html                 OST 3 — diaporama d'énoncés N3/N4 (quatorze énoncés bruts, compétence en tête, un par écran)
+3e/ost3/activite-revision-notions-ost3.html       OST 3 — révision interactive des notions (six fiches, un onglet par fiche, défi de 20 questions dans l'onglet Bonus)
+3e/ost3/enonces-n3-n4-ost-3e.html                 OST 3 — énoncés N3/N4 (quatorze, compétence en tête, un par écran ; boutons Indication et Correction)
 3e/ost3/activite-revision-n3-n4-ost-3e-orale.html OST 3 — diaporama tableau blanc « réviser N3-N4 » (quatre gestes, fiche papier recto-verso)
 3e/ost3/documentation-revision-n3-n4-ost-3e.html  OST 3 — la documentation de ce diaporama (viewer PDF, cible de l'unique QR code)
 3e/ost3/documentation-revision-n3-n4-ost-3e/*.pdf|jpg  OST 3 — les 3 fiches en PDF et les images de leurs pages
