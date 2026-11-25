@@ -12,10 +12,6 @@ utilisées sur ordinateur, tablette et téléphone.
 ```
 index.html                          page d'accueil : les pages d'activités, sommaire par niveau
 chronometre.html                    Chronomètre de classe — page du professeur, compte à rebours à projeter
-4e/approfondissement-domotique/     Approfondissement 4e — 4 sujets (2 présentations + 2 ateliers chacun)
-4e/approfondissement-drone/         Approfondissement 4e — 4 sujets
-5e/approfondissement-reseau/        Approfondissement 5e — 4 sujets
-3e/approfondissement-vae/           Approfondissement 3e — 4 sujets
 .nojekyll                           demande à GitHub de servir les fichiers tels quels
 
 3e/revision-ost1/                   Réviser l'évaluation — séquences 1a et 2a
@@ -23,14 +19,11 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/revision-ost3/revision-evaluation-ost3.html     Réviser l'évaluation — OST 3 (trois sujets : notice, performance, choix durable)
 4e/revision-ost1-ost2/revision-evaluation-ost1-ost2.html  Réviser l'évaluation — OST 1 et OST 2 (sujets A, B, C)
 4e/revision-ost2-ost3/activite-revision-notions-ost2-ost3.html  Réviser les notions — huit fiches OST2-OST3 (un onglet par fiche, score par questionnaire, défi de 20 questions dans l'onglet Bonus)
-4e/revision-ost2-ost3/enonces-n3-n4-ost2-ost3.html       Énoncés N3/N4 OST2-OST3 (quatre énoncés bruts, objets neufs, compétence en tête ; boutons Indication et Correction)
 4e/revision-ost-sfc/enonces-n3-n4-ost-sfc-4e.html        Énoncés N3/N4 OST1-OST2-OST3-SFC5 (douze énoncés bruts, objets neufs, compétence en tête ; boutons Indication et Correction)
 5e/revision-sfc1/revision-evaluation-sfc1.html     Réviser l'évaluation — réseau, composants internes, périphériques
 3e/ost1a/                           OST 1 — le smartphone
     app-activite1-frise-evolution.html
     app-activite2-innovations.html
-    app-activite3-biais-ia.html
-3e/ost2a/app-impact-numerique.html  OST 2a — l'impact du numérique
 3e/ost3/app-comparateur-ost.html    OST 3 — comparateur trottinette / VAE
 3e/ost3/activite-ost-ideal.html     OST 3 — la trottinette dans son environnement (jeu bonus)
 3e/ost3/activite-revision-notions-ost3.html       OST 3 — révision interactive des notions (six fiches, un onglet par fiche, défi de 20 questions dans l'onglet Bonus)
@@ -42,19 +35,12 @@ chronometre.html                    Chronomètre de classe — page du professeu
 3e/ost3/activite-3e-ost3-orale.html                OST 3 — diaporama tableau blanc (interacteurs, comparaison trottinette / VAE)
 3e/ost3/documentation-3e-ost3.html                 OST 3 — la documentation (viewer PDF, cible de l'unique QR code)
 3e/ost3/documentation-3e-ost3/*.pdf|jpg            OST 3 — les 8 fiches en PDF et les images de leurs pages
-3e/ost3/activite-3e-reparabilite-orale.html        OST 3 — diaporama tableau blanc (indice de réparabilité, estimation sur fiche technique)
-3e/ost3/documentation-3e-reparabilite.html         OST 3 — la documentation de ce diaporama (viewer PDF, cible de l'unique QR code)
-3e/ost3/documentation-3e-reparabilite/*.pdf|jpg    OST 3 — les 4 fiches en PDF et les images de leurs pages
-3e/sfc1/activite-fortnite-client-serveur.html  SFC 1 — le trajet d'un tir en jeu en ligne (sans quiz)
 3e/rnr/app-tracker-solaire.html     RNR — tracker solaire
 3e/tp-ia/                           TP d'apprentissage IA
     tp-ia.html
     atelier-ia-exemples.html        atelier « L'IA apprend avec des exemples »
     CREDITS-SONS.md                 crédits et licences des sons de l'atelier
     donnees/*.csv                   6 fichiers à ouvrir dans un tableur
-3e/bonus-incident-ia/               Activité bonus — l'incident OpenAI / Hugging Face
-    infographie-incident-ia.html    infographie à projeter et à commenter
-    infographie-incident-ia.jpg     l'infographie (1536 × 1024, JPEG, 374 Ko)
 3e/ost13/activite-defi-chatgpt.html            Défi — l'IA générative, 5 défis (sans quiz)
 
 4e/ost1/activite-securite-donnees.html            Séquence 1 — sécurité des données
@@ -65,54 +51,17 @@ chronometre.html                    Chronomètre de classe — page du professeu
 4e/ost3/documentation/*.pdf|jpg                    Séquence 3 — les 8 fiches en PDF et les images de leurs pages
 4e/ost3/mission-chauffage-papier-ordinateur.html  Séquence 4 — parcours papier–ordinateur (notions et PDF intégrés, notices en tableau, six ateliers dont les preuves égarées, questionnaire ; quatre onglets libres (trois séances et une conclusion), un exercice à la fois, notices au-dessus des questions, une question à la fois, terme TAPO souligné avec aide au survol, jeu « Qui suis-je ? » en 2A, séquence filmée, relevés à interpréter et quiz final de dix questions)
 4e/ost4/activite-chauffage-choix-tapo.html        Séquence 4 — choisir un chauffage (choix de l'OST)
-4e/ost4/activite-chauffage-domotique.html         Séquence 4 — chauffage domotique
 
-5e/sfc1/diaporama-decouvrir-l-ordinateur.html      Progression « Découvrir l'ordinateur » — support de présentation
 5e/sfc1/activite-composants-ordinateur.html        Progression — séance 1 : les composants internes
 5e/sfc1/activite-demarrage-systeme-exploitation.html  Progression — séance 2 : démarrage et système d'exploitation
 5e/ost2/activite-peripheriques.html                Progression — séance 3 : les périphériques
 5e/sfc1/activite-reseau.html                      SFC 1 — exploiter le réseau informatique
 5e/ost2/activite-outils-numeriques.html           Séquence 2 — outils numériques
-5e/ost3/activite-evolution-ost.html               Séquence 3 — évolution des OST
-5e/ost4/activite-souris-interaction.html          Séquence 4 — la souris
-5e/ost5/activite-choix-lampes.html                Séquence 5 — choisir un OST : les lampes
 ```
 
 Une convention de nommage simple : `Niveau/ostN/` pour un objet et système technique,
 `Niveau/tp-*/` pour un travail pratique. Le numéro suit celui de la séquence d'origine, ce qui
 permet de retrouver le dossier de préparation correspondant.
-
-### Les pages « Approfondissement »
-
-Seize sujets, répartis en quatre ateliers, sous
-`Niveau/approfondissement-<atelier>/index.html`. Chaque atelier a sa page d'index,
-et chaque sujet a sa page : deux présentations de 4 diapositives (20 minutes de
-propos) et deux ateliers projetables. L'accueil y mène par l'onglet
-**🔎 Approfondissement**, au même rang que 3e, 4e et 5e : il ouvre une section
-`#approfondissement` qui présente les quatre ateliers. Les pages suivent la
-convention de nommage comme les autres activités, et leur identifiant de
-publication est leur propre chemin
-(`4e/approfondissement-domotique/d3-l-ampoule-bavarde.html`, …).
-
-| Onglet d'une page sujet | Contenu |
-|---|---|
-| **Présentation 1** | 4 diapos, « comprendre » — flèches ← →, **F** plein écran, **I** impression PDF, **N** notes |
-| **Présentation 2** | 4 diapos, « appliquer et nuancer » |
-| **Atelier 1** | un tableau à compléter, bouton *À compléter / Corrigé* |
-| **Atelier 2** | un schéma à trous en deux versions (*À compléter / Corrigé*), ou un second tableau |
-| **Conduite** | le déroulé minute par minute, les avertissements « ne dites pas », la question de sortie |
-
-Les liens directs `#p1`, `#p2`, `#a1`, `#a2`, `#conduite` ouvrent l'onglet
-correspondant. Aucune ressource externe, aucun formulaire, aucun stockage ;
-cibles tactiles de 44 px. Mesuré le 2026-11-07 : **54/54 pages alors en ligne**
-(`inventorier_activites.py`), **43 contrôles** du panneau de développement sur
-chacune des pages alors en ligne, aucun débordement horizontal à 320 / 390 / 412 / 1280 px,
-0 anomalie de diaporama sur les 16 pages sujets.
-
-Les pages sont **générées**, jamais écrites à la main : source de vérité dans
-`prof/pastilles/approfondissement/contenu/<code>.json`, générateur
-`prof/pastilles/approfondissement/generer_pages.py`, mode d'emploi
-`prof/pastilles/approfondissement/README.md`.
 
 Chaque application est un **fichier HTML autonome** : le style, le code, les images et même les
 données et les sons sont inclus dans le fichier. Aucune bibliothèque externe n'est téléchargée,
@@ -196,11 +145,8 @@ git push
 
 ## Compatibilité téléphone
 
-Les **18 mini-apps** (16 activités + les 2 pages du TP) ont été auditées dans un navigateur en
-émulation de téléphone, puis corrigées pour l'usage au doigt. La page de l'activité bonus
-(l'infographie de l'incident OpenAI / Hugging Face) est **hors de ce périmètre** : elle n'a
-pas d'interaction au doigt, seulement une image et deux liens, et sa page se contente
-d'afficher l'image sur toute la largeur — il n'y a donc rien à corriger pour le mobile. Chaque correction a été vérifiée
+Les mini-apps du site ont été auditées dans un navigateur en
+émulation de téléphone, puis corrigées pour l'usage au doigt. Chaque correction a été vérifiée
 en comparant la page corrigée à sa sauvegarde `*.BACKUP-avant-correctifs-mobile.html`.
 
 | Point | Avant | Après |
@@ -230,9 +176,8 @@ Ce qui a été mis en place :
 
 Trois structures d'en-tête différentes coexistent dans les activités ; le correctif les
 détecte automatiquement. Quand les onglets sont **dans** l'en-tête, celui-ci se replie jusqu'à
-eux ; quand ils sont dans un `<nav>` **hors** de l'en-tête (activités « évolution des OST »,
-« la souris », « choix des lampes »), l'en-tête disparaît entièrement et le `<nav>` se colle en
-haut de l'écran.
+eux ; quand ils sont dans un `<nav>` **hors** de l'en-tête, l'en-tête disparaît entièrement et
+le `<nav>` se colle en haut de l'écran.
 
 Sur ordinateur, le rendu et le comportement sont **inchangés** (vérifié en 1280×900) : la barre
 reste collante et les onglets reviennent à la ligne.

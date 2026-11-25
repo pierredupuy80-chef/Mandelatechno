@@ -76,28 +76,11 @@
   }
   nav.sommaire a:hover{background:var(--bleuf); border-color:var(--bleu2)}
   nav.sommaire a.actif{background:var(--bleu2); color:#fff; border-color:var(--bleu2)}
-  /* Approfondissement : même rang que les onglets de niveau, mais reconnaissable.
-     C'est une ancre comme les autres : quand sa section est affichée, il passe
-     en « actif » comme les trois niveaux. */
-  nav.sommaire a.lien-approfondissement{
-    background:var(--bleu); border-color:var(--bleu); color:#fff;
-    flex:0 1 auto; padding:8px 16px;
-  }
-  nav.sommaire a.lien-approfondissement:hover,
-  nav.sommaire a.lien-approfondissement:focus-visible{background:#173f63; border-color:#173f63}
-  nav.sommaire a.lien-approfondissement.actif{background:var(--bleu2); border-color:var(--bleu2)}
-  .accueil-intro .classes a.classe-approfondissement{
-    background:#173f63; font-size:1rem;
-    display:inline-flex; align-items:center; gap:6px;
-  }
-  .accueil-intro .classes a.classe-approfondissement:hover{background:var(--bleu)}
-
-  /* En 320 px, « Approfondissement » ne tient plus à côté des trois niveaux :
-     on resserre les quatre onglets plutôt que de laisser la page déborder. */
+  /* En 320 px, les trois onglets de niveau se resserrent plutôt que de laisser
+     la page déborder. */
   @media (max-width:380px){
     nav.sommaire{padding:8px 6px; gap:4px}
     nav.sommaire a{font-size:.84rem; padding:8px 5px; min-width:44px}
-    nav.sommaire a.lien-approfondissement{font-size:.84rem; padding:8px 8px}
   }
 
   main{max-width:960px; margin:0 auto; padding:18px 14px 40px}
@@ -239,7 +222,6 @@
   <a href="#niveau-3e">3<sup>e</sup></a>
   <a href="#niveau-4e">4<sup>e</sup></a>
   <a href="#niveau-5e">5<sup>e</sup></a>
-  <a href="#approfondissement" class="lien-approfondissement">🔎 Approfondissement</a>
 </nav>
 
 <main>
@@ -253,7 +235,6 @@
       <a href="#niveau-3e">3<sup>e</sup></a>
       <a href="#niveau-4e">4<sup>e</sup></a>
       <a href="#niveau-5e">5<sup>e</sup></a>
-      <a href="#approfondissement" class="classe-approfondissement">🔎 Approfondissement</a>
     </div>
   </div>
 
@@ -341,30 +322,6 @@
         <a class="ouvrir" href="3e/ost1a/app-activite2-innovations.html">Ouvrir l'activité</a>
       </article>
 
-      <article class="carte">
-        <h4>3 · Simulateur LexIA — découvrir les biais de l'IA</h4>
-        <p>Mini-labs pour chaque type d'apprentissage (supervisé, non supervisé, par
-           renforcement), laboratoire des biais à curseurs et débat structuré.</p>
-        <span class="niveaux">N1 → N4</span>
-        <a class="ouvrir" href="3e/ost1a/app-activite3-biais-ia.html">Ouvrir l'activité</a>
-      </article>
-
-    </div>
-  </div>
-
-  <div class="sequence">
-    <h3>OST 2a · L'impact du numérique sur la société et les métiers</h3>
-    <p class="resume">Comprendre ce que change le numérique : stockage, flux de données, réseaux, métiers</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>Impact du numérique — société et métiers</h4>
-        <p>Connaissances, compréhension, application puis analyse : les incidences du stockage et
-           des flux de données, et les métiers qui apparaissent ou disparaissent.</p>
-        <span class="niveaux">N1 → N4</span>
-        <a class="ouvrir" href="3e/ost2a/app-impact-numerique.html">Ouvrir l'activité</a>
-      </article>
-
     </div>
   </div>
 
@@ -406,19 +363,6 @@
       </article>
 
       <article class="carte">
-        <h4>Activité orale · Que dit vraiment un 6 sur 10 ? (indice de réparabilité)</h4>
-        <p>Un diaporama à projeter sur le tableau blanc : cinq critères, cinq notes sur 20, une note
-           sur 10. La classe lit la petite fiche technique d'un ordinateur portable, estime chaque
-           note au feutre — un critère par îlot — puis calcule la note et décide ce qu'elle dit
-           vraiment. Le cas limite de la pièce qui coûte 38 % du prix et le tri des appareils qui
-           ont (ou n'ont pas) d'indice officiel ferment la séance. <strong>Un seul QR code</strong>
-           ouvre les quatre fiches sur le téléphone (dont la fiche technique de l'exercice).
-           38 min sans les diapositives de rab, 47 min avec, pour une séance de 40 min.</p>
-        <span class="niveaux">OST33 · tableau blanc</span>
-        <a class="ouvrir" href="3e/ost3/activite-3e-reparabilite-orale.html">Ouvrir le diaporama</a>
-      </article>
-
-      <article class="carte">
         <h4>Activité orale · Réviser l'évaluation : les niveaux N3 et N4</h4>
         <p>Un diaporama à projeter pendant que la classe travaille sur la fiche papier recto-verso :
            les quatre gestes qui valent 10 points sur 20 — confronter un comparatif aux exigences,
@@ -427,23 +371,6 @@
            sur le téléphone. 57 min de contenu, dont 52 min sans l'écran de rab.</p>
         <span class="niveaux">N3 → N4 · tableau blanc</span>
         <a class="ouvrir" href="3e/ost3/activite-revision-n3-n4-ost-3e-orale.html">Ouvrir le diaporama</a>
-      </article>
-
-    </div>
-  </div>
-
-  <div class="sequence">
-    <h3>SFC 1 · Les chemins de l'information — Fortnite</h3>
-    <p class="resume">Le trajet d'une action en jeu vidéo, du poste client au serveur de jeu — sans quiz, avec des ateliers animés</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>Fortnite : le voyage secret d'un tir</h4>
-        <p>Suis une action de jeu en ligne de ton poste jusqu'au serveur : schéma en étoile, trois ateliers
-           pour reconstruire le trajet, animation du routeur, panne à diagnostiquer (le personnage
-           « se téléporte »), puis choix argumenté d'une salle de jeu pour le collège.</p>
-        <span class="niveaux">N1 → N4 + bonus · sans quiz</span>
-        <a class="ouvrir" href="3e/sfc1/activite-fortnite-client-serveur.html">Ouvrir l'activité</a>
       </article>
 
     </div>
@@ -516,22 +443,6 @@
     </div>
   </div>
 
-  <div class="sequence">
-    <h3>Activité bonus · L'incident OpenAI / Hugging Face</h3>
-    <p class="resume">Infographie à projeter · bac à sable, dépôt et exécution de code expliqués de proche en proche</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>Qui fait quoi, et que s'est-il passé ?</h4>
-        <p>Une chaîne d'intrusion décomposée en cinq colonnes — les agents, le bac à sable, le dépôt,
-           la plateforme atteinte, ce qui l'a permis — puis six étapes de chronologie et un encadré
-           à retenir. À projeter et à commenter avec la classe.</p>
-        <span class="niveaux">Activité bonus</span>
-        <a class="ouvrir" href="3e/bonus-incident-ia/infographie-incident-ia.html">Ouvrir l'infographie</a>
-      </article>
-
-    </div>
-  </div>
 </section>
 
 <!-- ==================== 4e ==================== -->
@@ -654,14 +565,6 @@
 
 
       <article class="carte">
-        <h4>Chauffage domotique</h4>
-        <p>Classer les systèmes de chauffage par source d'énergie, suivre la chaîne d'énergie et
-           comprendre comment un système domotique régule la température.</p>
-        <span class="niveaux">N1 → N4</span>
-        <a class="ouvrir" href="4e/ost4/activite-chauffage-domotique.html">Ouvrir l'activité</a>
-      </article>
-
-      <article class="carte">
         <h4>Choisir un chauffage compatible TAPO</h4>
         <p>Choisir un chauffage d'appoint compatible avec le système domotique TAPO :
            sources d'énergie, chaîne d'information, diagnostic de compatibilité.</p>
@@ -674,7 +577,7 @@
 
   <div class="sequence">
     <h3>Réviser les évaluations · OST 2 et OST 3</h3>
-    <p class="resume">La maison connectée et le chauffage domotique : les huit fiches, puis les niveaux N3 et N4</p>
+    <p class="resume">La maison connectée et le chauffage domotique : les huit fiches de connaissances, une par onglet</p>
     <div class="cartes">
 
       <article class="carte">
@@ -687,18 +590,6 @@
            veulent un vrai challenge.</p>
         <span class="niveaux">N1 → N2</span>
         <a class="ouvrir" href="4e/revision-ost2-ost3/activite-revision-notions-ost2-ost3.html">Ouvrir l'activité</a>
-      </article>
-
-      <article class="carte">
-        <h4>🧾 Énoncés N3 et N4 · comme à l'évaluation</h4>
-        <p>Quatre énoncés bruts, un par écran, sur des objets neufs — purificateur d'air, bouilloire,
-           thermostat connecté, poêle à granulés : contraintes et normes, appareils de mesure,
-           expérience de l'utilisateur, critères de choix. La compétence vue en classe est rappelée en
-           tête d'écran. À la demande : <strong>Indication</strong> ouvre une modale avec les notions à
-           réutiliser, <strong>Correction</strong> ouvre un volet à droite avec la correction. La fiche
-           papier recto-verso porte les mêmes exercices.</p>
-        <span class="niveaux">N3 → N4</span>
-        <a class="ouvrir" href="4e/revision-ost2-ost3/enonces-n3-n4-ost2-ost3.html">Ouvrir le diaporama</a>
       </article>
 
     </div>
@@ -754,15 +645,6 @@
     <div class="cartes">
 
       <article class="carte">
-        <h4>Support de présentation des séances 1 et 2</h4>
-        <p>Huit diapositives pour projeter les deux premières séances : les composants internes,
-           les six étapes du démarrage et le système d'exploitation.
-           Navigation aux flèches, impression en PDF.</p>
-        <span class="niveaux">Diaporama</span>
-        <a class="ouvrir" href="5e/sfc1/diaporama-decouvrir-l-ordinateur.html?v=20261029c">Ouvrir le diaporama</a>
-      </article>
-
-      <article class="carte">
         <h4>Séance 1 · Les composants internes d'un ordinateur</h4>
         <p>Nommer le processeur, la mémoire vive, le disque, la carte mère, les bus, l'alimentation
            et la carte graphique, suivre le trajet d'une information, diagnostiquer une lenteur,
@@ -806,7 +688,7 @@
 
   <div class="sequence">
     <h3>Séquence 1 · Exploiter le réseau informatique pour travailler</h3>
-    <p class="resume">Composants du réseau, trajet des données, réparation des appareils</p>
+    <p class="resume">Composants du réseau, trajet des données, câblage de deux salles</p>
     <div class="cartes">
 
       <article class="carte">
@@ -816,15 +698,6 @@
            câbler deux salles en deux sous-réseaux séparés, reliés au routeur et à Internet.</p>
         <span class="niveaux">N1 → N4</span>
         <a class="ouvrir" href="5e/sfc1/activite-reseau.html?v=20261026">Ouvrir l'activité</a>
-      </article>
-
-      <article class="carte">
-        <h4>Le réseau en panne — jeu de plateforme</h4>
-        <p>Le professeur de techno parcourt un collège de cinq étages et répare les appareils
-           du réseau : commutateur, routeur, poste client et serveur de données. Chaque
-           appareil réparé rappelle son rôle dans le réseau.</p>
-        <span class="niveaux">Jeu</span>
-        <a class="ouvrir" href="5e/sfc1/jeu-reseau.html?v=20261026">Jouer</a>
       </article>
 
     </div>
@@ -842,54 +715,6 @@
            clavier, cinq noms de fichiers et une arborescence à construire.</p>
         <span class="niveaux">N1 → N4</span>
         <a class="ouvrir" href="5e/ost2/activite-outils-numeriques.html">Ouvrir l'activité</a>
-      </article>
-
-    </div>
-  </div>
-
-  <div class="sequence">
-    <h3>Séquence 3 · L'évolution des objets et systèmes techniques</h3>
-    <p class="resume">Grandes époques, inventeurs clés et objets qui ont marqué l'histoire</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>L'évolution des objets techniques</h4>
-        <p>Mémoriser les grandes époques et les inventeurs clés de l'histoire de l'écriture et de
-           la communication, puis analyser ce qui fait évoluer un objet technique.</p>
-        <span class="niveaux">N1 → N4</span>
-        <a class="ouvrir" href="5e/ost3/activite-evolution-ost.html">Ouvrir l'activité</a>
-      </article>
-
-    </div>
-  </div>
-
-  <div class="sequence">
-    <h3>Séquence 4 · La souris et ses interactions</h3>
-    <p class="resume">Un objet technique, son environnement et ses interactions</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>La souris et ses interactions</h4>
-        <p>Vocabulaire technique des objets techniques et de leurs interactions, puis analyse de la
-           souris dans son environnement.</p>
-        <span class="niveaux">N1 → N4</span>
-        <a class="ouvrir" href="5e/ost4/activite-souris-interaction.html">Ouvrir l'activité</a>
-      </article>
-
-    </div>
-  </div>
-
-  <div class="sequence">
-    <h3>Séquence 5 · Choisir un objet technique — les lampes</h3>
-    <p class="resume">Comparer, évaluer le cycle de vie, choisir en justifiant</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>Choisir un OST — les lampes</h4>
-        <p>Quiz, cycle de vie d'une lampe, comparateur et analyse : choisir un objet technique en
-           tenant compte du développement durable.</p>
-        <span class="niveaux">N1 → N4</span>
-        <a class="ouvrir" href="5e/ost5/activite-choix-lampes.html">Ouvrir l'activité</a>
       </article>
 
     </div>
@@ -916,55 +741,6 @@
   <strong>Astuce :</strong> ajoute cette page à ton écran d'accueil pour la retrouver
   en un geste — menu <em>Partager</em> puis <em>« Sur l'écran d'accueil »</em>.
   Les activités fonctionnent ensuite sans connexion.
-</section>
-
-<!-- ==================== Approfondissement ==================== -->
-<section class="niveau" id="approfondissement">
-  <h2>🔎 Approfondissement</h2>
-
-  <div class="sequence">
-    <h3>Deux présentations de 4 diapos et deux ateliers par sujet — 20 minutes de propos</h3>
-    <p class="resume">On projette, on raconte, puis un élève complète un tableau ou un schéma au tableau</p>
-    <div class="cartes">
-
-      <article class="carte">
-        <h4>🏠 Domotique — 4<sup>e</sup></h4>
-        <p>Quatre sujets autour de la maison connectée&nbsp;: ce que coûte un degré de
-           chauffage, ce qu'une ampoule connectée retient de vous, par où passe la
-           chaleur, et ce qu'un détecteur de chute surveille sans le dire.</p>
-        <span class="niveaux">4 sujets · 20 min chacun</span>
-        <a class="ouvrir" href="4e/approfondissement-domotique/index.html">Ouvrir les approfondissements de domotique</a>
-      </article>
-
-      <article class="carte">
-        <h4>🚁 Drone — 4<sup>e</sup></h4>
-        <p>Quatre sujets pour comprendre le vol&nbsp;: la portance, les hélices
-           contrarotatives, l'algorithme du retour maison, et l'énergie contenue dans
-           un kilo de batterie face à un kilo d'essence.</p>
-        <span class="niveaux">4 sujets · 20 min chacun</span>
-        <a class="ouvrir" href="4e/approfondissement-drone/index.html">Ouvrir les approfondissements du drone</a>
-      </article>
-
-      <article class="carte">
-        <h4>🌐 Réseau informatique — 5<sup>e</sup></h4>
-        <p>Quatre sujets sur le réseau local&nbsp;: les six métiers de la box, la
-           différence entre l'adresse MAC et l'adresse IP (et le DHCP), la table de
-           routage, et le chemin d'un fichier dans une arborescence.</p>
-        <span class="niveaux">4 sujets · 20 min chacun</span>
-        <a class="ouvrir" href="5e/approfondissement-reseau/index.html">Ouvrir les approfondissements du réseau</a>
-      </article>
-
-      <article class="carte">
-        <h4>🚲 VAE et trottinette — 3<sup>e</sup></h4>
-        <p>Quatre sujets sur l'objet technique&nbsp;: la différence entre un Wh et un W,
-           ce que note vraiment l'indice de réparabilité, le capteur de couple, et les
-           données que laisse un trajet de location.</p>
-        <span class="niveaux">4 sujets · 20 min chacun</span>
-        <a class="ouvrir" href="3e/approfondissement-vae/index.html">Ouvrir les approfondissements du VAE</a>
-      </article>
-
-    </div>
-  </div>
 </section>
 
 </main>

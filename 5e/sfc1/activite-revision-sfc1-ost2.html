@@ -6481,6 +6481,60 @@
          demandée. Aucune image : uniquement des dégradés et motifs CSS.) -->
     <style id="ambiance-activite"></style>
     <!-- AMBIANCE:FIN -->
+
+<style id="atelier-aide-style">
+/* Aide en ligne de l'atelier : terme souligné, définition au survol et au focus. */
+.atelier-aide-terme {
+  position: relative;
+  border-bottom: 2px dotted var(--couleur-info, #1f4e79);
+  cursor: help;
+  text-decoration: none;
+}
+.atelier-aide-terme::after {
+  content: attr(data-definition);
+  position: absolute;
+  left: 0;
+  top: calc(100% + .4rem);
+  z-index: 60;
+  width: max-content;
+  max-width: min(28rem, 82vw);
+  padding: .55rem .75rem;
+  border: 1px solid var(--couleur-info, #1f4e79);
+  border-radius: var(--rayon-bordure, 8px);
+  background: var(--couleur-fond, #fff);
+  color: var(--couleur-texte, #1f2933);
+  font-size: .95rem;
+  line-height: 1.4;
+  font-weight: 400;
+  text-align: left;
+  white-space: normal;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-.2rem);
+  transition: opacity .12s ease, transform .12s ease, visibility .12s;
+  pointer-events: none;
+}
+.atelier-aide-terme:hover::after,
+.atelier-aide-terme:focus::after,
+.atelier-aide-terme:focus-within::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.atelier-aide-terme:focus-visible {
+  outline: 2px solid var(--couleur-info, #1f4e79);
+  outline-offset: 2px;
+}
+.atelier-aide-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+@media (max-width: 640px) {
+  .atelier-aide-terme::after { left: auto; right: 0; max-width: 86vw; }
+}
+
+</style>
 </head>
 <body>
     <!-- Skip link pour accessibilité -->
@@ -6615,12 +6669,11 @@
                 <div class="carte-contenu">
                     <h2>Fiche OST2a — Les interacteurs extérieurs : usagers, données, autres objets, éléments de l'environnement</h2>
                     <p class="carte-fiche-meta">Fiche OST2a · compétences OST2, OST21</p>
-                    <p>Un objet technique ne fonctionne jamais seul. Cette fiche nomme les quatre familles d'éléments qui entourent l'objet et agissent sur son fonctionnement. Le questionnaire vérifie les définitions ; l'atelier applique ces quatre familles à la souris de la séquence OST4b, comme la question B2 du sujet.</p>
+                    <p>Un objet technique ne fonctionne jamais seul. Cette fiche nomme les quatre familles d'éléments qui entourent l'objet et agissent sur son fonctionnement. Le questionnaire vérifie les définitions ; l'atelier applique ces quatre familles à la souris d'un poste informatique, comme la question B2 du sujet.</p>
                     <section class="revision-liens" data-ost-id="revision-liens">
                         <h3>🔗 Pour aller plus loin — sites officiels</h3>
                         <ul class="revision-liens-liste">
                             <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/ost2/activite-peripheriques.html" target="_blank" rel="noopener noreferrer">La souris, le clavier, l'écran : dialoguer avec le poste</a> — <span class="lien-editeur">Mandelatechno — activité 5e OST2</span></li>
-                            <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/ost4/activite-souris-interaction.html" target="_blank" rel="noopener noreferrer">La souris informatique et ses interactions</a> — <span class="lien-editeur">Mandelatechno — séquence 5e OST4</span></li>
                         </ul>
                     </section>
 
@@ -6660,19 +6713,18 @@
                         <h3 class="exercice-titre">✏️ Nommer les interacteurs et leur type</h3>
                         <p class="exercice-consigne">Six questions sur les extraits ci-dessus, dont deux reprises des sujets d'évaluation. Une seule proposition est juste par question.</p>
                         <form id="quiz-ost2a-1" class="quiz-conteneur">
-                        <div class="question-quiz" data-ost-id="ost2a-1-quiz-q1" data-question="1" data-explication="La fiche OST2a appelle interacteurs extérieurs les éléments qui entourent l'objet et agissent sur son fonctionnement : les usagers, les données, les autres objets et les éléments de l'environnement.">
-                            <p>1. Que désigne un « interacteur extérieur » d'un objet technique ?</p>
+                                                <div class="question-quiz" data-ost-id="ost2a-1-quiz-q1" data-question="1" data-explication="La fiche OST2a regroupe en quatre familles les éléments qui entourent l&#39;objet et agissent sur son fonctionnement : les usagers, les données, les autres objets et les éléments de l&#39;environnement.">
+                            <p>1. Parmi ces listes, laquelle ne contient que des interacteurs extérieurs d&#39;un objet technique ?</p>
                             <div class="options-reponse" role="radiogroup">
-                                
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="ost2a-1-quiz-q1-opta">
-                                    <span>Un élément extérieur qui interagit avec l'objet : usager, autres objets, environnement.</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="ost2a-1-quiz-q1-optb">
-                                    <span>Un composant placé à l'intérieur de l'objet.</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="ost2a-1-quiz-q1-optc">
-                                    <span>Le mode d'emploi fourni avec l'objet.</span>
-                                </div>
+                            <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="ost2a-1-quiz-q1-opta">
+                                <span>Les composants électroniques placés à l&#39;intérieur du boîtier de l&#39;objet.</span>
+                            </div>
+                            <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="ost2a-1-quiz-q1-optb">
+                                <span>Les <span class="atelier-aide-terme" tabindex="0" data-definition="Les usagers sont les personnes qui utilisent un objet technique ou un service. Par exemple, un élève qui utilise une tablette en classe est un usager de cette tablette.">usagers<span class="atelier-aide-sr"> — définition : Les usagers sont les personnes qui utilisent un objet technique ou un service. Par exemple, un élève qui utilise une tablette en classe est un usager de cette tablette.</span></span>, les données, les autres objets et les éléments de l&#39;environnement.</span>
+                            </div>
+                            <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="ost2a-1-quiz-q1-optc">
+                                <span>Le prix d&#39;achat, la marque et la notice de l&#39;objet.</span>
+                            </div>
                             </div>
                             <div class="feedback-reponse" role="alert"></div>
                         </div>
@@ -6854,7 +6906,6 @@
                         <h3>🔗 Pour aller plus loin — sites officiels</h3>
                         <ul class="revision-liens-liste">
                             <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/sfc1/activite-composants-ordinateur.html" target="_blank" rel="noopener noreferrer">L'activité des composants internes — monter le poste</a> — <span class="lien-editeur">Mandelatechno — activité 5e SFC1</span></li>
-                            <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/sfc1/diaporama-decouvrir-l-ordinateur.html" target="_blank" rel="noopener noreferrer">Découvrir l'ordinateur — diaporama du cours</a> — <span class="lien-editeur">Mandelatechno — diaporama 5e SFC1</span></li>
                         </ul>
                     </section>
 
@@ -7224,7 +7275,6 @@
                     <section class="revision-liens" data-ost-id="revision-liens">
                         <h3>🔗 Pour aller plus loin — sites officiels</h3>
                         <ul class="revision-liens-liste">
-                            <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/sfc1/jeu-reseau.html" target="_blank" rel="noopener noreferrer">Le réseau en panne — jeu du collège</a> — <span class="lien-editeur">Mandelatechno — jeu 5e SFC1</span></li>
                             <li><a href="https://www.submarinecablemap.com/" target="_blank" rel="noopener noreferrer">La carte des câbles sous-marins d'Internet</a> — <span class="lien-editeur">TeleGeography — carte interactive</span></li>
                         </ul>
                     </section>
@@ -7686,13 +7736,6 @@
                     <h2>Fiche SFC1p — Le rôle et la structure d'une adresse IP, des tables de routage</h2>
                     <p class="carte-fiche-meta">Fiche SFC1p · compétences SFC1, SFC18</p>
                     <p>Pour envoyer et recevoir des données, chaque appareil porte un numéro unique : l'adresse IP. Le tableau ci-dessous récapitule les deux formes d'adresse et la table de routage ; le questionnaire vérifie la structure de l'adresse et son unicité, l'atelier remet dans l'ordre le trajet d'un paquet.</p>
-                    <section class="revision-liens" data-ost-id="revision-liens">
-                        <h3>🔗 Pour aller plus loin — sites officiels</h3>
-                        <ul class="revision-liens-liste">
-                            <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/approfondissement-reseau/n2-deux-adresses.html" target="_blank" rel="noopener noreferrer">Deux adresses : privée et publique</a> — <span class="lien-editeur">Mandelatechno — approfondissement Réseau 5e</span></li>
-                            <li><a href="https://pierredupuy80-chef.github.io/Mandelatechno/5e/approfondissement-reseau/n3-la-table-de-routage.html" target="_blank" rel="noopener noreferrer">La table de routage</a> — <span class="lien-editeur">Mandelatechno — approfondissement Réseau 5e</span></li>
-                        </ul>
-                    </section>
                     <section class="revision-tableau" data-ost-id="tableau-sfc1p" aria-labelledby="tableau-sfc1p-titre">
                         <h3 class="revision-tableau-titre" id="tableau-sfc1p-titre">L'adresse IP et la table de routage</h3>
                         <div class="revision-tableau-defilement" role="group" tabindex="0" aria-label="Tableau récapitulatif, défilable horizontalement">
@@ -8111,7 +8154,7 @@
         
         // Configuration des bonnes réponses (à adapter selon le contenu)
         const bonnesReponses = {
-            'ost2a-1': {'q1': 'a', 'q2': 'a', 'q3': 'a', 'q4': 'a', 'q5': 'a', 'q6': 'a'},
+                        'ost2a-1': {'q1': 'b', 'q2': 'a', 'q3': 'a', 'q4': 'a', 'q5': 'a', 'q6': 'a'},
             'sfc1b-1': {'q1': 'a', 'q2': 'b', 'q3': 'c', 'q4': 'a', 'q5': 'b', 'q6': 'b', 'q7': 'a'},
             'sfc1b-3': {'q1': 'a', 'q2': 'b', 'q3': 'a', 'q4': 'a', 'q5': 'a'},
             'sfc1n-1': {'q1': 'a', 'q2': 'a', 'q3': 'a', 'q4': 'a', 'q5': 'a', 'q6': 'a'},
