@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Énoncés N3 et N4 — Technologie 5e</title>
-<meta name="description" content="6 énoncés, un par écran, comme un sujet d'évaluation : précédés d'un écran de rappel sur la chaîne d'information, la compétence de 5e en tête, thèmes OST21, OST22, SFC15, SFC1, SFC17, SFC18.">
+<meta name="description" content="6 énoncés, un par écran, comme un sujet d'évaluation : la compétence de 5e en tête, thèmes OST21, OST22, SFC15, SFC1, SFC17, SFC18.">
 <style>
 :root {
     --encre: #10243b;
@@ -428,41 +428,12 @@ body.correction-ouverte .enonce:not([hidden]) {
 <header class="entete">
 <h1 class="visuellement-cache">Énoncés N3 et N4 — Technologie 5e</h1>
 <a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+    <div class="barre-outils">
+        <button type="button" class="bouton-outil" id="bouton-indication" aria-pressed="false" aria-controls="modale-e1">Indication</button>
+        <button type="button" class="bouton-outil bouton-outil--correction" id="bouton-correction" aria-pressed="false" aria-controls="correction-e1">Correction</button>
+    </div>
 </header>
 <main id="scene">
-        <section class="enonce ouverture" id="ouverture" data-rappel="1" aria-label="Rappel d'ouverture — la chaîne d'information">
-            <div class="enonce-corps">
-                <h2 class="ouverture-titre">Rappel — la chaîne d’information</h2>
-                <p class="ouverture-chapeau">Un objet qui traite des informations suit toujours le même trajet : il acquiert, il traite, il communique — dans les trois séquences de la période.</p>
-                <div class="chaine"><div class="chaine-etape"><p class="chaine-titre">1. Acquérir</p><p class="chaine-texte">Un capteur ou un périphérique d’entrée (souris, clavier, webcam) transforme un geste, une lumière ou une touche en information.</p></div><p class="chaine-fleche" aria-hidden="true">→</p><div class="chaine-etape"><p class="chaine-titre">2. Traiter</p><p class="chaine-texte">L’unité de traitement exécute le programme : le processeur calcule et décide, la mémoire vive garde les données du travail en cours.</p></div><p class="chaine-fleche" aria-hidden="true">→</p><div class="chaine-etape"><p class="chaine-titre">3. Communiquer</p><p class="chaine-texte">Un émetteur-récepteur transmet l’information : carte réseau, câble Ethernet ou Wi-Fi, jusqu’à un autre terminal ou un serveur.</p></div></div>
-                <p class="chaine-pied">Acquérir → traiter → communiquer : c’est la chaîne d’information. Elle transporte des informations, jamais de l’énergie.</p>
-                <div class="energie">
-                    <p class="energie-titre">La chaîne d’énergie — à ne pas confondre avec elle</p>
-                    <p class="energie-texte">Alimenter (secteur, batterie) → distribuer (alimentation, relais) → convertir (moteur, LED, haut-parleur) → transmettre (roue, son). L’alimentation apporte l’énergie, les bus transportent les informations : un poste alimenté peut n’afficher aucune image.</p>
-                </div>
-                <div class="ouverture-bas">
-                    <div><p class="ouverture-bloc-titre">Trois applications concrètes</p>
-                        <p class="appli"><b>Le poste</b> — clavier (acquérir) → bus → processeur + mémoire vive (traiter) → carte graphique → écran (communiquer).</p>
-                        <p class="appli"><b>Le réseau</b> — terminal → carte réseau → commutateur → routeur → serveur.</p>
-                        <p class="appli"><b>La souris</b> — mouvement ou clic → capteur → information → poste → curseur.</p>
-                    </div>
-                    <div><p class="ouverture-bloc-titre">Le vocabulaire exact</p>
-                        <div class="vocabulaire">
-                        <p class="mot"><b>information</b> — ce qui se transmet : un geste, une mesure, une image.</p>
-                        <p class="mot"><b>donnée</b> — une information mise en forme pour être stockée ou calculée.</p>
-                        <p class="mot"><b>capteur</b> — composant qui transforme un phénomène physique en information.</p>
-                        <p class="mot"><b>actionneur</b> — composant qui transforme une information en action (moteur, LED).</p>
-                        <p class="mot"><b>chaîne d’information</b> — acquérir → traiter → communiquer.</p>
-                        <p class="mot"><b>chaîne d’énergie</b> — alimenter → distribuer → convertir → transmettre.</p>
-                        <p class="mot"><b>terminal</b> — appareil relié au réseau : poste, tablette, imprimante.</p>
-                        <p class="mot"><b>commutateur</b> — boîtier qui relie les terminaux d’un même réseau local.</p>
-                        <p class="mot"><b>routeur</b> — appareil qui relie deux réseaux et choisit la route des données.</p>
-                        <p class="mot"><b>serveur</b> — ordinateur qui met des fichiers à disposition du réseau.</p>
-                        <p class="mot"><b>adresse IP</b> — numéro unique d’un appareil : quatre nombres de 0 à 255.</p>
-                        </div></div>
-                </div>
-            </div>
-        </section>
         <section class="enonce" data-theme="OST21" data-niveau="N3" data-objet="borne interactive" data-competence="OST21" aria-label="Énoncé 1 sur 6">
             <div class="enonce-corps">
                 <h2 class="enonce-titre"><span class="enonce-code">OST21</span> <span class="enonce-competence">Faire la liste des interacteurs extérieurs d’un OST</span></h2>
@@ -475,6 +446,34 @@ body.correction-ouverte .enonce:not([hidden]) {
             </table>
                 <p class="enonce-tache">Complète les deux dernières colonnes du tableau. Puis explique pourquoi le pied de la borne est réglable en hauteur : quel interacteur est concerné, et quel objectif de l’ergonomie est visé ?</p>
             </div>
+            <aside class="correction" id="correction-e1" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Les quatre éléments observés relèvent de quatre familles différentes. L’élève qui touche l’écran est un usager : c’est une personne qui utilise l’objet. Le numéro lu sur le badge est une donnée : c’est une information que la borne utilise pour fonctionner, sans elle le lecteur n’a rien à envoyer. Le serveur de la vie scolaire est un autre objet : c’est un appareil avec lequel la borne est en contact par le réseau. La lumière du hall vitré est un élément de l’environnement : elle ne vient pas de l’objet, mais elle gêne ou facilite la lecture de l’écran.</p>
+                    <p>Le pied réglable concerne l’usager. Un visiteur adulte et un élève de 6e n’ont pas la même hauteur d’yeux : sans réglage, l’un doit se baisser, l’autre se met sur la pointe des pieds. Deux objectifs de l’ergonomie sont visés : réduire la fatigue, donc les douleurs du dos et du cou, et améliorer l’efficacité, puisque l’écran lu sans effort se consulte plus vite.</p>
+                    <p>Une borne n’est donc jamais « seule » : elle dépend de ses usagers, des données qu’elle transporte, du serveur qui les reçoit et de la lumière du hall. C’est exactement ce que demande la compétence : décrire les interactions entre un objet, son environnement et les utilisateurs. L’écran tactile n’est que la partie visible ; le badge, le réseau et le réglage du pied font partie de la même réponse.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e1" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e1">
+                    <h3 class="modale-titre" id="modale-titre-e1">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2a — Les interacteurs extérieurs</p>
+                        <p class="rappel-texte">Un objet ou un système technique ne fonctionne jamais seul : il est en interaction avec des usagers, c’est-à-dire les personnes qui l’utilisent ; des données, c’est-à-dire les informations qu’il utilise pour fonctionner ; d’autres objets, c’est-à-dire les appareils avec lesquels il est en contact ; et des éléments de l’environnement, comme la lumière, la chaleur, le vent ou la poussière.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2d — L’ergonomie liée à l’usage</p>
+                        <p class="rappel-texte">L’ergonomie adapte l’objet à l’utilisateur. Elle poursuit quatre objectifs : améliorer la satisfaction de l’utilisateur, améliorer son efficacité, réduire la fatigue et les troubles musculo-squelettiques, et améliorer la sécurité. Pour cela, l’ergonome étudie la taille, la force et les capacités des utilisateurs, ainsi que l’environnement d’utilisation.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="OST22" data-niveau="N4" data-objet="casque de réalité virtuelle" data-competence="OST22" aria-label="Énoncé 2 sur 6" hidden>
             <div class="enonce-corps">
@@ -486,6 +485,34 @@ body.correction-ouverte .enonce:not([hidden]) {
                 <tbody><tr><th scope="row">Témoignage 1</th><td>au bout de vingt minutes, deux élèves ont mal à la tête et à la nuque ; le casque pèse 720 g</td></tr><tr><th scope="row">Témoignage 2</th><td>trois élèves portent des lunettes : elles ne rentrent pas dans le masque</td></tr><tr><th scope="row">Témoignage 3</th><td>la batterie tient 40 minutes, alors que la séance dure 55 minutes</td></tr><tr><th scope="row">Cahier des charges</th><td>séance de 55 min · deux élèves par casque · visière nettoyable entre deux élèves</td></tr></tbody>
             </table>
                 <p class="enonce-tache">Pour chaque témoignage, associe l’objectif de l’ergonomie qui n’est pas respecté (satisfaction, efficacité, fatigue, sécurité) et propose une solution technique. Puis indique le constat le plus grave et justifie ton choix avec une exigence du cahier des charges.</p>
+            </div>
+            <aside class="correction" id="correction-e2" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le témoignage 1 relève de la fatigue et des troubles musculo-squelettiques : 720 g portés sur la tête pendant vingt minutes suffisent à provoquer des maux de nuque. Une sangle qui répartit l’appui sur l’avant du crâne, un casque plus léger ou des séances de quinze minutes coupées de pauses corrigent ce défaut. Le témoignage 2 relève de la satisfaction et de l’efficacité : trois élèves ne peuvent pas utiliser l’objet, qui n’est donc pas adapté à leurs caractéristiques ; il faut un espace pour les lunettes et des œilletons souples.</p>
+                    <p>Le témoignage 3 relève de l’efficacité et de l’organisation : la batterie s’arrête à 40 minutes alors que la séance en dure 55. Une batterie externe, un casque relié par câble ou une seconde batterie rechargée entre deux séances règlent le problème. L’exigence « visière nettoyable entre deux élèves » est, elle, respectée : elle relève de la sécurité sanitaire et du confort, et non de la performance du casque.</p>
+                    <p>Le constat le plus grave est celui de la batterie : il touche les douze élèves et empêche de tenir l’exigence « séance de 55 min » du cahier des charges. Le constat des lunettes se défend aussi, car il exclut trois élèves de la séance et contredit l’exigence de deux élèves par casque. Les deux réponses sont acceptées, à condition de citer l’exigence du cahier des charges qui n’est pas tenue.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e2" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e2">
+                    <h3 class="modale-titre" id="modale-titre-e2">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2d — Les quatre objectifs de l’ergonomie</p>
+                        <p class="rappel-texte">L’ergonomie vise à adapter l’objet à l’utilisateur : améliorer la satisfaction, en rendant l’usage agréable et intuitif ; améliorer l’efficacité, pour accomplir la tâche vite et sans erreur ; réduire la fatigue et les troubles musculo-squelettiques, en limitant les gestes répétitifs et le poids porté ; améliorer la sécurité, en diminuant les risques d’accident.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">OST2c — Les contraintes : normes, cahier des charges, labels</p>
+                        <p class="rappel-texte">Les exigences de conception viennent de trois sources : les normes, qui fixent les caractéristiques minimales pour être mis sur le marché ; le cahier des charges, qui décrit les exigences propres du client ; les labels et certifications, qui attestent d’un niveau de qualité ou de performance. Elles garantissent la sécurité, la fiabilité, et limitent l’impact environnemental.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
             </div>
         </section>
         <section class="enonce" data-theme="SFC15" data-niveau="N3" data-objet="webcam" data-competence="SFC15" aria-label="Énoncé 3 sur 6" hidden>
@@ -500,6 +527,34 @@ body.correction-ouverte .enonce:not([hidden]) {
             </table>
                 <p class="enonce-tache">Complète les cases vides du tableau. Puis corrige la phrase d’un élève : « la webcam envoie l’image directement dans l’écran ».</p>
             </div>
+            <aside class="correction" id="correction-e3" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Acquérir revient au capteur d’image de la webcam : derrière l’objectif, il transforme la lumière reçue en informations numériques, que la petite puce de la webcam met en forme avant de les envoyer. Traiter revient au processeur et à la mémoire vive du poste : le logiciel de visioconférence compresse l’image, la garde en mémoire et la prépare pour l’envoi. La webcam seule ne peut donc rien faire : elle fournit l’information, elle ne la traite pas.</p>
+                    <p>Communiquer revient à la carte réseau du poste, puis au câble Ethernet ou au Wi-Fi, jusqu’au serveur de l’établissement. Le câble USB, lui, ne transporte pas seulement des informations : il apporte aussi l’énergie qui alimente la webcam. Énergie et information passent dans le même câble, mais elles ne se confondent pas : certains fils portent l’énergie, d’autres les données.</p>
+                    <p>La phrase de l’élève est donc fausse : la webcam n’envoie rien directement à l’écran. L’information passe par le bus jusqu’au processeur, qui la traite avec la mémoire vive ; la carte graphique compose ensuite l’image, que l’écran affiche. La preuve : si le processeur ou la carte graphique est en panne, la diode de la webcam s’allume encore, mais aucune image n’apparaît — le trajet passe bien par le poste.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e3" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e3">
+                    <h3 class="modale-titre" id="modale-titre-e3">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">Fiche maison SFC1b — Les sept composants d’un poste et leur rôle</p>
+                        <p class="rappel-texte">Le poste contient sept composants : le processeur exécute les instructions et effectue les calculs ; la mémoire vive garde le travail en cours et s’efface hors tension ; le disque ou le SSD conserve les fichiers ; la carte mère relie les composants ; les bus transportent les informations ; l’alimentation fournit l’énergie ; la carte graphique calcule l’image envoyée à l’écran.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC15 — La chaîne d’information : acquérir, traiter, communiquer</p>
+                        <p class="rappel-texte">La chaîne d’information décrit le trajet de l’information dans un objet : acquérir avec un capteur ou un périphérique d’entrée ; traiter avec l’unité de traitement, c’est-à-dire le processeur et la mémoire vive ; communiquer avec un émetteur-récepteur, une carte réseau, un câble ou le Wi-Fi. L’énergie, elle, suit la chaîne d’énergie.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="SFC1" data-niveau="N4" data-objet="tablette" data-competence="SFC1" aria-label="Énoncé 4 sur 6" hidden>
             <div class="enonce-corps">
@@ -511,6 +566,34 @@ body.correction-ouverte .enonce:not([hidden]) {
                 <tbody><tr><th scope="row">Mémoire vive</th><td>3 Go, dont 2,4 Go déjà occupés par les applications ouvertes</td></tr><tr><th scope="row">Stockage</th><td>32 Go, dont 1,2 Go libres</td></tr><tr><th scope="row">Processeur</th><td>quatre cœurs ; il ralentit quand sa température dépasse 80 °C</td></tr><tr><th scope="row">Carte graphique</th><td>intégrée au processeur : elle utilise la même mémoire vive</td></tr><tr><th scope="row">Relevé pendant l’export</th><td>température du processeur 84 °C ; mémoire vive libre 0,2 Go</td></tr></tbody>
             </table>
                 <p class="enonce-tache">Explique l’échec de l’export en citant deux valeurs du relevé et en nommant le composant en cause. Propose une solution qui ne coûte rien, puis une solution qui coûte de l’argent, et justifie chacune avec le rôle des composants.</p>
+            </div>
+            <aside class="correction" id="correction-e4" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>Le relevé donne deux valeurs décisives : la mémoire vive libre n’est plus que de 0,2 Go sur 3 Go, et le processeur atteint 84 °C alors qu’il ralentit au-delà de 80 °C pour se protéger. L’export doit garder en mémoire les images du montage pour les compresser : la mémoire vive est saturée, l’application ne peut plus continuer et se ferme. Le composant en cause est donc la mémoire vive, insuffisante pour la tâche, et le processeur ralenti par la chaleur aggrave le blocage.</p>
+                    <p>La solution gratuite consiste à fermer les autres applications avant l’export, à baisser la résolution du reportage et à découper le montage en trois parties : moins de données à garder en mémoire, donc plus de mémoire vive libre. Poser la tablette sur une table plutôt que sur un tissu la refroidit et rend au processeur sa vitesse. Ces gestes utilisent ce que dit la fiche : la mémoire vive est une mémoire de travail, elle se libère quand on ferme un programme.</p>
+                    <p>La solution payante est une tablette ou un poste dont la mémoire vive est dimensionnée pour le montage : 8 Go plutôt que 3 Go, ou un poste fixe avec 16 Go. Le stockage n’est pas la cause ici : il reste 1,2 Go, assez pour un film de douze minutes ; mais il deviendrait un problème pour un reportage plus long, car un disque plein empêche d’enregistrer, alors qu’une mémoire vive pleine empêche de travailler.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e4" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e4">
+                    <h3 class="modale-titre" id="modale-titre-e4">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">Fiche maison SFC1b — Mémoire vive et mémoire de masse</p>
+                        <p class="rappel-texte">La mémoire vive est la mémoire de travail : elle garde le programme et les données pendant le calcul, et son contenu s’efface quand on coupe le courant. Le disque ou le SSD est la mémoire de masse : il conserve les fichiers et les programmes hors tension. Un montage vidéo occupe les deux : le fichier reste sur le disque, les images en cours de calcul passent en mémoire vive.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1 — L’organisation interne d’un poste et ses échanges</p>
+                        <p class="rappel-texte">Le processeur exécute les instructions, la mémoire vive garde les données du travail en cours, la carte graphique calcule l’image, le disque stocke les fichiers, la carte mère relie les composants et les bus transportent les informations. Un composant saturé ralentit ou bloque tout le poste : un poste est un système, pas une somme de pièces indépendantes.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
             </div>
         </section>
         <section class="enonce" data-theme="SFC17" data-niveau="N3" data-objet="ampoule connectée" data-competence="SFC17" aria-label="Énoncé 5 sur 6" hidden>
@@ -525,6 +608,34 @@ body.correction-ouverte .enonce:not([hidden]) {
             </table>
                 <p class="enonce-tache">Complète les cases vides du tableau : le rôle de chaque appareil, sa liaison, et une adresse libre pour l’ordinateur. Puis explique ce qui se passe avec l’adresse que Maya a donnée à l’ampoule, et propose une adresse correcte.</p>
             </div>
+            <aside class="correction" id="correction-e5" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>La box est le modem routeur : elle relie le réseau de la maison au réseau du fournisseur d’accès et attribue les adresses ; sa liaison est le câble ou la fibre qui entre dans le logement. L’ordinateur du salon est un terminal, relié par un câble Ethernet : il peut recevoir une adresse libre du même réseau, par exemple 192.168.1.13. L’imprimante est un terminal partagé, branché en câble Ethernet ; l’ampoule connectée est un terminal relié en Wi-Fi, qui n’a pas de câble réseau.</p>
+                    <p>Avec deux appareils sur 192.168.1.12, la box ne sait plus à qui remettre les paquets destinés à cette adresse : l’imprimante ne répond plus, ou répond une fois sur deux, et l’ampoule non plus. L’adresse doit être unique, sinon l’information n’arrive pas au bon terminal. Une adresse correcte pour l’ampoule est 192.168.1.14, à condition que ce numéro ne soit pas déjà pris.</p>
+                    <p>Ce relevé montre à quoi sert d’identifier les terminaux : l’adresse IP est leur identité sur le réseau, comme une adresse postale. Sans identité unique, la box ne peut pas router l’information vers le bon appareil ; avec elle, chaque terminal est joignable, et le professeur peut retrouver, dans l’interface de la box, quel appareil consomme la connexion.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e5" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e5">
+                    <h3 class="modale-titre" id="modale-titre-e5">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1o — Le rôle d’un terminal, d’un commutateur, d’un routeur, d’un serveur</p>
+                        <p class="rappel-texte">Un réseau local relie des terminaux — postes, tablettes, imprimantes, objets connectés — par des liaisons filaires, les câbles Ethernet, ou non filaires, le Wi-Fi. Chaque terminal possède une carte réseau. Le commutateur relie les terminaux d’un même réseau local ; le routeur, dont la box fait partie, relie le réseau local à Internet ; le serveur met des fichiers ou des services à disposition.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1p — Le rôle et la structure d’une adresse IP</p>
+                        <p class="rappel-texte">Une adresse IP est le numéro d’identification unique d’un appareil sur un réseau : quatre nombres de 0 à 255 séparés par des points. L’adresse privée identifie un appareil dans le réseau local ; l’adresse publique est attribuée au modem routeur par le fournisseur d’accès Internet. Deux appareils d’un même réseau ne peuvent pas porter la même adresse.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
+            </div>
         </section>
         <section class="enonce" data-theme="SFC18" data-niveau="N4" data-objet="réseau d’un lycée" data-competence="SFC18" aria-label="Énoncé 6 sur 6" hidden>
             <div class="enonce-corps">
@@ -536,6 +647,34 @@ body.correction-ouverte .enonce:not([hidden]) {
                 <tbody><tr><th scope="row">voyant du port du commutateur de la salle 2 relié au reste du réseau</th><td>éteint</td></tr><tr><th scope="row">voyants des ports des huit postes de la salle 2</th><td>allumés</td></tr><tr><th scope="row">postes de la salle 2, entre eux</th><td>ils se voient et peuvent s’échanger un fichier</td></tr><tr><th scope="row">postes de la salle 2 vers l’imprimante (192.168.1.20)</th><td>aucune réponse</td></tr><tr><th scope="row">postes de la salle 1 vers l’imprimante</th><td>réponse immédiate</td></tr></tbody>
             </table>
                 <p class="enonce-tache">Dis quel élément est en cause et cite l’indice qui le prouve. Explique ensuite pourquoi les postes de la salle 2 se voient encore entre eux. Enfin, un élève propose de donner au poste B4 l’adresse IP de l’imprimante pour « rétablir la communication » : explique pourquoi cela ne peut pas marcher.</p>
+            </div>
+            <aside class="correction" id="correction-e6" hidden aria-label="Correction de l'énoncé">
+                <div class="correction-entete">
+                    <h3 class="correction-titre">Correction</h3>
+                    <button type="button" class="bouton-fermer" data-fermer aria-label="Fermer la correction">Fermer</button>
+                </div>
+                <div class="raisonnement">
+                    <p>L’élément en cause est la liaison entre le commutateur de la salle 2 et le reste du réseau : le voyant du port qui la porte est éteint, alors que les voyants des huit postes sont allumés. Un commutateur relie les terminaux d’un même réseau local : les huit postes forment donc un petit réseau isolé, où ils se voient encore et peuvent s’échanger un fichier, mais dont rien ne sort plus.</p>
+                    <p>L’imprimante et le serveur sont de l’autre côté de cette liaison coupée : les paquets n’y arrivent jamais, d’où l’absence de réponse et la perte d’Internet. Le problème n’est donc pas une panne des postes, ni une panne du routeur, mais un câble débranché, un port abîmé ou un câble mal serti : c’est la liaison entre les deux commutateurs qu’il faut rétablir.</p>
+                    <p>Donner au poste B4 l’adresse de l’imprimante ne rétablirait rien : la liaison physique reste coupée, donc aucun paquet ne sortirait de la salle. Cela créerait en plus une adresse en double, et la table de routage enverrait les paquets destinés à l’imprimante vers le poste B4 : l’imprimante cesserait de répondre pour tout le lycée. La réparation consiste à rebrancher le câble, à vérifier le voyant, puis à contrôler avec ipconfig que chaque terminal porte bien sa propre adresse.</p>
+                </div>
+            </aside>
+            <div class="modale" id="modale-e6" hidden>
+                <div class="modale-boite" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="modale-titre-e6">
+                    <h3 class="modale-titre" id="modale-titre-e6">Indication — les rappels du cours</h3>
+                    <div class="rappels">
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1o — Le rôle du commutateur et des liaisons</p>
+                        <p class="rappel-texte">Le commutateur relie entre eux les terminaux d’un même réseau local ; il ne relie pas le réseau local à Internet, c’est le rôle du routeur. Chaque terminal est relié par un câble Ethernet ou par le Wi-Fi, et chaque port du commutateur porte un voyant : un voyant éteint signale que la liaison ne passe plus.</p>
+                    </div>
+                    <div class="rappel">
+                        <p class="rappel-titre">SFC1p — Adresse IP unique et table de routage</p>
+                        <p class="rappel-texte">Une adresse IP identifie un appareil de façon unique sur le réseau. La table de routage du routeur indique, pour chaque destination, par quelle liaison envoyer les données. Si deux appareils portent la même adresse, le routeur ne sait plus à qui remettre les paquets : la communication devient aléatoire, voire impossible.</p>
+                    </div>
+                    </div>
+                    <p class="modale-fiches">Rappel des fiches de connaissances du cycle 4.</p>
+                    <p class="modale-pied"><button type="button" class="bouton-fermer" data-fermer aria-label="Fermer l'indication">Fermer</button></p>
+                </div>
             </div>
         </section>
 </main>
