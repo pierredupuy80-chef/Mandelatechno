@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Énoncés N3 et N4 — Technologie 5e</title>
+<meta name="description" content="6 énoncés, un par écran, comme un sujet d'évaluation : précédés d'un écran de rappel sur la chaîne d'information, la compétence de 5e en tête, thèmes OST21, OST22, SFC15, SFC1, SFC17, SFC18.">
+<style>
+:root {
+    --encre: #10243b;
+    --encre-douce: #3b4f66;
+    --fond: #fbfcfe;
+    --accent: #1f4e79;
+    --accent-pale: #eef4fa;
+    --bord: #c9d6e4;
+    --entete-tableau: #eaf1f8;
+    --correction: #1d6b4b;
+    --correction-pale: #f2f8f4;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    background: var(--fond);
+    color: var(--encre);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.visuellement-cache {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; border: 0; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ---- En-tête : le retour à l'accueil (dans le flux) et les deux commandes -- */
+.entete {
+    flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+    padding: 10px 14px 4px;
+}
+.retour-accueil {
+    display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px; margin: 0; padding: 8px 16px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 0.85rem; font-weight: 700;
+    text-decoration: none;
+}
+.retour-accueil:hover { background: #2a6394; }
+.barre-outils {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-left: auto;
+}
+.bouton-outil {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 44px; padding: 8px 20px;
+    border: 2px solid var(--accent); border-radius: 999px;
+    background: #ffffff; color: var(--accent);
+    font: inherit; font-size: 0.95rem; font-weight: 700;
+    line-height: 1.1; cursor: pointer;
+}
+.bouton-outil:hover { background: var(--accent-pale); }
+.bouton-outil[aria-pressed="true"] { background: var(--accent); color: #ffffff; }
+.bouton-outil--correction { border-color: var(--correction); color: var(--correction); }
+.bouton-outil--correction:hover { background: var(--correction-pale); }
+.bouton-outil--correction[aria-pressed="true"] {
+    background: var(--correction); color: #ffffff;
+}
+.bouton-outil:focus-visible,
+.bouton-fermer:focus-visible { outline: 3px solid #b45309; outline-offset: 2px; }
+.bouton-outil[hidden] { display: none; }
+.bouton-fermer {
+    min-height: 44px; padding: 6px 16px;
+    border: 2px solid var(--bord); border-radius: 999px;
+    background: #f3f6f9; color: var(--encre);
+    font: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+}
+.bouton-fermer:hover { background: #e7edf3; }
+
+body.projection .retour-accueil { display: none; }
+body.projection .mention-rgpd { display: none; }
+
+main {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1vh 3vw 3vh;
+}
+.mention-rgpd { flex: 0 0 auto; }
+
+/* ---- L'énoncé, et la colonne de correction réservée à droite -------------- */
+.enonce {
+    width: 100%; max-width: 1180px; --facteur: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 2.2vw;
+    align-items: start;
+}
+.enonce[hidden] { display: none; }
+.enonce-corps { min-width: 0; }
+body.correction-ouverte .enonce:not([hidden]) {
+    max-width: 1820px;
+    grid-template-columns: minmax(0, 1fr) clamp(340px, 36vw, 660px);
+}
+.enonce-titre {
+    margin: 0 0 0.85em;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid var(--bord);
+    font-size: calc(var(--facteur) * clamp(13px, min(1.3vw, 2.1vh), 23px));
+    font-weight: 400;
+    line-height: 1.32;
+    color: var(--encre-douce);
+}
+.enonce-code {
+    margin-right: 0.1em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+}
+.enonce p {
+    margin: 0 0 0.62em;
+    font-size: calc(var(--facteur) * clamp(16px, min(2.25vw, 3.7vh), 42px));
+    line-height: 1.4;
+    hyphens: auto;
+}
+.enonce .enonce-tache {
+    margin-top: 0.9em;
+    padding: 0.5em 0.75em;
+    border-left: 5px solid var(--accent);
+    background: var(--accent-pale);
+    font-weight: 600;
+}
+.enonce table {
+    border-collapse: collapse;
+    margin: 0.6em 0 1em;
+    font-size: calc(var(--facteur) * clamp(12px, min(1.55vw, 2.5vh), 27px));
+    font-variant-numeric: tabular-nums;
+}
+.enonce th, .enonce td {
+    border: 1px solid var(--bord);
+    padding: 0.34em 0.65em;
+    text-align: left;
+}
+.enonce th { background: var(--entete-tableau); font-weight: 700; }
+.enonce td:not(:first-child), .enonce th:not(:first-child) { text-align: center; }
+
+/* ---- Le volet de correction : la colonne de droite ------------------------ */
+.correction {
+    min-width: 0;
+    /* Plafonnée sur l'espace réellement disponible : la hauteur utile est
+       mesurée par le script (--hauteur-volet). Le volet défile alors tout seul,
+       et la section ne dépasse jamais l'écran. */
+    max-height: var(--hauteur-volet, 60vh);
+    overflow-y: auto;
+    padding: 0 0 0 1.2vw;
+    border-left: 3px solid var(--correction);
+    /* La barre de défilement doit se voir : sans elle, une correction plus
+       longue que l'écran semble s'arrêter en pleine phrase. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--correction) #e9eef3;
+}
+.correction::-webkit-scrollbar { width: 11px; }
+.correction::-webkit-scrollbar-track {
+    background: #e9eef3; border-radius: 6px;
+}
+.correction::-webkit-scrollbar-thumb {
+    background: var(--correction); border-radius: 6px;
+}
+.correction[hidden] { display: none; }
+.correction-entete {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-bottom: 0.35em;
+}
+.correction-titre {
+    margin: 0;
+    font-size: clamp(14px, 1.3vw, 22px);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--correction);
+}
+/* Le raisonnement se lit comme un texte : paragraphes rédigés, interligne
+   large, pas de listes télégraphiques. */
+.raisonnement p {
+    margin: 0 0 0.85em;
+    font-size: clamp(15px, 1.15vw, 20px);
+    line-height: 1.5;
+    text-align: justify;
+    hyphens: auto;
+}
+.raisonnement p:last-child { margin-bottom: 0; }
+
+/* ---- La modale d'indication ---------------------------------------------- */
+.modale {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4vh 4vw;
+    background: rgba(16, 36, 59, 0.55);
+}
+.modale[hidden] { display: none; }
+.modale-boite {
+    /* La modale porte des rappels de fiches, donc du texte : elle s'élargit
+       plutôt que de s'allonger. */
+    width: min(1120px, 100%);
+    max-height: 90vh; overflow-y: auto;
+    padding: 26px 30px 20px;
+    border: 3px solid var(--accent);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 18px 44px rgba(16, 36, 59, 0.3);
+}
+.modale-boite:focus { outline: none; }
+.modale-titre {
+    margin: 0 0 0.55em;
+    font-size: clamp(18px, 1.7vw, 28px);
+    color: var(--accent);
+}
+.modale-resume {
+    margin: 0 0 0.7em;
+    font-size: clamp(17px, 1.5vw, 25px);
+    line-height: 1.42;
+}
+.rappel { margin: 0 0 1em; }
+.rappel:last-child { margin-bottom: 0; }
+.modale .rappel-titre {
+    margin: 0 0 0.25em;
+    font-size: clamp(16px, 1.25vw, 21px);
+    font-weight: 700; line-height: 1.3;
+    color: var(--accent);
+}
+.modale .rappel-texte {
+    margin: 0;
+    font-size: clamp(15px, 1.2vw, 20px);
+    line-height: 1.5;
+    text-align: justify;
+    hyphens: auto;
+}
+.modale .modale-fiches {
+    margin: 1.2em 0 0;
+    padding-top: 0.7em;
+    border-top: 1px solid var(--bord);
+    font-size: clamp(14px, 1.05vw, 18px);
+    font-style: italic;
+    color: var(--encre-douce);
+}
+.modale-pied {
+    display: flex; justify-content: flex-end; margin: 1.1em 0 0;
+    /* Le bouton « Fermer » reste atteignable même si la modale défile. */
+    position: sticky; bottom: 0;
+    background: #ffffff; padding-top: 0.6em;
+}
+
+/* ---- L'écran d'ouverture (facultatif) : le rappel de la chaîne d'info ------
+   Il n'existe que si le module de contenu déclare `OUVERTURE` : les pages qui
+   n'en ont pas (3e, 4e) sont produites exactement comme avant. L'écran tient
+   dans la scène parce que le script l'ajuste comme un énoncé (--facteur). */
+.ouverture .ouverture-titre {
+    margin: 0 0 0.25em;
+    padding-bottom: 0.18em;
+    border-bottom: 3px solid var(--accent);
+    font-size: calc(var(--facteur) * clamp(20px, min(2.1vw, 3.6vh), 38px));
+    line-height: 1.16;
+    color: var(--accent);
+}
+.ouverture .ouverture-chapeau {
+    margin: 0 0 0.55em;
+    font-size: calc(var(--facteur) * clamp(15px, min(1.4vw, 2.45vh), 25px));
+    line-height: 1.3;
+    color: var(--encre-douce);
+}
+.ouverture .chaine {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: stretch;
+    column-gap: 0.4em;
+    margin: 0 0 0.45em;
+}
+.ouverture .chaine-etape {
+    padding: 0.42em 0.6em;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    background: var(--accent-pale);
+}
+.ouverture .chaine-titre {
+    margin: 0 0 0.12em;
+    font-size: calc(var(--facteur) * clamp(15px, min(1.5vw, 2.6vh), 27px));
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+}
+.ouverture .chaine-texte {
+    margin: 0;
+    font-size: calc(var(--facteur) * clamp(13px, min(1.25vw, 2.15vh), 23px));
+    line-height: 1.28;
+}
+.ouverture .chaine-fleche {
+    align-self: center;
+    margin: 0;
+    font-size: calc(var(--facteur) * clamp(19px, min(2vw, 3.4vh), 36px));
+    font-weight: 700;
+    color: var(--accent);
+}
+.ouverture .chaine-pied {
+    margin: 0 0 0.5em;
+    font-size: calc(var(--facteur) * clamp(13px, min(1.2vw, 2vh), 22px));
+    color: var(--encre-douce);
+}
+.ouverture .energie {
+    margin: 0 0 0.5em;
+    padding: 0.35em 0.65em;
+    border-left: 5px solid #b45309;
+    background: #fdf6ec;
+}
+.ouverture .energie-titre {
+    margin: 0 0 0.1em;
+    font-size: calc(var(--facteur) * clamp(14px, min(1.35vw, 2.3vh), 24px));
+    font-weight: 700;
+    color: #8a4108;
+}
+.ouverture .energie-texte {
+    margin: 0;
+    font-size: calc(var(--facteur) * clamp(13px, min(1.25vw, 2.1vh), 23px));
+    line-height: 1.28;
+}
+.ouverture .energie-texte b { color: #8a4108; }
+.ouverture .ouverture-bas {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 1.4vw;
+    align-items: start;
+}
+.ouverture .ouverture-bloc-titre {
+    margin: 0 0 0.15em;
+    font-size: calc(var(--facteur) * clamp(14px, min(1.35vw, 2.3vh), 24px));
+    font-weight: 700;
+    color: var(--accent);
+}
+.ouverture .appli, .ouverture .mot {
+    margin: 0 0 0.1em;
+    font-size: calc(var(--facteur) * clamp(12px, min(1.15vw, 1.95vh), 21px));
+    line-height: 1.24;
+    color: var(--encre-douce);
+}
+.ouverture .appli b, .ouverture .mot b { color: var(--encre); }
+.ouverture .vocabulaire { columns: 2; column-gap: 1.1em; }
+.ouverture .vocabulaire .mot { break-inside: avoid; }
+
+@media (max-width: 360px) {
+    .enonce table { font-size: 10.5px; }
+    .enonce th, .enonce td { padding: 0.22em 0.36em; }
+}
+
+@media print {
+    @page { size: 297mm 167mm; margin: 14mm; }
+    .entete, .modale, .correction, .mention-rgpd, .mention-rgpd * { display: none; }
+    body { display: block; height: auto; min-height: 0; }
+    main { overflow: visible; min-height: 0; display: block; padding: 0; }
+    .enonce, .enonce[hidden] { display: block !important; page-break-after: always; }
+    .enonce:last-child { page-break-after: auto; }
+    .enonce-titre { font-size: 10.5pt; }
+    .enonce p { font-size: 12pt; }
+    .enonce table { font-size: 10pt; }
+    /* L'écran de rappel s'imprime lui aussi, sur sa propre page : les tailles
+       suivent la feuille et non la projection. */
+    .ouverture .ouverture-titre { font-size: 17pt; }
+    .ouverture .ouverture-chapeau,
+    .ouverture .chaine-texte,
+    .ouverture .energie-texte { font-size: 10.5pt; }
+    .ouverture .chaine-titre { font-size: 10.5pt; }
+    .ouverture .chaine-fleche { font-size: 14pt; }
+    .ouverture .chaine-pied { font-size: 9pt; }
+    .ouverture .energie-titre,
+    .ouverture .ouverture-bloc-titre { font-size: 10pt; }
+    .ouverture .appli, .ouverture .mot { font-size: 8.5pt; }
+}
+
+/* ---- Téléphone : les deux colonnes s'empilent ----------------------------- */
+@media (max-width: 900px) {
+    main { align-items: flex-start; padding: 1vh 4vw 4vh; }
+    /* Un tableau de six colonnes ne tient pas dans 390 px : on le fixe à la
+       largeur disponible et on laisse les en-têtes passer à la ligne, plutôt
+       que de le laisser déborder sous le bord droit de l'écran. */
+    .enonce table { width: 100%; table-layout: fixed; font-size: 11px; }
+    .enonce th, .enonce td { padding: 0.25em 0.3em; hyphens: auto; }
+    .enonce th { overflow-wrap: normal; }
+    .enonce, body.correction-ouverte .enonce:not([hidden]) {
+        max-width: none; grid-template-columns: minmax(0, 1fr);
+    }
+    .correction {
+        max-height: none; overflow: visible;
+        margin-top: 3vh; padding: 2vh 0 0;
+        border-left: 0; border-top: 3px solid var(--correction);
+    }
+    .modale-boite { padding: 20px 18px 16px; }
+    /* L'écran de rappel s'empile : trois cartes verticales, puis les deux
+       colonnes du bas l'une sous l'autre, vocabulaire sur une seule colonne.
+       Ses tailles deviennent absolues : sur un téléphone, le rappel défile
+       plutôt que de rétrécir jusqu'à l'illisible (le script ne réduit que la
+       variable --facteur, que ces règles n'utilisent plus). */
+    .ouverture .ouverture-titre { font-size: 20px; }
+    .ouverture .chaine-titre,
+    .ouverture .energie-titre,
+    .ouverture .ouverture-bloc-titre { font-size: 15px; }
+    .ouverture .ouverture-chapeau,
+    .ouverture .chaine-texte,
+    .ouverture .energie-texte { font-size: 14px; }
+    .ouverture .appli,
+    .ouverture .mot,
+    .ouverture .chaine-pied { font-size: 13px; }
+    .ouverture .chaine { grid-template-columns: minmax(0, 1fr); row-gap: 0.25em; }
+    .ouverture .chaine-fleche { transform: rotate(90deg); }
+    .ouverture .ouverture-bas { grid-template-columns: minmax(0, 1fr); row-gap: 0.8em; }
+    .ouverture .vocabulaire { columns: 1; }
+}
+</style>
+<!-- RGPD : plus aucune saisie de nom, plus aucune donnée personnelle -->
+<style>
+  .nom-manuscrit{font-size:.85rem; color:var(--gris); margin:4px 0 0}
+  .nom-manuscrit .mention-donnees{display:block; font-size:.72rem; font-style:italic; opacity:.85}
+  .mention-rgpd{max-width:1240px; margin:16px auto 24px; padding:10px 14px; border:1px solid #d8e0e8;
+    border-radius:8px; background:#f6f8fa; color:#5a6672; font-size:.78rem; line-height:1.45;
+    text-align:center}
+@media print{.nom-manuscrit .mention-donnees{display:block}}
+</style>
+</head>
+<body>
+<header class="entete">
+<h1 class="visuellement-cache">Énoncés N3 et N4 — Technologie 5e</h1>
+<a href="https://pierredupuy80-chef.github.io/Mandelatechno" class="retour-accueil" aria-label="Retour à l'accueil du site Technologie au collège">← Accueil</a>
+</header>
+<main id="scene">
+        <section class="enonce ouverture" id="ouverture" data-rappel="1" aria-label="Rappel d'ouverture — la chaîne d'information">
+            <div class="enonce-corps">
+                <h2 class="ouverture-titre">Rappel — la chaîne d’information</h2>
+                <p class="ouverture-chapeau">Un objet qui traite des informations suit toujours le même trajet : il acquiert, il traite, il communique — dans les trois séquences de la période.</p>
+                <div class="chaine"><div class="chaine-etape"><p class="chaine-titre">1. Acquérir</p><p class="chaine-texte">Un capteur ou un périphérique d’entrée (souris, clavier, webcam) transforme un geste, une lumière ou une touche en information.</p></div><p class="chaine-fleche" aria-hidden="true">→</p><div class="chaine-etape"><p class="chaine-titre">2. Traiter</p><p class="chaine-texte">L’unité de traitement exécute le programme : le processeur calcule et décide, la mémoire vive garde les données du travail en cours.</p></div><p class="chaine-fleche" aria-hidden="true">→</p><div class="chaine-etape"><p class="chaine-titre">3. Communiquer</p><p class="chaine-texte">Un émetteur-récepteur transmet l’information : carte réseau, câble Ethernet ou Wi-Fi, jusqu’à un autre terminal ou un serveur.</p></div></div>
+                <p class="chaine-pied">Acquérir → traiter → communiquer : c’est la chaîne d’information. Elle transporte des informations, jamais de l’énergie.</p>
+                <div class="energie">
+                    <p class="energie-titre">La chaîne d’énergie — à ne pas confondre avec elle</p>
+                    <p class="energie-texte">Alimenter (secteur, batterie) → distribuer (alimentation, relais) → convertir (moteur, LED, haut-parleur) → transmettre (roue, son). L’alimentation apporte l’énergie, les bus transportent les informations : un poste alimenté peut n’afficher aucune image.</p>
+                </div>
+                <div class="ouverture-bas">
+                    <div><p class="ouverture-bloc-titre">Trois applications concrètes</p>
+                        <p class="appli"><b>Le poste</b> — clavier (acquérir) → bus → processeur + mémoire vive (traiter) → carte graphique → écran (communiquer).</p>
+                        <p class="appli"><b>Le réseau</b> — terminal → carte réseau → commutateur → routeur → serveur.</p>
+                        <p class="appli"><b>La souris</b> — mouvement ou clic → capteur → information → poste → curseur.</p>
+                    </div>
+                    <div><p class="ouverture-bloc-titre">Le vocabulaire exact</p>
+                        <div class="vocabulaire">
+                        <p class="mot"><b>information</b> — ce qui se transmet : un geste, une mesure, une image.</p>
+                        <p class="mot"><b>donnée</b> — une information mise en forme pour être stockée ou calculée.</p>
+                        <p class="mot"><b>capteur</b> — composant qui transforme un phénomène physique en information.</p>
+                        <p class="mot"><b>actionneur</b> — composant qui transforme une information en action (moteur, LED).</p>
+                        <p class="mot"><b>chaîne d’information</b> — acquérir → traiter → communiquer.</p>
+                        <p class="mot"><b>chaîne d’énergie</b> — alimenter → distribuer → convertir → transmettre.</p>
+                        <p class="mot"><b>terminal</b> — appareil relié au réseau : poste, tablette, imprimante.</p>
+                        <p class="mot"><b>commutateur</b> — boîtier qui relie les terminaux d’un même réseau local.</p>
+                        <p class="mot"><b>routeur</b> — appareil qui relie deux réseaux et choisit la route des données.</p>
+                        <p class="mot"><b>serveur</b> — ordinateur qui met des fichiers à disposition du réseau.</p>
+                        <p class="mot"><b>adresse IP</b> — numéro unique d’un appareil : quatre nombres de 0 à 255.</p>
+                        </div></div>
+                </div>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST21" data-niveau="N3" data-objet="borne interactive" data-competence="OST21" aria-label="Énoncé 1 sur 6">
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST21</span> <span class="enonce-competence">Faire la liste des interacteurs extérieurs d’un OST</span></h2>
+                <p>Le lycée a installé une borne interactive dans son hall : un écran tactile sur pied affiche le plan des salles, les horaires et les informations du jour. Un lecteur lit le badge des visiteurs, et chaque consultation est envoyée au serveur de la vie scolaire.</p>
+                <p>Le hall est vitré et très passant ; la borne reste allumée de 7 h à 19 h. Le cahier des charges du lycée imposait un écran lisible en pleine lumière et un pied réglable en hauteur.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : borne interactive</caption>
+                <thead><tr><th scope="col">Élément observé</th><th scope="col">Famille d’interacteur</th><th scope="col">Justification</th></tr></thead>
+                <tbody><tr><th scope="row">l’élève qui touche l’écran</th><td></td><td></td></tr><tr><th scope="row">le numéro lu sur le badge</th><td></td><td></td></tr><tr><th scope="row">le serveur de la vie scolaire</th><td></td><td></td></tr><tr><th scope="row">la lumière du hall vitré</th><td></td><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Complète les deux dernières colonnes du tableau. Puis explique pourquoi le pied de la borne est réglable en hauteur : quel interacteur est concerné, et quel objectif de l’ergonomie est visé ?</p>
+            </div>
+        </section>
+        <section class="enonce" data-theme="OST22" data-niveau="N4" data-objet="casque de réalité virtuelle" data-competence="OST22" aria-label="Énoncé 2 sur 6" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">OST22</span> <span class="enonce-competence">Repérer et expliquer les choix de conception dans les domaines de l’ergonomie et de la sécurité ou en lien avec des objectifs de développement durable</span></h2>
+                <p>L’espace numérique du lycée achète six casques de réalité virtuelle pour une séance d’histoire de 55 minutes, à deux élèves par casque. Après la première séance, l’équipe relève trois constats et les confronte au cahier des charges.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : casque de réalité virtuelle</caption>
+                <thead><tr><th scope="col">Document</th><th scope="col">Constat relevé</th></tr></thead>
+                <tbody><tr><th scope="row">Témoignage 1</th><td>au bout de vingt minutes, deux élèves ont mal à la tête et à la nuque ; le casque pèse 720 g</td></tr><tr><th scope="row">Témoignage 2</th><td>trois élèves portent des lunettes : elles ne rentrent pas dans le masque</td></tr><tr><th scope="row">Témoignage 3</th><td>la batterie tient 40 minutes, alors que la séance dure 55 minutes</td></tr><tr><th scope="row">Cahier des charges</th><td>séance de 55 min · deux élèves par casque · visière nettoyable entre deux élèves</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Pour chaque témoignage, associe l’objectif de l’ergonomie qui n’est pas respecté (satisfaction, efficacité, fatigue, sécurité) et propose une solution technique. Puis indique le constat le plus grave et justifie ton choix avec une exigence du cahier des charges.</p>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC15" data-niveau="N3" data-objet="webcam" data-competence="SFC15" aria-label="Énoncé 3 sur 6" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC15</span> <span class="enonce-competence">Identifier des constituants de la chaîne d’information d’un OST (l’organisation de la chaîne d’information étant fournie)</span></h2>
+                <p>Pendant la semaine des langues, chaque binôme se filme avec la webcam du poste pour un message de présentation. La webcam capte la lumière de la salle, transforme l’image en informations et les envoie au poste, qui les compresse et les transmet au serveur de l’établissement.</p>
+                <p>La webcam est branchée en USB : elle n’a ni disque ni écran, et elle ne pèse que quelques dizaines de grammes.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : webcam</caption>
+                <thead><tr><th scope="col">Fonction de la chaîne</th><th scope="col">Constituant</th><th scope="col">Ce qu’il fait</th></tr></thead>
+                <tbody><tr><th scope="row">Acquérir</th><td></td><td></td></tr><tr><th scope="row">Traiter</th><td></td><td></td></tr><tr><th scope="row">Communiquer</th><td></td><td></td></tr><tr><th scope="row">Alimenter (chaîne d’énergie)</th><td>le câble USB</td><td></td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Complète les cases vides du tableau. Puis corrige la phrase d’un élève : « la webcam envoie l’image directement dans l’écran ».</p>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC1" data-niveau="N4" data-objet="tablette" data-competence="SFC1" aria-label="Énoncé 4 sur 6" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC1</span> <span class="enonce-competence">Décrire et caractériser l’organisation interne d’un objet ou d’un système technique et ses échanges avec son environnement</span></h2>
+                <p>Le club journal du collège monte un reportage de douze minutes sur une tablette prêtée par le CDI. À la fin du montage, l’élève lance l’export : la tablette devient brûlante, l’application se ferme et le montage reprend au début.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : tablette</caption>
+                <thead><tr><th scope="col">Document — fiche technique et relevés</th><th scope="col">Valeur</th></tr></thead>
+                <tbody><tr><th scope="row">Mémoire vive</th><td>3 Go, dont 2,4 Go déjà occupés par les applications ouvertes</td></tr><tr><th scope="row">Stockage</th><td>32 Go, dont 1,2 Go libres</td></tr><tr><th scope="row">Processeur</th><td>quatre cœurs ; il ralentit quand sa température dépasse 80 °C</td></tr><tr><th scope="row">Carte graphique</th><td>intégrée au processeur : elle utilise la même mémoire vive</td></tr><tr><th scope="row">Relevé pendant l’export</th><td>température du processeur 84 °C ; mémoire vive libre 0,2 Go</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Explique l’échec de l’export en citant deux valeurs du relevé et en nommant le composant en cause. Propose une solution qui ne coûte rien, puis une solution qui coûte de l’argent, et justifie chacune avec le rôle des composants.</p>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC17" data-niveau="N3" data-objet="ampoule connectée" data-competence="SFC17" aria-label="Énoncé 5 sur 6" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC17</span> <span class="enonce-competence">Identifier les composants qui constituent un réseau local (terminaux, commutateurs, liaisons filaires et sans fil (WiFi)) et sa topologie</span></h2>
+                <p>Dans la maison de Maya, la box du fournisseur d’accès sert de modem routeur : elle distribue le Wi-Fi et propose quatre prises Ethernet. Un ordinateur du salon est relié par un câble, l’imprimante aussi ; une ampoule connectée et une enceinte connectée utilisent le Wi-Fi.</p>
+                <p>Le tableau rassemble ce que Maya a relevé dans l’interface de la box. Elle a ensuite donné à l’ampoule l’adresse 192.168.1.12, la même que celle de l’imprimante.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : ampoule connectée</caption>
+                <thead><tr><th scope="col">Appareil</th><th scope="col">Rôle dans le réseau local</th><th scope="col">Adresse IP</th><th scope="col">Liaison</th></tr></thead>
+                <tbody><tr><th scope="row">la box</th><td></td><td>192.168.1.1</td><td></td></tr><tr><th scope="row">l’ordinateur du salon</th><td></td><td></td><td>câble Ethernet</td></tr><tr><th scope="row">l’imprimante</th><td></td><td>192.168.1.12</td><td>câble Ethernet</td></tr><tr><th scope="row">l’ampoule connectée</th><td></td><td></td><td>Wi-Fi</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Complète les cases vides du tableau : le rôle de chaque appareil, sa liaison, et une adresse libre pour l’ordinateur. Puis explique ce qui se passe avec l’adresse que Maya a donnée à l’ampoule, et propose une adresse correcte.</p>
+            </div>
+        </section>
+        <section class="enonce" data-theme="SFC18" data-niveau="N4" data-objet="réseau d’un lycée" data-competence="SFC18" aria-label="Énoncé 6 sur 6" hidden>
+            <div class="enonce-corps">
+                <h2 class="enonce-titre"><span class="enonce-code">SFC18</span> <span class="enonce-competence">Justifier la nécessité d’identifier les terminaux pour communiquer sur un réseau local</span></h2>
+                <p>Au lycée, les salles 1 et 2 sont reliées au reste du réseau par deux commutateurs. Depuis le remplacement du commutateur de la salle 2, les huit postes de cette salle n’atteignent plus ni l’imprimante du CDI, ni le serveur de fichiers, et n’ont plus Internet. Les postes de la salle 1 fonctionnent normalement.</p>
+            <table>
+                <caption class="visuellement-cache">Comparatif : réseau d’un lycée</caption>
+                <thead><tr><th scope="col">Ce que montre le relevé</th><th scope="col">Résultat</th></tr></thead>
+                <tbody><tr><th scope="row">voyant du port du commutateur de la salle 2 relié au reste du réseau</th><td>éteint</td></tr><tr><th scope="row">voyants des ports des huit postes de la salle 2</th><td>allumés</td></tr><tr><th scope="row">postes de la salle 2, entre eux</th><td>ils se voient et peuvent s’échanger un fichier</td></tr><tr><th scope="row">postes de la salle 2 vers l’imprimante (192.168.1.20)</th><td>aucune réponse</td></tr><tr><th scope="row">postes de la salle 1 vers l’imprimante</th><td>réponse immédiate</td></tr></tbody>
+            </table>
+                <p class="enonce-tache">Dis quel élément est en cause et cite l’indice qui le prouve. Explique ensuite pourquoi les postes de la salle 2 se voient encore entre eux. Enfin, un élève propose de donner au poste B4 l’adresse IP de l’imprimante pour « rétablir la communication » : explique pourquoi cela ne peut pas marcher.</p>
+            </div>
+        </section>
+</main>
+<script>
+(function () {
+    var diapos = Array.prototype.slice.call(document.querySelectorAll('.enonce'));
+    if (!diapos.length) { return; }
+    var courant = 0;
+    var boutonIndication = document.getElementById('bouton-indication');
+    var boutonCorrection = document.getElementById('bouton-correction');
+    var etat = { indication: false, correction: false };
+    var dernierFocus = null;
+
+    // Chaque énoncé est ajusté à la hauteur disponible : la taille de départ est
+    // généreuse (lisible du fond de la classe), puis on réduit si besoin. On
+    // mesure le corps de l'énoncé, pas la section : avec la correction ouverte,
+    // la section est aussi haute que le plus long des deux volets.
+    function ajuster(diapo) {
+        var scene = document.getElementById('scene');
+        var style = window.getComputedStyle(scene);
+        // La hauteur utile se mesure sur la FENÊTRE : la scène grandit avec son
+        // contenu, elle ne peut donc pas servir de référence.
+        var dispo = scene.clientHeight
+            - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - 6;
+        var corps = diapo.querySelector('.enonce-corps') || diapo;
+        diapo.style.setProperty('--hauteur-volet', Math.max(200, dispo - 6) + 'px');
+        diapo.style.setProperty('--facteur', '1');
+        var facteur = 1;
+        var tours = 0;
+        while (corps.getBoundingClientRect().height > dispo && facteur > 0.55 && tours < 40) {
+            facteur -= 0.03;
+            diapo.style.setProperty('--facteur', facteur.toFixed(2));
+            tours += 1;
+        }
+    }
+
+    // La mesure dépend de la mise en page finale (en-tête, pied de page,
+    // colonnes) : on la rejoue à la frame suivante, sinon le premier écran
+    // garde la taille calculée avant que le flex n'ait réparti les hauteurs.
+    function ajusterPlusTard(diapo) {
+        ajuster(diapo);
+        if (window.requestAnimationFrame) {
+            requestAnimationFrame(function () { ajuster(diapo); });
+        }
+    }
+
+    function volet(nom) {
+        return diapos[courant].querySelector(nom === 'indication' ? '.modale' : '.correction');
+    }
+
+    // Applique un état : une seule commande ouverte à la fois, et le volet
+    // affiché est celui de l'énoncé courant (les volets des autres énoncés sont
+    // dans des sections masquées, mais on les referme quand même).
+    function appliquer(nouvelEtat) {
+        var section = diapos[courant];
+        var modale = section.querySelector('.modale');
+        var correction = section.querySelector('.correction');
+        var indicationOuverte = !!(nouvelEtat.indication && modale);
+        var correctionOuverte = !!(nouvelEtat.correction && correction);
+
+        diapos.forEach(function (diapo) {
+            var m = diapo.querySelector('.modale');
+            var c = diapo.querySelector('.correction');
+            if (m) { m.hidden = true; }
+            if (c) { c.hidden = true; }
+        });
+        if (modale) { modale.hidden = !indicationOuverte; }
+        if (correction) { correction.hidden = !correctionOuverte; }
+        document.body.classList.toggle('correction-ouverte', correctionOuverte);
+
+        etat.indication = indicationOuverte;
+        etat.correction = correctionOuverte;
+        if (boutonIndication) {
+            boutonIndication.setAttribute('aria-pressed', indicationOuverte ? 'true' : 'false');
+            boutonIndication.hidden = !modale;
+            if (modale) { boutonIndication.setAttribute('aria-controls', modale.id); }
+        }
+        if (boutonCorrection) {
+            boutonCorrection.setAttribute('aria-pressed', correctionOuverte ? 'true' : 'false');
+            boutonCorrection.hidden = !correction;
+            if (correction) { boutonCorrection.setAttribute('aria-controls', correction.id); }
+        }
+        ajusterPlusTard(section);
+    }
+
+    function rendreFocus() {
+        if (dernierFocus && dernierFocus.focus) { dernierFocus.focus(); }
+        dernierFocus = null;
+    }
+
+    function basculer(nom) {
+        var cible = volet(nom);
+        if (!cible) { return; }
+        var ouverture = !etat[nom];
+        var suivant = { indication: false, correction: false };
+        suivant[nom] = ouverture;
+        if (ouverture) { dernierFocus = document.activeElement; }
+        appliquer(suivant);
+        // La modale reçoit le focus (elle est modale : la classe ne doit plus
+        // pouvoir agir derrière). Le volet de correction, lui, n'en prend pas :
+        // le focus reste sur la commande, et le bouton ne s'entoure pas d'un
+        // anneau qui se verrait à la projection.
+        if (ouverture && nom === 'indication') {
+            var boite = cible.querySelector('.modale-boite');
+            if (boite) { boite.focus(); }
+        } else if (ouverture) {
+            dernierFocus = null;
+        } else {
+            rendreFocus();
+        }
+    }
+
+    function afficher(rang) {
+        courant = Math.max(0, Math.min(diapos.length - 1, rang));
+        diapos.forEach(function (diapo, index) {
+            if (index === courant) {
+                diapo.hidden = false;
+                diapo.removeAttribute('hidden');
+            } else {
+                diapo.hidden = true;
+            }
+        });
+        document.body.setAttribute('data-ecran', String(courant + 1));
+        appliquer({ indication: false, correction: false });
+    }
+
+    if (/[?&]proj=1/.test(window.location.search)) {
+        document.body.classList.add('projection');
+    }
+
+    window.addEventListener('resize', function () { ajuster(diapos[courant]); });
+    window.addEventListener('load', function () { ajusterPlusTard(diapos[courant]); });
+
+    var demande = /[?&]c=(\d+)/.exec(window.location.search) ||
+                  /#(\d+)$/.exec(window.location.hash);
+    if (demande) { afficher(parseInt(demande[1], 10) - 1); }
+    afficher(courant);
+
+    if (boutonIndication) {
+        boutonIndication.addEventListener('click', function () { basculer('indication'); });
+    }
+    if (boutonCorrection) {
+        boutonCorrection.addEventListener('click', function () { basculer('correction'); });
+    }
+
+    // Fermeture : le bouton « Fermer », le fond de la modale, ou Échap.
+    document.addEventListener('click', function (evenement) {
+        var cible = evenement.target;
+        if (!cible || !cible.closest) { return; }
+        if (cible.closest('[data-fermer]') ||
+            (cible.classList && cible.classList.contains('modale'))) {
+            appliquer({ indication: false, correction: false });
+            rendreFocus();
+        }
+    });
+
+    document.addEventListener('keydown', function (evenement) {
+        var touche = evenement.key;
+        var cible = evenement.target;
+        var surBouton = cible && cible.closest && cible.closest('button');
+        if (touche === 'Escape') {
+            appliquer({ indication: false, correction: false });
+            rendreFocus();
+            evenement.preventDefault();
+            return;
+        }
+        // Sur un bouton, Espace et Entrée activent le bouton : on ne navigue pas.
+        if (surBouton && (touche === ' ' || touche === 'Enter')) { return; }
+        if (touche === 'i' || touche === 'I') {
+            basculer('indication');
+            evenement.preventDefault();
+        } else if (touche === 'c' || touche === 'C') {
+            basculer('correction');
+            evenement.preventDefault();
+        } else if (touche === 'ArrowRight' || touche === 'ArrowDown' ||
+            touche === ' ' || touche === 'PageDown' || touche === 'Enter') {
+            afficher(courant + 1);
+            evenement.preventDefault();
+        } else if (touche === 'ArrowLeft' || touche === 'ArrowUp' ||
+                   touche === 'PageUp' || touche === 'Backspace') {
+            afficher(courant - 1);
+            evenement.preventDefault();
+        } else if (touche === 'Home') {
+            afficher(0);
+            evenement.preventDefault();
+        } else if (touche === 'End') {
+            afficher(diapos.length - 1);
+            evenement.preventDefault();
+        }
+    });
+
+    // Au clic : le cinquième gauche recule, le reste avance (tablette, téléviseur).
+    // Un clic sur une commande, la modale ou le volet de correction ne navigue pas.
+    document.addEventListener('click', function (evenement) {
+        var cible = evenement.target;
+        if (cible.closest && cible.closest('a, button, .modale, .correction')) { return; }
+        var largeur = window.innerWidth || 1;
+        afficher(courant + (evenement.clientX < largeur * 0.2 ? -1 : 1));
+    });
+})();
+</script>
+<!-- RGPD : mention informative pour les élèves -->
+<footer class="mention-rgpd">🔒 Aucune donnée personnelle : cette page ne demande ni nom, ni adresse, ni compte, ne conserve rien et n'envoie rien sur Internet. Tu peux refaire l'exercice autant de fois que tu veux.</footer>
+</body>
+</html>
