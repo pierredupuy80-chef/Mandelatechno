@@ -2943,6 +2943,14 @@ function updateRotateNote() {
 }
 
 /* --------------------------- démarrage ---------------------------------- */
+function focusJeu() {
+  // Le jeu est parfois chargé dans un cadre (activité informatique) : sans ce
+  // focus, les touches restent dans la page parente et le personnage ne bouge
+  // qu'après un second clic dans le jeu.
+  try { window.focus(); } catch (e) {}
+  setTimeout(() => { try { window.focus(); } catch (e) {} }, 60);
+}
+
 function startGame() {
   $('#intro').hidden = true;
   $('#final').hidden = true;
@@ -2954,6 +2962,7 @@ function startGame() {
     setMission('Mission · Le garage automatique', false);
     updateTopbar();
     openMissionBrief('garage');
+    focusJeu();
     return;
   }
   cam.mode = 'follow';
@@ -2962,6 +2971,7 @@ function startGame() {
   setPhase('hub');
   updateTopbar();
   openMissionHub();
+  focusJeu();
 }
 
 /* ---------------------- choix et briefing des missions ------------------ */
@@ -3092,6 +3102,7 @@ function startSelectedMission() {
     goToN4();
   }
   updateTopbar();
+  focusJeu();
 }
 
 function resumeMission() {
@@ -3111,6 +3122,7 @@ function resumeMission() {
     goToN4();
   }
   updateTopbar();
+  focusJeu();
 }
 
 function finishMission(id) {

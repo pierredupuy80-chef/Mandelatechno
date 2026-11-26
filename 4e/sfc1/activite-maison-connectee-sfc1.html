@@ -6211,10 +6211,7 @@
                 N1 - Quiz
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n2-intro" role="tab" aria-selected="false" aria-controls="contenu-n2-intro" tabindex="-1" disabled>
-                N2 - Découverte
-            </button>
-            <button class="bouton-onglet verrouille" data-niveau="n2-quiz" role="tab" aria-selected="false" aria-controls="contenu-n2-quiz" tabindex="-1" disabled>
-                N2 - Quiz
+                N2 - Cours
             </button>
             <button class="bouton-onglet verrouille" data-niveau="n3-enigme" role="tab" aria-selected="false" aria-controls="contenu-n3-enigme" tabindex="-1" disabled>
                 N3 - Enquêtes 3D
@@ -6459,283 +6456,192 @@
                 </div>
             </section>
 
-            <!-- N2 - Découverte interactive -->
-            <section id="contenu-n2-intro" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-intro">
-                <div class="carte-contenu">
-                    <h2>Niveau 2 : Explorer en détail</h2>
-                    <p>Le microcontrôleur est au centre : les capteurs lui envoient leurs mesures, il décide, puis il commande les actionneurs. L'utilisateur dialogue avec lui par l'IHM, directement ou par le réseau Wi-Fi.</p>
-
-                    <h3>Qui acquiert, qui décide, qui agit ?</h3>
-                    <div class="chaine-interactive chaine-etoile" data-legende-fin="Trajet terminé : les capteurs ont acquis, le microcontrôleur a traité, le réseau a communiqué, l'IHM a affiché et les actionneurs ont agi." role="list" aria-label="Qui acquiert, qui décide, qui agit ? — éléments interactifs">
-
-                        <svg class="ce-liens" viewBox="0 0 720 720"
-                             preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                            <defs><marker id="ce-fleche-information" class="ce-fleche-information" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 z"></path></marker><marker id="ce-fleche-commande" class="ce-fleche-commande" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" markerUnits="strokeWidth" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 z"></path></marker>
-                            </defs>
-                        <path class="ce-lien" data-type="information" d="M360.0,158.2 L360.0,270.2" marker-end="url(#ce-fleche-information)" data-ordre="2" data-legende="Le capteur envoie sa mesure au microcontrôleur : c'est l'acquisition."></path>
-                        <path class="ce-lien" data-type="information" d="M360.0,449.8 L360.0,561.8" marker-end="url(#ce-fleche-information)" data-ordre="3" data-legende="Le microcontrôleur confie l'information au module Wi-Fi : c'est la communication."></path>
-                        <path class="ce-lien" data-type="information" d="M263.0,624.6 Q117.2,616.5 107.8,428.2" marker-end="url(#ce-fleche-information)" data-ordre="4" data-legende="Le réseau pousse l'information jusqu'à la tablette, qui l'affiche."></path>
-                        <path class="ce-lien" data-type="commande" d="M201.4,360.0 L245.0,360.0" marker-end="url(#ce-fleche-commande)" data-ordre="2" data-legende="L'utilisateur appuie sur un bouton ou un écran : l'ordre part vers le microcontrôleur."></path>
-                        <path class="ce-lien" data-type="commande" d="M475.0,360.0 L518.6,360.0" marker-end="url(#ce-fleche-commande)" data-ordre="5" data-legende="Le microcontrôleur commande l'actionneur : le volet monte, la lampe s'allume, le radiateur chauffe."></path>
-                        </svg>
-                        <div class="element-chaine ce-noeud ce-centre" role="listitem" tabindex="0" data-ost-id="n2-chaine-e1" data-ordre="2" data-legende="3. Le microcontrôleur compare la mesure à la consigne et décide de l'ordre à envoyer." style="--ce-x:50%;--ce-y:50%" aria-label="Microcontrôleur : Cliquer pour plus d'informations" onclick="revelerElement(this)">
-                            <span class="ce-num" aria-hidden="true">2</span>
-                            <span class="ce-icone" aria-hidden="true">🧠</span>
-                            <span class="ce-texte">
-                                <span class="ce-nom">Microcontrôleur</span>
-                                <span class="ce-role">traiter et décider</span>
-                            </span>
-                            <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Circuit électronique programmable, c'est le cerveau de la maison. Il reçoit les mesures des capteurs, les compare à des consignes ou à un programme horaire, puis envoie des signaux de commande aux actionneurs. Il garde aussi la trace des événements pour l'application de la tablette.</p>
-                            </div>
-                        </div>
-                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e2" data-ordre="1" data-legende="1. Les capteurs acquièrent une information : une présence, une température, une luminosité." style="--ce-x:50%;--ce-y:12.5%" aria-label="Capteurs (présence, température, luminosité) : Cliquer pour plus d'informations" onclick="revelerElement(this)">
-                            <span class="ce-num" aria-hidden="true">1</span>
-                            <span class="ce-icone" aria-hidden="true">📡</span>
-                            <span class="ce-texte">
-                                <span class="ce-nom">Capteurs</span>
-                                <span class="ce-role">acquérir</span>
-                            </span>
-                            <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Le capteur de présence détecte un mouvement dans une pièce, le capteur de température mesure les degrés, le capteur de luminosité repère le jour et la nuit. Tous transforment une grandeur physique en signal électrique lisible par le microcontrôleur.</p>
-                            </div>
-                        </div>
-                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e3" data-ordre="3" data-legende="4. Le réseau Wi-Fi transporte l'information entre le microcontrôleur et la tablette, même à distance." style="--ce-x:50%;--ce-y:87.5%" aria-label="Réseau Wi-Fi de la maison : Cliquer pour plus d'informations" onclick="revelerElement(this)">
-                            <span class="ce-num" aria-hidden="true">3</span>
-                            <span class="ce-icone" aria-hidden="true">📶</span>
-                            <span class="ce-texte">
-                                <span class="ce-nom">Réseau Wi-Fi</span>
-                                <span class="ce-role">communiquer</span>
-                            </span>
-                            <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Le module Wi-Fi relie la maison au réseau local et à Internet. Il permet à la tablette des parents de recevoir l'alerte « Léo est bien rentré » et de commander un équipement depuis une autre pièce, sans fil.</p>
-                            </div>
-                        </div>
-                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e4" data-ordre="5" data-legende="5. Les actionneurs agissent : le moteur lève le volet, la lampe éclaire, le radiateur chauffe." style="--ce-x:85.5%;--ce-y:50%" aria-label="Actionneurs (volet, lampe, radiateur, VMC) : Cliquer pour plus d'informations" onclick="revelerElement(this)">
-                            <span class="ce-num" aria-hidden="true">5</span>
-                            <span class="ce-icone" aria-hidden="true">⚙️</span>
-                            <span class="ce-texte">
-                                <span class="ce-nom">Actionneurs</span>
-                                <span class="ce-role">agir</span>
-                            </span>
-                            <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>Un actionneur transforme un ordre en action physique. Le moteur du volet convertit l'énergie électrique en mouvement, la lampe en lumière, le radiateur en chaleur, le moteur de la VMC en circulation d'air.</p>
-                            </div>
-                        </div>
-                        <div class="element-chaine ce-noeud " role="listitem" tabindex="0" data-ost-id="n2-chaine-e5" data-ordre="4" data-legende="2. L'IHM affiche l'information à l'utilisateur et reçoit ses ordres : bouton, écran tactile, application." style="--ce-x:14.5%;--ce-y:50%" aria-label="Interface homme-machine (tablette, boutons) : Cliquer pour plus d'informations" onclick="revelerElement(this)">
-                            <span class="ce-num" aria-hidden="true">4</span>
-                            <span class="ce-icone" aria-hidden="true">📱</span>
-                            <span class="ce-texte">
-                                <span class="ce-nom">IHM</span>
-                                <span class="ce-role">dialoguer avec l'humain</span>
-                            </span>
-                            <div class="info-element">
-                                <strong>Description détaillée :</strong>
-                                <p>L'interface homme-machine est la porte d'entrée et de sortie pour l'utilisateur. Un bouton poussoir envoie un ordre au microcontrôleur ; un afficheur ou la tablette restitue une information. C'est par elle que Léo et Mila commandent la maison quand ils ne veulent pas attendre l'automatique.</p>
-                            </div>
-                        </div>
-                    
+            <!-- N2 - Cours interactive -->
+            <style>
+.n2-cours{max-width:980px;margin:0 auto}
+.n2-entete{padding:0 0 1.2rem;border-bottom:1px solid var(--couleur-texte-leger)}
+.n2-kicker{margin:0 0 .35rem;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--couleur-primaire);font-weight:800}
+.n2-entete h2{margin:0 0 .6rem}
+.n2-lead{font-size:1.08rem;line-height:1.65;max-width:760px}
+.n2-reperes{margin:.65rem 0 0;font-size:.9rem;color:var(--couleur-texte-leger)}
+.n2-notion{display:grid;grid-template-columns:44px minmax(0,1fr);gap:1rem;padding:1.45rem 0;border-bottom:1px solid var(--couleur-texte-leger)}
+.n2-num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--couleur-primaire);color:#fff;font-weight:800;font-size:.95rem;margin-top:.15rem}
+.n2-corps{min-width:0}
+.n2-source{margin:0 0 .25rem;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--couleur-texte-leger);font-weight:700}
+.n2-corps h3{margin:0 0 .55rem;font-size:1.22rem;line-height:1.3}
+.n2-corps p{line-height:1.62;margin:.45rem 0}
+.n2-corps ul{margin:.45rem 0 .6rem;padding-left:1.25rem;line-height:1.55}
+.n2-corps li{margin:.22rem 0}
+.n2-chaine{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin:.7rem 0 .75rem}
+.n2-chaine span{border:1px solid var(--couleur-primaire);border-radius:999px;padding:.28rem .72rem;font-weight:700;font-size:.92rem;color:var(--couleur-primaire)}
+.n2-chaine b{color:var(--couleur-texte-leger);font-weight:700}
+.n2-question{display:inline-flex;align-items:center;gap:.45rem;margin-top:.65rem;border:1px solid var(--couleur-primaire);background:transparent;color:var(--couleur-primaire);border-radius:999px;padding:.5rem .9rem;font:inherit;font-weight:700;font-size:.92rem;cursor:pointer;min-height:44px}
+.n2-question:hover{background:var(--couleur-primaire);color:#fff}
+.n2-dialogue{margin:auto;border:0;border-radius:18px;padding:0;width:min(900px,92vw);max-height:88vh;background:#fff;color:#1e293b;box-shadow:0 24px 70px rgba(15,23,42,.35)}
+.n2-dialogue::backdrop{background:rgba(15,23,42,.62);backdrop-filter:blur(3px)}
+.n2-dialogue-cadre{padding:clamp(1.4rem,4vw,2.6rem)}
+.n2-dialogue-entete{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.1rem}
+.n2-dialogue-kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#2563eb;font-weight:800}
+.n2-dialogue-fermer{border:0;background:transparent;font-size:2rem;line-height:1;cursor:pointer;color:#64748b;min-width:44px;min-height:44px}
+.n2-dialogue h2{margin:0 0 1rem;font-size:clamp(1.45rem,3.2vw,2.1rem);line-height:1.3;color:#0f172a}
+.n2-dialogue-question{margin:0 0 1.2rem;font-size:clamp(1.2rem,2.5vw,1.55rem);line-height:1.5;font-weight:600;color:#1e293b}
+.n2-dialogue-note{margin:0 0 1.4rem;padding:1rem 1.1rem;border-left:4px solid #2563eb;background:#eff6ff;line-height:1.55;font-size:1rem}
+.n2-dialogue-note b{color:#1d4ed8}
+@media (max-width:600px){.n2-notion{grid-template-columns:34px minmax(0,1fr);gap:.7rem}.n2-num{width:30px;height:30px;font-size:.82rem}.n2-dialogue-cadre{padding:1.2rem}}
+:where(html[data-theme="sombre"]) .n2-dialogue{background:#1c2534;color:#e6ecf5}
+:where(html[data-theme="sombre"]) .n2-dialogue h2{color:#e6ecf5}
+:where(html[data-theme="sombre"]) .n2-dialogue-question{color:#dbe5f3}
+:where(html[data-theme="sombre"]) .n2-dialogue-note{background:#132a20;border-left-color:#4ade80}
+:where(html[data-theme="sombre"]) .n2-dialogue-note b{color:#86efac}
+:where(html[data-theme="sombre"]) .n2-dialogue-kicker{color:#8ab4f8}
+</style>
+<section id="contenu-n2-intro" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-intro">
+                <div class="carte-contenu n2-cours">
+                    <div class="n2-entete">
+                        <p class="n2-kicker">Niveau 2 · cours</p>
+                        <h2>Les notions des fiches de connaissances</h2>
+                        <p class="n2-lead">Lis chaque notion, puis ouvrez la question pour en discuter en groupe. Note ta réponse sur ta feuille : ce niveau est un cours, il n’y a pas de quiz.</p>
+                        <p class="n2-reperes"><b>8 notions</b> · chaîne d’information, capteurs, microcontrôleur, IHM, énergies, conversions, chaîne d’énergie, procédés</p>
                     </div>
-
-                    <div class="ce-commandes">
-                        <button type="button" class="bouton-action"
-                                onclick="animerFluxEtoile()">
-                            ▶️ Voir le trajet de l'information
-                        </button>
-                        <p class="ce-legende" id="legende-etoile" role="status"
-                           aria-live="polite"></p>
-                        <p class="ce-legende-couleurs" aria-label="Légende des liens">
-                            <span><i data-type="information" aria-hidden="true"></i> information (mesure)</span>
-                            <span><i data-type="commande" aria-hidden="true"></i> ordre de commande</span>
-                        </p>
+                    <div class="n2-notions">
+<article class="n2-notion" data-notion="chaine-info">
+  <div class="n2-num" aria-hidden="true">1</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1i · chaîne d’information</p>
+    <h3>La chaîne d’information</h3>
+    <p>Pour fonctionner, un objet technique automatisé reçoit des informations, les traite, les communique et agit. C’est la <b>chaîne d’information</b>.</p>
+<div class="n2-chaine" aria-label="Chaîne d’information : acquérir, traiter, communiquer, agir">
+  <span>Acquérir</span><b>→</b><span>Traiter</span><b>→</b><span>Communiquer</span><b>→</b><span>Agir</span>
+</div>
+<ul>
+  <li><b>Acquérir :</b> les capteurs relèvent une information sur l’environnement.</li>
+  <li><b>Traiter :</b> le microcontrôleur compare la mesure à la consigne ou au programme.</li>
+  <li><b>Communiquer :</b> le réseau Wi-Fi transporte l’information vers la tablette ou l’application.</li>
+  <li><b>Agir :</b> les actionneurs exécutent l’ordre : moteur, lampe, radiateur, VMC.</li>
+</ul>
+<p>L’<b>IHM</b> (interface homme-machine) permet à l’utilisateur de dialoguer avec le système : envoyer un ordre ou lire une information.</p>
+    <button type="button" class="n2-question" data-question="chaine-info" onclick="ouvrirQuestionN2('chaine-info')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="capteurs">
+  <div class="n2-num" aria-hidden="true">2</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1i · capteurs</p>
+    <h3>Les capteurs</h3>
+    <p>Les capteurs <b>acquièrent</b> des informations sur l’environnement. Ils transforment une <b>grandeur physique</b> (température, présence, distance, luminosité…) en <b>signal électrique</b> transmis au microcontrôleur.</p>
+<ul>
+  <li><b>Capteur de température :</b> mesure la température d’un milieu.</li>
+  <li><b>Capteur de présence :</b> détecte une personne ou un objet.</li>
+  <li><b>Capteur de distance :</b> mesure la distance entre l’objet et un obstacle.</li>
+  <li><b>Autres :</b> lumière, son, pression…</li>
+</ul>
+    <button type="button" class="n2-question" data-question="capteurs" onclick="ouvrirQuestionN2('capteurs')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="microcontroleur">
+  <div class="n2-num" aria-hidden="true">3</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1i · microcontrôleur</p>
+    <h3>Le microcontrôleur</h3>
+    <p>Le microcontrôleur est un <b>circuit électronique programmable</b>. Il reçoit les signaux des capteurs, les <b>traite</b> en fonction de sa programmation, puis envoie des <b>signaux de commande</b> aux actionneurs.</p>
+<p>Il est au centre de la chaîne d’information : c’est lui qui décide de l’action à réaliser.</p>
+    <button type="button" class="n2-question" data-question="microcontroleur" onclick="ouvrirQuestionN2('microcontroleur')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="ihm">
+  <div class="n2-num" aria-hidden="true">4</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1i · IHM</p>
+    <h3>L’interface homme-machine (IHM)</h3>
+    <p>Les composants d’une <b>IHM</b> permettent à l’utilisateur d’interagir avec l’objet technique : envoyer une information au microcontrôleur ou recevoir une information de sa part.</p>
+<ul>
+  <li><b>Boutons :</b> saisir une information ou commander une action.</li>
+  <li><b>Afficheurs :</b> visualiser une information.</li>
+  <li><b>Écrans tactiles :</b> saisir et visualiser de façon interactive.</li>
+  <li><b>Autres :</b> haut-parleurs, LED…</li>
+</ul>
+    <button type="button" class="n2-question" data-question="ihm" onclick="ouvrirQuestionN2('ihm')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="formes-energie">
+  <div class="n2-num" aria-hidden="true">5</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1a · formes d’énergie</p>
+    <h3>Les formes d’énergie</h3>
+    <p>L’énergie, c’est ce qui permet de réaliser un travail, de produire un mouvement ou de modifier la température. Elle se présente sous différentes formes :</p>
+<ul>
+  <li><b>Énergie électrique :</b> fait fonctionner les appareils électriques.</li>
+  <li><b>Énergie cinétique :</b> énergie d’un objet en mouvement.</li>
+  <li><b>Énergie potentielle :</b> réserve d’énergie stockée dans un objet immobile.</li>
+  <li><b>Énergie thermique :</b> énergie associée à la chaleur.</li>
+  <li><b>Énergie lumineuse :</b> énergie liée à la lumière.</li>
+</ul>
+    <button type="button" class="n2-question" data-question="formes-energie" onclick="ouvrirQuestionN2('formes-energie')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="conversions">
+  <div class="n2-num" aria-hidden="true">6</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1b · conversions d’énergie</p>
+    <h3>Les conversions d’énergie</h3>
+    <p>L’énergie ne peut ni être créée ni détruite : elle se <b>transforme</b> d’une forme en une autre. C’est une <b>conversion d’énergie</b>.</p>
+<ul>
+  <li><b>Moteur électrique :</b> électrique → cinétique + thermique.</li>
+  <li><b>Lampe :</b> électrique → lumineuse + thermique.</li>
+  <li><b>Radiateur :</b> électrique → thermique.</li>
+  <li><b>Génératrice :</b> mécanique → électrique.</li>
+  <li><b>Vérin :</b> hydraulique ou pneumatique → mécanique.</li>
+</ul>
+<p>Une conversion s’accompagne souvent de <b>pertes</b> sous forme de chaleur.</p>
+    <button type="button" class="n2-question" data-question="conversions" onclick="ouvrirQuestionN2('conversions')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="chaine-energie">
+  <div class="n2-num" aria-hidden="true">7</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC11 · SFC12 · chaîne d’énergie</p>
+    <h3>La chaîne d’énergie</h3>
+    <p>La chaîne d’énergie relie la source d’énergie à l’actionneur. Elle permet d’<b>alimenter</b>, de <b>convertir</b>, de <b>transmettre</b> puis d’<b>agir</b>.</p>
+<div class="n2-chaine" aria-label="Chaîne d’énergie : alimenter, convertir, transmettre, agir">
+  <span>Alimenter</span><b>→</b><span>Convertir</span><b>→</b><span>Transmettre</span><b>→</b><span>Agir</span>
+</div>
+<p>Exemple du volet : l’énergie électrique alimente le moteur, qui la convertit en mouvement ; le mécanisme transmet ce mouvement au tablier, qui agit en montant ou en descendant.</p>
+    <button type="button" class="n2-question" data-question="chaine-energie" onclick="ouvrirQuestionN2('chaine-energie')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article><article class="n2-notion" data-notion="procedes">
+  <div class="n2-num" aria-hidden="true">8</div>
+  <div class="n2-corps">
+    <p class="n2-source">SFC1f · matériaux et procédés</p>
+    <h3>Les procédés de mise en forme</h3>
+    <p>Pour fabriquer un objet, on met en forme des matériaux. Les procédés du laboratoire se classent en trois grandes catégories :</p>
+<ul>
+  <li><b>Par déformation :</b> pliage, torsion (ex. thermoplieuse).</li>
+  <li><b>Par enlèvement de matière :</b> perçage, fraisage, découpe laser.</li>
+  <li><b>Par ajout de matière :</b> moulage, impression 3D.</li>
+</ul>
+<p>Le choix dépend de la <b>nature du matériau</b>, de la <b>forme</b> voulue, de la <b>précision</b>, du <b>coût</b> et de la <b>rapidité</b>.</p>
+    <button type="button" class="n2-question" data-question="procedes" onclick="ouvrirQuestionN2('procedes')">
+      <span aria-hidden="true">❓</span> Question pour le groupe
+    </button>
+  </div>
+</article>
                     </div>
-
-                    <div class="details-chaine" id="details-chaine"
-                         aria-label="Descriptions des éléments explorés"></div>
-
-
-                    <div class="ateliers-n2" id="ateliers-n2">
-                        <h3>🔧 Ateliers — les constituants de la maison</h3>
-                    <p class="texte-secondaire">Deux exercices pour vérifier que vous savez qui fait quoi, et dans quel ordre.</p>
-
-                    <article class="atelier-carte" data-ost-bloc="n2-atelier-qui-fait-quoi" data-type="association" data-atelier="qui-fait-quoi" aria-labelledby="atelier-titre-qui-fait-quoi">
-                        <h3 id="atelier-titre-qui-fait-quoi">🧩 Atelier 1 — Qui fait quoi ?</h3>
-                        <p class="atelier-consigne">Cliquez un constituant, puis la fonction qu'il assure dans la maison.</p>
-                        <div class="atelier-colonnes">
-                            <div>
-                                <h4>Constituants du drone</h4>
-                                <div class="atelier-liste" role="group" aria-label="Constituants du drone">
-                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">👁️ Capteur de présence</button>
-                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">🌡️ Capteur de température</button>
-                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">🧠 Microcontrôleur</button>
-                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">📶 Module Wi-Fi</button>
-                            <button type="button" class="atelier-jeton" data-cote="constituant" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">⚙️ Moteur du volet</button>
-                                </div>
-                            </div>
-                            <div>
-                                <h4>Fonctions techniques</h4>
-                                <div class="atelier-liste" role="group" aria-label="Fonctions techniques">
-                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="4" aria-pressed="false" onclick="atelierChoisirJeton(this)">AGIR : convertir l'énergie électrique en mouvement.</button>
-                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="1" aria-pressed="false" onclick="atelierChoisirJeton(this)">ACQUÉRIR : mesurer la température de la pièce.</button>
-                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="2" aria-pressed="false" onclick="atelierChoisirJeton(this)">TRAITER : comparer la mesure à la consigne et décider.</button>
-                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="0" aria-pressed="false" onclick="atelierChoisirJeton(this)">ACQUÉRIR : détecter un mouvement dans la pièce.</button>
-                            <button type="button" class="atelier-jeton" data-cote="fonction" data-paire="3" aria-pressed="false" onclick="atelierChoisirJeton(this)">COMMUNIQUER : transmettre l'information à la tablette.</button>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="atelier-compteur" data-role="compteur">0 paire(s) trouvée(s) sur 5 — il en reste 5.</p>
-                        <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierAssociation(this)">Vérifier l'atelier</button>
-                        </div>
-                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">Chaque constituant occupe une fonction de la chaîne d'information : les capteurs acquièrent, le microcontrôleur traite, le module Wi-Fi communique, les actionneurs agissent. L'IHM, elle, fait le lien avec l'utilisateur.</p>
-                    </article>
-
-                    <article class="atelier-carte" data-ost-bloc="n2-atelier-ordre-chaine" data-type="ordre" data-atelier="ordre-chaine" aria-labelledby="atelier-titre-ordre-chaine">
-                        <h3 id="atelier-titre-ordre-chaine">🔗 Atelier 2 — Remets la chaîne dans l'ordre</h3>
-                        <p class="atelier-consigne">Placez les quatre maillons dans l'ordre du trajet de l'information, du capteur à l'actionneur.</p>
-                        <div class="atelier-slots" role="list" aria-label="Emplacements de la chaîne, du premier au dernier maillon">
-                            <div class="atelier-slot" role="listitem" data-slot="0"><span class="atelier-marqueur">1</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="1"><span class="atelier-marqueur">2</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="2"><span class="atelier-marqueur">3</span></div>
-                            <div class="atelier-slot" role="listitem" data-slot="3"><span class="atelier-marqueur">4</span></div>
-                        </div>
-                        <h4>Maillons à replacer</h4>
-                        <div class="atelier-jetons-melanges" role="group" aria-label="Maillons mélangés">
-                            <button type="button" class="atelier-jeton" data-rang="1" onclick="atelierPlacerMaillon(this)">🧠 Traiter — le microcontrôleur compare et décide — La mesure est comparée à la consigne ou au programme.</button>
-                            <button type="button" class="atelier-jeton" data-rang="0" onclick="atelierPlacerMaillon(this)">👁️ Acquérir — le capteur de présence détecte Mila — Une grandeur physique devient un signal électrique.</button>
-                            <button type="button" class="atelier-jeton" data-rang="2" onclick="atelierPlacerMaillon(this)">📶 Communiquer — le module Wi-Fi transmet l'alerte — L'information part vers la tablette des parents.</button>
-                            <button type="button" class="atelier-jeton" data-rang="3" onclick="atelierPlacerMaillon(this)">⚙️ Agir — le moteur lève le volet — L'actionneur exécute l'ordre reçu.</button>
-                        </div>
-                        <p class="atelier-compteur" data-role="compteur">0 maillon(s) placé(s) sur 4.</p>
-                        <div class="atelier-actions">
-                            <button type="button" class="bouton-action" onclick="atelierVerifierOrdre(this)">Vérifier l'atelier</button>
-                        </div>
-                        <p class="atelier-retour" data-role="retour-atelier" role="status" aria-live="polite"></p>
-                        <p class="atelier-explication cache" data-role="explication">L'information circule toujours dans le même ordre : acquérir, traiter, communiquer, agir. Un maillon manquant et la maison ne peut plus réagir : sans capteur, elle ne sait pas qu'on est entré.</p>
-                    </article>
-                    </div>
-
-                    <div class="info-block marge-haut">
-                        <p><strong>Consigne :</strong> Explorez tous les éléments en cliquant dessus. Une fois que vous avez découvert toutes les informations, passez au quiz pour valider ce niveau.</p>
-                    </div>
-
-                    <button class="bouton-action marge-haut" onclick="passerOngletSuivant('n2-intro')" id="bouton-suite-n2-intro" disabled>
-                        J'ai tout exploré →
+                    <button class="bouton-action succes marge-haut" onclick="terminerCoursN2()">
+                        J’ai participé aux 8 questions →
                     </button>
                 </div>
             </section>
 
             <!-- N2 - Quiz -->
-            <section id="contenu-n2-quiz" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n2-quiz">
-                <div class="carte-contenu">
-                    <h2>Niveau 2 : Maîtriser les détails</h2>
-                    <p>Testez votre compréhension approfondie du système.</p>
-
-                    <form id="quiz-n2" class="quiz-conteneur">
-
-                        <div class="question-quiz" data-ost-id="n2-quiz-q1" data-question="1" data-explication="Le capteur acquiert d'abord, le microcontrôleur traite ensuite, le réseau communique l'information, l'actionneur agit en dernier.">
-                            <p>1. Dans quel ordre l'information circule-t-elle dans la maison ?</p>
-                            <div class="options-reponse" role="radiogroup">
-                                
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n2-quiz-q1-opta">
-                                    <span>Agir → Traiter → Acquérir → Communiquer</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n2-quiz-q1-optb">
-                                    <span>Acquérir → Traiter → Communiquer → Agir</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n2-quiz-q1-optc">
-                                    <span>Traiter → Acquérir → Agir → Communiquer</span>
-                                </div>
-                            </div>
-                            <div class="feedback-reponse" role="alert"></div>
-                        </div>
-
-                        <div class="question-quiz" data-ost-id="n2-quiz-q2" data-question="2" data-explication="La mesure est inférieure à la consigne : le microcontrôleur commande le relais du radiateur jusqu'à atteindre 21 °C, puis il l'arrêtera.">
-                            <p>2. Le capteur mesure 19 °C et la consigne est 21 °C. Que fait le microcontrôleur ?</p>
-                            <div class="options-reponse" role="radiogroup">
-                                
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n2-quiz-q2-opta">
-                                    <span>Il commande le chauffage pour remonter la température</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n2-quiz-q2-optb">
-                                    <span>Il coupe le chauffage pour économiser l'énergie</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n2-quiz-q2-optc">
-                                    <span>Il affiche 21 °C sur la tablette sans rien commander</span>
-                                </div>
-                            </div>
-                            <div class="feedback-reponse" role="alert"></div>
-                        </div>
-
-                        <div class="question-quiz" data-ost-id="n2-quiz-q3" data-question="3" data-explication="Le radiateur transforme l'énergie électrique en chaleur : c'est un actionneur. Le capteur acquiert et le module Wi-Fi communique.">
-                            <p>3. Lequel de ces constituants est un actionneur ?</p>
-                            <div class="options-reponse" role="radiogroup">
-                                
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n2-quiz-q3-opta">
-                                    <span>Le capteur de luminosité</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n2-quiz-q3-optb">
-                                    <span>Le radiateur</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n2-quiz-q3-optc">
-                                    <span>Le module Wi-Fi</span>
-                                </div>
-                            </div>
-                            <div class="feedback-reponse" role="alert"></div>
-                        </div>
-
-                        <div class="question-quiz" data-ost-id="n2-quiz-q4" data-question="4" data-explication="Le module Wi-Fi est le maillon « communiquer » : il fait circuler les informations sans fil, jusqu'à la tablette et au réseau.">
-                            <p>4. À quoi sert le module Wi-Fi dans la maison ?</p>
-                            <div class="options-reponse" role="radiogroup">
-                                
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n2-quiz-q4-opta">
-                                    <span>À mesurer la température des pièces</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n2-quiz-q4-optb">
-                                    <span>À transporter les informations entre le microcontrôleur et la tablette</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n2-quiz-q4-optc">
-                                    <span>À produire l'électricité du chauffage</span>
-                                </div>
-                            </div>
-                            <div class="feedback-reponse" role="alert"></div>
-                        </div>
-
-                        <div class="question-quiz" data-ost-id="n2-quiz-q5" data-question="5" data-explication="Sans acquisition, le microcontrôleur ne reçoit plus rien et ne peut pas décider : l'automatisme s'arrête. C'est pourquoi chaque maillon de la chaîne est indispensable.">
-                            <p>5. Le capteur de présence du couloir tombe en panne. Que se passe-t-il ?</p>
-                            <div class="options-reponse" role="radiogroup">
-                                
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="a" data-ost-id="n2-quiz-q5-opta">
-                                    <span>La lumière reste allumée en permanence</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="b" data-ost-id="n2-quiz-q5-optb">
-                                    <span>La lumière ne s'allume plus automatiquement : l'information manque</span>
-                                </div>
-                                <div class="option-reponse" role="radio" aria-checked="false" tabindex="0" data-value="c" data-ost-id="n2-quiz-q5-optc">
-                                    <span>Le microcontrôleur chauffe la pièce à la place</span>
-                                </div>
-                            </div>
-                            <div class="feedback-reponse" role="alert"></div>
-                        </div>
-
-                        <button type="button" class="bouton-action" onclick="validerQuiz('n2')">
-                            Valider mes réponses
-                        </button>
-                        
-                        <div id="resultat-quiz-n2" class="marge-haut" style="display: none;">
-                            <p id="message-resultat-n2"></p>
-                            <button type="button" class="bouton-action succes cache" id="bouton-suite-n2" onclick="debloquerNiveauSuivant('n2')">
-                                Continuer vers N3 →
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </section>
+            
 
             <!-- N3 - Enquêtes 3D interactive
                  Les identifiants et les classes gardent le nom historique
@@ -7014,6 +6920,10 @@
                 if (typeof schemaTracerTout === 'function') {
                     schemaTracerTout();
                 }
+                // Les jeux sont dans des iframes : sans ce focus, le clavier
+                // reste sur l'onglet de l'activité et le personnage ne bouge
+                // qu'après un second clic dans le jeu.
+                if (typeof focuserJeuActif === 'function') focuserJeuActif(niveauId);
             }
         }
 
@@ -17542,5 +17452,114 @@
 // ==== SAUVEGARDE:JS-FIN ====
     </script>
 
+
+<dialog id="question-n2" class="n2-dialogue" aria-labelledby="question-n2-titre">
+  <div class="n2-dialogue-cadre">
+    <div class="n2-dialogue-entete">
+      <span class="n2-dialogue-kicker">Question pour le groupe</span>
+      <button type="button" class="n2-dialogue-fermer" data-close-question aria-label="Fermer la question">×</button>
+    </div>
+    <h2 id="question-n2-titre"></h2>
+    <p class="n2-dialogue-question" id="question-n2-question"></p>
+    <p class="n2-dialogue-note" id="question-n2-note"></p>
+    <button type="button" class="bouton-action" data-close-question>Fermer et noter sur ma feuille</button>
+  </div>
+</dialog>
+
+<script>
+const QUESTIONS_N2 = {
+  "chaine-info": ["La chaîne d’information", "Dans la maison de Léo et Mila, quels constituants acquièrent, traitent, communiquent et agissent ?", "Écris les quatre fonctions de la chaîne d’information et un exemple de constituant pour chacune."],
+  "capteurs": ["Les capteurs", "Comment un capteur transforme-t-il une grandeur physique en information utilisable par le microcontrôleur ?", "Donne un capteur, la grandeur qu’il mesure et la forme du signal qu’il produit."],
+  "microcontroleur": ["Le microcontrôleur", "Pourquoi le microcontrôleur est-il au centre de la chaîne d’information ?", "Explique ce qu’il reçoit, ce qu’il fait et ce qu’il envoie."],
+  "ihm": ["L’interface homme-machine", "Quelle différence fais-tu entre un bouton et un afficheur dans une IHM ?", "Donne un exemple de bouton et un exemple d’afficheur dans la maison."],
+  "formes-energie": ["Les formes d’énergie", "Quelles formes d’énergie reconnais-tu dans la maison ?", "Classe les formes d’énergie et donne un exemple d’objet pour chacune."],
+  "conversions": ["Les conversions d’énergie", "Quelle conversion d’énergie réalise le moteur du volet ? la lampe ? le radiateur ?", "Écris pour chacun : énergie d’entrée → énergie(s) de sortie, puis les pertes."],
+  "chaine-energie": ["La chaîne d’énergie", "Comment l’énergie arrive-t-elle jusqu’au moteur du volet ?", "Nomme la source, le convertisseur, le transmetteur et l’actionneur."],
+  "procedes": ["Les procédés de mise en forme", "Quel procédé choisir pour remplacer une pièce cassée de la maison ?", "Justifie ton choix avec le matériau, la forme, la précision et le coût."]
+};
+function ouvrirQuestionN2(cle) {
+  const q = QUESTIONS_N2[cle];
+  const d = document.getElementById("question-n2");
+  if (!q || !d) return;
+  document.getElementById("question-n2-titre").textContent = q[0];
+  document.getElementById("question-n2-question").textContent = q[1];
+  document.getElementById("question-n2-note").innerHTML = "<b>À noter sur ta feuille :</b> " + q[2];
+  if (typeof d.showModal === "function") { if (!d.open) d.showModal(); }
+  else { d.setAttribute("open", ""); }
+}
+function fermerQuestionN2() {
+  const d = document.getElementById("question-n2");
+  if (!d) return;
+  if (typeof d.close === "function") d.close(); else d.removeAttribute("open");
+}
+function terminerCoursN2() {
+  const b = document.querySelector('[data-niveau="n2-intro"]');
+  if (b) b.classList.add("valide");
+  debloquerNiveauSuivant("n2");
+}
+document.querySelectorAll("[data-close-question]").forEach(function (b) {
+  b.addEventListener("click", fermerQuestionN2);
+});
+document.addEventListener("click", function (e) {
+  if (e.target && e.target.id === "question-n2") fermerQuestionN2();
+});
+</script>
+
+<script>
+(function () {
+  const TOUCHES = new Set(['z','q','s','d','w','a','arrowup','arrowdown','arrowleft','arrowright',' ']);
+  function cadreActif() {
+    const onglet = document.querySelector('.contenu-onglet.actif');
+    return onglet ? onglet.querySelector('.jeu-3d-cadre iframe') : null;
+  }
+  function focuserJeuActif(niveauId) {
+    if (niveauId !== 'n3-enigme' && niveauId !== 'n4-probleme') return;
+    setTimeout(function () {
+      const f = document.querySelector('#contenu-' + niveauId + ' .jeu-3d-cadre iframe');
+      if (!f) return;
+      try { f.contentWindow.focus(); } catch (e) {}
+    }, 220);
+  }
+  window.focuserJeuActif = focuserJeuActif;
+  function envoyer(f, type, e) {
+    try {
+      f.contentWindow.dispatchEvent(new KeyboardEvent(type, {
+        key: e.key, code: e.code, keyCode: e.keyCode, which: e.which,
+        bubbles: true, cancelable: true
+      }));
+    } catch (err) {}
+  }
+  document.addEventListener('keydown', function (e) {
+    const f = cadreActif();
+    if (!f) return;
+    if (e.target && e.target.closest && e.target.closest('input,textarea,select')) return;
+    const k = e.key.toLowerCase();
+    if (!TOUCHES.has(k)) return;
+    e.preventDefault();
+    envoyer(f, 'keydown', e);
+  });
+  document.addEventListener('keyup', function (e) {
+    const f = cadreActif();
+    if (!f) return;
+    if (e.target && e.target.closest && e.target.closest('input,textarea,select')) return;
+    if (!TOUCHES.has(e.key.toLowerCase())) return;
+    envoyer(f, 'keyup', e);
+  });
+  document.querySelectorAll('.jeu-3d-cadre iframe').forEach(function (f) {
+    f.addEventListener('load', function () {
+      try {
+        f.contentWindow.focus();
+        f.contentDocument.addEventListener('pointerdown', function () { try { f.contentWindow.focus(); } catch (e) {} });
+      } catch (e) {}
+    });
+  });
+  document.addEventListener('pointerdown', function (e) {
+    if (e.target && e.target.closest && e.target.closest('.jeu-3d-cadre')) {
+      const f = cadreActif();
+      if (f) setTimeout(function () { try { f.contentWindow.focus(); } catch (err) {} }, 0);
+    }
+  });
+})();
+</script>
 </body>
 </html>
