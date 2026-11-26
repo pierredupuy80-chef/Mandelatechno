@@ -17547,6 +17547,10 @@ document.addEventListener("click", function (e) {
   });
   document.querySelectorAll('.jeu-3d-cadre iframe').forEach(function (f) {
     f.addEventListener('load', function () {
+      // Ne jamais voler le focus pour un cadre caché : sinon le N4 qui finit
+      // de charger prend le clavier alors que l'élève est sur le N3.
+      const onglet = f.closest('.contenu-onglet');
+      if (!onglet || !onglet.classList.contains('actif')) return;
       try {
         f.contentWindow.focus();
         f.contentDocument.addEventListener('pointerdown', function () { try { f.contentWindow.focus(); } catch (e) {} });
