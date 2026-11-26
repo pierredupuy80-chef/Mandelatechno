@@ -17495,7 +17495,13 @@ document.addEventListener("click", function (e) {
   const TOUCHES = new Set(['z','q','s','d','w','a','arrowup','arrowdown','arrowleft','arrowright',' ']);
   function cadreActif() {
     const onglet = document.querySelector('.contenu-onglet.actif');
-    return onglet ? onglet.querySelector('.jeu-3d-cadre iframe') : null;
+    if (!onglet) return null;
+    // N4 contient deux jeux : le premier est l'introduction, le second
+    // l'atelier. On choisit le dernier cadre visible pour que le clavier
+    // aille au jeu que l'élève est en train d'utiliser.
+    const cadres = Array.from(onglet.querySelectorAll('.jeu-3d-cadre iframe'))
+      .filter(function (f) { return !f.closest('[hidden]'); });
+    return cadres.length ? cadres[cadres.length - 1] : null;
   }
   function focuserJeuActif(niveauId) {
     if (niveauId !== 'n3-enigme' && niveauId !== 'n4-probleme') return;
@@ -17543,8 +17549,9 @@ document.addEventListener("click", function (e) {
     });
   });
   document.addEventListener('pointerdown', function (e) {
-    if (e.target && e.target.closest && e.target.closest('.jeu-3d-cadre')) {
-      const f = cadreActif();
+    const cadre = e.target && e.target.closest ? e.target.closest('.jeu-3d-cadre') : null;
+    if (cadre) {
+      const f = cadre.querySelector('iframe');
       if (f) setTimeout(function () { try { f.contentWindow.focus(); } catch (err) {} }, 0);
     }
   });
