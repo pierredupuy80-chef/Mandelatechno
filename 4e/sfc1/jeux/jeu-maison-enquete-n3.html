@@ -4797,9 +4797,10 @@ function showFinalN4() {
   $('#final-code-cafe').textContent = state.n3.pannes.cafe.code;
   $('#final-code-n4-wrap').hidden = false;
   $('#final-code-n4').textContent = state.n4.code;
-  $('#btn-final-next').hidden = true;
+  $('#btn-final-next').hidden = false;
+  $('#btn-final-next').textContent = 'Continuer vers l\'atelier du garage →';
   $('#btn-rejouer').hidden = false;
-  $('#final-note').textContent = 'Recopiez le code GARAGE-24 sur votre fiche N4 (page 1).';
+  $('#final-note').textContent = 'Recopiez le code GARAGE-24 sur la fiche N4, puis passez à l\'atelier de conception du garage connecté.';
   setMission('Bilan', false);
   setPhase('final');
 }
@@ -5074,7 +5075,15 @@ $('#btn-conclure').addEventListener('click', () => {
 });
 $('#btn-interagir').addEventListener('click', tryInteract);
 $('#nh-skip').addEventListener('click', () => { if (state.sim) state.sim.t = state.sim.duration; });
-$('#btn-final-next').addEventListener('click', () => { if (!state.n4.safetySolved) goToN4(); });
+$('#btn-final-next').addEventListener('click', () => {
+  if (!state.n4.safetySolved) { goToN4(); return; }
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: 'n4-atelier' }, '*');
+    toast('Atelier de conception ouvert dans l\'activité.', '', 2600);
+  } else {
+    toast('Atelier de conception : ouvrez jeu-garage-domotique-n4.html dans le dossier N4.', '', 5200);
+  }
+});
 $('#btn-rejouer').addEventListener('click', () => location.reload());
 $('#btn-final-carnet').addEventListener('click', openCarnet);
 $('#n4-reprendre').addEventListener('click', () => {

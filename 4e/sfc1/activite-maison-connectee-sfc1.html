@@ -6631,18 +6631,47 @@
             </section>
 
             <!-- N4 - Garage 3D ouvert -->
-            <section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
-                <div class="carte-contenu">
-                    <h2>Niveau 4 : le garage automatique</h2>
-                    <p>Le jeu N4 est séparé du N3 : il ouvre directement la mission « Le garage automatique ». Lisez l'énoncé, remettez la chaîne de l'automatisme dans l'ordre, choisissez l'actionneur, sélectionnez les sécurités et testez le scénario.</p>
+            <style>
+.n4-parcours{max-width:980px;margin:0 auto}
+.n4-kicker{margin:0 0 .35rem;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--couleur-primaire);font-weight:800}
+.n4-parcours h2{margin:0 0 .6rem}
+.n4-passage{margin:1.1rem 0;padding:1rem 1.1rem;border:1px solid var(--couleur-texte-leger);border-radius:12px;background:var(--couleur-fond)}
+.n4-passage p{margin:0 0 .7rem;line-height:1.55}
+.n4-atelier{padding-top:.4rem}
+.n4-sep{border:0;border-top:1px solid var(--couleur-texte-leger);margin:1.4rem 0 1.1rem}
+</style>
+<section id="contenu-n4-probleme" class="contenu-onglet" role="tabpanel" aria-labelledby="onglet-n4-probleme">
+                <div class="carte-contenu n4-parcours">
+                    <p class="n4-kicker">Niveau 4 · étape 1 — découverte</p>
+                    <h2>Le garage automatique</h2>
+                    <p>Le premier jeu N4 sert d’introduction : Léo rentre chez lui et le garage doit s’ouvrir, s’éclairer et se protéger. Lisez l’énoncé, remettez la chaîne de l’automatisme dans l’ordre, choisissez l’actionneur, sélectionnez les sécurités et testez le scénario. Le code <b>GARAGE-24</b> s’affiche à la fin.</p>
                     <div class="jeu-3d-cadre">
-                        <iframe src="jeux/jeu-maison-enquete-n4.html" title="Jeu N4 — le garage automatique" allowfullscreen></iframe>
+                        <iframe src="jeux/jeu-maison-enquete-n4.html" title="Jeu N4 d’introduction — le garage automatique" allowfullscreen></iframe>
                     </div>
-                    <p class="note-inline">Si le jeu ne s'affiche pas dans le cadre, <a href="jeux/jeu-maison-enquete-n4.html" target="_blank" rel="noopener">ouvrez-le dans un nouvel onglet</a>.</p>
-                    <p>Fiche papier : <a href="jeux/fiche-eleve-n4.pdf" target="_blank" rel="noopener">télécharger la fiche N4 (PDF, 1 page)</a>.</p>
-                    <button class="bouton-action succes marge-haut" onclick="debloquerNiveauSuivant('n4')">
-                        J'ai terminé le garage →
-                    </button>
+                    <p class="note-inline">Si le jeu ne s’affiche pas dans le cadre, <a href="jeux/jeu-maison-enquete-n4.html" target="_blank" rel="noopener">ouvrez-le dans un nouvel onglet</a>.</p>
+                    <p>Fiche papier de l’étape 1 : <a href="jeux/fiche-eleve-n4.pdf" target="_blank" rel="noopener">télécharger la fiche N4 (PDF, 1 page)</a>.</p>
+
+                    <div class="n4-passage">
+                        <p><b>Étape suivante :</b> construire vous-même la solution domotique du garage, en déplaçant le personnage et en installant les composants.</p>
+                        <button type="button" class="bouton-action succes" onclick="ouvrirAtelierN4()">
+                            Passer à l’atelier de conception →
+                        </button>
+                    </div>
+
+                    <div id="n4-atelier" class="n4-atelier" hidden>
+                        <hr class="n4-sep">
+                        <p class="n4-kicker">Niveau 4 · étape 2 — atelier</p>
+                        <h2>Le garage connecté</h2>
+                        <p>À vous de construire la solution : rejoignez les six emplacements, choisissez et installez les composants (caméra, détecteurs, fin de course, télécommande), réglez les angles, puis programmez le microcontrôleur par blocs. Le code <b>DOMO-24</b> s’affiche quand les tests réussissent.</p>
+                        <div class="jeu-3d-cadre">
+                            <iframe data-src="jeux/jeu-garage-domotique-n4.html" title="Atelier N4 — le garage connecté" allowfullscreen></iframe>
+                        </div>
+                        <p class="note-inline">Si l’atelier ne s’affiche pas dans le cadre, <a href="jeux/jeu-garage-domotique-n4.html" target="_blank" rel="noopener">ouvrez-le dans un nouvel onglet</a>.</p>
+                        <p>Fiche papier de l’atelier : <a href="jeux/fiche-eleve-garage-n4.pdf" target="_blank" rel="noopener">télécharger la fiche atelier (PDF, 2 pages)</a>.</p>
+                        <button class="bouton-action succes marge-haut" onclick="debloquerNiveauSuivant('n4')">
+                            J’ai terminé l’atelier du garage →
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -17520,6 +17549,26 @@ document.addEventListener("click", function (e) {
     }
   });
 })();
+</script>
+
+<script>
+function ouvrirAtelierN4() {
+  const stage = document.getElementById('n4-atelier');
+  if (!stage) return;
+  const cadre = stage.querySelector('iframe');
+  if (cadre && !cadre.getAttribute('src')) cadre.setAttribute('src', cadre.dataset.src);
+  stage.hidden = false;
+  setTimeout(function () {
+    stage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
+  setTimeout(function () {
+    try { if (cadre) cadre.contentWindow.focus(); } catch (e) {}
+  }, 650);
+}
+window.ouvrirAtelierN4 = ouvrirAtelierN4;
+window.addEventListener('message', function (e) {
+  if (e.data && e.data.type === 'n4-atelier') ouvrirAtelierN4();
+});
 </script>
 </body>
 </html>
